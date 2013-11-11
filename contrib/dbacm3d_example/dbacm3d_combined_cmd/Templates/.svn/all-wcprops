@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/6618/trunk/contrib/dbacm3d_example/dbacm3d_combined_cmd/Templates
+END
+median_filter_slices+byte-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/lemsvxl/!svn/ver/6618/trunk/contrib/dbacm3d_example/dbacm3d_combined_cmd/Templates/median_filter_slices+byte-.cxx
+END
+median_filter_slices+float-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/lemsvxl/!svn/ver/6618/trunk/contrib/dbacm3d_example/dbacm3d_combined_cmd/Templates/median_filter_slices+float-.cxx
+END
+median_filter_slices+uint16-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/lemsvxl/!svn/ver/6618/trunk/contrib/dbacm3d_example/dbacm3d_combined_cmd/Templates/median_filter_slices+uint16-.cxx
+END

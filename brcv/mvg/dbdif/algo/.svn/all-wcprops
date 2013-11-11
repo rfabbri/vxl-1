@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/lemsvxl/!svn/ver/14043/trunk/brcv/mvg/dbdif/algo
+END
+dbdif_data.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/14043/trunk/brcv/mvg/dbdif/algo/dbdif_data.cxx
+END
+dbdif_transfer.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/13339/trunk/brcv/mvg/dbdif/algo/dbdif_transfer.h
+END
+dbdif_data.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/12524/trunk/brcv/mvg/dbdif/algo/dbdif_data.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/12529/trunk/brcv/mvg/dbdif/algo/CMakeLists.txt
+END
+dbdif_transfer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/12522/trunk/brcv/mvg/dbdif/algo/dbdif_transfer.cxx
+END

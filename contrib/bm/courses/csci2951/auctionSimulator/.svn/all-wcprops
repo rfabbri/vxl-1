@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/15835/trunk/contrib/bm/courses/csci2951/auctionSimulator
+END
+base.py
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/15796/trunk/contrib/bm/courses/csci2951/auctionSimulator/base.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/15642/trunk/contrib/bm/courses/csci2951/auctionSimulator/__init__.py
+END
+valuation.py
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/15643/trunk/contrib/bm/courses/csci2951/auctionSimulator/valuation.py
+END

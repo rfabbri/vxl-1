@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/11683/trunk/brcv/rec/dborl/algo/mpi/compute_ishock
+END
+mpi_compute_ishock_processor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/11682/trunk/brcv/rec/dborl/algo/mpi/compute_ishock/mpi_compute_ishock_processor.cxx
+END
+mpi_compute_ishock_params.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/11683/trunk/brcv/rec/dborl/algo/mpi/compute_ishock/mpi_compute_ishock_params.cxx
+END
+mpi_compute_ishock_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/11642/trunk/brcv/rec/dborl/algo/mpi/compute_ishock/mpi_compute_ishock_main.cxx
+END
+mpi_compute_ishock_processor.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/11682/trunk/brcv/rec/dborl/algo/mpi/compute_ishock/mpi_compute_ishock_processor.h
+END
+mpi_compute_ishock_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/11644/trunk/brcv/rec/dborl/algo/mpi/compute_ishock/mpi_compute_ishock_params.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/11642/trunk/brcv/rec/dborl/algo/mpi/compute_ishock/CMakeLists.txt
+END
+dborl_cluster+mpi_compute_ishock_processor_input-mpi_compute_ishock_processor-float-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 161
+/svn/lemsvxl/!svn/ver/11642/trunk/brcv/rec/dborl/algo/mpi/compute_ishock/dborl_cluster+mpi_compute_ishock_processor_input-mpi_compute_ishock_processor-float-.cxx
+END

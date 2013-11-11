@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/13158/trunk/contrib/bm/vehicleRecognition
+END
+bmvr_functions.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/13158/trunk/contrib/bm/vehicleRecognition/bmvr_functions.cxx
+END
+#driver.cxx#
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/13158/trunk/contrib/bm/vehicleRecognition/%23driver.cxx%23
+END
+driver_v1.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12726/trunk/contrib/bm/vehicleRecognition/driver_v1.cxx
+END
+bmvr_functions.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/13158/trunk/contrib/bm/vehicleRecognition/bmvr_functions.h
+END
+bmvr_functions.cxx.~1.1.~
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/13158/trunk/contrib/bm/vehicleRecognition/bmvr_functions.cxx.~1.1.~
+END
+CMakeLists.txt.~1.5.~
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/13158/trunk/contrib/bm/vehicleRecognition/CMakeLists.txt.~1.5.~
+END
+driver.cxx.~1.6.~
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/13158/trunk/contrib/bm/vehicleRecognition/driver.cxx.~1.6.~
+END
+bmvr_functions.h.~1.1.~
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/13158/trunk/contrib/bm/vehicleRecognition/bmvr_functions.h.~1.1.~
+END
+driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/13158/trunk/contrib/bm/vehicleRecognition/driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/13158/trunk/contrib/bm/vehicleRecognition/CMakeLists.txt
+END

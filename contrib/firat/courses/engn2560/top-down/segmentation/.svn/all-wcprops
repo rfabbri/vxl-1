@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/13881/trunk/contrib/firat/courses/engn2560/top-down/segmentation
+END
+detect_all_fragments.m
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/lemsvxl/!svn/ver/13841/trunk/contrib/firat/courses/engn2560/top-down/segmentation/detect_all_fragments.m
+END
+tdseg.m
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/13854/trunk/contrib/firat/courses/engn2560/top-down/segmentation/tdseg.m
+END
+tdseg2.m
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/13854/trunk/contrib/firat/courses/engn2560/top-down/segmentation/tdseg2.m
+END
+detect_fragment.m
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/13881/trunk/contrib/firat/courses/engn2560/top-down/segmentation/detect_fragment.m
+END
+save_fragment_detections_testset.m
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/lemsvxl/!svn/ver/13841/trunk/contrib/firat/courses/engn2560/top-down/segmentation/save_fragment_detections_testset.m
+END
+normalized_cross_correlation.m
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/lemsvxl/!svn/ver/13841/trunk/contrib/firat/courses/engn2560/top-down/segmentation/normalized_cross_correlation.m
+END
+nonmaxsuppts.m
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/13841/trunk/contrib/firat/courses/engn2560/top-down/segmentation/nonmaxsuppts.m
+END
+save_td_testset.m
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/13879/trunk/contrib/firat/courses/engn2560/top-down/segmentation/save_td_testset.m
+END

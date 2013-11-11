@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/io
+END
+bsta_io_gaussian_indep.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/io/bsta_io_gaussian_indep.h
+END
+bsta_io_beta.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/io/bsta_io_beta.h
+END
+bsta_io_gaussian_full.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/io/bsta_io_gaussian_full.h
+END
+bsta_io_mixture_fixed.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/io/bsta_io_mixture_fixed.h
+END
+bsta_io_histogram.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/io/bsta_io_histogram.h
+END
+bsta_io_mixture.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/io/bsta_io_mixture.h
+END
+bsta_io_gaussian_sphere.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/io/bsta_io_gaussian_sphere.h
+END
+bsta_io_von_mises.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/io/bsta_io_von_mises.h
+END
+bsta_io_parzen_sphere.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/io/bsta_io_parzen_sphere.h
+END
+bsta_io_attributes.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/io/bsta_io_attributes.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/io/CMakeLists.txt
+END

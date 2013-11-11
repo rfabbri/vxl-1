@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/lemsvxl/!svn/ver/13454/trunk/basic/dbgui/examples
+END
+dump_screen.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/12405/trunk/basic/dbgui/examples/dump_screen.cxx
+END
+track.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/12405/trunk/basic/dbgui/examples/track.cxx
+END
+segmented_contours.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12405/trunk/basic/dbgui/examples/segmented_contours.cxx
+END
+track.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/12405/trunk/basic/dbgui/examples/track.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/13454/trunk/basic/dbgui/examples/CMakeLists.txt
+END
+segmented_contours.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12405/trunk/basic/dbgui/examples/segmented_contours.h
+END

@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/lemsvxl/!svn/ver/12552/trunk/brcv/mvg/dbecl/tests
+END
+test_epiband.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/12550/trunk/brcv/mvg/dbecl/tests/test_epiband.cxx
+END
+polygon_bug_test-1.bvl
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12552/trunk/brcv/mvg/dbecl/tests/polygon_bug_test-1.bvl
+END
+test_include.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/5508/trunk/brcv/mvg/dbecl/tests/test_include.cxx
+END
+polygon_bug_test-2.bvl
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12552/trunk/brcv/mvg/dbecl/tests/polygon_bug_test-2.bvl
+END
+polygon_bug_test-3.bvl
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12552/trunk/brcv/mvg/dbecl/tests/polygon_bug_test-3.bvl
+END
+polygon_bug_test.bvl
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12552/trunk/brcv/mvg/dbecl/tests/polygon_bug_test.bvl
+END
+polygon_bug_test-4.bvl
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12552/trunk/brcv/mvg/dbecl/tests/polygon_bug_test-4.bvl
+END
+polygon_bug_test-5.bvl
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12552/trunk/brcv/mvg/dbecl/tests/polygon_bug_test-5.bvl
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/12550/trunk/brcv/mvg/dbecl/tests/test_driver.cxx
+END
+test_episeg.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/5508/trunk/brcv/mvg/dbecl/tests/test_episeg.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/12550/trunk/brcv/mvg/dbecl/tests/CMakeLists.txt
+END
+test_epipole.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/5508/trunk/brcv/mvg/dbecl/tests/test_epipole.cxx
+END

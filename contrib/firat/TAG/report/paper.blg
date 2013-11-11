@@ -1,0 +1,74 @@
+This is BibTeX, Version 0.99c (TeX Live 2009/Debian)
+The top-level auxiliary file: paper.aux
+The style file: plain.bst
+Reallocated bib_list (elt_size=4) to 40 items from 20.
+Reallocated bib_file (elt_size=8) to 40 items from 40.
+Reallocated s_preamble (elt_size=4) to 40 items from 40.
+Database file #1: paper.bib
+Database file #2: Kimia.bib
+Database file #3: vision.bib
+Database file #4: edge.bib
+Database file #5: medical.bib
+Database file #6: multiview.bib
+Database file #7: recognition.bib
+Database file #8: categorization.bib
+Database file #9: ridge.bib
+Database file #10: indexing.bib
+Database file #11: metric.bib
+Database file #12: nn-search.bib
+Database file #13: segmentation.bib
+Database file #14: deformable.bib
+Database file #15: url.bib
+Database file #16: perceptual-grouping.bib
+Database file #17: shape-papers.bib
+Database file #18: shape-matching.bib
+Database file #19: skeleton2D.bib
+Database file #20: texture.bib
+Database file #21: shape-from-shading.bib
+Database file #22: psychophysics.bib
+Database file #23: multidimscaling.bib
+Database file #24: surface-networks.bib
+Database file #25: proceedings.bib
+Warning--can't use both volume and number fields in Takahashi:etal:CGF95
+You've used 38 entries,
+            2118 wiz_defined-function locations,
+            793 strings with 11317 characters,
+and the built_in function-call counts, 12522 in all, are:
+= -- 1275
+> -- 460
+< -- 12
++ -- 189
+- -- 146
+* -- 817
+:= -- 2023
+add.period$ -- 120
+call.type$ -- 38
+change.case$ -- 187
+chr.to.int$ -- 0
+cite$ -- 39
+duplicate$ -- 508
+empty$ -- 1063
+format.name$ -- 146
+if$ -- 2711
+int.to.chr$ -- 0
+int.to.str$ -- 38
+missing$ -- 34
+newline$ -- 193
+num.names$ -- 76
+pop$ -- 184
+preamble$ -- 1
+purify$ -- 149
+quote$ -- 0
+skip$ -- 377
+stack$ -- 0
+substring$ -- 852
+swap$ -- 125
+text.length$ -- 12
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 152
+warning$ -- 1
+while$ -- 132
+width$ -- 40
+write$ -- 422
+(There was 1 warning)

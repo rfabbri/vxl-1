@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/lemsvxl/!svn/ver/12177/trunk/basic/dbgrl/tests
+END
+graph_test.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/12177/trunk/basic/dbgrl/tests/graph_test.cxx
+END
+test_edge_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/3574/trunk/basic/dbgrl/tests/test_edge_sptr.h
+END
+test_node_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/3574/trunk/basic/dbgrl/tests/test_node_sptr.h
+END
+test_include.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/3574/trunk/basic/dbgrl/tests/test_include.cxx
+END
+test_graph.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/3574/trunk/basic/dbgrl/tests/test_graph.h
+END
+test_edge.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/3784/trunk/basic/dbgrl/tests/test_edge.h
+END
+test_node.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/3784/trunk/basic/dbgrl/tests/test_node.h
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/3556/trunk/basic/dbgrl/tests/test_driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/3579/trunk/basic/dbgrl/tests/CMakeLists.txt
+END
+test_graph_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/3574/trunk/basic/dbgrl/tests/test_graph_sptr.h
+END

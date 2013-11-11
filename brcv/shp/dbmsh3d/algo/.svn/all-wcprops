@@ -1,0 +1,269 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo
+END
+dbmsh3d_sheet_algo.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_sheet_algo.cxx
+END
+dbmsh3d_create_box.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_create_box.cxx
+END
+dbmsh3d_ray_intersect.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_ray_intersect.cxx
+END
+dbmsh3d_sg3pi_algo.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_sg3pi_algo.h
+END
+dbmsh3d_mesh_bnd.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_mesh_bnd.cxx
+END
+dbmsh3d_fmm.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_fmm.cxx
+END
+dbmsh3d_mesh_triangulate.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_mesh_triangulate.h
+END
+dbmsh3d_pt_set_bucket.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_pt_set_bucket.h
+END
+dbmsh3d_mesh_algos.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_mesh_algos.cxx
+END
+dbmsh3d_scan_sim.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_scan_sim.h
+END
+dbmsh3d_pt_mesh_dist.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_pt_mesh_dist.cxx
+END
+dbmsh3d_face_algo.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_face_algo.h
+END
+dbmsh3d_pt_set_correspondence.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_pt_set_correspondence.cxx
+END
+dbmsh3d_pt_normal.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_pt_normal.cxx
+END
+dbmsh3d_fileio_ply.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_fileio_ply.cxx
+END
+dbmsh3d_xform.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_xform.cxx
+END
+dbmsh3d_fileio.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_fileio.h
+END
+dbmsh3d_sheet_algo.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_sheet_algo.h
+END
+dbmsh3d_ray_intersect.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_ray_intersect.h
+END
+dbmsh3d_mesh_bnd.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_mesh_bnd.h
+END
+dbmsh3d_fmm.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_fmm.h
+END
+dbmsh3d_mesh_algos.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_mesh_algos.h
+END
+dbmsh3d_pt_mesh_dist.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_pt_mesh_dist.h
+END
+dbmsh3d_graph_sh_path.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_graph_sh_path.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/CMakeLists.txt
+END
+dbmsh3d_fileio_nuages.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_fileio_nuages.cxx
+END
+dbmsh3d_bucketing.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_bucketing.cxx
+END
+dbmsh3d_pt_set_correspondence.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_pt_set_correspondence.h
+END
+dbmsh3d_pt_normal.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_pt_normal.h
+END
+dbmsh3d_xform.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_xform.h
+END
+dbmsh3d_sg3pi_algo.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_sg3pi_algo.cxx
+END
+dbmsh3d_fileio_wrl_iv.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_fileio_wrl_iv.cxx
+END
+dbmsh3d_pt_set_bucket.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_pt_set_bucket.cxx
+END
+dbmsh3d_mesh_triangulate.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_mesh_triangulate.cxx
+END
+dbmsh3d_graph_sh_path.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_graph_sh_path.h
+END
+dbmsh3d_scan_sim.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_scan_sim.cxx
+END
+dbmsh3d_bucketing.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_bucketing.h
+END
+dbmsh3d_face_algo.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_face_algo.cxx
+END
+dbmsh3d_create_paragutter.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_create_paragutter.cxx
+END
+dbmsh3d_fileio_obj.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_fileio_obj.cxx
+END
+dbmsh3d_fileio_off.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_fileio_off.cxx
+END
+dbmsh3d_iv_process_fileio.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_iv_process_fileio.cxx
+END
+dbmsh3d_fileio.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_fileio.cxx
+END
+dbmsh3d_bucketing_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/algo/dbmsh3d_bucketing_sptr.h
+END

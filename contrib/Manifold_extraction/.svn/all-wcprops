@@ -1,0 +1,125 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/10365/trunk/contrib/Manifold_extraction
+END
+Lie_group_operations_3d.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/9581/trunk/contrib/Manifold_extraction/Lie_group_operations_3d.cxx
+END
+vrml_print.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/9581/trunk/contrib/Manifold_extraction/vrml_print.h
+END
+Lie_contour_match.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/9581/trunk/contrib/Manifold_extraction/Lie_contour_match.h
+END
+vehicle_model.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/9581/trunk/contrib/Manifold_extraction/vehicle_model.h
+END
+vehicle_model_3d.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/9581/trunk/contrib/Manifold_extraction/vehicle_model_3d.cxx
+END
+Lie_group_operations.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/9581/trunk/contrib/Manifold_extraction/Lie_group_operations.cxx
+END
+Lie_cv_cor.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/9581/trunk/contrib/Manifold_extraction/Lie_cv_cor.h
+END
+Lie_spoke_utilities.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/9790/trunk/contrib/Manifold_extraction/Lie_spoke_utilities.h
+END
+Lie_contour_match_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/9581/trunk/contrib/Manifold_extraction/Lie_contour_match_sptr.h
+END
+Lie_contour_match.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/9581/trunk/contrib/Manifold_extraction/Lie_contour_match.cxx
+END
+vehicle_model.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/9581/trunk/contrib/Manifold_extraction/vehicle_model.cxx
+END
+Lie_cv_cor_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/9581/trunk/contrib/Manifold_extraction/Lie_cv_cor_sptr.h
+END
+Lie_contour_utilities.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/9790/trunk/contrib/Manifold_extraction/Lie_contour_utilities.h
+END
+Lie_group_operations_3d.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/9581/trunk/contrib/Manifold_extraction/Lie_group_operations_3d.h
+END
+Lie_cv_cor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/9581/trunk/contrib/Manifold_extraction/Lie_cv_cor.cxx
+END
+Lie_spoke_utilities.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/9790/trunk/contrib/Manifold_extraction/Lie_spoke_utilities.cxx
+END
+vehicle_model_3d.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/9581/trunk/contrib/Manifold_extraction/vehicle_model_3d.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/CMakeLists.txt
+END
+Lie_group_operations.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/9581/trunk/contrib/Manifold_extraction/Lie_group_operations.h
+END
+Lie_contour_utilities.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/9790/trunk/contrib/Manifold_extraction/Lie_contour_utilities.cxx
+END

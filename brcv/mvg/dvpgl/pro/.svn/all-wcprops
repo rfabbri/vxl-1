@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/lemsvxl/!svn/ver/9293/trunk/brcv/mvg/dvpgl/pro
+END
+dvpgl_fm_storage_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/9293/trunk/brcv/mvg/dvpgl/pro/dvpgl_fm_storage_sptr.h
+END
+dvpgl_fm_storage.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/9293/trunk/brcv/mvg/dvpgl/pro/dvpgl_fm_storage.cxx
+END
+dvpgl_camera_storage_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/9293/trunk/brcv/mvg/dvpgl/pro/dvpgl_camera_storage_sptr.h
+END
+dvpgl_fm_storage.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/9293/trunk/brcv/mvg/dvpgl/pro/dvpgl_fm_storage.h
+END
+dvpgl_camera_storage.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/9293/trunk/brcv/mvg/dvpgl/pro/dvpgl_camera_storage.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/9293/trunk/brcv/mvg/dvpgl/pro/CMakeLists.txt
+END
+dvpgl_camera_storage.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/9293/trunk/brcv/mvg/dvpgl/pro/dvpgl_camera_storage.h
+END

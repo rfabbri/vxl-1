@@ -1,0 +1,13 @@
+<type name = "image">
+<description>
+	<instance>
+		<category>tool</category>
+	</instance>
+	<instance>
+		<category>skyhawk</category>
+	</instance>
+	<instance>
+		<category>skyhawk</category>
+	</instance>
+</description>
+</type>

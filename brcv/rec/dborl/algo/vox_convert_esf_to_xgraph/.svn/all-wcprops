@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/13788/trunk/brcv/rec/dborl/algo/vox_convert_esf_to_xgraph
+END
+vbl_smart_ptr+vox_convert_esf_to_xgraph_params-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/lemsvxl/!svn/ver/13787/trunk/brcv/rec/dborl/algo/vox_convert_esf_to_xgraph/vbl_smart_ptr+vox_convert_esf_to_xgraph_params-.cxx
+END
+vox_convert_esf_to_xgraph_params_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/lemsvxl/!svn/ver/13787/trunk/brcv/rec/dborl/algo/vox_convert_esf_to_xgraph/vox_convert_esf_to_xgraph_params_sptr.h
+END
+vox_convert_esf_to_xgraph_params.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/lemsvxl/!svn/ver/13788/trunk/brcv/rec/dborl/algo/vox_convert_esf_to_xgraph/vox_convert_esf_to_xgraph_params.cxx
+END
+vox_convert_esf_to_xgraph_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/lemsvxl/!svn/ver/13788/trunk/brcv/rec/dborl/algo/vox_convert_esf_to_xgraph/vox_convert_esf_to_xgraph_main.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/13787/trunk/brcv/rec/dborl/algo/vox_convert_esf_to_xgraph/CMakeLists.txt
+END
+vox_convert_esf_to_xgraph_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/lemsvxl/!svn/ver/13788/trunk/brcv/rec/dborl/algo/vox_convert_esf_to_xgraph/vox_convert_esf_to_xgraph_params.h
+END

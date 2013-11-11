@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/lemsvxl/!svn/ver/13562/trunk/contrib/dec/hsds
+END
+hsds_fd_tree.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/13557/trunk/contrib/dec/hsds/hsds_fd_tree.h
+END
+hsds_fd_tree_incremental_reader.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12338/trunk/contrib/dec/hsds/hsds_fd_tree_incremental_reader.h
+END
+hsds_fd_tree.txx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/13562/trunk/contrib/dec/hsds/hsds_fd_tree.txx
+END
+hsds_fd_tree_node_index.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/12337/trunk/contrib/dec/hsds/hsds_fd_tree_node_index.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/12337/trunk/contrib/dec/hsds/CMakeLists.txt
+END
+hsds_fd_tree_incremental_reader.txx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12338/trunk/contrib/dec/hsds/hsds_fd_tree_incremental_reader.txx
+END

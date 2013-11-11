@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/lemsvxl/!svn/ver/12406/trunk/breye/vorl/exec
+END
+vorl_compute_homography_exec.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/3925/trunk/breye/vorl/exec/vorl_compute_homography_exec.cxx
+END
+vorl_dbctrk_exec.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/2162/trunk/breye/vorl/exec/vorl_dbctrk_exec.cxx
+END
+vorl_fgdetect_blob_finder_exec.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/6310/trunk/breye/vorl/exec/vorl_fgdetect_blob_finder_exec.cxx
+END
+vorl_fgdetect_con_finder_exec.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/7110/trunk/breye/vorl/exec/vorl_fgdetect_con_finder_exec.cxx
+END
+vorl_cri_curve.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/9051/trunk/breye/vorl/exec/vorl_cri_curve.cxx
+END
+vorl_bgbuilder_exec.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/7630/trunk/breye/vorl/exec/vorl_bgbuilder_exec.cxx
+END
+vorl_mirec_exec.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/12406/trunk/breye/vorl/exec/vorl_mirec_exec.cxx
+END
+vorl_dbbgm_con_finder_exec.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/9197/trunk/breye/vorl/exec/vorl_dbbgm_con_finder_exec.cxx
+END
+vorl_fg_detect_exec.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/7639/trunk/breye/vorl/exec/vorl_fg_detect_exec.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/11827/trunk/breye/vorl/exec/CMakeLists.txt
+END
+vorl_bmrf_exec.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/7070/trunk/breye/vorl/exec/vorl_bmrf_exec.cxx
+END

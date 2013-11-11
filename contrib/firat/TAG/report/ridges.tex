@@ -1,0 +1,21 @@
+\subsection{Ridge and Valley Topographic Curves}
+\begin{definition} 
+A {\em ridge} or {\em valley} point of $z=f(x,y)$ is a point where
+\begin{equation}
+\overrightarrow{\grad f}.\overrightarrow{\nu_1} = 0, \label{eq:07-27-06:starstar10}
+\end{equation}
+where $\nu_1$ is the eigenvector with the largest eigenvalue of the Hessian of $f$, and where the
+eigenvalue $\lambda_1>0$ or $\lambda_1<0$, respectively. \todo{[Letting $\xi$ parametrize direction $\overrightarrow{\nu}$, we have]}
+\end{definition}
+
+\noindent In analogy to the condition in 1D used to distinguish minima from maxima among the extrema of 1D functions, namely,
+whether $f^{''}(x)$ is positive or negative, respectively, ridges and valleys are distinguished using the
+second derivative in the direction $\nu_1$,
+\begin{equation*}
+\frac{\partial^2 f}{\partial\xi^2} = \nu_1^T H \nu_1 
+= \nu_1^T(\lambda_1 \nu_1)
+= \lambda_1,
+\end{equation*}
+which gives just the eigenvalue $\lambda_1$.
+Thus, if $\lambda_1 < 0$, we have a ridge and if $\lambda_1 > 0$ we have a valley. The case $\lambda_1=0$ also implies $\lambda_2=0$
+since $\lambda_1$ is the larger eigenvalue. In such a case higher-order derivatives needs to be consulted to determine a ridge.

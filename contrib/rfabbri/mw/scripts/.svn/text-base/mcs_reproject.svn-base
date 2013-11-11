@@ -1,0 +1,5 @@
+# for capitolsite high
+# mcr -curvesketch capitol_building_high_near_optimal_for_other_30_instance_mininliers_5_minepiangle_10/mcs-rec -totalsupport 200 -dist 3 -dtheta 15
+
+# for synthetic data
+mcr -curvesketch csk -dist 3 -dtheta 15

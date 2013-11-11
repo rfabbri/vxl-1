@@ -1,0 +1,257 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/lemsvxl/!svn/ver/15140/trunk/brcv/shp/dbsksp
+END
+dbsksp_xshock_edge.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/13507/trunk/brcv/shp/dbsksp/dbsksp_xshock_edge.h
+END
+dbsksp_shock_node_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/8484/trunk/brcv/shp/dbsksp/dbsksp_shock_node_sptr.h
+END
+dbsksp_shock_node_descriptor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12246/trunk/brcv/shp/dbsksp/dbsksp_shock_node_descriptor.cxx
+END
+dbsksp_shock_node.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/12246/trunk/brcv/shp/dbsksp/dbsksp_shock_node.cxx
+END
+dbsksp_bnd_edge.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/8484/trunk/brcv/shp/dbsksp/dbsksp_bnd_edge.h
+END
+dbsksp_bnd_arc.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/8708/trunk/brcv/shp/dbsksp/dbsksp_bnd_arc.h
+END
+dbsksp_xshock_graph_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/11878/trunk/brcv/shp/dbsksp/dbsksp_xshock_graph_sptr.h
+END
+dbsksp_shock_fragment.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/10806/trunk/brcv/shp/dbsksp/dbsksp_shock_fragment.h
+END
+dbsksp_xshock_edge_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/11878/trunk/brcv/shp/dbsksp/dbsksp_xshock_edge_sptr.h
+END
+dbsksp_shock_edge.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/10285/trunk/brcv/shp/dbsksp/dbsksp_shock_edge.h
+END
+dbsksp_xshock_graph.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/15140/trunk/brcv/shp/dbsksp/dbsksp_xshock_graph.cxx
+END
+dbsksp_bnd_edge_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/8484/trunk/brcv/shp/dbsksp/dbsksp_bnd_edge_sptr.h
+END
+dbsksp_shock_graph_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/8484/trunk/brcv/shp/dbsksp/dbsksp_shock_graph_sptr.h
+END
+dbsksp_shock_model.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/8887/trunk/brcv/shp/dbsksp/dbsksp_shock_model.cxx
+END
+dbsksp_xshock_node_descriptor.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/13727/trunk/brcv/shp/dbsksp/dbsksp_xshock_node_descriptor.h
+END
+dbsksp_shock_edge_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/8484/trunk/brcv/shp/dbsksp/dbsksp_shock_edge_sptr.h
+END
+dbsksp_shock_graph.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/12303/trunk/brcv/shp/dbsksp/dbsksp_shock_graph.cxx
+END
+dbsksp_xshock_node.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/13800/trunk/brcv/shp/dbsksp/dbsksp_xshock_node.h
+END
+introduction_doxy.txt
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/8484/trunk/brcv/shp/dbsksp/introduction_doxy.txt
+END
+dbsksp_shock_node_descriptor.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/12246/trunk/brcv/shp/dbsksp/dbsksp_shock_node_descriptor.h
+END
+dbsksp_shock_node.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/12246/trunk/brcv/shp/dbsksp/dbsksp_shock_node.h
+END
+dbsksp_xshock_graph.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/15140/trunk/brcv/shp/dbsksp/dbsksp_xshock_graph.h
+END
+dbsksp_shapelet.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/13512/trunk/brcv/shp/dbsksp/dbsksp_shapelet.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/12246/trunk/brcv/shp/dbsksp/CMakeLists.txt
+END
+dbsksp_shock_model.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/8887/trunk/brcv/shp/dbsksp/dbsksp_shock_model.h
+END
+dbsksp_shock_graph.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/12246/trunk/brcv/shp/dbsksp/dbsksp_shock_graph.h
+END
+dbsksp_xshock_fragment_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12136/trunk/brcv/shp/dbsksp/dbsksp_xshock_fragment_sptr.h
+END
+dbsksp_xshock_fragment.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/13792/trunk/brcv/shp/dbsksp/dbsksp_xshock_fragment.cxx
+END
+dbsksp_xshock_edge.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/13507/trunk/brcv/shp/dbsksp/dbsksp_xshock_edge.cxx
+END
+dbsksp_bnd_arc_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/8484/trunk/brcv/shp/dbsksp/dbsksp_bnd_arc_sptr.h
+END
+dbsksp_bnd_edge.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/8484/trunk/brcv/shp/dbsksp/dbsksp_bnd_edge.cxx
+END
+dbsksp_shock_fragment_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/8484/trunk/brcv/shp/dbsksp/dbsksp_shock_fragment_sptr.h
+END
+dbsksp_bnd_arc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/8484/trunk/brcv/shp/dbsksp/dbsksp_bnd_arc.cxx
+END
+dbsksp_shapelet.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/13512/trunk/brcv/shp/dbsksp/dbsksp_shapelet.h
+END
+dbsksp_shock_fragment.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12246/trunk/brcv/shp/dbsksp/dbsksp_shock_fragment.cxx
+END
+dbsksp_shock_edge.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/12246/trunk/brcv/shp/dbsksp/dbsksp_shock_edge.cxx
+END
+dbsksp_xshock_node_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/11878/trunk/brcv/shp/dbsksp/dbsksp_xshock_node_sptr.h
+END
+dbsksp_shapelet_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/8484/trunk/brcv/shp/dbsksp/dbsksp_shapelet_sptr.h
+END
+dbsksp_xshock_node_descriptor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/13536/trunk/brcv/shp/dbsksp/dbsksp_xshock_node_descriptor.cxx
+END
+dbsksp_xshock_node.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/13800/trunk/brcv/shp/dbsksp/dbsksp_xshock_node.cxx
+END
+dbsksp_shock_node_descriptor_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12246/trunk/brcv/shp/dbsksp/dbsksp_shock_node_descriptor_sptr.h
+END
+dbsksp_xshock_fragment.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/13792/trunk/brcv/shp/dbsksp/dbsksp_xshock_fragment.h
+END

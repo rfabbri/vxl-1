@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/lemsvxl/!svn/ver/9750/trunk/brcv/seg/dbbgm/algo
+END
+dbbgm_hmm_algo.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/6036/trunk/brcv/seg/dbbgm/algo/dbbgm_hmm_algo.cxx
+END
+dbbgm_hmm_algo.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/5925/trunk/brcv/seg/dbbgm/algo/dbbgm_hmm_algo.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/9750/trunk/brcv/seg/dbbgm/algo/CMakeLists.txt
+END

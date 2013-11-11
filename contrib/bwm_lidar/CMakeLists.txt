@@ -1,0 +1,10 @@
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR} )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib )
+
+SUBDIRS( algo )
+SUBDIRS( appw )
+SUBDIRS( pro )
+SUBDIRS( vis )
+
+SUBDIRS( gui )

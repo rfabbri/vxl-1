@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/7183/trunk/contrib/biotree/xmvg/tests
+END
+test_xmvg_no_noise_filter.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/5839/trunk/contrib/biotree/xmvg/tests/test_xmvg_no_noise_filter.cxx
+END
+test_xmvg_gaussian_filter.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/7119/trunk/contrib/biotree/xmvg/tests/test_xmvg_gaussian_filter.cxx
+END
+test_include.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/5223/trunk/contrib/biotree/xmvg/tests/test_include.cxx
+END
+test_xmvg_filter.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/2389/trunk/contrib/biotree/xmvg/tests/test_xmvg_filter.cxx
+END
+test_xmvg_gaussian_edge_detector.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/6901/trunk/contrib/biotree/xmvg/tests/test_xmvg_gaussian_edge_detector.cxx
+END
+test_xmvg_splat_filter.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/5223/trunk/contrib/biotree/xmvg/tests/test_xmvg_splat_filter.cxx
+END
+test_xmvg_composite_filters.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/5839/trunk/contrib/biotree/xmvg/tests/test_xmvg_composite_filters.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/7182/trunk/contrib/biotree/xmvg/tests/test_driver.cxx
+END
+test_xmvg_impulse_response.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/6959/trunk/contrib/biotree/xmvg/tests/test_xmvg_impulse_response.cxx
+END
+test_xmvg_point_filter.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/5839/trunk/contrib/biotree/xmvg/tests/test_xmvg_point_filter.cxx
+END
+test_perspective_camera.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/5839/trunk/contrib/biotree/xmvg/tests/test_perspective_camera.cxx
+END
+test_xmvg_filter_response.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/3187/trunk/contrib/biotree/xmvg/tests/test_xmvg_filter_response.cxx
+END
+test_xmvg_parallel_beam_filter_3d.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/6918/trunk/contrib/biotree/xmvg/tests/test_xmvg_parallel_beam_filter_3d.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/7183/trunk/contrib/biotree/xmvg/tests/CMakeLists.txt
+END
+test_xmvg_gaussian_filter_descriptor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/7181/trunk/contrib/biotree/xmvg/tests/test_xmvg_gaussian_filter_descriptor.cxx
+END

@@ -1,0 +1,47 @@
+DT_FILE_DIR = /home/firat/Codes/3dVisualize/Subpixel-3d-Reconstruction/DATA-Test/
+// /vision/projects/kimia/3dVisualize/3D-DT-RAW-DATA/
+// /vision/projects/kimia/3dVisualize/Subpixel-3d-Reconstruction/DATA-Test/
+ENO_FILE_DIR = /home/firat/Codes/3dVisualize/Subpixel-3d-Reconstruction/DATA-Test/
+DT_FILE_NAME = simple_test/firat.raw
+// Lhemi.dt.raw
+// Lhemi.dt2.raw
+// Lhemi.signed.dt.raw
+// Lhemi.signed.halved.dt.raw
+// Lhemi.signed.h-avg7.dt.raw
+// Lhemi.signed.h-avg19.dt.raw
+// Lhemi.signed.h-avg27.dt.raw
+// Lhemi.signed.third-avg27.dt.raw
+// Lhemi.clip.dt.raw
+// FredData/Medical/Lhemi.clip.dt.raw
+// FredData/Medical/Lhemi.tweaked.raw
+// FredData/Medical/carot-b-80-dt.raw <--- CONTAINS SHOCKS
+// FredData/Medical/rad-100-dt.raw <--- CONTAINS SHOCKS
+// FredData/Medical/rad-80-dt.raw <--- CONTAINS SHOCKS
+// FredData/Medical/radius-80-dt.raw <--- ALL ZEROS! (except 2 pts)
+// simple_test/simple_test.raw
+// simple_test/simple_test2.raw
+// simple_test/close_spheres.raw
+// simple_test/dumbell.raw
+// simple_test/two_tori.raw
+// CylinderConeZ15/cylinderZ.raw
+// Sphere1-d15-r43/sphere1-d15-r43.raw
+// Sphere1-d50-c245-r2205/sphere1-dim50-center245-r2205.raw
+// CubeTiltY/cube_tiltY.raw
+// TwoSphere20-noSub/sphere20_c1888r55_c214r38.raw
+DT_FILE_HAS_HEADER = 1
+DT_FILE_HAS_SHOCKS = 0
+//DEFAULT_FILE_DIMENSIONS_X = 15
+//DEFAULT_FILE_DIMENSIONS_Y = 15
+//DEFAULT_FILE_DIMENSIONS_Z = 15
+
+ENO_FILE_PREFIX = INVALID
+// simple_test/simple_test
+// simple_test/simple_test2
+// CylinderConeZ15/cylinderZ
+// Sphere1-d15-r43/sphere1-d15-r43
+// Sphere1-d50-c245-r2205/sphere1-dim50-center245-r2205
+// CubeTiltY/cube_tiltY
+// TwoSphere20-noSub/sphere20_c1888r55_c214r38
+
+OUTPUT_FILE_DIR = ./
+OUTPUT_FILE_NAME = output.vtk

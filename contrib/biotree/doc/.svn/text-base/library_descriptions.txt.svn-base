@@ -1,0 +1,19 @@
+Within biotree directory:
+
+bio_defs.h
+
+First level:
+   xmvg (x-ray multiview geometry)
+   doc 
+Second level:
+   det (detection)
+   xscan (x-ray scan)
+   gui (views of data structures defined elsewhere)
+Third level:
+  biov (managers for handling gui events)
+  resc (resources)
+     contains imgr (image resource), splr (splat resource)
+  bin (executables)
+Fourth level: (not in active use)
+  biolung
+  biocts

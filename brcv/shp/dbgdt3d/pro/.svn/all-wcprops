@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbgdt3d/pro
+END
+dbgdt3d_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbgdt3d/pro/dbgdt3d_process.h
+END
+dbgdt3d_cmdpara.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbgdt3d/pro/dbgdt3d_cmdpara.cxx
+END
+dbgdt3d_cmdpara.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbgdt3d/pro/dbgdt3d_cmdpara.h
+END
+dbgdt3d_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbgdt3d/pro/dbgdt3d_process.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbgdt3d/pro/CMakeLists.txt
+END

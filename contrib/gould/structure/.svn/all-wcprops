@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/13290/trunk/contrib/gould/structure
+END
+dbcfg_cfg_constructor.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/13290/trunk/contrib/gould/structure/dbcfg_cfg_constructor.h
+END
+dbcfg_curve.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/13254/trunk/contrib/gould/structure/dbcfg_curve.h
+END
+dbcfg_junction.txx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/13254/trunk/contrib/gould/structure/dbcfg_junction.txx
+END
+dbcfg_line.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/13290/trunk/contrib/gould/structure/dbcfg_line.h
+END
+dbcfg_contour_fragment_graph.txx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/13254/trunk/contrib/gould/structure/dbcfg_contour_fragment_graph.txx
+END
+dbcfg_contour_fragment_graph.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/13254/trunk/contrib/gould/structure/dbcfg_contour_fragment_graph.h
+END
+dbcfg_cfg_constructor.txx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/13290/trunk/contrib/gould/structure/dbcfg_cfg_constructor.txx
+END
+dbcfg_curve.txx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/13254/trunk/contrib/gould/structure/dbcfg_curve.txx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/13254/trunk/contrib/gould/structure/CMakeLists.txt
+END
+dbcfg_line.txx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/13290/trunk/contrib/gould/structure/dbcfg_line.txx
+END

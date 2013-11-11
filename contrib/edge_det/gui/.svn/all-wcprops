@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/lemsvxl/!svn/ver/16438/trunk/contrib/edge_det/gui
+END
+sel_gui_menu.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/10323/trunk/contrib/edge_det/gui/sel_gui_menu.h
+END
+sel_gui
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/14169/trunk/contrib/edge_det/gui/sel_gui
+END
+sel_gui_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/16438/trunk/contrib/edge_det/gui/sel_gui_main.cxx
+END
+sel_gui_menu.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/16438/trunk/contrib/edge_det/gui/sel_gui_menu.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/10327/trunk/contrib/edge_det/gui/CMakeLists.txt
+END

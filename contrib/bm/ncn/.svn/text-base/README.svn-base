@@ -1,0 +1,6 @@
+ This project is to investigate methods for avoiding false detection of shadow in change
+ detection algorithms.
+ The main methods will involve a non compact markov neighborhood placed at each pixel.
+ A neighborhood around each pixel will be a set of pivot pixels.
+ Pivot Pixels are chosen stochastically by examining areas of the image sequence which have high entropy
+ by using importance sampling techniques.

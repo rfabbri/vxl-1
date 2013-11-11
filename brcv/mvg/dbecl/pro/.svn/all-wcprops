@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/lemsvxl/!svn/ver/9288/trunk/brcv/mvg/dbecl/pro
+END
+dbecl_episeg_storage.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/9288/trunk/brcv/mvg/dbecl/pro/dbecl_episeg_storage.h
+END
+dbecl_builder_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/9288/trunk/brcv/mvg/dbecl/pro/dbecl_builder_process.h
+END
+dbecl_episeg_storage_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/9288/trunk/brcv/mvg/dbecl/pro/dbecl_episeg_storage_sptr.h
+END
+dbecl_episeg_storage.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/9288/trunk/brcv/mvg/dbecl/pro/dbecl_episeg_storage.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/9288/trunk/brcv/mvg/dbecl/pro/CMakeLists.txt
+END
+dbecl_builder_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/9288/trunk/brcv/mvg/dbecl/pro/dbecl_builder_process.cxx
+END

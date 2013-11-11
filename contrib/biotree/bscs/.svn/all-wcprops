@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/lemsvxl/!svn/ver/8134/trunk/contrib/biotree/bscs
+END
+bscs.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/8134/trunk/contrib/biotree/bscs/bscs.h
+END
+bscs_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/8134/trunk/contrib/biotree/bscs/bscs_sptr.h
+END
+bscs.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/8134/trunk/contrib/biotree/bscs/bscs.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/8134/trunk/contrib/biotree/bscs/CMakeLists.txt
+END

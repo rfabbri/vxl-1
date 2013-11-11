@@ -1,0 +1,30 @@
+#!/bin/sh
+# to be called from capitol high
+#mcp -curvesketch capitol_building_high_near_optimal_for_other_30_instance_mininliers_5_minepiangle_10/mcs-rec -totalsupport 200 -maxviews 30
+
+#mcp -curvesketch capitol_building_high_near_optimal_for_other_30_instance_mininliers_5_minepiangle_10/mcs-rec -totalsupport 200 -maxviews 30
+
+
+##mcp -curvesketch csk
+
+
+# To be called fromt he video directory of each dataset.
+
+#fstamp="onecamattime-run-20views-results"
+#csk="capitol_building_high_near_optimal_for_other_30_instance_mininliers_5_minepiangle_10/mcs-rec/"
+
+
+#views="100,200,300,400"
+#fstamp="onecamattime-run-views_$views-results"
+#csk="results-paper/capitol_building_optimal_26_instances_mininliers_5/mcs-rec"
+
+#mycmd="mcp -views $views -totalsupport 80 -onecam -curvesketch $csk| tee out-mcp/$fstamp"
+#echo $mycmd > out-mcp/$fstamp-commandline
+#eval $mycmd
+
+fstamp="onecamattime-run-views-results"
+csk="csk"
+
+mycmd="mcp -views 12,13,14 -onecam -curvesketch $csk| tee out-mcp/$fstamp"
+echo $mycmd > out-mcp/$fstamp-commandline
+eval $mycmd

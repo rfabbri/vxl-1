@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/lemsvxl/!svn/ver/12418/trunk/contrib/Spatemp/vis
+END
+dbdet_temporal_map_displayer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/10470/trunk/contrib/Spatemp/vis/dbdet_temporal_map_displayer.cxx
+END
+dbdet_temporal_map_tableau.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/vis/dbdet_temporal_map_tableau.cxx
+END
+bpro_spatemp_process_manager_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/10320/trunk/contrib/Spatemp/vis/bpro_spatemp_process_manager_sptr.h
+END
+bpro_spatemp_process_manager.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12418/trunk/contrib/Spatemp/vis/bpro_spatemp_process_manager.cxx
+END
+dbdet_temporal_map_displayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/10470/trunk/contrib/Spatemp/vis/dbdet_temporal_map_displayer.h
+END
+dbdet_temporal_map_tableau.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/vis/dbdet_temporal_map_tableau.h
+END
+dbdet_temporal_map_tableau_commands.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/vis/dbdet_temporal_map_tableau_commands.h
+END
+bpro_spatemp_process_manager.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12418/trunk/contrib/Spatemp/vis/bpro_spatemp_process_manager.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/10470/trunk/contrib/Spatemp/vis/CMakeLists.txt
+END
+dbdet_temporal_map_tableau_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/10470/trunk/contrib/Spatemp/vis/dbdet_temporal_map_tableau_sptr.h
+END

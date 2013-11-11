@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/lemsvxl/!svn/ver/10276/trunk/brcv/trk/dbmrf/pro
+END
+dbmrf_evaluate_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/10276/trunk/brcv/trk/dbmrf/pro/dbmrf_evaluate_process.cxx
+END
+dbmrf_bmrf_storage_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbmrf/pro/dbmrf_bmrf_storage_sptr.h
+END
+dbmrf_curvel_3d_storage_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbmrf/pro/dbmrf_curvel_3d_storage_sptr.h
+END
+dbmrf_curve_projector_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbmrf/pro/dbmrf_curve_projector_process.cxx
+END
+dbmrf_backproject_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/10276/trunk/brcv/trk/dbmrf/pro/dbmrf_backproject_process.h
+END
+dbmrf_bmrf_storage.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbmrf/pro/dbmrf_bmrf_storage.cxx
+END
+dbmrf_curvel_3d_storage.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbmrf/pro/dbmrf_curvel_3d_storage.cxx
+END
+dbmrf_rocdata_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/10276/trunk/brcv/trk/dbmrf/pro/dbmrf_rocdata_process.cxx
+END
+dbmrf_predict_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/10276/trunk/brcv/trk/dbmrf/pro/dbmrf_predict_process.h
+END
+dbmrf_curve_3d_builder_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbmrf/pro/dbmrf_curve_3d_builder_process.cxx
+END
+dbmrf_network_builder_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbmrf/pro/dbmrf_network_builder_process.h
+END
+dbmrf_backproject_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/10276/trunk/brcv/trk/dbmrf/pro/dbmrf_backproject_process.cxx
+END
+dbmrf_predict_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/10276/trunk/brcv/trk/dbmrf/pro/dbmrf_predict_process.cxx
+END
+dbmrf_evaluate_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/10276/trunk/brcv/trk/dbmrf/pro/dbmrf_evaluate_process.h
+END
+dbmrf_network_builder_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbmrf/pro/dbmrf_network_builder_process.cxx
+END
+dbmrf_curve_projector_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbmrf/pro/dbmrf_curve_projector_process.h
+END
+dbmrf_curvel_3d_storage.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbmrf/pro/dbmrf_curvel_3d_storage.h
+END
+dbmrf_bmrf_storage.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbmrf/pro/dbmrf_bmrf_storage.h
+END
+dbmrf_rocdata_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/10276/trunk/brcv/trk/dbmrf/pro/dbmrf_rocdata_process.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/10276/trunk/brcv/trk/dbmrf/pro/CMakeLists.txt
+END
+dbmrf_curve_3d_builder_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbmrf/pro/dbmrf_curve_3d_builder_process.h
+END

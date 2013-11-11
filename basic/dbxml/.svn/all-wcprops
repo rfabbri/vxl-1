@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/lemsvxl/!svn/ver/14035/trunk/basic/dbxml
+END
+dbxml_algos.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/13237/trunk/basic/dbxml/dbxml_algos.h
+END
+dbxml_xio.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/13237/trunk/basic/dbxml/dbxml_xio.cxx
+END
+dbxml_vector_xio.txx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/13232/trunk/basic/dbxml/dbxml_vector_xio.txx
+END
+dbxml_xio.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/13237/trunk/basic/dbxml/dbxml_xio.h
+END
+dbxml_algos.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/13237/trunk/basic/dbxml/dbxml_algos.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/13230/trunk/basic/dbxml/CMakeLists.txt
+END
+dbxml_vector_xio.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/13232/trunk/basic/dbxml/dbxml_vector_xio.h
+END

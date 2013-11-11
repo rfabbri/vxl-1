@@ -1,0 +1,55 @@
+searchState PuzzleSolving::pairMatch()
+{
+  int i,j,k;
+  searchState init = searchState(_Contours);//declares a new search state based on contours
+  //Make _Contours a vector of top and bottom. Same for cList.
+  vcl_vector<map_with_cost> this_pair;//Make this a pair
+  vcl_string exname1,exname2;//couple of more strings I guess
+
+  _cList.clear();//
+  unsigned size = _Contours.size();
+  //vcl_cout<<size<<" OH MY GOD!!!!"<<vcl_endl;
+  for(unsigned i=0; i < size; i++)
+    _cList.push_back(_Contours[i]);//_clist now has all the contours
+
+  if (_nPieces>0)//Begin processing pieces.
+  {
+    for(i=0;i<_nPieces-1;i++)
+    {
+      for(j=i+1;j<_nPieces;j++)
+      {
+        vcl_cout << "matching piece [" << i << "] to piece [" << j << "]." << vcl_endl;
+        clock_t start, end;
+        start = clock();
+        this_pair = testDP(_Contours[j],_Contours[i]);//Stores map with costs of all matches of these 2 curves.
+        end = clock();
+        vcl_cout << (double(end)-start) / CLOCKS_PER_SEC << vcl_endl;
+        if(this_pair.size()>0)
+        {
+          int this_pair_size_int = static_cast<int>(this_pair.size());
+          assert(this_pair_size_int>=0);
+          for(k=0;k<this_pair_size_int;k++)
+          {
+            double cost = this_pair[k].first;
+            intMap map = this_pair[k].second;
+            bfrag_curve c1 = _Contours[j];
+            bfrag_curve c2 = _Contours[i];
+
+            // Update for state curve transformation lists not necessary here
+            regContour(&c1,&c2,map);
+
+            // CAN : This is not necessary! When I commented it out, I got the same result.
+            //localReg(&c1,&c2,&d1,&d2,&d3,1);
+            // CAN : This operation should be moved in the end part of fineScaleMatching
+
+            cost-=SMOOTH_EDGE_BONUS*edgeCheck(&c1, &c2, map);
+            init.addMatch(map,cost,j,i);
+          }
+        }
+      }
+    }
+  }
+  //vcl_cout<<init.numMatch()<<vcl_endl;
+	  //vcl_cout<<"see!"<<vcl_endl;
+  return init;
+}

@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/6105/trunk/contrib/biotree/proc/biocluster/Templates
+END
+biocluster_volpart_filtering_proc+double.xmvg_gaussian_edge_detector_x_3d-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 153
+/svn/lemsvxl/!svn/ver/6045/trunk/contrib/biotree/proc/biocluster/Templates/biocluster_volpart_filtering_proc+double.xmvg_gaussian_edge_detector_x_3d-.cxx
+END
+biocluster_volpart_filtering_proc+double.xmvg_gaussian_edge_detector_y_3d-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 153
+/svn/lemsvxl/!svn/ver/6045/trunk/contrib/biotree/proc/biocluster/Templates/biocluster_volpart_filtering_proc+double.xmvg_gaussian_edge_detector_y_3d-.cxx
+END
+biocluster_volpart_filtering_proc+double.xmvg_parallel_beam_filter_3d+xmvg_gaussian_integrating_filter_3d--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 186
+/svn/lemsvxl/!svn/ver/6105/trunk/contrib/biotree/proc/biocluster/Templates/biocluster_volpart_filtering_proc+double.xmvg_parallel_beam_filter_3d+xmvg_gaussian_integrating_filter_3d--.cxx
+END
+biocluster_volpart_filtering_proc+double.xmvg_gaussian_edge_detector_z_3d-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 153
+/svn/lemsvxl/!svn/ver/6045/trunk/contrib/biotree/proc/biocluster/Templates/biocluster_volpart_filtering_proc+double.xmvg_gaussian_edge_detector_z_3d-.cxx
+END
+biocluster_volpart_filtering_proc+double.xmvg_parallel_beam_filter_3d+xmvg_pipe_filter_3d--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 170
+/svn/lemsvxl/!svn/ver/6105/trunk/contrib/biotree/proc/biocluster/Templates/biocluster_volpart_filtering_proc+double.xmvg_parallel_beam_filter_3d+xmvg_pipe_filter_3d--.cxx
+END
+biocluster_volpart_filtering_proc+double.xmvg_no_noise_filter-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/svn/lemsvxl/!svn/ver/6045/trunk/contrib/biotree/proc/biocluster/Templates/biocluster_volpart_filtering_proc+double.xmvg_no_noise_filter-.cxx
+END
+biocluster_volpart_filtering_proc+double.xmvg_point_filter-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/svn/lemsvxl/!svn/ver/6045/trunk/contrib/biotree/proc/biocluster/Templates/biocluster_volpart_filtering_proc+double.xmvg_point_filter-.cxx
+END
+biocluster_volpart_filtering_proc+double.xmvg_gaussian_filter-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/svn/lemsvxl/!svn/ver/6045/trunk/contrib/biotree/proc/biocluster/Templates/biocluster_volpart_filtering_proc+double.xmvg_gaussian_filter-.cxx
+END

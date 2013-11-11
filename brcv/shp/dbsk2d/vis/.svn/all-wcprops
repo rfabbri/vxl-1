@@ -1,0 +1,185 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/lemsvxl/!svn/ver/16957/trunk/brcv/shp/dbsk2d/vis
+END
+dbsk2d_bpoint_view.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/4544/trunk/brcv/shp/dbsk2d/vis/dbsk2d_bpoint_view.cxx
+END
+dbsk2d_ishock_loop_transform_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/9291/trunk/brcv/shp/dbsk2d/vis/dbsk2d_ishock_loop_transform_tool.h
+END
+dbsk2d_ishock_getinfo_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/9291/trunk/brcv/shp/dbsk2d/vis/dbsk2d_ishock_getinfo_tool.cxx
+END
+dbsk2d_shock_tableau.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/9109/trunk/brcv/shp/dbsk2d/vis/dbsk2d_shock_tableau.h
+END
+dbsk2d_shock_image_fragment_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/9291/trunk/brcv/shp/dbsk2d/vis/dbsk2d_shock_image_fragment_tool.cxx
+END
+dbsk2d_rich_map_query_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/9291/trunk/brcv/shp/dbsk2d/vis/dbsk2d_rich_map_query_tool.h
+END
+dbsk2d_ishock_highlight_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/11211/trunk/brcv/shp/dbsk2d/vis/dbsk2d_ishock_highlight_tool.h
+END
+dbsk2d_ishock_splice_transform_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/9291/trunk/brcv/shp/dbsk2d/vis/dbsk2d_ishock_splice_transform_tool.h
+END
+dbsk2d_shock_subgraph_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/9291/trunk/brcv/shp/dbsk2d/vis/dbsk2d_shock_subgraph_tool.cxx
+END
+dbsk2d_ishock_gap_transform_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/16957/trunk/brcv/shp/dbsk2d/vis/dbsk2d_ishock_gap_transform_tool.cxx
+END
+dbsk2d_shock_tableau_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/vis/dbsk2d_shock_tableau_sptr.h
+END
+dbsk2d_ishock_detector_debug_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/11764/trunk/brcv/shp/dbsk2d/vis/dbsk2d_ishock_detector_debug_tool.h
+END
+dbsk2d_ishock_loop_transform_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/16596/trunk/brcv/shp/dbsk2d/vis/dbsk2d_ishock_loop_transform_tool.cxx
+END
+dbsk2d_ishock_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/9291/trunk/brcv/shp/dbsk2d/vis/dbsk2d_ishock_tool.h
+END
+dbsk2d_rich_map_query_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/9291/trunk/brcv/shp/dbsk2d/vis/dbsk2d_rich_map_query_tool.cxx
+END
+dbsk2d_ishock_highlight_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/11211/trunk/brcv/shp/dbsk2d/vis/dbsk2d_ishock_highlight_tool.cxx
+END
+dbsk2d_shock_tableau.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/11765/trunk/brcv/shp/dbsk2d/vis/dbsk2d_shock_tableau.cxx
+END
+dbsk2d_ishock_splice_transform_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/9291/trunk/brcv/shp/dbsk2d/vis/dbsk2d_ishock_splice_transform_tool.cxx
+END
+dbsk2d_bline_view.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/3851/trunk/brcv/shp/dbsk2d/vis/dbsk2d_bline_view.h
+END
+dbsk2d_shock_displayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/9291/trunk/brcv/shp/dbsk2d/vis/dbsk2d_shock_displayer.h
+END
+dbsk2d_bpoint_view.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/4090/trunk/brcv/shp/dbsk2d/vis/dbsk2d_bpoint_view.h
+END
+dbsk2d_ishock_detector_debug_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/11764/trunk/brcv/shp/dbsk2d/vis/dbsk2d_ishock_detector_debug_tool.cxx
+END
+dbsk2d_ishock_getinfo_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/9291/trunk/brcv/shp/dbsk2d/vis/dbsk2d_ishock_getinfo_tool.h
+END
+dbsk2d_ishock_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/9291/trunk/brcv/shp/dbsk2d/vis/dbsk2d_ishock_tool.cxx
+END
+dbsk2d_shock_image_fragment_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/9291/trunk/brcv/shp/dbsk2d/vis/dbsk2d_shock_image_fragment_tool.h
+END
+dbsk2d_bline_view.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/4898/trunk/brcv/shp/dbsk2d/vis/dbsk2d_bline_view.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/9291/trunk/brcv/shp/dbsk2d/vis/CMakeLists.txt
+END
+dbsk2d_shock_displayer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/9291/trunk/brcv/shp/dbsk2d/vis/dbsk2d_shock_displayer.cxx
+END
+dbsk2d_ishock_gap_transform_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/16502/trunk/brcv/shp/dbsk2d/vis/dbsk2d_ishock_gap_transform_tool.h
+END
+dbsk2d_shock_subgraph_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/9291/trunk/brcv/shp/dbsk2d/vis/dbsk2d_shock_subgraph_tool.h
+END

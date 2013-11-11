@@ -1,0 +1,107 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/8875/trunk/contrib/biotree/resc/imgr/file_formats
+END
+imgr_skyscan_log.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/7816/trunk/contrib/biotree/resc/imgr/file_formats/imgr_skyscan_log.h
+END
+imgr_rsq_header.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/3224/trunk/contrib/biotree/resc/imgr/file_formats/imgr_rsq_header.h
+END
+imgr_skyscan_reconlog.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/8875/trunk/contrib/biotree/resc/imgr/file_formats/imgr_skyscan_reconlog.cxx
+END
+imgr_isq_file_format.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/7234/trunk/contrib/biotree/resc/imgr/file_formats/imgr_isq_file_format.cxx
+END
+imgr_isq_header.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/3745/trunk/contrib/biotree/resc/imgr/file_formats/imgr_isq_header.cxx
+END
+imgr_ff_algos.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/3416/trunk/contrib/biotree/resc/imgr/file_formats/imgr_ff_algos.h
+END
+imgr_rsq.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/7234/trunk/contrib/biotree/resc/imgr/file_formats/imgr_rsq.cxx
+END
+imgr_skyscan_log_header.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/6934/trunk/contrib/biotree/resc/imgr/file_formats/imgr_skyscan_log_header.h
+END
+imgr_skyscan_log.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/resc/imgr/file_formats/imgr_skyscan_log.cxx
+END
+imgr_rsq_header.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/3317/trunk/contrib/biotree/resc/imgr/file_formats/imgr_rsq_header.cxx
+END
+imgr_ff_algos.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/4794/trunk/contrib/biotree/resc/imgr/file_formats/imgr_ff_algos.cxx
+END
+imgr_skyscan_log_header.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/8875/trunk/contrib/biotree/resc/imgr/file_formats/imgr_skyscan_log_header.cxx
+END
+imgr_skyscan_reconlog.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/6094/trunk/contrib/biotree/resc/imgr/file_formats/imgr_skyscan_reconlog.h
+END
+imgr_isq_file_format.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/6922/trunk/contrib/biotree/resc/imgr/file_formats/imgr_isq_file_format.h
+END
+imgr_isq_header.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/7816/trunk/contrib/biotree/resc/imgr/file_formats/imgr_isq_header.h
+END
+imgr_rsq.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/5218/trunk/contrib/biotree/resc/imgr/file_formats/imgr_rsq.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/7816/trunk/contrib/biotree/resc/imgr/file_formats/CMakeLists.txt
+END

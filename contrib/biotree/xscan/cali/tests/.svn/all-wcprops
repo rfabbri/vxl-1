@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/7816/trunk/contrib/biotree/xscan/cali/tests
+END
+test_cali_artf.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/7816/trunk/contrib/biotree/xscan/cali/tests/test_cali_artf.cxx
+END
+test_cali_corresp.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/6259/trunk/contrib/biotree/xscan/cali/tests/test_cali_corresp.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/6259/trunk/contrib/biotree/xscan/cali/tests/test_driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/6259/trunk/contrib/biotree/xscan/cali/tests/CMakeLists.txt
+END

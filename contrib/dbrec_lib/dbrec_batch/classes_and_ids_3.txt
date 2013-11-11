@@ -1,0 +1,6 @@
+# if running recognition experiments with 3 classes: use car, pick-up-truck and utility
+#   the suv and van classes are merged into a single class with name utility in this case
+# otherwise we have four classes: car, pick-up-truck, suv and van
+car 0
+pick-up-truck 1
+utility 2

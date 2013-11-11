@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/16185/trunk/brcv/rec/dborl/algo/vox_contour_evaluation
+END
+dborl_contour_evaluation_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/lemsvxl/!svn/ver/16417/trunk/brcv/rec/dborl/algo/vox_contour_evaluation/dborl_contour_evaluation_main.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/15936/trunk/brcv/rec/dborl/algo/vox_contour_evaluation/CMakeLists.txt
+END

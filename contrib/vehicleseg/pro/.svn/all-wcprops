@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/9752/trunk/contrib/vehicleseg/pro
+END
+vidpro1_robust_intensity_register_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/9350/trunk/contrib/vehicleseg/pro/vidpro1_robust_intensity_register_process.h
+END
+dbbgm_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/3242/trunk/contrib/vehicleseg/pro/dbbgm_utils.h
+END
+vidpro1_compute_homography_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/9350/trunk/contrib/vehicleseg/pro/vidpro1_compute_homography_process.h
+END
+vidpro1_register_images_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/9350/trunk/contrib/vehicleseg/pro/vidpro1_register_images_process.h
+END
+vidpro1_fgdetector_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/9350/trunk/contrib/vehicleseg/pro/vidpro1_fgdetector_process.cxx
+END
+vidpro1_robust_bg_model_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/9350/trunk/contrib/vehicleseg/pro/vidpro1_robust_bg_model_process.cxx
+END
+vidpro1_robust_intensity_register_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/9350/trunk/contrib/vehicleseg/pro/vidpro1_robust_intensity_register_process.cxx
+END
+dbbgm_utils.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/3242/trunk/contrib/vehicleseg/pro/dbbgm_utils.cxx
+END
+vidpro1_compute_homography_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/9350/trunk/contrib/vehicleseg/pro/vidpro1_compute_homography_process.cxx
+END
+vidpro1_register_images_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/9350/trunk/contrib/vehicleseg/pro/vidpro1_register_images_process.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/9752/trunk/contrib/vehicleseg/pro/CMakeLists.txt
+END
+vidpro1_fgdetector_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/9350/trunk/contrib/vehicleseg/pro/vidpro1_fgdetector_process.h
+END
+vidpro1_robust_bg_model_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/9350/trunk/contrib/vehicleseg/pro/vidpro1_robust_bg_model_process.h
+END

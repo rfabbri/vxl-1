@@ -1,0 +1,125 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/lemsvxl/!svn/ver/13360/trunk/contrib/mleotta/gui
+END
+features_gui.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/12416/trunk/contrib/mleotta/gui/features_gui.cxx
+END
+lmco_manager.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/11658/trunk/contrib/mleotta/gui/lmco_manager.cxx
+END
+live_bgm_vpdt_gui.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12615/trunk/contrib/mleotta/gui/live_bgm_vpdt_gui.cxx
+END
+lmco_menus.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/9918/trunk/contrib/mleotta/gui/lmco_menus.h
+END
+data_observers.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/8642/trunk/contrib/mleotta/gui/data_observers.h
+END
+live_bgm_gui.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/12768/trunk/contrib/mleotta/gui/live_bgm_gui.cxx
+END
+codebook_gui.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/11524/trunk/contrib/mleotta/gui/codebook_gui.cxx
+END
+bae_test_gui.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/10595/trunk/contrib/mleotta/gui/bae_test_gui.cxx
+END
+mesh_map_gui.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/12416/trunk/contrib/mleotta/gui/mesh_map_gui.cxx
+END
+lmco_gui.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/9585/trunk/contrib/mleotta/gui/lmco_gui.cxx
+END
+mesh_test_gui.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/11658/trunk/contrib/mleotta/gui/mesh_test_gui.cxx
+END
+set_file_commands.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/12416/trunk/contrib/mleotta/gui/set_file_commands.h
+END
+lmco_compute_mi.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/11524/trunk/contrib/mleotta/gui/lmco_compute_mi.h
+END
+lmco_menus.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/9918/trunk/contrib/mleotta/gui/lmco_menus.cxx
+END
+pca_vehicle_gui.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/12068/trunk/contrib/mleotta/gui/pca_vehicle_gui.cxx
+END
+lmco_manager.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/11524/trunk/contrib/mleotta/gui/lmco_manager.h
+END
+xio_processes.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/10752/trunk/contrib/mleotta/gui/xio_processes.h
+END
+lmco_compute_mi.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/11658/trunk/contrib/mleotta/gui/lmco_compute_mi.cxx
+END
+flimap_gui.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/11994/trunk/contrib/mleotta/gui/flimap_gui.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/12415/trunk/contrib/mleotta/gui/CMakeLists.txt
+END

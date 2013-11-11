@@ -1,0 +1,12 @@
+#!/bin/sh
+# Phase 1 reconstruction of capitol building at optimal operating point.
+# Wed Nov 18 20:01:01 EST 2009
+
+
+
+stamp="capitol_building_high_near_optimal_for_other_30_instance_mininliers_5_minepiangle_10"
+
+# The value of mininliers_total at 30% recall is 125.
+# We threshold this after the fact in matlab.
+opts="-mininliers_total 5 -dist 1 -dtheta 10 -minlength 40 -prune_by_length -mininliers_view 30 -first_to_second_ratio 1.5 -lonely 0 -min_epipolar_overlap 5 -minepiangle 10"
+mcs_rec $stamp $opts

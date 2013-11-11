@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/15852/trunk/contrib/firat/matlab/levelset3d_segmentation
+END
+reinitlevelset_narrow.m
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/15440/trunk/contrib/firat/matlab/levelset3d_segmentation/reinitlevelset_narrow.m
+END
+levelset3dupdate.m
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/15440/trunk/contrib/firat/matlab/levelset3d_segmentation/levelset3dupdate.m
+END
+check_stop_condition_3d.m
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/15508/trunk/contrib/firat/matlab/levelset3d_segmentation/check_stop_condition_3d.m
+END
+configure.m
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/15836/trunk/contrib/firat/matlab/levelset3d_segmentation/configure.m
+END

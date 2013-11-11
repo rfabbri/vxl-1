@@ -1,0 +1,155 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/15697/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes
+END
+bof_examine_ground_truth_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/lemsvxl/!svn/ver/15075/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_examine_ground_truth_process.cxx
+END
+bof_k_means_on_vector_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/lemsvxl/!svn/ver/15142/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_k_means_on_vector_process.cxx
+END
+bof_combine_means_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/15136/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_combine_means_process.cxx
+END
+bof_euclidean_cluster_quantization_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/lemsvxl/!svn/ver/15059/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_euclidean_cluster_quantization_process.cxx
+END
+bof_choose_min_distortion_clustering_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/lemsvxl/!svn/ver/15135/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_choose_min_distortion_clustering_process.cxx
+END
+bof_sample_from_train_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/lemsvxl/!svn/ver/15045/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_sample_from_train_process.cxx
+END
+bof_save_cluster_id_scene_raw_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/lemsvxl/!svn/ver/15697/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_save_cluster_id_scene_raw_process.cxx
+END
+bof_learn_category_codebook_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/lemsvxl/!svn/ver/15697/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_learn_category_codebook_process.cxx
+END
+bof_class_probability_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/lemsvxl/!svn/ver/15697/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_class_probability_process.cxx
+END
+bof_rnd_means_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/15119/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_rnd_means_process.cxx
+END
+bof_learn_categories_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/lemsvxl/!svn/ver/15119/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_learn_categories_process.cxx
+END
+bof_make_cluster_id_scene_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/lemsvxl/!svn/ver/15697/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_make_cluster_id_scene_process.cxx
+END
+bof_init_codebook_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/15059/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_init_codebook_process.cxx
+END
+bof_k_means_train_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/15144/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_k_means_train_process.cxx
+END
+bof_init_category_info_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/lemsvxl/!svn/ver/15490/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_init_category_info_process.cxx
+END
+bof_scale_ply_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/15119/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_scale_ply_process.cxx
+END
+bof_compute_typical_bbox_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/lemsvxl/!svn/ver/15697/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_compute_typical_bbox_process.cxx
+END
+bof_init_info_file_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/lemsvxl/!svn/ver/15490/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_init_info_file_process.cxx
+END
+bof_classify_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/15059/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_classify_process.cxx
+END
+bof_save_category_scene_raw_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/lemsvxl/!svn/ver/15059/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_save_category_scene_raw_process.cxx
+END
+bof_combine_quantization_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/lemsvxl/!svn/ver/15059/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_combine_quantization_process.cxx
+END
+bof_load_category_info_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/lemsvxl/!svn/ver/15697/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_load_category_info_process.cxx
+END
+bof_load_p_xc_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/15059/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_load_p_xc_process.cxx
+END
+bof_k_means_subsample_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/lemsvxl/!svn/ver/15143/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_k_means_subsample_process.cxx
+END
+bof_combine_cluster_info_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/lemsvxl/!svn/ver/15059/trunk/contrib/dbrec_lib/dbrec3d/bof/pro/processes/bof_combine_cluster_info_process.cxx
+END

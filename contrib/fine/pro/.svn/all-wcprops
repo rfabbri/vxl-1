@@ -1,0 +1,203 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/pro
+END
+dbseg_jseg_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_jseg_process.h
+END
+dbseg_seg_load_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_seg_load_process.cxx
+END
+dbseg_seg_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_seg_process.cxx
+END
+dbseg_ripple_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_ripple_process.h
+END
+dbseg_subpixel_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_subpixel_process.h
+END
+dbseg_graph_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_graph_process.h
+END
+dbseg_seg_save_binimage_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_seg_save_binimage_process.cxx
+END
+dbseg_seg_load_sequence_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_seg_load_sequence_process.h
+END
+dbseg_seg_save_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_seg_save_process.cxx
+END
+dbseg_srgtek_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_srgtek_process.cxx
+END
+dbseg_seg_load_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_seg_load_process.h
+END
+dbseg_seg_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_seg_process.h
+END
+dbseg_seg_save_contour_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_seg_save_contour_process.cxx
+END
+dbseg_disk_bin_images_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_disk_bin_images_process.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/pro/CMakeLists.txt
+END
+dbseg_seg_save_binimage_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_seg_save_binimage_process.h
+END
+dbseg_mean_shift_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_mean_shift_process.cxx
+END
+dbseg_seg_save_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_seg_save_process.h
+END
+dbseg_disk_measurements_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_disk_measurements_process.cxx
+END
+dbseg_levelset_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_levelset_process.cxx
+END
+dbseg_srgtek_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_srgtek_process.h
+END
+dbseg_seg_save_view_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_seg_save_view_process.cxx
+END
+dbseg_jseg_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_jseg_process.cxx
+END
+dbseg_seg_save_contour_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_seg_save_contour_process.h
+END
+dbseg_ripple_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_ripple_process.cxx
+END
+dbseg_subpixel_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_subpixel_process.cxx
+END
+dbseg_disk_bin_images_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_disk_bin_images_process.h
+END
+dbseg_graph_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_graph_process.cxx
+END
+dbseg_mean_shift_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_mean_shift_process.h
+END
+dbseg_seg_load_sequence_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_seg_load_sequence_process.cxx
+END
+dbseg_disk_measurements_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_disk_measurements_process.h
+END
+dbseg_levelset_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_levelset_process.h
+END
+dbseg_seg_save_view_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/pro/dbseg_seg_save_view_process.h
+END

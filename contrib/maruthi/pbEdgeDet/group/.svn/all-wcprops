@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/12918/trunk/contrib/maruthi/pbEdgeDet/group
+END
+1NDEX
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/12918/trunk/contrib/maruthi/pbEdgeDet/group/1NDEX
+END
+filterbank.hh
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12918/trunk/contrib/maruthi/pbEdgeDet/group/filterbank.hh
+END
+ic.cc
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/12918/trunk/contrib/maruthi/pbEdgeDet/group/ic.cc
+END
+region.hh
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12918/trunk/contrib/maruthi/pbEdgeDet/group/region.hh
+END
+histogram.cc
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/12918/trunk/contrib/maruthi/pbEdgeDet/group/histogram.cc
+END
+texture.cc
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/12918/trunk/contrib/maruthi/pbEdgeDet/group/texture.cc
+END
+nonmax.cc
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12918/trunk/contrib/maruthi/pbEdgeDet/group/nonmax.cc
+END
+pb.cc
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/12918/trunk/contrib/maruthi/pbEdgeDet/group/pb.cc
+END
+ic.hh
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/12918/trunk/contrib/maruthi/pbEdgeDet/group/ic.hh
+END
+histogram.hh
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/12918/trunk/contrib/maruthi/pbEdgeDet/group/histogram.hh
+END
+affinity.cc
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12918/trunk/contrib/maruthi/pbEdgeDet/group/affinity.cc
+END
+texture.hh
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/12918/trunk/contrib/maruthi/pbEdgeDet/group/texture.hh
+END
+nonmax.hh
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12918/trunk/contrib/maruthi/pbEdgeDet/group/nonmax.hh
+END
+pb.hh
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/12918/trunk/contrib/maruthi/pbEdgeDet/group/pb.hh
+END
+color.cc
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/12918/trunk/contrib/maruthi/pbEdgeDet/group/color.cc
+END
+libgroup.a
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/12918/trunk/contrib/maruthi/pbEdgeDet/group/libgroup.a
+END
+filterbank.cc
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12918/trunk/contrib/maruthi/pbEdgeDet/group/filterbank.cc
+END
+affinity.hh
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12918/trunk/contrib/maruthi/pbEdgeDet/group/affinity.hh
+END
+region.cc
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12918/trunk/contrib/maruthi/pbEdgeDet/group/region.cc
+END
+color.hh
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/12918/trunk/contrib/maruthi/pbEdgeDet/group/color.hh
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/12918/trunk/contrib/maruthi/pbEdgeDet/group/CMakeLists.txt
+END

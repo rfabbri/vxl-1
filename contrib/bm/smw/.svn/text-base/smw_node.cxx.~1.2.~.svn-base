@@ -1,0 +1,30 @@
+#include"smw_node.h"
+
+bool smw_node::update(float const& observation)
+{
+
+    if(n_ > 0)
+    {
+        //we are assuming for now that we only
+        //have one gaussian therefore dw = 1.0f always
+        float dw = 1.0f;
+        w_ = w_ + dw;
+    
+        float mult = (dw/(dw + w_));    
+    
+        //update the mean;
+        mean_ = mean_ + mult*(observation-mean_);
+    
+        //update the variance/standard deviation
+        float var = pow(sigma_,2);
+        var = var + mult*(pow((observation-mean_),2)-var);
+        sigma_ = sqrt(var);
+    }
+    else
+    {
+        mean_ = observation;
+    }
+    ++n_;
+    return 1;
+}
+

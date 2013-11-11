@@ -1,0 +1,107 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/app/matlab/sexp/tracer
+END
+mcs_instances.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/app/matlab/sexp/tracer/mcs_instances.m
+END
+plot_tracer_rec_methods.m
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/12896/trunk/contrib/rfabbri/mw/app/matlab/sexp/tracer/plot_tracer_rec_methods.m
+END
+mcs_top_curves.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/app/matlab/sexp/tracer/mcs_top_curves.m
+END
+downtown_results.m
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/app/matlab/sexp/tracer/downtown_results.m
+END
+get_recs_from_fig.m
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/13444/trunk/contrib/rfabbri/mw/app/matlab/sexp/tracer/get_recs_from_fig.m
+END
+mcs_arclength.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/app/matlab/sexp/tracer/mcs_arclength.m
+END
+tracer_recs_repent.m
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/12304/trunk/contrib/rfabbri/mw/app/matlab/sexp/tracer/tracer_recs_repent.m
+END
+read_2v_curves.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/13444/trunk/contrib/rfabbri/mw/app/matlab/sexp/tracer/read_2v_curves.m
+END
+dino_results.m
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/app/matlab/sexp/tracer/dino_results.m
+END
+image-commands-util.sh
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/app/matlab/sexp/tracer/image-commands-util.sh
+END
+capitol_high_results.m
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/app/matlab/sexp/tracer/capitol_high_results.m
+END
+capitol_results.m
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/app/matlab/sexp/tracer/capitol_results.m
+END
+tracer_recs_init.m
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/13367/trunk/contrib/rfabbri/mw/app/matlab/sexp/tracer/tracer_recs_init.m
+END
+read_curve_sketch.m
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/app/matlab/sexp/tracer/read_curve_sketch.m
+END
+plot_all_recs.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/app/matlab/sexp/tracer/plot_all_recs.m
+END
+mcs_prune_curves.m
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/app/matlab/sexp/tracer/mcs_prune_curves.m
+END
+tracer_recs_append.m
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/12319/trunk/contrib/rfabbri/mw/app/matlab/sexp/tracer/tracer_recs_append.m
+END

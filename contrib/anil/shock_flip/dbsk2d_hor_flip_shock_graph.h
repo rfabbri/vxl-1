@@ -1,0 +1,1 @@
+bool dbsk2d_hor_flip_shock_graph(dbsk2d_shock_graph_sptr shock);

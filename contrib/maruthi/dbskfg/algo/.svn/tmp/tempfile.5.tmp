@@ -1,0 +1,283 @@
+// This is brcv/shp/dbskfg/dbskfg_compute_composite_graph.cxx
+
+//:
+// \file
+#include <dbskfg/algo/dbskfg_extract_fragments.h>
+
+#include <dbskfg/dbskfg_composite_graph.h>
+#include <dbskfg/dbskfg_rag_graph.h>
+#include <dbskfg/pro/dbskfg_composite_graph_storage_sptr.h>
+#include <dbskfg/pro/dbskfg_composite_graph_storage.h>
+#include <dbskfg/pro/dbskfg_form_composite_graph_process.h>
+#include <dbskfg/algo/dbskfg_detect_transforms.h>
+#include <dbskfg/algo/dbskfg_composite_graph_fileio.h>
+
+#include <dbsk2d/pro/dbsk2d_shock_storage.h>
+#include <dbsk2d/pro/dbsk2d_compute_ishock_process.h>
+
+#include <vgl/vgl_area.h>
+
+#include <vidpro1/storage/vidpro1_image_storage.h>
+
+dbskfg_extract_fragments::dbskfg_extract_fragments() 
+{
+}
+
+dbskfg_extract_fragments::~dbskfg_extract_fragments()
+{
+}
+
+void dbskfg_extract_fragments::compute_first_graph(
+    vidpro1_vsol2D_storage_sptr& input_vsol,
+    vidpro1_image_storage_sptr& image_storage)
+{
+
+    /*********************** Shock Compute **********************************/
+    // 1) Create shock pro process and assign inputs 
+    dbsk2d_compute_ishock_process shock_pro;
+
+    shock_pro.clear_input();
+    shock_pro.clear_output();
+
+    shock_pro.add_input(image_storage);
+    shock_pro.add_input(input_vsol);
+
+    bool ishock_status = shock_pro.execute();
+    shock_pro.finish();
+
+    assert(ishock_status == true);
+
+    // Grab output from shock computation
+    vcl_vector<bpro1_storage_sptr> shock_results;
+
+    shock_results = shock_pro.get_output();
+
+    // Clean up after ourselves
+    shock_pro.clear_input();
+    shock_pro.clear_output();
+
+    // Lets vertical cast to shock stroge
+    dbsk2d_shock_storage_sptr shock_storage;
+    shock_storage.vertical_cast(shock_results[0]);
+
+    /*********************** Compute Composite Graph ************************/
+    dbskfg_form_composite_graph_process cg_pro;
+
+    cg_pro.clear_input();
+    cg_pro.clear_output();
+
+    cg_pro.add_input(shock_storage);
+    cg_pro.add_input(image_storage);
+
+    bool status = cg_pro.execute();
+    cg_pro.finish();
+
+    vcl_vector<bpro1_storage_sptr> cg_results;
+    cg_results = cg_pro.get_output();
+
+    cg_pro.clear_input();
+    cg_pro.clear_output();
+
+    dbskfg_composite_graph_storage_sptr cg_storage;
+    cg_storage.vertical_cast(cg_results[0]);
+
+    composite_graph_ = cg_storage->get_composite_graph();
+    rag_graph_       = cg_storage->get_rag_graph();
+   
+
+}
+
+void dbskfg_extract_fragments::determine_start_regions(double contour_ratio)
+{
+    
+    // sort nodes by contour_ratio
+    vcl_vector<dbskfg_rag_node_sptr> rag_nodes_by_contour;
+
+    // push back node 
+    for (dbskfg_rag_graph::vertex_iterator vit = 
+             rag_graph_->vertices_begin(); 
+         vit != rag_graph_->vertices_end(); ++vit)
+    {
+        dbskfg_rag_node_sptr rag_node = *vit;
+        if ( rag_node->contour_ratio() >= contour_ratio )
+        {
+            rag_nodes_by_contour.push_back(rag_node);
+        }
+
+    }
+
+    // Loop thru all rag nodes and sort by area
+    for ( unsigned int i=0 ; i < rag_nodes_by_contour.size() ; ++i)
+    {
+        vgl_polygon<double> poly;
+        rag_nodes_by_contour[i]->fragment_boundary(poly);
+        double area = vgl_area(poly);
+        start_rag_nodes_[area]=rag_nodes_by_contour[i]->id();
+    }
+}
+
+void dbskfg_extract_fragments::extract(
+    vidpro1_vsol2D_storage_sptr& input_vsol,
+    vidpro1_image_storage_sptr& image_storage,
+    bool detect_gaps,
+    bool detect_loops,
+    double ess_completion,
+    double alpha,
+    double transform_thresh,
+    double contour_ratio,
+    double prune_thres,
+    vcl_string output_folder,
+    vcl_string output_prefix)
+{
+
+    image_ = image_storage->get_image();
+
+    // Compute first graph first
+    compute_first_graph(input_vsol,image_storage);
+
+    // Determine start regions to consider
+    determine_start_regions(contour_ratio);
+    
+    vcl_map<double,unsigned int>::reverse_iterator it;
+    for ( it = start_rag_nodes_.rbegin() ; it != start_rag_nodes_.rend() ; ++it)
+    {
+        dbskfg_rag_node_sptr rag_node = rag_graph_->rag_node((*it).second);
+
+        // Apply Transforms to this region
+        extract_helper(rag_node,
+                       detect_gaps,
+                       detect_loops,
+                       ess_completion,
+                       alpha,
+                       transform_thresh,
+                       contour_ratio,
+                       prune_thres,
+                       output_folder,
+                       output_prefix);
+
+        
+        composite_graph_->unref();
+        rag_graph_->unref();
+
+        // Recompute the graph
+        compute_first_graph(input_vsol,image_storage);
+
+    }
+
+}
+
+
+
+void dbskfg_extract_fragments::extract_helper(dbskfg_rag_node_sptr start_region,
+                                              bool detect_gaps,
+                                              bool detect_loops,
+                                              double ess_completion,
+                                              double alpha,
+                                              double transform_thresh,
+                                              double contour_ratio,
+                                              double prune_thres,
+                                              vcl_string output_folder,
+                                              vcl_string output_prefix
+)
+{
+
+    // First lets detect transforms
+    dbskfg_detect_transforms transforms(composite_graph_,image_);
+    transforms.set_rag_node(start_region);
+
+<<<<<<< .mine
+    // First lets do a small set of gaps then loops
+    // Keep doing gaps
+    transforms.detect_transforms(true,
+                                 false,
+=======
+    // Grab a shock link
+    vcl_map<unsigned int,dbskfg_shock_link*> shock_links =
+        start_region->get_shock_links();
+    dbskfg_shock_link* shock_link = (*shock_links.begin()).second;
+
+    vcl_cout<<"Starting growing from rag node id: "<<
+        start_region->id()<<vcl_endl;
+
+    unsigned int iterations=1;
+
+    // Detect transforms
+    transforms.detect_transforms(detect_gaps,
+                                 detect_loops,
+>>>>>>> .r14705
+                                 ess_completion,
+                                 0.4);
+
+
+    while ( transforms.transforms_valid(transform_thresh) > 0 )
+    {
+        // Apply then destroy
+        unsigned int n = transforms.apply_transforms(0.5,rag_graph_);
+        transforms.destroy_transforms();
+
+        vcl_cout<<"Iteration: "<<iterations<<vcl_endl;
+      
+        iterations++;
+<<<<<<< .mine
+        
+        if ( n == 0 )
+        {
+            break;
+        }
+=======
+      
+        dbskfg_rag_node_sptr next_rag_node = shock_link->get_rag_node();
+        transforms.set_rag_node(next_rag_node);
+        vcl_cout<<"next rag node: "<<next_rag_node->id()<<vcl_endl;
+>>>>>>> .r14705
+        
+        // Detect a new set of transforms
+        transforms.detect_transforms(true,
+                                     false,
+                                     ess_completion,
+                                     0.4);
+        
+      
+    }
+
+    //First lets do a small set of gaps then loops
+    //Keep doing gaps
+    transforms.detect_transforms(false,
+                                 true,
+                                 ess_completion,
+                                 1);
+
+    iterations=1;
+    while ( transforms.transforms_valid(transform_thresh) > 0 )
+    {
+        // Apply then destroy
+        unsigned int n = transforms.apply_transforms(0.1,rag_graph_);
+        transforms.destroy_transforms();
+
+        vcl_cout<<"Iteration: "<<iterations<<vcl_endl;
+        iterations++;
+        
+        if ( n == 0 )
+        {
+            break;
+        }
+        
+        // Detect a new set of transforms
+        transforms.detect_transforms(false,
+                                     true,
+                                     ess_completion,
+                                     1);
+        
+      
+    }
+
+    // write out fragments
+    dbskfg_composite_graph_fileio file;
+    file.write_out(rag_graph_,
+                   image_,
+                   shock_link->get_rag_node()->id(),
+                   prune_thres,
+                   output_prefix,
+                   output_folder);
+
+}

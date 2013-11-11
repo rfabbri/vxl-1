@@ -1,0 +1,137 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/13027/trunk/brcv/rec/dborl/Templates
+END
+vbl_smart_ptr+dborl_exp-stat-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/10060/trunk/brcv/rec/dborl/Templates/vbl_smart_ptr+dborl_exp-stat-.cxx
+END
+vbl_smart_ptr+dborl_index_node_base-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/Templates/vbl_smart_ptr+dborl_index_node_base-.cxx
+END
+dbgrl_edge+dborl_index_node_base-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/Templates/dbgrl_edge+dborl_index_node_base-.cxx
+END
+vbl_smart_ptr+dborl_index-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/Templates/vbl_smart_ptr+dborl_index-.cxx
+END
+vbl_smart_ptr+dborl_image_data_description_base-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/Templates/vbl_smart_ptr+dborl_image_data_description_base-.cxx
+END
+vbl_smart_ptr+dborl_image_object-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/Templates/vbl_smart_ptr+dborl_image_object-.cxx
+END
+vbl_smart_ptr+dborl_det_desc-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/12868/trunk/brcv/rec/dborl/Templates/vbl_smart_ptr+dborl_det_desc-.cxx
+END
+vbl_smart_ptr+dborl_index_node-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/Templates/vbl_smart_ptr+dborl_index_node-.cxx
+END
+vbl_smart_ptr+dborl_description_base-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/Templates/vbl_smart_ptr+dborl_description_base-.cxx
+END
+dbgrl_graph+dborl_index_node_base-dborl_index_edge-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/Templates/dbgrl_graph+dborl_index_node_base-dborl_index_edge-.cxx
+END
+vbl_io_smart_ptr+dborl_exp_stat-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/13027/trunk/brcv/rec/dborl/Templates/vbl_io_smart_ptr+dborl_exp_stat-.cxx
+END
+vbl_smart_ptr+dborl_algo_params_base-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/11220/trunk/brcv/rec/dborl/Templates/vbl_smart_ptr+dborl_algo_params_base-.cxx
+END
+vbl_smart_ptr+dborl_dataset-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/Templates/vbl_smart_ptr+dborl_dataset-.cxx
+END
+vbl_smart_ptr+dborl_image_description-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/Templates/vbl_smart_ptr+dborl_image_description-.cxx
+END
+dbgrl_vertex+dborl_index_edge.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/Templates/dbgrl_vertex+dborl_index_edge.cxx
+END
+vbl_smart_ptr+dborl_category_info-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/13027/trunk/brcv/rec/dborl/Templates/vbl_smart_ptr+dborl_category_info-.cxx
+END
+vbl_smart_ptr+dborl_index_edge-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/Templates/vbl_smart_ptr+dborl_index_edge-.cxx
+END
+vbl_smart_ptr+dborl_image_polygon_description-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/Templates/vbl_smart_ptr+dborl_image_polygon_description-.cxx
+END
+vbl_smart_ptr+dborl_index_leaf-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/9826/trunk/brcv/rec/dborl/Templates/vbl_smart_ptr+dborl_index_leaf-.cxx
+END
+vbl_smart_ptr+dborl_image_bbox_description-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/Templates/vbl_smart_ptr+dborl_image_bbox_description-.cxx
+END
+vbl_smart_ptr+dborl_image_mask_description-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/Templates/vbl_smart_ptr+dborl_image_mask_description-.cxx
+END
+vbl_smart_ptr+dborl_object_base-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/Templates/vbl_smart_ptr+dborl_object_base-.cxx
+END

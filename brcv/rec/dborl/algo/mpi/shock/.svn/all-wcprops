@@ -1,0 +1,197 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/12390/trunk/brcv/rec/dborl/algo/mpi/shock
+END
+dborl_patch_extract_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/11436/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_patch_extract_main.cxx
+END
+dborl_extract_patch_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/10249/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_extract_patch_main.cxx
+END
+dborl_match_patch_processor.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/10775/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_match_patch_processor.h
+END
+dborl_patch_match.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/11462/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_patch_match.h
+END
+dborl_cluster+dborl_match_patch_processor_input-dborl_match_patch_processor-float-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 150
+/svn/lemsvxl/!svn/ver/10039/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_cluster+dborl_match_patch_processor_input-dborl_match_patch_processor-float-.cxx
+END
+dborl_patch_match_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/11462/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_patch_match_params.h
+END
+dborl_cluster+dborl_patch_match_input-dborl_patch_match-float-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/lemsvxl/!svn/ver/11321/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_cluster+dborl_patch_match_input-dborl_patch_match-float-.cxx
+END
+dborl_detect_patch_processor.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/10775/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_detect_patch_processor.h
+END
+dborl_extract_patch_processor.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/10775/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_extract_patch_processor.h
+END
+dborl_patch_extract.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/11436/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_patch_extract.h
+END
+dborl_patch_extract_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/11333/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_patch_extract_params.h
+END
+dborl_match_shock_processor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/10775/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_match_shock_processor.cxx
+END
+dborl_cluster+dborl_match_shock_processor_input-dborl_match_shock_processor-float-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 149
+/svn/lemsvxl/!svn/ver/9897/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_cluster+dborl_match_shock_processor_input-dborl_match_shock_processor-float-.cxx
+END
+dborl_match_shock_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/10017/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_match_shock_main.cxx
+END
+dborl_match_shock_main_no_mpi.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/11119/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_match_shock_main_no_mpi.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/12390/trunk/brcv/rec/dborl/algo/mpi/shock/CMakeLists.txt
+END
+dborl_cluster+dborl_extract_patch_processor_input-dborl_extract_patch_processor-float-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 153
+/svn/lemsvxl/!svn/ver/9938/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_cluster+dborl_extract_patch_processor_input-dborl_extract_patch_processor-float-.cxx
+END
+dborl_cluster+dborl_patch_extract_input-dborl_patch_extract-float-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/lemsvxl/!svn/ver/11266/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_cluster+dborl_patch_extract_input-dborl_patch_extract-float-.cxx
+END
+dborl_cluster+dborl_detect_patch_processor_input-dborl_detect_patch_processor-char-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 151
+/svn/lemsvxl/!svn/ver/10062/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_cluster+dborl_detect_patch_processor_input-dborl_detect_patch_processor-char-.cxx
+END
+vbl_smart_ptr+dborl_patch_match_params-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/11321/trunk/brcv/rec/dborl/algo/mpi/shock/vbl_smart_ptr+dborl_patch_match_params-.cxx
+END
+dborl_match_shock_processor.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/10775/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_match_shock_processor.h
+END
+dborl_match_patch_processor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/10775/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_match_patch_processor.cxx
+END
+dborl_patch_match_params_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/11321/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_patch_match_params_sptr.h
+END
+dborl_patch_match.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/11488/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_patch_match.cxx
+END
+dborl_patch_match_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/11461/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_patch_match_main.cxx
+END
+dborl_match_patch_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/10039/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_match_patch_main.cxx
+END
+vbl_smart_ptr+dborl_patch_extract_params-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/lemsvxl/!svn/ver/11266/trunk/brcv/rec/dborl/algo/mpi/shock/vbl_smart_ptr+dborl_patch_extract_params-.cxx
+END
+dborl_detect_patch_processor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/10839/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_detect_patch_processor.cxx
+END
+dborl_extract_patch_processor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/11016/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_extract_patch_processor.cxx
+END
+dborl_patch_extract_params_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/11266/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_patch_extract_params_sptr.h
+END
+dborl_patch_extract.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/11442/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_patch_extract.cxx
+END
+dborl_detect_patch_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/10062/trunk/brcv/rec/dborl/algo/mpi/shock/dborl_detect_patch_main.cxx
+END

@@ -1,0 +1,347 @@
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt
+END
+gdt_f_prop_funs.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_f_prop_funs.cxx
+END
+gdt_shock_section.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_shock_section.h
+END
+gdt_path.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_path.h
+END
+gdt_mesh.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_mesh.h
+END
+gdt_solve_shock_intersect.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_solve_shock_intersect.h
+END
+gdt_ws_adv_wa_vertex_bnd.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_ws_adv_wa_vertex_bnd.cxx
+END
+gdt_fs_init.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_fs_init.cxx
+END
+gdt_ws_algo.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_ws_algo.cxx
+END
+gdt_shock.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_shock.h
+END
+gdt_solve_intersect.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_solve_intersect.h
+END
+gdt_ws_prop_shk.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_ws_prop_shk.cxx
+END
+gdt_manager.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_manager.h
+END
+gdt_fs_shock_prop.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_fs_shock_prop.cxx
+END
+gdt_ws_adv_shks_edge.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_ws_adv_shks_edge.cxx
+END
+gdt_ws_adv_shk_junction.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_ws_adv_shk_junction.cxx
+END
+gdt_vertex.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_vertex.h
+END
+gdt_numerical.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_numerical.h
+END
+gdt_edge.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_edge.cxx
+END
+gdt_welm.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_welm.cxx
+END
+gdt_interval_lsrc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_interval_lsrc.cxx
+END
+gdt_interval_section.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_interval_section.cxx
+END
+gdt_f_retract_prop.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_f_retract_prop.cxx
+END
+gdt_prop_funs.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_prop_funs.cxx
+END
+gdt_interval_psrc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_interval_psrc.cxx
+END
+gdt_i_init_prop.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_i_init_prop.cxx
+END
+gdt_f_flow.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_f_flow.cxx
+END
+gdt_ws_adv_shk_edge.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_ws_adv_shk_edge.cxx
+END
+gdt_ws_init.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_ws_init.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/CMakeLists.txt
+END
+gdt_manager_i_based.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_manager_i_based.cxx
+END
+gdt_ws_adv_wa_vertex_interior.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_ws_adv_wa_vertex_interior.cxx
+END
+gdt_interval.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_interval.cxx
+END
+gdt_fs_shock_prop.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_fs_shock_prop.h
+END
+gdt_f_prop.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_f_prop.cxx
+END
+gdt_ws_adv_wa_2ndsrc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_ws_adv_wa_2ndsrc.cxx
+END
+gdt_ws_algo_funs.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_ws_algo_funs.cxx
+END
+gdt_edge.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_edge.h
+END
+gdt_welm.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_welm.h
+END
+gdt_shock_edge.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_shock_edge.cxx
+END
+gdt_shock_section.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_shock_section.cxx
+END
+gdt_ws_prop_wa_2ndsrc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_ws_prop_wa_2ndsrc.cxx
+END
+gdt_path.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_path.cxx
+END
+gdt_mesh.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_mesh.cxx
+END
+gdt_fs_retract_prop.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_fs_retract_prop.cxx
+END
+gdt_interval_section.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_interval_section.h
+END
+gdt_ws_adv_wa_edge.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_ws_adv_wa_edge.cxx
+END
+gdt_fs_flow.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_fs_flow.cxx
+END
+gdt_solve_shock_intersect.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_solve_shock_intersect.cxx
+END
+gdt_ws_prop_wa_edge.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_ws_prop_wa_edge.cxx
+END
+gdt_shock.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_shock.cxx
+END
+gdt_f_init.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_f_init.cxx
+END
+gdt_fs_prop.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_fs_prop.cxx
+END
+gdt_solve_intersect.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_solve_intersect.cxx
+END
+gdt_interval.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_interval.h
+END
+gdt_manager.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_manager.cxx
+END
+gdt_vertex.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_vertex.cxx
+END
+gdt_f_base.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/gdt_f_base.cxx
+END

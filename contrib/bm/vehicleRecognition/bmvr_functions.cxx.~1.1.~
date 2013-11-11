@@ -1,0 +1,22 @@
+#include"bmvr_functions.h"
+
+void bmvr_functions::checkBinary(vcl_ostream &os, vil_image_view<vxl_byte>& img)
+{
+    bool check = true;
+    os << "Checking if vxl_byte Image is Binary..." << vcl_endl;
+    vil_image_view<vxl_byte>::iterator vit = img.begin();
+    vil_image_view<vxl_byte>::iterator endIt = img.end();
+    for( ; vit!=endIt; ++vit)
+    {
+        if(*vit != 0 || *vit != 1)
+            check = true;
+        else
+            check = false;
+    }
+    if(check == false)
+        os << "Image is not Binary!" << vcl_endl;
+    else
+        os << "It's is Binary!" << vcl_endl;
+
+    
+}

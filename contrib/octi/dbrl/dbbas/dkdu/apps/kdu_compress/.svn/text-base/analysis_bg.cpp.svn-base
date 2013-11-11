@@ -1,0 +1,541 @@
+#include <assert.h>
+#include <string.h>
+#include <math.h>
+#include "kdu_messaging.h"
+#include "kdu_compressed.h"
+#include "kdu_sample_processing.h"
+#include "kdu_kernels.h"
+#include "analysis_local.h"
+
+
+kdu_bg_analysis::kdu_bg_analysis(kdu_resolution resolution,
+                           kdu_sample_allocator *allocator,
+                           bool use_shorts, bbgm_io& bgm_interface_,
+						   float normalization,
+                           kdu_roi_node *roi,kdc_flow_control* param_flow,kdu_push_ifc* param_analysis)
+  // In the future, we may create separate, optimized objects for each kernel.
+{
+  	state = new kd_bg_analysis(resolution,allocator,use_shorts,normalization,roi,param_flow,
+		bgm_interface_,param_analysis);
+}
+
+kd_bg_analysis::kd_bg_analysis(kdu_resolution resolution,
+                         kdu_sample_allocator *allocator,
+                         bool use_shorts, float normalization,
+                         kdu_roi_node *roi,kdc_flow_control* param_flow_,
+						 bbgm_io& bgm_interface_,kdu_push_ifc* param_analysis):bgm_interface(bgm_interface_)
+{
+  reversible = resolution.get_reversible();
+  this->use_shorts = use_shorts;
+  this->param_flow=param_flow_;
+  this->isLast=false;
+  int kernel_id = resolution.get_kernel_id();
+  kdu_kernels kernels(kernel_id,reversible);
+  float low_gain, high_gain;
+  float *factors =
+    kernels.get_lifting_factors(L_max,low_gain,high_gain);
+  int n;
+
+  if ((roi != NULL) && !resolution.propagate_roi())
+    {
+      roi->release();
+      roi = NULL;
+    }
+  if (roi != NULL)
+    roi_level.create(resolution,roi);
+
+  assert(L_max <= 4); // We have statically sized the array to improve locality
+  for (n=0; n < L_max; n++)
+    {
+      steps[n].augend_parity = (n+1) & 1; // Step 0 updates odd locations
+      steps[n].lambda = factors[n];
+      if (kernels.get_lifting_downshift(n,steps[n].downshift))
+        { // Reversible case
+          steps[n].i_lambda = (kdu_int32)
+            floor(0.5 + steps[n].lambda*(1<<steps[n].downshift));
+        }
+      else
+        { // Irreversible case
+          steps[n].i_lambda = steps[n].downshift = 0;
+          kdu_int32 fix_lambda = (kdu_int32) floor(0.5 + factors[n]*(1<<16));
+          steps[n].fixpoint.fix_lambda = fix_lambda;
+          steps[n].fixpoint.i_lambda = 0;
+          while (fix_lambda >= (1<<15))
+            { steps[n].fixpoint.i_lambda++; fix_lambda -= (1<<16); }
+          while (fix_lambda < -(1<<15))
+            { steps[n].fixpoint.i_lambda--; fix_lambda += (1<<16); }
+          steps[n].fixpoint.remainder = (kdu_int16) fix_lambda;
+          steps[n].fixpoint.pre_offset = (kdu_int16)
+            floor(0.5 + ((double)(1<<15)) / ((double) fix_lambda));
+        }
+    }
+
+  kdu_dims dims,sb_dims;
+  kdu_coords min, max;
+
+  // Get output dimensions.
+
+  resolution.get_dims(dims);
+  min = dims.pos; max = min + dims.size; max.x--; max.y--;
+  y_next = min.y;
+  y_max = max.y;
+  x_min = min.x;
+  x_max = max.x;
+
+  
+  empty = !dims;
+  unit_height = (y_next==y_max);
+  unit_width = (x_min==x_max);
+
+  low_width = ((max.x+2)>>1) - ((min.x+1)>>1);
+  high_width = ((max.x+1)>>1) - (min.x>>1);
+
+  output_rows_remaining = y_max+1-y_next;
+
+  resolution.access_subband(HH_BAND).get_dims(sb_dims);
+  high_height=sb_dims.size.y;
+  resolution.access_subband(HL_BAND).get_dims(sb_dims);
+  low_height=sb_dims.size.y;
+  if (empty)
+    return;
+
+  // Pre-allocate the line buffers.
+
+  augend.pre_create(allocator,low_width,high_width,reversible,use_shorts,true);
+  new_state.pre_create(allocator,low_width,high_width,reversible,use_shorts,true);
+  lo_line.pre_create(allocator,low_width,reversible,use_shorts);
+  hi_line.pre_create(allocator,high_width,reversible,use_shorts);
+  for (n=0; n < L_max; n++)
+    steps[n].state.pre_create(allocator,low_width,high_width,
+                              reversible,use_shorts,true);
+  initialized = false; // Finalize creation in the first `push' call.
+
+  // Now determine the normalizing downshift and subband nominal ranges.
+
+  float LL_range, HL_range, LH_range, HH_range;
+  LL_range = HL_range = LH_range = HH_range = normalization;
+  normalizing_downshift = 0;
+  if (!reversible)
+    {
+      int lev_idx = resolution.get_dwt_level(); assert(lev_idx > 0);
+      double bibo_low, bibo_high, bibo_prev;
+      kernels.get_bibo_gains(lev_idx-1,bibo_prev,bibo_high);
+      double *bibo_steps = kernels.get_bibo_gains(lev_idx,bibo_low,bibo_high);
+      double bibo_max = 0.0;
+
+      // Find BIBO and nominal ranges for the vertical analysis transform.
+      if (unit_height)
+        bibo_max = normalization;
+      else
+        {
+          LL_range /= low_gain;  HL_range /= low_gain;
+          LH_range /= high_gain; HH_range /= high_gain;
+          bibo_prev *= normalization; // BIBO horizontal range at stage input
+          for (n=0; n < L_max; n++)
+            if ((bibo_prev * bibo_steps[n]) > bibo_max)
+              bibo_max = bibo_prev * bibo_steps[n];
+        }
+      // Find BIBO gains for horizontal analysis
+      if (!unit_width)
+        {
+          LL_range /= low_gain;  LH_range /= low_gain;
+          HL_range /= high_gain; HH_range /= high_gain;
+          bibo_prev = bibo_low / low_gain; // If bounded by vertical low band
+          if ((bibo_high / high_gain) > bibo_prev)
+            bibo_prev = bibo_high / high_gain; // Bounded by vertical high band
+          bibo_prev *= normalization; // BIBO vertical range at horiz. input
+          for (n=0; n < L_max; n++)
+            if ((bibo_prev * bibo_steps[n]) > bibo_max)
+              bibo_max = bibo_prev * bibo_steps[n];
+        }
+      double overflow_limit = 1.0 * (double)(1<<(16-KDU_FIX_POINT));
+          // This is the largest numeric range which can be represented in
+          // our signed 16-bit fixed-point representation without overflow.
+      while (bibo_max > 0.95*overflow_limit)
+        { // Leave a little extra headroom to allow for approximations in
+          // the numerical BIBO gain calculations.
+          normalizing_downshift++;
+          LL_range*=0.5F; LH_range*=0.5F; HL_range*=0.5F; HH_range*=0.5F;
+          bibo_max *= 0.5;
+        }
+    }
+
+  // Finally, create the subband interfaces.
+  kdu_roi_node *LL_node=NULL, *HL_node=NULL, *LH_node=NULL, *HH_node=NULL;
+  if (roi != NULL)
+    {
+      LL_node = roi_level.acquire_node(LL_BAND);
+      HL_node = roi_level.acquire_node(HL_BAND);
+      LH_node = roi_level.acquire_node(LH_BAND);
+      HH_node = roi_level.acquire_node(HH_BAND);
+    }
+  int ncomps=this->param_flow->num_components;
+  hor_high_encoders=new kdu_push_ifc*[ncomps];
+  hor_low_encoders=new kdu_push_ifc*[ncomps];
+  
+  param_ana_network=new kdu_push_ifc[param_flow->num_components];
+    
+  for(int i=0;i<ncomps;i++)
+  {
+	kd_analysis* tm_analysis=dynamic_cast<kd_analysis*>(param_analysis[i].state);
+	if (resolution.which()!=1)
+		param_ana_network[i]=tm_analysis->hor_low[0];
+	
+	hor_high_encoders[i]=new kdu_push_ifc[2];
+	hor_high_encoders[i][0]=tm_analysis->hor_high[0];
+  	hor_high_encoders[i][1]=tm_analysis->hor_high[1];
+  
+	hor_low_encoders[i]=new kdu_push_ifc[2];
+	hor_low_encoders[i][1]=tm_analysis->hor_low[1];
+	 if (resolution.which() == 1)
+		hor_low_encoders[i][0]=tm_analysis->hor_low[0];
+	
+  }
+  
+  
+  
+  assert(resolution.which() > 0);
+  this->level=resolution.which();
+  if (resolution.which() == 1)
+  {
+	this->isLast=true;	  
+	//hor_low[0] = kdu_encoder(resolution.access_next().access_subband(LL_BAND),
+	 //                         allocator,use_shorts,LL_range,LL_node);
+  }
+  else
+    hor_low[0] = kdu_bg_analysis(resolution.access_next(),
+                              allocator,use_shorts,this->bgm_interface,
+							  LL_range,LL_node,param_flow,param_ana_network);
+  /*hor_high[0] = kdu_encoder(resolution.access_subband(HL_BAND),
+                            allocator,use_shorts,HL_range,HL_node);
+  //hor_low[1] = kdu_encoder(resolution.access_subband(LH_BAND),
+                           allocator,use_shorts,LH_range,LH_node);
+  //hor_high[1] = kdu_encoder(resolution.access_subband(HH_BAND),
+                            allocator,use_shorts,HH_range,HH_node);*/
+}
+
+/*****************************************************************************/
+/*                       kd_bg_analysis::~kd_bg_analysis                           */
+/*****************************************************************************/
+
+kd_bg_analysis::~kd_bg_analysis()
+{
+  hor_low[0].destroy();
+  //hor_low[1].destroy();
+  //hor_high[0].destroy();
+  //hor_high[1].destroy();
+  delete [] hor_low_encoders;
+  delete [] hor_high_encoders; 
+  delete [] param_ana_network;
+  if (roi_level.exists())
+    roi_level.destroy(); // Important to do this last, giving descendants a
+                         // chance to call the `release' function on their
+                         // `roi_node' interfaces.
+}
+
+/*****************************************************************************/
+/*                            kd_bg_analysis::push                              */
+/*****************************************************************************/
+
+void
+  kd_bg_analysis::push(kdu_line_buf &line, bool allow_exchange)
+{
+  assert(y_next <= y_max);
+  assert(reversible == line.is_absolute());
+  if (empty)
+    {
+      y_next++;
+      output_rows_remaining--;
+      return;
+    }
+  int k, c;
+
+  if (!initialized)
+    { // Finish creating all the buffers.
+      augend.create(); augend.deactivate();
+	  lo_line.create();
+	  hi_line.create();
+	  new_state.create(); new_state.deactivate();
+      for (k=0; k < L_max; k++)
+        { steps[k].state.create(); steps[k].state.deactivate(); }
+      initialized = true;
+    }
+
+  // Determine the appropriate input line.
+
+  kd_line_cosets *in = (y_next & 1)?(&augend):(&new_state);
+  if (!in->is_active())
+    in->activate();
+  in->lnum = y_next++;
+
+  // Copy the samples from `line', de-interleaving even and odd cosets
+
+  assert(line.get_width() == (low_width+high_width));
+  c = x_min & 1; // Index of first coset to be de-interleaved.
+  k = (line.get_width()+1)>>1; // May move one extra sample.
+  if (!use_shorts)
+    { // Working with 32-bit data
+      bgm_mix *sp = line.get_bgmBuf();
+      bgm_mix *dp1 = in->cosets[c].get_bgmBuf();
+      bgm_mix *dp2 = in->cosets[1-c].get_bgmBuf();
+	 if (normalizing_downshift == 0)
+        for (; k--; sp+=2, dp1++, dp2++)
+          { *dp1 = sp[0]; *dp2 = sp[1]; }
+      else
+        {
+          float scale = 1.0F / (float)(1<<normalizing_downshift);
+          for (; k--; sp+=2, dp1++, dp2++)
+            {
+              *dp1 = sp[0] * scale; //careful here
+              *dp2 = sp[1] * scale;
+            }
+        }
+    }
+   // Perform the transformation
+
+  if (unit_height)
+    { // No transform performed in this special case.
+      if (reversible && (in->lnum & 1))
+        { // Need to double the integer sample values.
+          if (!use_shorts)
+            { // Working with 32-bit data
+              bgm_mix *dp;
+              for (c=0; c < 2; c++)
+                for (dp=in->cosets[c].get_bgmBuf(),
+                     k=in->cosets[c].get_width(); k--; dp++)
+                  dp[0] =dp[0]* 2;
+            }
+         
+     
+        }
+      horizontal_analysis(*in);
+    }
+  else
+    { // Need to perform the vertical transform.
+      int n;
+      kd_line_cosets tmp;
+      kd_lifting_step *step;
+
+      if (in == &augend)
+        {
+          if (y_next <= y_max)
+            return; // Still waiting for the row after augend
+          new_state.deactivate(); // We have received the last line.
+        }
+      do { // Loop runs multiple times only to flush the pipe after last line
+          if (in == NULL)
+            { // There is no more input; must be flushing the pipe.
+              augend.deactivate();
+              new_state.deactivate();
+            }
+          in = NULL; // Just use it to flag the flushing condition if we loop
+
+          // Run the vertical analysis network
+          for (n=0; n < L_max; n++)
+            {
+              step = steps + n;
+              if (augend.is_active())
+                perform_vertical_lifting_step(step);
+              tmp = step->state;
+              step->state = new_state;
+              new_state = augend;
+              augend = tmp;
+            }
+
+          // Push newly generated subband lines down the pipe.
+          if (new_state.is_active())
+            horizontal_analysis(new_state);
+          if (augend.is_active())
+            horizontal_analysis(augend);
+        } while((y_next > y_max) && (output_rows_remaining > 0));
+    }
+}
+
+/*****************************************************************************/
+/*               kd_bg_analysis::perform_vertical_lifting_step                  */
+/*****************************************************************************/
+
+void
+  kd_bg_analysis::perform_vertical_lifting_step(kd_lifting_step *step)
+{
+  assert(step->state.is_active() || new_state.is_active());
+  assert((!step->state) || (step->state.lnum==(augend.lnum-1)));
+  assert((!new_state) || (new_state.lnum==(augend.lnum+1)));
+  for (int c=0; c < 2; c++) // Walk through the two horizontal cosets
+    if (!use_shorts)
+      { // Processing 32-bit samples.
+        bgm_mix *sp1 = step->state.cosets[c].get_bgmBuf();
+        bgm_mix *sp2 = new_state.cosets[c].get_bgmBuf();
+        if (sp1 == NULL) sp1 = sp2;
+        if (sp2 == NULL) sp2 = sp1;
+        bgm_mix *dp = augend.cosets[c].get_bgmBuf();
+        int k = augend.cosets[c].get_width();
+        if (!reversible)
+          {
+            float lambda = step->lambda;
+            for (; k--; sp1++, sp2++, dp++)
+              *dp+=((*sp1+*sp2)*lambda);
+          }
+       /* else
+          {
+            kdu_int32 downshift = step->downshift;
+            kdu_int32 offset = (1<<downshift)>>1;
+            kdu_int32 i_lambda = step->i_lambda;
+            if (i_lambda == 1)
+              for (; k--; sp1++, sp2++, dp++)
+                dp->ival += (offset+sp1->ival+sp2->ival)>>downshift;
+            else if (i_lambda == -1)
+              for (; k--; sp1++, sp2++, dp++)
+                dp->ival += (offset-sp1->ival-sp2->ival)>>downshift;
+            else
+              for (; k--; sp1++, sp2++, dp++)
+                dp->ival += (offset+i_lambda*(sp1->ival+sp2->ival))>>downshift;
+          }	 */
+      }
+  
+      
+}
+
+/*****************************************************************************/
+/*                    kd_bg_analysis::horizontal_analysis                       */
+/*****************************************************************************/
+
+void
+  kd_bg_analysis::horizontal_analysis(kd_line_cosets &line)
+{
+  assert(output_rows_remaining > 0);
+  assert((low_width == line.cosets[0].get_width()) &&
+         (high_width == line.cosets[1].get_width()));
+  output_rows_remaining--;
+
+  if (unit_width)
+    { // Special processing for this case.
+      assert((low_width+high_width)==1);
+      if (reversible && (x_min & 1))
+        {
+          if (!use_shorts)
+            line.cosets[1].get_buf32()->ival <<= 1;
+          else
+            line.cosets[1].get_buf16()->ival <<= 1;
+        }
+      if (low_width)
+        hor_low[line.lnum & 1].push(line.cosets[0]);
+      else
+        hor_high[line.lnum & 1].push(line.cosets[1]);
+      return;
+    }
+  
+  // Perform lifting steps.
+
+  for (int n=0; n < L_max; n++)
+    {
+      kd_lifting_step *step = steps + n;
+      int c = step->augend_parity; // Coset associated with augend.
+      int k = line.cosets[c].get_width();
+      int k_src = line.cosets[1-c].get_width();
+      int extend_left = ((x_min & 1) == c)?1:0;
+      if (!use_shorts)
+        { // Processing 32-bit samples
+          bgm_mix *sp=line.cosets[1-c].get_bgmBuf();
+          sp[k_src] = sp[k_src-1]; // Achieves symmetric extension as required
+          sp[-1] = sp[0]; sp -= extend_left;
+          bgm_mix *dp=line.cosets[c].get_bgmBuf();
+          if (!reversible)
+            {
+              float lambda = step->lambda;
+			  bgm_mix val,last_in = *(sp++);
+              while (k--)
+                {
+                  val = last_in; last_in = *(sp++); val += last_in;
+                  *(dp++) += (val*lambda);
+                }
+            }
+          /*else
+            {
+              kdu_int32 downshift = step->downshift;
+              kdu_int32 offset = (1<<downshift)>>1;
+              kdu_int32 val, i_lambda = step->i_lambda, last_in = (sp++)->ival;
+
+              if (i_lambda == 1)
+                while (k--)
+                  {
+                    val = last_in; last_in = (sp++)->ival; val += last_in;
+                    (dp++)->ival += (offset+val)>>downshift;
+                  }
+              else if (i_lambda == -1)
+                while (k--)
+                  {
+                    val = last_in; last_in = (sp++)->ival; val += last_in;
+                    (dp++)->ival += (offset-val)>>downshift;
+                  }
+              else
+                while (k--)
+                  {
+                    val = last_in; last_in = (sp++)->ival; val += last_in;
+                    (dp++)->ival += (offset+i_lambda*val)>>downshift;
+                  }
+            }  */
+        }
+      
+        
+    }
+
+  // Push subband lines out.
+  kdu_dims hi_dims,lo_dims;
+  int parity=line.lnum &1;
+  if (!(parity)&& (!this->isLast))
+      hor_low[parity].push(line.cosets[0]);
+  
+  hi_dims.size.x=line.cosets[1].get_width();
+  hi_dims.size.y=high_height;
+  
+  lo_dims.size.x=line.cosets[0].get_width();
+  lo_dims.size.y=low_height;
+  
+  if(parity)
+  {
+	  this->bgm_interface.putLine(line.cosets[1].get_bgmBuf(),HH_BAND,
+	  lo_dims,hi_dims,this->level);
+  	  
+	  this->bgm_interface.putLine(line.cosets[0].get_bgmBuf(),LH_BAND,
+		  lo_dims,hi_dims,this->level);
+  }else{
+	   this->bgm_interface.putLine(line.cosets[1].get_bgmBuf(),HL_BAND,
+			lo_dims,hi_dims,this->level);
+		
+		if (this->isLast)
+		 {
+		  this->bgm_interface.putLine(line.cosets[0].get_bgmBuf(),LL_BAND,
+		  lo_dims,hi_dims,this->level-1);
+		 }
+		}
+
+  for (int i=0;i<param_flow->num_components;i++)
+	{
+										  
+		if (parity)
+		{
+			this->bgm_interface.convert_rv_to_param(this->hi_line,
+			line.cosets[1].get_bgmBuf(),i);
+		    this->bgm_interface.convert_rv_to_param(this->lo_line,
+			line.cosets[0].get_bgmBuf(),i);	
+			//takes care of HH and LH
+			hor_high_encoders[i][parity].push(this->hi_line); //HH
+			hor_low_encoders[i][parity].push(this->lo_line); //LH
+		}else{
+			
+			this->bgm_interface.convert_rv_to_param(this->hi_line,
+			line.cosets[1].get_bgmBuf(),i);
+			hor_high_encoders[i][parity].push(this->hi_line);	//HL
+			if(this->isLast)
+			{
+				this->bgm_interface.convert_rv_to_param(this->lo_line,
+			line.cosets[0].get_bgmBuf(),i);	
+				hor_low_encoders[i][parity].push(this->lo_line);	//LL
+			}
+		}
+			
+    }
+ 
+  
+}

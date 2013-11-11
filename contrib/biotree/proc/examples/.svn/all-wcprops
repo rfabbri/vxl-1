@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/10270/trunk/contrib/biotree/proc/examples
+END
+bioproc_edge_detector_example.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/7106/trunk/contrib/biotree/proc/examples/bioproc_edge_detector_example.cxx
+END
+bioproc_filtering_example_xml.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/7039/trunk/contrib/biotree/proc/examples/bioproc_filtering_example_xml.cxx
+END
+bioproc_splr_filtering_example.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/4060/trunk/contrib/biotree/proc/examples/bioproc_splr_filtering_example.cxx
+END
+bioproc_splr_filtering_example_xml.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/6851/trunk/contrib/biotree/proc/examples/bioproc_splr_filtering_example_xml.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/10270/trunk/contrib/biotree/proc/examples/CMakeLists.txt
+END

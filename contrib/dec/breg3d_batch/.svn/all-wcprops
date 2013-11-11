@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/12717/trunk/contrib/dec/breg3d_batch
+END
+reg_breg3d.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/11467/trunk/contrib/dec/breg3d_batch/reg_breg3d.cxx
+END
+batch_breg3d.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/11215/trunk/contrib/dec/breg3d_batch/batch_breg3d.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/12717/trunk/contrib/dec/breg3d_batch/CMakeLists.txt
+END
+batch_breg3d.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/11215/trunk/contrib/dec/breg3d_batch/batch_breg3d.h
+END

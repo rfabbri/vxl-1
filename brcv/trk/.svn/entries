@@ -1,0 +1,77 @@
+9
+
+dir
+15842
+https://visionserver.lems.brown.edu/svn/lemsvxl/trunk/brcv/trk
+https://visionserver.lems.brown.edu/svn/lemsvxl
+
+
+
+2011-07-05T22:16:45.674214Z
+15227
+ausumezbas
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+19b38075-fba0-4a01-96da-394feb402aa5
+
+dbinfo
+dir
+
+dbctrk
+dir
+
+dbetl
+dir
+
+dbmrf
+dir
+
+dbetrk
+dir
+
+CMakeLists.txt
+file
+
+
+
+
+2010-05-28T16:08:33.041306Z
+00ab02593d3b93a0f0a7ffd283a3ef40
+2008-08-05T14:38:10.000000Z
+11827
+mleotta
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+403
+

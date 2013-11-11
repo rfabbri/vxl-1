@@ -1,0 +1,83 @@
+\subsection{Terminology and Notation}
+\label{sec:terminology}
+
+\begin{table}[H]
+\begin{center}    
+    \begin{tabular}{ | c | c | c |}
+    \hline
+    \textbf{Concept} & \textbf{Definition} & \textbf{Notation}\\
+    \hline
+    Topographical surface  &  & $z = f(x,y)$\\
+    \hline
+    Gradient & $\grad f = [f_x, f_y]$ & $\grad f$ \\
+    \hline
+    Ortho-gradient & $\grad f^\perp = [-f_y, f_x]$ & $\grad f^\perp$\\
+    \hline
+    Hessian & $H = \left[ 
+    	\begin{array}{cc}
+	f_{xx} & f_{xy} \\
+	f_{xy} & f_{yy} 
+ 	\end{array} \right]$& $H$ \\
+    \hline
+    Determinant of Hessian & $|H| = \det(H) = f_{xx}f_{yy} - f_{xy}^2$ & $|H|,\det(H)$\\
+    \hline
+    Trace of Hessian & $\Tr(H) = f_{xx} + f_{yy}$ & $\Tr(H)$\\
+    \hline
+    Laplacian & $\Delta f = f_{xx} + f_{yy} = f_{uu} + f_{vv}$ & $\Delta f$ \\
+    \hline
+    Eccentricity & $\varepsilon^2 = \frac{1}{4}(f_{xx} - f_{yy})^2 + f^2_{xy} $ & $\varepsilon$\\
+    \hline
+    Principal curvatures & Eigenvalues of $H$, $\Delta f \pm \varepsilon$ & $\lambda_1$, $\lambda_2$ \\
+    \hline
+    Principal curvature directions & Eigenvectors of $H$ & $e_1$, $e_2$ \\
+    \hline
+    Regular point & Non-critical point where $|\grad f| > 0 $& \\
+    \hline
+    Peak (Morse max) & $|\grad f| = 0$, $\det(H) > 0$, $\Tr(H) < 0$ & $\color{CriticalPoint}\boldsymbol{\bigtriangleup}$ \\
+    \hline
+    Pit (Morse min) & $|\grad f| = 0$, $\det(H) > 0$, $\Tr(H) > 0$ & $\color{CriticalPoint}\boldsymbol{\circ}$ \\
+    \hline
+    Pass/bar (Morse saddle) & $\grad f = 0$, $\det(H) < 0$ & $\color{CriticalPoint}\boldsymbol{+}$ \\
+    \hline
+    Degenerate critical point & $\det(H) = 0$ & \\
+    \hline
+    Level-set contour & $\beta(0) = P$, $\beta'(s) = -\grad f^\perp(\beta(s))/|\grad f^\perp(\beta(s))|$ & $\beta(s)$  \\
+    \hline
+    Slope line (integral curve) & $\alpha(0) = P$, $\alpha'(s) = -\grad f(\alpha(s))/|\grad f(\alpha(s))|$ & $\alpha(s)$  \\
+    \hline
+    Slope line segment & \shortstack{The slope line between two adjacent critical points.} & \\
+    \hline
+    Hill associated with peak $p_0$ &  \shortstack{$\{ p \;| \; \exists \text{ slope line segment through $p$ that ends at $p_0$}\}$} & $\Hill(p_0)$\\
+    \hline
+    Dale associated with pit $p_0$ & $\{ p \;| \; \exists \text{ slope line segment through $p$ that ends at $p_0$}\}$ & $\Dale(p_0)$\\
+    \hline
+    Watershed line & \shortstack{Dale boundaries. \\Special slope lines connecting saddles to peaks. \\According to Rothe/Reiger \cite{Rieger:IJCV97}, this definition \\ may not be true under degenerate cases.} & WS\\
+    \hline
+    Watercourse line & \shortstack{Hill boundaries. \\Special slope lines connecting saddles to pits. \\According to Rothe/Reiger \cite{Rieger:IJCV97}, this definition \\may not be true under degenerate cases.}& WC\\
+    \hline
+    Slope district & \shortstack{Non-empty intersection of a hill and a dale \cite{Nackman:PAMI84};\\ monotonic region.} & SD\\
+    \hline
+    \end{tabular}
+    
+\end{center}
+\end{table}
+
+
+\begin{notation}
+The \textbf{gradient} and \textbf{Hessian} of a function $f(x,y)$ are denoted by $\grad f~=~[f_x, f_y]$ and $H = \left[ 
+    	\begin{array}{cc}
+	f_{xx} & f_{xy} \\
+	f_{xy} & f_{yy} 
+ 	\end{array} \right]$.
+\end{notation}
+
+\begin{definition}
+A \textbf{non-degenerate critical point} of a function $f(x,y)$ occur at points where $|\grad f| = 0$, and $|H_f| \neq 0$.
+\end{definition}
+
+\begin{notation}
+Recall that the derivative of $f$ in the direction of the unit vector $T$ which is parametrized by variable $\xi$ is
+\begin{equation*}
+\frac{\partial f}{\partial \xi} = \grad f \cdot T.
+\end{equation*}
+\end{notation}

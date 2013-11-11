@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/1830/trunk/brcv/mvg/dbvrl/Templates
+END
+vbl_smart_ptr+dbvrl_transform_2d-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/1830/trunk/brcv/mvg/dbvrl/Templates/vbl_smart_ptr+dbvrl_transform_2d-.cxx
+END
+vbl_smart_ptr+dbvrl_world_roi-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/1830/trunk/brcv/mvg/dbvrl/Templates/vbl_smart_ptr+dbvrl_world_roi-.cxx
+END
+vbl_smart_ptr+dbvrl_region-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/1830/trunk/brcv/mvg/dbvrl/Templates/vbl_smart_ptr+dbvrl_region-.cxx
+END
+vbl_io_smart_ptr+dbvrl_transform_2d-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/1830/trunk/brcv/mvg/dbvrl/Templates/vbl_io_smart_ptr+dbvrl_transform_2d-.cxx
+END
+vbl_io_smart_ptr+dbvrl_region-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/1830/trunk/brcv/mvg/dbvrl/Templates/vbl_io_smart_ptr+dbvrl_region-.cxx
+END

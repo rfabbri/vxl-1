@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/lemsvxl/!svn/ver/15505/trunk/contrib/bm/dsm/tests
+END
+dsm_test_state_machine_binary_io.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/15015/trunk/contrib/bm/dsm/tests/dsm_test_state_machine_binary_io.cxx
+END
+dsm_test_frame_clock_binary_io.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/14956/trunk/contrib/bm/dsm/tests/dsm_test_frame_clock_binary_io.cxx
+END
+dsm_test_node_binary_io.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/14968/trunk/contrib/bm/dsm/tests/dsm_test_node_binary_io.cxx
+END
+dsm_test_map_map_map_binary_io.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/14960/trunk/contrib/bm/dsm/tests/dsm_test_map_map_map_binary_io.cxx
+END
+dsm_test_map_binary_io.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/15505/trunk/contrib/bm/dsm/tests/dsm_test_map_binary_io.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/14995/trunk/contrib/bm/dsm/tests/test_driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/14995/trunk/contrib/bm/dsm/tests/CMakeLists.txt
+END
+dsm_test_manager.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/15011/trunk/contrib/bm/dsm/tests/dsm_test_manager.cxx
+END

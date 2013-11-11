@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/12579/trunk/contrib/rfabbri/mw/algo/dg-estimation
+END
+mw_geometry_estimation.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/12579/trunk/contrib/rfabbri/mw/algo/dg-estimation/mw_geometry_estimation.h
+END
+mw_test_sel_geometry.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/12579/trunk/contrib/rfabbri/mw/algo/dg-estimation/mw_test_sel_geometry.cxx
+END
+mw_test_sel_geometry.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/12579/trunk/contrib/rfabbri/mw/algo/dg-estimation/mw_test_sel_geometry.h
+END
+mw_geometry_estimation.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/12579/trunk/contrib/rfabbri/mw/algo/dg-estimation/mw_geometry_estimation.cxx
+END

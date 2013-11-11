@@ -1,0 +1,155 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14710/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates
+END
+bsta_sample_set+float.1-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_sample_set+float.1-.cxx
+END
+bsta_adaptive_updater+bsta_mixture_fixed+bsta_num_obs+bsta_gauss_if3-.3--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 156
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_adaptive_updater+bsta_mixture_fixed+bsta_num_obs+bsta_gauss_if3-.3--.cxx
+END
+bsta_sample_set+float.2-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_sample_set+float.2-.cxx
+END
+bsta_mix_beta_updater+bsta_mixture_fixed+bsta_num_obs+bsta_beta+float--.3--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 158
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_mix_beta_updater+bsta_mixture_fixed+bsta_num_obs+bsta_beta+float--.3--.cxx
+END
+bsta_sample_set+float.3-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_sample_set+float.3-.cxx
+END
+bsta_sample_set+double.1-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_sample_set+double.1-.cxx
+END
+bsta_adaptive_updater+bsta_mixture+bsta_num_obs+bsta_gauss_f1---.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 147
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_adaptive_updater+bsta_mixture+bsta_num_obs+bsta_gauss_f1---.cxx
+END
+bsta_sample_set+double.2-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_sample_set+double.2-.cxx
+END
+bsta_adaptive_updater+bsta_mixture+bsta_num_obs+bsta_gauss_fd3---.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 148
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_adaptive_updater+bsta_mixture+bsta_num_obs+bsta_gauss_fd3---.cxx
+END
+bsta_adaptive_updater+bsta_mixture+bsta_num_obs+bsta_gauss_ff3---.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 148
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_adaptive_updater+bsta_mixture+bsta_num_obs+bsta_gauss_ff3---.cxx
+END
+bsta_adaptive_updater+bsta_mixture+bsta_num_obs+bsta_gauss_id3---.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 148
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_adaptive_updater+bsta_mixture+bsta_num_obs+bsta_gauss_id3---.cxx
+END
+bsta_parzen_updater+bsta_parzen_sphere+float.1--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_parzen_updater+bsta_parzen_sphere+float.1--.cxx
+END
+bsta_von_mises_updater+bsta_von_mises+float.2--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_von_mises_updater+bsta_von_mises+float.2--.cxx
+END
+bsta_von_mises_updater+bsta_von_mises+float.3--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_von_mises_updater+bsta_von_mises+float.3--.cxx
+END
+bsta_adaptive_updater+bsta_mixture+bsta_num_obs+bsta_gauss_if3---.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 148
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_adaptive_updater+bsta_mixture+bsta_num_obs+bsta_gauss_if3---.cxx
+END
+bsta_parzen_updater+bsta_parzen_sphere+float.3--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_parzen_updater+bsta_parzen_sphere+float.3--.cxx
+END
+bsta_mean_shift+float.1-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_mean_shift+float.1-.cxx
+END
+bsta_mean_shift+float.2-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_mean_shift+float.2-.cxx
+END
+bsta_mean_shift+float.3-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_mean_shift+float.3-.cxx
+END
+bsta_von_mises_updater+bsta_von_mises+double.2--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_von_mises_updater+bsta_von_mises+double.2--.cxx
+END
+bsta_adaptive_updater+bsta_mixture_fixed+bsta_num_obs+bsta_gauss_f1-.3--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 155
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_adaptive_updater+bsta_mixture_fixed+bsta_num_obs+bsta_gauss_f1-.3--.cxx
+END
+bsta_von_mises_updater+bsta_von_mises+double.3--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_von_mises_updater+bsta_von_mises+double.3--.cxx
+END
+bsta_mean_shift+double.1-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_mean_shift+double.1-.cxx
+END
+bsta_adaptive_updater+bsta_mixture+bsta_num_obs+bsta_gauss_sd3---.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 148
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_adaptive_updater+bsta_mixture+bsta_num_obs+bsta_gauss_sd3---.cxx
+END
+bsta_adaptive_updater+bsta_mixture+bsta_num_obs+bsta_gauss_sf3---.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 148
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbbas/dbsta/algo/Templates/bsta_adaptive_updater+bsta_mixture+bsta_num_obs+bsta_gauss_sf3---.cxx
+END

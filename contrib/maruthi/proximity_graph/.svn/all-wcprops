@@ -1,0 +1,173 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/16902/trunk/contrib/maruthi/proximity_graph
+END
+dborl_knn_graph.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/13700/trunk/contrib/maruthi/proximity_graph/dborl_knn_graph.h
+END
+vbl_smart_ptr+dborl_graph_categorization_params-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/lemsvxl/!svn/ver/13944/trunk/contrib/maruthi/proximity_graph/vbl_smart_ptr+dborl_graph_categorization_params-.cxx
+END
+test_lbnn.m
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/16893/trunk/contrib/maruthi/proximity_graph/test_lbnn.m
+END
+dborl_graph_construction_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/13946/trunk/contrib/maruthi/proximity_graph/dborl_graph_construction_params.h
+END
+dborl_graph_categorization.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/13965/trunk/contrib/maruthi/proximity_graph/dborl_graph_categorization.cxx
+END
+dborl_find_nn_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/13910/trunk/contrib/maruthi/proximity_graph/dborl_find_nn_params.h
+END
+dborl_graph_categorization_params_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/lemsvxl/!svn/ver/13944/trunk/contrib/maruthi/proximity_graph/dborl_graph_categorization_params_sptr.h
+END
+vbl_smart_ptr+dborl_find_nn_params-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/13681/trunk/contrib/maruthi/proximity_graph/vbl_smart_ptr+dborl_find_nn_params-.cxx
+END
+vbl_smart_ptr+dborl_graph_construction_params-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/lemsvxl/!svn/ver/13679/trunk/contrib/maruthi/proximity_graph/vbl_smart_ptr+dborl_graph_construction_params-.cxx
+END
+dborl_graph_categorization_params.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/13961/trunk/contrib/maruthi/proximity_graph/dborl_graph_categorization_params.cxx
+END
+dborl_knn_graph.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/13750/trunk/contrib/maruthi/proximity_graph/dborl_knn_graph.cxx
+END
+dborl_graph_categorization_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/13962/trunk/contrib/maruthi/proximity_graph/dborl_graph_categorization_main.cxx
+END
+test_things.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/13963/trunk/contrib/maruthi/proximity_graph/test_things.cxx
+END
+dborl_proximity_graph.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/13953/trunk/contrib/maruthi/proximity_graph/dborl_proximity_graph.h
+END
+dborl_graph_construction_params_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/13679/trunk/contrib/maruthi/proximity_graph/dborl_graph_construction_params_sptr.h
+END
+dborl_graph_wave_propagation.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/13758/trunk/contrib/maruthi/proximity_graph/dborl_graph_wave_propagation.h
+END
+dborl_find_nn_params_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/13681/trunk/contrib/maruthi/proximity_graph/dborl_find_nn_params_sptr.h
+END
+test_lbnn_parallel.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/16902/trunk/contrib/maruthi/proximity_graph/test_lbnn_parallel.m
+END
+dborl_graph_construction_params.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/13946/trunk/contrib/maruthi/proximity_graph/dborl_graph_construction_params.cxx
+END
+dborl_find_nn_params.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/13910/trunk/contrib/maruthi/proximity_graph/dborl_find_nn_params.cxx
+END
+dborl_find_nn_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/13910/trunk/contrib/maruthi/proximity_graph/dborl_find_nn_main.cxx
+END
+dborl_graph_construction_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/13946/trunk/contrib/maruthi/proximity_graph/dborl_graph_construction_main.cxx
+END
+dborl_proximity_graph.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/13966/trunk/contrib/maruthi/proximity_graph/dborl_proximity_graph.cxx
+END
+dborl_graph_wave_propagation.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/13912/trunk/contrib/maruthi/proximity_graph/dborl_graph_wave_propagation.cxx
+END
+compute_beta_graph.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/16849/trunk/contrib/maruthi/proximity_graph/compute_beta_graph.c
+END
+dborl_graph_categorization.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/13954/trunk/contrib/maruthi/proximity_graph/dborl_graph_categorization.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/13967/trunk/contrib/maruthi/proximity_graph/CMakeLists.txt
+END
+dborl_graph_categorization_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/13961/trunk/contrib/maruthi/proximity_graph/dborl_graph_categorization_params.h
+END

@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/13161/trunk/contrib/dec/psm_opt/tests
+END
+gen_synthetic_scene.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/13161/trunk/contrib/dec/psm_opt/tests/gen_synthetic_scene.cxx
+END
+test_psm_opt_generate_opt_samples.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/13161/trunk/contrib/dec/psm_opt/tests/test_psm_opt_generate_opt_samples.cxx
+END
+test_psm_opt_optimizer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12403/trunk/contrib/dec/psm_opt/tests/test_psm_opt_optimizer.cxx
+END
+gen_synthetic_scene.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/12403/trunk/contrib/dec/psm_opt/tests/gen_synthetic_scene.h
+END
+test_psm_opt_appearance_estimator.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/13161/trunk/contrib/dec/psm_opt/tests/test_psm_opt_appearance_estimator.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/13161/trunk/contrib/dec/psm_opt/tests/test_driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/13161/trunk/contrib/dec/psm_opt/tests/CMakeLists.txt
+END
+test_psm_opt_bayesian_optimizer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/13161/trunk/contrib/dec/psm_opt/tests/test_psm_opt_bayesian_optimizer.cxx
+END

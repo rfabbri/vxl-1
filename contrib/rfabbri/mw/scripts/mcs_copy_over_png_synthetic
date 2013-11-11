@@ -1,0 +1,3 @@
+#to be called from 'cmd' dir.
+for i in `noext *extrinsic`; do cp ../frame_0000.png $i.png; done
+

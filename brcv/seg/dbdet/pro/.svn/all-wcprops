@@ -1,0 +1,575 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/lemsvxl/!svn/ver/16738/trunk/brcv/seg/dbdet/pro
+END
+dbdet_third_order_color_edge_detector_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/16535/trunk/brcv/seg/dbdet/pro/dbdet_third_order_color_edge_detector_process.cxx
+END
+dbdet_generic_linker_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/15690/trunk/brcv/seg/dbdet/pro/dbdet_generic_linker_process.cxx
+END
+dbdet_save_cem_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/13209/trunk/brcv/seg/dbdet/pro/dbdet_save_cem_process.cxx
+END
+dbdet_prune_fragments_Logistic_Regression.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/16432/trunk/brcv/seg/dbdet/pro/dbdet_prune_fragments_Logistic_Regression.h
+END
+dbdet_sel_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/16738/trunk/brcv/seg/dbdet/pro/dbdet_sel_process.cxx
+END
+dbdet_load_seg3d_info_xml_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_load_seg3d_info_xml_process.h
+END
+dbdet_save_edg_k_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/13188/trunk/brcv/seg/dbdet/pro/dbdet_save_edg_k_process.cxx
+END
+dbdet_mask_edges_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_mask_edges_process.h
+END
+dbdet_save_cvlet_map_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12800/trunk/brcv/seg/dbdet/pro/dbdet_save_cvlet_map_process.cxx
+END
+dbdet_load_cem_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/10335/trunk/brcv/seg/dbdet/pro/dbdet_load_cem_process.h
+END
+dbdet_lowe_keypoint_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/11207/trunk/brcv/seg/dbdet/pro/dbdet_lowe_keypoint_process.cxx
+END
+dbdet_subsample_edges.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/10724/trunk/brcv/seg/dbdet/pro/dbdet_subsample_edges.h
+END
+dbdet_generic_edge_detector_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/10335/trunk/brcv/seg/dbdet/pro/dbdet_generic_edge_detector_process.cxx
+END
+dbdet_edge_tracer_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/10335/trunk/brcv/seg/dbdet/pro/dbdet_edge_tracer_process.h
+END
+dbdet_convert_edgemap_to_image_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/12652/trunk/brcv/seg/dbdet/pro/dbdet_convert_edgemap_to_image_process.h
+END
+dbdet_seg3d_info_storage.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_seg3d_info_storage.h
+END
+dbdet_load_edg_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/13441/trunk/brcv/seg/dbdet/pro/dbdet_load_edg_process.cxx
+END
+dbdet_sel_extract_contours_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/10102/trunk/brcv/seg/dbdet/pro/dbdet_sel_extract_contours_process.h
+END
+dbdet_generic_linker_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/10335/trunk/brcv/seg/dbdet/pro/dbdet_generic_linker_process.h
+END
+dbdet_third_order_color_edge_detector_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_third_order_color_edge_detector_process.h
+END
+dbdet_save_cem_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/10335/trunk/brcv/seg/dbdet/pro/dbdet_save_cem_process.h
+END
+dbdet_evaluation_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/16306/trunk/brcv/seg/dbdet/pro/dbdet_evaluation_process.cxx
+END
+dbdet_new_seg3d_info_xml_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_new_seg3d_info_xml_process.cxx
+END
+dbdet_sel_storage.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/15935/trunk/brcv/seg/dbdet/pro/dbdet_sel_storage.cxx
+END
+dbdet_hybrid_linker_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/11960/trunk/brcv/seg/dbdet/pro/dbdet_hybrid_linker_process.h
+END
+dbdet_prune_edgemap_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/10335/trunk/brcv/seg/dbdet/pro/dbdet_prune_edgemap_process.cxx
+END
+dbdet_generic_multiscale_edge_detector_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/12554/trunk/brcv/seg/dbdet/pro/dbdet_generic_multiscale_edge_detector_process.cxx
+END
+dbdet_lowe_keypoint_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_lowe_keypoint_process.h
+END
+dbdet_save_cvlet_map_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/11860/trunk/brcv/seg/dbdet/pro/dbdet_save_cvlet_map_process.h
+END
+dbdet_save_seg3d_info_xml_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/10804/trunk/brcv/seg/dbdet/pro/dbdet_save_seg3d_info_xml_process.cxx
+END
+dbdet_pb_edge_detector_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/13748/trunk/brcv/seg/dbdet/pro/dbdet_pb_edge_detector_process.cxx
+END
+dbdet_contour_tracer_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/13886/trunk/brcv/seg/dbdet/pro/dbdet_contour_tracer_process.h
+END
+dbdet_compass_color_edge_detector_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/11207/trunk/brcv/seg/dbdet/pro/dbdet_compass_color_edge_detector_process.cxx
+END
+dbdet_third_order_edge_detector_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/10335/trunk/brcv/seg/dbdet/pro/dbdet_third_order_edge_detector_process.cxx
+END
+dbdet_load_edg_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_load_edg_process.h
+END
+dbdet_composite_edge_detection_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/10335/trunk/brcv/seg/dbdet/pro/dbdet_composite_edge_detection_process.cxx
+END
+dbdet_image_gradient_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_image_gradient_process.h
+END
+dbdet_generic_color_edge_detector_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/11207/trunk/brcv/seg/dbdet/pro/dbdet_generic_color_edge_detector_process.cxx
+END
+dbdet_detect_topographic_curves_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/12554/trunk/brcv/seg/dbdet/pro/dbdet_detect_topographic_curves_process.cxx
+END
+dbdet_load_seg3d_info_xml_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/10804/trunk/brcv/seg/dbdet/pro/dbdet_load_seg3d_info_xml_process.cxx
+END
+dbdet_save_edg_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_save_edg_process.h
+END
+dbdet_seg3d_info_storage_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_seg3d_info_storage_sptr.h
+END
+dbdet_save_seg3d_info_xml_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_save_seg3d_info_xml_process.h
+END
+dbdet_load_cem_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/10335/trunk/brcv/seg/dbdet/pro/dbdet_load_cem_process.cxx
+END
+dbdet_pb_edge_detector_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/13651/trunk/brcv/seg/dbdet/pro/dbdet_pb_edge_detector_process.h
+END
+dbdet_combine_contour_cues_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/12554/trunk/brcv/seg/dbdet/pro/dbdet_combine_contour_cues_process.cxx
+END
+dbdet_compass_color_edge_detector_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/10335/trunk/brcv/seg/dbdet/pro/dbdet_compass_color_edge_detector_process.h
+END
+dbdet_third_order_edge_detector_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_third_order_edge_detector_process.h
+END
+dbdet_sel_extract_contours_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/10335/trunk/brcv/seg/dbdet/pro/dbdet_sel_extract_contours_process.cxx
+END
+dbdet_composite_edge_detection_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_composite_edge_detection_process.h
+END
+dbdet_prune_curves_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/11207/trunk/brcv/seg/dbdet/pro/dbdet_prune_curves_process.cxx
+END
+dbdet_compass_edge_detector_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/10346/trunk/brcv/seg/dbdet/pro/dbdet_compass_edge_detector_process.cxx
+END
+dbdet_detect_topographic_curves_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_detect_topographic_curves_process.h
+END
+dbdet_edgemap_storage_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_edgemap_storage_sptr.h
+END
+dbdet_hybrid_linker_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/11960/trunk/brcv/seg/dbdet/pro/dbdet_hybrid_linker_process.cxx
+END
+dbdet_keypoint_storage_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_keypoint_storage_sptr.h
+END
+dbdet_edgemap_storage.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_edgemap_storage.cxx
+END
+dbdet_keypoint_storage.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_keypoint_storage.cxx
+END
+dbdet_combine_contour_cues_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/10335/trunk/brcv/seg/dbdet/pro/dbdet_combine_contour_cues_process.h
+END
+dbdet_contour_tracer_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/13886/trunk/brcv/seg/dbdet/pro/dbdet_contour_tracer_process.cxx
+END
+dbdet_blob_finder_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_blob_finder_process.h
+END
+dbdet_lvwr_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/13211/trunk/brcv/seg/dbdet/pro/dbdet_lvwr_process.cxx
+END
+dbdet_load_cvlet_map_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/11860/trunk/brcv/seg/dbdet/pro/dbdet_load_cvlet_map_process.h
+END
+dbdet_image_gradient_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12554/trunk/brcv/seg/dbdet/pro/dbdet_image_gradient_process.cxx
+END
+dbdet_generic_multicue_edge_detector_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/12554/trunk/brcv/seg/dbdet/pro/dbdet_generic_multicue_edge_detector_process.cxx
+END
+dbdet_edgemap_from_edge_image_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/12639/trunk/brcv/seg/dbdet/pro/dbdet_edgemap_from_edge_image_process.h
+END
+dbdet_prune_curves_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_prune_curves_process.h
+END
+dbdet_compass_edge_detector_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/10095/trunk/brcv/seg/dbdet/pro/dbdet_compass_edge_detector_process.h
+END
+dbdet_sel_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/16341/trunk/brcv/seg/dbdet/pro/dbdet_sel_process.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/16434/trunk/brcv/seg/dbdet/pro/CMakeLists.txt
+END
+dbdet_save_edg_k_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/10215/trunk/brcv/seg/dbdet/pro/dbdet_save_edg_k_process.h
+END
+dbdet_keypoint_storage.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_keypoint_storage.h
+END
+dbdet_edgemap_storage.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/13188/trunk/brcv/seg/dbdet/pro/dbdet_edgemap_storage.h
+END
+dbdet_save_edg_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12792/trunk/brcv/seg/dbdet/pro/dbdet_save_edg_process.cxx
+END
+dbdet_generic_edge_detector_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_generic_edge_detector_process.h
+END
+dbdet_lvwr_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_lvwr_process.h
+END
+dbdet_generic_multicue_edge_detector_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/10093/trunk/brcv/seg/dbdet/pro/dbdet_generic_multicue_edge_detector_process.h
+END
+dbdet_kovesi_edge_linker_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/13748/trunk/brcv/seg/dbdet/pro/dbdet_kovesi_edge_linker_process.cxx
+END
+dbdet_evaluation_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/16145/trunk/brcv/seg/dbdet/pro/dbdet_evaluation_process.h
+END
+dbdet_new_seg3d_info_xml_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_new_seg3d_info_xml_process.h
+END
+dbdet_sel_storage.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/15935/trunk/brcv/seg/dbdet/pro/dbdet_sel_storage.h
+END
+dbdet_prune_fragments_Logistic_Regression.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/16432/trunk/brcv/seg/dbdet/pro/dbdet_prune_fragments_Logistic_Regression.cxx
+END
+dbdet_generic_multiscale_edge_detector_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_generic_multiscale_edge_detector_process.h
+END
+dbdet_prune_edgemap_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/10101/trunk/brcv/seg/dbdet/pro/dbdet_prune_edgemap_process.h
+END
+dbdet_mask_edges_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/13218/trunk/brcv/seg/dbdet/pro/dbdet_mask_edges_process.cxx
+END
+dbdet_edge_tracer_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/10335/trunk/brcv/seg/dbdet/pro/dbdet_edge_tracer_process.cxx
+END
+dbdet_subsample_edges.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/11866/trunk/brcv/seg/dbdet/pro/dbdet_subsample_edges.cxx
+END
+dbdet_blob_finder_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/15236/trunk/brcv/seg/dbdet/pro/dbdet_blob_finder_process.cxx
+END
+dbdet_convert_edgemap_to_image_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/15691/trunk/brcv/seg/dbdet/pro/dbdet_convert_edgemap_to_image_process.cxx
+END
+dbdet_seg3d_info_storage.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_seg3d_info_storage.cxx
+END
+dbdet_sel_storage_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_sel_storage_sptr.h
+END
+dbdet_load_cvlet_map_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/14179/trunk/brcv/seg/dbdet/pro/dbdet_load_cvlet_map_process.cxx
+END
+dbdet_edgemap_from_edge_image_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/10335/trunk/brcv/seg/dbdet/pro/dbdet_edgemap_from_edge_image_process.cxx
+END
+dbdet_generic_color_edge_detector_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/pro/dbdet_generic_color_edge_detector_process.h
+END
+dbdet_kovesi_edge_linker_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/13689/trunk/brcv/seg/dbdet/pro/dbdet_kovesi_edge_linker_process.h
+END

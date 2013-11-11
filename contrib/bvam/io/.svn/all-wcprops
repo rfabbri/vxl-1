@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/lemsvxl/!svn/ver/10860/trunk/contrib/bvam/io
+END
+bvam_io_voxel_world.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/10860/trunk/contrib/bvam/io/bvam_io_voxel_world.cxx
+END
+bvam_io_config_parser.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/10630/trunk/contrib/bvam/io/bvam_io_config_parser.h
+END
+bvam_io_voxel_world.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/10859/trunk/contrib/bvam/io/bvam_io_voxel_world.h
+END
+bvam_io_world_params.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/10674/trunk/contrib/bvam/io/bvam_io_world_params.cxx
+END
+bvam_io_structs.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/10630/trunk/contrib/bvam/io/bvam_io_structs.h
+END
+bvam_io_world_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/10674/trunk/contrib/bvam/io/bvam_io_world_params.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/10859/trunk/contrib/bvam/io/CMakeLists.txt
+END
+bvam_io_config_parser.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/10630/trunk/contrib/bvam/io/bvam_io_config_parser.cxx
+END

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/lemsvxl/!svn/ver/9751/trunk/db3p/mesh_tri
+END
+mesh_tri.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/8653/trunk/db3p/mesh_tri/mesh_tri.h
+END
+mesh_tri.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/8653/trunk/db3p/mesh_tri/mesh_tri.cxx
+END
+readme.txt
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/8653/trunk/db3p/mesh_tri/readme.txt
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/9751/trunk/db3p/mesh_tri/CMakeLists.txt
+END

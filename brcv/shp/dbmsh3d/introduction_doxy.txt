@@ -1,0 +1,12 @@
+// The following text is included in the main documentation page by doxygen
+/*! \mainpage dbmsh3d : Brown 3D Mesh Library
+* This library contains data structures and algorithms to handle 
+* three-dimensional point clouds.
+*
+* \section dbmsh3d_overview Overview
+*
+*
+* The dbmsh3d_mesh class is the main mesh class.
+* The dbmsh3d_point_set class is to represent an unorganized point cloud.
+*
+*/

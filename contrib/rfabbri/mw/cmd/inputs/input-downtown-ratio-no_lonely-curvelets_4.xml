@@ -1,0 +1,44 @@
+<?xml 
+ version="1.0"
+ encoding="UTF-8"
+ standalone="yes"?>
+<vox_mcs_eval_params><io 
+ cam_type="intrinsic_extrinsic"
+ dataset_name="downtown"
+ dump_corresps="off"
+ gt_object_dir="/home/rfabbri/lib/data/Downtown/video/instance1/ground-truth/40_length-views_0_33/"
+ gt_object_name="40_length-views_0_33-epiangle_10-gt.vsl"
+ input_folder="/home/rfabbri/lib/data/Downtown/video/"
+ output_mcs_eval_extension_="-eval_results.xml"
+ output_mcs_eval_folder="/home/rfabbri/lib/data/Downtown/video/instance1/eval/ok_edges-length40-ratio-no_lonely-4conf-cvlets_4/"
+ save_to_object_folder="on"
+>
+</io>
+<mcs_basics 
+ min_epiangle_list="10.0"
+ min_epipolar_overlap_list="5"
+ min_samples_per_curve_frag_list="40"
+ prune_by_length="on"
+>
+</mcs_basics>
+<mcs_reprojection 
+ distance_threshold_list="1 2 3 5 10"
+ dtheta_threshold_list="1 2 5 10 15 20 30 90"
+ lonely_threshold_list="0"
+ min_first_to_second_best_ratio_list="1.5"
+ min_inliers_per_view_list="0 10 20 30 40"
+ use_curvelets="on"
+ min_num_inlier_edgels_per_curvelet_list="4"
+ min_total_inliers_list="1 5 10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90 95 100 105 110 115 120 125  130   140   150   160   170   180   190   200   210   220   230   240   250   260   270   280   290   300   310   320 330   340   350   360   370   380   390   400   410   420   430   440   450   460   470   480   490   500   510   520 530   540   550   560   570   580   590   600   610   620   630   640   650   660   670   680   690   700   710   720 730   740   750   760   770   780   790   800   810   820   830   840   850   860   870   880   890   900   910   920 930   940   950   960   970   980   990  1000 10000"
+>
+</mcs_reprojection>
+<web_directive 
+ categorization_file="categorization.xml"
+ evaluation_file="evaluation.xml"
+ perf_block="perf.xml"
+ print_params_file="params.xml"
+ print_params_only="off"
+ status_block="status.xml"
+>
+</web_directive>
+</vox_mcs_eval_params>

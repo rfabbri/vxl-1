@@ -1,0 +1,437 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/lemsvxl/!svn/ver/14038/trunk/breye1/vidpro1/process
+END
+vidpro1_load_video_and_polys_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/12406/trunk/breye1/vidpro1/process/vidpro1_load_video_and_polys_process.cxx
+END
+vidpro1_load_image_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/10897/trunk/breye1/vidpro1/process/vidpro1_load_image_process.cxx
+END
+vidpro1_smoothcem_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_smoothcem_process.h
+END
+vidpro1_harris_corners_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_harris_corners_process.cxx
+END
+vidpro1_gaussian_blur_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_gaussian_blur_process.h
+END
+vidpro1_vsol_scale_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_vsol_scale_process.cxx
+END
+vidpro1_kl_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_kl_process.h
+END
+vidpro1_VD_edge_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_VD_edge_process.cxx
+END
+vidpro1_load_image_sequence_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/11978/trunk/breye1/vidpro1/process/vidpro1_load_image_sequence_process.h
+END
+vidpro1_save_image_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/10340/trunk/breye1/vidpro1/process/vidpro1_save_image_process.cxx
+END
+vidpro1_RGB_to_IHS_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_RGB_to_IHS_process.h
+END
+vidpro1_load_video_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/13450/trunk/breye1/vidpro1/process/vidpro1_load_video_process.cxx
+END
+vidpro1_motion_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_motion_process.cxx
+END
+vidpro1_edgeprune_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/14038/trunk/breye1/vidpro1/process/vidpro1_edgeprune_process.cxx
+END
+vidpro1_load_con_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12889/trunk/breye1/vidpro1/process/vidpro1_load_con_process.cxx
+END
+vidpro1_vsol_scale_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_vsol_scale_process.h
+END
+vidpro1_save_cem_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_save_cem_process.cxx
+END
+vidpro1_save_video_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12406/trunk/breye1/vidpro1/process/vidpro1_save_video_process.cxx
+END
+vidpro1_frame_average_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_frame_average_process.cxx
+END
+vidpro1_save_image_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_save_image_process.h
+END
+vidpro1_brightness_contrast_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/13851/trunk/breye1/vidpro1/process/vidpro1_brightness_contrast_process.cxx
+END
+vidpro1_load_cem_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/13292/trunk/breye1/vidpro1/process/vidpro1_load_cem_process.h
+END
+vidpro1_load_edg_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12227/trunk/breye1/vidpro1/process/vidpro1_load_edg_process.cxx
+END
+vidpro1_save_ps_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_save_ps_process.cxx
+END
+vidpro1_random_del_polygon_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/10649/trunk/breye1/vidpro1/process/vidpro1_random_del_polygon_process.h
+END
+vidpro1_RGB_to_CIELab_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_RGB_to_CIELab_process.h
+END
+vidpro1_load_con_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/11639/trunk/breye1/vidpro1/process/vidpro1_load_con_process.h
+END
+vidpro1_edgeprune_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_edgeprune_process.h
+END
+vidpro1_save_cem_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/10339/trunk/breye1/vidpro1/process/vidpro1_save_cem_process.h
+END
+vidpro1_grey_image_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_grey_image_process.cxx
+END
+vidpro1_save_video_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_save_video_process.h
+END
+vidpro1_load_image_sequence_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/11978/trunk/breye1/vidpro1/process/vidpro1_load_image_sequence_process.cxx
+END
+vidpro1_frame_average_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_frame_average_process.h
+END
+vidpro1_split_into_RGB_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_split_into_RGB_process.cxx
+END
+vidpro1_RGB_to_IHS_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_RGB_to_IHS_process.cxx
+END
+vidpro1_frame_diff_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_frame_diff_process.cxx
+END
+vidpro1_load_vsol_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/13359/trunk/breye1/vidpro1/process/vidpro1_load_vsol_process.cxx
+END
+vidpro1_save_con_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_save_con_process.h
+END
+vidpro1_load_edg_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/13292/trunk/breye1/vidpro1/process/vidpro1_load_edg_process.h
+END
+vidpro1_image_gradient_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_image_gradient_process.h
+END
+vidpro1_horn_schunck_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/13210/trunk/breye1/vidpro1/process/vidpro1_horn_schunck_process.cxx
+END
+vidpro1_Rothwell_edge_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_Rothwell_edge_process.cxx
+END
+vidpro1_save_ps_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_save_ps_process.h
+END
+vidpro1_save_vsol_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/13359/trunk/breye1/vidpro1/process/vidpro1_save_vsol_process.h
+END
+vidpro1_background_diff_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_background_diff_process.h
+END
+vidpro1_grey_image_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_grey_image_process.h
+END
+vidpro1_load_video_and_polys_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_load_video_and_polys_process.h
+END
+vidpro1_split_into_RGB_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_split_into_RGB_process.h
+END
+vidpro1_load_cem_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/13418/trunk/breye1/vidpro1/process/vidpro1_load_cem_process.cxx
+END
+vidpro1_equalize_images_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/11208/trunk/breye1/vidpro1/process/vidpro1_equalize_images_process.cxx
+END
+vidpro1_load_image_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_load_image_process.h
+END
+vidpro1_frame_diff_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_frame_diff_process.h
+END
+vidpro1_load_vsol_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/13359/trunk/breye1/vidpro1/process/vidpro1_load_vsol_process.h
+END
+vidpro1_harris_corners_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_harris_corners_process.h
+END
+vidpro1_resample_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_resample_process.cxx
+END
+vidpro1_horn_schunck_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_horn_schunck_process.h
+END
+vidpro1_Rothwell_edge_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_Rothwell_edge_process.h
+END
+vidpro1_RGB_to_CIELab_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_RGB_to_CIELab_process.cxx
+END
+vidpro1_random_del_polygon_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/11217/trunk/breye1/vidpro1/process/vidpro1_random_del_polygon_process.cxx
+END
+vidpro1_VD_edge_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_VD_edge_process.h
+END
+vidpro1_equalize_images_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_equalize_images_process.h
+END
+vidpro1_load_video_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/13450/trunk/breye1/vidpro1/process/vidpro1_load_video_process.h
+END
+vidpro1_motion_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_motion_process.h
+END
+vidpro1_save_con_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_save_con_process.cxx
+END
+vidpro1_resample_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_resample_process.h
+END
+vidpro1_gaussian_blur_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_gaussian_blur_process.cxx
+END
+vidpro1_smoothcem_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_smoothcem_process.cxx
+END
+vidpro1_image_gradient_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_image_gradient_process.cxx
+END
+vidpro1_save_vsol_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/13359/trunk/breye1/vidpro1/process/vidpro1_save_vsol_process.cxx
+END
+vidpro1_kl_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_kl_process.cxx
+END
+vidpro1_background_diff_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_background_diff_process.cxx
+END
+vidpro1_brightness_contrast_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/vidpro1/process/vidpro1_brightness_contrast_process.h
+END

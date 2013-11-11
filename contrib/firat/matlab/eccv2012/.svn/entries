@@ -1,0 +1,71 @@
+9
+
+dir
+17056
+https://visionserver.lems.brown.edu/svn/lemsvxl/trunk/contrib/firat/matlab/eccv2012
+https://visionserver.lems.brown.edu/svn/lemsvxl
+
+
+
+2012-03-30T21:23:03.616178Z
+16143
+firat
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+19b38075-fba0-4a01-96da-394feb402aa5
+
+hypothesis
+dir
+
+verification
+dir
+
+configure.m
+file
+
+
+
+
+2012-05-16T20:34:20.081687Z
+0836ded6c01581945986a7ab97207b54
+2012-02-01T00:01:39.788719Z
+15893
+firat
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+392
+
+ethz-resized
+dir
+

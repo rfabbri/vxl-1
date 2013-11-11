@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/lemsvxl/!svn/ver/6858/trunk/contrib/biotree/xmvg/io
+END
+xmvg_io_atomic_filter_2d.txx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/5078/trunk/contrib/biotree/xmvg/io/xmvg_io_atomic_filter_2d.txx
+END
+xmvg_io_atomic_filter_2d.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/2833/trunk/contrib/biotree/xmvg/io/xmvg_io_atomic_filter_2d.h
+END
+xmvg_io_composite_filter_2d.txx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/5079/trunk/contrib/biotree/xmvg/io/xmvg_io_composite_filter_2d.txx
+END
+xmvg_io_composite_filter_2d.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/5079/trunk/contrib/biotree/xmvg/io/xmvg_io_composite_filter_2d.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/5403/trunk/contrib/biotree/xmvg/io/CMakeLists.txt
+END

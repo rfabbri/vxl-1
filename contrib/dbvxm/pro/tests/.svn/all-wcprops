@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/11980/trunk/contrib/dbvxm/pro/tests
+END
+world_model_params_lvcs.txt
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/11421/trunk/contrib/dbvxm/pro/tests/world_model_params_lvcs.txt
+END
+po_39928_pan_0000000_chip_700_700_noICHIPB.nitf
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/11421/trunk/contrib/dbvxm/pro/tests/po_39928_pan_0000000_chip_700_700_noICHIPB.nitf
+END
+test_include.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/11980/trunk/contrib/dbvxm/pro/tests/test_include.cxx
+END
+world_model_params.xml
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/11366/trunk/contrib/dbvxm/pro/tests/world_model_params.xml
+END
+test_dbvxm_detect_instance_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/11980/trunk/contrib/dbvxm/pro/tests/test_dbvxm_detect_instance_process.cxx
+END
+roi_params.xml
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/11366/trunk/contrib/dbvxm/pro/tests/roi_params.xml
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/11980/trunk/contrib/dbvxm/pro/tests/test_driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/11421/trunk/contrib/dbvxm/pro/tests/CMakeLists.txt
+END
+test_dbvxm_detect_scale_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/11721/trunk/contrib/dbvxm/pro/tests/test_dbvxm_detect_scale_process.cxx
+END

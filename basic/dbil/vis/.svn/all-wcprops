@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/lemsvxl/!svn/ver/11504/trunk/basic/dbil/vis
+END
+dbil_image_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/9273/trunk/basic/dbil/vis/dbil_image_tool.h
+END
+dbil_image_region_stats_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/9273/trunk/basic/dbil/vis/dbil_image_region_stats_tool.h
+END
+dbil_image_patch_gradient_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/9273/trunk/basic/dbil/vis/dbil_image_patch_gradient_tool.cxx
+END
+dbil_image_intensity_inspector.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/9273/trunk/basic/dbil/vis/dbil_image_intensity_inspector.cxx
+END
+dbil_image_observer.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/10583/trunk/basic/dbil/vis/dbil_image_observer.h
+END
+dbil_image_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/9273/trunk/basic/dbil/vis/dbil_image_tool.cxx
+END
+dbil_image_patch_gradient_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/9273/trunk/basic/dbil/vis/dbil_image_patch_gradient_tool.h
+END
+dbil_image_region_stats_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/9273/trunk/basic/dbil/vis/dbil_image_region_stats_tool.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/11504/trunk/basic/dbil/vis/CMakeLists.txt
+END
+dbil_image_intensity_inspector.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/9273/trunk/basic/dbil/vis/dbil_image_intensity_inspector.h
+END

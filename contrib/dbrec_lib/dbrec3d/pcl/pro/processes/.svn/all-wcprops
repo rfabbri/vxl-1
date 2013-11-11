@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl/pro/processes
+END
+pcl_trasform_xy_align_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl/pro/processes/pcl_trasform_xy_align_process.cxx
+END
+pcl_convert_id_to_rgb_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl/pro/processes/pcl_convert_id_to_rgb_process.cxx
+END
+pcl_k_means_learning_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl/pro/processes/pcl_k_means_learning_process.cxx
+END
+pcl_compute_fphf_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl/pro/processes/pcl_compute_fphf_process.cxx
+END
+pcl_convert_scene_to_pc_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl/pro/processes/pcl_convert_scene_to_pc_process.cxx
+END
+pcl_k_means_assign_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl/pro/processes/pcl_k_means_assign_process.cxx
+END
+pcl_read_and_filter_ply_normals_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl/pro/processes/pcl_read_and_filter_ply_normals_process.cxx
+END

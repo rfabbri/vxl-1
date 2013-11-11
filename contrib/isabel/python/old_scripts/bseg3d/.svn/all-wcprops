@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bseg3d
+END
+crop_grid.py
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bseg3d/crop_grid.py
+END
+gen_expected.py
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bseg3d/gen_expected.py
+END
+l2_distances.py
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bseg3d/l2_distances.py
+END
+l2_thresh.py
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bseg3d/l2_thresh.py
+END
+locate_region.py
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bseg3d/locate_region.py
+END
+train.py
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bseg3d/train.py
+END
+merge_mixtures.py
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bseg3d/merge_mixtures.py
+END
+multiply.py
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bseg3d/multiply.py
+END
+save_raw.py
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bseg3d/save_raw.py
+END

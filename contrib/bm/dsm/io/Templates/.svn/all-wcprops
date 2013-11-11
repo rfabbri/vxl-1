@@ -1,0 +1,143 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/15535/trunk/contrib/bm/dsm/io/Templates
+END
+dsm_io_manager+2-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/15535/trunk/contrib/bm/dsm/io/Templates/dsm_io_manager+2-.cxx
+END
+vbl_io_smart_ptr+dsm_state_machine_base-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/lemsvxl/!svn/ver/15076/trunk/contrib/bm/dsm/io/Templates/vbl_io_smart_ptr+dsm_state_machine_base-.cxx
+END
+dsm_io_map_map+uint.uint.double-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/15506/trunk/contrib/bm/dsm/io/Templates/dsm_io_map_map+uint.uint.double-.cxx
+END
+vbl_io_smart_ptr+dsm_manager_base-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/15015/trunk/contrib/bm/dsm/io/Templates/vbl_io_smart_ptr+dsm_manager_base-.cxx
+END
+vbl_io_smart_ptr+dsm_pixel_time_series_map-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/lemsvxl/!svn/ver/15101/trunk/contrib/bm/dsm/io/Templates/vbl_io_smart_ptr+dsm_pixel_time_series_map-.cxx
+END
+dsm_io_map_map+uint.uint.uint-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/15506/trunk/contrib/bm/dsm/io/Templates/dsm_io_map_map+uint.uint.uint-.cxx
+END
+dsm_io_node+1-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/15356/trunk/contrib/bm/dsm/io/Templates/dsm_io_node+1-.cxx
+END
+vbl_io_smart_ptr+dsm_time_series-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/15076/trunk/contrib/bm/dsm/io/Templates/vbl_io_smart_ptr+dsm_time_series-.cxx
+END
+dsm_io_node+2-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/15076/trunk/contrib/bm/dsm/io/Templates/dsm_io_node+2-.cxx
+END
+dsm_io_node+3-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/15076/trunk/contrib/bm/dsm/io/Templates/dsm_io_node+3-.cxx
+END
+vbl_io_smart_ptr+dsm_target_neighborhood_map-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/lemsvxl/!svn/ver/15149/trunk/contrib/bm/dsm/io/Templates/vbl_io_smart_ptr+dsm_target_neighborhood_map-.cxx
+END
+dsm_io_node+4-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/15076/trunk/contrib/bm/dsm/io/Templates/dsm_io_node+4-.cxx
+END
+dsm_io_map_map_map+uint.uint.uint.double-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/15506/trunk/contrib/bm/dsm/io/Templates/dsm_io_map_map_map+uint.uint.uint.double-.cxx
+END
+vbl_io_smart_ptr+dsm_ncn-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/14815/trunk/contrib/bm/dsm/io/Templates/vbl_io_smart_ptr+dsm_ncn-.cxx
+END
+vbl_io_smart_ptr+dsm_features-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/14940/trunk/contrib/bm/dsm/io/Templates/vbl_io_smart_ptr+dsm_features-.cxx
+END
+dsm_io_map_map_map+uint.uint.uint.uint-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/15506/trunk/contrib/bm/dsm/io/Templates/dsm_io_map_map_map+uint.uint.uint.uint-.cxx
+END
+vbl_io_smart_ptr+dsm_ground_truth-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/15328/trunk/contrib/bm/dsm/io/Templates/vbl_io_smart_ptr+dsm_ground_truth-.cxx
+END
+dsm_io_state_machine+1-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/15357/trunk/contrib/bm/dsm/io/Templates/dsm_io_state_machine+1-.cxx
+END
+dsm_io_state_machine+2-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/15013/trunk/contrib/bm/dsm/io/Templates/dsm_io_state_machine+2-.cxx
+END
+dsm_io_state_machine+3-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/15013/trunk/contrib/bm/dsm/io/Templates/dsm_io_state_machine+3-.cxx
+END
+dsm_io_state_machine+4-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/15076/trunk/contrib/bm/dsm/io/Templates/dsm_io_state_machine+4-.cxx
+END
+vbl_io_smart_ptr+dsm_feature-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/15076/trunk/contrib/bm/dsm/io/Templates/vbl_io_smart_ptr+dsm_feature-.cxx
+END
+dsm_io_manager+1-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/15355/trunk/contrib/bm/dsm/io/Templates/dsm_io_manager+1-.cxx
+END

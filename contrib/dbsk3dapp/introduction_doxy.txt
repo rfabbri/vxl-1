@@ -1,0 +1,16 @@
+// The following text is included in the main documentation page by doxygen
+/*! \mainpage dbshock3dapp : Brown 3dShock debugger
+* This program allows you to view 3D shocks and helps debug them
+*
+* \section dbsk3dapp Overview
+*
+* This program enables the user to load and process 3d shocks.  The program deals
+* with four main data structures include 3d points, voronoi diagrams, full shocks, 
+* and shock hypergraphs.  Each inferior data structure can be processed to a 
+* a superior data structure.  Individual parts of each data structure can also be 
+* displayed or hidden to help understand the underlying structure.       
+*
+*
+*/
+
+

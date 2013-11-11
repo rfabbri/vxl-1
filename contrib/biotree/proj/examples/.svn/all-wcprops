@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj/examples
+END
+bioproj_mem_proc_example.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj/examples/bioproj_mem_proc_example.cxx
+END
+bioproj_proc_example.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/7814/trunk/contrib/biotree/proj/examples/bioproj_proc_example.cxx
+END
+bioproj_ridge_detection_example.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/7814/trunk/contrib/biotree/proj/examples/bioproj_ridge_detection_example.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/7896/trunk/contrib/biotree/proj/examples/CMakeLists.txt
+END

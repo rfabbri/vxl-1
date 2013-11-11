@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/15087/trunk/contrib/dbrec_lib/dbrec3d/pro/processes
+END
+dbrec3d_xml_parse_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/14491/trunk/contrib/dbrec_lib/dbrec3d/pro/processes/dbrec3d_xml_parse_process.cxx
+END
+dbrec3d_xml_write_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/14491/trunk/contrib/dbrec_lib/dbrec3d/pro/processes/dbrec3d_xml_write_process.cxx
+END
+dbrec3d_get_response_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/lemsvxl/!svn/ver/15087/trunk/contrib/dbrec_lib/dbrec3d/pro/processes/dbrec3d_get_response_process.cxx
+END
+dbrec3d_kernels_to_parts_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/lemsvxl/!svn/ver/15087/trunk/contrib/dbrec_lib/dbrec3d/pro/processes/dbrec3d_kernels_to_parts_process.cxx
+END
+dbrec3d_find_pairs_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/14491/trunk/contrib/dbrec_lib/dbrec3d/pro/processes/dbrec3d_find_pairs_process.cxx
+END
+dbrec3d_save_vrml_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/14491/trunk/contrib/dbrec_lib/dbrec3d/pro/processes/dbrec3d_save_vrml_process.cxx
+END
+dbrec3d_compose_primitives_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/lemsvxl/!svn/ver/14420/trunk/contrib/dbrec_lib/dbrec3d/pro/processes/dbrec3d_compose_primitives_process.cxx
+END
+dbrec3d_create_scene_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/lemsvxl/!svn/ver/14491/trunk/contrib/dbrec_lib/dbrec3d/pro/processes/dbrec3d_create_scene_process.cxx
+END
+dbrec3d_register_managers_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/lemsvxl/!svn/ver/14006/trunk/contrib/dbrec_lib/dbrec3d/pro/processes/dbrec3d_register_managers_process.cxx
+END
+dbrec3d_non_max_suppression_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/lemsvxl/!svn/ver/14419/trunk/contrib/dbrec_lib/dbrec3d/pro/processes/dbrec3d_non_max_suppression_process.cxx
+END

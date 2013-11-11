@@ -1,0 +1,353 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm
+END
+boxm_block_vis_graph_iterator.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_block_vis_graph_iterator.h
+END
+boxm_render_image_triangle.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_render_image_triangle.h
+END
+boxm_mog_grey_processor.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_mog_grey_processor.h
+END
+boxm_rational_camera_utils.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_rational_camera_utils.cxx
+END
+boxm_mob_grey_processor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_mob_grey_processor.cxx
+END
+boxm_sample_multi_bin.txx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_sample_multi_bin.txx
+END
+boxm_render_image.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_render_image.h
+END
+boxm_save_block_raw.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_save_block_raw.h
+END
+boxm_quad_scan_iterator.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_quad_scan_iterator.cxx
+END
+boxm_update.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_update.h
+END
+boxm_sample_multi_bin.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_sample_multi_bin.h
+END
+boxm_scene_parser.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_scene_parser.cxx
+END
+boxm_save_scene_raw.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_save_scene_raw.h
+END
+boxm_cell_vis_graph_node.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_cell_vis_graph_node.h
+END
+boxm_cell_vis_graph_iterator.txx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_cell_vis_graph_iterator.txx
+END
+boxm_raytrace_operations.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_raytrace_operations.cxx
+END
+boxm_simple_grey_processor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_simple_grey_processor.cxx
+END
+boxm_cell_vis_graph_iterator.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_cell_vis_graph_iterator.h
+END
+boxm_depth_image_triangle.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_depth_image_triangle.h
+END
+boxm_triangle_scan_iterator.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_triangle_scan_iterator.cxx
+END
+boxm_cell_data_traits.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_cell_data_traits.h
+END
+boxm_edge_sample.txx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_edge_sample.txx
+END
+boxm_rational_camera_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_rational_camera_utils.h
+END
+boxm_mob_grey_processor.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_mob_grey_processor.h
+END
+boxm_scene_base.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_scene_base.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/CMakeLists.txt
+END
+boxm_compute_scene_statistics.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_compute_scene_statistics.h
+END
+boxm_edge_sample.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_edge_sample.h
+END
+boxm_update_triangle.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_update_triangle.h
+END
+boxm_quad_scan_iterator.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_quad_scan_iterator.h
+END
+boxm_refine.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_refine.h
+END
+boxm_scene_parser.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_scene_parser.h
+END
+boxm_compute_volume_visibility.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_compute_volume_visibility.h
+END
+boxm_utils.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_utils.cxx
+END
+boxm_sample.txx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_sample.txx
+END
+boxm_raytrace_operations.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_raytrace_operations.h
+END
+boxm_apm_traits.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_apm_traits.cxx
+END
+boxm_simple_grey_processor.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_simple_grey_processor.h
+END
+boxm_triangle_interpolation_iterator.txx
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_triangle_interpolation_iterator.txx
+END
+boxm_sample.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_sample.h
+END
+boxm_mog_grey_processor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_mog_grey_processor.cxx
+END
+boxm_triangle_scan_iterator.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_triangle_scan_iterator.h
+END
+boxm_neighb_graph_node.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_neighb_graph_node.h
+END
+boxm_update_sample.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_update_sample.h
+END
+boxm_triangle_interpolation_iterator.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_triangle_interpolation_iterator.h
+END
+boxm_block.txx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_block.txx
+END
+boxm_scene_base.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_scene_base.h
+END
+boxm_fill_in_mesh.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_fill_in_mesh.h
+END
+boxm_scene.txx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_scene.txx
+END
+boxm_block.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_block.h
+END
+boxm_vis_implicit_sample.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_vis_implicit_sample.h
+END
+boxm_block_vis_graph_node.txx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_block_vis_graph_node.txx
+END
+boxm_scene.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_scene.h
+END
+boxm_upload_mesh.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_upload_mesh.h
+END
+boxm_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_utils.h
+END
+boxm_block_vis_graph_iterator.txx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_block_vis_graph_iterator.txx
+END
+boxm_block_vis_graph_node.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_block_vis_graph_node.h
+END
+boxm_apm_traits.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/boxm_apm_traits.h
+END

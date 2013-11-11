@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/lemsvxl/!svn/ver/10632/trunk/contrib/bvam/apps
+END
+bvam_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/10632/trunk/contrib/bvam/apps/bvam_main.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/10505/trunk/contrib/bvam/apps/CMakeLists.txt
+END

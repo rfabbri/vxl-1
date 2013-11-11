@@ -1,0 +1,221 @@
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/lemsvxl/!svn/ver/11184/trunk/contrib/bvam
+END
+bvam_mog_rgb_processor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/10928/trunk/contrib/bvam/bvam_mog_rgb_processor.cxx
+END
+bvam_voxel_slab_base.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/10786/trunk/contrib/bvam/bvam_voxel_slab_base.h
+END
+bvam_processor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/10661/trunk/contrib/bvam/bvam_processor.cxx
+END
+bvam_world_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/11147/trunk/contrib/bvam/bvam_world_params.h
+END
+bvam_voxel_grid_base.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/10856/trunk/contrib/bvam/bvam_voxel_grid_base.h
+END
+bvam_image_metadata.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/10605/trunk/contrib/bvam/bvam_image_metadata.cxx
+END
+bvam_voxel_world.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/11184/trunk/contrib/bvam/bvam_voxel_world.h
+END
+bvam_mog_grey_processor.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/11071/trunk/contrib/bvam/bvam_mog_grey_processor.h
+END
+bvam_image_schedule.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/10624/trunk/contrib/bvam/bvam_image_schedule.cxx
+END
+bvam_memory_chunk.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/10537/trunk/contrib/bvam/bvam_memory_chunk.cxx
+END
+bvam_mog_rgb_processor.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/11071/trunk/contrib/bvam/bvam_mog_rgb_processor.h
+END
+bvam_apm_processor.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/10564/trunk/contrib/bvam/bvam_apm_processor.h
+END
+bvam_voxel_storage.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/11173/trunk/contrib/bvam/bvam_voxel_storage.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/10999/trunk/contrib/bvam/CMakeLists.txt
+END
+bvam_image_metadata.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/10926/trunk/contrib/bvam/bvam_image_metadata.h
+END
+bvam_macros.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/10505/trunk/contrib/bvam/bvam_macros.h
+END
+bvam_voxel_storage_disk.txx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/11173/trunk/contrib/bvam/bvam_voxel_storage_disk.txx
+END
+bvam_util.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/10926/trunk/contrib/bvam/bvam_util.cxx
+END
+bvam_voxel_slab.txx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/11068/trunk/contrib/bvam/bvam_voxel_slab.txx
+END
+bvam_voxel_storage_disk.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/11173/trunk/contrib/bvam/bvam_voxel_storage_disk.h
+END
+bvam_image_schedule.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/10627/trunk/contrib/bvam/bvam_image_schedule.h
+END
+bvam_process_mgr.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/10675/trunk/contrib/bvam/bvam_process_mgr.cxx
+END
+bvam_voxel_grid.txx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/10537/trunk/contrib/bvam/bvam_voxel_grid.txx
+END
+bvam_voxel_slab.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/11068/trunk/contrib/bvam/bvam_voxel_slab.h
+END
+bvam_memory_chunk.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/10487/trunk/contrib/bvam/bvam_memory_chunk.h
+END
+bvam_voxel_grid.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/11173/trunk/contrib/bvam/bvam_voxel_grid.h
+END
+bvam_voxel_slab_iterator.txx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/10769/trunk/contrib/bvam/bvam_voxel_slab_iterator.txx
+END
+bvam_world_params.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/11111/trunk/contrib/bvam/bvam_world_params.cxx
+END
+bvam_voxel_slab_iterator.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/10769/trunk/contrib/bvam/bvam_voxel_slab_iterator.h
+END
+bvam_voxel_storage_mem.txx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/11173/trunk/contrib/bvam/bvam_voxel_storage_mem.txx
+END
+bvam_util.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/11178/trunk/contrib/bvam/bvam_util.h
+END
+bvam_voxel_storage_mem.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/11173/trunk/contrib/bvam/bvam_voxel_storage_mem.h
+END
+bvam_voxel_world.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/11173/trunk/contrib/bvam/bvam_voxel_world.cxx
+END
+bvam_mog_grey_processor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/11145/trunk/contrib/bvam/bvam_mog_grey_processor.cxx
+END
+bvam_process_mgr.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/10630/trunk/contrib/bvam/bvam_process_mgr.h
+END
+bvam_voxel_traits.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/11102/trunk/contrib/bvam/bvam_voxel_traits.h
+END

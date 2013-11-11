@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/16830/trunk/contrib/firat/matlab/surface_networks/groundtruth
+END
+create_polynomial.m
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/16320/trunk/contrib/firat/matlab/surface_networks/groundtruth/create_polynomial.m
+END
+get_surface.m
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/16830/trunk/contrib/firat/matlab/surface_networks/groundtruth/get_surface.m
+END
+myroipoly.m
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/16320/trunk/contrib/firat/matlab/surface_networks/groundtruth/myroipoly.m
+END

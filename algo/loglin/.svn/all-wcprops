@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/lemsvxl/!svn/ver/9752/trunk/algo/loglin
+END
+erfinv.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/lemsvxl/!svn/ver/199/trunk/algo/loglin/erfinv.h
+END
+Tokenizer.h
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/199/trunk/algo/loglin/Tokenizer.h
+END
+SubPixel.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/lemsvxl/!svn/ver/26/trunk/algo/loglin/SubPixel.h
+END
+PowellsAlgorithm.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/237/trunk/algo/loglin/PowellsAlgorithm.h
+END
+points.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/lemsvxl/!svn/ver/1247/trunk/algo/loglin/points.h
+END
+EdgeDetector.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/199/trunk/algo/loglin/EdgeDetector.h
+END
+LogicalLinearFilters.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/1247/trunk/algo/loglin/LogicalLinearFilters.h
+END
+LogicalLinearFunctions.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/1247/trunk/algo/loglin/LogicalLinearFunctions.h
+END
+SubPixelOptimizer.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/971/trunk/algo/loglin/SubPixelOptimizer.h
+END
+Utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/lemsvxl/!svn/ver/15/trunk/algo/loglin/Utils.h
+END
+EdgeDetection.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/15/trunk/algo/loglin/EdgeDetection.h
+END
+LogicalLinear.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/971/trunk/algo/loglin/LogicalLinear.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/9752/trunk/algo/loglin/CMakeLists.txt
+END
+LogicalLinearPixel.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/971/trunk/algo/loglin/LogicalLinearPixel.h
+END

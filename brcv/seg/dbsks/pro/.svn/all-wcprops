@@ -1,0 +1,197 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/lemsvxl/!svn/ver/14140/trunk/brcv/seg/dbsks/pro
+END
+dbsks_compute_shock_graph_stats_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/14140/trunk/brcv/seg/dbsks/pro/dbsks_compute_shock_graph_stats_process.cxx
+END
+dbsks_shapematch_storage.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/10805/trunk/brcv/seg/dbsks/pro/dbsks_shapematch_storage.cxx
+END
+dbsks_local_match_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/11197/trunk/brcv/seg/dbsks/pro/dbsks_local_match_process.cxx
+END
+dbsks_train_xshock_geom_model_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/13577/trunk/brcv/seg/dbsks/pro/dbsks_train_xshock_geom_model_process.h
+END
+dbsks_load_dp_results_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/10397/trunk/brcv/seg/dbsks/pro/dbsks_load_dp_results_process.h
+END
+dbsks_trace_opt_graph_bnd_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/10397/trunk/brcv/seg/dbsks/pro/dbsks_trace_opt_graph_bnd_process.h
+END
+dbsks_save_arc_cost_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/10397/trunk/brcv/seg/dbsks/pro/dbsks_save_arc_cost_process.cxx
+END
+dbsks_compute_symmetry_points_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/10397/trunk/brcv/seg/dbsks/pro/dbsks_compute_symmetry_points_process.cxx
+END
+dbsks_detect_xgraph_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12092/trunk/brcv/seg/dbsks/pro/dbsks_detect_xgraph_process.cxx
+END
+dbsks_compute_shock_graph_stats_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/11612/trunk/brcv/seg/dbsks/pro/dbsks_compute_shock_graph_stats_process.h
+END
+dbsks_shapematch_storage.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/10805/trunk/brcv/seg/dbsks/pro/dbsks_shapematch_storage.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/13577/trunk/brcv/seg/dbsks/pro/CMakeLists.txt
+END
+dbsks_detect_shape_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/14140/trunk/brcv/seg/dbsks/pro/dbsks_detect_shape_process.cxx
+END
+dbsks_compute_arc_cost_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/11999/trunk/brcv/seg/dbsks/pro/dbsks_compute_arc_cost_process.cxx
+END
+dbsks_local_match_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/10805/trunk/brcv/seg/dbsks/pro/dbsks_local_match_process.h
+END
+dbsks_write_shapematch_to_ps_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/11193/trunk/brcv/seg/dbsks/pro/dbsks_write_shapematch_to_ps_process.cxx
+END
+dbsks_load_arc_cost_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/11232/trunk/brcv/seg/dbsks/pro/dbsks_load_arc_cost_process.cxx
+END
+dbsks_train_xshock_ccm_model_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/13837/trunk/brcv/seg/dbsks/pro/dbsks_train_xshock_ccm_model_process.cxx
+END
+dbsks_shapematch_storage_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/10397/trunk/brcv/seg/dbsks/pro/dbsks_shapematch_storage_sptr.h
+END
+dbsks_save_arc_cost_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/10397/trunk/brcv/seg/dbsks/pro/dbsks_save_arc_cost_process.h
+END
+dbsks_save_dp_results_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/10397/trunk/brcv/seg/dbsks/pro/dbsks_save_dp_results_process.cxx
+END
+dbsks_compute_symmetry_points_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/10397/trunk/brcv/seg/dbsks/pro/dbsks_compute_symmetry_points_process.h
+END
+dbsks_detect_xgraph_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12092/trunk/brcv/seg/dbsks/pro/dbsks_detect_xgraph_process.h
+END
+dbsks_detect_shape_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/10397/trunk/brcv/seg/dbsks/pro/dbsks_detect_shape_process.h
+END
+dbsks_compute_arc_cost_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/10416/trunk/brcv/seg/dbsks/pro/dbsks_compute_arc_cost_process.h
+END
+dbsks_write_shapematch_to_ps_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/11193/trunk/brcv/seg/dbsks/pro/dbsks_write_shapematch_to_ps_process.h
+END
+dbsks_load_arc_cost_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/10397/trunk/brcv/seg/dbsks/pro/dbsks_load_arc_cost_process.h
+END
+dbsks_train_xshock_geom_model_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/13599/trunk/brcv/seg/dbsks/pro/dbsks_train_xshock_geom_model_process.cxx
+END
+dbsks_train_xshock_ccm_model_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/13577/trunk/brcv/seg/dbsks/pro/dbsks_train_xshock_ccm_model_process.h
+END
+dbsks_load_dp_results_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/11232/trunk/brcv/seg/dbsks/pro/dbsks_load_dp_results_process.cxx
+END
+dbsks_trace_opt_graph_bnd_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/10397/trunk/brcv/seg/dbsks/pro/dbsks_trace_opt_graph_bnd_process.cxx
+END
+dbsks_save_dp_results_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/10397/trunk/brcv/seg/dbsks/pro/dbsks_save_dp_results_process.h
+END

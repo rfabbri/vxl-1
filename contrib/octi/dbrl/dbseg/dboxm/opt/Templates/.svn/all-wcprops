@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/Templates
+END
+boxm_aux_scene+short.boxm_sample+BOXM_APM_SIMPLE_GREY-.boxm_rt_sample+float--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 159
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/Templates/boxm_aux_scene+short.boxm_sample+BOXM_APM_SIMPLE_GREY-.boxm_rt_sample+float--.cxx
+END
+boxm_block+boct_tree+short.boxm_rt_sample+float---.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/Templates/boxm_block+boct_tree+short.boxm_rt_sample+float---.cxx
+END
+boxm_opt_rt_bayesian_optimizer+short.BOXM_APM_SIMPLE_GREY.BOXM_AUX_OPT_RT_GREY-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 161
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/Templates/boxm_opt_rt_bayesian_optimizer+short.BOXM_APM_SIMPLE_GREY.BOXM_AUX_OPT_RT_GREY-.cxx
+END
+boxm_scene+boct_tree+short.boxm_rt_sample+float---.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/Templates/boxm_scene+boct_tree+short.boxm_rt_sample+float---.cxx
+END
+boct_tree_cell_reader+short.boxm_sample+BOXM_APM_MOB_GREY--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/Templates/boct_tree_cell_reader+short.boxm_sample+BOXM_APM_MOB_GREY--.cxx
+END
+boxm_aux_scene+short.boxm_sample+BOXM_APM_MOB_GREY-.boxm_rt_sample+float--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 156
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/Templates/boxm_aux_scene+short.boxm_sample+BOXM_APM_MOB_GREY-.boxm_rt_sample+float--.cxx
+END
+boct_tree_cell+short.boxm_rt_sample+float--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/Templates/boct_tree_cell+short.boxm_rt_sample+float--.cxx
+END
+boct_tree+short.boxm_rt_sample+float--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/Templates/boct_tree+short.boxm_rt_sample+float--.cxx
+END
+boct_tree_cell_reader+short.boxm_rt_sample+float--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/Templates/boct_tree_cell_reader+short.boxm_rt_sample+float--.cxx
+END
+boct_tree_cell_reader+short.boxm_sample+BOXM_APM_MOG_GREY--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/Templates/boct_tree_cell_reader+short.boxm_sample+BOXM_APM_MOG_GREY--.cxx
+END
+boxm_aux_scene+short.boxm_sample+BOXM_APM_MOG_GREY-.boxm_rt_sample+float--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 156
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/Templates/boxm_aux_scene+short.boxm_sample+BOXM_APM_MOG_GREY-.boxm_rt_sample+float--.cxx
+END
+boxm_rt_sample+float-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/Templates/boxm_rt_sample+float-.cxx
+END
+vbl_array_3d+boxm_block+boct_tree+short.boxm_rt_sample+float---~-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 147
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/Templates/vbl_array_3d+boxm_block+boct_tree+short.boxm_rt_sample+float---~-.cxx
+END

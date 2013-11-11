@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/8865/trunk/contrib/biotree/roipick/bin
+END
+skyscan_roi_pick_menus.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/8865/trunk/contrib/biotree/roipick/bin/skyscan_roi_pick_menus.cxx
+END
+skyscan_roi_pick_menus.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/8865/trunk/contrib/biotree/roipick/bin/skyscan_roi_pick_menus.h
+END
+skyscan_roi_pick.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/7824/trunk/contrib/biotree/roipick/bin/skyscan_roi_pick.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/7824/trunk/contrib/biotree/roipick/bin/CMakeLists.txt
+END

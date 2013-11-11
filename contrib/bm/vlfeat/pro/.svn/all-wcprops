@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/14903/trunk/contrib/bm/vlfeat/pro
+END
+vlfeat_register.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14903/trunk/contrib/bm/vlfeat/pro/vlfeat_register.cxx
+END
+vlfeat_register.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/14903/trunk/contrib/bm/vlfeat/pro/vlfeat_register.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/14903/trunk/contrib/bm/vlfeat/pro/CMakeLists.txt
+END
+vlfeat_processes.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/14903/trunk/contrib/bm/vlfeat/pro/vlfeat_processes.h
+END

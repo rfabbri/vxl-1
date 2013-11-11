@@ -1,0 +1,39 @@
+Move filter based 3d-volume from xmvg to vol3d (gamze)
+
+vcl_log2 (kk)
+
+building executables:(terry)
+  (1) button to update, tag, rebuild on cluster, run a test case, and
+report back. 
+  (2) script for transfering from cluster to DB
+cvs tag and user and date  are part of description of executable
+
+synthetic images generator should use xscan_scan in order to generate
+the right scan file (Can)
+
+test-cases for the edge-detectors (Can)
+
+bugzilla (Terry)
+
+test for proc on cluster (kk)
+
+test for splr_proc on cluster (klein)
+
+including resolution in splr responses (gamze)
+
+fix geom_index_structure (klein)
+
+delete all examples that don't make sense (pradeep)
+
+two display programs, one voxel-oriented on a regular grid, one 
+arbitrary, geometric objects (actually cylinders) (pradeep)
+
+getting big box from margin from filter descriptor (pradeep)
+
+----------------------------------------------
+
+make separate procs for each of the stages of our processing, all
+called by the uber-proc, which takes an xml description of which
+processes are run.  No visualization (UNASSIGNED)
+
+parallel-beam versions of edge-detectors (klein)

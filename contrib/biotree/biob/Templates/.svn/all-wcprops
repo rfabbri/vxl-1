@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/6122/trunk/contrib/biotree/biob/Templates
+END
+vbl_smart_ptr+biob_explicit_worldpt_roster.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/lemsvxl/!svn/ver/6056/trunk/contrib/biotree/biob/Templates/vbl_smart_ptr+biob_explicit_worldpt_roster.cxx
+END
+vbl_smart_ptr+biob_grid_worldpt_roster-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/5613/trunk/contrib/biotree/biob/Templates/vbl_smart_ptr+biob_grid_worldpt_roster-.cxx
+END
+vbl_smart_ptr+biob_subset_worldpt_roster-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/lemsvxl/!svn/ver/6122/trunk/contrib/biotree/biob/Templates/vbl_smart_ptr+biob_subset_worldpt_roster-.cxx
+END
+vbl_smart_ptr+biob_worldpt_field-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/5693/trunk/contrib/biotree/biob/Templates/vbl_smart_ptr+biob_worldpt_field-.cxx
+END
+biob_enumerator+biob_worldpt_index-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/5700/trunk/contrib/biotree/biob/Templates/biob_enumerator+biob_worldpt_index-.cxx
+END
+vbl_smart_ptr+biob_worldpt_index_enumerator-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/lemsvxl/!svn/ver/5700/trunk/contrib/biotree/biob/Templates/vbl_smart_ptr+biob_worldpt_index_enumerator-.cxx
+END
+vbl_smart_ptr+biob_worldpt_roster-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/5975/trunk/contrib/biotree/biob/Templates/vbl_smart_ptr+biob_worldpt_roster-.cxx
+END

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/6531/trunk/contrib/biotree/xmvg/algo/Templates
+END
+xmvg_dot_product_2d+double.uchar-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/lemsvxl/!svn/ver/2928/trunk/contrib/biotree/xmvg/algo/Templates/xmvg_dot_product_2d+double.uchar-.cxx
+END
+xmvg_dot_product_2d+double.ushort-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/2891/trunk/contrib/biotree/xmvg/algo/Templates/xmvg_dot_product_2d+double.ushort-.cxx
+END
+xmvg_ramp_compensation+double-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/6531/trunk/contrib/biotree/xmvg/algo/Templates/xmvg_ramp_compensation+double-.cxx
+END
+xmvg_ramp_compensation+float-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/6531/trunk/contrib/biotree/xmvg/algo/Templates/xmvg_ramp_compensation+float-.cxx
+END

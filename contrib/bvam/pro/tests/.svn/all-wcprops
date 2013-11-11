@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/lemsvxl/!svn/ver/11184/trunk/contrib/bvam/pro/tests
+END
+world_model_params_lvcs.txt
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/11011/trunk/contrib/bvam/pro/tests/world_model_params_lvcs.txt
+END
+test_bvam_roi_init_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/11122/trunk/contrib/bvam/pro/tests/test_bvam_roi_init_process.cxx
+END
+test_bvam_rpc_registration_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/11150/trunk/contrib/bvam/pro/tests/test_bvam_rpc_registration_process.cxx
+END
+two_box_synth.tif
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/11098/trunk/contrib/bvam/pro/tests/two_box_synth.tif
+END
+po_39928_pan_0000000_chip_700_700_noICHIPB.ntf
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/10964/trunk/contrib/bvam/pro/tests/po_39928_pan_0000000_chip_700_700_noICHIPB.ntf
+END
+test_bvam_create_voxel_world_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/11117/trunk/contrib/bvam/pro/tests/test_bvam_create_voxel_world_process.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/11109/trunk/contrib/bvam/pro/tests/test_driver.cxx
+END
+roi_params.xml
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/10964/trunk/contrib/bvam/pro/tests/roi_params.xml
+END
+rpc_registration_parameters.xml
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/11109/trunk/contrib/bvam/pro/tests/rpc_registration_parameters.xml
+END
+po_39928_pan_0000000_chip_700_700_withICHIPB.nitf
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/lemsvxl/!svn/ver/11125/trunk/contrib/bvam/pro/tests/po_39928_pan_0000000_chip_700_700_withICHIPB.nitf
+END
+po_39928_pan_0000000_chip_700_700_noICHIPB.nitf
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/10987/trunk/contrib/bvam/pro/tests/po_39928_pan_0000000_chip_700_700_noICHIPB.nitf
+END
+edge_map_params.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/11109/trunk/contrib/bvam/pro/tests/edge_map_params.xml
+END
+rpc_registration_image.png
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/11109/trunk/contrib/bvam/pro/tests/rpc_registration_image.png
+END
+test_bvam_normalize_image_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/11184/trunk/contrib/bvam/pro/tests/test_bvam_normalize_image_process.cxx
+END
+rpc_registration_camera.rpb
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/11128/trunk/contrib/bvam/pro/tests/rpc_registration_camera.rpb
+END
+world_model_params.xml
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/11011/trunk/contrib/bvam/pro/tests/world_model_params.xml
+END
+test_bvam_change_detection_display_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/11059/trunk/contrib/bvam/pro/tests/test_bvam_change_detection_display_process.cxx
+END
+test_bvam_illum_index_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/11125/trunk/contrib/bvam/pro/tests/test_bvam_illum_index_process.cxx
+END
+change_display_params.xml
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/11059/trunk/contrib/bvam/pro/tests/change_display_params.xml
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/11125/trunk/contrib/bvam/pro/tests/CMakeLists.txt
+END
+test_bvam_generate_edge_map_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/11109/trunk/contrib/bvam/pro/tests/test_bvam_generate_edge_map_process.cxx
+END

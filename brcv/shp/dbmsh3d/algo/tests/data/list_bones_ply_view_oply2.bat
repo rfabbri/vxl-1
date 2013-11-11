@@ -1,0 +1,1 @@
+dbmsh3dappw -list list_bones_ply.txt -oply2 qq

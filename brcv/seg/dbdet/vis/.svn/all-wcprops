@@ -1,0 +1,245 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/lemsvxl/!svn/ver/16435/trunk/brcv/seg/dbdet/vis
+END
+dbdet_query_linking_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/vis/dbdet_query_linking_tool.cxx
+END
+dbdet_multiview_livewire_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/2729/trunk/brcv/seg/dbdet/vis/dbdet_multiview_livewire_tool.h
+END
+dbdet_sel_DHT_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/11863/trunk/brcv/seg/dbdet/vis/dbdet_sel_DHT_tool.cxx
+END
+dbdet_sel_edge_linking_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/13186/trunk/brcv/seg/dbdet/vis/dbdet_sel_edge_linking_tool.cxx
+END
+dbdet_medial_livewire_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/vis/dbdet_medial_livewire_tool.h
+END
+dbdet_livewire_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/vis/dbdet_livewire_tool.cxx
+END
+dbdet_sel_displayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/vis/dbdet_sel_displayer.h
+END
+dbdet_keypoint_soview2D.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/2882/trunk/brcv/seg/dbdet/vis/dbdet_keypoint_soview2D.cxx
+END
+dbdet_sel_CC_linking_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/11960/trunk/brcv/seg/dbdet/vis/dbdet_sel_CC_linking_tool.h
+END
+dbdet_sel_explorer_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/13186/trunk/brcv/seg/dbdet/vis/dbdet_sel_explorer_tool.h
+END
+dbdet_sel_contour_explorer_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/10335/trunk/brcv/seg/dbdet/vis/dbdet_sel_contour_explorer_tool.h
+END
+dbdet_edgemap_tableau.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/11960/trunk/brcv/seg/dbdet/vis/dbdet_edgemap_tableau.cxx
+END
+dbdet_query_linking_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/10335/trunk/brcv/seg/dbdet/vis/dbdet_query_linking_tool.h
+END
+dbdet_sel_DHT_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/11863/trunk/brcv/seg/dbdet/vis/dbdet_sel_DHT_tool.h
+END
+dbdet_sel_edge_linking_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/10335/trunk/brcv/seg/dbdet/vis/dbdet_sel_edge_linking_tool.h
+END
+dbdet_sel_curvelet_linking_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/11867/trunk/brcv/seg/dbdet/vis/dbdet_sel_curvelet_linking_tool.cxx
+END
+dbdet_crop_curvelet_map_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/11864/trunk/brcv/seg/dbdet/vis/dbdet_crop_curvelet_map_tool.cxx
+END
+dbdet_livewire_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/vis/dbdet_livewire_tool.h
+END
+dbdet_keypoint_soview2D.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/2677/trunk/brcv/seg/dbdet/vis/dbdet_keypoint_soview2D.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/11866/trunk/brcv/seg/dbdet/vis/CMakeLists.txt
+END
+dbdet_sel_tableau_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/6218/trunk/brcv/seg/dbdet/vis/dbdet_sel_tableau_sptr.h
+END
+dbdet_edgemap_displayer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/vis/dbdet_edgemap_displayer.cxx
+END
+dbdet_keypoint_displayer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/vis/dbdet_keypoint_displayer.cxx
+END
+dbdet_sel_tableau.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/16397/trunk/brcv/seg/dbdet/vis/dbdet_sel_tableau.cxx
+END
+dbdet_crop_edgemap_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/13186/trunk/brcv/seg/dbdet/vis/dbdet_crop_edgemap_tool.cxx
+END
+dbdet_edgemap_tableau.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/11865/trunk/brcv/seg/dbdet/vis/dbdet_edgemap_tableau.h
+END
+dbdet_sel_tableau_commands.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/16435/trunk/brcv/seg/dbdet/vis/dbdet_sel_tableau_commands.h
+END
+dbdet_multiview_livewire_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/2351/trunk/brcv/seg/dbdet/vis/dbdet_multiview_livewire_tool.cxx
+END
+dbdet_sel_curvelet_linking_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/11866/trunk/brcv/seg/dbdet/vis/dbdet_sel_curvelet_linking_tool.h
+END
+dbdet_crop_curvelet_map_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/11864/trunk/brcv/seg/dbdet/vis/dbdet_crop_curvelet_map_tool.h
+END
+dbdet_edgemap_tableau_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/8093/trunk/brcv/seg/dbdet/vis/dbdet_edgemap_tableau_sptr.h
+END
+dbdet_medial_livewire_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/vis/dbdet_medial_livewire_tool.cxx
+END
+dbdet_sel_displayer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/10335/trunk/brcv/seg/dbdet/vis/dbdet_sel_displayer.cxx
+END
+dbdet_sel_CC_linking_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/11969/trunk/brcv/seg/dbdet/vis/dbdet_sel_CC_linking_tool.cxx
+END
+dbdet_sel_explorer_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/13186/trunk/brcv/seg/dbdet/vis/dbdet_sel_explorer_tool.cxx
+END
+dbdet_edgemap_displayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/vis/dbdet_edgemap_displayer.h
+END
+dbdet_keypoint_displayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/vis/dbdet_keypoint_displayer.h
+END
+dbdet_sel_tableau.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/15933/trunk/brcv/seg/dbdet/vis/dbdet_sel_tableau.h
+END
+dbdet_crop_edgemap_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/9286/trunk/brcv/seg/dbdet/vis/dbdet_crop_edgemap_tool.h
+END
+dbdet_sel_contour_explorer_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/13186/trunk/brcv/seg/dbdet/vis/dbdet_sel_contour_explorer_tool.cxx
+END

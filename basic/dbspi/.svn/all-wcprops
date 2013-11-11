@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/lemsvxl/!svn/ver/13848/trunk/basic/dbspi
+END
+dbspi_curve_distance.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/12692/trunk/basic/dbspi/dbspi_curve_distance.cxx
+END
+introduction_doxy.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/12653/trunk/basic/dbspi/introduction_doxy.txt
+END
+dbspi_curve_map.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/12352/trunk/basic/dbspi/dbspi_curve_map.cxx
+END
+dbspi_curve_distance.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/12692/trunk/basic/dbspi/dbspi_curve_distance.h
+END
+dbspi_chamfer.txx
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/11924/trunk/basic/dbspi/dbspi_chamfer.txx
+END
+dbspi_curve_map.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/1876/trunk/basic/dbspi/dbspi_curve_map.h
+END
+dbspi_chamfer.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/1876/trunk/basic/dbspi/dbspi_chamfer.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/12674/trunk/basic/dbspi/CMakeLists.txt
+END

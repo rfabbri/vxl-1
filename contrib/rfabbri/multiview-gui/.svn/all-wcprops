@@ -1,0 +1,167 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/13447/trunk/contrib/rfabbri/multiview-gui
+END
+mw_util.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/5842/trunk/contrib/rfabbri/multiview-gui/mw_util.cxx
+END
+THIS_DIRECTORY_IS_OBSOLETE_GO_TO_MW_INSTEAD
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/13447/trunk/contrib/rfabbri/multiview-gui/THIS_DIRECTORY_IS_OBSOLETE_GO_TO_MW_INSTEAD
+END
+epip_app.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/9319/trunk/contrib/rfabbri/multiview-gui/epip_app.h
+END
+mw_app.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/9319/trunk/contrib/rfabbri/multiview-gui/mw_app.cxx
+END
+mw_rig.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/3225/trunk/contrib/rfabbri/multiview-gui/mw_rig.cxx
+END
+mw_match.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/3125/trunk/contrib/rfabbri/multiview-gui/mw_match.h
+END
+mw_discrete_corresp.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/3147/trunk/contrib/rfabbri/multiview-gui/mw_discrete_corresp.h
+END
+mw_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/9319/trunk/contrib/rfabbri/multiview-gui/mw_main.cxx
+END
+geno_app.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/9319/trunk/contrib/rfabbri/multiview-gui/geno_app.cxx
+END
+mw_menu.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/3076/trunk/contrib/rfabbri/multiview-gui/mw_menu.h
+END
+epip_app.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/9319/trunk/contrib/rfabbri/multiview-gui/epip_app.cxx
+END
+show_contours_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/9319/trunk/contrib/rfabbri/multiview-gui/show_contours_process.h
+END
+mw_match.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/5842/trunk/contrib/rfabbri/multiview-gui/mw_match.cxx
+END
+mw_curves.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/3147/trunk/contrib/rfabbri/multiview-gui/mw_curves.h
+END
+confiles
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/3088/trunk/contrib/rfabbri/multiview-gui/confiles
+END
+mw_discrete_corresp.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/3147/trunk/contrib/rfabbri/multiview-gui/mw_discrete_corresp.cxx
+END
+mw_util.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/5842/trunk/contrib/rfabbri/multiview-gui/mw_util.h
+END
+writecam.m
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/3117/trunk/contrib/rfabbri/multiview-gui/writecam.m
+END
+mw_cmd.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/3223/trunk/contrib/rfabbri/multiview-gui/mw_cmd.cxx
+END
+mw_menu.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/9319/trunk/contrib/rfabbri/multiview-gui/mw_menu.cxx
+END
+mw_app.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/9319/trunk/contrib/rfabbri/multiview-gui/mw_app.h
+END
+mw_rig.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/5842/trunk/contrib/rfabbri/multiview-gui/mw_rig.h
+END
+mw_curves.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/3173/trunk/contrib/rfabbri/multiview-gui/mw_curves.cxx
+END
+show_contours_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/9319/trunk/contrib/rfabbri/multiview-gui/show_contours_process.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/9319/trunk/contrib/rfabbri/multiview-gui/CMakeLists.txt
+END
+mw_basename
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/3088/trunk/contrib/rfabbri/multiview-gui/mw_basename
+END
+geno_app.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/9319/trunk/contrib/rfabbri/multiview-gui/geno_app.h
+END

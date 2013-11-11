@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dbbgm/pro/tests
+END
+test_include.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dbbgm/pro/tests/test_include.cxx
+END
+test_io.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dbbgm/pro/tests/test_io.cxx
+END
+test_update_dist_image.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dbbgm/pro/tests/test_update_dist_image.cxx
+END
+test_neighborhood_ops.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dbbgm/pro/tests/test_neighborhood_ops.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dbbgm/pro/tests/test_driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dbbgm/pro/tests/CMakeLists.txt
+END

@@ -1,0 +1,3 @@
+biosim_ctsim_input
+c (0, 0, 0) 0.02 0.1 (1, 0, 0)
+e

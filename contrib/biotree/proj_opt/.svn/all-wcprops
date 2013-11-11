@@ -1,0 +1,215 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt
+END
+bioproj_g_filter.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_g_filter.cxx
+END
+bioproj_io.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_io.h
+END
+bioproj_mem_data.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_mem_data.h
+END
+error_functions.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/error_functions.cxx
+END
+bioproj_proc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_proc.cxx
+END
+bioproj_nu_gxy_filter.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_nu_gxy_filter.h
+END
+bioproj_nu_gyy_filter.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_nu_gyy_filter.h
+END
+bioproj_gzz_filter.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_gzz_filter.h
+END
+bioproj_mem_io.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_mem_io.cxx
+END
+bioproj_data.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_data.cxx
+END
+bioproj_nu_gx_filter.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_nu_gx_filter.h
+END
+bioproj_nu_gxx_filter.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_nu_gxx_filter.cxx
+END
+bioproj_g_filter.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_g_filter.h
+END
+error_functions.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/error_functions.h
+END
+bioproj_filter_integrant.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_filter_integrant.h
+END
+bioproj_gz_filter.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_gz_filter.cxx
+END
+bioproj_nu_gy_filter.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_nu_gy_filter.cxx
+END
+bioproj_proc.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_proc.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/CMakeLists.txt
+END
+bioproj_mem_io.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_mem_io.h
+END
+bioproj_nu_g_filter.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_nu_g_filter.cxx
+END
+bioproj_data.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_data.h
+END
+bioproj_mem_proc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_mem_proc.cxx
+END
+bioproj_nu_gxx_filter.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_nu_gxx_filter.h
+END
+bioproj_mem_data.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_mem_data.cxx
+END
+bioproj_io.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_io.cxx
+END
+bioproj_gz_filter.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_gz_filter.h
+END
+bioproj_filter.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_filter.h
+END
+bioproj_nu_gy_filter.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_nu_gy_filter.h
+END
+bioproj_nu_gxy_filter.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_nu_gxy_filter.cxx
+END
+bioproj_gzz_filter.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_gzz_filter.cxx
+END
+bioproj_nu_gyy_filter.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_nu_gyy_filter.cxx
+END
+bioproj_nu_g_filter.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_nu_g_filter.h
+END
+bioproj_nu_gx_filter.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_nu_gx_filter.cxx
+END
+bioproj_mem_proc.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/8132/trunk/contrib/biotree/proj_opt/bioproj_mem_proc.h
+END

@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/15894/trunk/contrib/firat/matlab/eccv2012/verification
+END
+levelset_evolution.m
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/15872/trunk/contrib/firat/matlab/eccv2012/verification/levelset_evolution.m
+END
+verify_all_hypotheses.m
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/15893/trunk/contrib/firat/matlab/eccv2012/verification/verify_all_hypotheses.m
+END
+pascal_sim.m
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/15893/trunk/contrib/firat/matlab/eccv2012/verification/pascal_sim.m
+END
+visualize_detections.m
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/15874/trunk/contrib/firat/matlab/eccv2012/verification/visualize_detections.m
+END
+nms_detections.m
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/15872/trunk/contrib/firat/matlab/eccv2012/verification/nms_detections.m
+END
+verify_hypothesis_by_levelset.m
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/lemsvxl/!svn/ver/15894/trunk/contrib/firat/matlab/eccv2012/verification/verify_hypothesis_by_levelset.m
+END

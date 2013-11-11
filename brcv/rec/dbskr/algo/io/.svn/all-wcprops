@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/lemsvxl/!svn/ver/13885/trunk/brcv/rec/dbskr/algo/io
+END
+dbskr_extract_shock_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/11328/trunk/brcv/rec/dbskr/algo/io/dbskr_extract_shock_params.h
+END
+dbskr_detect_patch_params.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/10747/trunk/brcv/rec/dbskr/algo/io/dbskr_detect_patch_params.cxx
+END
+dbskr_match_shock_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/13885/trunk/brcv/rec/dbskr/algo/io/dbskr_match_shock_params.h
+END
+dbskr_extract_patch_params.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/10747/trunk/brcv/rec/dbskr/algo/io/dbskr_extract_patch_params.cxx
+END
+dbskr_match_patch_params.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/10747/trunk/brcv/rec/dbskr/algo/io/dbskr_match_patch_params.cxx
+END
+dbskr_detect_patch_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/11488/trunk/brcv/rec/dbskr/algo/io/dbskr_detect_patch_params.h
+END
+dbskr_extract_bnd_params.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/10747/trunk/brcv/rec/dbskr/algo/io/dbskr_extract_bnd_params.cxx
+END
+dbskr_extract_patch_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/11272/trunk/brcv/rec/dbskr/algo/io/dbskr_extract_patch_params.h
+END
+dbskr_match_patch_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/10747/trunk/brcv/rec/dbskr/algo/io/dbskr_match_patch_params.h
+END
+dbskr_extract_shock_params.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/10747/trunk/brcv/rec/dbskr/algo/io/dbskr_extract_shock_params.cxx
+END
+dbskr_extract_bnd_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/10747/trunk/brcv/rec/dbskr/algo/io/dbskr_extract_bnd_params.h
+END
+dbskr_match_shock_params.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/10747/trunk/brcv/rec/dbskr/algo/io/dbskr_match_shock_params.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/11221/trunk/brcv/rec/dbskr/algo/io/CMakeLists.txt
+END

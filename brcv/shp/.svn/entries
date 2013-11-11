@@ -1,0 +1,80 @@
+9
+
+dir
+15842
+https://visionserver.lems.brown.edu/svn/lemsvxl/trunk/brcv/shp
+https://visionserver.lems.brown.edu/svn/lemsvxl
+
+
+
+2011-11-08T20:56:23.135979Z
+15757
+mn
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+19b38075-fba0-4a01-96da-394feb402aa5
+
+dbmsh3d
+dir
+
+dbsksp
+dir
+
+dbsk2d
+dir
+
+dbsk3d
+dir
+
+dbgdt3d
+dir
+
+CMakeLists.txt
+file
+
+
+
+
+2010-05-28T16:08:56.809550Z
+84a73ec026244d9917c6c1327b4db814
+2008-10-14T15:35:16.000000Z
+12032
+mleotta
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+337
+
+gdt
+dir
+

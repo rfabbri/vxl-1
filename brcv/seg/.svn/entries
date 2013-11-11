@@ -1,0 +1,80 @@
+9
+
+dir
+16397
+https://visionserver.lems.brown.edu/svn/lemsvxl/trunk/brcv/seg
+https://visionserver.lems.brown.edu/svn/lemsvxl
+
+
+
+2012-07-02T20:27:47.294285Z
+16397
+Naman
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+19b38075-fba0-4a01-96da-394feb402aa5
+
+dbcll
+dir
+
+dbdet
+dir
+
+dbacm
+dir
+
+dbsks
+dir
+
+dbbgm
+dir
+
+dbacm3d
+dir
+
+CMakeLists.txt
+file
+
+
+
+
+2010-05-28T16:09:04.029300Z
+0d07c4a9818a5fff8eac3c0e861d973e
+2009-09-10T19:40:31.000000Z
+13397
+rfabbri
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+485
+

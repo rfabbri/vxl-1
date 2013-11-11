@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/12780/trunk/contrib/rfabbri/mw/algo/siftpp
+END
+sift-driver.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/12220/trunk/contrib/rfabbri/mw/algo/siftpp/sift-driver.cpp
+END
+sift.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/12780/trunk/contrib/rfabbri/mw/algo/siftpp/sift.cpp
+END
+sift-conv.tpp
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/12226/trunk/contrib/rfabbri/mw/algo/siftpp/sift-conv.tpp
+END
+sift.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/12276/trunk/contrib/rfabbri/mw/algo/siftpp/sift.hpp
+END
+sift.ipp
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/12581/trunk/contrib/rfabbri/mw/algo/siftpp/sift.ipp
+END

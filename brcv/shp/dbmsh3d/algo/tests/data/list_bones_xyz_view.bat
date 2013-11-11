@@ -1,0 +1,1 @@
+dbmsh3dappw -list list_bones_xyz.txt -gsize 2 -bg 0

@@ -1,0 +1,3 @@
+#include <dboxm/boxm_apm_traits.h>
+#include <dboxm/opt/open_cl/tests/octree_test_driver.txx>
+OCTREE_TEST_DRIVER_INSTANTIATE(boxm_sample<BOXM_APM_SIMPLE_GREY>);

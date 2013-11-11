@@ -1,0 +1,30 @@
+# 3D application
+# contrib/polygon_triangulation/CMakeLists.txt
+#
+# A Polygon triangulation code from flipcode.com
+# Added by Ming-Ching Chang, Aug 16, 2005
+#
+#
+# THIS IS A CODE SNIPPET WHICH WILL EFFICIEINTLY TRIANGULATE ANY
+# POLYGON/CONTOUR (without holes) AS A  CLASS.  THIS SNIPPET
+# IS COMPRISED OF 3 FILES, TRIANGULATE.H, THE HEADER FILE FOR THE
+# TRIANGULATE BASE CLASS, TRIANGULATE.CPP, THE IMPLEMENTATION OF
+# THE TRIANGULATE BASE CLASS, AND TEST.CPP, A SMALL TEST PROGRAM
+# DEMONSTRATING THE USAGE OF THE TRIANGULATOR.  THE TRIANGULATE
+# BASE CLASS ALSO PROVIDES TWO USEFUL HELPER METHODS, ONE WHICH
+# COMPUTES THE AREA OF A POLYGON, AND ANOTHER WHICH DOES AN EFFICENT
+# POINT IN A TRIANGLE TEST.
+# SUBMITTED BY JOHN W. RATCLIFF (jratcliff@verant.com) July 22, 2000
+#
+#
+
+SET ( polygon_tri_sources
+   triangulate.cxx              triangulate.h
+   test.cxx
+)
+
+
+ADD_EXECUTABLE ( polygon_tri ${polygon_tri_sources})
+
+TARGET_LINK_LIBRARIES( polygon_tri vcl )
+

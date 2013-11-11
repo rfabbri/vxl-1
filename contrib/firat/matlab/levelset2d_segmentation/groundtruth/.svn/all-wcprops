@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/15489/trunk/contrib/firat/matlab/levelset2d_segmentation/groundtruth
+END
+draw_contours.m
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/lemsvxl/!svn/ver/15481/trunk/contrib/firat/matlab/levelset2d_segmentation/groundtruth/draw_contours.m
+END
+show_contours.m
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/lemsvxl/!svn/ver/15489/trunk/contrib/firat/matlab/levelset2d_segmentation/groundtruth/show_contours.m
+END

@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/11845/trunk/contrib/bwm_lidar/vis
+END
+bwm_lidar_vis.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/11845/trunk/contrib/bwm_lidar/vis/bwm_lidar_vis.cxx
+END
+bwm_lidar_vis.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/10367/trunk/contrib/bwm_lidar/vis/bwm_lidar_vis.h
+END
+bwm_lidar_cmdproc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/10368/trunk/contrib/bwm_lidar/vis/bwm_lidar_cmdproc.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/10359/trunk/contrib/bwm_lidar/vis/CMakeLists.txt
+END
+bwm_lidar_cmdproc.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/10362/trunk/contrib/bwm_lidar/vis/bwm_lidar_cmdproc.h
+END

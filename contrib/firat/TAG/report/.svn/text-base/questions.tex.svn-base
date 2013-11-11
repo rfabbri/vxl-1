@@ -1,0 +1,111 @@
+\subsection{Questions, Propositions and Proofs}
+
+The slope line at each point can be obtained by integrating an ODE $\alpha'(s) = -\grad f(\alpha(s))$ where $\alpha(s)$ is the slope line.
+
+\begin{proposition}
+	 There is only one slope line through each regular point $P$ since the ODE, $\alpha'(s) = -\grad f(\alpha(s))$, with initial value for $\alpha(0) = P$ has a unique solution.	 
+\end{proposition}
+This is an explicit ODE for which there is a unique solution by the existense and uniqueness theorem \cite{Rieger:IJCV97}. Also see \cite{UniquenessTheoremWiki}.
+
+\begin{proposition}
+	The end points of a slope line segment, \ie, the slope line between two consecutive critical points, cannot both be a pit or both be a peak.
+\end{proposition}
+Let both $p_1$ and $p_2$ be two consecutive peaks on a slope line segment. Without loss of generality, assume that the downward flow is from $p_1$ to $p_2$. Since all slope lines around a peak must be outgoing, there is a contradiction in $p_2$ having an incoming slope line. Therefore, we can say that both end points cannot be a peak. A similar proof can be given for the pit case.
+
+\begin{corollary}
+	Can we have two slope lines meeting tangentially or intersecting transversely at a regular point?
+\end{corollary}
+No. Assume two slope lines meet at regular point $p$. Then, if we solve the slope line ODE with $\alpha(0) = p$, we should get two separate curves. But, we already know that the solution is unique, so that would be a contradiction.  
+
+\begin{question}
+	How do slope lines behave near min/max points?
+\end{question}
+\begin{figure}
+\centering
+\subfloat[max]{\label{fig:minslopelines}\includegraphics[height=.15\textheight]{img/max-slope-lines.png}}\;
+\subfloat[min]{\label{fig:maxslopelines}\includegraphics[height=.15\textheight]{img/min-slope-lines.png}}
+\subfloat[saddle]{\label{fig:saddleslopelines}\includegraphics[height=.15\textheight]{img/saddle-slope-lines.png}}\;
+\caption{Slope line behaviour near critical points. $e_1$ and $e_2$ are the principal curvature directions. Figures were taken from \cite{Nackman:PAMI84}.}
+\label{fig:cpslopelines}
+\end{figure}
+All slope lines approach mininima/maxima tangent to one of the principal curvatures \cite{Nackman:PAMI84}. See Figures \ref{fig:minslopelines} and \ref{fig:maxslopelines}. If the point is umbilical, the slope lines approach from all directions. This can be verified using a Monge patch. Let $f(x,y) = a x^2 + b y^2$ be the surface of interest where the signs of $a$ and $b$ are the same. Note that $(0,0)$ is either a max or a min point. Let $p_0 = (\epsilon \cos \theta, \epsilon \sin \theta)$ be a point on a slope line originating from $(0,0)$. Observe that as $\epsilon$ goes to $0$, the vector $p_0 - (0,0) = (\epsilon \cos \theta, \epsilon \sin \theta)$ becomes tangent to $\grad f(p_0) = (2 a \epsilon \cos \theta, 2 b \epsilon \sin \theta)$. This implies that $(2a \epsilon \cos \theta, 2b \epsilon \sin \theta) \cdot(\epsilon \sin \theta, - \epsilon \cos \theta) = 0$ which reduces to $(a-b) \sin 2\theta = 0$. If the point is not umbilical, $a \neq b$, then $\theta = 0$ or $\theta = \pi/2$ which are the pricincipal curvature directions. On the other hand, if $a = b$, the value of $\theta$ is arbitrary.
+
+\begin{question}
+	How do slope lines behave near saddle points?
+\end{question}
+See Figure \ref{fig:saddleslopelines}. We can use the same argument to show that the slope lines approach saddles along $e_1$ and $e_2$. Consider the Monge patch $f(x,y) = a x^2 + b y^2$ where $a$ and $b$ have opposite signs. Using the same approach we applied in the previous question, we obtain $(a-b) \sin 2\theta = 0$. In this case, it is guaranteed that $a \neq b$. Thus, $\theta = 0$ or $\theta = \pi/2$ are the solutions which correspond to the principle curvature directions. 
+\begin{question}
+	How do we characterize the hill corresponding to each peak?
+\end{question}
+Let $p_0$ be a peak. Then, $\Hill(p_0) = \{ p \;| \; \exists \text{ slope line segment through $p$ whose one end point is $p_0$}\}$. Similarly, if $p_0$ is a pit, $\Dale(p_0) = \{ p \;| \; \exists \text{ slope line segment through $p$ whose one end point is $p_0$}\}$.
+
+\begin{question}
+	Can two saddle points be connected with watershed/watercourse lines in generic images?
+\end{question}
+This can happen, but maybe an intrinsically unstable event \cite{Rosin:JVCIR95}, so it may not be generic. We have experience that saddle-saddle connections act like a watershed and watercourse line at the same time.
+\begin{question}
+	Can hills/dales be multiply connected?
+\end{question}
+No. Suppose we have a hill with two disconnected regions. The points in the region without the peak must be connected to the peak with slope lines by definition. Since a region cannot be disconnected from a region containing the peak and have slope lines connected to the peak at the same time, we can say that hills cannot be composed of disconnected regions. \todo{[pathwise connectivity]}
+
+\begin{question}
+	Do hills partition the image domain completely? In other words, is there any point in the domain that does not belong to any hill?
+\end{question}
+Every image point either belongs to a hill (corresponding to a peak) or to a watercourse line (which separates two hills).
+%There is a slope line for every regular point. If we follow slope lines in the upward flow direction starting at a regular point $p$, we will reach a critical point which is either a peak or a saddle. If it is a peak, then $p$ belongs to the associated hill. But if it is a saddle, then $p$ belongs to a watercourse line. Therefore, the points other than those belonging to watercourse lines belong to hills.
+Similarly,  every image point belongs to a dale (which corresponds to a pit) or to a watershed line (which separates two dales).
+\begin{proposition}
+	Hills are tightly surrounded by watercourse lines. In other words, watercourse lines correspond to hill boundaries. 
+\end{proposition}
+Yes. \todo{Don't know how to prove this!}
+
+\begin{figure}
+\centering
+\includegraphics[width=.45\textwidth]{img/slope-district-catalog.png}
+\caption{Catalog of slope districts. Taken from \cite{Nackman:PAMI84}.}
+\label{fig:slopedistrictcatalog}
+\end{figure}
+
+\begin{question}
+	Are saddle-saddle connections possible?
+\end{question}
+Yes. See Nackman's slope district catalog \cite{Nackman:PAMI84}. (Figure \ref{fig:slopedistrictcatalog}). It is not clear whether watershed, watercourse or both simultaneously connect them.
+\begin{question}
+	Are saddle-saddle connections generic?
+\end{question}
+\todo{TODO}
+\begin{question}
+	Is there any critical point that does not belong to a watershed/watercourse line?
+\end{question}
+No. There are slope line segments going in or out of each critical point. And those segments always have another end point (possibly out of boundaries in the case of images) which is also a critical point. Based on the type of the end points, these slope line segments are either watershed or watercourse lines.
+\begin{question}
+	Can there be any watershed/watercourse line without any critical points?
+\end{question}
+No. Watershed/watercourse lines are slope line segments, so by definition their end points are always critical points.
+\begin{proposition}
+	There is no other max point on a hill boundary.
+\end{proposition}
+Assume that $p$ is a max point on the boundary of hill $h$. In some neighborhood of $p$ with no other critical points, all the upward flowing slope lines converge to $p$. Since this neighborhood intersects $h$, all the points in the intersection must belong to $h$ and the hill corresponding to $p$ at the same time. Since this is not possible, we can say that there cannot be any peaks on a hill boundary.
+
+\noindent Another explanation: Hill boundaries are composed of watercourse lines, so there can only be regular, min and saddle points. 
+\begin{proposition}
+	There is at least one saddle and one min (max) point on a hill (dale) boundary.
+\end{proposition}
+\todo{[This proof ignores the saddle-saddle connections. INCORRECT.]} Since hills are bounded by watercourse lines whose end points are always a min and a saddle point, it is clear that there must be at least one min and one saddle point on a hill boundary.
+
+\begin{proposition}
+	Saddles and min points are arranged in an alternating pattern on a hill boundary.
+\end{proposition}
+\todo{[Probably INCORRECT]} Since there is no slope line with min-min or saddle-saddle end points, min and saddle points must be in an alternating pattern.
+\begin{proposition}
+The number of saddles and min points is the same on a hill boundary.
+\end{proposition}
+\todo{[Probably INCORRECT]} The closed alternating pattern guarantees that the number of saddles and min points is the same.
+\begin{question}
+	Can there be another critical point inside a hill (dale) other than the associated peak (pit)?
+\end{question}
+\todo{There is an example showing a special case in \cite{Bremer:etal:TVCG04} on page 3. A min and a saddle point are inside the centeral hill. This example is important, because it is generic and might affect our definition of slope districts.}
+\begin{corollary}
+Slope lines from a hill (dale) meet the hill boundary transversely at a saddle and tangentially at a min.
+\end{corollary}
+Figure \ref{fig:cpslopelines} gives an idea about why this should be correct. Observe how slope lines meet the critical points.

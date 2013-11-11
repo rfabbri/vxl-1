@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/lemsvxl/!svn/ver/11474/trunk/contrib/ozge/bin
+END
+dborl_cmd_line.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/11469/trunk/contrib/ozge/bin/dborl_cmd_line.h
+END
+dbru_match_shock_only2.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/6612/trunk/contrib/ozge/bin/dbru_match_shock_only2.cxx
+END
+dbskr_visualize_patch_detections.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/10911/trunk/contrib/ozge/bin/dbskr_visualize_patch_detections.h
+END
+dborl_cmd_line.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/11474/trunk/contrib/ozge/bin/dborl_cmd_line.cxx
+END
+dbru_match_shock.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/8611/trunk/contrib/ozge/bin/dbru_match_shock.cxx
+END
+dborl_cmd_line_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/11469/trunk/contrib/ozge/bin/dborl_cmd_line_main.cxx
+END
+dbru_match_shock_only.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/6612/trunk/contrib/ozge/bin/dbru_match_shock_only.cxx
+END
+dbskr_visualize_patch_detections.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/11377/trunk/contrib/ozge/bin/dbskr_visualize_patch_detections.cxx
+END
+dber_match_edgels_video.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/8061/trunk/contrib/ozge/bin/dber_match_edgels_video.cxx
+END
+dbru_match_tps_curve.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/6612/trunk/contrib/ozge/bin/dbru_match_tps_curve.cxx
+END
+dbskr_visualize_patch_detections_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/10911/trunk/contrib/ozge/bin/dbskr_visualize_patch_detections_main.cxx
+END
+dbru_match.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/10775/trunk/contrib/ozge/bin/dbru_match.cxx
+END
+match_shock_99db.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/10775/trunk/contrib/ozge/bin/match_shock_99db.cxx
+END
+dber_match_edgels.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/8611/trunk/contrib/ozge/bin/dber_match_edgels.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/11377/trunk/contrib/ozge/bin/CMakeLists.txt
+END
+dbru_match_curve.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/7076/trunk/contrib/ozge/bin/dbru_match_curve.cxx
+END

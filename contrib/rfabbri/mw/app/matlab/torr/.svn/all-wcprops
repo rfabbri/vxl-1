@@ -1,0 +1,545 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/12330/trunk/contrib/rfabbri/mw/app/matlab/torr
+END
+torr_ls.m
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_ls.m
+END
+torr_triangulate.m
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_triangulate.m
+END
+torr_estimateF.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_estimateF.m
+END
+torr_correctx4F.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12330/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_correctx4F.m
+END
+torr_test_F.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_test_F.m
+END
+torr_comp_sam_lin_script.m
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_comp_sam_lin_script.m
+END
+torr_compare_epipoles.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_compare_epipoles.m
+END
+torr_calc_cubic_coefs.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_calc_cubic_coefs.m
+END
+torr_self_calib_f.m
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_self_calib_f.m
+END
+torr_add_manual_matches.m
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_add_manual_matches.m
+END
+torr_gen_2view_matches.m
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_gen_2view_matches.m
+END
+torr_linear_EtoPX.m
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_linear_EtoPX.m
+END
+torr_EtoRt.m
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_EtoRt.m
+END
+torr_test_calib_sc.m
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_test_calib_sc.m
+END
+torr_display_epipolar.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_display_epipolar.m
+END
+torr_nonlinG.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_nonlinG.m
+END
+torr_nonlcon_f2x2.m
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_nonlcon_f2x2.m
+END
+torr_sphere2unit.m
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_sphere2unit.m
+END
+torr_mapsac_F.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_mapsac_F.m
+END
+torr_errg_sse.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_errg_sse.m
+END
+torr_mapsac_H.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_mapsac_H.m
+END
+torr_estf_bookstein_sampson.m
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_estf_bookstein_sampson.m
+END
+torr_estf_bookstein.m
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_estf_bookstein.m
+END
+torr_genf.m
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_genf.m
+END
+torr_m_menu.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_m_menu.m
+END
+torr_F_constrained_fit.m
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_F_constrained_fit.m
+END
+torr_test_mat.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_test_mat.m
+END
+torr_f_reprojection_error.m
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_f_reprojection_error.m
+END
+torr_grad_f.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_grad_f.m
+END
+torr_disp_epip_geom.m
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_disp_epip_geom.m
+END
+torr_self_calib.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_self_calib.m
+END
+torr_main_f_ave.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_main_f_ave.m
+END
+torr_test_correct_sc.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_test_correct_sc.m
+END
+torr_display_structure.m
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_display_structure.m
+END
+j1.bmp
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/j1.bmp
+END
+j2.bmp
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/j2.bmp
+END
+torr_get_right_epipole.m
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_get_right_epipole.m
+END
+torr_RCT2P.m
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_RCT2P.m
+END
+patch_match.c
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/patch_match.c
+END
+torr_charris.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_charris.m
+END
+torrsam.pdf
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torrsam.pdf
+END
+torr_g2FP.m
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_g2FP.m
+END
+torr_errfa.m
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_errfa.m
+END
+torr_estf.m
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_estf.m
+END
+torr_esth.m
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_esth.m
+END
+torr_robust_chieral.m
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_robust_chieral.m
+END
+torr_main_f_ave2.m
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_main_f_ave2.m
+END
+torr_unit2sphere.m
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_unit2sphere.m
+END
+torr_FtoP.m
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_FtoP.m
+END
+torr_napsac_F.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_napsac_F.m
+END
+torr_errf_sseC.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_errf_sseC.m
+END
+torr_napsac_H.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_napsac_H.m
+END
+torr_tool.m
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_tool.m
+END
+torr_sym_f.m
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_sym_f.m
+END
+torr_refine_f_sampson.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_refine_f_sampson.m
+END
+torr_g2F.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_g2F.m
+END
+torr_errf2.m
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_errf2.m
+END
+torr_evalFsc.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_evalFsc.m
+END
+torr_Sampson_F.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_Sampson_F.m
+END
+torr_PfromF.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_PfromF.m
+END
+torr_main_book_ave.m
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_main_book_ave.m
+END
+torr_skew_sym.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_skew_sym.m
+END
+torr_nonlinf_mincon2x2.m
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_nonlinf_mincon2x2.m
+END
+torr_estfa.m
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_estfa.m
+END
+torr_display_epipoles.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_display_epipoles.m
+END
+torr_c_menu.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_c_menu.m
+END
+torr_cor_script.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_cor_script.m
+END
+torr_errf_sse.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_errf_sse.m
+END
+torr_max3x3.c
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_max3x3.c
+END
+torr_display_matches.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_display_matches.m
+END
+torr_test_SFMsc.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_test_SFMsc.m
+END
+torr_quick_fit.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_quick_fit.m
+END
+torr_ransach.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_ransach.m
+END
+torr_main_rotation_ave2.m
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_main_rotation_ave2.m
+END
+torr_test_calib_sc2.m
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_test_calib_sc2.m
+END
+torr_rotations.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_rotations.m
+END
+torr_cal_menu.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_cal_menu.m
+END
+torr_birch_match.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_birch_match.c
+END
+torr_compF_sc.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_compF_sc.m
+END
+torr_gauss_mask.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_gauss_mask.m
+END
+torr_errh.m
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_errh.m
+END
+torr_patch_match.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_patch_match.c
+END
+torr_nonlinf.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_nonlinf.m
+END
+torr_corn_matcher.m
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_corn_matcher.m
+END
+torr_matcher_script.m
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_matcher_script.m
+END
+torr_errf_nl_2.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_errf_nl_2.m
+END
+torr_mlesac_F.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_mlesac_F.m
+END
+torr_f_menu.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_f_menu.m
+END
+readme.txt
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/readme.txt
+END
+torr_nonlcon_f.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12159/trunk/contrib/rfabbri/mw/app/matlab/torr/torr_nonlcon_f.m
+END

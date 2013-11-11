@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/7156/trunk/contrib/biotree/proc/io/examples
+END
+proc_io_run_xml_parser_example.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/6874/trunk/contrib/biotree/proc/io/examples/proc_io_run_xml_parser_example.cxx
+END
+proc_io_filter_xml_parser_example.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/6874/trunk/contrib/biotree/proc/io/examples/proc_io_filter_xml_parser_example.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/7156/trunk/contrib/biotree/proc/io/examples/CMakeLists.txt
+END

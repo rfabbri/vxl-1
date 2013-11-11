@@ -1,0 +1,119 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/lemsvxl/!svn/ver/15765/trunk/contrib/bm/dsm2/io
+END
+dsm2_io_node_base.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/15441/trunk/contrib/bm/dsm2/io/dsm2_io_node_base.h
+END
+dsm2_io_transition_map.txx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/15467/trunk/contrib/bm/dsm2/io/dsm2_io_transition_map.txx
+END
+dsm2_io_transition_map.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/15467/trunk/contrib/bm/dsm2/io/dsm2_io_transition_map.h
+END
+dsm2_io_manager_pixels.txx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/15468/trunk/contrib/bm/dsm2/io/dsm2_io_manager_pixels.txx
+END
+dsm2_io_state_machine_base.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/15441/trunk/contrib/bm/dsm2/io/dsm2_io_state_machine_base.h
+END
+dsm2_io_manager_pixels.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/15468/trunk/contrib/bm/dsm2/io/dsm2_io_manager_pixels.h
+END
+dsm2_io_state_machine.txx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/15467/trunk/contrib/bm/dsm2/io/dsm2_io_state_machine.txx
+END
+dsm2_io_state_machine.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/15441/trunk/contrib/bm/dsm2/io/dsm2_io_state_machine.h
+END
+dsm2_io_transition_table_base.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/15441/trunk/contrib/bm/dsm2/io/dsm2_io_transition_table_base.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/15765/trunk/contrib/bm/dsm2/io/CMakeLists.txt
+END
+dsm2_io_node_gaussian.txx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/15467/trunk/contrib/bm/dsm2/io/dsm2_io_node_gaussian.txx
+END
+dsm2_io_manager_base.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/15467/trunk/contrib/bm/dsm2/io/dsm2_io_manager_base.cxx
+END
+dsm2_io_node_gaussian.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/15467/trunk/contrib/bm/dsm2/io/dsm2_io_node_gaussian.h
+END
+dsm2_io_node_base.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/15467/trunk/contrib/bm/dsm2/io/dsm2_io_node_base.cxx
+END
+dsm2_io_transition_table_base.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/15441/trunk/contrib/bm/dsm2/io/dsm2_io_transition_table_base.h
+END
+dsm2_io_manager_base.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/15467/trunk/contrib/bm/dsm2/io/dsm2_io_manager_base.h
+END
+dsm2_io_manager.txx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/15467/trunk/contrib/bm/dsm2/io/dsm2_io_manager.txx
+END
+dsm2_io_state_machine_base.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/15467/trunk/contrib/bm/dsm2/io/dsm2_io_state_machine_base.cxx
+END
+dsm2_io_manager.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/15467/trunk/contrib/bm/dsm2/io/dsm2_io_manager.h
+END

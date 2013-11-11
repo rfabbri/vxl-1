@@ -1,0 +1,10 @@
+camera pixel size: 10.000000 um
+source to origin distance: 40.000000 mm
+source to sensor distance: 160.000000 mm
+image rows: 200
+image columns: 200
+principal point: (100.000000,100.000000)
+initial source position: (40.000000,0.000000,0.000000)
+rotation axis: (0.000000,0.000000,1.000000)
+rotation step size angle: 2.000000
+number of views: 180

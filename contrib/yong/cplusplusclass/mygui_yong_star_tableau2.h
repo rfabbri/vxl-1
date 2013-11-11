@@ -1,0 +1,56 @@
+#ifndef mygui_yong_star_tableau2_h_
+#define mygui_yong_star_tableau2_h_
+#include <vcl_vector.h>
+#include <vcl_map.h>
+#include <vcl_algorithm.h>
+#include <vcl_utility.h>
+#include <vgui/vgui_easy2D_tableau.h>
+#include <cplusplusclass/mygui_yong_star_tableau2.h>
+#include <cplusplusclass/mygui_yong_star_tableau2_sptr.h>
+#include <cplusplusclass/yong_star.h>
+#include <cplusplusclass/yong_star_sptr.h>
+
+
+struct mygui_yong_star_tableau2_new;
+
+class mygui_yong_star_tableau2 : public vgui_easy2D_tableau
+
+{
+    private:
+    vcl_vector<yong_star_sptr> star_list_;
+    int current_selected_star_;
+    int current_highlighted_star_;
+
+    public:
+  //: Constructor - don't use this, use vgui_easy2D_tableau_new.
+  //  Create an easy2D with the given name.
+  mygui_yong_star_tableau2(const char* n="unnamed");
+
+
+    ~mygui_yong_star_tableau2() { }
+    vcl_string mygui_yong_star_tableau2::type_name() const;
+    bool handle(const vgui_event& e);
+    virtual bool draw();
+    bool set_star_list(vcl_vector<yong_star_sptr> list);
+
+  //: Name of this tableau.
+  vcl_string name_;
+
+  //: the style of the objects
+  vgui_style_sptr style_;
+
+};
+
+
+//-------------------------------------------------------------
+// Make a smart-pointer constructor for our tableau.
+struct mygui_yong_star_tableau2_new : public mygui_yong_star_tableau2_sptr
+{
+  //: Constructor - create an easy2D with the given name.
+  mygui_yong_star_tableau2_new(char const *n="unnamed") :
+    mygui_yong_star_tableau2_sptr(new mygui_yong_star_tableau2(n)) { }
+
+};
+
+#endif // 
+

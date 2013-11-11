@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/15841/trunk/contrib/dbrec_lib/dbrec3d/gui/vtk
+END
+dbrec3d_region_viewer.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/15841/trunk/contrib/dbrec_lib/dbrec3d/gui/vtk/dbrec3d_region_viewer.h
+END
+dbrec3d_pca_kernels_viewer.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/14745/trunk/contrib/dbrec_lib/dbrec3d/gui/vtk/dbrec3d_pca_kernels_viewer.h
+END
+dbrec3d_filter_grid_widget.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/15695/trunk/contrib/dbrec_lib/dbrec3d/gui/vtk/dbrec3d_filter_grid_widget.cxx
+END
+dbrec3d_vtk_boxm_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/14740/trunk/contrib/dbrec_lib/dbrec3d/gui/vtk/dbrec3d_vtk_boxm_utils.h
+END
+dbrec3d_regular_grid_widget.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/15695/trunk/contrib/dbrec_lib/dbrec3d/gui/vtk/dbrec3d_regular_grid_widget.h
+END
+dbrec3d_kernel_viewer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/15496/trunk/contrib/dbrec_lib/dbrec3d/gui/vtk/dbrec3d_kernel_viewer.cxx
+END
+dbrec3d_region_viewer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/15841/trunk/contrib/dbrec_lib/dbrec3d/gui/vtk/dbrec3d_region_viewer.cxx
+END
+dbrec3d_pca_kernels_viewer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/15496/trunk/contrib/dbrec_lib/dbrec3d/gui/vtk/dbrec3d_pca_kernels_viewer.cxx
+END
+dbrec3d_vtk_boxm_utils.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/14740/trunk/contrib/dbrec_lib/dbrec3d/gui/vtk/dbrec3d_vtk_boxm_utils.cxx
+END
+dbrec3d_regular_grid_widget.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/15695/trunk/contrib/dbrec_lib/dbrec3d/gui/vtk/dbrec3d_regular_grid_widget.cxx
+END
+dbrec3d_octree_widget.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/14740/trunk/contrib/dbrec_lib/dbrec3d/gui/vtk/dbrec3d_octree_widget.h
+END
+dbrec3d_filter_grid_widget.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/15695/trunk/contrib/dbrec_lib/dbrec3d/gui/vtk/dbrec3d_filter_grid_widget.h
+END
+dbrec3d_octree_widget.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/14740/trunk/contrib/dbrec_lib/dbrec3d/gui/vtk/dbrec3d_octree_widget.cxx
+END
+dbrec3d_kernel_viewer.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/15496/trunk/contrib/dbrec_lib/dbrec3d/gui/vtk/dbrec3d_kernel_viewer.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/15841/trunk/contrib/dbrec_lib/dbrec3d/gui/vtk/CMakeLists.txt
+END

@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/lemsvxl/!svn/ver/4835/trunk/contrib/itrack/tests
+END
+test_include.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/3638/trunk/contrib/itrack/tests/test_include.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/3612/trunk/contrib/itrack/tests/test_driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/4835/trunk/contrib/itrack/tests/CMakeLists.txt
+END

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/12418/trunk/contrib/ozge/vidl2_gui/bin
+END
+videx_dshow_menus.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/8611/trunk/contrib/ozge/vidl2_gui/bin/videx_dshow_menus.h
+END
+videx_dshow.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/12418/trunk/contrib/ozge/vidl2_gui/bin/videx_dshow.cxx
+END
+videx_dshow_menus.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12418/trunk/contrib/ozge/vidl2_gui/bin/videx_dshow_menus.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12418/trunk/contrib/ozge/vidl2_gui/bin/CMakeLists.txt
+END

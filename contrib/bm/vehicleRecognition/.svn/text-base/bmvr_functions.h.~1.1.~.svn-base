@@ -1,0 +1,23 @@
+//:
+// \file
+// \Functions for Vehicle Recognition
+// \author Brandon Mayer
+// \date 24 May 09
+#ifndef bmvr_functions_h_
+#define bmvr_functions_h_
+
+#include<vcl_iostream.h>
+
+#include<vil/vil_image_view.h>
+
+class bmvr_functions
+{
+public:
+    ~bmvr_functions(){}
+// to quickly iterate through an image and output to error stream if
+// there is a number other than 0 or 1. This is to check if loading a
+// binary image worked.
+    static void checkBinary(vcl_ostream &os, vil_image_view<vxl_byte>& img);
+        
+};
+#endif //bmvr_functions_h_

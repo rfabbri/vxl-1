@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/lemsvxl/!svn/ver/6886/trunk/brcv/seg/dbacm3d/xio
+END
+dbacm3d_xio_geodesic_active_contour.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/5815/trunk/brcv/seg/dbacm3d/xio/dbacm3d_xio_geodesic_active_contour.cxx
+END
+dbacm3d_xio_geodesic_active_contour.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/6181/trunk/brcv/seg/dbacm3d/xio/dbacm3d_xio_geodesic_active_contour.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/6886/trunk/brcv/seg/dbacm3d/xio/CMakeLists.txt
+END

@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/rec/dbsk3dr/vis
+END
+dbsk3dr_draw.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/rec/dbsk3dr/vis/dbsk3dr_draw.h
+END
+dbsk3dr_process_vis.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/rec/dbsk3dr/vis/dbsk3dr_process_vis.h
+END
+dbsk3dr_cmdproc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/rec/dbsk3dr/vis/dbsk3dr_cmdproc.cxx
+END
+dbsk3dr_provis_smre.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/rec/dbsk3dr/vis/dbsk3dr_provis_smre.cxx
+END
+dbsk3dr_cmdproc.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/rec/dbsk3dr/vis/dbsk3dr_cmdproc.h
+END
+dbsk3dr_draw.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/rec/dbsk3dr/vis/dbsk3dr_draw.cxx
+END
+dbsk3dr_process_vis.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/rec/dbsk3dr/vis/dbsk3dr_process_vis.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/rec/dbsk3dr/vis/CMakeLists.txt
+END

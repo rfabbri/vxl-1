@@ -1,0 +1,55 @@
+function main_levelset(V, edg, objectname, origin, spacing)
+	global start_index end_index;
+	[nrows,ncols,nslices] = size(V);
+	levelset_params = load_parameters(fullfile('..','parameters','levelset_parameters.txt'));
+	prompt = {'beta0:','beta1:','alpha:', 'Maximum iterations:', 'hx:', 'hy:', 'Narrow band:', 'Slice distance threshold:', 'Edge strength threshold:', 'Edge length:', 'First slice:', 'Last slice:'};
+	dlg_title = 'Level-set segmentation parameters';
+	num_lines = 1;
+	def = {levelset_params.beta0, levelset_params.beta1, levelset_params.alpha, levelset_params.max_iter, levelset_params.hx, levelset_params.hy, levelset_params.narrow_band, levelset_params.slice_distance_thresh, levelset_params.edge_thresh, levelset_params.edge_length, num2str(start_index), num2str(end_index)};
+	answer = inputdlg(prompt,dlg_title,num_lines,def);				
+	hx = str2num(answer{5});
+	hy = str2num(answer{6});
+	[gridx, gridy] = meshgrid(1:hx:ncols, 1:hy:nrows);
+	start_index = str2num(answer{11});
+	end_index = str2num(answer{12});
+	num_slices = end_index - start_index + 1;
+	x = edg(:,1); y = edg(:,2); z = edg(:,3);
+	nx = edg(:,4); ny = edg(:,5); nz = edg(:,6);
+	str = edg(:,7);
+	dthresh = str2num(answer{8});
+	sthresh = str2num(answer{9});	
+	beta0 = str2num(answer{1});
+	beta1 = str2num(answer{2});
+	alpha = str2num(answer{3});
+	max_num_iter = str2num(answer{4});	
+	narrow_band = str2num(answer{7});
+	edge_length = str2num(answer{10});
+	phi = zeros(size(gridx,1), size(gridx,2), num_slices);
+	h = waitbar(0,'Please wait...');
+	for i = start_index:end_index
+		slices = find(abs(z  - i) < dthresh & str > sthresh);
+		x1 = x(slices);
+		y1 = y(slices);
+		z1 = z(slices);
+		nx1 = nx(slices);
+		ny1 = ny(slices);
+		nz1 = nz(slices);
+		edg1 = [x1 y1 z1 nx1 ny1 nz1];
+		phi(:,:,i-start_index+1) = autoinit_reaction_geodesic_graddt_edge_stop_bubble_with_sussman(V(:,:,i), i, beta0, alpha, 1, max_num_iter, hx, hy, narrow_band, edg1, edge_length, 0);		
+		%clf;show_segmentation_matlab(V(:,:,i), phi(:,:,i-start_index+1), gridx, gridy, 0);		
+		waitbar((i-start_index+1)/num_slices);
+	end
+	close(h);
+	%seg = phi >= 0;	
+	%save(fullfile('..','binary_segmentations',[objectname '_segmentation_' datestr(now,30) '.mat']), 'phi', 'seg', 'start_index', 'end_index');
+	[gridx, gridy, gridz] = meshgrid(1:hx:ncols, 1:hy:nrows, start_index:end_index);
+	values = interp3(gridx, gridy, gridz, phi, x, y, z, 'linear');
+	selected_index = find(str >= sthresh & values > -narrow_band);
+	selected = edg(selected_index, 1:6);	
+	clusters = cluster_edges(selected, sthresh);
+	selected = get_largest_cluster(clusters);
+	selected_file = fullfile('..','oriented_points', [objectname '_levelset_' datestr(now,30) '.xyz']);
+	selected_coordinates = ((selected(:,1:3)-1).*repmat(spacing, size(selected, 1), 1))+repmat(origin, size(selected, 1), 1);
+	dlmwrite(selected_file, [selected_coordinates selected(:,4:6)], 'delimiter', ' ');
+	msgbox(sprintf('Please run Poisson reconstruction using MeshLab\nInput file: %s', selected_file),'Action Required');	
+end

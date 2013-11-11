@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/lemsvxl/!svn/ver/11165/trunk/contrib/bvam/algo
+END
+bvam_ekf_camera_optimizer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/11165/trunk/contrib/bvam/algo/bvam_ekf_camera_optimizer.cxx
+END
+bvam_ekf_camera_optimizer_state.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/11027/trunk/contrib/bvam/algo/bvam_ekf_camera_optimizer_state.cxx
+END
+bvam_ekf_camera_optimizer.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/11165/trunk/contrib/bvam/algo/bvam_ekf_camera_optimizer.h
+END
+bvam_ekf_camera_optimizer_state.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/11165/trunk/contrib/bvam/algo/bvam_ekf_camera_optimizer_state.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/11027/trunk/contrib/bvam/algo/CMakeLists.txt
+END

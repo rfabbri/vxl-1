@@ -1,0 +1,305 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/12212/trunk/contrib/rfabbri/mw/app/matlab/ma-book
+END
+compute3DStructure.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/compute3DStructure.m
+END
+quadric_linear_f.m
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/quadric_linear_f.m
+END
+warpNonlin.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/warpNonlin.m
+END
+makeRows.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/makeRows.m
+END
+rectifData.mat
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/rectifData.mat
+END
+plot3Lines.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/plot3Lines.m
+END
+shelves.jpg
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/shelves.jpg
+END
+plotLineNormal.m
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/plotLineNormal.m
+END
+projRectify.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/projRectify.m
+END
+isoscale.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/isoscale.m
+END
+edgeDetection.m
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/edgeDetection.m
+END
+plot3_struct.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/plot3_struct.m
+END
+alExample.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/alExample.m
+END
+test_11_9.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/test_11_9.m
+END
+plotLines.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/plotLines.m
+END
+sampleFlow.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/sampleFlow.m
+END
+skew.m
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/skew.m
+END
+essentialDiscrete.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/essentialDiscrete.m
+END
+test_4_1.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/test_4_1.m
+END
+plot_struct.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/plot_struct.m
+END
+test_5_1.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/test_5_1.m
+END
+test_6_1.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/test_6_1.m
+END
+test_5_2.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/test_5_2.m
+END
+row_quadric_f.m
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/row_quadric_f.m
+END
+test_6_2.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/test_6_2.m
+END
+homography2Motion.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/homography2Motion.m
+END
+gaussian_filt.m
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/gaussian_filt.m
+END
+LocalMaximum.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/LocalMaximum.m
+END
+rot_matrix.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/rot_matrix.m
+END
+vanishing_point.m
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/vanishing_point.m
+END
+triple_product.m
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/triple_product.m
+END
+plot3_cube.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/plot3_cube.m
+END
+step_by_step.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/step_by_step.m
+END
+harrisCorner.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/harrisCorner.m
+END
+dfundamental.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/dfundamental.m
+END
+houselines_mixed.m
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/houselines_mixed.m
+END
+warpLinear.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/warpLinear.m
+END
+project.m
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/project.m
+END
+ch4appendix.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/ch4appendix.m
+END
+corridor.jpg
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/corridor.jpg
+END
+sfm_mixed.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/sfm_mixed.m
+END
+test_test.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/test_test.m
+END
+sfm_projective.m
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/sfm_projective.m
+END
+exp_matrix.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/exp_matrix.m
+END
+Hwarp.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/Hwarp.m
+END
+sfm_points.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/sfm_points.m
+END
+rq.m
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/rq.m
+END
+al.tif
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/al.tif
+END
+draw_frame_scaled.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/draw_frame_scaled.m
+END
+angle_vec.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12197/trunk/contrib/rfabbri/mw/app/matlab/ma-book/angle_vec.m
+END

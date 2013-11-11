@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/lemsvxl/!svn/ver/9855/trunk/brcv/rec/dbkpr/vis
+END
+dbkpr_corr3d_displayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/9289/trunk/brcv/rec/dbkpr/vis/dbkpr_corr3d_displayer.h
+END
+dbkpr_keypoint_tools.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/9289/trunk/brcv/rec/dbkpr/vis/dbkpr_keypoint_tools.cxx
+END
+dbkpr_keypoint_tools.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/9289/trunk/brcv/rec/dbkpr/vis/dbkpr_keypoint_tools.h
+END
+dbkpr_corr3d_displayer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/9289/trunk/brcv/rec/dbkpr/vis/dbkpr_corr3d_displayer.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/9855/trunk/brcv/rec/dbkpr/vis/CMakeLists.txt
+END

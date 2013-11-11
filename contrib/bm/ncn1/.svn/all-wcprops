@@ -1,0 +1,185 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/lemsvxl/!svn/ver/14330/trunk/contrib/bm/ncn1
+END
+ncn1_utilities.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/14212/trunk/contrib/bm/ncn1/ncn1_utilities.h
+END
+ncn1_classifier_factory.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14271/trunk/contrib/bm/ncn1/ncn1_classifier_factory.h
+END
+ncn1_linear_classifier_training_data.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/14216/trunk/contrib/bm/ncn1/ncn1_linear_classifier_training_data.cxx
+END
+ncn1_linear_classifier.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/14212/trunk/contrib/bm/ncn1/ncn1_linear_classifier.h
+END
+ncn1_sampler.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/14003/trunk/contrib/bm/ncn1/ncn1_sampler.cxx
+END
+ncn1_neighborhood_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/14212/trunk/contrib/bm/ncn1/ncn1_neighborhood_sptr.h
+END
+ncn1_linear_classifier_io.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/14222/trunk/contrib/bm/ncn1/ncn1_linear_classifier_io.cxx
+END
+ncn1_neighborhood.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/14023/trunk/contrib/bm/ncn1/ncn1_neighborhood.cxx
+END
+ncn1_factory.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/14212/trunk/contrib/bm/ncn1/ncn1_factory.cxx
+END
+ncn1_linear_classifier_training_point.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/14216/trunk/contrib/bm/ncn1/ncn1_linear_classifier_training_point.h
+END
+smart_ptr+ncn1_classifier-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/14270/trunk/contrib/bm/ncn1/smart_ptr+ncn1_classifier-.cxx
+END
+ncn1_classifier.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/14212/trunk/contrib/bm/ncn1/ncn1_classifier.h
+END
+ncn1_classifier_factory.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14271/trunk/contrib/bm/ncn1/ncn1_classifier_factory.cxx
+END
+ncn1_vgl_point_2d_less_than.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/14069/trunk/contrib/bm/ncn1/ncn1_vgl_point_2d_less_than.h
+END
+ncn1_utilities.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/14212/trunk/contrib/bm/ncn1/ncn1_utilities.cxx
+END
+ncn1_linear_classifier.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/14200/trunk/contrib/bm/ncn1/ncn1_linear_classifier.cxx
+END
+smart_ptr+ncn1_feature-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14210/trunk/contrib/bm/ncn1/smart_ptr+ncn1_feature-.cxx
+END
+ncn1_feature.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/14315/trunk/contrib/bm/ncn1/ncn1_feature.h
+END
+ncn1_classifier_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/14271/trunk/contrib/bm/ncn1/ncn1_classifier_sptr.h
+END
+ncn1_linear_classifier_training_point.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/14216/trunk/contrib/bm/ncn1/ncn1_linear_classifier_training_point.cxx
+END
+ncn1_linear_classifier_training_data.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/14216/trunk/contrib/bm/ncn1/ncn1_linear_classifier_training_data.h
+END
+ncn1_sampler.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/14004/trunk/contrib/bm/ncn1/ncn1_sampler.h
+END
+ncn1_feature_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/14200/trunk/contrib/bm/ncn1/ncn1_feature_sptr.h
+END
+ncn1_linear_classifier_io.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14222/trunk/contrib/bm/ncn1/ncn1_linear_classifier_io.h
+END
+ncn1_feature.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/14330/trunk/contrib/bm/ncn1/ncn1_feature.cxx
+END
+smart_ptr+ncn1_neighborhood-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/14061/trunk/contrib/bm/ncn1/smart_ptr+ncn1_neighborhood-.cxx
+END
+ncn1_neighborhood.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/14212/trunk/contrib/bm/ncn1/ncn1_neighborhood.h
+END
+ncn1_factory.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/14212/trunk/contrib/bm/ncn1/ncn1_factory.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/14315/trunk/contrib/bm/ncn1/CMakeLists.txt
+END
+ncn1_linear_classifier_definitions.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/14222/trunk/contrib/bm/ncn1/ncn1_linear_classifier_definitions.h
+END

@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/lemsvxl/!svn/ver/15237/trunk/contrib/vehicleseg/exe
+END
+aerial_vehicle_segmentation.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/5414/trunk/contrib/vehicleseg/exe/aerial_vehicle_segmentation.h
+END
+save_boulder_video_to_images_from_bmf.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/12409/trunk/contrib/vehicleseg/exe/save_boulder_video_to_images_from_bmf.cxx
+END
+aerial_background_foreground_detection.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/15237/trunk/contrib/vehicleseg/exe/aerial_background_foreground_detection.cxx
+END
+boulder_load_dll.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12409/trunk/contrib/vehicleseg/exe/boulder_load_dll.cxx
+END
+aerial_vehicle_observation.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/7100/trunk/contrib/vehicleseg/exe/aerial_vehicle_observation.cxx
+END
+save_boulder_video_to_images.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/12409/trunk/contrib/vehicleseg/exe/save_boulder_video_to_images.cxx
+END
+aerial_background_foreground_detection.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/5930/trunk/contrib/vehicleseg/exe/aerial_background_foreground_detection.h
+END
+aerial_vehicle_segmentation.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/9352/trunk/contrib/vehicleseg/exe/aerial_vehicle_segmentation.cxx
+END
+boulder_load_dll.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/3966/trunk/contrib/vehicleseg/exe/boulder_load_dll.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/15237/trunk/contrib/vehicleseg/exe/CMakeLists.txt
+END
+aerial_vehicle_observation.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/5564/trunk/contrib/vehicleseg/exe/aerial_vehicle_observation.h
+END

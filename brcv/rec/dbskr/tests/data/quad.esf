@@ -1,0 +1,1950 @@
+Extrinsic Shock File v1.0
+
+Begin [GENERAL INFO]
+
+Input Contour File: C:\Documents and Settings\yakkeeper\Desktop\quad.esf
+Pruning Scale: 1.00
+Other parameters used: Default
+Date of Creation: 12/26/2002
+
+Number of Nodes: 6
+Number of Edges: 5
+Number of Sample Points: 159
+
+End [GENERAL INFO]
+
+Begin [NODE DESCRIPTION]
+# node_ID  node_type Inside/Outside [CW linked node_IDs] [corresponding sample points]
+17 A I [25 ] [1 ] 
+18 A I [27 ] [16 ] 
+19 A I [27 ] [51 ] 
+20 A I [25 ] [84 ] 
+25 J I [27 17 20 ] [99 15 98 ] 
+27 F I [18 25 19 ] [50 159 83 ] 
+End [NODE DESCRIPTION]
+
+Begin [NODE SAMPLE POINTS]
+
+Begin SAMPLE
+sample_id 1
+(x, y, t) (30, 40, 0)
+edge_id 21
+label regular
+type N
+theta 321.26
+speed 1.282
+boundaryPoints [(30, 40), (30, 40)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 16
+(x, y, t) (120, 60, 0)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 60), (120, 60)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 51
+(x, y, t) (120, 10, 1.4211e-014)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(120, 10), (120, 10)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 84
+(x, y, t) (30, 23, 0)
+edge_id 24
+label regular
+type N
+theta 40.89
+speed 1.3228
+boundaryPoints [(30, 23), (30, 23)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 99
+(x, y, t) (40.191, 31.825, 10.191)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(37.98, 41.773), (38.734, 21.738)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 15
+(x, y, t) (40.191, 31.825, 10.191)
+edge_id 21
+label regular
+type N
+theta 321.26
+speed 1.282
+boundaryPoints [(37.98, 41.773), (30, 31.825)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 98
+(x, y, t) (40.191, 31.825, 10.191)
+edge_id 24
+label regular
+type N
+theta 40.89
+speed 1.3228
+boundaryPoints [(30, 31.825), (38.734, 21.738)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 50
+(x, y, t) (99.179, 34.044, 20.821)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 34.044), (94.662, 54.369)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 159
+(x, y, t) (99.179, 34.044, 20.821)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(94.662, 54.369), (96.203, 13.437)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 83
+(x, y, t) (99.179, 34.044, 20.821)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(96.203, 13.437), (120, 34.044)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+End [NODE SAMPLE POINTS]
+
+Begin [EDGE DESCRIPTION]
+# Edge_ID Inside/Outside [From_NODE To_NODE] [IDs of the sample points]
+21 I [17 25] [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 ]
+22 I [18 27] [16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ]
+23 I [19 27] [51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 ]
+24 I [20 25] [84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 ]
+26 I [25 27] [99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 ]
+End [EDGE DESCRIPTION]
+
+Begin [EDGE SAMPLE POINTS]
+
+Begin SAMPLE
+sample_id 2
+(x, y, t) (30.78, 39.374, 0.78004)
+edge_id 21
+label regular
+type N
+theta 321.26
+speed 1.282
+boundaryPoints [(30.611, 40.136), (30, 39.374)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 3
+(x, y, t) (31.56, 38.749, 1.5601)
+edge_id 21
+label regular
+type N
+theta 321.26
+speed 1.282
+boundaryPoints [(31.222, 40.271), (30, 38.749)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 4
+(x, y, t) (32.34, 38.123, 2.3401)
+edge_id 21
+label regular
+type N
+theta 321.26
+speed 1.282
+boundaryPoints [(31.832, 40.407), (30, 38.123)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 5
+(x, y, t) (33.12, 37.497, 3.1202)
+edge_id 21
+label regular
+type N
+theta 321.26
+speed 1.282
+boundaryPoints [(32.443, 40.543), (30, 37.497)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 6
+(x, y, t) (33.9, 36.871, 3.9002)
+edge_id 21
+label regular
+type N
+theta 321.26
+speed 1.282
+boundaryPoints [(33.054, 40.679), (30, 36.871)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 7
+(x, y, t) (34.68, 36.246, 4.6803)
+edge_id 21
+label regular
+type N
+theta 321.26
+speed 1.282
+boundaryPoints [(33.665, 40.814), (30, 36.246)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 8
+(x, y, t) (35.46, 35.62, 5.4603)
+edge_id 21
+label regular
+type N
+theta 321.26
+speed 1.282
+boundaryPoints [(34.276, 40.95), (30, 35.62)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 9
+(x, y, t) (36.24, 34.994, 6.2403)
+edge_id 21
+label regular
+type N
+theta 321.26
+speed 1.282
+boundaryPoints [(34.887, 41.086), (30, 34.994)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 10
+(x, y, t) (37.02, 34.368, 7.0204)
+edge_id 21
+label regular
+type N
+theta 321.26
+speed 1.282
+boundaryPoints [(35.497, 41.222), (30, 34.368)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 11
+(x, y, t) (37.8, 33.743, 7.8004)
+edge_id 21
+label regular
+type N
+theta 321.26
+speed 1.282
+boundaryPoints [(36.108, 41.357), (30, 33.743)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 12
+(x, y, t) (38.58, 33.117, 8.5805)
+edge_id 21
+label regular
+type N
+theta 321.26
+speed 1.282
+boundaryPoints [(36.719, 41.493), (30, 33.117)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 13
+(x, y, t) (39.361, 32.491, 9.3605)
+edge_id 21
+label regular
+type N
+theta 321.26
+speed 1.282
+boundaryPoints [(37.33, 41.629), (30, 32.491)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 14
+(x, y, t) (40.141, 31.866, 10.141)
+edge_id 21
+label regular
+type N
+theta 321.26
+speed 1.282
+boundaryPoints [(37.941, 41.765), (30, 31.866)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 17
+(x, y, t) (119.37, 59.22, 0.62573)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 59.22), (119.24, 59.831)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 18
+(x, y, t) (118.75, 58.44, 1.2515)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 58.44), (118.48, 59.662)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 19
+(x, y, t) (118.12, 57.66, 1.8772)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 57.66), (117.72, 59.492)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 20
+(x, y, t) (117.5, 56.88, 2.5029)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 56.88), (116.95, 59.323)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 21
+(x, y, t) (116.87, 56.1, 3.1286)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 56.1), (116.19, 59.154)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 22
+(x, y, t) (116.25, 55.32, 3.7544)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 55.32), (115.43, 58.985)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 23
+(x, y, t) (115.62, 54.54, 4.3801)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 54.54), (114.67, 58.815)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 24
+(x, y, t) (114.99, 53.76, 5.0058)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 53.76), (113.91, 58.646)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 25
+(x, y, t) (114.37, 52.98, 5.6315)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 52.98), (113.15, 58.477)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 26
+(x, y, t) (113.74, 52.2, 6.2573)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 52.2), (112.39, 58.308)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 27
+(x, y, t) (113.12, 51.42, 6.883)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 51.42), (111.62, 58.139)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 28
+(x, y, t) (112.49, 50.639, 7.5087)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 50.639), (110.86, 57.969)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 29
+(x, y, t) (111.87, 49.859, 8.1345)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 49.859), (110.1, 57.8)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 30
+(x, y, t) (111.24, 49.079, 8.7602)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 49.079), (109.34, 57.631)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 31
+(x, y, t) (110.61, 48.299, 9.3859)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 48.299), (108.58, 57.462)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 32
+(x, y, t) (109.99, 47.519, 10.012)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 47.519), (107.82, 57.293)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 33
+(x, y, t) (109.36, 46.739, 10.637)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 46.739), (107.06, 57.123)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 34
+(x, y, t) (108.74, 45.959, 11.263)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 45.959), (106.29, 56.954)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 35
+(x, y, t) (108.11, 45.179, 11.889)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 45.179), (105.53, 56.785)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 36
+(x, y, t) (107.49, 44.399, 12.515)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 44.399), (104.77, 56.616)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 37
+(x, y, t) (106.86, 43.619, 13.14)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 43.619), (104.01, 56.446)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 38
+(x, y, t) (106.23, 42.839, 13.766)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 42.839), (103.25, 56.277)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 39
+(x, y, t) (105.61, 42.059, 14.392)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 42.059), (102.49, 56.108)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 40
+(x, y, t) (104.98, 41.279, 15.017)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 41.279), (101.72, 55.939)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 41
+(x, y, t) (104.36, 40.499, 15.643)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 40.499), (100.96, 55.77)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 42
+(x, y, t) (103.73, 39.719, 16.269)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 39.719), (100.2, 55.6)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 43
+(x, y, t) (103.11, 38.939, 16.895)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 38.939), (99.44, 55.431)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 44
+(x, y, t) (102.48, 38.159, 17.52)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 38.159), (98.679, 55.262)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 45
+(x, y, t) (101.85, 37.379, 18.146)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 37.379), (97.917, 55.093)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 46
+(x, y, t) (101.23, 36.599, 18.772)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 36.599), (97.156, 54.924)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 47
+(x, y, t) (100.6, 35.819, 19.398)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 35.819), (96.395, 54.754)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 48
+(x, y, t) (99.977, 35.039, 20.023)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 35.039), (95.633, 54.585)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 49
+(x, y, t) (99.351, 34.259, 20.649)
+edge_id 22
+label regular
+type N
+theta 231.26
+speed 1.5981
+boundaryPoints [(120, 34.259), (94.872, 54.416)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 52
+(x, y, t) (119.35, 10.756, 0.65461)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(119.25, 10.108), (120, 10.756)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 53
+(x, y, t) (118.69, 11.512, 1.3092)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(118.5, 10.216), (120, 11.512)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 54
+(x, y, t) (118.04, 12.268, 1.9638)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(117.76, 10.324), (120, 12.268)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 55
+(x, y, t) (117.38, 13.024, 2.6185)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(117.01, 10.432), (120, 13.024)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 56
+(x, y, t) (116.73, 13.78, 3.2731)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(116.26, 10.54), (120, 13.78)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 57
+(x, y, t) (116.07, 14.536, 3.9277)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(115.51, 10.648), (120, 14.536)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 58
+(x, y, t) (115.42, 15.292, 4.5823)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(114.76, 10.757), (120, 15.292)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 59
+(x, y, t) (114.76, 16.048, 5.2369)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(114.01, 10.865), (120, 16.048)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 60
+(x, y, t) (114.11, 16.804, 5.8915)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(113.27, 10.973), (120, 16.804)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 61
+(x, y, t) (113.45, 17.56, 6.5461)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(112.52, 11.081), (120, 17.56)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 62
+(x, y, t) (112.8, 18.316, 7.2008)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(111.77, 11.189), (120, 18.316)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 63
+(x, y, t) (112.14, 19.072, 7.8554)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(111.02, 11.297), (120, 19.072)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 64
+(x, y, t) (111.49, 19.828, 8.51)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(110.27, 11.405), (120, 19.828)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 65
+(x, y, t) (110.84, 20.583, 9.1646)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(109.53, 11.513), (120, 20.583)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 66
+(x, y, t) (110.18, 21.339, 9.8192)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(108.78, 11.621), (120, 21.339)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 67
+(x, y, t) (109.53, 22.095, 10.474)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(108.03, 11.729), (120, 22.095)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 68
+(x, y, t) (108.87, 22.851, 11.128)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(107.28, 11.837), (120, 22.851)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 69
+(x, y, t) (108.22, 23.607, 11.783)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(106.53, 11.945), (120, 23.607)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 70
+(x, y, t) (107.56, 24.363, 12.438)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(105.78, 12.053), (120, 24.363)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 71
+(x, y, t) (106.91, 25.119, 13.092)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(105.04, 12.161), (120, 25.119)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 72
+(x, y, t) (106.25, 25.875, 13.747)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(104.29, 12.27), (120, 25.875)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 73
+(x, y, t) (105.6, 26.631, 14.402)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(103.54, 12.378), (120, 26.631)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 74
+(x, y, t) (104.94, 27.387, 15.056)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(102.79, 12.486), (120, 27.387)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 75
+(x, y, t) (104.29, 28.143, 15.711)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(102.04, 12.594), (120, 28.143)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 76
+(x, y, t) (103.63, 28.899, 16.365)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(101.3, 12.702), (120, 28.899)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 77
+(x, y, t) (102.98, 29.655, 17.02)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(100.55, 12.81), (120, 29.655)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 78
+(x, y, t) (102.33, 30.411, 17.675)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(99.799, 12.918), (120, 30.411)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 79
+(x, y, t) (101.67, 31.167, 18.329)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(99.05, 13.026), (120, 31.167)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 80
+(x, y, t) (101.02, 31.923, 18.984)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(98.302, 13.134), (120, 31.923)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 81
+(x, y, t) (100.36, 32.679, 19.638)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(97.554, 13.242), (120, 32.679)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 82
+(x, y, t) (99.707, 33.435, 20.293)
+edge_id 23
+label regular
+type N
+theta 130.89
+speed 1.5276
+boundaryPoints [(96.806, 13.35), (120, 33.435)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 85
+(x, y, t) (30.756, 23.655, 0.75596)
+edge_id 24
+label regular
+type N
+theta 40.89
+speed 1.3228
+boundaryPoints [(30, 23.655), (30.648, 22.906)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 86
+(x, y, t) (31.512, 24.309, 1.5119)
+edge_id 24
+label regular
+type N
+theta 40.89
+speed 1.3228
+boundaryPoints [(30, 24.309), (31.296, 22.813)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 87
+(x, y, t) (32.268, 24.964, 2.2679)
+edge_id 24
+label regular
+type N
+theta 40.89
+speed 1.3228
+boundaryPoints [(30, 24.964), (31.944, 22.719)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 88
+(x, y, t) (33.024, 25.618, 3.0239)
+edge_id 24
+label regular
+type N
+theta 40.89
+speed 1.3228
+boundaryPoints [(30, 25.618), (32.592, 22.626)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 89
+(x, y, t) (33.78, 26.273, 3.7798)
+edge_id 24
+label regular
+type N
+theta 40.89
+speed 1.3228
+boundaryPoints [(30, 26.273), (33.239, 22.532)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 90
+(x, y, t) (34.536, 26.928, 4.5358)
+edge_id 24
+label regular
+type N
+theta 40.89
+speed 1.3228
+boundaryPoints [(30, 26.928), (33.887, 22.438)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 91
+(x, y, t) (35.292, 27.582, 5.2917)
+edge_id 24
+label regular
+type N
+theta 40.89
+speed 1.3228
+boundaryPoints [(30, 27.582), (34.535, 22.345)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 92
+(x, y, t) (36.048, 28.237, 6.0477)
+edge_id 24
+label regular
+type N
+theta 40.89
+speed 1.3228
+boundaryPoints [(30, 28.237), (35.183, 22.251)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 93
+(x, y, t) (36.804, 28.892, 6.8037)
+edge_id 24
+label regular
+type N
+theta 40.89
+speed 1.3228
+boundaryPoints [(30, 28.892), (35.831, 22.158)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 94
+(x, y, t) (37.56, 29.546, 7.5596)
+edge_id 24
+label regular
+type N
+theta 40.89
+speed 1.3228
+boundaryPoints [(30, 29.546), (36.479, 22.064)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 95
+(x, y, t) (38.316, 30.201, 8.3156)
+edge_id 24
+label regular
+type N
+theta 40.89
+speed 1.3228
+boundaryPoints [(30, 30.201), (37.127, 21.971)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 96
+(x, y, t) (39.072, 30.855, 9.0716)
+edge_id 24
+label regular
+type N
+theta 40.89
+speed 1.3228
+boundaryPoints [(30, 30.855), (37.775, 21.877)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 97
+(x, y, t) (39.828, 31.51, 9.8275)
+edge_id 24
+label regular
+type N
+theta 40.89
+speed 1.3228
+boundaryPoints [(30, 31.51), (38.423, 21.783)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 100
+(x, y, t) (41.19, 31.863, 10.371)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(38.941, 41.987), (39.708, 21.598)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 101
+(x, y, t) (42.19, 31.9, 10.551)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(39.901, 42.2), (40.681, 21.457)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 102
+(x, y, t) (43.189, 31.938, 10.731)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(40.861, 42.414), (41.655, 21.317)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 103
+(x, y, t) (44.188, 31.975, 10.911)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(41.821, 42.627), (42.628, 21.176)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 104
+(x, y, t) (45.188, 32.013, 11.092)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(42.782, 42.84), (43.602, 21.035)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 105
+(x, y, t) (46.187, 32.051, 11.272)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(43.742, 43.054), (44.576, 20.895)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 106
+(x, y, t) (47.186, 32.088, 11.452)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(44.702, 43.267), (45.549, 20.754)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 107
+(x, y, t) (48.186, 32.126, 11.632)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(45.662, 43.481), (46.523, 20.613)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 108
+(x, y, t) (49.185, 32.163, 11.812)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(46.622, 43.694), (47.496, 20.473)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 109
+(x, y, t) (50.184, 32.201, 11.992)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(47.583, 43.907), (48.47, 20.332)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 110
+(x, y, t) (51.183, 32.239, 12.172)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(48.543, 44.121), (49.443, 20.192)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 111
+(x, y, t) (52.183, 32.276, 12.352)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(49.503, 44.334), (50.417, 20.051)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 112
+(x, y, t) (53.182, 32.314, 12.532)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(50.463, 44.547), (51.39, 19.91)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 113
+(x, y, t) (54.181, 32.351, 12.712)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(51.424, 44.761), (52.364, 19.77)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 114
+(x, y, t) (55.181, 32.389, 12.892)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(52.384, 44.974), (53.338, 19.629)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 115
+(x, y, t) (56.18, 32.426, 13.072)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(53.344, 45.188), (54.311, 19.488)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 116
+(x, y, t) (57.179, 32.464, 13.252)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(54.304, 45.401), (55.285, 19.348)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 117
+(x, y, t) (58.178, 32.502, 13.433)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(55.265, 45.614), (56.258, 19.207)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 118
+(x, y, t) (59.178, 32.539, 13.613)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(56.225, 45.828), (57.232, 19.067)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 119
+(x, y, t) (60.177, 32.577, 13.793)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(57.185, 46.041), (58.205, 18.926)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 120
+(x, y, t) (61.176, 32.614, 13.973)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(58.145, 46.254), (59.179, 18.785)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 121
+(x, y, t) (62.176, 32.652, 14.153)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(59.105, 46.468), (60.152, 18.645)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 122
+(x, y, t) (63.175, 32.69, 14.333)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(60.066, 46.681), (61.126, 18.504)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 123
+(x, y, t) (64.174, 32.727, 14.513)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(61.026, 46.895), (62.099, 18.363)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 124
+(x, y, t) (65.174, 32.765, 14.693)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(61.986, 47.108), (63.073, 18.223)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 125
+(x, y, t) (66.173, 32.802, 14.873)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(62.946, 47.321), (64.047, 18.082)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 126
+(x, y, t) (67.172, 32.84, 15.053)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(63.907, 47.535), (65.02, 17.942)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 127
+(x, y, t) (68.171, 32.878, 15.233)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(64.867, 47.748), (65.994, 17.801)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 128
+(x, y, t) (69.171, 32.915, 15.413)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(65.827, 47.962), (66.967, 17.66)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 129
+(x, y, t) (70.17, 32.953, 15.593)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(66.787, 48.175), (67.941, 17.52)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 130
+(x, y, t) (71.169, 32.99, 15.773)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(67.748, 48.388), (68.914, 17.379)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 131
+(x, y, t) (72.169, 33.028, 15.954)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(68.708, 48.602), (69.888, 17.238)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 132
+(x, y, t) (73.168, 33.066, 16.134)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(69.668, 48.815), (70.861, 17.098)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 133
+(x, y, t) (74.167, 33.103, 16.314)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(70.628, 49.028), (71.835, 16.957)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 134
+(x, y, t) (75.166, 33.141, 16.494)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(71.588, 49.242), (72.808, 16.817)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 135
+(x, y, t) (76.166, 33.178, 16.674)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(72.549, 49.455), (73.782, 16.676)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 136
+(x, y, t) (77.165, 33.216, 16.854)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(73.509, 49.669), (74.756, 16.535)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 137
+(x, y, t) (78.164, 33.254, 17.034)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(74.469, 49.882), (75.729, 16.395)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 138
+(x, y, t) (79.164, 33.291, 17.214)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(75.429, 50.095), (76.703, 16.254)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 139
+(x, y, t) (80.163, 33.329, 17.394)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(76.39, 50.309), (77.676, 16.113)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 140
+(x, y, t) (81.162, 33.366, 17.574)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(77.35, 50.522), (78.65, 15.973)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 141
+(x, y, t) (82.162, 33.404, 17.754)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(78.31, 50.736), (79.623, 15.832)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 142
+(x, y, t) (83.161, 33.442, 17.934)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(79.27, 50.949), (80.597, 15.692)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 143
+(x, y, t) (84.16, 33.479, 18.114)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(80.231, 51.162), (81.57, 15.551)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 144
+(x, y, t) (85.159, 33.517, 18.294)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(81.191, 51.376), (82.544, 15.41)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 145
+(x, y, t) (86.159, 33.554, 18.475)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(82.151, 51.589), (83.518, 15.27)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 146
+(x, y, t) (87.158, 33.592, 18.655)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(83.111, 51.802), (84.491, 15.129)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 147
+(x, y, t) (88.157, 33.63, 18.835)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(84.071, 52.016), (85.465, 14.988)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 148
+(x, y, t) (89.157, 33.667, 19.015)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(85.032, 52.229), (86.438, 14.848)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 149
+(x, y, t) (90.156, 33.705, 19.195)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(85.992, 52.443), (87.412, 14.707)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 150
+(x, y, t) (91.155, 33.742, 19.375)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(86.952, 52.656), (88.385, 14.567)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 151
+(x, y, t) (92.154, 33.78, 19.555)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(87.912, 52.869), (89.359, 14.426)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 152
+(x, y, t) (93.154, 33.818, 19.735)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(88.873, 53.083), (90.332, 14.285)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 153
+(x, y, t) (94.153, 33.855, 19.915)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(89.833, 53.296), (91.306, 14.145)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 154
+(x, y, t) (95.152, 33.893, 20.095)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(90.793, 53.51), (92.279, 14.004)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 155
+(x, y, t) (96.152, 33.93, 20.275)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(91.753, 53.723), (93.253, 13.863)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 156
+(x, y, t) (97.151, 33.968, 20.455)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(92.714, 53.936), (94.227, 13.723)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 157
+(x, y, t) (98.15, 34.006, 20.635)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(93.674, 54.15), (95.2, 13.582)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+Begin SAMPLE
+sample_id 158
+(x, y, t) (99.149, 34.043, 20.816)
+edge_id 26
+label regular
+type N
+theta 2.1548
+speed 5.5533
+boundaryPoints [(94.634, 54.363), (96.174, 13.442)]
+boundaryTangents [0, 0]
+End SAMPLE
+
+End [EDGE SAMPLE POINTS]
+

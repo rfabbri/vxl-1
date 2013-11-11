@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/boxm
+END
+split_scene.py
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/boxm/split_scene.py
+END
+fill_internal_nodes.py
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/boxm/fill_internal_nodes.py
+END
+save_scene_vrml.py
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/boxm/save_scene_vrml.py
+END
+split_and_convert.py
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/boxm/split_and_convert.py
+END
+update_capitol_rotated.py
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/boxm/update_capitol_rotated.py
+END
+update_scene.py
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/boxm/update_scene.py
+END
+crop_scene.py
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/boxm/crop_scene.py
+END
+merge_mog.py
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/boxm/merge_mog.py
+END
+update.py
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/boxm/update.py
+END
+update_batch.py
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/boxm/update_batch.py
+END
+save_scene_raw.py
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/boxm/save_scene_raw.py
+END
+render_expected_images.py
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/boxm/render_expected_images.py
+END

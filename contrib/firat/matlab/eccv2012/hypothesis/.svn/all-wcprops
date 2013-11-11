@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/15893/trunk/contrib/firat/matlab/eccv2012/hypothesis
+END
+generate_detection_hypotheses_given_model_contour.m
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/lemsvxl/!svn/ver/15893/trunk/contrib/firat/matlab/eccv2012/hypothesis/generate_detection_hypotheses_given_model_contour.m
+END
+sample_curve.m
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/15878/trunk/contrib/firat/matlab/eccv2012/hypothesis/sample_curve.m
+END
+visualize_hypotheses.m
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/15863/trunk/contrib/firat/matlab/eccv2012/hypothesis/visualize_hypotheses.m
+END
+get_hypothesis_contour.m
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/15885/trunk/contrib/firat/matlab/eccv2012/hypothesis/get_hypothesis_contour.m
+END
+get_best_matches_single_scale.m
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/lemsvxl/!svn/ver/15863/trunk/contrib/firat/matlab/eccv2012/hypothesis/get_best_matches_single_scale.m
+END
+generate_all_detection_hypotheses.m
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/lemsvxl/!svn/ver/15885/trunk/contrib/firat/matlab/eccv2012/hypothesis/generate_all_detection_hypotheses.m
+END
+score_diff_chord_angles.m
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/15858/trunk/contrib/firat/matlab/eccv2012/hypothesis/score_diff_chord_angles.m
+END
+kappa.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/15858/trunk/contrib/firat/matlab/eccv2012/hypothesis/kappa.m
+END
+diff_chord_angles.m
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/15858/trunk/contrib/firat/matlab/eccv2012/hypothesis/diff_chord_angles.m
+END
+get_best_matches_multi_scale.m
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/15863/trunk/contrib/firat/matlab/eccv2012/hypothesis/get_best_matches_multi_scale.m
+END
+angular_distance.m
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/15858/trunk/contrib/firat/matlab/eccv2012/hypothesis/angular_distance.m
+END

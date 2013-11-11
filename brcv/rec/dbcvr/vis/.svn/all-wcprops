@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/lemsvxl/!svn/ver/11203/trunk/brcv/rec/dbcvr/vis
+END
+dbcvr_curvematch_tableau.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/11203/trunk/brcv/rec/dbcvr/vis/dbcvr_curvematch_tableau.cxx
+END
+dbcvr_curvematch_displayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/9294/trunk/brcv/rec/dbcvr/vis/dbcvr_curvematch_displayer.h
+END
+dbcvr_curvematch_tableau.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/11203/trunk/brcv/rec/dbcvr/vis/dbcvr_curvematch_tableau.h
+END
+dbcvr_curvematch_tableau_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/2301/trunk/brcv/rec/dbcvr/vis/dbcvr_curvematch_tableau_sptr.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/9294/trunk/brcv/rec/dbcvr/vis/CMakeLists.txt
+END
+dbcvr_curvematch_displayer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/9294/trunk/brcv/rec/dbcvr/vis/dbcvr_curvematch_displayer.cxx
+END

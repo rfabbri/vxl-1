@@ -1,0 +1,299 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/lemsvxl/!svn/ver/14748/trunk/contrib/rfabbri/mw/pro
+END
+dbdet_compute_linked_curves_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/12594/trunk/contrib/rfabbri/mw/pro/dbdet_compute_linked_curves_process.h
+END
+mw_save_discrete_corresp_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/pro/mw_save_discrete_corresp_process.cxx
+END
+dbmcs_nearest_edgels_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/pro/dbmcs_nearest_edgels_process.h
+END
+dvpgl_load_camera_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12607/trunk/contrib/rfabbri/mw/pro/dvpgl_load_camera_process.cxx
+END
+dbpro_load_camera_source.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/pro/dbpro_load_camera_source.h
+END
+dbpro_load_curvelet_source.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/14176/trunk/contrib/rfabbri/mw/pro/dbpro_load_curvelet_source.h
+END
+dbpro_load_cemv_source.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/13428/trunk/contrib/rfabbri/mw/pro/dbpro_load_cemv_source.h
+END
+dbmcs_stereo_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/14748/trunk/contrib/rfabbri/mw/pro/dbmcs_stereo_driver.cxx
+END
+dvcpl_bundle_adjust_sink.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/pro/dvcpl_bundle_adjust_sink.h
+END
+dbkpr_projective_reconstruct_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/12497/trunk/contrib/rfabbri/mw/pro/dbkpr_projective_reconstruct_process.cxx
+END
+mw_extend_corresp_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/pro/mw_extend_corresp_process.cxx
+END
+dbdet_combine_curves_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/9319/trunk/contrib/rfabbri/mw/pro/dbdet_combine_curves_process.h
+END
+dbdet_test_sel_circle_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/12594/trunk/contrib/rfabbri/mw/pro/dbdet_test_sel_circle_process.h
+END
+dbpro_load_edg_source.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/14055/trunk/contrib/rfabbri/mw/pro/dbpro_load_edg_source.h
+END
+mw_project_cube_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12286/trunk/contrib/rfabbri/mw/pro/mw_project_cube_process.h
+END
+mw_synthetic_corresp_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12594/trunk/contrib/rfabbri/mw/pro/mw_synthetic_corresp_process.h
+END
+dbkpr_frenet_reconstruct_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/12541/trunk/contrib/rfabbri/mw/pro/dbkpr_frenet_reconstruct_process.cxx
+END
+mw_load_discrete_corresp_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/pro/mw_load_discrete_corresp_process.cxx
+END
+mw_save_discrete_corresp_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/13447/trunk/contrib/rfabbri/mw/pro/mw_save_discrete_corresp_process.h
+END
+mw_discrete_corresp_storage_3_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/13447/trunk/contrib/rfabbri/mw/pro/mw_discrete_corresp_storage_3_sptr.h
+END
+dvpgl_load_camera_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12594/trunk/contrib/rfabbri/mw/pro/dvpgl_load_camera_process.h
+END
+mw_discrete_corresp_storage_3.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/13447/trunk/contrib/rfabbri/mw/pro/mw_discrete_corresp_storage_3.cxx
+END
+dbmcs_stereo_driver.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14176/trunk/contrib/rfabbri/mw/pro/dbmcs_stereo_driver.h
+END
+mw_extend_corresp_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/pro/mw_extend_corresp_process.h
+END
+dbkpr_projective_reconstruct_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/9319/trunk/contrib/rfabbri/mw/pro/dbkpr_projective_reconstruct_process.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/14183/trunk/contrib/rfabbri/mw/pro/CMakeLists.txt
+END
+dbmcs_stereo_filter.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/14165/trunk/contrib/rfabbri/mw/pro/dbmcs_stereo_filter.cxx
+END
+dbmcs_project_curve_sketch_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/pro/dbmcs_project_curve_sketch_process.cxx
+END
+dbpro_fragment_tangents.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/13319/trunk/contrib/rfabbri/mw/pro/dbpro_fragment_tangents.h
+END
+mw_project_polyline_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/pro/mw_project_polyline_process.cxx
+END
+mw_discrete_corresp_storage_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/13447/trunk/contrib/rfabbri/mw/pro/mw_discrete_corresp_storage_sptr.h
+END
+dbkpr_frenet_reconstruct_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/9319/trunk/contrib/rfabbri/mw/pro/dbkpr_frenet_reconstruct_process.h
+END
+mw_load_discrete_corresp_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/13447/trunk/contrib/rfabbri/mw/pro/mw_load_discrete_corresp_process.h
+END
+mw_discrete_corresp_storage.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/13447/trunk/contrib/rfabbri/mw/pro/mw_discrete_corresp_storage.cxx
+END
+dvcpl_bundle_adjust_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/pro/dvcpl_bundle_adjust_driver.cxx
+END
+dbpro_load_vsol_polyline_source.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/pro/dbpro_load_vsol_polyline_source.h
+END
+dbdet_compute_linked_curves_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/12666/trunk/contrib/rfabbri/mw/pro/dbdet_compute_linked_curves_process.cxx
+END
+dbmcs_nearest_edgels_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/pro/dbmcs_nearest_edgels_process.cxx
+END
+mw_discrete_corresp_storage_3.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/13447/trunk/contrib/rfabbri/mw/pro/mw_discrete_corresp_storage_3.h
+END
+dvcpl_bundle_adjust_sink.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/pro/dvcpl_bundle_adjust_sink.cxx
+END
+dbdet_combine_curves_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/9319/trunk/contrib/rfabbri/mw/pro/dbdet_combine_curves_process.cxx
+END
+dbdet_test_sel_circle_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/12599/trunk/contrib/rfabbri/mw/pro/dbdet_test_sel_circle_process.cxx
+END
+dbmcs_stereo_filter.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14176/trunk/contrib/rfabbri/mw/pro/dbmcs_stereo_filter.h
+END
+mw_project_cube_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12541/trunk/contrib/rfabbri/mw/pro/mw_project_cube_process.cxx
+END
+dbmcs_project_curve_sketch_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/pro/dbmcs_project_curve_sketch_process.h
+END
+mw_project_polyline_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12704/trunk/contrib/rfabbri/mw/pro/mw_project_polyline_process.h
+END
+mw_synthetic_corresp_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/12594/trunk/contrib/rfabbri/mw/pro/mw_synthetic_corresp_process.cxx
+END
+mw_discrete_corresp_storage.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/13447/trunk/contrib/rfabbri/mw/pro/mw_discrete_corresp_storage.h
+END
+dvcpl_bundle_adjust_driver.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/pro/dvcpl_bundle_adjust_driver.h
+END

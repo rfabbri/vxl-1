@@ -1,0 +1,54 @@
+#Inventor V2.1 ascii
+
+Separator {
+
+   Separator {
+		Translation {
+	   	translation	0 -2 0
+		}
+		Material {
+	   	diffuseColor	0.8 0.2 0
+		}
+		Cube {
+	   	width	0.75
+	   	height	1.75
+	   	depth	0.75
+		}
+   }
+    
+   Separator {
+		Translation {
+	    	translation	0 0.75 0
+		}
+		Material {
+	    	diffuseColor	0 0.8 0
+		}
+		Cone {
+	    	bottomRadius	1.4
+	    	height	4.3
+		}
+	}
+    
+   Separator {
+		Transform {
+			translation 2 0 0
+      }
+      BaseColor {
+         rgb 0.3 0.2 0.6
+      }
+      Sphere {
+      	radius 0.5
+      }
+	}
+	Separator {
+		Translation {
+         translation 2 -2 0
+      }
+      Cylinder {
+   	   parts ALL
+      	radius .25
+      	height 0.8
+		}
+	}
+}
+

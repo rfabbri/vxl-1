@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/lemsvxl/!svn/ver/9483/trunk/brcv/rec/dbru/algo
+END
+dbru_object_matcher.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/9483/trunk/brcv/rec/dbru/algo/dbru_object_matcher.cxx
+END
+dbru_rcor_generator.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/9033/trunk/brcv/rec/dbru/algo/dbru_rcor_generator.cxx
+END
+dbru_object_matcher.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/9098/trunk/brcv/rec/dbru/algo/dbru_object_matcher.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/9033/trunk/brcv/rec/dbru/algo/CMakeLists.txt
+END
+dbru_rcor_generator.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/8057/trunk/brcv/rec/dbru/algo/dbru_rcor_generator.h
+END

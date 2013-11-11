@@ -1,0 +1,13 @@
+bvaml parameter file
+
+corner -5 -5 -5
+voxel_length 1
+supervoxel_length 40
+num_supervoxels 2 2 1
+
+training_images C:\data\plasticville\outseq1 C:\data\plasticville\outseq1_cameras.txt NONE
+model_dir C:\voxel_models\plasticville
+output_dir F:\testing
+subimg_length 80
+
+inspect_frame 1 200 300 400 500

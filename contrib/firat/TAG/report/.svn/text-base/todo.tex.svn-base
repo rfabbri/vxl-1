@@ -1,0 +1,12 @@
+\section{TODO List}
+\begin{enumerate}
+\item \sout{Include experimental results (copy them from the tech report ppt)}
+\item \sout{Add visual examples of the issues of the current implementation}
+\item \sout{Algorithm correction: no need for Mask images, Label images are sufficient}
+\item Integrate Prof. Kimia's comments
+\item \sout{Add examples for each event pixel classification case}
+\item Add more questions and answers
+\item Clean up the code
+\end{enumerate}
+
+\newpage

@@ -1,0 +1,10 @@
+# breyes/dbvis/CMakeLists.txt
+
+
+INCLUDE_DIRECTORIES( ${VXL_VGUI_INCLUDE_DIR} )
+
+IF( BUILD_EXAMPLES )
+  SUBDIRS( examples )
+ENDIF( BUILD_EXAMPLES )
+
+

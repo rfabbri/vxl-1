@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/13052/trunk/brcv/rec/dborl/algo/tests
+END
+test_include.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/algo/tests/test_include.cxx
+END
+test_index_parser.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/13052/trunk/brcv/rec/dborl/algo/tests/test_index_parser.cxx
+END
+test_algo_params.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/11461/trunk/brcv/rec/dborl/algo/tests/test_algo_params.cxx
+END
+test_polygon.xml
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/algo/tests/test_polygon.xml
+END
+test_box.xml
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/algo/tests/test_box.xml
+END
+test_index_image_tree.xml
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/10567/trunk/brcv/rec/dborl/algo/tests/test_index_image_tree.xml
+END
+test_mask.xml
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/algo/tests/test_mask.xml
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/11382/trunk/brcv/rec/dborl/algo/tests/test_driver.cxx
+END
+test_image_desc_parser.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/10084/trunk/brcv/rec/dborl/algo/tests/test_image_desc_parser.cxx
+END
+310-75-120-objects.txt
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/algo/tests/310-75-120-objects.txt
+END
+99-db-description.xml
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/algo/tests/99-db-description.xml
+END
+test_category_info_parser.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/algo/tests/test_category_info_parser.cxx
+END
+pascal_000005.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/algo/tests/pascal_000005.xml
+END
+dog2.con
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/9823/trunk/brcv/rec/dborl/algo/tests/dog2.con
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/11230/trunk/brcv/rec/dborl/algo/tests/CMakeLists.txt
+END
+test_index_flat_image.xml
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/9830/trunk/brcv/rec/dborl/algo/tests/test_index_flat_image.xml
+END

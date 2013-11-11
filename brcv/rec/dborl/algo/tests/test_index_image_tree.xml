@@ -1,0 +1,43 @@
+<file basictype="index" name="test-index2" filetype="image_tree">
+   <node>
+      <name>seeds</name>
+      <objects>
+         <object name="bonefishesocc1" id="81" path="---REMOTE---////objects//1//1198173654073//object" /> 
+                   <object name="desertcottontail" id="89" path="---REMOTE---////objects//1//1198173658186//object" /> 
+                   <object name="calf2" id="84" path="---REMOTE---////objects//1//1198173655526//object" /> 
+                   <object name="dude1" id="96" path="---REMOTE---////objects//1//1198173662052//object" />
+                   <object name="f16" id="108" path="---REMOTE---////objects//1//1198173668561//object" /> 
+                  <object name="fgen1bp" id="111" path="---REMOTE---////objects//1//1198173670731//object" /> 
+                  <object name="hand2" id="124" path="---REMOTE---////objects//1//1198173677132//object" /> 
+                  <object name="tool04bent1" id="168" path="---REMOTE---////objects//1//1198173701068//object" /> 
+                  <object name="kk0729" id="140" path="---REMOTE---////objects//1//1198173687810//object" /> 
+      </objects>
+      <node>
+         <name>bonefishesocc1</name>
+         <objects>
+                        <object name="bonefishes" id="80" path="---REMOTE---////objects//1//1198173653364//object" /> 
+                       <object name="fish30" id="121" path="---REMOTE---////objects//1//1198173675543//object" /> 
+                       <object name="fish28" id="120" path="---REMOTE---////objects//1//1198173675134//object" /> 
+         </objects>
+         <leaf><name>fish</name></leaf>
+      </node>
+      <node>
+         <name>desertcottontail</name>
+         <objects>
+                      <object name="easterncottontail" id="106" path="---REMOTE---////objects//1//1198173667236//object" /> 
+           <object name="swamprabbit" id="164" path="---REMOTE---////objects//1//1198173698918//object" /> 
+                      <object name="mountaincottontailrot" id="157" path="---REMOTE---////objects//1//1198173695234//object" /> 
+
+         </objects>
+         <leaf><name>pickup</name></leaf>
+      </node>
+      <node>
+         <name>level1_3</name>
+         <objects>
+            <object name="obj2" id = "007" path="/mnt/obj2/"></object>
+            <object name="obj4" id = "008" path="/mnt/obj4/"></object>
+         </objects>
+         <leaf><name>truck</name></leaf>
+      </node>
+   </node>
+</file>

@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/15066/trunk/contrib/octi/dbrl/dbbas/dkdu/coresys/coding
+END
+block_decoder.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/14858/trunk/contrib/octi/dbrl/dbbas/dkdu/coresys/coding/block_decoder.cpp
+END
+encoder.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/15066/trunk/contrib/octi/dbrl/dbbas/dkdu/coresys/coding/encoder.cpp
+END
+mq_encoder.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/14858/trunk/contrib/octi/dbrl/dbbas/dkdu/coresys/coding/mq_encoder.h
+END
+mq_decoder.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/14858/trunk/contrib/octi/dbrl/dbbas/dkdu/coresys/coding/mq_decoder.cpp
+END
+block_coding_common.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/14858/trunk/contrib/octi/dbrl/dbbas/dkdu/coresys/coding/block_coding_common.cpp
+END
+decoder.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/14858/trunk/contrib/octi/dbrl/dbbas/dkdu/coresys/coding/decoder.cpp
+END
+mq_decoder.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/14858/trunk/contrib/octi/dbrl/dbbas/dkdu/coresys/coding/mq_decoder.h
+END
+block_encoder.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/14858/trunk/contrib/octi/dbrl/dbbas/dkdu/coresys/coding/block_encoder.cpp
+END
+block_coding_common.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/14858/trunk/contrib/octi/dbrl/dbbas/dkdu/coresys/coding/block_coding_common.h
+END
+msvc_block_decode_asm.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/14858/trunk/contrib/octi/dbrl/dbbas/dkdu/coresys/coding/msvc_block_decode_asm.h
+END
+mq_encoder.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/14858/trunk/contrib/octi/dbrl/dbbas/dkdu/coresys/coding/mq_encoder.cpp
+END

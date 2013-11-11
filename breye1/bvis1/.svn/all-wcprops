@@ -1,0 +1,125 @@
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/lemsvxl/!svn/ver/15728/trunk/breye1/bvis1
+END
+bvis1_manager.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/15229/trunk/breye1/bvis1/bvis1_manager.cxx
+END
+bvis1_tool_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/bvis1/bvis1_tool_sptr.h
+END
+bvis1_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/15728/trunk/breye1/bvis1/bvis1_tool.cxx
+END
+bvis1_displayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/bvis1/bvis1_displayer.h
+END
+bvis1_mapper_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/bvis1/bvis1_mapper_sptr.h
+END
+bvis1_gl_codec.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/12406/trunk/breye1/bvis1/bvis1_gl_codec.h
+END
+bvis1_mapper.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/bvis1/bvis1_mapper.cxx
+END
+bvis1_displayer_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/bvis1/bvis1_displayer_sptr.h
+END
+bvis1_view_tableau.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/15229/trunk/breye1/bvis1/bvis1_view_tableau.h
+END
+bvis1_gl_codec_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/bvis1/bvis1_gl_codec_sptr.h
+END
+introduction_doxy.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/9270/trunk/breye1/bvis1/introduction_doxy.txt
+END
+bvis1_gl_codec.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/13182/trunk/breye1/bvis1/bvis1_gl_codec.cxx
+END
+bvis1_manager.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/15229/trunk/breye1/bvis1/bvis1_manager.h
+END
+bvis1_util.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/11584/trunk/breye1/bvis1/bvis1_util.h
+END
+bvis1_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/15728/trunk/breye1/bvis1/bvis1_tool.h
+END
+bvis1_view_tableau_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/bvis1/bvis1_view_tableau_sptr.h
+END
+bvis1_view_tableau.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/15229/trunk/breye1/bvis1/bvis1_view_tableau.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/12406/trunk/breye1/bvis1/CMakeLists.txt
+END
+bvis1_mapper.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/bvis1/bvis1_mapper.h
+END
+bvis1_macros.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/9265/trunk/breye1/bvis1/bvis1_macros.h
+END

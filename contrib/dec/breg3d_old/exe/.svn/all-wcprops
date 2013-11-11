@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/11213/trunk/contrib/dec/breg3d_old/exe
+END
+breg3d_cost_neighborhood.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/11213/trunk/contrib/dec/breg3d_old/exe/breg3d_cost_neighborhood.cxx
+END
+breg3d_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/11213/trunk/contrib/dec/breg3d_old/exe/breg3d_main.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/11213/trunk/contrib/dec/breg3d_old/exe/CMakeLists.txt
+END
+breg3d_build_world.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/11213/trunk/contrib/dec/breg3d_old/exe/breg3d_build_world.cxx
+END

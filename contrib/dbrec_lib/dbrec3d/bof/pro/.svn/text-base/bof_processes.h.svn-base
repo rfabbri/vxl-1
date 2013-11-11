@@ -1,0 +1,31 @@
+#ifndef bof_processes_h_
+#define bof_processes_h_
+
+#include <bprb/bprb_func_process.h>
+#include <bprb/bprb_macros.h>
+
+DECLARE_FUNC_CONS(bof_sample_from_train_process);
+DECLARE_FUNC_CONS(bof_init_info_file_process);
+DECLARE_FUNC_CONS(bof_rnd_means_process);
+DECLARE_FUNC_CONS(bof_k_means_subsample_process);
+DECLARE_FUNC_CONS(bof_combine_means_process);
+DECLARE_FUNC_CONS(bof_k_means_on_vector_process);
+DECLARE_FUNC_CONS(bof_choose_min_distortion_clustering_process);
+DECLARE_FUNC_CONS(bof_k_means_train_process);
+DECLARE_FUNC_CONS(bof_init_category_info_process);
+DECLARE_FUNC_CONS(bof_init_codebook_process);
+DECLARE_FUNC_CONS(bof_learn_categories_process);
+DECLARE_FUNC_CONS(bof_combine_quantization_process);
+DECLARE_FUNC_CONS(bof_save_category_scene_raw_process);
+DECLARE_FUNC_CONS(bof_classify_process);
+DECLARE_FUNC_CONS(bof_load_p_xc_process);
+DECLARE_FUNC_CONS(bof_examine_ground_truth_process);
+DECLARE_FUNC_CONS(bof_scale_ply_process);
+DECLARE_FUNC_CONS(bof_make_cluster_id_scene_process);
+DECLARE_FUNC_CONS(bof_save_cluster_id_scene_raw_process);
+DECLARE_FUNC_CONS(bof_compute_typical_bbox_process);
+DECLARE_FUNC_CONS(bof_learn_category_codebook_process);
+DECLARE_FUNC_CONS(bof_load_category_info_process);
+DECLARE_FUNC_CONS(bof_class_probability_process);
+
+#endif

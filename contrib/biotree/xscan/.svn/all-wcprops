@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/lemsvxl/!svn/ver/8874/trunk/contrib/biotree/xscan
+END
+xscan_uniform_orbit.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/6888/trunk/contrib/biotree/xscan/xscan_uniform_orbit.h
+END
+xscan_dummy_scan.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/6956/trunk/contrib/biotree/xscan/xscan_dummy_scan.h
+END
+xscan_scan.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/8867/trunk/contrib/biotree/xscan/xscan_scan.cxx
+END
+xscan_orbit_base_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/2702/trunk/contrib/biotree/xscan/xscan_orbit_base_sptr.h
+END
+xscan_scan.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/8867/trunk/contrib/biotree/xscan/xscan_scan.h
+END
+xscan_orbit_base.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/5392/trunk/contrib/biotree/xscan/xscan_orbit_base.h
+END
+xscan_uniform_orbit.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/7079/trunk/contrib/biotree/xscan/xscan_uniform_orbit.cxx
+END
+xscan_dummy_scan.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/6956/trunk/contrib/biotree/xscan/xscan_dummy_scan.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/8867/trunk/contrib/biotree/xscan/CMakeLists.txt
+END

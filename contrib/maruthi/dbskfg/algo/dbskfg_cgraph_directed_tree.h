@@ -1,0 +1,163 @@
+// This is brcv/shp/dbskfg/algo/dbskfg_cgraph_directed_tree.h
+
+#ifndef dbskfg_cgraph_directed_tree_h_
+#define dbskfg_cgraph_directed_tree_h_
+
+//:
+// \file 
+// \brief A directed tree constructed from a dbskfg_composite_graph to use in 
+//        tree-edit-distance algorithm 
+// \author Maruthi Narayanan (mn@lems.brown.edu)
+//
+// \date Sep 19 2010
+//
+// \verbatim
+// Modifications
+//  Maruthi Narayanan      Sep 19, 2010    Initial version
+//
+// \endverbatim
+
+#include <dbskr/dbskr_directed_tree.h>
+
+#include <dbskfg/dbskfg_composite_graph_sptr.h>
+#include <dbskfg/dbskfg_composite_link_sptr.h>
+#include <dbskfg/dbskfg_composite_node_sptr.h>
+
+//==============================================================================
+// dbskfg_cgraph_directed_tree
+//==============================================================================
+
+
+//: A directed tree built from a dbsk2d_shock_graph
+class dbskfg_cgraph_directed_tree : public dbskr_directed_tree
+{
+public:
+  // Constructors / Destructors / Initializers----------------------------------
+  
+  //: Constructor
+  dbskfg_cgraph_directed_tree(float scurve_sample_ds=5.0f, 
+                              float interpolate_ds=1.0f, 
+                              float matching_R=6.0f);
+
+  //: Destructor;
+  /* virtual */ ~dbskfg_cgraph_directed_tree();
+
+  //: acquire tree from the given rag node
+  bool acquire(const dbskfg_composite_graph_sptr& composite_graph,
+               bool elastic_splice_cost, bool construct_circular_ends, 
+               bool dpmatch_combined);
+ 
+  //: acquire tree from the given rag node
+  bool acquire(const dbskfg_composite_graph_sptr& composite_graph,
+               bool elastic_splice_cost, bool construct_circular_ends, 
+               bool dpmatch_combined,float cost);
+  
+  // Graph-related--------------------------------------------------------------
+
+  // used in get_scurve(...)
+  //: return a vector of pointers to the edges in underlying composite graph 
+  //  for the given dart list
+  void get_edge_list(const vcl_vector<int>& dart_list,  
+                     dbskfg_composite_node_sptr& start_node,  
+                     vcl_vector<dbskfg_composite_link_sptr>& path);
+
+  //: acquire tree topology from a shock graph
+  bool acquire_tree_topology(const dbskfg_composite_graph_sptr& 
+                             composite_graph);
+
+  //: Compute delete and contract costs for individual dart. 
+  // Only call this function after acquire_tree_topology 
+  // has been called and succeeded.
+  void compute_delete_and_contract_costs(bool elastic_splice_cost,
+                                         bool construct_circular_ends,
+                                         bool dpmatch_combined);
+
+  //: sets all delete and contract costs to a specified value
+  void set_delete_and_contract_costs(bool elastic_splice_cost,
+                                     bool construct_circular_ends,
+                                     bool dpmatch_combined,
+                                     float cost);
+
+  //: find and cache the shock curve for this pair of darts, 
+  // if not already cached
+  /* virtual */ dbskr_scurve_sptr get_curve(int start_dart, int end_dart,
+                                            bool construst_circular_ends);
+
+  //: returns both the coarse and dense version of shock curve
+  /* virtual */ dbskr_sc_pair_sptr get_curve_pair(int start_dart, int end_dart,
+                                                  bool construct_circular_ends);
+
+
+  //: Clear the cache of scurve's for given pairs of darts
+  void clear_dart_path_scurve_map()
+  {
+    this->dart_path_scurve_map_.clear();
+  }
+
+  //: get root node radius
+  double get_root_node_radius(){return root_node_radius_;}
+
+  //: set scale ratio for this tree
+  void set_scale_ratio(double scale_ratio){scale_ratio_=scale_ratio;}
+
+  //: get composite graph 
+  dbskfg_composite_graph_sptr& get_cgraph(){return composite_graph_;}
+
+  // File I/O-------------------------------------------------------------------
+
+  //: create and write .shg file to debug splice and contract costs
+  bool create_shg(vcl_string fname);
+
+protected:
+  // Reset / Initalize /////////////////////////////////////////////////////////
+
+  //: Reset all member variables to default
+  void clear(); 
+
+  
+protected:
+  
+  // Member variables-----------------------------------------------------------
+  
+  // Composite-graph related //////////////////////////////////////
+
+  // The shock graph this tree is constructed from
+  dbskfg_composite_graph_sptr composite_graph_;
+
+  //: each dart has a list of pointers to the actual edges 
+  //  on the corresponding shock branch of the graph (in the correct order)
+  vcl_vector<vcl_vector<dbskfg_composite_link_sptr> > shock_edges_;
+
+  //: each dart also has a list of start nodes for the underlying edge to 
+  // determine direction 
+  vcl_vector<dbskfg_composite_node_sptr> starting_nodes_;
+
+  //: Keep a vector of mapping of dart ids which have virtual nodes
+  vcl_vector<int> darts_virtual_nodes_;
+
+  //: Keep track of largest radius of root node
+  double root_node_radius_;
+
+  // Cache data////////////////////////////////////////////////////////////
+
+  //: cache the shock curves for future use for each path of darts
+  vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr> dart_path_scurve_map_;
+
+
+  // Cost-related parameters /////////////////////////////////////////////
+  // For now only, may change later
+  
+  // in get_curve we call the curve computation like this:
+  float scurve_sample_ds_;
+  float interpolate_ds_;  // made this into a parameter as well, default is 0.5
+  float scurve_matching_R_;
+  double scale_ratio_;
+
+  static bool compare_node_radius_pairs(
+      const vcl_pair<double,unsigned int>& pair1,
+      const vcl_pair<double,unsigned int>& pair2)
+  {return pair1.first > pair2.first; }
+
+};
+
+#endif // dbskfg_cgraph_directed_tree_h_

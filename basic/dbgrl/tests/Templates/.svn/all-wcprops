@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/3574/trunk/basic/dbgrl/tests/Templates
+END
+dbgrl_vertex+test_edge-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/3520/trunk/basic/dbgrl/tests/Templates/dbgrl_vertex+test_edge-.cxx
+END
+vbl_smart_ptr+test_graph-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/3574/trunk/basic/dbgrl/tests/Templates/vbl_smart_ptr+test_graph-.cxx
+END
+vbl_smart_ptr+test_edge-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/3574/trunk/basic/dbgrl/tests/Templates/vbl_smart_ptr+test_edge-.cxx
+END
+dbgrl_edge+test_node-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/3520/trunk/basic/dbgrl/tests/Templates/dbgrl_edge+test_node-.cxx
+END
+dbgrl_graph+test_node_test_edge-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/3520/trunk/basic/dbgrl/tests/Templates/dbgrl_graph+test_node_test_edge-.cxx
+END
+vbl_smart_ptr+test_node-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/3574/trunk/basic/dbgrl/tests/Templates/vbl_smart_ptr+test_node-.cxx
+END

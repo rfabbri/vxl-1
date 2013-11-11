@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset2
+END
+dbseg_levelset2_gnuplot_i.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset2/dbseg_levelset2_gnuplot_i.h
+END
+dbseg_levelset2_BMatrix.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset2/dbseg_levelset2_BMatrix.cpp
+END
+dbseg_levelset2_RGBImg.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset2/dbseg_levelset2_RGBImg.cpp
+END
+dbseg_levelset2_BVector.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset2/dbseg_levelset2_BVector.h
+END
+dbseg_levelset2_Mh.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset2/dbseg_levelset2_Mh.h
+END
+dbseg_levelset2_BMatrix.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset2/dbseg_levelset2_BMatrix.h
+END
+dbseg_levelset2_RGBImg.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset2/dbseg_levelset2_RGBImg.h
+END
+dbseg_levelset2_ImageObj.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset2/dbseg_levelset2_ImageObj.cpp
+END
+dbseg_levelset2_Util.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset2/dbseg_levelset2_Util.cpp
+END
+dbseg_levelset2_Desc.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset2/dbseg_levelset2_Desc.cpp
+END
+dbseg_levelset2_ImageObj.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset2/dbseg_levelset2_ImageObj.h
+END
+dbseg_levelset2_Util.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset2/dbseg_levelset2_Util.h
+END
+dbseg_levelset2_Desc.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset2/dbseg_levelset2_Desc.h
+END
+ImageApp.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset2/ImageApp.cpp
+END
+dbseg_levelset2_BPoint.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset2/dbseg_levelset2_BPoint.cpp
+END
+dbseg_levelset2_BPoint.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset2/dbseg_levelset2_BPoint.h
+END
+dbseg_levelset2_gnuplot_i.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset2/dbseg_levelset2_gnuplot_i.c
+END
+dbseg_levelset2_BVector.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset2/dbseg_levelset2_BVector.cpp
+END

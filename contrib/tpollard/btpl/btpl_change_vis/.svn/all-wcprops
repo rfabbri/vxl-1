@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/11815/trunk/contrib/tpollard/btpl/btpl_change_vis
+END
+btpl_generate_roc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/9572/trunk/contrib/tpollard/btpl/btpl_change_vis/btpl_generate_roc.cxx
+END
+btpl_threshold_prob.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/9572/trunk/contrib/tpollard/btpl/btpl_change_vis/btpl_threshold_prob.cxx
+END
+btpl_generate_roc2.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/11815/trunk/contrib/tpollard/btpl/btpl_change_vis/btpl_generate_roc2.cxx
+END
+btpl_mark_red.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/9723/trunk/contrib/tpollard/btpl/btpl_change_vis/btpl_mark_red.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/10180/trunk/contrib/tpollard/btpl/btpl_change_vis/CMakeLists.txt
+END

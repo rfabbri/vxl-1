@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/8740/trunk/contrib/han/add_3D_same_direction
+END
+main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/8697/trunk/contrib/han/add_3D_same_direction/main.cxx
+END
+main_SD.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/8740/trunk/contrib/han/add_3D_same_direction/main_SD.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/8738/trunk/contrib/han/add_3D_same_direction/CMakeLists.txt
+END

@@ -1,0 +1,222 @@
+\begin{thebibliography}{10}
+
+\bibitem{Aanaes:etal:IJCV2012}
+Henrik Aan{\ae}s, Anders~Lindbjerg Dahl, and Kim~Steenstrup Pedersen.
+\newblock Interesting interest points - a comparative study of interest point
+  performance on a unique data set.
+\newblock {\em International Journal of Computer Vision}, 97(1):18--35, 2012.
+
+\bibitem{Bremer:etal:TVCG04}
+Peer-Timo Bremer, Herbert Edelsbrunner, Bernd Hamann, and Valerio Pascucci.
+\newblock A topological hierarchy for functions on triangulated surfaces.
+\newblock {\em IEEE Trans. Vis. Comput. Graph.}, 10(4):385--396, 2004.
+
+\bibitem{Cayley:1859}
+A.~Cayley.
+\newblock On contour and slope lines.
+\newblock {\em The London, Edinburgh and Dublin Philosophical Magazine and
+  Journal of Science}, 18:264--268, October 1859.
+
+\bibitem{Chinveeraphan:etal:ICPR96}
+Supoj Chinveeraphan, Ryo Takamatsu, and Makoto Sato.
+\newblock A hierarchical description of digital grayscale images based on image
+  dipoles.
+\newblock In {\em International Conference on Pattern Recognition}, pages
+  246--250, Vienna, Austria, 1996. Computer Society Press.
+
+\bibitem{Damon:Arch-Rat-Mech-Anal:1995}
+James Damon.
+\newblock Generic properties of solutions to partial differential equations.
+\newblock {\em Arch. Rat. Mech. Anal.}, 1995.
+
+\bibitem{Damon:JAM98}
+James Damon.
+\newblock Generic structure of two-dimensional images under gaussian blurring.
+\newblock {\em SIAM Journal on Applied Mathematics}, 59(1):97--138, 1998.
+
+\bibitem{Champ:CRASP:1854}
+Paul Emile~Breton de~Champ.
+\newblock Note sur les lignes de fa\^{i}te et de {Thalweg}.
+\newblock {\em C.R. Acad. Sc. Paris}, 39:647, 1854.
+
+\bibitem{Fu:etal:MIA04}
+Guoyi Fu, S.~A. Hojjat, and Alan C.~F. Colchester.
+\newblock Integrating watersheds and critical point analysis for object
+  detection in discrete 2{D} images.
+\newblock {\em Medical Image Analysis}, 8(3):177--185, 2004.
+
+\bibitem{Gu:etal:ECCV10}
+Steve Gu, Ying Zheng, and Carlo Tomasi.
+\newblock Critical nets and beta-stable features for image matching.
+\newblock In {\em Proceedings of European Conference on Computer Vision},
+  Lecture Notes in Computer Science, pages 663--676. Springer, 2010.
+
+\bibitem{Harris:Stephens:Edge:Corner}
+Chris Harris and Mike Stephens.
+\newblock A combined edge and corner detector.
+\newblock In {\em Alvey Vision Conference}, pages 189--192, 1988.
+
+\bibitem{Jordan:1872}
+Camille Jordan.
+\newblock Sur les lignes de fa\^ite et de thalweg.
+\newblock {\em C.R. Acad. Sc. Paris}, 74(1457):705--710, 1872.
+
+\bibitem{Kalaycilar:Kimia:AppearanceTechReportURL}
+F\i{}rat Kalayc\i{}lar and Benjamin Kimia.
+\newblock A topographical and topological representation of images.
+\newblock \url{http://vision.lems.brown.edu/techreports/ttri}.
+
+\bibitem{Kergosien:Thom:1980}
+Yannick~L. Kergosien and Rene Thom.
+\newblock Sur les points paraboliques des surfaces.
+\newblock {\em C.R. Acad. Sc. Paris}, 290(15), 1980.
+
+\bibitem{Kimmel:Shape:Shading}
+Ronnie Kimmel, Kaleem Siddiqi, Benjamin~B. Kimia, and Alfred~M. Bruckstein.
+\newblock Shape from shading: Level set propagation and viscosity solutions.
+\newblock {\em International Journal of Computer Vision}, 16(2), October 1995.
+
+\bibitem{Koenderink:Structure:84}
+Jan~J. Koenderink.
+\newblock The structure of images.
+\newblock {\em Biological Cybernetics}, 50:363--370, 1984.
+
+\bibitem{Liu:etal:TOG04}
+Yanxi Liu, Wen-Chieh Lin, and James Hays.
+\newblock Near-regular texture analysis and manipulation.
+\newblock {\em ACM Trans. Graph.}, 23(3):368--376, 2004.
+
+\bibitem{lowe:distinctive:IJCV04}
+David~G. Lowe.
+\newblock Distinctive image features from scale-invariant keypoints.
+\newblock {\em Int. Journal of Computer Vision}, 60(2):91--110, 2004.
+
+\bibitem{Maxwell:1870}
+James~C. Maxwell.
+\newblock On hills and dales.
+\newblock {\em The London, Edinburgh and Dublin Philosophical Magazine and
+  Journal of Science XL}, pages 421--427, 1870.
+
+\bibitem{Nackman:PAMI84}
+Lee~R. Nackman.
+\newblock Two-dimensional critical point configuration graphs.
+\newblock {\em IEEE Trans. Pattern Anal. Mach. Intell.}, 6(4):442--450, 1984.
+
+\bibitem{Pfaltz:1976}
+John~L. Pfaltz.
+\newblock Surface networks.
+\newblock {\em Geographical Analysis}, 8(1):77--93, 1976.
+
+\bibitem{Rana:GCC07}
+Sanjay Rana.
+\newblock Novel structural analyses of surface networks.
+\newblock In {\em Proceedings of GeoComputation Conference}, pages 1--7, {NUI}
+  Maynooth, Ireland, 2007.
+
+\bibitem{Rieger:Biol-Cybernet:1992}
+Joachim~H. Rieger.
+\newblock Generic properties of edges and corners on smooth greyvalue
+  functions.
+\newblock {\em Biol. Cybernet}, 66:497--502, 1992.
+
+\bibitem{Rieger:J-Math-Img-Vision:1995}
+Joachim~H. Rieger.
+\newblock Generic evolutions of edges on families of diffused greyvalue
+  surfaces.
+\newblock {\em J.Math.Imaging Vision}, 5:207--217, 1995.
+
+\bibitem{Rieger:IJCV97}
+Joachim~H. Rieger.
+\newblock Topographical properties of generic images.
+\newblock {\em International Journal of Computer Vision}, 23(1):79--92, 1997.
+
+\bibitem{Rosin:JVCIR95}
+Paul~L. Rosin.
+\newblock Early image representation by slope districts.
+\newblock {\em Journal of Visual Communication and Image Representation},
+  6(3):228--243, 1995.
+
+\bibitem{Rosin:etal:PR92}
+Paul~L. Rosin, Alan C.~F. Colchester, and David~J. Hawkes.
+\newblock Early image representation using regions defined by maximum gradient
+  paths between singular points.
+\newblock {\em Pattern Recognition}, 25(7):695--711, 1992.
+
+\bibitem{Saint-Venant:1852}
+M.~De Saint-Venant.
+\newblock Surfaces \'a plus grande pente constitu\'ees sur des lignes courbes.
+\newblock {\em Bulletin de la soc. philomath. de paris}, pages 24--30, 1852.
+
+\bibitem{Shechtman:Irani:CVPR07}
+Eli Shechtman and Michal Irani.
+\newblock Matching local self-similarities across images and videos.
+\newblock In {\em Proceedings of the IEEE Computer Society Conference on
+  Computer Vision and Pattern Recognition}, pages 1--8. IEEE Computer Society,
+  2007.
+
+\bibitem{Shidfar:Colchester:MVIP11}
+Shaadi Shidfar and Alan Colchester.
+\newblock Detection and correction of invalid slope districts in
+  separatrix-based image segmentation.
+\newblock In {\em Machine Vision and Image Processing (MVIP), 2011 7th
+  Iranian}, pages 1--6. IEEE, 2011.
+
+\bibitem{Shidfar:etal:BMVC10}
+Shaadi Shidfar, Adina Ion, Lazaros Ktorides, and Alan Colchester.
+\newblock Improvements in a generic approach to low level data-driven
+  segmentation based on separatrices.
+\newblock In {\em Proceedings of the BMVC 2010 UK postgraduate workshop}. BMVA
+  Press, 2010.
+
+\bibitem{Snavely:etal:ToG06}
+Noah Snavely, Steven~M. Seitz, and Richard Szeliski.
+\newblock Photo tourism: exploring photo collections in 3d.
+\newblock {\em ACM Trans. Graph.}, 25(3):835--846, 2006.
+
+\bibitem{Takahashi:etal:CGF95}
+Shigeo Takahashi, Tetsuya Ikeda, Yoshihisa Shinagawa, Tosiyasu~L. Kunii, and
+  Minoru Ueda.
+\newblock Algorithms for extracting correct critical points and constructing
+  topological graphs from discrete geographical elevation data.
+\newblock In {\em Computer Graphics Forum}, volume~14, pages 181--192. Wiley
+  Online Library, 1995.
+
+\bibitem{Usumezbas:MultiviewIllumDB:URL}
+Anil Usumezbas and Benjamin~B. Kimia.
+\newblock Multi-view dense point correspondence ground-truth dataset.
+\newblock \url{http://vision.lems.brown.edu/datasets/dense-corr}.
+
+\bibitem{Usumezbas:Kimia:3DIMPVT12}
+Anil Usumezbas and Benjamin~B. Kimia.
+\newblock Generating dense point correspondence ground-truth across multiple
+  views.
+\newblock In {\em International Conference on 3D Imaging, Modeling, Processing,
+  Visualization and Transmission, 3DIMPVT 2012}, pages 1--8, Zurich,
+  Switzerland, October 2012.
+
+\bibitem{Weinkauf:Guenther:CGF09}
+Tino Weinkauf and David Guenther.
+\newblock Separatrix persistence: Extraction of salient edges on surfaces using
+  topological methods.
+\newblock {\em Computer Graphics Forum (Proc. SGP '09)}, 28(5):1519--1528, July
+  2009.
+
+\bibitem{UniquenessTheoremWiki}
+Wikipedia.
+\newblock Picard-{L}indel\"{o}f {T}heorem.
+\newblock
+  \url{http://en.wikipedia.org/wiki/Picard%E2%80%93Lindel%C3%B6f_theorem}.
+
+\bibitem{WatershedWiki}
+Wikipedia.
+\newblock Watershed (image processing).
+\newblock \url{http://en.wikipedia.org/wiki/Watershed_(image_processing)}.
+
+\bibitem{Wood:2000}
+Joseph Wood.
+\newblock Constructing weighted surface networks for the representation and
+  analysis of surface topology.
+\newblock In {\em 5th International Conference on GeoComputation}, pages
+  23--25, Chatham, UK, September 2000.
+
+\end{thebibliography}

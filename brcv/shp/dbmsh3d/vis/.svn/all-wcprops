@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/vis
+END
+dbmsh3d_vis_point_set.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/vis/dbmsh3d_vis_point_set.h
+END
+dbmsh3d_vis_backpt.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/vis/dbmsh3d_vis_backpt.h
+END
+dbmsh3d_vis_edge.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/vis/dbmsh3d_vis_edge.h
+END
+dbmsh3d_vis_mesh.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/vis/dbmsh3d_vis_mesh.cxx
+END
+dbmsh3d_vis_face.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/vis/dbmsh3d_vis_face.cxx
+END
+dbmsh3d_vis_utils.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/vis/dbmsh3d_vis_utils.cxx
+END
+dbmsh3d_vis_vertex.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/vis/dbmsh3d_vis_vertex.h
+END
+dbmsh3d_vis_bucket_3d.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/vis/dbmsh3d_vis_bucket_3d.cxx
+END
+dbmsh3d_click_getinfo.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/vis/dbmsh3d_click_getinfo.h
+END
+dbmsh3d_vis_backpt.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/vis/dbmsh3d_vis_backpt.cxx
+END
+dbmsh3d_vis_edge.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/vis/dbmsh3d_vis_edge.cxx
+END
+dbmsh3d_vis_fmm.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/vis/dbmsh3d_vis_fmm.h
+END
+dbmsh3d_vis_point_set.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/vis/dbmsh3d_vis_point_set.cxx
+END
+dbmsh3d_vis_vertex.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/vis/dbmsh3d_vis_vertex.cxx
+END
+dbmsh3d_click_getinfo.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/vis/dbmsh3d_click_getinfo.cxx
+END
+dbmsh3d_vis_fmm.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/vis/dbmsh3d_vis_fmm.cxx
+END
+dbmsh3d_vis_mesh.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/vis/dbmsh3d_vis_mesh.h
+END
+dbmsh3d_vis_face.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/vis/dbmsh3d_vis_face.h
+END
+dbmsh3d_vis_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/vis/dbmsh3d_vis_utils.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/vis/CMakeLists.txt
+END
+dbmsh3d_vis_bucket_3d.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbmsh3d/vis/dbmsh3d_vis_bucket_3d.h
+END

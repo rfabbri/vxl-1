@@ -1,0 +1,197 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo
+END
+dbdet_temporal_bundle.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_temporal_bundle.cxx
+END
+dbdet_spherical_histogram.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_spherical_histogram.h
+END
+dbdet_temporal_map_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/10435/trunk/contrib/Spatemp/algo/dbdet_temporal_map_sptr.h
+END
+dbdet_temporal_map.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_temporal_map.cxx
+END
+dbdet_spherical_histogram_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_spherical_histogram_sptr.h
+END
+dbdet_temporal_model.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_temporal_model.h
+END
+dbdet_temporal_options_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/10470/trunk/contrib/Spatemp/algo/dbdet_temporal_options_sptr.h
+END
+dbdet_temporal_options.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_temporal_options.cxx
+END
+dbdet_delaunay_map.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_delaunay_map.cxx
+END
+dbdet_spatial_temporal_options.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_spatial_temporal_options.h
+END
+dbdet_temporal_bundle.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_temporal_bundle.h
+END
+dbdet_temporal_utils.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_temporal_utils.cxx
+END
+dbdet_temporal_map.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_temporal_map.h
+END
+dbdet_spatial_temporal_derivatives.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_spatial_temporal_derivatives.cxx
+END
+dbdet_spatial_temporal_options_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_spatial_temporal_options_sptr.h
+END
+dbdet_spatemp_edgel.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/10425/trunk/contrib/Spatemp/algo/dbdet_spatemp_edgel.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/CMakeLists.txt
+END
+dbdet_contour_fragment.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/11196/trunk/contrib/Spatemp/algo/dbdet_contour_fragment.cxx
+END
+dbdet_spatemp_model.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/10425/trunk/contrib/Spatemp/algo/dbdet_spatemp_model.h
+END
+dbdet_region.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_region.cxx
+END
+dbdet_temporal_map_params.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_temporal_map_params.cxx
+END
+dbdet_temporal_options.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_temporal_options.h
+END
+dbdet_delaunay_map.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_delaunay_map.h
+END
+dbdet_spherical_histogram.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_spherical_histogram.cxx
+END
+dbdet_temporal_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_temporal_utils.h
+END
+dbdet_spatial_temporal_derivatives.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_spatial_temporal_derivatives.h
+END
+dbdet_spatemp_edgel.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/10425/trunk/contrib/Spatemp/algo/dbdet_spatemp_edgel.h
+END
+dbdet_contour_fragment.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/11196/trunk/contrib/Spatemp/algo/dbdet_contour_fragment.h
+END
+dbdet_temporal_model.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_temporal_model.cxx
+END
+dbdet_region.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_region.h
+END
+dbdet_temporal_map_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_temporal_map_params.h
+END
+dbdet_spatial_temporal_options.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/12318/trunk/contrib/Spatemp/algo/dbdet_spatial_temporal_options.cxx
+END

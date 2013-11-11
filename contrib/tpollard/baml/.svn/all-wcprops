@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/11815/trunk/contrib/tpollard/baml
+END
+baml_prob_img.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/10178/trunk/contrib/tpollard/baml/baml_prob_img.h
+END
+baml_appearance.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/9829/trunk/contrib/tpollard/baml/baml_appearance.h
+END
+baml_mog.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/9838/trunk/contrib/tpollard/baml/baml_mog.h
+END
+baml_rbf.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/9761/trunk/contrib/tpollard/baml/baml_rbf.cxx
+END
+baml_multi_mog.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/10178/trunk/contrib/tpollard/baml/baml_multi_mog.cxx
+END
+baml_physical.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/9761/trunk/contrib/tpollard/baml/baml_physical.cxx
+END
+baml_prob_img.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/11815/trunk/contrib/tpollard/baml/baml_prob_img.cxx
+END
+baml_rbf.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/9761/trunk/contrib/tpollard/baml/baml_rbf.h
+END
+baml_appearance.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/9829/trunk/contrib/tpollard/baml/baml_appearance.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/9829/trunk/contrib/tpollard/baml/CMakeLists.txt
+END
+baml_multi_mog.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/9865/trunk/contrib/tpollard/baml/baml_multi_mog.h
+END
+baml_physical.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/9761/trunk/contrib/tpollard/baml/baml_physical.h
+END
+baml_mog.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/10178/trunk/contrib/tpollard/baml/baml_mog.cxx
+END

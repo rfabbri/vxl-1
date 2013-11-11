@@ -1,0 +1,63 @@
+#!/bin/sh
+#
+# Multiview Curve Stereo utility
+# 
+# outputs mcs_list.txt in the format:
+#
+# img_fname0:edg_fname0:frag_fname0
+# img_fname1:edg_fname1:frag_fname1
+# img_fname2:edg_fname2:frag_fname2
+# ...
+#
+# Make sure your file name has no ":" in it.
+#
+# Ricardo Fabbri Thu Sep  3 14:33:33 PDT 2009
+
+#set -x
+case $# in
+  0) echo "Usage: $0 [image_extension]" 1>&2; exit 2
+esac
+
+# Error checking
+
+img_ext=$1
+img_files=`ls *.$img_ext`
+
+if test -z "$img_files"; then
+  echo "Error: No image files with the given extension." 1>&2
+  exit 1;
+fi
+
+bad_files=`ls *.$img_ext |grep :`
+if test -n "$bad_files"; then
+  echo "Error: Image files have ':' in ther name." 1>&2
+  exit 1;
+fi
+
+ls *.$img_ext > mcs_img_list.txt
+ls *.{vsl,cemv}* > mcs_frag_list.txt
+ls *.edg* > mcs_edg_list.txt
+
+cvletfiles=`ls *.cvlet*`;
+if [ -n "$cvletfiles" ]; then
+  ls *.cvlet* > mcs_cvlet_list.txt
+fi
+
+paste -d : mcs_*_list.txt > mcs_list.txt
+
+set -x
+nimg=`wc -l mcs_img_list.txt | cut -f 1 -d ' ' `
+nfrag=`wc -l mcs_frag_list.txt | cut -f 1 -d ' ' `
+nedg=`wc -l mcs_edg_list.txt | cut -f 1 -d ' ' `
+
+if [ -n "$cvletfiles" ]; then
+  ncvlet=`wc -l mcs_cvlet_list.txt | cut -f 1 -d ' ' `
+else
+  #dummy
+  ncvlet=$nedg
+fi
+
+if [ "$nimg" != "$nfrag" -o "$nimg" != "$nedg" -o "$ncvlet" != "$nedg" ]; then
+  echo "Error: number of images is different than the number of cfrags and/or edges"
+  exit 1;
+fi

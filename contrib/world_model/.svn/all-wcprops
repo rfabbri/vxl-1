@@ -1,0 +1,245 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/lemsvxl/!svn/ver/9855/trunk/contrib/world_model
+END
+poly_hybrid_manager.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/9705/trunk/contrib/world_model/poly_hybrid_manager.cxx
+END
+obj_observable.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/9839/trunk/contrib/world_model/obj_observable.cxx
+END
+poly_observer.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/9705/trunk/contrib/world_model/poly_observer.h
+END
+vpgl_rat_proj_camera.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/9705/trunk/contrib/world_model/vpgl_rat_proj_camera.cxx
+END
+poly_lidar_manager.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/9836/trunk/contrib/world_model/poly_lidar_manager.cxx
+END
+poly_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/8690/trunk/contrib/world_model/poly_utils.h
+END
+poly_coin3d_observer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/9734/trunk/contrib/world_model/poly_coin3d_observer.cxx
+END
+poly_menu.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/9647/trunk/contrib/world_model/poly_menu.h
+END
+poly_cam_observer.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/9705/trunk/contrib/world_model/poly_cam_observer.h
+END
+poly_coin3d_manager.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/9647/trunk/contrib/world_model/poly_coin3d_manager.h
+END
+poly_manager.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/9551/trunk/contrib/world_model/poly_manager.h
+END
+poly_hybrid_manager.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/9705/trunk/contrib/world_model/poly_hybrid_manager.h
+END
+obj_observable.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/9520/trunk/contrib/world_model/obj_observable.h
+END
+texture_map_generator.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/9647/trunk/contrib/world_model/texture_map_generator.cxx
+END
+poly_lidar_observer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/9705/trunk/contrib/world_model/poly_lidar_observer.cxx
+END
+vpgl_rat_proj_camera.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/9705/trunk/contrib/world_model/vpgl_rat_proj_camera.h
+END
+poly_coin3d_menu.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/9647/trunk/contrib/world_model/poly_coin3d_menu.cxx
+END
+poly_hybrid_menu.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/8765/trunk/contrib/world_model/poly_hybrid_menu.cxx
+END
+observable.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/8001/trunk/contrib/world_model/observable.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/9855/trunk/contrib/world_model/CMakeLists.txt
+END
+utm_lat_lon.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/8764/trunk/contrib/world_model/utm_lat_lon.cxx
+END
+poly_lidar_manager.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/9705/trunk/contrib/world_model/poly_lidar_manager.h
+END
+poly_coin3d_observer.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/9647/trunk/contrib/world_model/poly_coin3d_observer.h
+END
+poly_coin3d_proj_simple_observer.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/9520/trunk/contrib/world_model/poly_coin3d_proj_simple_observer.h
+END
+poly_lidar_menu.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/8967/trunk/contrib/world_model/poly_lidar_menu.cxx
+END
+poly_coin3d_proj_observer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/9734/trunk/contrib/world_model/poly_coin3d_proj_observer.cxx
+END
+poly_observer_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/8150/trunk/contrib/world_model/poly_observer_sptr.h
+END
+texture_map_generator.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/8928/trunk/contrib/world_model/texture_map_generator.h
+END
+poly_lidar_observer.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/9705/trunk/contrib/world_model/poly_lidar_observer.h
+END
+poly_observer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/9647/trunk/contrib/world_model/poly_observer.cxx
+END
+poly_coin3d_menu.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/9647/trunk/contrib/world_model/poly_coin3d_menu.h
+END
+poly_hybrid_menu.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/8765/trunk/contrib/world_model/poly_hybrid_menu.h
+END
+utm_lat_lon.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/8764/trunk/contrib/world_model/utm_lat_lon.h
+END
+poly_utils.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/8928/trunk/contrib/world_model/poly_utils.cxx
+END
+poly_menu.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/9550/trunk/contrib/world_model/poly_menu.cxx
+END
+poly_lidar_menu.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/8967/trunk/contrib/world_model/poly_lidar_menu.h
+END
+poly_coin3d_proj_observer.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/9520/trunk/contrib/world_model/poly_coin3d_proj_observer.h
+END
+poly_cam_observer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/9647/trunk/contrib/world_model/poly_cam_observer.cxx
+END
+poly_coin3d_manager.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/9839/trunk/contrib/world_model/poly_coin3d_manager.cxx
+END
+poly_manager.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/9734/trunk/contrib/world_model/poly_manager.cxx
+END

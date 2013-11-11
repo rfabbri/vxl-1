@@ -1,0 +1,61 @@
+<type name = "category-info">
+<description>
+	<category>
+		<name>fish</name>
+		<id>0</id>
+		<color>0 0 0</color>
+		<prefix>bonefishes dogfish fish herring mullet swordfish whaleshark</prefix>
+	</category>
+	<category>
+		<name>bunny</name>
+		<id>1</id>
+		<color>0 0 1</color>
+		<prefix>bunny desertcottontail easterncottontail marshrabbit mountaincottontail pygmyrabbit swamprabbit</prefix>
+	</category>
+	<category>
+		<name>quadruped</name>
+		<id>2</id>
+		<color>0 1 0</color>
+		<prefix>calf cat cow dog donkey fox</prefix>
+	</category>
+	<category>
+		<name>dude</name>
+		<id>3</id>
+		<color>0 1 1</color>
+		<prefix>dude</prefix>
+	</category>
+	<category>
+		<name>fighterjet</name>
+		<id>4</id>
+		<color>1 0 0</color>
+		<prefix>f1 harrier phantom skyhawk</prefix>
+	</category>
+	<category>
+		<name>fgen</name>
+		<id>5</id>
+		<color>1 0 1</color>
+		<prefix>fgen mgen</prefix>
+	</category>
+	<category>
+		<name>hand</name>
+		<id>6</id>
+		<color>1 1 0</color>
+		<prefix>hand</prefix>
+	</category>
+	<category>
+		<name>tool</name>
+		<id>7</id>
+		<color>1 1 1</color>
+		<prefix>tool</prefix>
+	</category>
+	<category>
+		<name>flatfish</name>
+		<id>8</id>
+		<color>0 0 2</color>
+		<prefix>kk0</prefix>
+	</category>
+
+</description>
+</type>
+
+

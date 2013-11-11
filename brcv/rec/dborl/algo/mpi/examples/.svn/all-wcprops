@@ -1,0 +1,293 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/12390/trunk/brcv/rec/dborl/algo/mpi/examples
+END
+dborl_cluster+int-dborl_extract_shock-int-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/lemsvxl/!svn/ver/10501/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_cluster+int-dborl_extract_shock-int-.cxx
+END
+example_main2.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/9993/trunk/brcv/rec/dborl/algo/mpi/examples/example_main2.cxx
+END
+dborl_categorization_evaluate_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/10940/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_categorization_evaluate_params.h
+END
+example_main3.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/9993/trunk/brcv/rec/dborl/algo/mpi/examples/example_main3.cxx
+END
+vbl_smart_ptr+dborl_categorization_evaluate_params-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/lemsvxl/!svn/ver/10563/trunk/brcv/rec/dborl/algo/mpi/examples/vbl_smart_ptr+dborl_categorization_evaluate_params-.cxx
+END
+dborl_extract_contour.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/10455/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_extract_contour.h
+END
+dborl_categorization_evaluate.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/10775/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_categorization_evaluate.cxx
+END
+dborl_categorization_evaluate_params_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/lemsvxl/!svn/ver/10563/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_categorization_evaluate_params_sptr.h
+END
+example_processor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/9988/trunk/brcv/rec/dborl/algo/mpi/examples/example_processor.cxx
+END
+dborl_categorization_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/10940/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_categorization_params.h
+END
+dborl_extract_contour_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/10940/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_extract_contour_params.h
+END
+vbl_smart_ptr+dborl_categorization_params-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/lemsvxl/!svn/ver/10563/trunk/brcv/rec/dborl/algo/mpi/examples/vbl_smart_ptr+dborl_categorization_params-.cxx
+END
+example_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/9993/trunk/brcv/rec/dborl/algo/mpi/examples/example_main.cxx
+END
+dborl_cluster+int-example_processor-float-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/lemsvxl/!svn/ver/9867/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_cluster+int-example_processor-float-.cxx
+END
+dborl_cluster+int-dborl_extract_contour-int-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/lemsvxl/!svn/ver/10453/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_cluster+int-dborl_extract_contour-int-.cxx
+END
+dborl_categorization_params_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/10563/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_categorization_params_sptr.h
+END
+dborl_categorization.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/10622/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_categorization.cxx
+END
+vbl_smart_ptr+dborl_categorization_simple_params-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/lemsvxl/!svn/ver/10635/trunk/brcv/rec/dborl/algo/mpi/examples/vbl_smart_ptr+dborl_categorization_simple_params-.cxx
+END
+example_processor2.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/9992/trunk/brcv/rec/dborl/algo/mpi/examples/example_processor2.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/12390/trunk/brcv/rec/dborl/algo/mpi/examples/CMakeLists.txt
+END
+vbl_smart_ptr+dborl_extract_shock_params-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/lemsvxl/!svn/ver/10501/trunk/brcv/rec/dborl/algo/mpi/examples/vbl_smart_ptr+dborl_extract_shock_params-.cxx
+END
+example_processor3.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/9991/trunk/brcv/rec/dborl/algo/mpi/examples/example_processor3.cxx
+END
+dborl_categorization_simple_params_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/lemsvxl/!svn/ver/10635/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_categorization_simple_params_sptr.h
+END
+dborl_categorization_simple.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/10975/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_categorization_simple.cxx
+END
+example_processor.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/10380/trunk/brcv/rec/dborl/algo/mpi/examples/example_processor.h
+END
+dborl_categorization_evaluate.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/10572/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_categorization_evaluate.h
+END
+dborl_cluster+int-example_processor2-ex_class-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/lemsvxl/!svn/ver/9875/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_cluster+int-example_processor2-ex_class-.cxx
+END
+dborl_categorization_simple_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/10641/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_categorization_simple_main.cxx
+END
+dborl_extract_shock_params_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/10501/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_extract_shock_params_sptr.h
+END
+dborl_extract_shock.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/11516/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_extract_shock.cxx
+END
+dborl_extract_shock_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/10662/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_extract_shock_main.cxx
+END
+dborl_extract_shock_main_no_mpi.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/10713/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_extract_shock_main_no_mpi.cxx
+END
+dborl_categorization.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/10634/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_categorization.h
+END
+dborl_categorization_evaluate_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/10572/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_categorization_evaluate_main.cxx
+END
+vbl_smart_ptr+dborl_extract_contour_params-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/lemsvxl/!svn/ver/10455/trunk/brcv/rec/dborl/algo/mpi/examples/vbl_smart_ptr+dborl_extract_contour_params-.cxx
+END
+dborl_cluster+int-dborl_categorization-int-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/lemsvxl/!svn/ver/10563/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_cluster+int-dborl_categorization-int-.cxx
+END
+example_processor2.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/10380/trunk/brcv/rec/dborl/algo/mpi/examples/example_processor2.h
+END
+dborl_categorization_simple.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/10635/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_categorization_simple.h
+END
+example_processor3.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/10380/trunk/brcv/rec/dborl/algo/mpi/examples/example_processor3.h
+END
+dborl_cluster+int-example_processor3-ex_class3-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/lemsvxl/!svn/ver/9876/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_cluster+int-example_processor3-ex_class3-.cxx
+END
+dborl_extract_contour_params_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/10455/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_extract_contour_params_sptr.h
+END
+dborl_extract_contour.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/10501/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_extract_contour.cxx
+END
+dborl_categorization_simple_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/10975/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_categorization_simple_params.h
+END
+dborl_extract_shock.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/10501/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_extract_shock.h
+END
+dborl_categorization_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/10634/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_categorization_main.cxx
+END
+dborl_extract_contour_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/10466/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_extract_contour_main.cxx
+END
+dborl_cluster+int-dborl_categorization_simple-int-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/lemsvxl/!svn/ver/10635/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_cluster+int-dborl_categorization_simple-int-.cxx
+END
+dborl_extract_shock_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/11327/trunk/brcv/rec/dborl/algo/mpi/examples/dborl_extract_shock_params.h
+END

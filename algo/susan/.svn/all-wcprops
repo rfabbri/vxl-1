@@ -1,0 +1,293 @@
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/lemsvxl/!svn/ver/9752/trunk/algo/susan
+END
+susan.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/lemsvxl/!svn/ver/199/trunk/algo/susan/susan.h
+END
+getint.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/getint.h
+END
+median.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/median.h
+END
+susan_main.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/susan_main.h
+END
+putImage.c
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/putImage.c
+END
+putImage.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/putImage.h
+END
+getImage.c
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/getImage.c
+END
+susan_corners.c
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/1247/trunk/algo/susan/susan_corners.c
+END
+susan_principle_small.c
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/susan_principle_small.c
+END
+getImage.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/getImage.h
+END
+susan_edges_small.c
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/1247/trunk/algo/susan/susan_edges_small.c
+END
+susan_corners.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/susan_corners.h
+END
+int_to_char.c
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/int_to_char.c
+END
+susan_principle_small.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/susan_principle_small.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/9752/trunk/algo/susan/CMakeLists.txt
+END
+susan_edges_small.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/susan_edges_small.h
+END
+susan_principle.c
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/susan_principle.c
+END
+int_to_char.h
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/int_to_char.h
+END
+susan_edges.c
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/1247/trunk/algo/susan/susan_edges.c
+END
+susan_edges_medium.c
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/1247/trunk/algo/susan/susan_edges_medium.c
+END
+susan_sub.c
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/1247/trunk/algo/susan/susan_sub.c
+END
+susan_principle.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/susan_principle.h
+END
+usage.c
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/usage.c
+END
+corner_draw.c
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/corner_draw.c
+END
+susan_edges.h
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/susan_edges.h
+END
+susan_edges_medium.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/susan_edges_medium.h
+END
+susan_sub_function.c
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/1247/trunk/algo/susan/susan_sub_function.c
+END
+susan_sub.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/susan_sub.h
+END
+usage.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/usage.h
+END
+corner_draw.h
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/corner_draw.h
+END
+susan_thin.c
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/lemsvxl/!svn/ver/1247/trunk/algo/susan/susan_thin.c
+END
+setup_brightness_lut.c
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/setup_brightness_lut.c
+END
+susan_sub_function.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/susan_sub_function.h
+END
+enlarge.c
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/enlarge.c
+END
+SusanInterface.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/SusanInterface.h
+END
+susan_corners_quick.c
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/susan_corners_quick.c
+END
+susan_thin.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/susan_thin.h
+END
+setup_brightness_lut.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/setup_brightness_lut.h
+END
+edge_draw.c
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/1247/trunk/algo/susan/edge_draw.c
+END
+enlarge.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/enlarge.h
+END
+susan_smooth.c
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/1247/trunk/algo/susan/susan_smooth.c
+END
+susan_edges_temp.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/1247/trunk/algo/susan/susan_edges_temp.c
+END
+susan_corners_quick.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/susan_corners_quick.h
+END
+edge_draw.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/edge_draw.h
+END
+susan_smooth.h
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/susan_smooth.h
+END
+getint.c
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/getint.c
+END
+median.c
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/lemsvxl/!svn/ver/14/trunk/algo/susan/median.c
+END
+susan_main.c
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/lemsvxl/!svn/ver/1247/trunk/algo/susan/susan_main.c
+END

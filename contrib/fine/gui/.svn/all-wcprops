@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/gui
+END
+seg_gui_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/gui/seg_gui_main.cxx
+END
+seg_gui_menu.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/gui/seg_gui_menu.cxx
+END
+seg_gui_menu.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/gui/seg_gui_menu.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/gui/CMakeLists.txt
+END
+Copy of CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12803/trunk/contrib/fine/gui/Copy%20of%20CMakeLists.txt
+END

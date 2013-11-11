@@ -1,0 +1,119 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/15440/trunk/contrib/firat/matlab/elbow
+END
+show_groundtruth.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/15440/trunk/contrib/firat/matlab/elbow/show_groundtruth.m
+END
+segment_region2.m
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/15223/trunk/contrib/firat/matlab/elbow/segment_region2.m
+END
+segment_region3.m
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/15254/trunk/contrib/firat/matlab/elbow/segment_region3.m
+END
+thresholding.m
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/15254/trunk/contrib/firat/matlab/elbow/thresholding.m
+END
+statistics.m
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/15254/trunk/contrib/firat/matlab/elbow/statistics.m
+END
+save_initial_contour_mask.m
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/15254/trunk/contrib/firat/matlab/elbow/save_initial_contour_mask.m
+END
+drlse_edge.m
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/15223/trunk/contrib/firat/matlab/elbow/drlse_edge.m
+END
+levelset_independent.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/15254/trunk/contrib/firat/matlab/elbow/levelset_independent.m
+END
+readVTK.m
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/15223/trunk/contrib/firat/matlab/elbow/readVTK.m
+END
+segment_bones_just_levelset.m
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/15254/trunk/contrib/firat/matlab/elbow/segment_bones_just_levelset.m
+END
+demo_1.m
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/15223/trunk/contrib/firat/matlab/elbow/demo_1.m
+END
+demo_2.m
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/15223/trunk/contrib/firat/matlab/elbow/demo_2.m
+END
+segment_region.m
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/15254/trunk/contrib/firat/matlab/elbow/segment_region.m
+END
+demo_3.m
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/15223/trunk/contrib/firat/matlab/elbow/demo_3.m
+END
+segment_thresh_level.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/15254/trunk/contrib/firat/matlab/elbow/segment_thresh_level.m
+END
+thresholding_all_bones.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/15254/trunk/contrib/firat/matlab/elbow/thresholding_all_bones.m
+END
+segment_thresh.m
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/15254/trunk/contrib/firat/matlab/elbow/segment_thresh.m
+END
+levelset.m
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/15254/trunk/contrib/firat/matlab/elbow/levelset.m
+END
+export_slices.m
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/15254/trunk/contrib/firat/matlab/elbow/export_slices.m
+END

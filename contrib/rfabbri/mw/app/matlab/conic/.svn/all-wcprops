@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/12154/trunk/contrib/rfabbri/mw/app/matlab/conic
+END
+conic_define.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12154/trunk/contrib/rfabbri/mw/app/matlab/conic/conic_define.m
+END
+conic_compute.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12154/trunk/contrib/rfabbri/mw/app/matlab/conic/conic_compute.m
+END
+conic_draw.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12154/trunk/contrib/rfabbri/mw/app/matlab/conic/conic_draw.m
+END
+conic_translate.m
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12154/trunk/contrib/rfabbri/mw/app/matlab/conic/conic_translate.m
+END
+conic.m
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12154/trunk/contrib/rfabbri/mw/app/matlab/conic/conic.m
+END
+conic_delete.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12154/trunk/contrib/rfabbri/mw/app/matlab/conic/conic_delete.m
+END
+conic_increment.m
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12154/trunk/contrib/rfabbri/mw/app/matlab/conic/conic_increment.m
+END
+conic_f.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12154/trunk/contrib/rfabbri/mw/app/matlab/conic/conic_f.m
+END
+conic_decrement.m
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12154/trunk/contrib/rfabbri/mw/app/matlab/conic/conic_decrement.m
+END

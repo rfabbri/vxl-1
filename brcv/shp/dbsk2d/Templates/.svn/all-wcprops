@@ -1,0 +1,143 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/16573/trunk/brcv/shp/dbsk2d/Templates
+END
+vbl_smart_ptr+dbsk2d_xshock_sample-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/Templates/vbl_smart_ptr+dbsk2d_xshock_sample-.cxx
+END
+vbl_smart_ptr+dbsk2d_bnd_vertex-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/Templates/vbl_smart_ptr+dbsk2d_bnd_vertex-.cxx
+END
+vbl_smart_ptr+dbsk2d_ishock_graph-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/Templates/vbl_smart_ptr+dbsk2d_ishock_graph-.cxx
+END
+vbl_smart_ptr+dbsk2d_bnd_cell-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/4205/trunk/brcv/shp/dbsk2d/Templates/vbl_smart_ptr+dbsk2d_bnd_cell-.cxx
+END
+dbgrl_vertex+dbsk2d_shock_edge-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/Templates/dbgrl_vertex+dbsk2d_shock_edge-.cxx
+END
+vbl_smart_ptr+dbsk2d_ishock_transform-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/16573/trunk/brcv/shp/dbsk2d/Templates/vbl_smart_ptr+dbsk2d_ishock_transform-.cxx
+END
+vbl_smart_ptr+dbsk2d_shock_node-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/Templates/vbl_smart_ptr+dbsk2d_shock_node-.cxx
+END
+dbgrl_edge+dbsk2d_shock_node-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/Templates/dbgrl_edge+dbsk2d_shock_node-.cxx
+END
+vbl_smart_ptr+dbsk2d_bnd_contour-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/Templates/vbl_smart_ptr+dbsk2d_bnd_contour-.cxx
+END
+vbl_smart_ptr+dbsk2d_shock_ishock_node-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/Templates/vbl_smart_ptr+dbsk2d_shock_ishock_node-.cxx
+END
+vtol_list_functions+dbsk2d_bnd_edge~-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/Templates/vtol_list_functions+dbsk2d_bnd_edge~-.cxx
+END
+vbl_smart_ptr+dbsk2d_shock_grouped_ishock_edge-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/Templates/vbl_smart_ptr+dbsk2d_shock_grouped_ishock_edge-.cxx
+END
+vbl_smart_ptr+dbsk2d_rich_map-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/4061/trunk/brcv/shp/dbsk2d/Templates/vbl_smart_ptr+dbsk2d_rich_map-.cxx
+END
+vbl_smart_ptr+dbsk2d_xshock_edge-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/9221/trunk/brcv/shp/dbsk2d/Templates/vbl_smart_ptr+dbsk2d_xshock_edge-.cxx
+END
+vbl_smart_ptr+dbsk2d_boundary-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/Templates/vbl_smart_ptr+dbsk2d_boundary-.cxx
+END
+vbl_smart_ptr+dbsk2d_containment_node-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/16573/trunk/brcv/shp/dbsk2d/Templates/vbl_smart_ptr+dbsk2d_containment_node-.cxx
+END
+vbl_smart_ptr+dbsk2d_lagrangian_cell_bnd-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/5563/trunk/brcv/shp/dbsk2d/Templates/vbl_smart_ptr+dbsk2d_lagrangian_cell_bnd-.cxx
+END
+vbl_smart_ptr+dbsk2d_bnd_edge-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/Templates/vbl_smart_ptr+dbsk2d_bnd_edge-.cxx
+END
+vtol_list_functions+dbsk2d_bnd_vertex~-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/Templates/vtol_list_functions+dbsk2d_bnd_vertex~-.cxx
+END
+vbl_smart_ptr+dbsk2d_shock_graph-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/Templates/vbl_smart_ptr+dbsk2d_shock_graph-.cxx
+END
+vbl_smart_ptr+dbsk2d_shock_fragment-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/Templates/vbl_smart_ptr+dbsk2d_shock_fragment-.cxx
+END
+vbl_smart_ptr+dbsk2d_shock_edge-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/Templates/vbl_smart_ptr+dbsk2d_shock_edge-.cxx
+END
+dbgrl_graph+dbsk2d_shock_node-dbsk2d_shock_edge-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/Templates/dbgrl_graph+dbsk2d_shock_node-dbsk2d_shock_edge-.cxx
+END

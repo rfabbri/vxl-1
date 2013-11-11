@@ -1,0 +1,218 @@
+\section{Use of Critical Points as Features}
+\label{sec:experiments}
+
+In this section, we propose the use of critical points as features as an alternative to other features such as the Harris corners \cite{Harris:Stephens:Edge:Corner}, SIFT keypoints \cite{lowe:distinctive:IJCV04}, \etc. A clear difference between critical points and other features is that the latter are based on local detections, \eg, by optimizing a funcitonal on a local grid. The detection of critical points, especially saddle points, however, is global, and thus more robust. We illustrate two applications using critical points; one in image matching and one in multiview image calibration. Since both applications require matching of these features using some local descriptor, we describe that first.
+
+\subsection{Matching critical points}
+
+We use the standard methodology for matching features based on a traditional local descriptor as described in \cite{lowe:distinctive:IJCV04}. First, the local descriptor is the SIFT histogram. It should be obvious that this descriptor is not optimal for describing critical points as it is tailored to describe SIFT keypoints. We keep the descriptor identical to test the viability of using critical points compared to SIFT and Harris corners. Alternatively, the connectivity of a critical point with its neighbors itself is a more intrinsic and natural descriptor of each critical point. We do not use this descriptor in this paper.
+
+\begin{figure}
+\centering
+\subfloat[Minima]{\includegraphics[width=.95\textwidth]{img/featmatch/narrow-min.png}}\\
+\subfloat[SIFT keypoints]{\includegraphics[width=.95\textwidth]{img/featmatch/narrow-sift.png}}
+\caption{Comparison of critical points to SIFT points in a narrow baseline setting.}
+\label{fig:featmatch_narrow}
+\end{figure}
+
+\begin{figure}
+\centering
+\subfloat[Maxima]{\includegraphics[width=.95\textwidth]{img/featmatch/wider-max.png}}\\
+\subfloat[SIFT keypoints]{\includegraphics[width=.95\textwidth]{img/featmatch/narrow-min.png}}
+\caption{Comparison of critical points to SIFT points in a medium baseline setting.}
+\label{fig:featmatch_medium}
+\end{figure}
+
+\begin{figure}
+\centering
+\subfloat[Saddle points]{\includegraphics[width=.95\textwidth]{img/featmatch/widest-saddle.png}}\\
+\subfloat[SIFT points]{\includegraphics[width=.95\textwidth]{img/featmatch/widest-sift.png}}
+\caption{Comparison of critical points to SIFT points in a wide baseline setting.}
+\label{fig:featmatch_wide}
+\end{figure}
+
+Second, the matching strategy is identical to the one described in \cite{lowe:distinctive:IJCV04}. A feature from one of the images is compared to all of the features in the other image. The closest two features are found and their distance ratio is analyzed. If the ratio is less than a certain threshold (usually a value between $0.6$ and $0.8$), the closest feature is regarded as a correct match.
+
+We use the multiview dataset of \cite{Usumezbas:MultiviewIllumDB:URL,Usumezbas:Kimia:3DIMPVT12} which has 13 views of a scene with ground truth correspondence. The critical points in pairs of views are matched as described above and the results are validated using the ground truth correspondence. Figure \ref{fig:featmatch_narrow}, \ref{fig:featmatch_medium} and \ref{fig:featmatch_wide} show a comparison of using critical points against SIFT keypoints for pairs of images having harrow, medium and wide baselines. Table \ref{tab:featurematching} shows the recall rates for each of these cases. \todo{[Evaluation has not been done! I'll try to do it if I have enough time left. the problem is I'm working with resized images since the original ones are too big to be used in my critical point detection algorithm.]}
+
+\subsection{Image matching}
+
+
+\begin{figure}
+\centering
+\subfloat[Scene 1]{\includegraphics[width=.18\textwidth]{img/robot/SET001_118.png} \includegraphics[width=.18\textwidth]{img/robot/SET001_164.png} \includegraphics[width=.18\textwidth]{img/robot/SET001_168.png} \includegraphics[width=.18\textwidth]{img/robot/SET001_197.png} \includegraphics[width=.18\textwidth]{img/robot/SET001_218.png}}\\
+
+\subfloat[Scene 2]{\includegraphics[width=.18\textwidth]{img/robot/SET002_006.png} \includegraphics[width=.18\textwidth]{img/robot/SET002_151.png} \includegraphics[width=.18\textwidth]{img/robot/SET002_182.png} \includegraphics[width=.18\textwidth]{img/robot/SET002_209.png} \includegraphics[width=.18\textwidth]{img/robot/SET002_067.png}}\\
+
+\subfloat[Scene 9]{\includegraphics[width=.18\textwidth]{img/robot/SET009_004.png} \includegraphics[width=.18\textwidth]{img/robot/SET009_013.png} \includegraphics[width=.18\textwidth]{img/robot/SET009_119.png} \includegraphics[width=.18\textwidth]{img/robot/SET009_208.png} \includegraphics[width=.18\textwidth]{img/robot/SET009_235.png}}\\
+
+\subfloat[Scene 29]{\includegraphics[width=.18\textwidth]{img/robot/SET029_070.png} \includegraphics[width=.18\textwidth]{img/robot/SET029_084.png} \includegraphics[width=.18\textwidth]{img/robot/SET029_105.png} \includegraphics[width=.18\textwidth]{img/robot/SET029_163.png} \includegraphics[width=.18\textwidth]{img/robot/SET029_251.png}}\\
+
+\subfloat[Scene 54]{\includegraphics[width=.18\textwidth]{img/robot/SET054_035.png} \includegraphics[width=.18\textwidth]{img/robot/SET054_042.png} \includegraphics[width=.18\textwidth]{img/robot/SET054_046.png} \includegraphics[width=.18\textwidth]{img/robot/SET054_115.png} \includegraphics[width=.18\textwidth]{img/robot/SET054_193.png}}\\
+\caption{5 of the 45 scenes we use in our image matching experiments.}
+\label{fig:robotdataset_example_scenes}
+\end{figure}
+
+\begin{table}[H]
+\begin{center}  
+{\small  
+    \begin{tabular}{ | c | c |}
+    \hline
+    \textbf{Keypoint type} & \textbf{True positive rate}\\
+    \hline
+    Top $100\%$ SIFT & $84.89\%$\\
+    \hline
+    Top $100\%$ Min & $78.22\%$\\
+    \hline
+    Top $90\%$ Min & $77.78\%$\\
+    \hline
+    Top $80\%$ Min & $82.67\%$\\
+    \hline
+    Top $70\%$ Min & $78.22\%$\\
+    \hline
+    Top $60\%$ Min & $78.22\%$\\
+    \hline
+    Top $50\%$ Min & $80.89\%$\\
+    \hline
+    Top $40\%$ Min & $81.33\%$\\
+    \hline
+    Top $30\%$ Min & $80.00\%$\\
+    \hline
+    Top $20\%$ Min & $75.11\%$\\
+    \hline
+    Top $10\%$ Min & $77.33\%$\\
+    \hline
+    Top $100\%$ Max & $75.11\%$\\
+    \hline
+    Top $90\%$ Max & $76.00\%$\\
+    \hline
+    Top $80\%$ Max & $77.33\%$\\
+    \hline
+    Top $70\%$ Max & $78.67\%$\\
+    \hline
+    Top $60\%$ Max & $79.11\%$\\
+    \hline
+    Top $50\%$ Max & $80.89\%$\\
+    \hline
+    Top $40\%$ Max & $79.56\%$\\
+    \hline
+    Top $30\%$ Max & $78.67\%$\\
+    \hline
+    Top $20\%$ Max & $79.56\%$\\
+    \hline
+    Top $10\%$ Max & $75.11\%$\\
+     \hline
+    Top $100\%$ Saddle & $77.33\%$\\
+    \hline
+    Top $90\%$ Saddle & $79.11\%$\\
+    \hline
+    Top $80\%$ Saddle & $78.22\%$\\
+    \hline
+    Top $70\%$ Saddle & $79.11\%$\\
+    \hline
+    Top $60\%$ Saddle & $79.11\%$\\
+    \hline
+    Top $50\%$ Saddle & $80.89\%$\\
+    \hline
+    Top $40\%$ Saddle & $82.67\%$\\
+    \hline
+    Top $30\%$ Saddle & $83.11\%$\\
+    \hline
+    Top $20\%$ Saddle & $83.11\%$\\
+    \hline
+    Top $10\%$ Saddle & $80.00\%$\\
+     \hline
+    Top $100\%$ Min + Max + Saddle & $78.22\%$\\
+    \hline
+    Top $90\%$ Min + Max + Saddle & $78.67\%$\\
+    \hline
+    Top $80\%$ Min + Max + Saddle & $80.44\%$\\
+    \hline
+    Top $70\%$ Min + Max + Saddle & $80.89\%$\\
+    \hline
+    Top $60\%$ Min + Max + Saddle & $80.89\%$\\
+    \hline
+    Top $50\%$ Min + Max + Saddle & $83.11\%$\\
+    \hline
+    Top $40\%$ Min + Max + Saddle & $82.67\%$\\
+    \hline
+    Top $30\%$ Min + Max + Saddle & $84.89\%$\\
+    \hline
+    Top $20\%$ Min + Max + Saddle & $83.56\%$\\
+    \hline
+    Top $10\%$ Min + Max + Saddle & $84.00\%$\\    
+    \hline
+    Top $30\%$ Min + $80\%$ Max + $10\%$ Saddle & $87.11\%$\\
+    \hline
+    Top $80\%$ Min + $20\%$ Max + $90\%$ Saddle + $100\%$ SIFT & $\mathbf{88.89\%}$ \\
+    \hline
+    Top $10\%$ Min + $10\%$ Max + $20\%$ Saddle + $100\%$ SIFT & $\mathbf{88.89\%}$ \\
+    \hline
+    \end{tabular}
+    }
+\end{center}
+\caption{Image matching results.}
+\label{tab:imagematching}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics[width=.75\textwidth]{img/featmatch/topcrittp.png}
+\caption{Recall rates for top $T\%$ critical points.}
+\label{fig:topcrittp}
+\end{figure}
+
+In this section, we describe an application of feature matching using critical points to the problem of image matching. We subsampled the Quarter Size Reduced Robot Dataset \cite{Aanaes:etal:IJCV2012} which contains 60 scenes and 266 images per scene to create a smaller dataset. This dataset contains 45 scenes and 5 images per scene for a total of 225 images, Figure \ref{fig:robotdataset_example_scenes}. We used a leave-one-out strategy where a match is correct if the two matching images belong to the same scene. Observe that small amounts of noise can generate numerous spurious critical points. We used the minimum principal curvature\footnote{We tried other curvature measures such as Gaussian and mean, but the minimum curvature yielded the best results.} of the intensity profile as a measure to indicate the likelihood that a critical point comes from noise, since noise would generate low curvature profiles. With this measure, it is possible to use only the top $T\%$ of critical points ranked order by this measure in the matching task. Table \ref{tab:imagematching} shows the results for various values of $T$ using minima, maxima, saddles and their combinations. These results show that the recall is not so sensitive with changes in $T$. 
+
+\begin{figure}
+\centering
+\includegraphics[width=.95\textwidth]{img/featmatch/tpr-vs-numpts.png}
+\caption{True positive rate vs number of keypoints}
+\label{fig:imgmatchrandomdense}
+\end{figure}
+
+A key question is whether a random sampling or a regular grid sampling is more effective than keypoint sampling. Given a fixed number of samples $N$, we can fairly compare the recall rate for regular samples, random samples, and the top $N$ critical points, Figure \ref{fig:imgmatchrandomdense}. Observe that \textit{(i)} for both regular samples and random samples the recall rate increases and saturates with regular sampling doing a little better. \textit{(ii)} The recall rate decreases as the number critical points increases, possibly due to the effect of noise. \textit{(iii)} The recall rate for SIFT keypoints is also shown which is roughly in the same ball park with using fewer critical points. This figure concludes that \textit{(i)} feature points are not useful if many random or regular samples can be used and \textit{(ii)} the benefit of feature points is effectively on working with fewer samples.
+
+In conclusion, critical points with a SIFT descriptor achive similar recall rate as SIFT keypoints with a SIFT descriptor. We conjecture that a more natural descriptor for critical points is using a SIFT descriptor but using joint matching of neighbors would lead to substantially better results. For example, if we use the $K$ nearest neighbor matches of two neighboring critical points in image one, we would require that the matches also be neighbors in image 2, Figure \ref{fig:neighbormatching}. 
+
+\subsection{Use of critical points in multiview calibration}
+
+\begin{table}[H]
+\begin{center}    
+    \begin{tabular}{ | c | c | c | c | c |}
+    \hline
+    & \textbf{SIFT} & \textbf{Minimum} & \textbf{Maximum}& \textbf{Saddle}\\
+    \hline
+    \textbf{Scene 1} & 0.62 & 0.71 & \textit{0.47} & 0.48\\
+    \hline
+    \textbf{Scene 2} & 0.58 & 0.32 & 0.28 & \textit{0.26} \\
+    \hline
+    \textbf{Scene 3} & \textit{0.36} & 0.44 & 0.42 & 0.44\\
+    \hline
+    \textbf{Scene 4} & 0.28 & \textit{0.11} & 0.34 & 0.31\\
+    \hline
+    \end{tabular}
+\end{center}
+\caption{Bundler calibration, average reprojection errors in pixels}
+\label{tab:calibration}
+\end{table}
+
+\begin{figure}
+\centering
+\subfloat[Scene 1]{\includegraphics[width=.18\textwidth]{img/calib/scene1/Img001_01.png} \includegraphics[width=.18\textwidth]{img/calib/scene1/Img026_01.png} \includegraphics[width=.18\textwidth]{img/calib/scene1/Img049_01.png} \includegraphics[width=.18\textwidth]{img/calib/scene1/Img050_01.png} \includegraphics[width=.18\textwidth]{img/calib/scene1/Img064_01.png}}\\
+\subfloat[Scene 2]{\includegraphics[width=.18\textwidth]{img/calib/scene2/Img001_01.png} \includegraphics[width=.18\textwidth]{img/calib/scene2/Img037_01.png} \includegraphics[width=.18\textwidth]{img/calib/scene2/Img049_01.png} \includegraphics[width=.18\textwidth]{img/calib/scene2/Img094_01.png} \includegraphics[width=.18\textwidth]{img/calib/scene2/Img095_01.png}}\\
+\subfloat[Scene 3]{\includegraphics[width=.18\textwidth]{img/calib/scene3/Img001_01.png} \includegraphics[width=.18\textwidth]{img/calib/scene3/Img025_01.png} \includegraphics[width=.18\textwidth]{img/calib/scene3/Img057_01.png} \includegraphics[width=.18\textwidth]{img/calib/scene3/Img094_01.png} \includegraphics[width=.18\textwidth]{img/calib/scene3/Img095_01.png}}\\
+\subfloat[Scene 4]{\includegraphics[width=.18\textwidth]{img/calib/scene4/Img001_01.png} \includegraphics[width=.18\textwidth]{img/calib/scene4/Img024_01.png} \includegraphics[width=.18\textwidth]{img/calib/scene4/Img037_01.png} \includegraphics[width=.18\textwidth]{img/calib/scene4/Img065_01.png} \includegraphics[width=.18\textwidth]{img/calib/scene4/Img094_01.png}}
+\caption{The scenes used in the calibration experiments.}
+\label{fig:calibrationscenes}
+\end{figure}
+
+The traditional approach to calibrating two views is to use RANSAC on potential matches to generate the candidate calibrations and then verify using the remaining points. A useful package for this purpose is Bundler \cite{Snavely:etal:ToG06} which takes an input of features and uses Lowe's algorithm to generate matches \todo{[not sure, have to check!!!]}. Since Bundler expects SIFT keypoints we had to customize the code to allow use of critical points instead. The reprojection errors measure the effectiveness of two competing calibrations. We used a dataset of four scenes and 14 multiview images of each with a constant illumination setting \todo{[future todo: study the effects of varying illumination]}, Figure \ref{fig:calibrationscenes}. 
+
+Table \ref{tab:calibration} compares the average reprojection error when using SIFT with using one type of critical point, \ie, min, max, and saddle, respectively. We have not shown the result of using all critical points because Bundler does not allow a representation to type, \eg, to prevent matching a minimum to a maximum.
+
+The results show that in all but Scene 3, one type of critical point performs better than SIFT; and, in the case of Scene 3 the results are not sognificantly worse. We expect better results when all types are combined. As it is, using a set of four bundle adjustments one for each feature type, and using the one with minimum reprojection error leads to significant improvement.
+
+%We have also compared the performance of critical points to that of SIFT keypoints for camera calibration. We used the Bundler \cite{Snavely:etal:ToG06} in both cases and using 4 scenes (Figure \ref{fig:calibrationscenes}) from the Robot dataset, we measured the average reprojection errors. The results show that in three of four cases the use of critical points led to lower reprojection errors. See Table \ref{tab:calibration} for the results.
+
+

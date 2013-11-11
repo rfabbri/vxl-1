@@ -1,0 +1,25 @@
+IF (VXL_VGUI_FOUND)
+
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/tpollard )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/mvg )
+INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
+INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
+INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
+INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
+INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
+INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
+
+
+SET(tpollard_gui_sources
+
+   tpollard_menu.cxx       tpollard_menu.h
+   tpollard_main.cxx
+)
+
+
+ADD_EXECUTABLE( tpollard_gui ${tpollard_gui_sources})
+
+TARGET_LINK_LIBRARIES(tpollard_gui bvis1 dbccl_pro )
+
+ENDIF (VXL_VGUI_FOUND)

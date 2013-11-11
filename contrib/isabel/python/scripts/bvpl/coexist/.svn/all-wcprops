@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvpl/coexist
+END
+find_corners.py
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvpl/coexist/find_corners.py
+END
+find_corners_and_vrml_save.py
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvpl/coexist/find_corners_and_vrml_save.py
+END
+run_window_hierarchy.sh
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvpl/coexist/run_window_hierarchy.sh
+END
+pair_window_primitives.py
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvpl/coexist/pair_window_primitives.py
+END
+pair_corner_pairs.py
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvpl/coexist/pair_corner_pairs.py
+END
+pair_appearance_corners.py
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvpl/coexist/pair_appearance_corners.py
+END
+pair_corners.py
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvpl/coexist/pair_corners.py
+END
+find_appearance_corner.py
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvpl/coexist/find_appearance_corner.py
+END
+pair2raw.py
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvpl/coexist/pair2raw.py
+END

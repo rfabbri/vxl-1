@@ -1,0 +1,24 @@
+// The following text is included in the main documentation page by doxygen
+/*! \mainpage dbkpr : keypoint recognition library
+* Routines to match and reconstruct keypoints
+*
+* \section Overview
+* The process in the 'pro' directory enables one to run all the facilities in
+* brown eyes. You can: detect keypoints, match them, and reconstruct cameras and
+* 3D points:
+*   - dbkpr_bbf_match_process : matches two views based on SIFT descriptors
+*   - dbkpr_span_match_process : matches whole video sequence using SIFT descriptors and estimates fundamental matrices
+*   - dbkpr_reconstruct_process : structure and motion recovery by bundle adjustment
+*
+* \sa dbdet
+*
+* \section Details of classes
+*
+* \subsection After Global Match Process (dbkpr_span_match_process)
+* Each frame will store:
+*   - dbdet_keypoint_storage : matched keypoints
+*   - dbkpr_corr3d_storage :
+*     - default initial camera (hand-initialized, equal for all frames)
+*     - Global correspondence
+*       - YES, the same one is currently being copied on every single frame
+*/

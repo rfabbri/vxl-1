@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/9752/trunk/contrib/ntrinh/MESH_nogui/src/lib3d
+END
+model_in_raw.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/5541/trunk/contrib/ntrinh/MESH_nogui/src/lib3d/model_in_raw.c
+END
+ply.c
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/5541/trunk/contrib/ntrinh/MESH_nogui/src/lib3d/ply.c
+END
+debug_print.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/5541/trunk/contrib/ntrinh/MESH_nogui/src/lib3d/debug_print.h
+END
+geomutils.c
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/5541/trunk/contrib/ntrinh/MESH_nogui/src/lib3d/geomutils.c
+END
+types.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/5541/trunk/contrib/ntrinh/MESH_nogui/src/lib3d/types.h
+END
+ply.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/5541/trunk/contrib/ntrinh/MESH_nogui/src/lib3d/ply.h
+END
+model_in_ply.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/5541/trunk/contrib/ntrinh/MESH_nogui/src/lib3d/model_in_ply.c
+END
+geomutils.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/5541/trunk/contrib/ntrinh/MESH_nogui/src/lib3d/geomutils.h
+END
+model_in_ply.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/5541/trunk/contrib/ntrinh/MESH_nogui/src/lib3d/model_in_ply.h
+END
+model_in_off.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/5541/trunk/contrib/ntrinh/MESH_nogui/src/lib3d/model_in_off.c
+END
+model_in_vrml_iv.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/5541/trunk/contrib/ntrinh/MESH_nogui/src/lib3d/model_in_vrml_iv.c
+END
+block_list.c
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/5541/trunk/contrib/ntrinh/MESH_nogui/src/lib3d/block_list.c
+END
+model_in.c
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/5541/trunk/contrib/ntrinh/MESH_nogui/src/lib3d/model_in.c
+END
+block_list.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/5541/trunk/contrib/ntrinh/MESH_nogui/src/lib3d/block_list.h
+END
+model_in.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/5541/trunk/contrib/ntrinh/MESH_nogui/src/lib3d/model_in.h
+END
+model_in_smf.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/5541/trunk/contrib/ntrinh/MESH_nogui/src/lib3d/model_in_smf.c
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/9752/trunk/contrib/ntrinh/MESH_nogui/src/lib3d/CMakeLists.txt
+END
+3dmodel.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/5541/trunk/contrib/ntrinh/MESH_nogui/src/lib3d/3dmodel.h
+END

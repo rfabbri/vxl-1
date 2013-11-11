@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/6144/trunk/contrib/biotree/det/tests
+END
+test_det_suppression_and_interpolation.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/5712/trunk/contrib/biotree/det/tests/test_det_suppression_and_interpolation.cxx
+END
+test_det_suppression_and_interpolation_2.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/6098/trunk/contrib/biotree/det/tests/test_det_suppression_and_interpolation_2.cxx
+END
+test_det_edge_line_2d.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/6144/trunk/contrib/biotree/det/tests/test_det_edge_line_2d.h
+END
+test_det_nonmaxium_suppression.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/6140/trunk/contrib/biotree/det/tests/test_det_nonmaxium_suppression.cxx
+END
+test_det_edge_line_3d.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/6144/trunk/contrib/biotree/det/tests/test_det_edge_line_3d.h
+END
+test_det_nonmax_sup_helper.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/4842/trunk/contrib/biotree/det/tests/test_det_nonmax_sup_helper.cxx
+END
+test_edge_det_nonmaximum_suppression.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/6144/trunk/contrib/biotree/det/tests/test_edge_det_nonmaximum_suppression.cxx
+END
+test_include.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/4753/trunk/contrib/biotree/det/tests/test_include.cxx
+END
+test_cylinder_map.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/6140/trunk/contrib/biotree/det/tests/test_cylinder_map.cxx
+END
+test_det_edge_circle_2d.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/6144/trunk/contrib/biotree/det/tests/test_det_edge_circle_2d.h
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/6099/trunk/contrib/biotree/det/tests/test_driver.cxx
+END
+test_det_edge_circle_3d.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/6144/trunk/contrib/biotree/det/tests/test_det_edge_circle_3d.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/6099/trunk/contrib/biotree/det/tests/CMakeLists.txt
+END
+test_det_field_stats.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/3347/trunk/contrib/biotree/det/tests/test_det_field_stats.cxx
+END

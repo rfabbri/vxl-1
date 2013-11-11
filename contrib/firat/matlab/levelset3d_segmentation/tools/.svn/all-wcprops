@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/15852/trunk/contrib/firat/matlab/levelset3d_segmentation/tools
+END
+visualize_foreground.m
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/15440/trunk/contrib/firat/matlab/levelset3d_segmentation/tools/visualize_foreground.m
+END
+subpixelDT_fast_3d.m
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/15482/trunk/contrib/firat/matlab/levelset3d_segmentation/tools/subpixelDT_fast_3d.m
+END
+remove_small_foreground_from_phi_3d.m
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/lemsvxl/!svn/ver/15501/trunk/contrib/firat/matlab/levelset3d_segmentation/tools/remove_small_foreground_from_phi_3d.m
+END
+classify_edges_3d.m
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/15508/trunk/contrib/firat/matlab/levelset3d_segmentation/tools/classify_edges_3d.m
+END
+make_border_and_nans_zero.m
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/lemsvxl/!svn/ver/15440/trunk/contrib/firat/matlab/levelset3d_segmentation/tools/make_border_and_nans_zero.m
+END
+gaussian_second_derivative_filter.m
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/lemsvxl/!svn/ver/15440/trunk/contrib/firat/matlab/levelset3d_segmentation/tools/gaussian_second_derivative_filter.m
+END
+sbwdist.m
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/15440/trunk/contrib/firat/matlab/levelset3d_segmentation/tools/sbwdist.m
+END
+make_edgemap_denser.m
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/lemsvxl/!svn/ver/15852/trunk/contrib/firat/matlab/levelset3d_segmentation/tools/make_edgemap_denser.m
+END
+readVTK.m
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/15501/trunk/contrib/firat/matlab/levelset3d_segmentation/tools/readVTK.m
+END
+gaussian_derivative_filter.m
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/lemsvxl/!svn/ver/15440/trunk/contrib/firat/matlab/levelset3d_segmentation/tools/gaussian_derivative_filter.m
+END

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl/pro
+END
+pcl_register.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl/pro/pcl_register.cxx
+END
+pcl_register.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl/pro/pcl_register.h
+END
+pcl_processes.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl/pro/pcl_processes.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl/pro/CMakeLists.txt
+END

@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/13453/trunk/brcv/rec/dborl/algo/vox_eval_shock_patches
+END
+vox_eval_shock_patches.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/13453/trunk/brcv/rec/dborl/algo/vox_eval_shock_patches/vox_eval_shock_patches.cxx
+END
+vox_eval_shock_patches_params_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/lemsvxl/!svn/ver/13048/trunk/brcv/rec/dborl/algo/vox_eval_shock_patches/vox_eval_shock_patches_params_sptr.h
+END
+vox_eval_shock_patches_params.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/lemsvxl/!svn/ver/13048/trunk/brcv/rec/dborl/algo/vox_eval_shock_patches/vox_eval_shock_patches_params.cxx
+END
+vox_eval_shock_patches_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/lemsvxl/!svn/ver/13048/trunk/brcv/rec/dborl/algo/vox_eval_shock_patches/vox_eval_shock_patches_main.cxx
+END
+vox_eval_shock_patches.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/13048/trunk/brcv/rec/dborl/algo/vox_eval_shock_patches/vox_eval_shock_patches.h
+END
+vox_eval_shock_patches_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/lemsvxl/!svn/ver/13048/trunk/brcv/rec/dborl/algo/vox_eval_shock_patches/vox_eval_shock_patches_params.h
+END
+vbl_smart_ptr+vox_eval_shock_patches_params-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/lemsvxl/!svn/ver/13048/trunk/brcv/rec/dborl/algo/vox_eval_shock_patches/vbl_smart_ptr+vox_eval_shock_patches_params-.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/13048/trunk/brcv/rec/dborl/algo/vox_eval_shock_patches/CMakeLists.txt
+END

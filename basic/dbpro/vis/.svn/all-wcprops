@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/lemsvxl/!svn/ver/12618/trunk/basic/dbpro/vis
+END
+dbpro_run_tableau_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/7149/trunk/basic/dbpro/vis/dbpro_run_tableau_sptr.h
+END
+dbpro_run_tableau.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/8988/trunk/basic/dbpro/vis/dbpro_run_tableau.cxx
+END
+dbpro_basic_gui_observers.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12618/trunk/basic/dbpro/vis/dbpro_basic_gui_observers.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/12618/trunk/basic/dbpro/vis/CMakeLists.txt
+END
+dbpro_run_tableau.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/8589/trunk/basic/dbpro/vis/dbpro_run_tableau.h
+END

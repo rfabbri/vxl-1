@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/15141/trunk/contrib/firat/dbsksp_object_warehouse
+END
+dbsksp_object_warehouse.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/15141/trunk/contrib/firat/dbsksp_object_warehouse/dbsksp_object_warehouse.cxx
+END
+dbsksp_object_warehouse.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/15141/trunk/contrib/firat/dbsksp_object_warehouse/dbsksp_object_warehouse.h
+END
+driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/15048/trunk/contrib/firat/dbsksp_object_warehouse/driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/15048/trunk/contrib/firat/dbsksp_object_warehouse/CMakeLists.txt
+END

@@ -1,0 +1,17 @@
+# This is contrib/anil/bin/CMakeLists.txt
+# Brown Shock Recognition Library Executables
+
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
+INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bseg )
+INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bbas )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/Gregistration )
+INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
+INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
+
+SUBDIRS ( dborl_bin )
+SUBDIRS ( test )

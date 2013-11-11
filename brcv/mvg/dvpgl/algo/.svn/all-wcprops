@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/lemsvxl/!svn/ver/14041/trunk/brcv/mvg/dvpgl/algo
+END
+dvpgl_distmap_bundle_adjust.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/14041/trunk/brcv/mvg/dvpgl/algo/dvpgl_distmap_bundle_adjust.cxx
+END
+dvpgl_triangulation.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12507/trunk/brcv/mvg/dvpgl/algo/dvpgl_triangulation.h
+END
+dvpgl_distmap_bundle_adjust.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/14041/trunk/brcv/mvg/dvpgl/algo/dvpgl_distmap_bundle_adjust.h
+END
+dvpgl_camera_compute_ransac.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12576/trunk/brcv/mvg/dvpgl/algo/dvpgl_camera_compute_ransac.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/14041/trunk/brcv/mvg/dvpgl/algo/CMakeLists.txt
+END
+dvpgl_camera_compute_ransac.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12576/trunk/brcv/mvg/dvpgl/algo/dvpgl_camera_compute_ransac.h
+END
+dvpgl_triangulation.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12507/trunk/brcv/mvg/dvpgl/algo/dvpgl_triangulation.cxx
+END

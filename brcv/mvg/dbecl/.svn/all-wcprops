@@ -1,0 +1,119 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/lemsvxl/!svn/ver/13346/trunk/brcv/mvg/dbecl
+END
+dbecl_episeg_point.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/1976/trunk/brcv/mvg/dbecl/dbecl_episeg_point.cxx
+END
+dbecl_epiband.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/12562/trunk/brcv/mvg/dbecl/dbecl_epiband.h
+END
+dbecl_epipole_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/1976/trunk/brcv/mvg/dbecl/dbecl_epipole_sptr.h
+END
+dbecl_episeg_from_curve_converter.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/13346/trunk/brcv/mvg/dbecl/dbecl_episeg_from_curve_converter.cxx
+END
+dbecl_epiband_builder.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/12564/trunk/brcv/mvg/dbecl/dbecl_epiband_builder.h
+END
+dbecl_epipole.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/1976/trunk/brcv/mvg/dbecl/dbecl_epipole.cxx
+END
+dbecl_epiband_iterator.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/12563/trunk/brcv/mvg/dbecl/dbecl_epiband_iterator.h
+END
+dbecl_episeg.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/1976/trunk/brcv/mvg/dbecl/dbecl_episeg.h
+END
+dbecl_epiband.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/12562/trunk/brcv/mvg/dbecl/dbecl_epiband.cxx
+END
+introduction_doxy.txt
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/12551/trunk/brcv/mvg/dbecl/introduction_doxy.txt
+END
+dbecl_epiband_builder.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/12851/trunk/brcv/mvg/dbecl/dbecl_epiband_builder.cxx
+END
+dbecl_episeg_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/1976/trunk/brcv/mvg/dbecl/dbecl_episeg_sptr.h
+END
+dbecl_episeg_point.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/1976/trunk/brcv/mvg/dbecl/dbecl_episeg_point.h
+END
+dbecl_epiband_iterator.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12776/trunk/brcv/mvg/dbecl/dbecl_epiband_iterator.cxx
+END
+dbecl_episeg.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/1976/trunk/brcv/mvg/dbecl/dbecl_episeg.cxx
+END
+dbecl_episeg_from_curve_converter.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/13343/trunk/brcv/mvg/dbecl/dbecl_episeg_from_curve_converter.h
+END
+dbecl_epipole.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/1976/trunk/brcv/mvg/dbecl/dbecl_epipole.h
+END
+dbecl_episeg_point_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/1976/trunk/brcv/mvg/dbecl/dbecl_episeg_point_sptr.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/12564/trunk/brcv/mvg/dbecl/CMakeLists.txt
+END

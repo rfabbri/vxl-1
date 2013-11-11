@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/graph
+END
+dbseg_graph_filter.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/graph/dbseg_graph_filter.h
+END
+dbseg_graph_disjoint-set.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/graph/dbseg_graph_disjoint-set.cxx
+END
+dbseg_graph_pnmfile.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/graph/dbseg_graph_pnmfile.h
+END
+dbseg_graph_convolve.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/graph/dbseg_graph_convolve.h
+END
+dbseg_graph_imconv.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/graph/dbseg_graph_imconv.h
+END
+dbseg_graph_misc.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/graph/dbseg_graph_misc.h
+END
+dbseg_graph_disjoint-set.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/graph/dbseg_graph_disjoint-set.h
+END
+dbseg_graph_segment-graph.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/graph/dbseg_graph_segment-graph.h
+END
+dbseg_graph_image.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/graph/dbseg_graph_image.h
+END
+dbseg_graph_segment-image.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/graph/dbseg_graph_segment-image.h
+END
+dbseg_graph_imutil.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/graph/dbseg_graph_imutil.h
+END

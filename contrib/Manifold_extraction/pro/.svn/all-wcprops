@@ -1,0 +1,221 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro
+END
+Flip_spoke_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Flip_spoke_process.h
+END
+Lie_contour_generate_geodesics.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_contour_generate_geodesics.cxx
+END
+Lie_contour_classify_shapes.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_contour_classify_shapes.cxx
+END
+Lie_contour_geodesic_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_contour_geodesic_process.cxx
+END
+Lie_contour_discrete_geodesic_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_contour_discrete_geodesic_process.h
+END
+Lie_contour_match_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/9581/trunk/contrib/Manifold_extraction/pro/Lie_contour_match_process.cxx
+END
+Lie_spoke_geodesic_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_spoke_geodesic_process.h
+END
+Lie_spoke_classify_shapes.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_spoke_classify_shapes.h
+END
+Lie_contour_average_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_contour_average_process.h
+END
+Lie_contour_generate_geodesic_shapes.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_contour_generate_geodesic_shapes.cxx
+END
+shape_articulation_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/shape_articulation_process.h
+END
+Lie_contour_discrete_mean_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_contour_discrete_mean_process.cxx
+END
+Lie_contour_classify_shapes.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_contour_classify_shapes.h
+END
+Lie_contour_geodesic_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_contour_geodesic_process.h
+END
+Lie_spoke_mean_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_spoke_mean_process.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/CMakeLists.txt
+END
+Lie_contour_match_storage_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/9581/trunk/contrib/Manifold_extraction/pro/Lie_contour_match_storage_sptr.h
+END
+Lie_spoke_principal_geodesic_shapes.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_spoke_principal_geodesic_shapes.cxx
+END
+Lie_contour_mean_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_contour_mean_process.cxx
+END
+Lie_contour_match_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/9581/trunk/contrib/Manifold_extraction/pro/Lie_contour_match_process.h
+END
+Lie_contour_match_storage.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/9581/trunk/contrib/Manifold_extraction/pro/Lie_contour_match_storage.cxx
+END
+Lie_cost_geodesics_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_cost_geodesics_process.cxx
+END
+Lie_contour_generate_geodesic_shapes.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_contour_generate_geodesic_shapes.h
+END
+Lie_contour_discrete_mean_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_contour_discrete_mean_process.h
+END
+Lie_contour_principal_geodesic_shapes.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_contour_principal_geodesic_shapes.cxx
+END
+Flip_spoke_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Flip_spoke_process.cxx
+END
+Lie_spoke_mean_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_spoke_mean_process.h
+END
+Lie_contour_discrete_geodesic_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_contour_discrete_geodesic_process.cxx
+END
+Lie_spoke_principal_geodesic_shapes.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_spoke_principal_geodesic_shapes.h
+END
+Lie_contour_mean_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_contour_mean_process.h
+END
+Lie_contour_match_storage.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/9581/trunk/contrib/Manifold_extraction/pro/Lie_contour_match_storage.h
+END
+Lie_cost_geodesics_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_cost_geodesics_process.h
+END
+Lie_spoke_geodesic_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_spoke_geodesic_process.cxx
+END
+Lie_spoke_classify_shapes.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_spoke_classify_shapes.cxx
+END
+shape_articulation_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/shape_articulation_process.cxx
+END
+Lie_contour_principal_geodesic_shapes.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/9791/trunk/contrib/Manifold_extraction/pro/Lie_contour_principal_geodesic_shapes.h
+END

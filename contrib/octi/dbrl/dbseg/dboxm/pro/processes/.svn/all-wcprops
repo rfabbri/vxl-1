@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/pro/processes
+END
+boxm_save_occupancy_raw_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/pro/processes/boxm_save_occupancy_raw_process.cxx
+END
+boxm_load_scene_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/pro/processes/boxm_load_scene_process.cxx
+END
+boxm_roi_init_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/pro/processes/boxm_roi_init_process.cxx
+END
+boxm_volume_visibility_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/pro/processes/boxm_volume_visibility_process.cxx
+END
+boxm_create_scene_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/pro/processes/boxm_create_scene_process.cxx
+END
+boxm_render_expected_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/pro/processes/boxm_render_expected_process.cxx
+END
+boxm_upload_mesh_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/pro/processes/boxm_upload_mesh_process.cxx
+END
+boxm_replace_const_app_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/pro/processes/boxm_replace_const_app_process.cxx
+END
+boxm_update_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/pro/processes/boxm_update_process.cxx
+END
+boxm_proj_local_cam_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/pro/processes/boxm_proj_local_cam_process.cxx
+END
+boxm_refine_scene_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/pro/processes/boxm_refine_scene_process.cxx
+END

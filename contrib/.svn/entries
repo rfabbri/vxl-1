@@ -1,0 +1,270 @@
+9
+
+dir
+15842
+https://visionserver.lems.brown.edu/svn/lemsvxl/trunk/contrib
+https://visionserver.lems.brown.edu/svn/lemsvxl
+
+
+
+2011-12-01T20:01:20.177232Z
+15842
+mir
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+19b38075-fba0-4a01-96da-394feb402aa5
+
+int_cedt3d
+dir
+
+Gregistration
+dir
+
+tpollard
+dir
+
+dbmsh3dapp
+dir
+
+bvam
+dir
+
+dbpz_hindsite
+dir
+
+bvam_batch
+dir
+
+cluster_mpi
+dir
+
+polygon_triangulation
+dir
+
+Manifold_extraction
+dir
+
+new_project.pl
+file
+
+
+
+
+2010-05-28T16:10:26.301311Z
+6ab9ffe46cd7fb43f570629a3123b259
+2004-12-15T00:11:36.000000Z
+1606
+mleotta
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3186
+
+fatih
+dir
+
+dec
+dir
+
+starter_kit
+dir
+
+shock2d
+dir
+
+visualizer
+dir
+
+sadali
+dir
+
+knee_cartilage
+dir
+
+matching_gui
+dir
+
+bm
+dir
+
+octi
+dir
+
+isabel
+dir
+
+medial_livewire
+dir
+
+can
+dir
+
+ntrinh
+dir
+
+mleotta
+dir
+
+firat
+dir
+
+han
+dir
+
+world_model
+dir
+
+rfabbri
+dir
+
+dbacm3d_example
+dir
+
+curve2d
+dir
+
+dbctrkapp
+dir
+
+dbsk3dapp
+dir
+
+yong
+dir
+
+edubrito
+dir
+
+dbpz_hindsite_pair_match
+dir
+
+db3dapp
+dir
+
+CMakeLists.txt
+file
+
+
+
+
+2011-10-20T22:19:06.072385Z
+f6f3076480ee6e9bc9a2258d7f433b71
+2010-07-21T13:48:08.726472Z
+14110
+avpuri
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+17295
+
+dbvxm
+dir
+
+fine
+dir
+
+dbvxm_batch
+dir
+
+levelset_seg
+dir
+
+anil
+dir
+
+multi_view
+dir
+
+amir
+dir
+
+biotree
+dir
+
+geodesic_mesh
+dir
+
+edge_det
+dir
+
+bwm_lidar
+dir
+
+Anant
+dir
+
+ozge
+dir
+
+dbrec_lib
+dir
+
+dbpz_hindsite_2
+dir
+
+Spatemp
+dir
+
+maruthi
+dir
+
+gould
+dir
+
+itrack
+dir
+
+meshvis
+dir
+
+vehicleseg
+dir
+

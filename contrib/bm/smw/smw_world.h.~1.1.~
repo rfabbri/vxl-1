@@ -1,0 +1,33 @@
+#ifndef SMW_WORLD_H_
+#define SMW_WORLD_H_
+//this is contrib/bm/smw/smw_world.h
+#include "smw_graph.h"
+#include <vil/vil_image_view.h>
+
+class smw_world
+{
+public:
+    //create empty world
+    smw_world():ni_(0),nj_(0){}
+    
+    smw_world(unsigned const& ni, unsigned const& nj);
+
+    smw_world(vil_image_view<vxl_byte> const& img);
+
+    ~smw_world(){}
+    
+    bool set_size(unsigned const&ni, unsigned const&nj);
+
+    bool update(vil_image_view<vxl_byte> const& img);
+
+    void size(unsigned& rows, unsigned& cols);
+
+    vil_image_view<vxl_byte> change_map();
+
+private:
+    unsigned ni_;
+    unsigned nj_;
+    vcl_vector< vcl_vector<smw_graph> > world_; 
+};
+
+#endif //SMW_WORLD_H_

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/lemsvxl/!svn/ver/5815/trunk/brcv/seg/dbacm/tests
+END
+test_include.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/5364/trunk/brcv/seg/dbacm/tests/test_include.cxx
+END
+test_image_filters.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/5364/trunk/brcv/seg/dbacm/tests/test_image_filters.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/5364/trunk/brcv/seg/dbacm/tests/test_driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/5815/trunk/brcv/seg/dbacm/tests/CMakeLists.txt
+END

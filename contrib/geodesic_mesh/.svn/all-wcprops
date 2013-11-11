@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/lemsvxl/!svn/ver/7108/trunk/contrib/geodesic_mesh
+END
+mathops.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/4334/trunk/contrib/geodesic_mesh/mathops.h
+END
+ctree.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/4334/trunk/contrib/geodesic_mesh/ctree.cxx
+END
+sp.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/7108/trunk/contrib/geodesic_mesh/sp.cxx
+END
+cone.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/4334/trunk/contrib/geodesic_mesh/cone.cxx
+END
+ctree.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/4334/trunk/contrib/geodesic_mesh/ctree.h
+END
+llist.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/4334/trunk/contrib/geodesic_mesh/llist.cxx
+END
+s10.in
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/4334/trunk/contrib/geodesic_mesh/s10.in
+END
+structs.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/4334/trunk/contrib/geodesic_mesh/structs.cxx
+END
+cone.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/4334/trunk/contrib/geodesic_mesh/cone.h
+END
+macros.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/4334/trunk/contrib/geodesic_mesh/macros.h
+END
+mathops.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/4334/trunk/contrib/geodesic_mesh/mathops.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/4334/trunk/contrib/geodesic_mesh/CMakeLists.txt
+END
+llist.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/4334/trunk/contrib/geodesic_mesh/llist.h
+END
+structs.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/4438/trunk/contrib/geodesic_mesh/structs.h
+END

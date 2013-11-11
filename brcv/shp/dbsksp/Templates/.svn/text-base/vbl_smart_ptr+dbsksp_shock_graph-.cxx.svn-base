@@ -1,0 +1,8 @@
+// This is file shp/dbsksp/Templates/vbl_smart_ptr+dbsksp_shock_graph-.cxx
+
+#include <dbsksp/dbsksp_shock_graph.h>
+#include <dbsksp/dbsksp_shock_fragment.h>
+#include <dbsksp/dbsksp_shock_node_descriptor.h>
+#include <vbl/vbl_smart_ptr.txx>
+
+VBL_SMART_PTR_INSTANTIATE(dbsksp_shock_graph);

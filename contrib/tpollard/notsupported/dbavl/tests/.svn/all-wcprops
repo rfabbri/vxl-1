@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12409/trunk/contrib/tpollard/notsupported/dbavl/tests
+END
+test_camera_estimator.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/9571/trunk/contrib/tpollard/notsupported/dbavl/tests/test_camera_estimator.cxx
+END
+test_manual_camera.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/9571/trunk/contrib/tpollard/notsupported/dbavl/tests/test_manual_camera.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/9571/trunk/contrib/tpollard/notsupported/dbavl/tests/test_driver.cxx
+END
+test_tracker.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/9571/trunk/contrib/tpollard/notsupported/dbavl/tests/test_tracker.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/12409/trunk/contrib/tpollard/notsupported/dbavl/tests/CMakeLists.txt
+END

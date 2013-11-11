@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/13564/trunk/contrib/dec/psm_mfa/pro
+END
+psm_mfa_register.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/13561/trunk/contrib/dec/psm_mfa/pro/psm_mfa_register.cxx
+END
+psm_mfa_register.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/13561/trunk/contrib/dec/psm_mfa/pro/psm_mfa_register.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/13562/trunk/contrib/dec/psm_mfa/pro/CMakeLists.txt
+END
+psm_mfa_processes.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/13561/trunk/contrib/dec/psm_mfa/pro/psm_mfa_processes.h
+END

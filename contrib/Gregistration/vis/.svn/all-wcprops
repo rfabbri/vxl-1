@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/15230/trunk/contrib/Gregistration/vis
+END
+dbrl_rpm_tps_process_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/9391/trunk/contrib/Gregistration/vis/dbrl_rpm_tps_process_tool.cxx
+END
+dbrl_match_set_displayer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/vis/dbrl_match_set_displayer.cxx
+END
+dbrl_select_id_point_process_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/vis/dbrl_select_id_point_process_tool.h
+END
+bvis_correspond_line_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/15230/trunk/contrib/Gregistration/vis/bvis_correspond_line_tool.h
+END
+dbrl_match_set_tableau.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/8405/trunk/contrib/Gregistration/vis/dbrl_match_set_tableau.h
+END
+dbrl_id_point_2d_displayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/vis/dbrl_id_point_2d_displayer.h
+END
+dbrl_select_id_point_process_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/vis/dbrl_select_id_point_process_tool.cxx
+END
+dbrl_id_point_2d_crop_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/vis/dbrl_id_point_2d_crop_tool.h
+END
+dbrl_match_set_tableau_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/5324/trunk/contrib/Gregistration/vis/dbrl_match_set_tableau_sptr.h
+END
+bvis_correspond_line_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/15230/trunk/contrib/Gregistration/vis/bvis_correspond_line_tool.cxx
+END
+dbrl_rpm_tps_process_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/vis/dbrl_rpm_tps_process_tool.h
+END
+dbrl_match_set_tableau.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/9432/trunk/contrib/Gregistration/vis/dbrl_match_set_tableau.cxx
+END
+dbrl_id_point_2d_displayer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/vis/dbrl_id_point_2d_displayer.cxx
+END
+dbrl_match_set_displayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/vis/dbrl_match_set_displayer.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/9752/trunk/contrib/Gregistration/vis/CMakeLists.txt
+END
+dbrl_id_point_2d_crop_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/vis/dbrl_id_point_2d_crop_tool.cxx
+END

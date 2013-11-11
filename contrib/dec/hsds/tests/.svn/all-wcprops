@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/lemsvxl/!svn/ver/12257/trunk/contrib/dec/hsds/tests
+END
+test_hsds_ptr_tree.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/11963/trunk/contrib/dec/hsds/tests/test_hsds_ptr_tree.cxx
+END
+test_hsds_fd_tree.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/12257/trunk/contrib/dec/hsds/tests/test_hsds_fd_tree.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/11963/trunk/contrib/dec/hsds/tests/test_driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/11963/trunk/contrib/dec/hsds/tests/CMakeLists.txt
+END

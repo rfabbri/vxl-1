@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/10437/trunk/brcv/rec/dbasn/tests/file_read_data
+END
+GraphFile1_bicr1p500x_NoSearchRadius.txt
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/lemsvxl/!svn/ver/1995/trunk/brcv/rec/dbasn/tests/file_read_data/GraphFile1_bicr1p500x_NoSearchRadius.txt
+END
+GraphFile2_bicr2p500x_NoSearchRadius.txt
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/lemsvxl/!svn/ver/1995/trunk/brcv/rec/dbasn/tests/file_read_data/GraphFile2_bicr2p500x_NoSearchRadius.txt
+END
+GF1_bicr1p_GF2_bicr2p_ground_truth.txt
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/1995/trunk/brcv/rec/dbasn/tests/file_read_data/GF1_bicr1p_GF2_bicr2p_ground_truth.txt
+END

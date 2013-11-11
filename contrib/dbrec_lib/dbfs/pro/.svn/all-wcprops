@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/13527/trunk/contrib/dbrec_lib/dbfs/pro
+END
+dbfs_register.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/13527/trunk/contrib/dbrec_lib/dbfs/pro/dbfs_register.cxx
+END
+dbfs_register.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/13527/trunk/contrib/dbrec_lib/dbfs/pro/dbfs_register.h
+END
+dbfs_processes.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/13527/trunk/contrib/dbrec_lib/dbfs/pro/dbfs_processes.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/13527/trunk/contrib/dbrec_lib/dbfs/pro/CMakeLists.txt
+END

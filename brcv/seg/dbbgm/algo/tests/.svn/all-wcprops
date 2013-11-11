@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/5926/trunk/brcv/seg/dbbgm/algo/tests
+END
+test_hmm_algo.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/5926/trunk/brcv/seg/dbbgm/algo/tests/test_hmm_algo.cxx
+END
+test_include.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/5914/trunk/brcv/seg/dbbgm/algo/tests/test_include.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/5914/trunk/brcv/seg/dbbgm/algo/tests/test_driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/5914/trunk/brcv/seg/dbbgm/algo/tests/CMakeLists.txt
+END

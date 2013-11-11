@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/16188/trunk/contrib/firat/matlab/elbow_release/parameters
+END
+clustering_parameters.txt
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/16188/trunk/contrib/firat/matlab/elbow_release/parameters/clustering_parameters.txt
+END
+levelset_parameters.txt
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/16188/trunk/contrib/firat/matlab/elbow_release/parameters/levelset_parameters.txt
+END
+edge_parameters.txt
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/16188/trunk/contrib/firat/matlab/elbow_release/parameters/edge_parameters.txt
+END

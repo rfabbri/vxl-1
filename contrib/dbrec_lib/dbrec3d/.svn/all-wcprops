@@ -1,0 +1,191 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d
+END
+dbrec3d_part_hierarchy.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/13974/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_part_hierarchy.h
+END
+dbrec3d_primitive_kernel_part.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/14441/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_primitive_kernel_part.cxx
+END
+dbrec3d_context_part.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/14006/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_context_part.h
+END
+dbrec3d_scene_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/14443/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_scene_utils.h
+END
+dbrec3d_context_manager.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/15059/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_context_manager.h
+END
+dbrec3d_part.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/14373/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_part.cxx
+END
+dbrec3d_models.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/15087/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_models.h
+END
+dbrec3d_scene_widgets.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/15035/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_scene_widgets.h
+END
+dbrec3d_io_visitors.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/14476/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_io_visitors.cxx
+END
+dbrec3d_octree_context.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/14491/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_octree_context.h
+END
+dbrec3d_primitive_kernel_part.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/15035/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_primitive_kernel_part.h
+END
+dbrec3d_parts_manager.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/14491/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_parts_manager.cxx
+END
+dbrec3d_visitor.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14447/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_visitor.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/15695/trunk/contrib/dbrec_lib/dbrec3d/CMakeLists.txt
+END
+dbrec3d_composite_part.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/14476/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_composite_part.cxx
+END
+dbrec3d_part_instance.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/14491/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_part_instance.cxx
+END
+dbrec3d_part.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/14685/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_part.h
+END
+dbrec3d_io_visitors.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/14476/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_io_visitors.h
+END
+dbrec3d_pairwise_compositor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/14317/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_pairwise_compositor.cxx
+END
+dbrec3d_parts_manager.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/15035/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_parts_manager.h
+END
+dbrec3d_kernel_max_functor.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/14441/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_kernel_max_functor.h
+END
+dbrec3d_composite_part.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/14685/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_composite_part.h
+END
+dbrec3d_scene_utils.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/14447/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_scene_utils.cxx
+END
+dbrec3d_context_manager.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/14476/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_context_manager.cxx
+END
+dbrec3d_part_instance.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/14491/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_part_instance.h
+END
+dbrec3d_scene_widgets.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/15035/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_scene_widgets.cxx
+END
+dbrec3d_models.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/15087/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_models.cxx
+END
+dbrec3d_local_max_functor.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/14373/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_local_max_functor.h
+END
+dbrec3d_vrml_visitor.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/14685/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_vrml_visitor.h
+END
+dbrec3d_octree_context.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/14476/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_octree_context.cxx
+END
+dbrec3d_pairwise_compositor.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/14685/trunk/contrib/dbrec_lib/dbrec3d/dbrec3d_pairwise_compositor.h
+END

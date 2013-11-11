@@ -1,0 +1,215 @@
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/lemsvxl/!svn/ver/13949/trunk/basic/dbgl
+END
+dbgl_poly_curve.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/2373/trunk/basic/dbgl/dbgl_poly_curve.cxx
+END
+dbgl_param_curve_3d.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/8211/trunk/basic/dbgl/dbgl_param_curve_3d.cxx
+END
+dbgl_arc.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/lemsvxl/!svn/ver/8577/trunk/basic/dbgl/dbgl_arc.h
+END
+dbgl_triangle.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/9501/trunk/basic/dbgl/dbgl_triangle.h
+END
+dbgl_rigid_align.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/11810/trunk/basic/dbgl/dbgl_rigid_align.h
+END
+dbgl_poly_curve_line.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/4250/trunk/basic/dbgl/dbgl_poly_curve_line.cxx
+END
+dbgl_arc_base.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/2169/trunk/basic/dbgl/dbgl_arc_base.cxx
+END
+dbgl_dist.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/8834/trunk/basic/dbgl/dbgl_dist.cxx
+END
+dbgl_param_curve.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/2169/trunk/basic/dbgl/dbgl_param_curve.cxx
+END
+dbgl_linear_curve_3d.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/8383/trunk/basic/dbgl/dbgl_linear_curve_3d.cxx
+END
+dbgl_barycentric.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/9840/trunk/basic/dbgl/dbgl_barycentric.cxx
+END
+introduction_doxy.txt
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/2164/trunk/basic/dbgl/introduction_doxy.txt
+END
+dbgl_eno_curve.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/8577/trunk/basic/dbgl/dbgl_eno_curve.h
+END
+dbgl_fuzzy_boolean.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/9518/trunk/basic/dbgl/dbgl_fuzzy_boolean.h
+END
+dbgl_eno_curve_3d.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/8479/trunk/basic/dbgl/dbgl_eno_curve_3d.cxx
+END
+dbgl_poly_curve.h
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/8577/trunk/basic/dbgl/dbgl_poly_curve.h
+END
+dbgl_param_curve_3d.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/8374/trunk/basic/dbgl/dbgl_param_curve_3d.h
+END
+dbgl_eulerspiral_base.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/2539/trunk/basic/dbgl/dbgl_eulerspiral_base.cxx
+END
+dbgl_poly_curve_line.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/8577/trunk/basic/dbgl/dbgl_poly_curve_line.h
+END
+dbgl_arc_base.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/8577/trunk/basic/dbgl/dbgl_arc_base.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/11810/trunk/basic/dbgl/CMakeLists.txt
+END
+dbgl_dist.h
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/lemsvxl/!svn/ver/13341/trunk/basic/dbgl/dbgl_dist.h
+END
+dbgl_area.txx
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/9516/trunk/basic/dbgl/dbgl_area.txx
+END
+dbgl_linear_curve_3d.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/8383/trunk/basic/dbgl/dbgl_linear_curve_3d.h
+END
+dbgl_param_curve.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/11091/trunk/basic/dbgl/dbgl_param_curve.h
+END
+dbgl_barycentric.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/9642/trunk/basic/dbgl/dbgl_barycentric.h
+END
+dbgl_area.h
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/9516/trunk/basic/dbgl/dbgl_area.h
+END
+dbgl_eno_curve_3d.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/8481/trunk/basic/dbgl/dbgl_eno_curve_3d.h
+END
+dbgl_triangle.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/8654/trunk/basic/dbgl/dbgl_triangle.cxx
+END
+dbgl_arc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/lemsvxl/!svn/ver/4766/trunk/basic/dbgl/dbgl_arc.cxx
+END
+dbgl_eulerspiral_base.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/8577/trunk/basic/dbgl/dbgl_eulerspiral_base.h
+END
+dbgl_rigid_align.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/13585/trunk/basic/dbgl/dbgl_rigid_align.cxx
+END
+dbgl_minimal_container.txx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/7255/trunk/basic/dbgl/dbgl_minimal_container.txx
+END
+dbgl_minimal_container.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/7142/trunk/basic/dbgl/dbgl_minimal_container.h
+END
+dbgl_eno_curve.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/8480/trunk/basic/dbgl/dbgl_eno_curve.cxx
+END

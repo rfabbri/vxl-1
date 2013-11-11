@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/lemsvxl/!svn/ver/14752/trunk/brcv/seg/dbdet/lvwr
+END
+dbdet_lvwr_fit.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/13212/trunk/brcv/seg/dbdet/lvwr/dbdet_lvwr_fit.cxx
+END
+dbdet_lvwr_params.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/4024/trunk/brcv/seg/dbdet/lvwr/dbdet_lvwr_params.cxx
+END
+dbdet_lvwr.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/13212/trunk/brcv/seg/dbdet/lvwr/dbdet_lvwr.h
+END
+dbdet_lvwr_fit.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/3884/trunk/brcv/seg/dbdet/lvwr/dbdet_lvwr_fit.h
+END
+dbdet_lvwr_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/4024/trunk/brcv/seg/dbdet/lvwr/dbdet_lvwr_params.h
+END
+dbdet_lvwr.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/14752/trunk/brcv/seg/dbdet/lvwr/dbdet_lvwr.cxx
+END

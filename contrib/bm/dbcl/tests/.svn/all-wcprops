@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/14398/trunk/contrib/bm/dbcl/tests
+END
+test1.xml
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/14232/trunk/contrib/bm/dbcl/tests/test1.xml
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/14360/trunk/contrib/bm/dbcl/tests/test_driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/14398/trunk/contrib/bm/dbcl/tests/CMakeLists.txt
+END
+test_linear_classifier.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/14360/trunk/contrib/bm/dbcl/tests/test_linear_classifier.cxx
+END

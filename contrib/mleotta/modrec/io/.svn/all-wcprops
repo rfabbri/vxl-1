@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/11296/trunk/contrib/mleotta/modrec/io
+END
+modrec_io_desc_feature_3d.txx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/10740/trunk/contrib/mleotta/modrec/io/modrec_io_desc_feature_3d.txx
+END
+modrec_io_desc_feature_3d.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/10740/trunk/contrib/mleotta/modrec/io/modrec_io_desc_feature_3d.h
+END
+modrec_io_codeword.txx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/10937/trunk/contrib/mleotta/modrec/io/modrec_io_codeword.txx
+END
+modrec_io_codeword.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/10937/trunk/contrib/mleotta/modrec/io/modrec_io_codeword.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/10937/trunk/contrib/mleotta/modrec/io/CMakeLists.txt
+END

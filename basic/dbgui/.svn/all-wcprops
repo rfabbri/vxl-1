@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/lemsvxl/!svn/ver/13803/trunk/basic/dbgui
+END
+dbgui_gnd_cal_tableau.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/12093/trunk/basic/dbgui/dbgui_gnd_cal_tableau.cxx
+END
+dbgui_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/13803/trunk/basic/dbgui/dbgui_utils.h
+END
+dbgui_soview2D.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/11482/trunk/basic/dbgui/dbgui_soview2D.h
+END
+introduction_doxy.txt
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/2248/trunk/basic/dbgui/introduction_doxy.txt
+END
+dbgui_gnd_cal_tableau.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/11992/trunk/basic/dbgui/dbgui_gnd_cal_tableau.h
+END
+dbgui_utils.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/13803/trunk/basic/dbgui/dbgui_utils.cxx
+END
+dbgui_gnd_cal_tableau_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/11992/trunk/basic/dbgui/dbgui_gnd_cal_tableau_sptr.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/11992/trunk/basic/dbgui/CMakeLists.txt
+END
+dbgui_soview2D.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/11482/trunk/basic/dbgui/dbgui_soview2D.cxx
+END

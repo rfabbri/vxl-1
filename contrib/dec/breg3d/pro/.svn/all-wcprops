@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/lemsvxl/!svn/ver/12404/trunk/contrib/dec/breg3d/pro
+END
+breg3d_ekf_camera_optimize_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/11648/trunk/contrib/dec/breg3d/pro/breg3d_ekf_camera_optimize_process.cxx
+END
+breg3d_set_occupancy_plane_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/12404/trunk/contrib/dec/breg3d/pro/breg3d_set_occupancy_plane_process.cxx
+END
+breg3d_init_ekf_camera_optimizer_planar_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/lemsvxl/!svn/ver/11464/trunk/contrib/dec/breg3d/pro/breg3d_init_ekf_camera_optimizer_planar_process.cxx
+END
+breg3d_ekf_camera_optimize_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/11215/trunk/contrib/dec/breg3d/pro/breg3d_ekf_camera_optimize_process.h
+END
+breg3d_init_ekf_camera_optimizer_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/11215/trunk/contrib/dec/breg3d/pro/breg3d_init_ekf_camera_optimizer_process.cxx
+END
+breg3d_set_occupancy_plane_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/11464/trunk/contrib/dec/breg3d/pro/breg3d_set_occupancy_plane_process.h
+END
+breg3d_zero_occupancy_borders_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/12404/trunk/contrib/dec/breg3d/pro/breg3d_zero_occupancy_borders_process.cxx
+END
+breg3d_init_ekf_camera_optimizer_planar_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/lemsvxl/!svn/ver/11464/trunk/contrib/dec/breg3d/pro/breg3d_init_ekf_camera_optimizer_planar_process.h
+END
+breg3d_init_ekf_camera_optimizer_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/11215/trunk/contrib/dec/breg3d/pro/breg3d_init_ekf_camera_optimizer_process.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/11464/trunk/contrib/dec/breg3d/pro/CMakeLists.txt
+END
+breg3d_zero_occupancy_borders_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/11464/trunk/contrib/dec/breg3d/pro/breg3d_zero_occupancy_borders_process.h
+END

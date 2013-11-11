@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvpl
+END
+appearance_gauss3d_xx_batch.py
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvpl/appearance_gauss3d_xx_batch.py
+END
+find_ocp_corner.py
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvpl/find_ocp_corner.py
+END
+non_max_suppression.py
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvpl/non_max_suppression.py
+END
+save_orientations.py
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvpl/save_orientations.py
+END
+occupancy_edge2d.py
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvpl/occupancy_edge2d.py
+END
+occupancy_edge2d_batch.py
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvpl/occupancy_edge2d_batch.py
+END
+occupancy_edge3d.py
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvpl/occupancy_edge3d.py
+END
+occupancy_edge3d_batch.py
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvpl/occupancy_edge3d_batch.py
+END
+appearance_tests.py
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvpl/appearance_tests.py
+END
+find_one_apm_corner.py
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvpl/find_one_apm_corner.py
+END
+find_appearance_corner.py
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvpl/find_appearance_corner.py
+END

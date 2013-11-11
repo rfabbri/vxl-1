@@ -1,0 +1,329 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/14167/trunk/contrib/rfabbri/mw/app/matlab/utils
+END
+strip_trailing_blanks.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/8085/trunk/contrib/rfabbri/mw/app/matlab/utils/strip_trailing_blanks.m
+END
+rf_quadratic_derivative.m
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/13444/trunk/contrib/rfabbri/mw/app/matlab/utils/rf_quadratic_derivative.m
+END
+my_sp.m
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12839/trunk/contrib/rfabbri/mw/app/matlab/utils/my_sp.m
+END
+my_sp_batch.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12839/trunk/contrib/rfabbri/mw/app/matlab/utils/my_sp_batch.m
+END
+myreadv2.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/myreadv2.m
+END
+perturb_normal.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/perturb_normal.m
+END
+mysphere.m
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/13444/trunk/contrib/rfabbri/mw/app/matlab/utils/mysphere.m
+END
+ellipse.m
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/ellipse.m
+END
+gsmi.m
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/gsmi.m
+END
+myiso.m
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/myiso.m
+END
+mywrite.m
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/mywrite.m
+END
+myarclength3.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/app/matlab/utils/myarclength3.m
+END
+cplot2.m
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/cplot2.m
+END
+myquiver2.m
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/myquiver2.m
+END
+myread.sci
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/myread.sci
+END
+rf_quadratic.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/13444/trunk/contrib/rfabbri/mw/app/matlab/utils/rf_quadratic.m
+END
+csm2.m
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/csm2.m
+END
+read_vector_ascii.m
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/8082/trunk/contrib/rfabbri/mw/app/matlab/utils/read_vector_ascii.m
+END
+pow.m
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14167/trunk/contrib/rfabbri/mw/app/matlab/utils/pow.m
+END
+myquantize.m
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/myquantize.m
+END
+csm_temp.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/csm_temp.m
+END
+dataset2.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/dataset2.m
+END
+myreadv.m
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/myreadv.m
+END
+kellipse.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/kellipse.m
+END
+my_ginput.m
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/app/matlab/utils/my_ginput.m
+END
+hdist.m
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/hdist.m
+END
+myarclength.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/myarclength.m
+END
+mysphere2.m
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/13444/trunk/contrib/rfabbri/mw/app/matlab/utils/mysphere2.m
+END
+myquiver.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/myquiver.m
+END
+cplot.m
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/cplot.m
+END
+myread.m
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/myread.m
+END
+gsmi2d.m
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/gsmi2d.m
+END
+perp_dist_squared_homg.m
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/12151/trunk/contrib/rfabbri/mw/app/matlab/utils/perp_dist_squared_homg.m
+END
+dir_hausdorff_distance.m
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/dir_hausdorff_distance.m
+END
+my-cursor-callback.m
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/12165/trunk/contrib/rfabbri/mw/app/matlab/utils/my-cursor-callback.m
+END
+circle_data.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/circle_data.m
+END
+gsmi_circ.m
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/gsmi_circ.m
+END
+plot_homg_line.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12151/trunk/contrib/rfabbri/mw/app/matlab/utils/plot_homg_line.m
+END
+myderiv2.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/myderiv2.m
+END
+circle.m
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/circle.m
+END
+myderiv3.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/myderiv3.m
+END
+fig.m
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/fig.m
+END
+rf_quadratic_eval.m
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/13444/trunk/contrib/rfabbri/mw/app/matlab/utils/rf_quadratic_eval.m
+END
+myderiv.m
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/myderiv.m
+END
+loadcon.m
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/loadcon.m
+END
+k_dataset2.m
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/k_dataset2.m
+END
+gsmi.sci
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/gsmi.sci
+END
+mytrim.m
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/mytrim.m
+END
+csm.m
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/8668/trunk/contrib/rfabbri/mw/app/matlab/utils/csm.m
+END
+gnorm.m
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/gnorm.m
+END
+mywrite.sci
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/mywrite.sci
+END
+gsmi_boundary1.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/matlab/utils/gsmi_boundary1.m
+END
+perturb.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12150/trunk/contrib/rfabbri/mw/app/matlab/utils/perturb.m
+END
+random_polygon_points.m
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/12151/trunk/contrib/rfabbri/mw/app/matlab/utils/random_polygon_points.m
+END

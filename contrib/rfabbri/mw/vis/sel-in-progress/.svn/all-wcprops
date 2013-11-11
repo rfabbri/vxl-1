@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/12597/trunk/contrib/rfabbri/mw/vis/sel-in-progress
+END
+mw_curve_appearance_tracing_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/12597/trunk/contrib/rfabbri/mw/vis/sel-in-progress/mw_curve_appearance_tracing_tool.h
+END
+mw_curve_appearance_tracing_tool_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/lemsvxl/!svn/ver/12597/trunk/contrib/rfabbri/mw/vis/sel-in-progress/mw_curve_appearance_tracing_tool_utils.h
+END
+mw_sel_tracing_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/12597/trunk/contrib/rfabbri/mw/vis/sel-in-progress/mw_sel_tracing_tool.h
+END
+mw_curve_appearance_tracing_tool_rec.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/lemsvxl/!svn/ver/12597/trunk/contrib/rfabbri/mw/vis/sel-in-progress/mw_curve_appearance_tracing_tool_rec.cxx
+END
+mw_curve_appearance_tracing_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/lemsvxl/!svn/ver/12597/trunk/contrib/rfabbri/mw/vis/sel-in-progress/mw_curve_appearance_tracing_tool.cxx
+END
+mw_curve_appearance_tracing_tool_utils.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/lemsvxl/!svn/ver/12597/trunk/contrib/rfabbri/mw/vis/sel-in-progress/mw_curve_appearance_tracing_tool_utils.cxx
+END
+mw_sel_tracing_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/12597/trunk/contrib/rfabbri/mw/vis/sel-in-progress/mw_sel_tracing_tool.cxx
+END

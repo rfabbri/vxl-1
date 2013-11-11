@@ -1,0 +1,431 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/15532/trunk/contrib/Gregistration/pro
+END
+dbrl_compute_amir_curvelets_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/12485/trunk/contrib/Gregistration/pro/dbrl_compute_amir_curvelets_process.cxx
+END
+dbrl_ground_truth_point_set_generator.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_ground_truth_point_set_generator.cxx
+END
+dbrl_oriented_edgemap_to_edge_image_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/15532/trunk/contrib/Gregistration/pro/dbrl_oriented_edgemap_to_edge_image_process.cxx
+END
+dbrl_rpm_tps_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_rpm_tps_process.cxx
+END
+dbrl_postprocess_observation.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_postprocess_observation.h
+END
+dbrl_edge_point_tangent_fg_detect_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_edge_point_tangent_fg_detect_process.h
+END
+dbrl_rpm_tps_affine_superimpose_fgbg_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_rpm_tps_affine_superimpose_fgbg_process.h
+END
+dbrl_rpm_rigid_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_rpm_rigid_process.h
+END
+dbrl_rpm_affine_superimpose_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_rpm_affine_superimpose_process.cxx
+END
+dbrl_compare_matchsets_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_compare_matchsets_process.cxx
+END
+dbrl_oriented_edgemap_to_edge_image_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/15532/trunk/contrib/Gregistration/pro/dbrl_oriented_edgemap_to_edge_image_process.h
+END
+dbbgm_fgdetect_edges_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbbgm_fgdetect_edges_process.h
+END
+dbrl_warp_image_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_warp_image_process.cxx
+END
+dbrl_load_con_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_load_con_process.cxx
+END
+dbrl_edge_point_tangent_bg_model_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/15532/trunk/contrib/Gregistration/pro/dbrl_edge_point_tangent_bg_model_process.cxx
+END
+dbrl_rpm_affine_superimpose_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_rpm_affine_superimpose_process.h
+END
+dbrl_compare_matchsets_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_compare_matchsets_process.h
+END
+dbrl_rpm_tps_affine_local_global_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_rpm_tps_affine_local_global_process.cxx
+END
+dbrl_rpm_tps_affine_superimpose_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_rpm_tps_affine_superimpose_process.cxx
+END
+dbrl_compute_motion_field_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/9441/trunk/contrib/Gregistration/pro/dbrl_compute_motion_field_process.h
+END
+dbrl_rpm_affine_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_rpm_affine_process.h
+END
+dbrl_match_set_storage.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_match_set_storage.cxx
+END
+dbrl_denoise_point_set_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_denoise_point_set_process.h
+END
+dbrl_warp_image_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_warp_image_process.h
+END
+dbrl_support_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_support_process.h
+END
+dbrl_id_point_2d_storage.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_id_point_2d_storage.h
+END
+dbrl_edge_point_tangent_bg_model_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_edge_point_tangent_bg_model_process.h
+END
+dbrl_rpm_tps_affine_superimpose_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_rpm_tps_affine_superimpose_process.h
+END
+dbrl_rpm_tps_affine_superimpose_fgbg_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_rpm_tps_affine_superimpose_fgbg_process.cxx
+END
+dbrl_rpm_rigid_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_rpm_rigid_process.cxx
+END
+dbrl_id_point_2d_storage_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_id_point_2d_storage_sptr.h
+END
+dbrl_rpm_tps_superimpose_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_rpm_tps_superimpose_process.cxx
+END
+dbrl_match_set_storage.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_match_set_storage.h
+END
+dbil_osl_canny_subpixel_edges_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbil_osl_canny_subpixel_edges_process.h
+END
+dbrl_edge_image_to_oriented_edgemap_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/15532/trunk/contrib/Gregistration/pro/dbrl_edge_image_to_oriented_edgemap_process.cxx
+END
+dbbgm_fgdetect_edges_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/9527/trunk/contrib/Gregistration/pro/dbbgm_fgdetect_edges_process.cxx
+END
+dbrl_support_subpixel_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_support_subpixel_process.cxx
+END
+dbrl_superimpose_2ndtier.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_superimpose_2ndtier.h
+END
+dbrl_load_multiple_instance_object_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_load_multiple_instance_object_process.h
+END
+edgemodel_image_to_vsol_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/edgemodel_image_to_vsol_process.cxx
+END
+dbrl_superresolution_multiple_objects.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/12488/trunk/contrib/Gregistration/pro/dbrl_superresolution_multiple_objects.h
+END
+dbbgm_bgmodel_edges_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbbgm_bgmodel_edges_process.h
+END
+dbrl_rpm_tps_superimpose_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_rpm_tps_superimpose_process.h
+END
+dbrl_compute_motion_field_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/12485/trunk/contrib/Gregistration/pro/dbrl_compute_motion_field_process.cxx
+END
+dbrl_compute_amir_curvelets_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_compute_amir_curvelets_process.h
+END
+dbrl_ground_truth_point_set_generator.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_ground_truth_point_set_generator.h
+END
+superimpose_frames_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/12487/trunk/contrib/Gregistration/pro/superimpose_frames_process.cxx
+END
+dbrl_rpm_affine_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_rpm_affine_process.cxx
+END
+dbrl_edge_image_to_oriented_edgemap_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/15532/trunk/contrib/Gregistration/pro/dbrl_edge_image_to_oriented_edgemap_process.h
+END
+dbrl_rpm_tps_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_rpm_tps_process.h
+END
+dbrl_denoise_point_set_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_denoise_point_set_process.cxx
+END
+dbrl_crop_id_points_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_crop_id_points_process.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/15532/trunk/contrib/Gregistration/pro/CMakeLists.txt
+END
+dbrl_support_subpixel_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_support_subpixel_process.h
+END
+dbrl_support_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12485/trunk/contrib/Gregistration/pro/dbrl_support_process.cxx
+END
+edgemodel_image_to_vsol_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/edgemodel_image_to_vsol_process.h
+END
+dbrl_id_point_2d_storage.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_id_point_2d_storage.cxx
+END
+dbrl_local_global_match_set_storage_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_local_global_match_set_storage_sptr.h
+END
+dbrl_match_set_storage_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_match_set_storage_sptr.h
+END
+superimpose_frames_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/superimpose_frames_process.h
+END
+dbil_osl_canny_subpixel_edges_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/9478/trunk/contrib/Gregistration/pro/dbil_osl_canny_subpixel_edges_process.cxx
+END
+dbrl_crop_id_points_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_crop_id_points_process.h
+END
+dbrl_postprocess_observation.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/12485/trunk/contrib/Gregistration/pro/dbrl_postprocess_observation.cxx
+END
+dbrl_edge_point_tangent_fg_detect_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_edge_point_tangent_fg_detect_process.cxx
+END
+dbrl_load_con_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_load_con_process.h
+END
+dbrl_superimpose_2ndtier.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_superimpose_2ndtier.cxx
+END
+dbrl_load_multiple_instance_object_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/9391/trunk/contrib/Gregistration/pro/dbrl_load_multiple_instance_object_process.cxx
+END
+dbrl_superresolution_multiple_objects.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/12485/trunk/contrib/Gregistration/pro/dbrl_superresolution_multiple_objects.cxx
+END
+dbbgm_bgmodel_edges_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/9527/trunk/contrib/Gregistration/pro/dbbgm_bgmodel_edges_process.cxx
+END
+dbrl_rpm_tps_affine_local_global_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_rpm_tps_affine_local_global_process.h
+END
+dbrl_local_global_match_set_storage.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/9354/trunk/contrib/Gregistration/pro/dbrl_local_global_match_set_storage.h
+END

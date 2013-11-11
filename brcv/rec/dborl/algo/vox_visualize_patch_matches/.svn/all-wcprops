@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/13069/trunk/brcv/rec/dborl/algo/vox_visualize_patch_matches
+END
+vox_visualize_patch_matches_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/lemsvxl/!svn/ver/13013/trunk/brcv/rec/dborl/algo/vox_visualize_patch_matches/vox_visualize_patch_matches_main.cxx
+END
+vox_visualize_patch_matches.h
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/lemsvxl/!svn/ver/13013/trunk/brcv/rec/dborl/algo/vox_visualize_patch_matches/vox_visualize_patch_matches.h
+END
+vox_visualize_patch_matches_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/lemsvxl/!svn/ver/13013/trunk/brcv/rec/dborl/algo/vox_visualize_patch_matches/vox_visualize_patch_matches_params.h
+END
+vbl_smart_ptr+vox_visualize_patch_matches_params-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/lemsvxl/!svn/ver/13013/trunk/brcv/rec/dborl/algo/vox_visualize_patch_matches/vbl_smart_ptr+vox_visualize_patch_matches_params-.cxx
+END
+vox_visualize_patch_matches.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/lemsvxl/!svn/ver/13069/trunk/brcv/rec/dborl/algo/vox_visualize_patch_matches/vox_visualize_patch_matches.cxx
+END
+vox_visualize_patch_matches_params_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/lemsvxl/!svn/ver/13013/trunk/brcv/rec/dborl/algo/vox_visualize_patch_matches/vox_visualize_patch_matches_params_sptr.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/13013/trunk/brcv/rec/dborl/algo/vox_visualize_patch_matches/CMakeLists.txt
+END
+vox_visualize_patch_matches_params.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/lemsvxl/!svn/ver/13068/trunk/brcv/rec/dborl/algo/vox_visualize_patch_matches/vox_visualize_patch_matches_params.cxx
+END

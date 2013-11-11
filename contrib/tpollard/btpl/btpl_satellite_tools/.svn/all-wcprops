@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/11815/trunk/contrib/tpollard/btpl/btpl_satellite_tools
+END
+btpl_imd_parser.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/9758/trunk/contrib/tpollard/btpl/btpl_satellite_tools/btpl_imd_parser.cxx
+END
+btpl_satellite_app.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/11815/trunk/contrib/tpollard/btpl/btpl_satellite_tools/btpl_satellite_app.cxx
+END
+btpl_satellite_tools.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/11815/trunk/contrib/tpollard/btpl/btpl_satellite_tools/btpl_satellite_tools.cxx
+END
+btpl_imd_parser.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/9758/trunk/contrib/tpollard/btpl/btpl_satellite_tools/btpl_imd_parser.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/9758/trunk/contrib/tpollard/btpl/btpl_satellite_tools/CMakeLists.txt
+END
+btpl_satellite_tools.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/9951/trunk/contrib/tpollard/btpl/btpl_satellite_tools/btpl_satellite_tools.h
+END

@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/14114/trunk/brcv/seg/dbsks/Templates
+END
+vbl_smart_ptr+dbsks_det_desc_xgraph-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/12102/trunk/brcv/seg/dbsks/Templates/vbl_smart_ptr+dbsks_det_desc_xgraph-.cxx
+END
+vbl_smart_ptr+dbsks_biarc_sampler-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/14114/trunk/brcv/seg/dbsks/Templates/vbl_smart_ptr+dbsks_biarc_sampler-.cxx
+END
+vbl_smart_ptr+dbsks_xnode_geom-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/12222/trunk/brcv/seg/dbsks/Templates/vbl_smart_ptr+dbsks_xnode_geom-.cxx
+END
+vbl_smart_ptr+dbsks_xnode_geom_model-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/12142/trunk/brcv/seg/dbsks/Templates/vbl_smart_ptr+dbsks_xnode_geom_model-.cxx
+END
+vbl_smart_ptr+dbsks_local_match-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/10805/trunk/brcv/seg/dbsks/Templates/vbl_smart_ptr+dbsks_local_match-.cxx
+END
+vbl_smart_ptr+dbsks_ocm_image_cost-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/10397/trunk/brcv/seg/dbsks/Templates/vbl_smart_ptr+dbsks_ocm_image_cost-.cxx
+END
+vbl_smart_ptr+dbsks_xgraph_ccm_model-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/12291/trunk/brcv/seg/dbsks/Templates/vbl_smart_ptr+dbsks_xgraph_ccm_model-.cxx
+END
+vbl_array_3d+vnl_matrix+double-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/12083/trunk/brcv/seg/dbsks/Templates/vbl_array_3d+vnl_matrix+double-.cxx
+END
+vbl_array_3d+vnl_matrix+int-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/12083/trunk/brcv/seg/dbsks/Templates/vbl_array_3d+vnl_matrix+int-.cxx
+END
+vbl_smart_ptr+dbsks_xfrag_geom_model-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/12142/trunk/brcv/seg/dbsks/Templates/vbl_smart_ptr+dbsks_xfrag_geom_model-.cxx
+END
+vbl_smart_ptr+dbsks_dp_match-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/10397/trunk/brcv/seg/dbsks/Templates/vbl_smart_ptr+dbsks_dp_match-.cxx
+END
+vbl_smart_ptr+dbsks_xgraph_geom_model-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/12171/trunk/brcv/seg/dbsks/Templates/vbl_smart_ptr+dbsks_xgraph_geom_model-.cxx
+END

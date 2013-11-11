@@ -1,0 +1,210 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+   <contour_segmentation>
+<object videofile_id= "310"  start_frame= "75"  end_frame= "115"  category= "vehicle"  subcategory= "lockheed"  subject= "pick-up truck">
+<track x="331.936" y = "175.335" width="26" height="34" x_margin="6" y_margin="8">
+<Polygon number_of_vertices= "120"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+328,157.709 327.428,158 327,158.231 326,158.475 325,158.747 324.383,159 324,159.217 323,159.742 322.6,160 322,160.579 321.737,161 321.474,162 321.231,163 321,163.417 320.742,164 320.219,165 320,165.417 319.742,166 319.219,167 319.144,168 319.231,169 319.475,170 319.747,171 320,171.541 320.232,172 320.5,173 320.5,174 320.5,175 320.475,176 320.747,177 321,177.541 321.231,178 321.475,179 321.747,180 322,180.541 322.231,181 322.475,182 322.743,183 323,183.411 323.506,184 324,184.494 324.589,185 325,185.257 326,185.525 327,185.769 327.325,186 328,186.476 328.611,187 329,187.258 330,187.781 330.417,188 331,188.258 332,188.781 332.417,189 333,189.258 334,189.781 334.417,190 335,190.258 336,190.781 336.383,191 337,191.253 338,191.524 339,191.524 340,191.253 340.617,191 341,190.783 342,190.258 342.4,190 343,189.4 343.258,189 343.783,188 344,187.675 344.476,187 345,186.389 345.257,186 345.525,185 345.5,184 345.5,183 345.5,182 345.525,181 345.253,180 345,179.383 344.781,179 344.258,178 344,177.417 343.781,177 343.258,176 343,175.417 342.781,175 342.258,174 342,173.417 341.781,173 341.258,172 341,171.417 340.769,171 340.525,170 340.257,169 340,168.589 339.483,168 339,167.51 338.49,167 338,166.517 337.4,166 337,165.742 336,165.219 335.687,165 335,164.528 334.472,164 334,163.313 333.781,163 333.258,162 333,161.611 332.476,161 332,160.325 331.796,160 331.165,159 331,158.835 330,158.204 329.646,158 329,157.709 
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="342.435" y = "192.568" width="32" height="35" x_margin="8" y_margin="8">
+<Polygon number_of_vertices= "134"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+338,174.747 337.459,175 337,175.232 336,175.5 335,175.475 334,175.747 333.383,176 333,176.219 332,176.742 331.6,177 331,177.506 330.506,178 330,178.6 329.742,179 329.219,180 329,180.325 328.524,181 328,181.611 327.743,182 327.475,183 327.231,184 327,184.428 326.709,185 326.709,186 327,186.572 327.231,187 327.475,188 327.747,189 328,189.541 328.231,190 328.475,191 328.747,192 329,192.617 329.219,193 329.742,194 330,194.4 330.517,195 331,195.49 331.517,196 332,196.483 332.517,197 333,197.483 333.517,198 334,198.483 334.517,199 335,199.483 335.517,200 336,200.472 336.524,201 337,201.687 337.219,202 337.742,203 338,203.4 338.506,204 339,204.494 339.6,205 340,205.245 341,205.962 341.038,206 341.755,207 342,207.4 342.6,208 343,208.258 344,208.783 344.383,209 345,209.253 346,209.525 347,209.5 348,209.5 349,209.525 350,209.253 350.541,209 351,208.768 352,208.5 353,208.525 354,208.253 354.617,208 355,207.783 356,207.258 356.4,207 357,206.421 357.263,206 357.526,205 357.5,204 357.5,203 357.5,202 357.768,201 358,200.541 358.253,200 358.544,199 358.253,198 358,197.383 357.781,197 357.258,196 357,195.6 356.483,195 356,194.51 355.483,194 355,193.517 354.483,193 354,192.528 353.476,192 353,191.313 352.781,191 352.258,190 352,189.611 351.476,189 351,188.325 350.768,188 350.5,187 350.525,186 350.253,185 350,184.383 349.796,184 349.165,183 349,182.835 348,182.204 347.583,182 347,181.742 346,181.219 345.687,181 345,180.528 344.472,180 344,179.313 343.781,179 343.258,178 343,177.6 342.483,177 342,176.51 341.49,176 341,175.517 340.411,175 340,174.743 339,174.456 
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="387.527" y = "257.331" width="31" height="41" x_margin="7" y_margin="10">
+<Polygon number_of_vertices= "144"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+379,237.747 378.383,238 378,238.219 377,238.742 376.6,239 376,239.517 375.528,240 375,240.524 374.34,241 374,241.231 373,241.474 372,241.737 371.579,242 371,242.579 370.737,243 370.474,244 370.5,245 370.475,246 370.743,247 371,247.389 371.524,248 372,248.675 372.219,249 372.742,250 373,250.389 373.524,251 374,251.675 374.219,252 374.742,253 375,253.389 375.524,254 376,254.675 376.219,255 376.742,256 377,256.389 377.524,257 378,257.675 378.219,258 378.742,259 379,259.389 379.524,260 380,260.675 380.219,261 380.742,262 381,262.389 381.524,263 382,263.675 382.219,264 382.742,265 383,265.583 383.231,266 383.475,267 383.747,268 384,268.541 384.231,269 384.475,270 384.747,271 385,271.617 385.219,272 385.742,273 386,273.4 386.517,274 387,274.49 387.517,275 388,275.483 388.51,276 389,276.483 389.6,277 390,277.258 391,277.781 391.383,278 392,278.253 393,278.524 394,278.524 395,278.253 395.617,278 396,277.781 397,277.258 397.4,277 398,276.483 398.49,276 399,275.483 399.483,275 400,274.49 400.483,274 401,273.411 401.257,273 401.525,272 401.5,271 401.5,270 401.5,269 401.5,268 401.5,267 401.5,266 401.5,265 401.5,264 401.5,263 401.525,262 401.257,261 401,260.611 400.476,260 400,259.325 399.781,259 399.258,258 399,257.417 398.781,257 398.258,256 398,255.417 397.781,255 397.258,254 397,253.417 396.781,253 396.258,252 396,251.417 395.781,251 395.258,250 395,249.611 394.476,249 394,248.325 393.796,248 393.165,247 393,246.835 392,246.204 391.583,246 391,245.744 390,245.219 389.687,245 389,244.313 388.781,244 388.256,243 388,242.611 387.476,242 387,241.325 386.781,241 386.258,240 386,239.6 385.494,239 385,238.506 384.411,238 384,237.743 383,237.475 382,237.5 381,237.5 380,237.475 
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="0" y = "0" width="2" height="2" x_margin="0" y_margin="0">
+<Polygon number_of_vertices= "0"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+<track x="442.027" y = "334.545" width="38" height="44" x_margin="9" y_margin="11">
+<Polygon number_of_vertices= "164"  motion_orientation_bin= "3"  view_angle_bin= "1"  shadow_angle_bin= "0"  shadow_length= "0">
+ <outerBoundaryIs>      <LinearRing>      <coordinates> 
+434,312.747 433.459,313 433,313.232 432,313.5 431,313.475 430,313.743 429.589,314 429,314.517 428.528,315 428,315.524 427.313,316 427,316.204 426,316.835 425.852,317 425.237,318 425,318.313 424,318.901 423.55,319 423,319.129 422.411,320 422.453,321 422.48,322 422.743,323 423,323.389 423.524,324 424,324.675 424.219,325 424.742,326 425,326.4 425.517,327 426,327.472 426.524,328 427,328.687 427.219,329 427.742,330 428,330.4 428.517,331 429,331.472 429.524,332 430,332.687 430.219,333 430.742,334 431,334.389 431.524,335 432,335.675 432.219,336 432.742,337 433,337.583 433.219,338 433.742,339 434,339.389 434.524,340 435,340.675 435.219,341 435.742,342 436,342.389 436.524,343 437,343.675 437.232,344 437.5,345 437.475,346 437.747,347 438,347.541 438.231,348 438.475,349 438.743,350 439,350.411 439.517,351 440,351.49 440.517,352 441,352.483 441.517,353 442,353.483 442.51,354 443,354.483 443.589,355 444,355.257 445,355.525 446,355.5 447,355.5 448,355.768 448.459,356 449,356.253 450,356.524 451,356.524 452,356.253 452.541,356 453,355.769 454,355.525 455,355.257 455.411,355 456,354.494 456.494,354 457,353.411 457.257,353 457.525,352 457.5,351 457.5,350 457.5,349 457.962,348 458,347.957 459,347.235 459.4,347 460,346.421 460.263,346 460.525,345 460.524,344 460.257,343 460,342.589 459.483,342 459,341.51 458.483,341 458,340.528 457.476,340 457,339.313 456.781,339 456.258,338 456,337.417 455.781,337 455.258,336 455,335.611 454.476,335 454,334.325 453.781,334 453.258,333 453,332.417 452.781,332 452.258,331 452,330.417 451.781,330 451.258,329 451,328.611 450.476,328 450,327.325 449.781,327 449.258,326 449,325.6 448.494,325 448,324.506 447.4,324 447,323.742 446,323.219 445.687,323 445,322.528 444.472,322 444,321.313 443.781,321 443.258,320 443,319.417 442.781,319 442.258,318 442,317.611 441.476,317 441,316.325 440.781,316 440.258,315 440,314.6 439.494,314 439,313.506 438.411,313 438,312.743 437,312.475 436,312.5 435,312.475 
+ </coordinates></LinearRing></outerBoundaryIs></Polygon></track>
+</object>
+   </contour_segmentation>

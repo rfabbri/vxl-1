@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/lemsvxl/!svn/ver/10593/trunk/contrib/mleotta/pro
+END
+mleotta_save_keypoints_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/10593/trunk/contrib/mleotta/pro/mleotta_save_keypoints_process.cxx
+END
+mleotta_video_slice_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/9323/trunk/contrib/mleotta/pro/mleotta_video_slice_process.cxx
+END
+mleotta_save_keypoints_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/10593/trunk/contrib/mleotta/pro/mleotta_save_keypoints_process.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/10593/trunk/contrib/mleotta/pro/CMakeLists.txt
+END
+mleotta_video_slice_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/9323/trunk/contrib/mleotta/pro/mleotta_video_slice_process.h
+END

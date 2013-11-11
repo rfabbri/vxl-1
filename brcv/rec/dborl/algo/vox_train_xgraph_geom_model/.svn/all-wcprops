@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/13859/trunk/brcv/rec/dborl/algo/vox_train_xgraph_geom_model
+END
+vox_train_xgraph_geom_model_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/lemsvxl/!svn/ver/13859/trunk/brcv/rec/dborl/algo/vox_train_xgraph_geom_model/vox_train_xgraph_geom_model_params.h
+END
+vbl_smart_ptr+vox_train_xgraph_geom_model_params-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/lemsvxl/!svn/ver/13859/trunk/brcv/rec/dborl/algo/vox_train_xgraph_geom_model/vbl_smart_ptr+vox_train_xgraph_geom_model_params-.cxx
+END
+vox_train_xgraph_geom_model_params_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/lemsvxl/!svn/ver/13859/trunk/brcv/rec/dborl/algo/vox_train_xgraph_geom_model/vox_train_xgraph_geom_model_params_sptr.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/13859/trunk/brcv/rec/dborl/algo/vox_train_xgraph_geom_model/CMakeLists.txt
+END
+vox_train_xgraph_geom_model_params.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/lemsvxl/!svn/ver/13859/trunk/brcv/rec/dborl/algo/vox_train_xgraph_geom_model/vox_train_xgraph_geom_model_params.cxx
+END
+vox_train_xgraph_geom_model_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/lemsvxl/!svn/ver/13859/trunk/brcv/rec/dborl/algo/vox_train_xgraph_geom_model/vox_train_xgraph_geom_model_main.cxx
+END

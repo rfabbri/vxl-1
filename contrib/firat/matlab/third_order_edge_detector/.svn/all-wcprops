@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/15481/trunk/contrib/firat/matlab/third_order_edge_detector
+END
+get_edgemap_for_slice_given_3d_edgemap.m
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/lemsvxl/!svn/ver/15476/trunk/contrib/firat/matlab/third_order_edge_detector/get_edgemap_for_slice_given_3d_edgemap.m
+END
+bfilter2.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/15476/trunk/contrib/firat/matlab/third_order_edge_detector/bfilter2.m
+END
+detect_and_show_edgemap.m
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/lemsvxl/!svn/ver/15481/trunk/contrib/firat/matlab/third_order_edge_detector/detect_and_show_edgemap.m
+END
+disp_edg.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/15440/trunk/contrib/firat/matlab/third_order_edge_detector/disp_edg.m
+END
+load_edg.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/15275/trunk/contrib/firat/matlab/third_order_edge_detector/load_edg.m
+END
+save_overlay_edg_image.m
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/15295/trunk/contrib/firat/matlab/third_order_edge_detector/save_overlay_edg_image.m
+END
+third_order_edge_detector_3d_all_planes.m
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/lemsvxl/!svn/ver/15476/trunk/contrib/firat/matlab/third_order_edge_detector/third_order_edge_detector_3d_all_planes.m
+END
+third_order_edge_detector_wrapper.m
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/lemsvxl/!svn/ver/15333/trunk/contrib/firat/matlab/third_order_edge_detector/third_order_edge_detector_wrapper.m
+END

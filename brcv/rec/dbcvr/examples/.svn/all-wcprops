@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/12389/trunk/brcv/rec/dbcvr/examples
+END
+dbcvr_open_space_cvmatch_even_grid_example.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/12389/trunk/brcv/rec/dbcvr/examples/dbcvr_open_space_cvmatch_even_grid_example.cxx
+END
+dbcvr_cvmatch_even_3d_example.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/8400/trunk/brcv/rec/dbcvr/examples/dbcvr_cvmatch_even_3d_example.cxx
+END
+dbcvr_open_2d_cvmatch_even_grid_example.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/12389/trunk/brcv/rec/dbcvr/examples/dbcvr_open_2d_cvmatch_even_grid_example.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/8464/trunk/brcv/rec/dbcvr/examples/CMakeLists.txt
+END

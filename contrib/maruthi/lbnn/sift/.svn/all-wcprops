@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/16879/trunk/contrib/maruthi/lbnn/sift
+END
+sift_descriptors_pb2.py
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/16814/trunk/contrib/maruthi/lbnn/sift/sift_descriptors_pb2.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/16814/trunk/contrib/maruthi/lbnn/sift/__init__.py
+END
+sift_util.cc
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/16879/trunk/contrib/maruthi/lbnn/sift/sift_util.cc
+END
+sift_util.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/16879/trunk/contrib/maruthi/lbnn/sift/sift_util.h
+END
+sift_util.py
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/16814/trunk/contrib/maruthi/lbnn/sift/sift_util.py
+END
+vlsift_test.cc
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/16814/trunk/contrib/maruthi/lbnn/sift/vlsift_test.cc
+END
+vlfeat_extractor.cc
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/16814/trunk/contrib/maruthi/lbnn/sift/vlfeat_extractor.cc
+END
+extractor.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/16814/trunk/contrib/maruthi/lbnn/sift/extractor.h
+END
+vlfeat_extractor.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/16814/trunk/contrib/maruthi/lbnn/sift/vlfeat_extractor.h
+END
+get_descriptor_info_cli.cc
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/16814/trunk/contrib/maruthi/lbnn/sift/get_descriptor_info_cli.cc
+END
+util.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/16814/trunk/contrib/maruthi/lbnn/sift/util.h
+END
+extract_descriptors_cli.cc
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/16814/trunk/contrib/maruthi/lbnn/sift/extract_descriptors_cli.cc
+END
+sift_descriptors.pb.cc
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/16814/trunk/contrib/maruthi/lbnn/sift/sift_descriptors.pb.cc
+END
+sift_descriptors.pb.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/16814/trunk/contrib/maruthi/lbnn/sift/sift_descriptors.pb.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/16814/trunk/contrib/maruthi/lbnn/sift/CMakeLists.txt
+END

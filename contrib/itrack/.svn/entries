@@ -1,0 +1,80 @@
+9
+
+dir
+15842
+https://visionserver.lems.brown.edu/svn/lemsvxl/trunk/contrib/itrack
+https://visionserver.lems.brown.edu/svn/lemsvxl
+
+
+
+2009-03-24T23:46:02.000000Z
+12418
+mleotta
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+19b38075-fba0-4a01-96da-394feb402aa5
+
+pro
+dir
+
+tests
+dir
+
+cmd
+dir
+
+gui
+dir
+
+gui2
+dir
+
+imatch_gui
+dir
+
+CMakeLists.txt
+file
+
+
+
+
+2010-05-28T16:10:25.946051Z
+3b13af78906d5610527b55f71adfd1a6
+2007-04-30T20:33:33.000000Z
+9382
+mleotta
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+580
+

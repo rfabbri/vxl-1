@@ -1,0 +1,9 @@
+DT_FILE_DIR = /home/firat/lemsvxl/src/contrib/firat/courses/engn2500/rodehorst/dt/
+ENO_FILE_DIR = /home/firat/Codes/3dVisualize/Subpixel-3d-Reconstruction/DATA-Test/
+DT_FILE_NAME = dumbell_fixed.raw
+// elbow.raw
+DT_FILE_HAS_HEADER = 1
+DT_FILE_HAS_SHOCKS = 0
+ENO_FILE_PREFIX = INVALID
+OUTPUT_FILE_DIR = ./
+OUTPUT_FILE_NAME = output.vtk

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/7367/trunk/contrib/biotree/biocbs/tests
+END
+test_biocbs.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/7367/trunk/contrib/biotree/biocbs/tests/test_biocbs.cxx
+END
+test_include.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/7279/trunk/contrib/biotree/biocbs/tests/test_include.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/7279/trunk/contrib/biotree/biocbs/tests/test_driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/7279/trunk/contrib/biotree/biocbs/tests/CMakeLists.txt
+END

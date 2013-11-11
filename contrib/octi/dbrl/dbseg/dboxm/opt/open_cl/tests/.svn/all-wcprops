@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/open_cl/tests
+END
+test_octree.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/open_cl/tests/test_octree.cxx
+END
+octree_test_driver.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/open_cl/tests/octree_test_driver.h
+END
+test_include.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/open_cl/tests/test_include.cxx
+END
+ray_trace_test_kernels.cl
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/open_cl/tests/ray_trace_test_kernels.cl
+END
+dalmation.tif
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/open_cl/tests/dalmation.tif
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/open_cl/tests/test_driver.cxx
+END
+octree_test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/open_cl/tests/octree_test_driver.cxx
+END
+scene.xml
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/open_cl/tests/scene.xml
+END
+open_cl_test_data.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/open_cl/tests/open_cl_test_data.h
+END
+octree_test_kernels.cl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/open_cl/tests/octree_test_kernels.cl
+END
+test_backproject_ray.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/open_cl/tests/test_backproject_ray.cxx
+END
+test_expected_image.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/open_cl/tests/test_expected_image.cxx
+END
+open_cl_test_data.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/open_cl/tests/open_cl_test_data.cxx
+END
+test_ray_trace.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/open_cl/tests/test_ray_trace.cxx
+END
+test_create_ray.cl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/open_cl/tests/test_create_ray.cl
+END
+test_img0.tif
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/open_cl/tests/test_img0.tif
+END
+octree_test_driver.txx
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/open_cl/tests/octree_test_driver.txx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dboxm/opt/open_cl/tests/CMakeLists.txt
+END

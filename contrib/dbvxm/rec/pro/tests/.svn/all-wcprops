@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/12026/trunk/contrib/dbvxm/rec/pro/tests
+END
+test_dbvxm_rec_update_changes_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/12026/trunk/contrib/dbvxm/rec/pro/tests/test_dbvxm_rec_update_changes_process.cxx
+END
+test_include.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/12007/trunk/contrib/dbvxm/rec/pro/tests/test_include.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12007/trunk/contrib/dbvxm/rec/pro/tests/test_driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/12007/trunk/contrib/dbvxm/rec/pro/tests/CMakeLists.txt
+END

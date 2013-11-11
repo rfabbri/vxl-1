@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/8149/trunk/contrib/biotree/slice/examples
+END
+sliceRidgeDetectExample.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/8040/trunk/contrib/biotree/slice/examples/sliceRidgeDetectExample.cxx
+END
+vblExample.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/8040/trunk/contrib/biotree/slice/examples/vblExample.cxx
+END
+vil3d_to_slice.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/8133/trunk/contrib/biotree/slice/examples/vil3d_to_slice.cxx
+END
+vil3d_to_gradients.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/8133/trunk/contrib/biotree/slice/examples/vil3d_to_gradients.cxx
+END
+modify_imgs.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/8133/trunk/contrib/biotree/slice/examples/modify_imgs.cxx
+END
+convert_to_tifs.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/8133/trunk/contrib/biotree/slice/examples/convert_to_tifs.cxx
+END
+sliceDummyExample.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/7766/trunk/contrib/biotree/slice/examples/sliceDummyExample.cxx
+END
+vil3d_to_tifs.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/8133/trunk/contrib/biotree/slice/examples/vil3d_to_tifs.cxx
+END
+sliceEdgeDetectExample.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/8040/trunk/contrib/biotree/slice/examples/sliceEdgeDetectExample.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/8040/trunk/contrib/biotree/slice/examples/CMakeLists.txt
+END

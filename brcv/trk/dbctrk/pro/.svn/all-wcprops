@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/lemsvxl/!svn/ver/12387/trunk/brcv/trk/dbctrk/pro
+END
+dbctrk_storage.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbctrk/pro/dbctrk_storage.h
+END
+dbctrk_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/12385/trunk/brcv/trk/dbctrk/pro/dbctrk_process.cxx
+END
+dbctrk_storage_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbctrk/pro/dbctrk_storage_sptr.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/12387/trunk/brcv/trk/dbctrk/pro/CMakeLists.txt
+END
+dbctrk_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbctrk/pro/dbctrk_process.h
+END
+dbctrk_storage.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbctrk/pro/dbctrk_storage.cxx
+END

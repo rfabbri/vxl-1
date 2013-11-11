@@ -1,0 +1,479 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/lemsvxl/!svn/ver/15140/trunk/brcv/shp/dbsksp/algo
+END
+dbsksp_average_n_xgraphs.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/13816/trunk/brcv/shp/dbsksp/algo/dbsksp_average_n_xgraphs.h
+END
+dbsksp_fit_shock_path.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/13764/trunk/brcv/shp/dbsksp/algo/dbsksp_fit_shock_path.h
+END
+dbsksp_interp_xfrag_cost_function.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/13740/trunk/brcv/shp/dbsksp/algo/dbsksp_interp_xfrag_cost_function.h
+END
+dbsksp_avg_n_xgraphs_grad_descent.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/13822/trunk/brcv/shp/dbsksp/algo/dbsksp_avg_n_xgraphs_grad_descent.h
+END
+dbsksp_xgraph_algos.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/13812/trunk/brcv/shp/dbsksp/algo/dbsksp_xgraph_algos.cxx
+END
+dbsksp_fit_xgraph.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/13759/trunk/brcv/shp/dbsksp/algo/dbsksp_fit_xgraph.h
+END
+dbsksp_average_two_xgraphs_cost_function.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/13712/trunk/brcv/shp/dbsksp/algo/dbsksp_average_two_xgraphs_cost_function.h
+END
+dbsksp_simplify.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/12303/trunk/brcv/shp/dbsksp/algo/dbsksp_simplify.h
+END
+dbsksp_morph_shock_graph_same_topology.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/8927/trunk/brcv/shp/dbsksp/algo/dbsksp_morph_shock_graph_same_topology.h
+END
+dbsksp_shock_path.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/13759/trunk/brcv/shp/dbsksp/algo/dbsksp_shock_path.cxx
+END
+dbsksp_edit_distance.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/13765/trunk/brcv/shp/dbsksp/algo/dbsksp_edit_distance.h
+END
+dbsksp_external_energy_function.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/10034/trunk/brcv/shp/dbsksp/algo/dbsksp_external_energy_function.h
+END
+dbsksp_trace_boundary.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/12303/trunk/brcv/shp/dbsksp/algo/dbsksp_trace_boundary.h
+END
+dbsksp_twoshapelet_cost_function.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/9793/trunk/brcv/shp/dbsksp/algo/dbsksp_twoshapelet_cost_function.cxx
+END
+dbsksp_morph_shock_graph.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/8909/trunk/brcv/shp/dbsksp/algo/dbsksp_morph_shock_graph.cxx
+END
+dbsksp_screenshot.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/13276/trunk/brcv/shp/dbsksp/algo/dbsksp_screenshot.h
+END
+dbsksp_average_two_xgraphs_one_node_cost_function.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/lemsvxl/!svn/ver/13712/trunk/brcv/shp/dbsksp/algo/dbsksp_average_two_xgraphs_one_node_cost_function.cxx
+END
+dbsksp_xgraph_algos.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/13551/trunk/brcv/shp/dbsksp/algo/dbsksp_xgraph_algos.h
+END
+dbsksp_avg_xgraph_utils.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/13812/trunk/brcv/shp/dbsksp/algo/dbsksp_avg_xgraph_utils.cxx
+END
+dbsksp_xgraph_model.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14127/trunk/brcv/shp/dbsksp/algo/dbsksp_xgraph_model.cxx
+END
+dbsksp_weighted_average_two_xgraphs_cost_function.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/lemsvxl/!svn/ver/13812/trunk/brcv/shp/dbsksp/algo/dbsksp_weighted_average_two_xgraphs_cost_function.cxx
+END
+dbsksp_weighted_average_two_xgraphs.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/13816/trunk/brcv/shp/dbsksp/algo/dbsksp_weighted_average_two_xgraphs.cxx
+END
+dbsksp_convert.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/13478/trunk/brcv/shp/dbsksp/algo/dbsksp_convert.cxx
+END
+dbsksp_twoshapelet_cost_function.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/9793/trunk/brcv/shp/dbsksp/algo/dbsksp_twoshapelet_cost_function.h
+END
+dbsksp_xshock_directed_tree.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/13809/trunk/brcv/shp/dbsksp/algo/dbsksp_xshock_directed_tree.cxx
+END
+dbsksp_xgraph_boundary_algos.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/15140/trunk/brcv/shp/dbsksp/algo/dbsksp_xgraph_boundary_algos.cxx
+END
+dbsksp_average_n_xgraphs.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/13820/trunk/brcv/shp/dbsksp/algo/dbsksp_average_n_xgraphs.cxx
+END
+dbsksp_interp_xfrag_cost_function.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/13740/trunk/brcv/shp/dbsksp/algo/dbsksp_interp_xfrag_cost_function.cxx
+END
+dbsksp_fit_shock_path.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/13776/trunk/brcv/shp/dbsksp/algo/dbsksp_fit_shock_path.cxx
+END
+dbsksp_twoshapelet_estimator.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/9490/trunk/brcv/shp/dbsksp/algo/dbsksp_twoshapelet_estimator.cxx
+END
+dbsksp_average_two_xgraphs_one_node_cost_function.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/lemsvxl/!svn/ver/13712/trunk/brcv/shp/dbsksp/algo/dbsksp_average_two_xgraphs_one_node_cost_function.h
+END
+dbsksp_shock_snake.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/9793/trunk/brcv/shp/dbsksp/algo/dbsksp_shock_snake.cxx
+END
+dbsksp_interp_xshock_fragment.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/13740/trunk/brcv/shp/dbsksp/algo/dbsksp_interp_xshock_fragment.h
+END
+dbsksp_weighted_avg_n_xgraphs_cost_function.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/13812/trunk/brcv/shp/dbsksp/algo/dbsksp_weighted_avg_n_xgraphs_cost_function.h
+END
+dbsksp_fit_xgraph.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/13776/trunk/brcv/shp/dbsksp/algo/dbsksp_fit_xgraph.cxx
+END
+dbsksp_avg_xgraph_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/13812/trunk/brcv/shp/dbsksp/algo/dbsksp_avg_xgraph_utils.h
+END
+dbsksp_edit_distance.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/13765/trunk/brcv/shp/dbsksp/algo/dbsksp_edit_distance.cxx
+END
+dbsksp_weighted_average_two_xgraphs_cost_function.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/lemsvxl/!svn/ver/13812/trunk/brcv/shp/dbsksp/algo/dbsksp_weighted_average_two_xgraphs_cost_function.h
+END
+dbsksp_trace_boundary.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/12823/trunk/brcv/shp/dbsksp/algo/dbsksp_trace_boundary.cxx
+END
+dbsksp_morph_shock_graph_different_topology.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/8927/trunk/brcv/shp/dbsksp/algo/dbsksp_morph_shock_graph_different_topology.h
+END
+dbsksp_convert.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/13478/trunk/brcv/shp/dbsksp/algo/dbsksp_convert.h
+END
+dbsksp_shock_snake_cost_function_old.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/9513/trunk/brcv/shp/dbsksp/algo/dbsksp_shock_snake_cost_function_old.h
+END
+dbsksp_interp_two_xnodes.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/13533/trunk/brcv/shp/dbsksp/algo/dbsksp_interp_two_xnodes.cxx
+END
+dbsksp_shock_snake_cost_function.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/9513/trunk/brcv/shp/dbsksp/algo/dbsksp_shock_snake_cost_function.h
+END
+dbsksp_twoshapelet_estimator.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/9490/trunk/brcv/shp/dbsksp/algo/dbsksp_twoshapelet_estimator.h
+END
+dbsksp_screenshot.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/13276/trunk/brcv/shp/dbsksp/algo/dbsksp_screenshot.cxx
+END
+dbsksp_shock_snake.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/9793/trunk/brcv/shp/dbsksp/algo/dbsksp_shock_snake.h
+END
+dbsksp_xshock_directed_tree_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/13507/trunk/brcv/shp/dbsksp/algo/dbsksp_xshock_directed_tree_sptr.h
+END
+dbsksp_weighted_average_two_xgraphs_one_node_cost_function.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/lemsvxl/!svn/ver/13815/trunk/brcv/shp/dbsksp/algo/dbsksp_weighted_average_two_xgraphs_one_node_cost_function.cxx
+END
+dbsksp_fit_one_shock_branch_cost_function.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/13776/trunk/brcv/shp/dbsksp/algo/dbsksp_fit_one_shock_branch_cost_function.cxx
+END
+dbsksp_average_two_xgraphs.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/13754/trunk/brcv/shp/dbsksp/algo/dbsksp_average_two_xgraphs.h
+END
+dbsksp_compute_scurve.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/13809/trunk/brcv/shp/dbsksp/algo/dbsksp_compute_scurve.h
+END
+dbsksp_interp_two_xnodes_cost_function.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/9494/trunk/brcv/shp/dbsksp/algo/dbsksp_interp_two_xnodes_cost_function.h
+END
+dbsksp_interp_two_xnodes.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/13533/trunk/brcv/shp/dbsksp/algo/dbsksp_interp_two_xnodes.h
+END
+dbsksp_weighted_avg_n_xgraphs_cost_function.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/13812/trunk/brcv/shp/dbsksp/algo/dbsksp_weighted_avg_n_xgraphs_cost_function.cxx
+END
+dbsksp_interp_xshock_fragment.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/13809/trunk/brcv/shp/dbsksp/algo/dbsksp_interp_xshock_fragment.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/15140/trunk/brcv/shp/dbsksp/algo/CMakeLists.txt
+END
+dbsksp_weighted_average_two_xgraphs_one_node_cost_function.h
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/lemsvxl/!svn/ver/13764/trunk/brcv/shp/dbsksp/algo/dbsksp_weighted_average_two_xgraphs_one_node_cost_function.h
+END
+dbsksp_shock_path.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/13759/trunk/brcv/shp/dbsksp/algo/dbsksp_shock_path.h
+END
+dbsksp_fit_one_shock_branch_cost_function.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/13754/trunk/brcv/shp/dbsksp/algo/dbsksp_fit_one_shock_branch_cost_function.h
+END
+dbsksp_morph_shock_graph_different_topology.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/8966/trunk/brcv/shp/dbsksp/algo/dbsksp_morph_shock_graph_different_topology.cxx
+END
+dbsksp_shock_path_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/13759/trunk/brcv/shp/dbsksp/algo/dbsksp_shock_path_sptr.h
+END
+dbsksp_build_from_xshock_graph.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/9793/trunk/brcv/shp/dbsksp/algo/dbsksp_build_from_xshock_graph.cxx
+END
+dbsksp_morph_shock_graph.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/8909/trunk/brcv/shp/dbsksp/algo/dbsksp_morph_shock_graph.h
+END
+dbsksp_shock_snake_cost_function_old.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/9510/trunk/brcv/shp/dbsksp/algo/dbsksp_shock_snake_cost_function_old.cxx
+END
+dbsksp_shock_snake_cost_function.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/9513/trunk/brcv/shp/dbsksp/algo/dbsksp_shock_snake_cost_function.cxx
+END
+dbsksp_avg_n_xgraphs_grad_descent.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/13825/trunk/brcv/shp/dbsksp/algo/dbsksp_avg_n_xgraphs_grad_descent.cxx
+END
+dbsksp_simplify.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/13471/trunk/brcv/shp/dbsksp/algo/dbsksp_simplify.cxx
+END
+dbsksp_average_two_xgraphs_cost_function.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/13712/trunk/brcv/shp/dbsksp/algo/dbsksp_average_two_xgraphs_cost_function.cxx
+END
+dbsksp_morph_shock_graph_same_topology.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/8966/trunk/brcv/shp/dbsksp/algo/dbsksp_morph_shock_graph_same_topology.cxx
+END
+dbsksp_xgraph_model.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/14127/trunk/brcv/shp/dbsksp/algo/dbsksp_xgraph_model.h
+END
+dbsksp_average_two_xgraphs.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/13812/trunk/brcv/shp/dbsksp/algo/dbsksp_average_two_xgraphs.cxx
+END
+dbsksp_external_energy_function.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/10034/trunk/brcv/shp/dbsksp/algo/dbsksp_external_energy_function.cxx
+END
+dbsksp_compute_scurve.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/13809/trunk/brcv/shp/dbsksp/algo/dbsksp_compute_scurve.cxx
+END
+dbsksp_weighted_average_two_xgraphs.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/13814/trunk/brcv/shp/dbsksp/algo/dbsksp_weighted_average_two_xgraphs.h
+END
+dbsksp_xshock_directed_tree.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/13809/trunk/brcv/shp/dbsksp/algo/dbsksp_xshock_directed_tree.h
+END
+dbsksp_xgraph_boundary_algos.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/15140/trunk/brcv/shp/dbsksp/algo/dbsksp_xgraph_boundary_algos.h
+END
+dbsksp_interp_two_xnodes_cost_function.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/9890/trunk/brcv/shp/dbsksp/algo/dbsksp_interp_two_xnodes_cost_function.cxx
+END
+dbsksp_build_from_xshock_graph.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/9511/trunk/brcv/shp/dbsksp/algo/dbsksp_build_from_xshock_graph.h
+END

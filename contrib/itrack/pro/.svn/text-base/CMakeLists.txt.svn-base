@@ -1,0 +1,22 @@
+
+
+INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
+INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
+INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
+INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR} )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/ )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+
+
+#SET( itrack_pro_sources
+#)
+
+#AUX_SOURCE_DIRECTORY(Templates itrack_pro_sources)
+
+#ADD_LIBRARY(itrack_pro ${itrack_pro_sources})
+
+#TARGET_LINK_LIBRARIES(itrack_pro dbinfo bpro vil_io brip bsol)

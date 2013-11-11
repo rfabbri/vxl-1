@@ -1,0 +1,215 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/13891/trunk/contrib/firat/courses/engn2560/evaluation
+END
+cars_td_results.mat
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/13881/trunk/contrib/firat/courses/engn2560/evaluation/cars_td_results.mat
+END
+cseg_overall_consistency.m
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/13854/trunk/contrib/firat/courses/engn2560/evaluation/cseg_overall_consistency.m
+END
+get_best_td_params.m
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/13856/trunk/contrib/firat/courses/engn2560/evaluation/get_best_td_params.m
+END
+td_figure_consistency.m
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/13870/trunk/contrib/firat/courses/engn2560/evaluation/td_figure_consistency.m
+END
+mybar3.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/13858/trunk/contrib/firat/courses/engn2560/evaluation/mybar3.m
+END
+horse_hcseg_results.mat
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/13891/trunk/contrib/firat/courses/engn2560/evaluation/horse_hcseg_results.mat
+END
+cars_cseg_results.mat
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/13881/trunk/contrib/firat/courses/engn2560/evaluation/cars_cseg_results.mat
+END
+get_best_cseg_params.m
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/13856/trunk/contrib/firat/courses/engn2560/evaluation/get_best_cseg_params.m
+END
+figure_consistency.m
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/13854/trunk/contrib/firat/courses/engn2560/evaluation/figure_consistency.m
+END
+cseg_figure_consistency.m
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/13870/trunk/contrib/firat/courses/engn2560/evaluation/cseg_figure_consistency.m
+END
+td_tpr_fpr.m
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/13855/trunk/contrib/firat/courses/engn2560/evaluation/td_tpr_fpr.m
+END
+run_hcseg_complete.m
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/13871/trunk/contrib/firat/courses/engn2560/evaluation/run_hcseg_complete.m
+END
+evaluate_hcseg_complete.m
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/13872/trunk/contrib/firat/courses/engn2560/evaluation/evaluate_hcseg_complete.m
+END
+runners_hcseg_results.mat
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/13881/trunk/contrib/firat/courses/engn2560/evaluation/runners_hcseg_results.mat
+END
+run_hcseg.m
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/13868/trunk/contrib/firat/courses/engn2560/evaluation/run_hcseg.m
+END
+horse_td_results.mat
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/13881/trunk/contrib/firat/courses/engn2560/evaluation/horse_td_results.mat
+END
+evaluate_hcseg.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/13867/trunk/contrib/firat/courses/engn2560/evaluation/evaluate_hcseg.m
+END
+run_fake_td.m
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/13868/trunk/contrib/firat/courses/engn2560/evaluation/run_fake_td.m
+END
+overall_consistency.m
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/13854/trunk/contrib/firat/courses/engn2560/evaluation/overall_consistency.m
+END
+horse_cseg_results.mat
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/13881/trunk/contrib/firat/courses/engn2560/evaluation/horse_cseg_results.mat
+END
+runners_td_results.mat
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/13881/trunk/contrib/firat/courses/engn2560/evaluation/runners_td_results.mat
+END
+run_td.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/13855/trunk/contrib/firat/courses/engn2560/evaluation/run_td.m
+END
+evaluate_td.m
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/13880/trunk/contrib/firat/courses/engn2560/evaluation/evaluate_td.m
+END
+hcseg_overall_consistency.m
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/13867/trunk/contrib/firat/courses/engn2560/evaluation/hcseg_overall_consistency.m
+END
+runners_cseg_results.mat
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/13881/trunk/contrib/firat/courses/engn2560/evaluation/runners_cseg_results.mat
+END
+run_cseg.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/13855/trunk/contrib/firat/courses/engn2560/evaluation/run_cseg.m
+END
+evaluate_cseg.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/13862/trunk/contrib/firat/courses/engn2560/evaluation/evaluate_cseg.m
+END
+cars_hcseg_results.mat
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/13881/trunk/contrib/firat/courses/engn2560/evaluation/cars_hcseg_results.mat
+END
+td_pr.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/13857/trunk/contrib/firat/courses/engn2560/evaluation/td_pr.m
+END
+get_best_hcseg_params.m
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/13873/trunk/contrib/firat/courses/engn2560/evaluation/get_best_hcseg_params.m
+END
+hcseg_figure_consistency.m
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/13867/trunk/contrib/firat/courses/engn2560/evaluation/hcseg_figure_consistency.m
+END
+td_overall_consistency.m
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/13855/trunk/contrib/firat/courses/engn2560/evaluation/td_overall_consistency.m
+END
+tpr_fpr.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/13855/trunk/contrib/firat/courses/engn2560/evaluation/tpr_fpr.m
+END
+pr.m
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/13857/trunk/contrib/firat/courses/engn2560/evaluation/pr.m
+END
+cseg_pr.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/13857/trunk/contrib/firat/courses/engn2560/evaluation/cseg_pr.m
+END

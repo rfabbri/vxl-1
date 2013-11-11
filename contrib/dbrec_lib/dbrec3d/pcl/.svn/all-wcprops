@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl
+END
+dbrec3d_pcl_codebook_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl/dbrec3d_pcl_codebook_utils.h
+END
+dbrec3d_pcl_features_util.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl/dbrec3d_pcl_features_util.cxx
+END
+dbrec3d_pcl_transforms.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl/dbrec3d_pcl_transforms.cxx
+END
+dbrec3d_pcl_features_util.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl/dbrec3d_pcl_features_util.h
+END
+dbrec3d_pcl_point_types.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl/dbrec3d_pcl_point_types.h
+END
+dbrec3d_pcl_transforms.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl/dbrec3d_pcl_transforms.h
+END
+dbrec3d_scene_to_pc_utils.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl/dbrec3d_scene_to_pc_utils.cxx
+END
+dbrec3d_pcl_codebook_utils.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl/dbrec3d_pcl_codebook_utils.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl/CMakeLists.txt
+END
+dbrec3d_scene_to_pc_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/15842/trunk/contrib/dbrec_lib/dbrec3d/pcl/dbrec3d_scene_to_pc_utils.h
+END

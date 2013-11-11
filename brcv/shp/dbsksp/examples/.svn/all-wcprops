@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/13839/trunk/brcv/shp/dbsksp/examples
+END
+xgraph2ps.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/13839/trunk/brcv/shp/dbsksp/examples/xgraph2ps.cxx
+END
+average_two_xgraphs_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/13662/trunk/brcv/shp/dbsksp/examples/average_two_xgraphs_main.cxx
+END
+screenshot_xgraph.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/12176/trunk/brcv/shp/dbsksp/examples/screenshot_xgraph.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/13804/trunk/brcv/shp/dbsksp/examples/CMakeLists.txt
+END
+convert_esf_to_xgraph_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/13661/trunk/brcv/shp/dbsksp/examples/convert_esf_to_xgraph_main.cxx
+END

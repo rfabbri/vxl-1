@@ -1,0 +1,23 @@
+// This is brl/bpro/bppy/batch_breg3d.h
+#ifndef batch_breg3d_h_
+#define batch_breg3d_h_
+//:
+// \file
+// \brief External function declarations
+// \author J.L. Mundy 
+// \date February 5, 2008
+//
+//
+// \verbatim
+//  Modifications
+// \endverbatim
+#include "Python.h"
+
+
+extern PyObject *
+register_processes(PyObject *self, PyObject *args);
+
+extern PyObject *
+register_datatypes(PyObject *self, PyObject *args);
+
+#endif //batch

@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/lemsvxl/!svn/ver/7271/trunk/contrib/biotree/proc/io
+END
+proc_io_run_xml_parser.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/7155/trunk/contrib/biotree/proc/io/proc_io_run_xml_parser.h
+END
+proc_io_filter_xml_parser.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/7155/trunk/contrib/biotree/proc/io/proc_io_filter_xml_parser.h
+END
+proc_io_run_xml_parser.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/7011/trunk/contrib/biotree/proc/io/proc_io_run_xml_parser.cxx
+END
+proc_io_filter_xml_parser.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/7271/trunk/contrib/biotree/proc/io/proc_io_filter_xml_parser.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/7155/trunk/contrib/biotree/proc/io/CMakeLists.txt
+END

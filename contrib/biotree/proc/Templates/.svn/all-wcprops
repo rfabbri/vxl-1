@@ -1,0 +1,167 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/6427/trunk/contrib/biotree/proc/Templates
+END
+bioproc_dummy_splat_resource+double.xmvg_edge_detector_x_3d-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/lemsvxl/!svn/ver/4887/trunk/contrib/biotree/proc/Templates/bioproc_dummy_splat_resource+double.xmvg_edge_detector_x_3d-.cxx
+END
+bioproc_dummy_splat_resource+double.xmvg_edge_detector_y_3d-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/lemsvxl/!svn/ver/5484/trunk/contrib/biotree/proc/Templates/bioproc_dummy_splat_resource+double.xmvg_edge_detector_y_3d-.cxx
+END
+bioproc_dummy_splat_resource+double.xmvg_edge_detector_z_3d-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/lemsvxl/!svn/ver/5484/trunk/contrib/biotree/proc/Templates/bioproc_dummy_splat_resource+double.xmvg_edge_detector_z_3d-.cxx
+END
+bioproc_dummy_splat_resource+double.xmvg_parallel_beam_filter_3d+xmvg_pipe_filter_3d--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 154
+/svn/lemsvxl/!svn/ver/4397/trunk/contrib/biotree/proc/Templates/bioproc_dummy_splat_resource+double.xmvg_parallel_beam_filter_3d+xmvg_pipe_filter_3d--.cxx
+END
+bioproc_splr_filtering_proc+double.xmvg_parallel_beam_filter_3d+xmvg_pipe_filter_3d--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 153
+/svn/lemsvxl/!svn/ver/5283/trunk/contrib/biotree/proc/Templates/bioproc_splr_filtering_proc+double.xmvg_parallel_beam_filter_3d+xmvg_pipe_filter_3d--.cxx
+END
+bioproc_filtering_proc+double.xmvg_parallel_beam_filter_3d+xmvg_pipe_filter_3d--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 148
+/svn/lemsvxl/!svn/ver/4416/trunk/contrib/biotree/proc/Templates/bioproc_filtering_proc+double.xmvg_parallel_beam_filter_3d+xmvg_pipe_filter_3d--.cxx
+END
+bioproc_dummy_splat_resource+double.xmvg_gaussian_filter-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/lemsvxl/!svn/ver/4355/trunk/contrib/biotree/proc/Templates/bioproc_dummy_splat_resource+double.xmvg_gaussian_filter-.cxx
+END
+bioproc_dummy_splat_resource+double.xmvg_nonoise_filter-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/lemsvxl/!svn/ver/2846/trunk/contrib/biotree/proc/Templates/bioproc_dummy_splat_resource+double.xmvg_nonoise_filter-.cxx
+END
+bioproc_filtering_proc+double.xmvg_no_noise_filter-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/lemsvxl/!svn/ver/2846/trunk/contrib/biotree/proc/Templates/bioproc_filtering_proc+double.xmvg_no_noise_filter-.cxx
+END
+bioproc_filtering_proc+double.xmvg_gaussian_filter-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/lemsvxl/!svn/ver/4355/trunk/contrib/biotree/proc/Templates/bioproc_filtering_proc+double.xmvg_gaussian_filter-.cxx
+END
+bioproc_dummy_splat_resource+double.xmvg_parallel_beam_filter_3d+xmvg_gaussian_integrating_filter_3d--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 170
+/svn/lemsvxl/!svn/ver/4553/trunk/contrib/biotree/proc/Templates/bioproc_dummy_splat_resource+double.xmvg_parallel_beam_filter_3d+xmvg_gaussian_integrating_filter_3d--.cxx
+END
+bioproc_splr_filtering_proc+double.xmvg_parallel_beam_filter_3d+xmvg_gaussian_integrating_filter_3d--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 169
+/svn/lemsvxl/!svn/ver/5822/trunk/contrib/biotree/proc/Templates/bioproc_splr_filtering_proc+double.xmvg_parallel_beam_filter_3d+xmvg_gaussian_integrating_filter_3d--.cxx
+END
+bioproc_filtering_proc+double.xmvg_parallel_beam_filter_3d+xmvg_gaussian_integrating_filter_3d--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 164
+/svn/lemsvxl/!svn/ver/4553/trunk/contrib/biotree/proc/Templates/bioproc_filtering_proc+double.xmvg_parallel_beam_filter_3d+xmvg_gaussian_integrating_filter_3d--.cxx
+END
+bioproc_splr_filtering_proc+double.xmvg_filter_3d_wrapper+xmvg_no_noise_filter_3d--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 151
+/svn/lemsvxl/!svn/ver/6427/trunk/contrib/biotree/proc/Templates/bioproc_splr_filtering_proc+double.xmvg_filter_3d_wrapper+xmvg_no_noise_filter_3d--.cxx
+END
+bioproc_splr_filtering_proc+double.xmvg_filter_3d_wrapper+xmvg_gaussian_filter_3d--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 151
+/svn/lemsvxl/!svn/ver/6427/trunk/contrib/biotree/proc/Templates/bioproc_splr_filtering_proc+double.xmvg_filter_3d_wrapper+xmvg_gaussian_filter_3d--.cxx
+END
+bioproc_dummy_splat_resource+double.xmvg_point_filter-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/lemsvxl/!svn/ver/4118/trunk/contrib/biotree/proc/Templates/bioproc_dummy_splat_resource+double.xmvg_point_filter-.cxx
+END
+bioproc_filtering_proc+double.xmvg_point_filter-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/lemsvxl/!svn/ver/4118/trunk/contrib/biotree/proc/Templates/bioproc_filtering_proc+double.xmvg_point_filter-.cxx
+END
+bioproc_splr_filtering_proc+double.xmvg_point_filter-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/lemsvxl/!svn/ver/5822/trunk/contrib/biotree/proc/Templates/bioproc_splr_filtering_proc+double.xmvg_point_filter-.cxx
+END
+bioproc_filtering_proc+double.xmvg_gaussian_edge_detector_x_3d-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/lemsvxl/!svn/ver/4887/trunk/contrib/biotree/proc/Templates/bioproc_filtering_proc+double.xmvg_gaussian_edge_detector_x_3d-.cxx
+END
+bioproc_splr_filtering_proc+double.xmvg_gaussian_edge_detector_x_3d-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/lemsvxl/!svn/ver/5822/trunk/contrib/biotree/proc/Templates/bioproc_splr_filtering_proc+double.xmvg_gaussian_edge_detector_x_3d-.cxx
+END
+bioproc_splr_filtering_proc+double.xmvg_no_noise_filter_3d-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/lemsvxl/!svn/ver/5822/trunk/contrib/biotree/proc/Templates/bioproc_splr_filtering_proc+double.xmvg_no_noise_filter_3d-.cxx
+END
+bioproc_filtering_proc+double.xmvg_gaussian_edge_detector_y_3d-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/lemsvxl/!svn/ver/5484/trunk/contrib/biotree/proc/Templates/bioproc_filtering_proc+double.xmvg_gaussian_edge_detector_y_3d-.cxx
+END
+bioproc_splr_filtering_proc+double.xmvg_gaussian_edge_detector_y_3d-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/lemsvxl/!svn/ver/5822/trunk/contrib/biotree/proc/Templates/bioproc_splr_filtering_proc+double.xmvg_gaussian_edge_detector_y_3d-.cxx
+END
+bioproc_splr_filtering_proc+double.xmvg_gaussian_filter_3d-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/lemsvxl/!svn/ver/5822/trunk/contrib/biotree/proc/Templates/bioproc_splr_filtering_proc+double.xmvg_gaussian_filter_3d-.cxx
+END
+bioproc_splr_filtering_proc+xmvg_no_noise_filter-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/lemsvxl/!svn/ver/3655/trunk/contrib/biotree/proc/Templates/bioproc_splr_filtering_proc+xmvg_no_noise_filter-.cxx
+END
+bioproc_filtering_proc+double.xmvg_gaussian_edge_detector_z_3d-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/lemsvxl/!svn/ver/5484/trunk/contrib/biotree/proc/Templates/bioproc_filtering_proc+double.xmvg_gaussian_edge_detector_z_3d-.cxx
+END
+bioproc_splr_filtering_proc+double.xmvg_gaussian_edge_detector_z_3d-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/lemsvxl/!svn/ver/5822/trunk/contrib/biotree/proc/Templates/bioproc_splr_filtering_proc+double.xmvg_gaussian_edge_detector_z_3d-.cxx
+END

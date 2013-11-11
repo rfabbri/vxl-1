@@ -1,0 +1,25 @@
+#ifndef dbrec_mic_processes_h_
+#define dbrec_mic_processes_h_
+
+#include <bprb/bprb_macros.h>
+#include <bprb/bprb_func_process.h>
+
+DECLARE_FUNC_CONS(dbrec_pca_initialize_process);
+DECLARE_FUNC_CONS(dbrec_pca_add_data_process);
+DECLARE_FUNC_CONS(dbrec_pca_construct_process);
+DECLARE_FUNC_CONS(dbrec_pca_classify_process);
+
+DECLARE_FUNC_CONS(dbrec_bayesian_pca_initialize_process);
+DECLARE_FUNC_CONS(dbrec_bayesian_pca_add_data_process);
+DECLARE_FUNC_CONS(dbrec_bayesian_pca_add_data_process2);
+DECLARE_FUNC_CONS(dbrec_bayesian_pca_construct_process);
+DECLARE_FUNC_CONS(dbrec_bayesian_pca_visualize_process);
+DECLARE_FUNC_CONS(dbrec_bayesian_pca_classify_process);
+
+DECLARE_FUNC_CONS(dbrec_template_matching_classify_process);
+DECLARE_FUNC_CONS(dbrec_template_matching_add_data_process2);
+DECLARE_FUNC_CONS(dbrec_template_matching_add_data_process);
+DECLARE_FUNC_CONS(dbrec_template_matching_initialize_process);
+
+#endif  // dbrec_mic_processes_h_
+

@@ -1,0 +1,125 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/lemsvxl/!svn/ver/13018/trunk/basic/dbxml-xerces
+END
+dbxml_track.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/13017/trunk/basic/dbxml-xerces/dbxml_track.h
+END
+DOMTreeErrorReporter.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/13017/trunk/basic/dbxml-xerces/DOMTreeErrorReporter.hpp
+END
+dbxml_param_input_converter.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/13017/trunk/basic/dbxml-xerces/dbxml_param_input_converter.h
+END
+dbxml_io.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/13017/trunk/basic/dbxml-xerces/dbxml_io.h
+END
+dbxml_track_input_converter.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/13017/trunk/basic/dbxml-xerces/dbxml_track_input_converter.h
+END
+DOMPrintFilter.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/13017/trunk/basic/dbxml-xerces/DOMPrintFilter.hpp
+END
+DOMPrintErrorHandler.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/13017/trunk/basic/dbxml-xerces/DOMPrintErrorHandler.hpp
+END
+dbxml_dom.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/13017/trunk/basic/dbxml-xerces/dbxml_dom.h
+END
+dbxml_param_input_converter.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/13017/trunk/basic/dbxml-xerces/dbxml_param_input_converter.cxx
+END
+dbxml_io.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/13017/trunk/basic/dbxml-xerces/dbxml_io.cxx
+END
+dll.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/13017/trunk/basic/dbxml-xerces/dll.h
+END
+dbxml_track_input_converter.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/13017/trunk/basic/dbxml-xerces/dbxml_track_input_converter.cxx
+END
+introduction_doxy.txt
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/13017/trunk/basic/dbxml-xerces/introduction_doxy.txt
+END
+dbxml_input_converter.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/13017/trunk/basic/dbxml-xerces/dbxml_input_converter.h
+END
+dbxml_tracks.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/13017/trunk/basic/dbxml-xerces/dbxml_tracks.h
+END
+dbxml_input_converter_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/13017/trunk/basic/dbxml-xerces/dbxml_input_converter_sptr.h
+END
+dbxml_param.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/13017/trunk/basic/dbxml-xerces/dbxml_param.h
+END
+dbxml_input_converter.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/13017/trunk/basic/dbxml-xerces/dbxml_input_converter.cxx
+END
+dbxml_generic_ptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/13017/trunk/basic/dbxml-xerces/dbxml_generic_ptr.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/13018/trunk/basic/dbxml-xerces/CMakeLists.txt
+END

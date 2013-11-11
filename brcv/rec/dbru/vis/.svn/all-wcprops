@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/lemsvxl/!svn/ver/12406/trunk/brcv/rec/dbru/vis
+END
+dbru_osl_tools.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/12406/trunk/brcv/rec/dbru/vis/dbru_osl_tools.h
+END
+dbru_rcor_tableau.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/9054/trunk/brcv/rec/dbru/vis/dbru_rcor_tableau.cxx
+END
+dbru_rcor_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/9289/trunk/brcv/rec/dbru/vis/dbru_rcor_tool.cxx
+END
+dbru_rcor_displayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/9289/trunk/brcv/rec/dbru/vis/dbru_rcor_displayer.h
+END
+dbru_osl_displayer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/9289/trunk/brcv/rec/dbru/vis/dbru_osl_displayer.cxx
+END
+dbru_labeling_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/12406/trunk/brcv/rec/dbru/vis/dbru_labeling_tool.cxx
+END
+dbru_matching_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/9289/trunk/brcv/rec/dbru/vis/dbru_matching_tool.h
+END
+dbru_osl_tools.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/12406/trunk/brcv/rec/dbru/vis/dbru_osl_tools.cxx
+END
+dbru_rcor_displayer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/9289/trunk/brcv/rec/dbru/vis/dbru_rcor_displayer.cxx
+END
+dbru_matching_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/9483/trunk/brcv/rec/dbru/vis/dbru_matching_tool.cxx
+END
+dbru_rcor_tableau.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/6146/trunk/brcv/rec/dbru/vis/dbru_rcor_tableau.h
+END
+dbru_rcor_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/9289/trunk/brcv/rec/dbru/vis/dbru_rcor_tool.h
+END
+dbru_osl_displayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/9289/trunk/brcv/rec/dbru/vis/dbru_osl_displayer.h
+END
+dbru_labeling_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/12406/trunk/brcv/rec/dbru/vis/dbru_labeling_tool.h
+END
+dbru_rcor_tableau_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/5241/trunk/brcv/rec/dbru/vis/dbru_rcor_tableau_sptr.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/9289/trunk/brcv/rec/dbru/vis/CMakeLists.txt
+END

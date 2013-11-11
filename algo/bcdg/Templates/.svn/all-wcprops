@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/lemsvxl/!svn/ver/1151/trunk/algo/bcdg/Templates
+END
+vbl_smart_ptr+bcdg_local_option_sptr-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/1093/trunk/algo/bcdg/Templates/vbl_smart_ptr+bcdg_local_option_sptr-.cxx
+END
+vbl_smart_ptr+bcdg_hypothel-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/1093/trunk/algo/bcdg/Templates/vbl_smart_ptr+bcdg_hypothel-.cxx
+END
+vbl_smart_ptr+bcdg_hypothesis-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/1093/trunk/algo/bcdg/Templates/vbl_smart_ptr+bcdg_hypothesis-.cxx
+END
+vbl_smart_ptr+bcdg_global_option_sptr-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/1093/trunk/algo/bcdg/Templates/vbl_smart_ptr+bcdg_global_option_sptr-.cxx
+END
+vbl_smart_ptr+bcdg_finger_sptr-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/1093/trunk/algo/bcdg/Templates/vbl_smart_ptr+bcdg_finger_sptr-.cxx
+END
+vbl_smart_ptr+bcdg_frame_sptr-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/1151/trunk/algo/bcdg/Templates/vbl_smart_ptr+bcdg_frame_sptr-.cxx
+END

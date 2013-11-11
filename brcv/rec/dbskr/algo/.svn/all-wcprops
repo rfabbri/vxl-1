@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/lemsvxl/!svn/ver/14754/trunk/brcv/rec/dbskr/algo
+END
+dbskr_shock_patch_model_selector.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/9952/trunk/brcv/rec/dbskr/algo/dbskr_shock_patch_model_selector.h
+END
+dbskr_shock_patch_curve_match.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/8930/trunk/brcv/rec/dbskr/algo/dbskr_shock_patch_curve_match.h
+END
+dbskr_shock_path_finder.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/11483/trunk/brcv/rec/dbskr/algo/dbskr_shock_path_finder.h
+END
+dbskr_shock_patch_match_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/8892/trunk/brcv/rec/dbskr/algo/dbskr_shock_patch_match_sptr.h
+END
+dbskr_shock_patch_match.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/14754/trunk/brcv/rec/dbskr/algo/dbskr_shock_patch_match.cxx
+END
+dbskr_shock_patch_curve_match_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/8930/trunk/brcv/rec/dbskr/algo/dbskr_shock_patch_curve_match_sptr.h
+END
+dbskr_rec_algs.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/11483/trunk/brcv/rec/dbskr/algo/dbskr_rec_algs.h
+END
+dbskr_shock_patch_model_selector.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/11207/trunk/brcv/rec/dbskr/algo/dbskr_shock_patch_model_selector.cxx
+END
+dbskr_shock_patch_curve_match.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/9047/trunk/brcv/rec/dbskr/algo/dbskr_shock_patch_curve_match.cxx
+END
+dbskr_shock_path_finder_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/11134/trunk/brcv/rec/dbskr/algo/dbskr_shock_path_finder_sptr.h
+END
+dbskr_shock_path_finder.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/11483/trunk/brcv/rec/dbskr/algo/dbskr_shock_path_finder.cxx
+END
+dbskr_shock_patch_selector.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/11272/trunk/brcv/rec/dbskr/algo/dbskr_shock_patch_selector.h
+END
+dbskr_rec_algs.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/14754/trunk/brcv/rec/dbskr/algo/dbskr_rec_algs.cxx
+END
+dbskr_shock_patch_selector.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/11316/trunk/brcv/rec/dbskr/algo/dbskr_shock_patch_selector.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/12478/trunk/brcv/rec/dbskr/algo/CMakeLists.txt
+END
+dbskr_shock_patch_match.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/13007/trunk/brcv/rec/dbskr/algo/dbskr_shock_patch_match.h
+END

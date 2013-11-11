@@ -1,0 +1,6 @@
+INCLUDE_DIRECTORIES( ${VXLCORE_INCLUDE_DIR} )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
+
+ADD_EXECUTABLE ( bvaml_run bvaml_run.cxx )
+TARGET_LINK_LIBRARIES( bvaml_run bvaml baml vcl vil vgl vnl)

@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/10270/trunk/contrib/biotree/vol3d/algo
+END
+vol3d_radius_detection.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/7585/trunk/contrib/biotree/vol3d/algo/vol3d_radius_detection.h
+END
+vol3d_gaussian_filtering_proc.txx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/7628/trunk/contrib/biotree/vol3d/algo/vol3d_gaussian_filtering_proc.txx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/7614/trunk/contrib/biotree/vol3d/algo/CMakeLists.txt
+END
+vol3d_gaussian_filtering_proc.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/7614/trunk/contrib/biotree/vol3d/algo/vol3d_gaussian_filtering_proc.h
+END
+vol3d_radius_detection.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/7816/trunk/contrib/biotree/vol3d/algo/vol3d_radius_detection.cxx
+END

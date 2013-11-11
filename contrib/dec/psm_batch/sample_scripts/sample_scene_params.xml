@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<psmLoadSceneProcess>
+  <storage_directory desc="Storage Directory" type="string" value="c:/research/psm/models/capitol_high_rand_06" />
+  <appearance_model_type desc="Appearance Model Type" type="string" value="mog_grey" />
+  <origin_x desc="Origin X" type="float" value="-220.0" />
+  <origin_y desc="Origin Y" type="float" value="-200.0" />
+  <origin_z desc="Origin Z" type="float" value="-35.0" />
+  <block_length desc="Block Length" type="float" value="384.0" />
+  <max_levels desc="Maximum Subdivision Levels" type="unsigned" value="10" />
+  <lvcs desc="LVCS Path" type="string" value="" />
+</psmLoadSceneProcess>

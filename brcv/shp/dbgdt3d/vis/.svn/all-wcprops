@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbgdt3d/vis
+END
+dbgdt3d_vis_backpt.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbgdt3d/vis/dbgdt3d_vis_backpt.cxx
+END
+dbgdt3d_vis_path_iso_contour.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbgdt3d/vis/dbgdt3d_vis_path_iso_contour.h
+END
+dbgdt3d_vis_welm.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbgdt3d/vis/dbgdt3d_vis_welm.cxx
+END
+dbgdt3d_vis_shock.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbgdt3d/vis/dbgdt3d_vis_shock.cxx
+END
+dbgdt3d_vis_interval.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbgdt3d/vis/dbgdt3d_vis_interval.h
+END
+dbgdt3d_vis_ws.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbgdt3d/vis/dbgdt3d_vis_ws.h
+END
+dbgdt3d_vis_path_iso_contour.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbgdt3d/vis/dbgdt3d_vis_path_iso_contour.cxx
+END
+dbgdt3d_vis_mesh.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbgdt3d/vis/dbgdt3d_vis_mesh.h
+END
+dbgdt3d_vis_interval.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbgdt3d/vis/dbgdt3d_vis_interval.cxx
+END
+dbgdt3d_vis_backpt.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbgdt3d/vis/dbgdt3d_vis_backpt.h
+END
+dbgdt3d_vis_welm.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbgdt3d/vis/dbgdt3d_vis_welm.h
+END
+dbgdt3d_vis_ws.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbgdt3d/vis/dbgdt3d_vis_ws.cxx
+END
+dbgdt3d_vis_mesh.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbgdt3d/vis/dbgdt3d_vis_mesh.cxx
+END
+dbgdt3d_vis_shock.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbgdt3d/vis/dbgdt3d_vis_shock.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbgdt3d/vis/CMakeLists.txt
+END

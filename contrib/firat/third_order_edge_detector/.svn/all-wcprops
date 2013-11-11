@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/16309/trunk/contrib/firat/third_order_edge_detector
+END
+third_order_edge_detector.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/15275/trunk/contrib/firat/third_order_edge_detector/third_order_edge_detector.cxx
+END
+mex_third_order_color_edge_detector.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/lemsvxl/!svn/ver/16309/trunk/contrib/firat/third_order_edge_detector/mex_third_order_color_edge_detector.cxx
+END
+mex_third_order_edge_detector.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/16309/trunk/contrib/firat/third_order_edge_detector/mex_third_order_edge_detector.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/16309/trunk/contrib/firat/third_order_edge_detector/CMakeLists.txt
+END

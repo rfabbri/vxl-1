@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/15835/trunk/contrib/bm/courses/csci2951/auctionSimulator/hw4/agents
+END
+riskAware.py
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/15835/trunk/contrib/bm/courses/csci2951/auctionSimulator/hw4/agents/riskAware.py
+END
+straightMV.py
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/15833/trunk/contrib/bm/courses/csci2951/auctionSimulator/hw4/agents/straightMV.py
+END
+targetMU.py
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/15834/trunk/contrib/bm/courses/csci2951/auctionSimulator/hw4/agents/targetMU.py
+END
+agentBase.py
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/15834/trunk/contrib/bm/courses/csci2951/auctionSimulator/hw4/agents/agentBase.py
+END
+targetMV.py
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/15833/trunk/contrib/bm/courses/csci2951/auctionSimulator/hw4/agents/targetMV.py
+END
+targetPrice.py
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/15833/trunk/contrib/bm/courses/csci2951/auctionSimulator/hw4/agents/targetPrice.py
+END
+targetMUS.py
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/15833/trunk/contrib/bm/courses/csci2951/auctionSimulator/hw4/agents/targetMUS.py
+END
+averageMU.py
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/15833/trunk/contrib/bm/courses/csci2951/auctionSimulator/hw4/agents/averageMU.py
+END
+baselineBidder.py
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/15801/trunk/contrib/bm/courses/csci2951/auctionSimulator/hw4/agents/baselineBidder.py
+END
+targetMVS.py
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/15833/trunk/contrib/bm/courses/csci2951/auctionSimulator/hw4/agents/targetMVS.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/15801/trunk/contrib/bm/courses/csci2951/auctionSimulator/hw4/agents/__init__.py
+END
+straightMU.py
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/15833/trunk/contrib/bm/courses/csci2951/auctionSimulator/hw4/agents/straightMU.py
+END

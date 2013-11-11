@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/7816/trunk/contrib/biotree/resc/imgr/file_formats/converters
+END
+spe_to_tiff.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/6672/trunk/contrib/biotree/resc/imgr/file_formats/converters/spe_to_tiff.cxx
+END
+rsq_cali_images.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/5143/trunk/contrib/biotree/resc/imgr/file_formats/converters/rsq_cali_images.cxx
+END
+rsq_to_tiff_converter.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/lemsvxl/!svn/ver/5056/trunk/contrib/biotree/resc/imgr/file_formats/converters/rsq_to_tiff_converter.cxx
+END
+modify_log_file.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/6230/trunk/contrib/biotree/resc/imgr/file_formats/converters/modify_log_file.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/7816/trunk/contrib/biotree/resc/imgr/file_formats/converters/CMakeLists.txt
+END
+isq_to_tiff_converter.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/lemsvxl/!svn/ver/5143/trunk/contrib/biotree/resc/imgr/file_formats/converters/isq_to_tiff_converter.cxx
+END

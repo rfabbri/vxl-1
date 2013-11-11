@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/13792/trunk/brcv/shp/dbsksp/tests
+END
+test_xshock_fragment.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/13792/trunk/brcv/shp/dbsksp/tests/test_xshock_fragment.cxx
+END
+test_include.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/8484/trunk/brcv/shp/dbsksp/tests/test_include.cxx
+END
+test_shapelet.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/10242/trunk/brcv/shp/dbsksp/tests/test_shapelet.cxx
+END
+test_shock_graph.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/9793/trunk/brcv/shp/dbsksp/tests/test_shock_graph.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/11982/trunk/brcv/shp/dbsksp/tests/test_driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/11982/trunk/brcv/shp/dbsksp/tests/CMakeLists.txt
+END

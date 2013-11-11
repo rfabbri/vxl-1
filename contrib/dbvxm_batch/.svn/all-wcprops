@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/lemsvxl/!svn/ver/12174/trunk/contrib/dbvxm_batch
+END
+world_model_params_lvcs.txt
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/11723/trunk/contrib/dbvxm_batch/world_model_params_lvcs.txt
+END
+batch_dbvxm.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/12094/trunk/contrib/dbvxm_batch/batch_dbvxm.cxx
+END
+world_multi_model_params.xml
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/11723/trunk/contrib/dbvxm_batch/world_multi_model_params.xml
+END
+change_detection_multi.py
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/11723/trunk/contrib/dbvxm_batch/change_detection_multi.py
+END
+corrected_roi_params.xml
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/11723/trunk/contrib/dbvxm_batch/corrected_roi_params.xml
+END
+batch_dbvxm.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/11723/trunk/contrib/dbvxm_batch/batch_dbvxm.h
+END
+world_model_params.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/11723/trunk/contrib/dbvxm_batch/world_model_params.xml
+END
+full_hiafa_images_mul.txt
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/11723/trunk/contrib/dbvxm_batch/full_hiafa_images_mul.txt
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/12026/trunk/contrib/dbvxm_batch/CMakeLists.txt
+END
+full_hiafa_images.txt
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/11723/trunk/contrib/dbvxm_batch/full_hiafa_images.txt
+END
+reg_dbvxm.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/12174/trunk/contrib/dbvxm_batch/reg_dbvxm.cxx
+END

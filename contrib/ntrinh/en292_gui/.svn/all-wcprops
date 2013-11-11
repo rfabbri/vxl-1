@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/9338/trunk/contrib/ntrinh/en292_gui
+END
+en292_gui_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/9305/trunk/contrib/ntrinh/en292_gui/en292_gui_main.cxx
+END
+en292_gui_menu.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/9305/trunk/contrib/ntrinh/en292_gui/en292_gui_menu.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/9338/trunk/contrib/ntrinh/en292_gui/CMakeLists.txt
+END
+en292_gui_menu.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/3812/trunk/contrib/ntrinh/en292_gui/en292_gui_menu.h
+END

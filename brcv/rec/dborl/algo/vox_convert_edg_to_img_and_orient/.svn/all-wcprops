@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/13747/trunk/brcv/rec/dborl/algo/vox_convert_edg_to_img_and_orient
+END
+vox_convert_edg_to_img_and_orient_params.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/lemsvxl/!svn/ver/13738/trunk/brcv/rec/dborl/algo/vox_convert_edg_to_img_and_orient/vox_convert_edg_to_img_and_orient_params.cxx
+END
+vox_convert_edg_to_img_and_orient_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/lemsvxl/!svn/ver/13747/trunk/brcv/rec/dborl/algo/vox_convert_edg_to_img_and_orient/vox_convert_edg_to_img_and_orient_main.cxx
+END
+vox_convert_edg_to_img_and_orient_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/lemsvxl/!svn/ver/13738/trunk/brcv/rec/dborl/algo/vox_convert_edg_to_img_and_orient/vox_convert_edg_to_img_and_orient_params.h
+END
+vbl_smart_ptr+vox_convert_edg_to_img_and_orient_params-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 147
+/svn/lemsvxl/!svn/ver/13738/trunk/brcv/rec/dborl/algo/vox_convert_edg_to_img_and_orient/vbl_smart_ptr+vox_convert_edg_to_img_and_orient_params-.cxx
+END
+vox_convert_edg_to_img_and_orient_params_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/lemsvxl/!svn/ver/13738/trunk/brcv/rec/dborl/algo/vox_convert_edg_to_img_and_orient/vox_convert_edg_to_img_and_orient_params_sptr.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/13738/trunk/brcv/rec/dborl/algo/vox_convert_edg_to_img_and_orient/CMakeLists.txt
+END

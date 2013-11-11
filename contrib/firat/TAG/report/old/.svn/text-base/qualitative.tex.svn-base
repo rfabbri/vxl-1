@@ -1,0 +1,324 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[11pt]{article} % use larger type; default would be 10pt
+
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+% \geometry{margins=2in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{mcode}
+\usepackage{color}
+\usepackage{bbm}
+\usepackage{multirow}
+\usepackage{rotating}
+
+
+% These packages are all incorporated in the memoir class to one degree or another...
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+%%% END Article customizations
+
+%%% The "real" document content comes below...
+
+\title{\textbf{Qualitative Representation of Images}}
+\author{Firat Kalaycilar and Benjamin Kimia}
+%\date{March 27, 2012} % Activate to display a given date or no date (if empty),
+         % otherwise the current date is printed 
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+\newpage
+\section{Mathematical Foundations}
+\subsection{Calculus}
+Given a 2D function $f(x,y)$, its derivative in the direction of unit vector $T$ which is parametrized by $\xi$ is
+\begin{equation*}
+\frac{\partial f}{\partial \xi} = f_\xi = \nabla f \cdot T.
+\end{equation*}
+The second derivatives in the directions of two unit vectors $(T,N)$ which are parametrized by $\xi$ and $\eta$ are
+\begin{equation*}
+\begin{split}
+f_{\xi \eta} = T^\text{T} H N.
+\end{split}
+\end{equation*}
+%Now, let $T = \frac{\nabla f}{|\nabla f|}$, $N = \frac{\nabla f ^ \perp}{|\nabla f|}$, and $u$, $v$ be the respective parametrizations. Then,
+%\begin{equation}
+%\begin{split}
+%f_{u} &= \nabla f \cdot \frac{\nabla f}{|\nabla f|} = |\nabla f|,\\
+%f_{v} &= \nabla f \cdot \frac{\nabla f^ \perp}{|\nabla f|} = 0
+%\end{split}
+%\end{equation}
+%and
+%\begin{equation}
+%\begin{split}
+%f_{uu} &= \frac{\nabla f^\text{T}}{|\nabla f|} H \frac{\nabla f}{|\nabla f|} = \frac{\nabla f^\text{T} H \nabla f}{|\nabla f|^2},\\
+%f_{uv} &=  \frac{\nabla f^\text{T} H \nabla f^\perp}{|\nabla f|^2},\\
+%f_{vv} &=  \frac{\left(\nabla f^\perp\right)^\text{T} H \nabla f^\perp}{|\nabla f|^2}.
+%\end{split}
+%\end{equation}
+
+\paragraph{Proposition:} If $\psi  = \arg\max_\theta f_{\xi(\theta)\xi(\theta)}$, then $\psi +\pi/2  = \arg\min_\theta f_{\xi(\theta)\xi(\theta)}$. 
+\paragraph{Proof:} Note that
+\begin{equation}
+\begin{split}
+\label{eq:obj}
+f_{\xi(\theta)\xi(\theta)} = f_{xx} \cos^2 \theta + 2 f_{xy} \cos \theta \sin \theta + f_{yy} \sin^2 \theta.
+\end{split}
+\end{equation}
+We can solve
+\begin{equation}
+\begin{split}
+\label{eq:deriv}
+\frac{\partial f_{\xi \xi}}{\partial \theta} = -2f_{xx}\sin\theta\cos\theta - 2f_{xy} \sin^2\theta + 2f_{xy}\cos^2\theta + 2f_{yy}\sin\theta\cos\theta = 0.
+\end{split}
+\end{equation}
+We can rewrite it as
+\begin{equation}
+\begin{split}
+\label{eq:1}
+-f_{xx}\tan\theta - f_{xy} \tan^2\theta + f_{xy} + f_{yy}\tan\theta &= 0 \\
+f_{xy} \tan^2\theta + \left(f_{xx} -f_{yy}\right)\tan\theta - f_{xy}  &= 0. \\
+\end{split}
+\end{equation}
+where $\cos \theta \neq 0$. \footnote{Note that if $\cos\theta = 0$, a similar proof can be given using $f_{xy} + \left(f_{xx} -f_{yy}\right)\cot\theta - f_{xy}\cot^2\theta  = 0$. But, we will ignore that case in the rest of the proof.} 
+
+If $f_{xy} \neq 0$, we have two real solutions:
+\begin{equation*}
+\begin{split}
+\tan\theta_1 = \frac{f_{yy} - f_{xx} + \sqrt{\left(f_{xx} -f_{yy}\right)^2 + 4f_{xy}^2}}{2f_{xy}}
+\end{split}
+\end{equation*}
+and
+\begin{equation*}
+\begin{split}
+\tan\theta_2 = \frac{f_{yy} - f_{xx} - \sqrt{\left(f_{xx} -f_{yy}\right)^2 + 4f_{xy}^2}}{2f_{xy}}.
+\end{split}
+\end{equation*}
+
+We can make use of the following trigonometric identity: 
+\begin{equation*}
+\begin{split}
+\tan(\theta_1 +\pi/2) = -2\cot(2\theta_1) - \tan\theta_1.
+\end{split}
+\end{equation*} 
+We can compute $\cot(2\theta_1)$ by rewriting \eqref{eq:deriv} as
+\begin{equation*}
+\begin{split}
+\frac{\partial f_{\xi \xi}}{\partial \theta} &= (f_{yy} - f_{xx})\sin(2\theta) + 2f_{xy}\cos(2\theta) \\
+&=(f_{xx} - f_{yy}, 2f_{xy}) \cdot (-\sin(2\theta), \cos(2\theta)) = 0
+\end{split}
+\end{equation*}
+which implies that 
+\begin{equation*}
+\begin{split}
+\cot(2\theta) = \frac{f_{xx} - f_{yy}}{2f_{xy}}.
+\end{split}
+\end{equation*}
+Then,
+\begin{equation*}
+\begin{split}
+\tan(\theta_1 +\pi/2) &= -2\cot(2\theta_1) - \tan\theta_1 \\
+&= \frac{2f_{yy} - 2f_{xx}}{2f_{xy}} - \frac{f_{yy} - f_{xx} + \sqrt{\left(f_{xx} -f_{yy}\right)^2 + 4f_{xy}^2}}{2f_{xy}}\\
+&= \frac{f_{yy} - f_{xx} - \sqrt{\left(f_{xx} -f_{yy}\right)^2 + 4f_{xy}^2}}{2f_{xy}}\\
+&= \tan\theta_2.
+\end{split}
+\end{equation*}
+Now, we know that the solutions of \eqref{eq:1} are $\{\theta_1 + k\pi, \theta_1 + k\pi + \pi/2 \}$ for any integer $k$. Then, it is sufficient to show that if $\psi = \theta_1 + k\pi$ is a maximizer of \eqref{eq:obj}, then $\psi + \pi/2$ is a minimizer. The second derivative along the direction $\theta$ is
+\begin{equation*}
+\begin{split}
+\frac{\partial^2 f_{\xi \xi}}{\partial \theta^2} = -2 (f_{xx} - f_{yy}, 2f_{xy}) \cdot (\cos(2\theta), \sin(2\theta)).
+\end{split}
+\end{equation*}
+If $\psi$ is a maximizer, then
+\begin{equation*}
+\begin{split}
+-2(f_{xx} - f_{yy}, 2f_{xy}) \cdot (\cos(2\psi), \sin(2\psi)) < 0.
+\end{split}
+\end{equation*}
+Now, we can look at the sign of $\frac{\partial^2 f_{\xi \xi}}{\partial \theta^2}$ when the direction is $\psi + \pi/2$:
+\begin{equation*}
+\begin{split}
+-2(f_{xx} - f_{yy}, 2f_{xy}) \cdot (\cos(2\psi + \pi), \sin(2\psi + \pi)) = 2(f_{xx} - f_{yy}, 2f_{xy}) \cdot (\cos(2\psi), \sin(2\psi)) > 0
+\end{split}
+\end{equation*}
+which proves that $\psi+\pi/2$ is a minimizer. \footnote{Note that we can also show that if $\theta_2 + k\pi$ is a maximizer, then $\theta_1 + k\pi + \pi/2$ is a minimizer. The proof would be very similar.}
+
+Now let's consider the case when $f_{xy} = 0$. Equation \eqref{eq:deriv} reduces to
+\begin{equation*}
+\begin{split}
+\left(f_{xx} -f_{yy}\right)\sin 2\theta  = 0. \\
+\end{split}
+\end{equation*}
+
+If $f_{xx} \neq f_{yy}$, the solution is $\theta = k\pi/2$ and consistent with what we have shown before.
+
+[FIRAT: WHAT HAPPENS IF $f_{xy} = 0$ and $f_{xx} = f_{yy}$?]
+
+\paragraph{Proposition:} Let $\psi_\text{max}  = \arg\max_\theta f_{\xi(\theta)\xi(\theta)}$ and $\psi_\text{min}  = \arg\min_\theta f_{\xi(\theta)\xi(\theta)}$. Let $\nu_\text{max} = (\cos\psi_\text{max}, \sin\psi_\text{max})$ and $\nu_\text{min} = (\cos\psi_\text{min}, \sin\psi_\text{min})$. Then,
+\begin{equation}
+\label{eq:eigen}
+\begin{split}
+H \nu_\text{max} &= \lambda_\text{max} \nu_\text{max} \\
+H \nu_\text{min} &= \lambda_\text{min} \nu_\text{min}
+\end{split}
+\end{equation}
+where
+\begin{equation*}
+\begin{split}
+\lambda_\text{max} &= f_{\xi(\psi_\text{max}) \xi(\psi_\text{max})}\\
+\lambda_\text{min} &= f_{\xi(\psi_\text{min}) \xi(\psi_\text{min})}.
+\end{split}
+\end{equation*}
+
+\paragraph{Proof:} The eigenvalues of $H$ are
+\begin{equation*}
+\begin{split}
+\lambda_1 &= \frac{f_{xx}+f_{yy} + \sqrt{\left(f_{xx} -f_{yy}\right)^2 + 4f_{xy}^2}}{2},\\
+\lambda_2 &= \frac{f_{xx}+f_{yy} - \sqrt{\left(f_{xx} -f_{yy}\right)^2 + 4f_{xy}^2}}{2} .
+\end{split}
+\end{equation*}
+Note that if 
+\begin{equation*}
+\begin{split}
+\tan\psi_\text{max} = \frac{f_{yy} - f_{xx} + \sqrt{\left(f_{xx} -f_{yy}\right)^2 + 4f_{xy}^2}}{2f_{xy}}
+\end{split}
+\end{equation*}
+then
+\begin{equation*}
+\begin{split}
+\tan\psi_\text{min} &= \frac{f_{yy} - f_{xx} - \sqrt{\left(f_{xx} -f_{yy}\right)^2 + 4f_{xy}^2}}{2f_{xy}},\\
+f_{\xi(\psi_\text{max}) \xi(\psi_\text{max})} &= \frac{f_{xx}+f_{yy} + \sqrt{\left(f_{xx} -f_{yy}\right)^2 + 4f_{xy}^2}}{2} = \lambda_1,\\
+f_{\xi(\psi_\text{min}) \xi(\psi_\text{min})} &= \frac{f_{xx}+f_{yy} - \sqrt{\left(f_{xx} -f_{yy}\right)^2 + 4f_{xy}^2}}{2} = \lambda_2.
+\end{split}
+\end{equation*}
+This shows that $\lambda_{max} = f_{\xi(\psi_\text{max}) \xi(\psi_\text{max})}$ and $\lambda_{min} = f_{\xi(\psi_\text{min}) \xi(\psi_\text{min})}$ are the eigenvalues of $H$. Then, we can verify that (I used MATLAB's symbolic toolbox)
+\begin{equation*}
+\begin{split}
+H \nu_\text{max} &= \lambda_\text{max} \nu_\text{max}, \\
+H \nu_\text{min} &= \lambda_\text{min} \nu_\text{min}.
+\end{split}
+\end{equation*}
+This means that $\nu_\text{max} = (\cos\psi_\text{max}, \sin\psi_\text{max})$ and $\nu_\text{min} = (\cos\psi_\text{min}, \sin\psi_\text{min})$ are the corresponding eigenvectors of $H$.
+
+\subsection{Differential Equations}
+
+\paragraph{Proposition:} The steady state solution of the heat equation, $u_t = \Delta u$, with Dirichlet boundary condition is unique.
+\paragraph{Proof:} Let $\Omega$ be the bounded domain of the problem and $B \subset \Omega$ be the set of boundary points where $u(\mathbf{x},t) = h(\mathbf{x})$. Let's assume that there are two steady state solutions, $f$ and $g$. Then, we know that $f(\mathbf{x} \in B) = h(\mathbf{x} \in B)$ and $g(\mathbf{x} \in B) = h(\mathbf{x} \in B)$. We also know that $\Delta f = 0$ and $\Delta g = 0$. Since $f$ and $g$ are both solutions of Laplace's equation $\Delta v = 0$ with $v(\mathbf{x} \in B) = h(\mathbf{x} \in B)$, we know that $(f-g)$ must be a solution of $\Delta v = 0$ with $v(\mathbf{x} \in B) = 0$. Note that $(f-g)$ is a harmonic function, so it conforms to the maximum principle, i.e.
+\begin{equation*}
+\begin{split}
+\max_{\mathbf{x} \in \Omega} (f-g) &= \max_{\mathbf{x} \in B} (f-g) = 0\\
+\min_{\mathbf{x} \in \Omega} (f-g) &= \min_{\mathbf{x} \in B} (f-g) = 0
+\end{split}
+\end{equation*}
+which means that $f = g$ when $\mathbf{x} \in \Omega$. This proves that the steady state solution is unique (QED).
+
+\section{Surface Networks}
+\begin{figure}[h]
+\centering
+\subfloat[Watersheds (red) and watercourses (green) as slope lines originating from saddle points.]{\label{fig:surfnet}\includegraphics[height=.2\textheight]{img/surfnet.png}}\;
+\subfloat[MATLAB's watersheds (red) and watercourses (green) extracted from $I$ + watersheds (blue) extracted from $|\nabla I|$ ]{\label{fig:fosurf}\includegraphics[height=.185\textheight]{img/fosurf.png}}
+\caption{}
+\label{fig:surfneteg}
+\end{figure}
+The (zeroth order) \textit{surface network} of a gray-level image is the graph whose vertices are the critical (max, min and saddle) points of the image connected by special image curves. Saddle to max connections are called watershed lines whereas saddle to min ones are called watercourse lines. Note that the curves connecting saddles to saddles are both watershed and watercourse lines. In surface networks, min-min, max-max and min-max connections do not exist. See Figure \ref{fig:surfnet} for a simple example.
+
+One can also make use of the first order surface network which is extracted from $|\nabla I|$. See Figure \ref{fig:fosurf}.
+
+\subsection{Alternative Names for Surface Network}
+Image Structure Graph, Structural Description Graph, Qualitative Image Description Graph, Structural Equivalance Graph, Critical Structure Graph, Structural Partitioning Graph
+
+\subsection{How to Construct Surface Networks?}
+
+In order to construct a surface network, one should precisely detect watershed and watercourse lines. Then, the vertices of the graph can be computed by intersecting these lines. Note that watershed-watershed intersections are max points, watershed-watercourse intersections are saddle points and watercourse-watercourse intersections are min points. However, detecting these lines accurately is not easy. For example, flooding based standard implementation that comes with MATLAB does not produce accurate watersheds. Therefore, we may not use this approach.
+
+Another approach is explained in Maxwell's 1870 paper. First detect the saddle points of the image. Then, for each saddle point, define a small circle $C$ centered at that saddle point. Next, compute the local max and min of $I(C)$ (image intensity along the circle). Start from the local min and trace the slope line on $I$ which eventually arrives at a min point of $I$. Similarly, start from the local max of $I(C)$ and follow the slope line to reach a max point of $I$. The curves between the local min of $I(C)$ and min points of $I$ are the watercourse lines and the curves between the local max of $I(C)$ and max points of $I$ are the watershed lines.
+
+Maxwell's procedure produces accurate watershed and watercourse lines. However, it requires correct and complete detection of saddle points which is pretty challenging. 
+
+\subsection{Detecting Saddle Points of an Image}
+Detecting saddle points is challenging. We observe the best results when we utilize hexagonal grid as explained in Kuijper's Pattern Recognition Letters 2004 paper. In this method, even rows of the image grid are virtually shifted a half pixel to the right/left as shown in Figure \ref{fig:hexgrid}. 
+\begin{figure}[h]
+\centering
+\includegraphics[height=.15\textheight]{img/hexgrid.png}
+\caption{}
+\label{fig:hexgrid}
+\end{figure}
+In order to detect saddles, we compare each pixel to its 6 neighbors. If the number of sign changes \footnote{If the neighbor is greater than the pixel of interest, its sign is $+$ and if the neighbor is smaller, its sign is $-$.} in the neighbors is 4, that pixel is marked as a saddle point. For example, in Figure \ref{fig:hexgrid}, the ``4'' in the middle is a saddle point because its neighbors' signs are $-++-+-$.
+
+\section{Generative Image Model}
+
+Surface network captures essential information about the structure of an image. It partitions the image into monotonic regions. Therefore, once the intensity values of the pixels on the surface network are known, it is possible to reconstruct the original image (with some error, of course) by generating the intensity values of the monotonic regions. Potential advantages of surface network representation are:
+\begin{enumerate}
+\item Transformations like scaling, rotation and shear applied to the surface network will not create the artifacts that may come from the transformations applied to the image itself.
+\item It is possible to structurally modify an image. (structural smoothing, simplification).
+\item Surface networks might be good candidates for being geometric deformation fields which is manually constructed in Liu-Lin-Hays 2004 (Near-regular Texture Analysis and Manipulation)
+\item Image compression  
+\end{enumerate} 
+
+\subsection{Reconstruction Using Heat Equation}
+One way to reconstruct images from their surface networks is interpolation by heat equation ($u_t = \Delta u$). Note that surface network contains all of the min, max and saddle points. Since the solution of heat equation is a harmonic function, it is guaranteed that the resulting monotonic regions will not contain any min, max and saddle points. In this sense, heat equation is a reasonable choice.
+
+\begin{figure}[h]
+\centering
+\subfloat[Heat equation with min, max and saddle points only.]{\label{fig:heat-min-max-sad}\includegraphics[width=.8\textwidth]{img/min-max-sad-only.png}}\\
+\subfloat[Heat equation with watershed and watercourse lines]{\label{fig:heat-wc-ws}\includegraphics[width=.8\textwidth]{img/heat-wc-ws.png}}
+\caption{}
+\label{fig:heat}
+\end{figure}
+
+We ran many experiments with the heat equation. Our preliminary results show that using min, max and saddle points only is not sufficient to preserve the structure of images. Utilizing the physical outer image boundary helps, but the results are not ideal. On the other hand, using watersheds and watercourses gives much better results. See Figure \ref{fig:heat}.
+
+
+\end{document}
+
+
+%\paragraph{Proof:} We can use MATLAB for this proof:
+%{\small
+%\lstset{frame=shadowbox}
+%\lstinputlisting{matlab_proof.m}}
+%Since MATLAB's symbolic toolbox returns $(0,0)$ for all 3 cases, we can say that our proposition is correct.

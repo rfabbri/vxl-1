@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/lemsvxl/!svn/ver/9788/trunk/breye/bvis/Templates
+END
+bvis_command+bvis_mview_manager-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/9376/trunk/breye/bvis/Templates/bvis_command+bvis_mview_manager-.cxx
+END
+bvis_tableau_menu+bvis_video_manager-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/9376/trunk/breye/bvis/Templates/bvis_tableau_menu+bvis_video_manager-.cxx
+END
+bvis_file_menu+bvis_video_manager-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/9376/trunk/breye/bvis/Templates/bvis_file_menu+bvis_video_manager-.cxx
+END
+bvis_repository_menu+bvis_video_manager-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/9376/trunk/breye/bvis/Templates/bvis_repository_menu+bvis_video_manager-.cxx
+END
+bvis_process_macro_menu+bvis_mview_manager-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/9376/trunk/breye/bvis/Templates/bvis_process_macro_menu+bvis_mview_manager-.cxx
+END
+bvis_tool_manager+bvis_video_manager-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/9376/trunk/breye/bvis/Templates/bvis_tool_manager+bvis_video_manager-.cxx
+END
+vbl_smart_ptr+bvis_tool-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/9376/trunk/breye/bvis/Templates/vbl_smart_ptr+bvis_tool-.cxx
+END
+bvis_manager+bvis_video_manager-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/9376/trunk/breye/bvis/Templates/bvis_manager+bvis_video_manager-.cxx
+END
+vbl_smart_ptr+bvis_mview_manager-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/9376/trunk/breye/bvis/Templates/vbl_smart_ptr+bvis_mview_manager-.cxx
+END
+bvis_command+bvis_video_manager-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/9376/trunk/breye/bvis/Templates/bvis_command+bvis_video_manager-.cxx
+END
+bvis_view_menu+bvis_mview_manager-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/9376/trunk/breye/bvis/Templates/bvis_view_menu+bvis_mview_manager-.cxx
+END
+bvis_tableau_menu+bvis_mview_manager-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/9376/trunk/breye/bvis/Templates/bvis_tableau_menu+bvis_mview_manager-.cxx
+END
+bvis_process_macro_menu+bvis_video_manager-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/9376/trunk/breye/bvis/Templates/bvis_process_macro_menu+bvis_video_manager-.cxx
+END
+bvis_file_menu+bvis_mview_manager-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/9376/trunk/breye/bvis/Templates/bvis_file_menu+bvis_mview_manager-.cxx
+END
+bvis_repository_menu+bvis_mview_manager-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/9376/trunk/breye/bvis/Templates/bvis_repository_menu+bvis_mview_manager-.cxx
+END
+vbl_smart_ptr+bvis_displayer-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/9376/trunk/breye/bvis/Templates/vbl_smart_ptr+bvis_displayer-.cxx
+END
+bvis_tool_manager+bvis_mview_manager-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/9376/trunk/breye/bvis/Templates/bvis_tool_manager+bvis_mview_manager-.cxx
+END
+vbl_smart_pointer+bvis_mapper-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/9376/trunk/breye/bvis/Templates/vbl_smart_pointer+bvis_mapper-.cxx
+END
+bvis_manager+bvis_mview_manager-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/9376/trunk/breye/bvis/Templates/bvis_manager+bvis_mview_manager-.cxx
+END
+vbl_smart_ptr+bvis_video_manager-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/9376/trunk/breye/bvis/Templates/vbl_smart_ptr+bvis_video_manager-.cxx
+END
+bvis_view_menu+bvis_video_manager-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/9376/trunk/breye/bvis/Templates/bvis_view_menu+bvis_video_manager-.cxx
+END

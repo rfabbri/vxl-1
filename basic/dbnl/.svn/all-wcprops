@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/lemsvxl/!svn/ver/13585/trunk/basic/dbnl
+END
+dbnl_cbrt.h
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/8651/trunk/basic/dbnl/dbnl_cbrt.h
+END
+dbnl_solve_quadratic_equation.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/13521/trunk/basic/dbnl/dbnl_solve_quadratic_equation.h
+END
+dbnl_sinc.h
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/4343/trunk/basic/dbnl/dbnl_sinc.h
+END
+dbnl_fresnel.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/3904/trunk/basic/dbnl/dbnl_fresnel.h
+END
+dbnl_solve_trigonometric_equation.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/13540/trunk/basic/dbnl/dbnl_solve_trigonometric_equation.h
+END
+dbnl_cbrt.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/8651/trunk/basic/dbnl/dbnl_cbrt.cxx
+END
+dbnl_solve_quadratic_equation.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/13521/trunk/basic/dbnl/dbnl_solve_quadratic_equation.cxx
+END
+dbnl_sinc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/4343/trunk/basic/dbnl/dbnl_sinc.cxx
+END
+dbnl_fresnel.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/3947/trunk/basic/dbnl/dbnl_fresnel.cxx
+END
+dbnl_gaussian.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/10032/trunk/basic/dbnl/dbnl_gaussian.h
+END
+dbnl_min_max_3.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/9613/trunk/basic/dbnl/dbnl_min_max_3.h
+END
+introduction_doxy.txt
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/2349/trunk/basic/dbnl/introduction_doxy.txt
+END
+dbnl_solve_trigonometric_equation.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/13540/trunk/basic/dbnl/dbnl_solve_trigonometric_equation.cxx
+END
+dbnl_newton_root.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/2244/trunk/basic/dbnl/dbnl_newton_root.h
+END
+dbnl_angle.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/13469/trunk/basic/dbnl/dbnl_angle.h
+END
+dbnl_newton_root.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/2244/trunk/basic/dbnl/dbnl_newton_root.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/13521/trunk/basic/dbnl/CMakeLists.txt
+END
+dbnl_math.h
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/lemsvxl/!svn/ver/13554/trunk/basic/dbnl/dbnl_math.h
+END

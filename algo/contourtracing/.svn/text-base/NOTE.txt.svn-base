@@ -1,0 +1,37 @@
+// /vision/projects/kimia/tek-projects/c/c-utils/graphics/subpixel-tracer-new
+// Contour Tracer
+
+// contour_processing.c
+// contour_tracer.c 
+// direction.c 
+// eno_zero_tracer.c 
+// next_xing_location.c 
+// utils.c 
+// zero_tracer.c
+
+//main:
+//compute-boundary-len.c
+
+//main file for Plugin (do not include compute-boundary-len.c for a plugin):
+//ContourTracing.cpp
+
+//Lib:
+// /vision/projects/kimia/geno/eno/eno_image.c
+// /vision/projects/kimia/geno/eno/eno_interval.c
+// /vision/projects/kimia/geno/eno/eno_zero_crossing.c
+// /vision/projects/kimia/geno/eno/eno_utils.c
+// /vision/projects/kimia/geno/eno/eno_shock.c
+// /vision/projects/kimia/geno/eno/eno_interpolant.c
+// /vision/projects/kimia/tek-projects/c/c-utils/image-processing/curvature_smoothing.c
+// /vision/projects/kimia/tek-projects/c/c-utils/basic_utils.c
+
+// /vision/projects/kimia/tek-projects/c/c-utils/distance-transform/redt/signed_dt.h
+// /vision/projects/kimia/tek-projects/c/c-utils/distance-transform/redt/signed_dt.c
+// /vision/projects/kimia/tek-projects/c/c-utils/distance-transform/redt/euclidean_dist.h
+// /vision/projects/kimia/tek-projects/c/c-utils/distance-transform/redt/euclidean_dist.c
+// /vision/projects/kimia/tek-projects/c/c-utils/basic-utils/pgm.c
+// /vision/projects/kimia/tek-projects/c/c-utils/basic-utils/pgm.h
+
+// /vision/medprojects/bone-segmentation/eno/boundary_fill.c
+// /vision/medprojects/bone-segmentation/eno/eno_label_zerox.h
+// /vision/medprojects/bone-segmentation/eno/eno_label_zerox.c

@@ -1,0 +1,179 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d
+END
+dbsk3d_ms_node.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_ms_node.cxx
+END
+dbsk3d_fs_mesh.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_fs_mesh.cxx
+END
+dbsk3d_fs_sheet.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_fs_sheet.h
+END
+dbsk3d_fs_comp.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_fs_comp.cxx
+END
+dbsk3d_fs_comp_set.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_fs_comp_set.h
+END
+dbsk3d_fs_face.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_fs_face.cxx
+END
+dbsk3d_fs_vertex.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_fs_vertex.h
+END
+dbsk3d_ms_hypg.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_ms_hypg.h
+END
+dbsk3d_fs_edge.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_fs_edge.cxx
+END
+dbsk3d_sg_sa.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_sg_sa.cxx
+END
+dbsk3d_ms_sheet.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_ms_sheet.h
+END
+dbsk3d_fs_sheet_set.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_fs_sheet_set.h
+END
+dbsk3d_fs_sheet.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_fs_sheet.cxx
+END
+qvoronoi.exe
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/3209/trunk/brcv/shp/dbsk3d/qvoronoi.exe
+END
+dbsk3d_fs_comp_set.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_fs_comp_set.cxx
+END
+dbsk3d_fs_vertex.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_fs_vertex.cxx
+END
+dbsk3d_ms_hypg.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_ms_hypg.cxx
+END
+introduction_doxy.txt
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/introduction_doxy.txt
+END
+dbsk3d_ms_sheet.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_ms_sheet.cxx
+END
+dbsk3d_ms_curve.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_ms_curve.h
+END
+dbsk3d_fs_mesh.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_fs_mesh.h
+END
+dbsk3d_ms_node.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_ms_node.h
+END
+dbsk3d_fs_comp.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_fs_comp.h
+END
+dbsk3d_fs_face.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_fs_face.h
+END
+dbsk3d_fs_sheet_set.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_fs_sheet_set.cxx
+END
+dbsk3d_sg_sa.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_sg_sa.h
+END
+dbsk3d_fs_edge.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_fs_edge.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/CMakeLists.txt
+END
+dbsk3d_ms_curve.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/dbsk3d/dbsk3d_ms_curve.cxx
+END

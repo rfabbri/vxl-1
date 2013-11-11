@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/lemsvxl/!svn/ver/13744/trunk/basic/dbul/cmdline
+END
+dbul_embed_files_to_vxl_source_utils.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/13725/trunk/basic/dbul/cmdline/dbul_embed_files_to_vxl_source_utils.cxx
+END
+dbul_embed_files_to_vxl_source_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/13744/trunk/basic/dbul/cmdline/dbul_embed_files_to_vxl_source_main.cxx
+END
+dbul_embed_files_to_vxl_source_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/13725/trunk/basic/dbul/cmdline/dbul_embed_files_to_vxl_source_utils.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/13729/trunk/basic/dbul/cmdline/CMakeLists.txt
+END

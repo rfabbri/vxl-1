@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/13076/trunk/contrib/mleotta/modrec/tests
+END
+test_vehicle_state.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/13076/trunk/contrib/mleotta/modrec/tests/test_vehicle_state.cxx
+END
+test_include.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/13073/trunk/contrib/mleotta/modrec/tests/test_include.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/13073/trunk/contrib/mleotta/modrec/tests/test_driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/13073/trunk/contrib/mleotta/modrec/tests/CMakeLists.txt
+END

@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/Templates
+END
+vbl_io_sparse_array+mw_attributed_point.mw_ntuplet-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/lemsvxl/!svn/ver/8066/trunk/contrib/rfabbri/mw/Templates/vbl_io_sparse_array+mw_attributed_point.mw_ntuplet-.cxx
+END
+vsl_vector_io+dbmcs_curve_3d_attributes-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/Templates/vsl_vector_io+dbmcs_curve_3d_attributes-.cxx
+END
+vbl_sparse_array_3d+mw_match_attribute-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/7649/trunk/contrib/rfabbri/mw/Templates/vbl_sparse_array_3d+mw_match_attribute-.cxx
+END
+vbl_sparse_array_base+mw_match_attribute-mw_ntuplet-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/lemsvxl/!svn/ver/8047/trunk/contrib/rfabbri/mw/Templates/vbl_sparse_array_base+mw_match_attribute-mw_ntuplet-.cxx
+END
+vbl_smart_ptr+mw_cvmatch.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/7768/trunk/contrib/rfabbri/mw/Templates/vbl_smart_ptr+mw_cvmatch.cxx
+END
+vsl_list_io+mw_attributed_point-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/13445/trunk/contrib/rfabbri/mw/Templates/vsl_list_io+mw_attributed_point-.cxx
+END
+mw_util+double-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/Templates/mw_util+double-.cxx
+END
+mw_util+unsigned-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/Templates/mw_util+unsigned-.cxx
+END
+vbl_io_sparse_array+mw_attributed_point.vcl_triple+uint.uint.uint--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/lemsvxl/!svn/ver/7651/trunk/contrib/rfabbri/mw/Templates/vbl_io_sparse_array+mw_attributed_point.vcl_triple+uint.uint.uint--.cxx
+END
+vsl_pair_io+vcl_pair+mw_ntuplet-mw_attributed_point-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/lemsvxl/!svn/ver/8066/trunk/contrib/rfabbri/mw/Templates/vsl_pair_io+vcl_pair+mw_ntuplet-mw_attributed_point-.cxx
+END
+vsl_pair_io+vcl_pair+vbl_triple_uuu-.mw_attributed_point-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/lemsvxl/!svn/ver/7651/trunk/contrib/rfabbri/mw/Templates/vsl_pair_io+vcl_pair+vbl_triple_uuu-.mw_attributed_point-.cxx
+END
+vbl_io_triple+uint.uint.uint--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/12797/trunk/contrib/rfabbri/mw/Templates/vbl_io_triple+uint.uint.uint--.cxx
+END
+vbl_smart_ptr+dbmcs_stereo_views-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/13321/trunk/contrib/rfabbri/mw/Templates/vbl_smart_ptr+dbmcs_stereo_views-.cxx
+END

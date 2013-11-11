@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/app/matlab/sexp
+END
+plot_epigain.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12156/trunk/contrib/rfabbri/mw/app/matlab/sexp/plot_epigain.m
+END
+plot_theoretical_bounds.m
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/13224/trunk/contrib/rfabbri/mw/app/matlab/sexp/plot_theoretical_bounds.m
+END
+parse-sexp-fnames.sh
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/13326/trunk/contrib/rfabbri/mw/app/matlab/sexp/parse-sexp-fnames.sh
+END
+plot_sexp.m
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/12156/trunk/contrib/rfabbri/mw/app/matlab/sexp/plot_sexp.m
+END
+plot_sexp_batch.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12330/trunk/contrib/rfabbri/mw/app/matlab/sexp/plot_sexp_batch.m
+END
+plot_stereo_exp_include.m
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/12305/trunk/contrib/rfabbri/mw/app/matlab/sexp/plot_stereo_exp_include.m
+END
+plot_sexp_include_oneplot.m
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/12774/trunk/contrib/rfabbri/mw/app/matlab/sexp/plot_sexp_include_oneplot.m
+END

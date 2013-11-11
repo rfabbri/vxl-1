@@ -1,0 +1,10 @@
+#!/bin/bash
+for i in *cemv; do
+  if [ -e "$i.gz" ]; then
+    echo rm $i
+    rm $i
+  else
+    echo gzip -9 $i
+    gzip -9 $i
+  fi
+done

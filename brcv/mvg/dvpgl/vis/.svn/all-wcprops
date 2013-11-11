@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/lemsvxl/!svn/ver/15234/trunk/brcv/mvg/dvpgl/vis
+END
+dvpgl_epipolar_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/13184/trunk/brcv/mvg/dvpgl/vis/dvpgl_epipolar_tool.cxx
+END
+dvpgl_epipolar_region_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12598/trunk/brcv/mvg/dvpgl/vis/dvpgl_epipolar_region_tool.cxx
+END
+dvpgl_epipolar_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/15234/trunk/brcv/mvg/dvpgl/vis/dvpgl_epipolar_tool.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/12783/trunk/brcv/mvg/dvpgl/vis/CMakeLists.txt
+END
+dvpgl_epipolar_region_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/15234/trunk/brcv/mvg/dvpgl/vis/dvpgl_epipolar_region_tool.h
+END

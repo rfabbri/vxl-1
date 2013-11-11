@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/lemsvxl/!svn/ver/13341/trunk/basic/dbgl/tests
+END
+test_include.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/13341/trunk/basic/dbgl/tests/test_include.cxx
+END
+test_linear_curve_3d.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/8388/trunk/basic/dbgl/tests/test_linear_curve_3d.cxx
+END
+test_arc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/4227/trunk/basic/dbgl/tests/test_arc.cxx
+END
+test_eno_curve.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/8578/trunk/basic/dbgl/tests/test_eno_curve.cxx
+END
+test_area.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/9516/trunk/basic/dbgl/tests/test_area.cxx
+END
+test_minimal_container.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/7142/trunk/basic/dbgl/tests/test_minimal_container.cxx
+END
+test_poly_line.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/4250/trunk/basic/dbgl/tests/test_poly_line.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/9516/trunk/basic/dbgl/tests/test_driver.cxx
+END
+test_eno_curve_3d.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/8388/trunk/basic/dbgl/tests/test_eno_curve_3d.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/9516/trunk/basic/dbgl/tests/CMakeLists.txt
+END

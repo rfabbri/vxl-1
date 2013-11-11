@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/12533/trunk/brcv/mvg/dbdif/algo/tests
+END
+test_diff_geometry.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12533/trunk/brcv/mvg/dbdif/algo/tests/test_diff_geometry.cxx
+END
+test_include.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/12524/trunk/brcv/mvg/dbdif/algo/tests/test_include.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12524/trunk/brcv/mvg/dbdif/algo/tests/test_driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/12524/trunk/brcv/mvg/dbdif/algo/tests/CMakeLists.txt
+END

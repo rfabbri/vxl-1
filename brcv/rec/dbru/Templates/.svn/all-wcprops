@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/12411/trunk/brcv/rec/dbru/Templates
+END
+vbl_io_smart_ptr+dbru_multiple_instance_object-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/lemsvxl/!svn/ver/9054/trunk/brcv/rec/dbru/Templates/vbl_io_smart_ptr+dbru_multiple_instance_object-.cxx
+END
+vsl_vector_io+dbru_multiple_instance_object_sptr-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/lemsvxl/!svn/ver/9054/trunk/brcv/rec/dbru/Templates/vsl_vector_io+dbru_multiple_instance_object_sptr-.cxx
+END
+vbl_io_smart_ptr+dbru_object-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/8185/trunk/brcv/rec/dbru/Templates/vbl_io_smart_ptr+dbru_object-.cxx
+END
+vbl_smart_ptr+dbru_osl-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/8221/trunk/brcv/rec/dbru/Templates/vbl_smart_ptr+dbru_osl-.cxx
+END
+vsl_vector_io+vbl_smart_pointer+dbru_osl--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/7350/trunk/brcv/rec/dbru/Templates/vsl_vector_io+vbl_smart_pointer+dbru_osl--.cxx
+END
+vbl_smart_ptr+dbru_label-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/3785/trunk/brcv/rec/dbru/Templates/vbl_smart_ptr+dbru_label-.cxx
+END
+vbl_io_smart_ptr+dbru_osl-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/7350/trunk/brcv/rec/dbru/Templates/vbl_io_smart_ptr+dbru_osl-.cxx
+END
+vbl_smart_ptr+dbru_multiple_instance_object-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/9054/trunk/brcv/rec/dbru/Templates/vbl_smart_ptr+dbru_multiple_instance_object-.cxx
+END
+vbl_smart_ptr+dbru_rcor-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/5208/trunk/brcv/rec/dbru/Templates/vbl_smart_ptr+dbru_rcor-.cxx
+END
+vbl_smart_ptr+dbru_object-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/9054/trunk/brcv/rec/dbru/Templates/vbl_smart_ptr+dbru_object-.cxx
+END
+vsl_vector_io+vbl_smart_pointer+dbru_object--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/lemsvxl/!svn/ver/7350/trunk/brcv/rec/dbru/Templates/vsl_vector_io+vbl_smart_pointer+dbru_object--.cxx
+END

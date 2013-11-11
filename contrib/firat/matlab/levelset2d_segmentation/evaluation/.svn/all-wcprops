@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/15553/trunk/contrib/firat/matlab/levelset2d_segmentation/evaluation
+END
+convert_phi_to_binary.m
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/lemsvxl/!svn/ver/15508/trunk/contrib/firat/matlab/levelset2d_segmentation/evaluation/convert_phi_to_binary.m
+END
+compute_hausdorff_distance.m
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/lemsvxl/!svn/ver/15508/trunk/contrib/firat/matlab/levelset2d_segmentation/evaluation/compute_hausdorff_distance.m
+END
+compute_jaccard_dice_sensitivity_specificity_precision.m
+K 25
+svn:wc:ra_dav:version-url
+V 146
+/svn/lemsvxl/!svn/ver/15489/trunk/contrib/firat/matlab/levelset2d_segmentation/evaluation/compute_jaccard_dice_sensitivity_specificity_precision.m
+END
+get_TP_FP_TN_FN.m
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/15508/trunk/contrib/firat/matlab/levelset2d_segmentation/evaluation/get_TP_FP_TN_FN.m
+END
+convert_contours_to_point_cloud.m
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/lemsvxl/!svn/ver/15553/trunk/contrib/firat/matlab/levelset2d_segmentation/evaluation/convert_contours_to_point_cloud.m
+END
+convert_phi_to_point_cloud.m
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/lemsvxl/!svn/ver/15553/trunk/contrib/firat/matlab/levelset2d_segmentation/evaluation/convert_phi_to_point_cloud.m
+END
+hausdorff.m
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/15489/trunk/contrib/firat/matlab/levelset2d_segmentation/evaluation/hausdorff.m
+END
+convert_contours_to_binary.m
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/lemsvxl/!svn/ver/15508/trunk/contrib/firat/matlab/levelset2d_segmentation/evaluation/convert_contours_to_binary.m
+END

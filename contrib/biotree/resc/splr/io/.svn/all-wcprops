@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/5731/trunk/contrib/biotree/resc/splr/io
+END
+splr_io_symmetry_splat_collection.txx
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/5074/trunk/contrib/biotree/resc/splr/io/splr_io_symmetry_splat_collection.txx
+END
+splr_io_per_orbit_index_splat_collection.txx
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/lemsvxl/!svn/ver/5074/trunk/contrib/biotree/resc/splr/io/splr_io_per_orbit_index_splat_collection.txx
+END
+splr_io_symmetry_splat_collection.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/5074/trunk/contrib/biotree/resc/splr/io/splr_io_symmetry_splat_collection.h
+END
+splr_io_map.txx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/5074/trunk/contrib/biotree/resc/splr/io/splr_io_map.txx
+END
+splr_io_per_orbit_index_splat_collection.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/5074/trunk/contrib/biotree/resc/splr/io/splr_io_per_orbit_index_splat_collection.h
+END
+splr_io_explicit_splat_collection.txx
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/5111/trunk/contrib/biotree/resc/splr/io/splr_io_explicit_splat_collection.txx
+END
+splr_io_map.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/5074/trunk/contrib/biotree/resc/splr/io/splr_io_map.h
+END
+splr_io_explicit_splat_collection.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/5074/trunk/contrib/biotree/resc/splr/io/splr_io_explicit_splat_collection.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/5084/trunk/contrib/biotree/resc/splr/io/CMakeLists.txt
+END

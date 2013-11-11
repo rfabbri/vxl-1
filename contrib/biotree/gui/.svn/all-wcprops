@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/lemsvxl/!svn/ver/9325/trunk/contrib/biotree/gui
+END
+biotree_menu.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/2166/trunk/contrib/biotree/gui/biotree_menu.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/9325/trunk/contrib/biotree/gui/CMakeLists.txt
+END
+biotree_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/9325/trunk/contrib/biotree/gui/biotree_main.cxx
+END
+biotree_menu.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/9325/trunk/contrib/biotree/gui/biotree_menu.cxx
+END

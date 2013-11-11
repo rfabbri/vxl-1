@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/lemsvxl/!svn/ver/9496/trunk/contrib/han/ps_xz
+END
+ps_xz.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/9496/trunk/contrib/han/ps_xz/ps_xz.cxx
+END
+ps_xz.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/9496/trunk/contrib/han/ps_xz/ps_xz.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/9496/trunk/contrib/han/ps_xz/CMakeLists.txt
+END

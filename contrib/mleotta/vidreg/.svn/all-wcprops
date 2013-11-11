@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/lemsvxl/!svn/ver/11948/trunk/contrib/mleotta/vidreg
+END
+vidreg_tracker.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/8641/trunk/contrib/mleotta/vidreg/vidreg_tracker.h
+END
+vidreg_feature_edgel.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/7446/trunk/contrib/mleotta/vidreg/vidreg_feature_edgel.h
+END
+vidreg_feature_pt_desc.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/7368/trunk/contrib/mleotta/vidreg/vidreg_feature_pt_desc.h
+END
+vidreg_initializer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/7401/trunk/contrib/mleotta/vidreg/vidreg_initializer.cxx
+END
+vidreg_matcher.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/8640/trunk/contrib/mleotta/vidreg/vidreg_matcher.cxx
+END
+vidreg_tracker.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/8641/trunk/contrib/mleotta/vidreg/vidreg_tracker.cxx
+END
+vidreg_feature_edgel.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/7446/trunk/contrib/mleotta/vidreg/vidreg_feature_edgel.cxx
+END
+vidreg_feature_group.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/7446/trunk/contrib/mleotta/vidreg/vidreg_feature_group.h
+END
+vidreg_feature_pt_desc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/7273/trunk/contrib/mleotta/vidreg/vidreg_feature_pt_desc.cxx
+END
+vidreg_detector.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/11948/trunk/contrib/mleotta/vidreg/vidreg_detector.h
+END
+vidreg_registration.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/7401/trunk/contrib/mleotta/vidreg/vidreg_registration.h
+END
+vidreg_salient_group.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/7446/trunk/contrib/mleotta/vidreg/vidreg_salient_group.h
+END
+vidreg_reconstructor.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/7864/trunk/contrib/mleotta/vidreg/vidreg_reconstructor.h
+END
+vidreg_salient_group_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/7368/trunk/contrib/mleotta/vidreg/vidreg_salient_group_sptr.h
+END
+vidreg_initializer.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/7437/trunk/contrib/mleotta/vidreg/vidreg_initializer.h
+END
+vidreg_matcher.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/7865/trunk/contrib/mleotta/vidreg/vidreg_matcher.h
+END
+vidreg_detector.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/11948/trunk/contrib/mleotta/vidreg/vidreg_detector.cxx
+END
+vidreg_registration.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/7437/trunk/contrib/mleotta/vidreg/vidreg_registration.cxx
+END
+vidreg_salient_group.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/7446/trunk/contrib/mleotta/vidreg/vidreg_salient_group.cxx
+END
+vidreg_reconstructor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/10277/trunk/contrib/mleotta/vidreg/vidreg_reconstructor.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/9888/trunk/contrib/mleotta/vidreg/CMakeLists.txt
+END

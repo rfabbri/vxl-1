@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/lemsvxl/!svn/ver/12622/trunk/basic/dbvidl2/pro
+END
+dbvidl2_frame_to_resource.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12622/trunk/basic/dbvidl2/pro/dbvidl2_frame_to_resource.h
+END
+dbvidl2_resource_to_frame.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12416/trunk/basic/dbvidl2/pro/dbvidl2_resource_to_frame.h
+END
+dbvidl2_sink.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/12416/trunk/basic/dbvidl2/pro/dbvidl2_sink.h
+END
+dbvidl2_multi_source.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/12416/trunk/basic/dbvidl2/pro/dbvidl2_multi_source.cxx
+END
+dbvidl2_multi_source.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/12416/trunk/basic/dbvidl2/pro/dbvidl2_multi_source.h
+END
+dbvidl2_source.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/12416/trunk/basic/dbvidl2/pro/dbvidl2_source.cxx
+END
+dbvidl2_frame_to_resource.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/12622/trunk/basic/dbvidl2/pro/dbvidl2_frame_to_resource.cxx
+END
+dbvidl2_resource_to_frame.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/12416/trunk/basic/dbvidl2/pro/dbvidl2_resource_to_frame.cxx
+END
+dbvidl2_sink.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/12416/trunk/basic/dbvidl2/pro/dbvidl2_sink.cxx
+END
+dbvidl2_source.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/12416/trunk/basic/dbvidl2/pro/dbvidl2_source.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/12416/trunk/basic/dbvidl2/pro/CMakeLists.txt
+END

@@ -1,0 +1,167 @@
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/lemsvxl/!svn/ver/2006/trunk/algo/bcdg
+END
+bcdg_finger.h
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/lemsvxl/!svn/ver/2006/trunk/algo/bcdg/bcdg_finger.h
+END
+bcdg_3d_reconstructor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/1093/trunk/algo/bcdg/bcdg_3d_reconstructor.cxx
+END
+bcdg_algo0.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/2006/trunk/algo/bcdg/bcdg_algo0.cxx
+END
+TextProgressBar.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/1093/trunk/algo/bcdg/TextProgressBar.h
+END
+bcdg_local_option.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/2006/trunk/algo/bcdg/bcdg_local_option.h
+END
+bcdg_finger_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/921/trunk/algo/bcdg/bcdg_finger_sptr.h
+END
+bcdg_globals.h
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/lemsvxl/!svn/ver/921/trunk/algo/bcdg/bcdg_globals.h
+END
+bcdg_point_projection.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/2006/trunk/algo/bcdg/bcdg_point_projection.h
+END
+bcdg_finger.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/2006/trunk/algo/bcdg/bcdg_finger.cxx
+END
+bcdg_global_option.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/2006/trunk/algo/bcdg/bcdg_global_option.h
+END
+bcdg_local_option_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/1093/trunk/algo/bcdg/bcdg_local_option_sptr.h
+END
+bcdg_frame.h
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/2006/trunk/algo/bcdg/bcdg_frame.h
+END
+bcdg_costs.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/lemsvxl/!svn/ver/921/trunk/algo/bcdg/bcdg_costs.h
+END
+bcdg_hypothel.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/2006/trunk/algo/bcdg/bcdg_hypothel.h
+END
+bcdg_local_option.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/2006/trunk/algo/bcdg/bcdg_local_option.cxx
+END
+bcdg_hypothesis.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/1377/trunk/algo/bcdg/bcdg_hypothesis.h
+END
+bcdg_global_option_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/1093/trunk/algo/bcdg/bcdg_global_option_sptr.h
+END
+bcdg_point_projection.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/1093/trunk/algo/bcdg/bcdg_point_projection.cxx
+END
+bcdg_frame_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/921/trunk/algo/bcdg/bcdg_frame_sptr.h
+END
+bcdg_algo0.h
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/2006/trunk/algo/bcdg/bcdg_algo0.h
+END
+bcdg_3d_reconstructor.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/1093/trunk/algo/bcdg/bcdg_3d_reconstructor.h
+END
+bcdg_global_option.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/2006/trunk/algo/bcdg/bcdg_global_option.cxx
+END
+bcdg_hypothel_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/1093/trunk/algo/bcdg/bcdg_hypothel_sptr.h
+END
+bcdg_frame.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/2006/trunk/algo/bcdg/bcdg_frame.cxx
+END
+bcdg_hypothel.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/2006/trunk/algo/bcdg/bcdg_hypothel.cxx
+END
+bcdg_hypothesis_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/1093/trunk/algo/bcdg/bcdg_hypothesis_sptr.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/2006/trunk/algo/bcdg/CMakeLists.txt
+END

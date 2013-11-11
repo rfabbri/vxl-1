@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/10270/trunk/contrib/Manifold_extraction/cmd
+END
+vehicle_classifier_example.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/9579/trunk/contrib/Manifold_extraction/cmd/vehicle_classifier_example.cxx
+END
+box_model_proj.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/9579/trunk/contrib/Manifold_extraction/cmd/box_model_proj.cxx
+END
+non_class_models.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/9579/trunk/contrib/Manifold_extraction/cmd/non_class_models.cxx
+END
+optimal_geodesic_example.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/9579/trunk/contrib/Manifold_extraction/cmd/optimal_geodesic_example.cxx
+END
+pga_vehicle_model.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/9579/trunk/contrib/Manifold_extraction/cmd/pga_vehicle_model.cxx
+END
+outline_matching.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/9579/trunk/contrib/Manifold_extraction/cmd/outline_matching.cxx
+END
+outline_batch_example.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/9579/trunk/contrib/Manifold_extraction/cmd/outline_batch_example.cxx
+END
+pga_lidar_data.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/9579/trunk/contrib/Manifold_extraction/cmd/pga_lidar_data.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/10270/trunk/contrib/Manifold_extraction/cmd/CMakeLists.txt
+END
+box_model_proj_example.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/9579/trunk/contrib/Manifold_extraction/cmd/box_model_proj_example.cxx
+END
+intrinsic_mean_example.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/9579/trunk/contrib/Manifold_extraction/cmd/intrinsic_mean_example.cxx
+END

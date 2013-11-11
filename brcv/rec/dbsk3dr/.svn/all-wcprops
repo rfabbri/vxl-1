@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/rec/dbsk3dr
+END
+dbsk3dr_ms_curve.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/rec/dbsk3dr/dbsk3dr_ms_curve.cxx
+END
+dbsk3dr_dpmatch.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/rec/dbsk3dr/dbsk3dr_dpmatch.h
+END
+dbsk3dr_ms_curve.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/rec/dbsk3dr/dbsk3dr_ms_curve.h
+END
+dbsk3dr_match.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/rec/dbsk3dr/dbsk3dr_match.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/rec/dbsk3dr/CMakeLists.txt
+END
+dbsk3dr_dpmatch.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/rec/dbsk3dr/dbsk3dr_dpmatch.cxx
+END
+dbsk3dr_match.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/rec/dbsk3dr/dbsk3dr_match.h
+END

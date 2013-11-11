@@ -1,0 +1,70 @@
+# contrib/seg/gui/CMakeLists.txt
+
+IF (VXL_VGUI_FOUND)
+
+INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
+INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
+INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
+INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
+INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
+
+
+SET(seg_gui_sources
+   seg_gui_menu.cxx                        seg_gui_menu.h
+   seg_gui_main.cxx                    
+   seg_object.cxx                        seg_object.h
+   seg_neighborhood.cxx                    seg_neighborhood.h
+   seg_spatial_object.cxx                seg_spatial_object.h
+   seg_tree.cxx                            seg_tree.h
+   dbseg_seg_storage.cxx                dbseg_seg_storage.h
+   dbseg_seg_displayer.cxx                dbseg_seg_displayer.h
+   dbseg_seg_tableau.cxx                dbseg_seg_tableau.h
+                                        dbseg_seg_tableau_sptr.h
+                                        dbseg_seg_storage_sptr.h
+                                        dbseg_seg_drawing_tableau_sptr.h
+    dbseg_seg_process.cxx                dbseg_seg_process.h
+    dbseg_seg_drawing_tableau.cxx        dbseg_seg_drawing_tableau.h
+    dbseg_seg_create_region_tool.cxx    dbseg_seg_create_region_tool.h
+    dbseg_seg_edit_region_tool.cxx        dbseg_seg_edit_region_tool.h
+    dbseg_seg_save_process.cxx            dbseg_seg_save_process.h
+    dbseg_seg_load_process.cxx            dbseg_seg_load_process.h
+    dbseg_mean_shift_process.cxx        dbseg_mean_shift_process.h
+    dbseg_seg_save_view_process.cxx        dbseg_seg_save_view_process.h    
+    
+    
+    
+    dbseg_mean_shift_ms.cpp                                dbseg_mean_shift_ms.h
+    dbseg_mean_shift_msImageProcessor.cpp                dbseg_mean_shift_msImageProcessor.h
+    dbseg_mean_shift_msSys.cpp                            dbseg_mean_shift_msSys.h
+#    msSysPrompt.cpp                        
+    dbseg_mean_shift_RAList.cpp                            dbseg_mean_shift_RAList.h
+    dbseg_mean_shift_rlist.cpp                            dbseg_mean_shift_rlist.h
+                                        dbseg_mean_shift_tdef.h
+                                        
+                                        
+    dbseg_graph_process.cxx                    dbseg_graph_process.h
+                                            dbseg_graph_convolve.h
+        dbseg_graph_disjoint-set.cxx        dbseg_graph_disjoint-set.h
+                                            dbseg_graph_filter.h
+                                            dbseg_graph_image.h
+                                            dbseg_graph_imconv.h
+                                            dbseg_graph_imutil.h
+                                            dbseg_graph_misc.h
+                                            dbseg_graph_pnmfile.h
+                                            dbseg_graph_segment-graph.h
+                                            dbseg_graph_segment-image.h
+                                            
+    
+    
+)
+ADD_EXECUTABLE(seg_gui ${seg_gui_sources})
+TARGET_LINK_LIBRARIES(seg_gui vidpro1 bvis1 dbil_pro dbdet)
+
+ENDIF (VXL_VGUI_FOUND)

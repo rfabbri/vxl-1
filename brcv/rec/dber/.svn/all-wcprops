@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/lemsvxl/!svn/ver/15235/trunk/brcv/rec/dber
+END
+dber_edgel_similarity.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/8355/trunk/brcv/rec/dber/dber_edgel_similarity.cxx
+END
+dber_edgel_similarity.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/8355/trunk/brcv/rec/dber/dber_edgel_similarity.h
+END
+dber_utilities.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/8355/trunk/brcv/rec/dber/dber_utilities.cxx
+END
+dber_match.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/15235/trunk/brcv/rec/dber/dber_match.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/9750/trunk/brcv/rec/dber/CMakeLists.txt
+END
+dber_utilities.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/8355/trunk/brcv/rec/dber/dber_utilities.h
+END
+dber_match.h
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/9042/trunk/brcv/rec/dber/dber_match.h
+END

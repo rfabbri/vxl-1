@@ -1,0 +1,71 @@
+9
+
+dir
+15842
+https://visionserver.lems.brown.edu/svn/lemsvxl/trunk/contrib/vehicleseg
+https://visionserver.lems.brown.edu/svn/lemsvxl
+
+
+
+2011-07-07T16:40:01.225532Z
+15237
+ausumezbas
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+19b38075-fba0-4a01-96da-394feb402aa5
+
+pro
+dir
+
+exe
+dir
+
+vehgui
+dir
+
+CMakeLists.txt
+file
+
+
+
+
+2010-05-28T16:10:26.301311Z
+714ab9609c5c086374d83d659805179c
+2007-05-01T15:56:55.000000Z
+9395
+vj
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+195
+

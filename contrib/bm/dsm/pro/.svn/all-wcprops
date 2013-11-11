@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/lemsvxl/!svn/ver/15520/trunk/contrib/bm/dsm/pro
+END
+dsm_processes.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/15372/trunk/contrib/bm/dsm/pro/dsm_processes.h
+END
+dsm_register.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/15520/trunk/contrib/bm/dsm/pro/dsm_register.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/14821/trunk/contrib/bm/dsm/pro/CMakeLists.txt
+END
+dsm_register.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/14784/trunk/contrib/bm/dsm/pro/dsm_register.h
+END

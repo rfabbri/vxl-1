@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/12590/trunk/contrib/rfabbri/mw/app/matlab/binford
+END
+t_simulation.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12590/trunk/contrib/rfabbri/mw/app/matlab/binford/t_simulation.m
+END
+project_t.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12590/trunk/contrib/rfabbri/mw/app/matlab/binford/project_t.m
+END
+theta_matrix.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12590/trunk/contrib/rfabbri/mw/app/matlab/binford/theta_matrix.m
+END
+define_cams.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12590/trunk/contrib/rfabbri/mw/app/matlab/binford/define_cams.m
+END
+random_n.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12590/trunk/contrib/rfabbri/mw/app/matlab/binford/random_n.m
+END
+project_k.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12590/trunk/contrib/rfabbri/mw/app/matlab/binford/project_k.m
+END
+random_t.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12590/trunk/contrib/rfabbri/mw/app/matlab/binford/random_t.m
+END

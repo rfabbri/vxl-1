@@ -1,0 +1,19 @@
+\BOOKMARK [1][-]{section.1}{TODO List}{}
+\BOOKMARK [1][-]{section.2}{Introduction}{}
+\BOOKMARK [1][-]{section.3}{Related Work}{}
+\BOOKMARK [1][-]{section.4}{Theoretical Aspect}{}
+\BOOKMARK [2][-]{subsection.4.1}{Terminology and Notation}{section.4}
+\BOOKMARK [2][-]{subsection.4.2}{Questions, Propositions and Proofs}{section.4}
+\BOOKMARK [2][-]{subsection.4.3}{Ridge and Valley Topographic Curves}{section.4}
+\BOOKMARK [1][-]{section.5}{Computing Critical Points and Their Connectivity}{}
+\BOOKMARK [1][-]{section.6}{Use of Critical Points as Features}{}
+\BOOKMARK [2][-]{subsection.6.1}{Matching critical points}{section.6}
+\BOOKMARK [2][-]{subsection.6.2}{Image matching}{section.6}
+\BOOKMARK [2][-]{subsection.6.3}{Use of critical points in multiview calibration}{section.6}
+\BOOKMARK [1][-]{section.7}{Future Directions}{}
+\BOOKMARK [2][-]{subsection.7.1}{Local TAG structures as feature descriptors}{section.7}
+\BOOKMARK [2][-]{subsection.7.2}{Level-set implementation}{section.7}
+\BOOKMARK [2][-]{subsection.7.3}{Organizing the watershed/watercourse pixels}{section.7}
+\BOOKMARK [2][-]{subsection.7.4}{Image generation}{section.7}
+\BOOKMARK [1][-]{section.8}{Appendix}{}
+\BOOKMARK [1][-]{section*.22}{References}{}

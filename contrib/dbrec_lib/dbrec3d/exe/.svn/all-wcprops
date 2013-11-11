@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/15839/trunk/contrib/dbrec_lib/dbrec3d/exe
+END
+dbrec3d_render_vtk_regular_grid.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/15498/trunk/contrib/dbrec_lib/dbrec3d/exe/dbrec3d_render_vtk_regular_grid.cxx
+END
+dbrec3d_scene_objects_to_pcd.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/15839/trunk/contrib/dbrec_lib/dbrec3d/exe/dbrec3d_scene_objects_to_pcd.cxx
+END
+dbrec3d_render_pca_k_means.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/15059/trunk/contrib/dbrec_lib/dbrec3d/exe/dbrec3d_render_pca_k_means.cxx
+END
+dbrec3d_render_kernels.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/15498/trunk/contrib/dbrec_lib/dbrec3d/exe/dbrec3d_render_kernels.cxx
+END
+dbrec3d_vtk_render_octree.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/14744/trunk/contrib/dbrec_lib/dbrec3d/exe/dbrec3d_vtk_render_octree.cxx
+END
+dbrec3d_render_vector_field.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/15498/trunk/contrib/dbrec_lib/dbrec3d/exe/dbrec3d_render_vector_field.cxx
+END
+dbrec3d_render_L1_taylor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/15839/trunk/contrib/dbrec_lib/dbrec3d/exe/dbrec3d_render_L1_taylor.cxx
+END
+dbrec3d_render_taylor_k_means.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/15498/trunk/contrib/dbrec_lib/dbrec3d/exe/dbrec3d_render_taylor_k_means.cxx
+END
+dbrec3d_scene_statistics.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/14741/trunk/contrib/dbrec_lib/dbrec3d/exe/dbrec3d_scene_statistics.cxx
+END
+dbrec3d_render_pca_patches.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/15036/trunk/contrib/dbrec_lib/dbrec3d/exe/dbrec3d_render_pca_patches.cxx
+END
+dbrec3d_display_gradients_as_pc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/15839/trunk/contrib/dbrec_lib/dbrec3d/exe/dbrec3d_display_gradients_as_pc.cxx
+END
+dbrec3d_render_points.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/15036/trunk/contrib/dbrec_lib/dbrec3d/exe/dbrec3d_render_points.cxx
+END
+dbrec3d_display_objects_from_bbox.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/15839/trunk/contrib/dbrec_lib/dbrec3d/exe/dbrec3d_display_objects_from_bbox.cxx
+END
+dbrec3d_pc_statistics.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/15839/trunk/contrib/dbrec_lib/dbrec3d/exe/dbrec3d_pc_statistics.cxx
+END
+dbrec3d_plot.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/15036/trunk/contrib/dbrec_lib/dbrec3d/exe/dbrec3d_plot.cxx
+END
+dbrec3d_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/14741/trunk/contrib/dbrec_lib/dbrec3d/exe/dbrec3d_main.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/15839/trunk/contrib/dbrec_lib/dbrec3d/exe/CMakeLists.txt
+END
+dbrec3d_render_id_scene_as_points.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/15839/trunk/contrib/dbrec_lib/dbrec3d/exe/dbrec3d_render_id_scene_as_points.cxx
+END

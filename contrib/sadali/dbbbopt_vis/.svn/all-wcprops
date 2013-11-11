@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/9752/trunk/contrib/sadali/dbbbopt_vis
+END
+dbvis1_polyg_select_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/9342/trunk/contrib/sadali/dbbbopt_vis/dbvis1_polyg_select_tool.cxx
+END
+dbvis1_polyg_select_img_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/9342/trunk/contrib/sadali/dbbbopt_vis/dbvis1_polyg_select_img_tool.h
+END
+dbvis1_polyg_select_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/9342/trunk/contrib/sadali/dbbbopt_vis/dbvis1_polyg_select_tool.h
+END
+dbvis1_polyg_select_img_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/9342/trunk/contrib/sadali/dbbbopt_vis/dbvis1_polyg_select_img_tool.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/9752/trunk/contrib/sadali/dbbbopt_vis/CMakeLists.txt
+END

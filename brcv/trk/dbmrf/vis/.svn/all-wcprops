@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/lemsvxl/!svn/ver/10591/trunk/brcv/trk/dbmrf/vis
+END
+SoCurvel3D.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/2352/trunk/brcv/trk/dbmrf/vis/SoCurvel3D.h
+END
+dbmrf_3d_picker_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbmrf/vis/dbmrf_3d_picker_tool.h
+END
+dbmrf_bmrf_tools.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/10276/trunk/brcv/trk/dbmrf/vis/dbmrf_bmrf_tools.cxx
+END
+dbmrf_curvel_3d_tools.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbmrf/vis/dbmrf_curvel_3d_tools.cxx
+END
+dbmrf_bmrf_displayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbmrf/vis/dbmrf_bmrf_displayer.h
+END
+dbmrf_curvel_3d_displayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbmrf/vis/dbmrf_curvel_3d_displayer.h
+END
+dbmrf_bmrf_tools.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbmrf/vis/dbmrf_bmrf_tools.h
+END
+dbmrf_curvel_3d_tools.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbmrf/vis/dbmrf_curvel_3d_tools.h
+END
+SoCurvel3D.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/2352/trunk/brcv/trk/dbmrf/vis/SoCurvel3D.cxx
+END
+dbmrf_3d_picker_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/10589/trunk/brcv/trk/dbmrf/vis/dbmrf_3d_picker_tool.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/10591/trunk/brcv/trk/dbmrf/vis/CMakeLists.txt
+END
+dbmrf_bmrf_displayer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbmrf/vis/dbmrf_bmrf_displayer.cxx
+END
+dbmrf_curvel_3d_displayer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/trk/dbmrf/vis/dbmrf_curvel_3d_displayer.cxx
+END

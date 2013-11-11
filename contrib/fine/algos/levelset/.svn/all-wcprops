@@ -1,0 +1,185 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset
+END
+dbseg_levelset_level_set.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/dbseg_levelset_level_set.h
+END
+dbseg_levelset_Image.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/dbseg_levelset_Image.h
+END
+dbseg_levelset_Region.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/dbseg_levelset_Region.h
+END
+dbseg_levelset_BorderCondition.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/dbseg_levelset_BorderCondition.h
+END
+member_ptr.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/member_ptr.hpp
+END
+dbseg_levelset_simple_tools_templates.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/dbseg_levelset_simple_tools_templates.h
+END
+operator_lambda_func_base.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/operator_lambda_func_base.hpp
+END
+dbseg_levelset_LevelSetFunction.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/dbseg_levelset_LevelSetFunction.h
+END
+dbseg_levelset_Mask.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/dbseg_levelset_Mask.h
+END
+dbseg_levelset_SingleRegionAlgorithm.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/dbseg_levelset_SingleRegionAlgorithm.h
+END
+dbseg_levelset_Histogram.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/dbseg_levelset_Histogram.h
+END
+dbseg_levelset_errormacros.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/dbseg_levelset_errormacros.h
+END
+dbseg_levelset_LevelSetFunction_implementation.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/dbseg_levelset_LevelSetFunction_implementation.h
+END
+dbseg_levelset_SingleRegionAlgorithm_implementation.h
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/dbseg_levelset_SingleRegionAlgorithm_implementation.h
+END
+dbseg_levelset_image_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/dbseg_levelset_image_utils.h
+END
+lsseg_1.0_gpl.tgz
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/lsseg_1.0_gpl.tgz
+END
+operator_actions.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/operator_actions.hpp
+END
+problems.txt
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/problems.txt
+END
+dbseg_levelset_cimg_dependent.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/dbseg_levelset_cimg_dependent.h
+END
+dbseg_levelset_MultiRegionAlgorithm.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/dbseg_levelset_MultiRegionAlgorithm.h
+END
+dbseg_levelset_ForceGenerator.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/dbseg_levelset_ForceGenerator.h
+END
+dbseg_levelset_NormalDistributionForce.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/dbseg_levelset_NormalDistributionForce.h
+END
+operators.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/operators.hpp
+END
+dbseg_levelset_Filters.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/dbseg_levelset_Filters.h
+END
+dbseg_levelset_simple_tools.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/dbseg_levelset_simple_tools.h
+END
+operator_return_type_traits.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/operator_return_type_traits.hpp
+END
+dbseg_levelset_ParzenDistributionForce.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/dbseg_levelset_ParzenDistributionForce.h
+END
+dbseg_levelset_colordefs.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/dbseg_levelset_colordefs.h
+END
+dbseg_levelset_lambda.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/dbseg_levelset_lambda.hpp
+END
+core.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/levelset/core.hpp
+END

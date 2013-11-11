@@ -1,0 +1,251 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph
+END
+dbseg_swgraph_pointattributes.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_pointattributes.cpp
+END
+dbseg_swgraph_graph.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_graph.cpp
+END
+dbseg_swgraph_histogram.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_histogram.h
+END
+dbseg_swgraph_Sampler.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_Sampler.cpp
+END
+dbseg_swgraph_stl_util.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_stl_util.h
+END
+dbseg_swgraph_ImgFunctions.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_ImgFunctions.cpp
+END
+dbseg_swgraph_SwendsenWang.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_SwendsenWang.h
+END
+dbseg_swgraph_Functions.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_Functions.cpp
+END
+dbseg_swgraph_SimpleModel.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_SimpleModel.cpp
+END
+cvlgrfmts.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/cvlgrfmts.h
+END
+dbseg_swgraph_gauss.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_gauss.cpp
+END
+dbseg_swgraph_irmm_LinkList.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_irmm_LinkList.h
+END
+Image.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/Image.cpp
+END
+dbseg_swgraph_UnionFind.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_UnionFind.cpp
+END
+dbseg_swgraph_Point.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_Point.cpp
+END
+ipl.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/ipl.h
+END
+dbseg_swgraph_SwendsenWangGraph.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_SwendsenWangGraph.h
+END
+dbseg_swgraph_FrameMap.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_FrameMap.h
+END
+dbseg_swgraph_histogram.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_histogram.cpp
+END
+dbseg_swgraph_mcPublic.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_mcPublic.h
+END
+dbseg_swgraph_SwendsenWang.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_SwendsenWang.cpp
+END
+dbseg_swgraph_PointAttributes.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_PointAttributes.h
+END
+dbseg_swgraph_graph.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_graph.h
+END
+dbseg_swgraph_Vector.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_Vector.h
+END
+cvlgrfmts.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/cvlgrfmts.cpp
+END
+dbseg_swgraph_Sampler.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_Sampler.h
+END
+dbseg_swgraph_Matrix.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_Matrix.h
+END
+dbseg_swgraph_ImgFunctions.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_ImgFunctions.h
+END
+dbseg_swgraph_SW_Framework.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_SW_Framework.h
+END
+iplwind.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/iplwind.h
+END
+dbseg_swgraph_Functions.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_Functions.h
+END
+dbseg_swgraph_SimpleModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_SimpleModel.h
+END
+dbseg_swgraph_SwendsenWangGraph.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_SwendsenWangGraph.cpp
+END
+dbseg_swgraph_gauss.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_gauss.h
+END
+Image.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/Image.h
+END
+dbseg_swgraph_FrameMap.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_FrameMap.cpp
+END
+dbseg_swgraph_irmm_RasterColor.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_irmm_RasterColor.h
+END
+dbseg_swgraph_irmm_Raster.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_irmm_Raster.h
+END
+dbseg_swgraph_UnionFind.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_UnionFind.h
+END
+dbseg_swgraph_Point.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_Point.h
+END
+dbseg_swgraph_mcPublic.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/swgraph/dbseg_swgraph_mcPublic.cpp
+END

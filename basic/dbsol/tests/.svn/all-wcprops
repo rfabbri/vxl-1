@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/lemsvxl/!svn/ver/8553/trunk/basic/dbsol/tests
+END
+test_include.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/6590/trunk/basic/dbsol/tests/test_include.cxx
+END
+test_file_io.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/6590/trunk/basic/dbsol/tests/test_file_io.cxx
+END
+test_interp_curve_2d.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/4251/trunk/basic/dbsol/tests/test_interp_curve_2d.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/8212/trunk/basic/dbsol/tests/test_driver.cxx
+END
+test_interp_curve_3d.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/8553/trunk/basic/dbsol/tests/test_interp_curve_3d.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/8212/trunk/basic/dbsol/tests/CMakeLists.txt
+END

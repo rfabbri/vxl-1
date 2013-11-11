@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/12390/trunk/brcv/rec/dborl/algo/mpi
+END
+dborl_processor_base.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/10393/trunk/brcv/rec/dborl/algo/mpi/dborl_processor_base.h
+END
+dborl_cluster.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/11445/trunk/brcv/rec/dborl/algo/mpi/dborl_cluster.cxx
+END
+dborl_cluster.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/11236/trunk/brcv/rec/dborl/algo/mpi/dborl_cluster.h
+END
+dborl_dataset_processor.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/10775/trunk/brcv/rec/dborl/algo/mpi/dborl_dataset_processor.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/11684/trunk/brcv/rec/dborl/algo/mpi/CMakeLists.txt
+END

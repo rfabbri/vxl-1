@@ -1,0 +1,119 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/11624/trunk/brcv/shp/dbsk2d/tests
+END
+test_ishock_belm.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/11624/trunk/brcv/shp/dbsk2d/tests/test_ishock_belm.cxx
+END
+test_boundary_bounding_box.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/4283/trunk/brcv/shp/dbsk2d/tests/test_boundary_bounding_box.cxx
+END
+test_include.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/4275/trunk/brcv/shp/dbsk2d/tests/test_include.cxx
+END
+test_bnd_utils.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/4499/trunk/brcv/shp/dbsk2d/tests/test_bnd_utils.cxx
+END
+test_dbsk2d_distance.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/4202/trunk/brcv/shp/dbsk2d/tests/test_dbsk2d_distance.cxx
+END
+test_boundary_inputs.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/4127/trunk/brcv/shp/dbsk2d/tests/test_boundary_inputs.cxx
+END
+test_bnd_edge.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/4516/trunk/brcv/shp/dbsk2d/tests/test_bnd_edge.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/7960/trunk/brcv/shp/dbsk2d/tests/test_driver.cxx
+END
+test_file_load_edg.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/3778/trunk/brcv/shp/dbsk2d/tests/test_file_load_edg.cxx
+END
+test_bnd_vertex.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/4283/trunk/brcv/shp/dbsk2d/tests/test_bnd_vertex.cxx
+END
+test_file_load_bnd.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/4121/trunk/brcv/shp/dbsk2d/tests/test_file_load_bnd.cxx
+END
+test_file_load_cem.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/3778/trunk/brcv/shp/dbsk2d/tests/test_file_load_cem.cxx
+END
+test_dbsk2d_exceptions.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/7981/trunk/brcv/shp/dbsk2d/tests/test_dbsk2d_exceptions.cxx
+END
+test_bnd_contour.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/4283/trunk/brcv/shp/dbsk2d/tests/test_bnd_contour.cxx
+END
+test_boundary_partition.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/4606/trunk/brcv/shp/dbsk2d/tests/test_boundary_partition.cxx
+END
+test_file_load_con.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/3778/trunk/brcv/shp/dbsk2d/tests/test_file_load_con.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/7981/trunk/brcv/shp/dbsk2d/tests/CMakeLists.txt
+END
+test_file_load_txt.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/3778/trunk/brcv/shp/dbsk2d/tests/test_file_load_txt.cxx
+END
+test_dbsk2d_closest_point.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/4283/trunk/brcv/shp/dbsk2d/tests/test_dbsk2d_closest_point.cxx
+END

@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/lemsvxl/!svn/ver/15762/trunk/contrib/bm/dts
+END
+dts_time_series_base.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/15637/trunk/contrib/bm/dts/dts_time_series_base.h
+END
+dts_pixel_time_series_base.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/15716/trunk/contrib/bm/dts/dts_pixel_time_series_base.h
+END
+dts_time_series.txx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/15637/trunk/contrib/bm/dts/dts_time_series.txx
+END
+dts_pixel_time_series.txx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/15744/trunk/contrib/bm/dts/dts_pixel_time_series.txx
+END
+dts_time_series.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/15637/trunk/contrib/bm/dts/dts_time_series.h
+END
+dts_pixel_time_series.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/15744/trunk/contrib/bm/dts/dts_pixel_time_series.h
+END
+dts_time_series_base_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/15560/trunk/contrib/bm/dts/dts_time_series_base_sptr.h
+END
+dts_pixel_time_series_base_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/15577/trunk/contrib/bm/dts/dts_pixel_time_series_base_sptr.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/15577/trunk/contrib/bm/dts/CMakeLists.txt
+END

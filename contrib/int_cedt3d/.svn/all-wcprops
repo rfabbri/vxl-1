@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/lemsvxl/!svn/ver/9752/trunk/contrib/int_cedt3d
+END
+propagate3d.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/7420/trunk/contrib/int_cedt3d/propagate3d.h
+END
+min_heap.C
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/7413/trunk/contrib/int_cedt3d/min_heap.C
+END
+dbil3d_cedt.txx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/7420/trunk/contrib/int_cedt3d/dbil3d_cedt.txx
+END
+heap.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/7413/trunk/contrib/int_cedt3d/heap.h
+END
+dbil3d_cedt.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/5113/trunk/contrib/int_cedt3d/dbil3d_cedt.h
+END
+cedt3d.C
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/7413/trunk/contrib/int_cedt3d/cedt3d.C
+END
+cedt3d_utils.C
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/7420/trunk/contrib/int_cedt3d/cedt3d_utils.C
+END
+dt_by_3d_cedt.C
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/7421/trunk/contrib/int_cedt3d/dt_by_3d_cedt.C
+END
+propagate3d.C
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/7420/trunk/contrib/int_cedt3d/propagate3d.C
+END
+cedt3d.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/7420/trunk/contrib/int_cedt3d/cedt3d.h
+END
+cedt3d_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/5113/trunk/contrib/int_cedt3d/cedt3d_utils.h
+END
+dt_by_3d_cedt.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/5113/trunk/contrib/int_cedt3d/dt_by_3d_cedt.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/9752/trunk/contrib/int_cedt3d/CMakeLists.txt
+END

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/10303/trunk/contrib/ntrinh/lems_itk/surfmatch
+END
+surfmatch_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/9422/trunk/contrib/ntrinh/lems_itk/surfmatch/surfmatch_main.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/10303/trunk/contrib/ntrinh/lems_itk/surfmatch/CMakeLists.txt
+END
+surfmatch.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/9422/trunk/contrib/ntrinh/lems_itk/surfmatch/surfmatch.cxx
+END
+mesh_vis.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/6954/trunk/contrib/ntrinh/lems_itk/surfmatch/mesh_vis.cxx
+END

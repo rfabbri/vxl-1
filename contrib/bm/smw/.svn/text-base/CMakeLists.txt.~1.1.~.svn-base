@@ -1,0 +1,25 @@
+# This is contrib/bm/smw/CMakeLists.txt
+# State Machine Scene Modeling
+
+project( smw )
+
+#MESSAGE( "smw_SOURCE_DIR = " ${smw_SOURCE_DIR} )
+INCLUDE_DIRECTORIES( ${VXL_CORE_INCLUDE_DIR} )
+INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/bm )
+INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
+INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
+
+SET( smw_sources smw_node.h      smw_node.cxx
+                 smw_graph.h     smw_graph.cxx
+                 smw_world.h     smw_world.cxx
+)
+
+ADD_LIBRARY( smw ${smw_sources} )
+
+TARGET_LINK_LIBRARIES( smw vil )
+
+#ADD_TEST(smw_bvxm_voxel_world ${EXECUTABLE_OUTPUT_PATH}/smw_test_all test_smw_bvxm_voxel_world)
+#ADD_TEST(smw_node ${EXECUTABLE_OUTPUT_PATH}/smw_test_all test_smw_node)
+
+SUBDIRS(tests)

@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/14089/trunk/contrib/octi/dbrl/dbseg/dbbgm/vis
+END
+dbbgm_distribution_image_tableau.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dbbgm/vis/dbbgm_distribution_image_tableau.h
+END
+dbbgm_image_displayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dbbgm/vis/dbbgm_image_displayer.h
+END
+dbbgm_inspector_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dbbgm/vis/dbbgm_inspector_tool.cxx
+END
+dbbgm_image_tableau.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dbbgm/vis/dbbgm_image_tableau.h
+END
+dbbgm_inspector_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dbbgm/vis/dbbgm_inspector_tool.h
+END
+dbbgm_distribution_image_tableau_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dbbgm/vis/dbbgm_distribution_image_tableau_sptr.h
+END
+dbbgm_image_tableau_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dbbgm/vis/dbbgm_image_tableau_sptr.h
+END
+dbbgm_distribution_image_displayer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dbbgm/vis/dbbgm_distribution_image_displayer.cxx
+END
+dbbgm_distribution_image_tableau.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dbbgm/vis/dbbgm_distribution_image_tableau.cxx
+END
+dbbgm_image_displayer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dbbgm/vis/dbbgm_image_displayer.cxx
+END
+dbbgm_image_tableau.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/14089/trunk/contrib/octi/dbrl/dbseg/dbbgm/vis/dbbgm_image_tableau.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dbbgm/vis/CMakeLists.txt
+END
+dbbgm_distribution_image_displayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/14049/trunk/contrib/octi/dbrl/dbseg/dbbgm/vis/dbbgm_distribution_image_displayer.h
+END

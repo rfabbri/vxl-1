@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/lemsvxl/!svn/ver/12498/trunk/basic/dbsta/algo
+END
+dbsta_adaptive_updater.txx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/5644/trunk/basic/dbsta/algo/dbsta_adaptive_updater.txx
+END
+dbsta_image_stats.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/4538/trunk/basic/dbsta/algo/dbsta_image_stats.h
+END
+dbsta_adaptive_updater.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/5336/trunk/basic/dbsta/algo/dbsta_adaptive_updater.h
+END
+dbsta_bayes_functor.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/5131/trunk/basic/dbsta/algo/dbsta_bayes_functor.h
+END
+dbsta_gaussian_stats.txx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/5516/trunk/basic/dbsta/algo/dbsta_gaussian_stats.txx
+END
+dbsta_mixture_updaters.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/4577/trunk/basic/dbsta/algo/dbsta_mixture_updaters.h
+END
+dbsta_truth_updater.txx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/4328/trunk/basic/dbsta/algo/dbsta_truth_updater.txx
+END
+dbsta_sinkhorn.txx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/12498/trunk/basic/dbsta/algo/dbsta_sinkhorn.txx
+END
+dbsta_gaussian_stats.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/5132/trunk/basic/dbsta/algo/dbsta_gaussian_stats.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/9747/trunk/basic/dbsta/algo/CMakeLists.txt
+END
+dbsta_truth_updater.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/4328/trunk/basic/dbsta/algo/dbsta_truth_updater.h
+END
+dbsta_sinkhorn.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/6038/trunk/basic/dbsta/algo/dbsta_sinkhorn.h
+END

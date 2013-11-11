@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/cmdproc
+END
+gdt_cmdproc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/cmdproc/gdt_cmdproc.cxx
+END
+gdt_cmdproc.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/cmdproc/gdt_cmdproc.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/14563/trunk/brcv/shp/gdt/cmdproc/CMakeLists.txt
+END

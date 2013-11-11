@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/12921/trunk/brcv/rec/dborl/algo/edge
+END
+dborl_third_order_edge_det_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/12921/trunk/brcv/rec/dborl/algo/edge/dborl_third_order_edge_det_params.h
+END
+vbl_smart_ptr+dborl_third_order_edge_det_params-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/lemsvxl/!svn/ver/11555/trunk/brcv/rec/dborl/algo/edge/vbl_smart_ptr+dborl_third_order_edge_det_params-.cxx
+END
+dborl_third_order_edge_det_params_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/11555/trunk/brcv/rec/dborl/algo/edge/dborl_third_order_edge_det_params_sptr.h
+END
+dborl_third_order_edge_det_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/11566/trunk/brcv/rec/dborl/algo/edge/dborl_third_order_edge_det_main.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/11555/trunk/brcv/rec/dborl/algo/edge/CMakeLists.txt
+END

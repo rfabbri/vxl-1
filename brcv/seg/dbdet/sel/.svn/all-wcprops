@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/lemsvxl/!svn/ver/16343/trunk/brcv/seg/dbdet/sel
+END
+dbdet_curve_bundle.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/7571/trunk/brcv/seg/dbdet/sel/dbdet_curve_bundle.cxx
+END
+dbdet_curve_fragment_graph.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/13173/trunk/brcv/seg/dbdet/sel/dbdet_curve_fragment_graph.h
+END
+dbdet_curvelet.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/13362/trunk/brcv/seg/dbdet/sel/dbdet_curvelet.h
+END
+dbdet_edgel.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/13204/trunk/brcv/seg/dbdet/sel/dbdet_edgel.cxx
+END
+dbdet_appearance.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/13124/trunk/brcv/seg/dbdet/sel/dbdet_appearance.h
+END
+dbdet_hyp_tree_graph.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/11867/trunk/brcv/seg/dbdet/sel/dbdet_hyp_tree_graph.h
+END
+dbdet_curvelet_map.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14171/trunk/brcv/seg/dbdet/sel/dbdet_curvelet_map.cxx
+END
+dbdet_sel_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/8256/trunk/brcv/seg/dbdet/sel/dbdet_sel_utils.h
+END
+dbdet_curve_model.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/14163/trunk/brcv/seg/dbdet/sel/dbdet_curve_model.h
+END
+dbdet_curvelet.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/12547/trunk/brcv/seg/dbdet/sel/dbdet_curvelet.cxx
+END
+dbdet_appearance.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/10105/trunk/brcv/seg/dbdet/sel/dbdet_appearance.cxx
+END
+dbdet_curve_bundle.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/7571/trunk/brcv/seg/dbdet/sel/dbdet_curve_bundle.h
+END
+dbdet_edgel_link_graph.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14533/trunk/brcv/seg/dbdet/sel/dbdet_edgel_link_graph.h
+END
+dbdet_curve_model.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/15688/trunk/brcv/seg/dbdet/sel/dbdet_curve_model.cxx
+END
+dbdet_EHT.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/11960/trunk/brcv/seg/dbdet/sel/dbdet_EHT.h
+END
+dbdet_edgel.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/14535/trunk/brcv/seg/dbdet/sel/dbdet_edgel.h
+END
+dbdet_CFTG.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/13173/trunk/brcv/seg/dbdet/sel/dbdet_CFTG.h
+END
+dbdet_curvelet_map.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/16343/trunk/brcv/seg/dbdet/sel/dbdet_curvelet_map.h
+END

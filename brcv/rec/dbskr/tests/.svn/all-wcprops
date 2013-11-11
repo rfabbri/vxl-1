@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/lemsvxl/!svn/ver/12271/trunk/brcv/rec/dbskr/tests
+END
+test_tree.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/9779/trunk/brcv/rec/dbskr/tests/test_tree.cxx
+END
+test_include.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/4655/trunk/brcv/rec/dbskr/tests/test_include.cxx
+END
+test_tree_edit.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/11143/trunk/brcv/rec/dbskr/tests/test_tree_edit.cxx
+END
+test_shock_patch.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/10246/trunk/brcv/rec/dbskr/tests/test_shock_patch.cxx
+END
+test_scurve.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/12271/trunk/brcv/rec/dbskr/tests/test_scurve.cxx
+END
+test_scvmatch.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/7249/trunk/brcv/rec/dbskr/tests/test_scvmatch.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/11143/trunk/brcv/rec/dbskr/tests/test_driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/10190/trunk/brcv/rec/dbskr/tests/CMakeLists.txt
+END

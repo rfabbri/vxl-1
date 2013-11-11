@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bvpl
+END
+appearance_gauss3d_xx_batch.py
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bvpl/appearance_gauss3d_xx_batch.py
+END
+find_ocp_corner.py
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bvpl/find_ocp_corner.py
+END
+non_max_suppression.py
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bvpl/non_max_suppression.py
+END
+directions_c.svg
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bvpl/directions_c.svg
+END
+save_orientations.py
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bvpl/save_orientations.py
+END
+occupancy_edge2d.py
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bvpl/occupancy_edge2d.py
+END
+temp_grid.vox
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bvpl/temp_grid.vox
+END
+occupancy_edge2d_batch.py
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bvpl/occupancy_edge2d_batch.py
+END
+occupancy_edge3d.py
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bvpl/occupancy_edge3d.py
+END
+occupancy_edge3d_batch.py
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bvpl/occupancy_edge3d_batch.py
+END
+appearance_tests.py
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bvpl/appearance_tests.py
+END
+crop_and_save.py
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bvpl/crop_and_save.py
+END
+test.txt
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bvpl/test.txt
+END
+find_appearance_corner.py
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/13937/trunk/contrib/isabel/python/old_scripts/bvpl/find_appearance_corner.py
+END

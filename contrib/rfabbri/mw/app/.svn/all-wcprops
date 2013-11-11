@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/lemsvxl/!svn/ver/14748/trunk/contrib/rfabbri/mw/app
+END
+scmd2.sh
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/12497/trunk/contrib/rfabbri/mw/app/scmd2.sh
+END
+mw_app.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/14748/trunk/contrib/rfabbri/mw/app/mw_app.cxx
+END
+mw_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/13447/trunk/contrib/rfabbri/mw/app/mw_main.cxx
+END
+geno_app.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/9319/trunk/contrib/rfabbri/mw/app/geno_app.cxx
+END
+mw_menu.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/3232/trunk/contrib/rfabbri/mw/app/mw_menu.h
+END
+scmd.sh
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/12497/trunk/contrib/rfabbri/mw/app/scmd.sh
+END
+show_contours_process.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/9319/trunk/contrib/rfabbri/mw/app/show_contours_process.h
+END
+mw_load_data.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/12497/trunk/contrib/rfabbri/mw/app/mw_load_data.h
+END
+mw_cmd.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/12587/trunk/contrib/rfabbri/mw/app/mw_cmd.cxx
+END
+mw_menu.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/12599/trunk/contrib/rfabbri/mw/app/mw_menu.cxx
+END
+mw_app.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/app/mw_app.h
+END
+show_contours_process.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/9319/trunk/contrib/rfabbri/mw/app/show_contours_process.cxx
+END
+Readme.txt
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/8215/trunk/contrib/rfabbri/mw/app/Readme.txt
+END
+mw_load_data.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/app/mw_load_data.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/12635/trunk/contrib/rfabbri/mw/app/CMakeLists.txt
+END
+geno_app.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/9319/trunk/contrib/rfabbri/mw/app/geno_app.h
+END

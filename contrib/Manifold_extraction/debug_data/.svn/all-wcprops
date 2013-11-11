@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/9579/trunk/contrib/Manifold_extraction/debug_data
+END
+intrinsic_mean_debug_info.txt
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/9579/trunk/contrib/Manifold_extraction/debug_data/intrinsic_mean_debug_info.txt
+END
+optimal_geodesic_debug_info.txt
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/9579/trunk/contrib/Manifold_extraction/debug_data/optimal_geodesic_debug_info.txt
+END
+test_tr_matrices.txt
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/9579/trunk/contrib/Manifold_extraction/debug_data/test_tr_matrices.txt
+END

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/13092/trunk/contrib/dbrec_lib/dbrec/pro/Templates
+END
+brdb_value_t+dbrec_context_factory_sptr-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/lemsvxl/!svn/ver/12827/trunk/contrib/dbrec_lib/dbrec/pro/Templates/brdb_value_t+dbrec_context_factory_sptr-.cxx
+END
+brdb_value_t+dbrec_part_selection_measure_sptr-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/lemsvxl/!svn/ver/13092/trunk/contrib/dbrec_lib/dbrec/pro/Templates/brdb_value_t+dbrec_part_selection_measure_sptr-.cxx
+END
+brdb_value_t+dbrec_hierarchy_sptr-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/lemsvxl/!svn/ver/12827/trunk/contrib/dbrec_lib/dbrec/pro/Templates/brdb_value_t+dbrec_hierarchy_sptr-.cxx
+END
+brdb_value_t+dbrec_visitor_sptr-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/lemsvxl/!svn/ver/12827/trunk/contrib/dbrec_lib/dbrec/pro/Templates/brdb_value_t+dbrec_visitor_sptr-.cxx
+END

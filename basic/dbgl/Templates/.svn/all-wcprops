@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/lemsvxl/!svn/ver/11205/trunk/basic/dbgl/Templates
+END
+dbgl_area+float-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/9516/trunk/basic/dbgl/Templates/dbgl_area+float-.cxx
+END
+dbgl_minimal_container+float-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/7140/trunk/basic/dbgl/Templates/dbgl_minimal_container+float-.cxx
+END
+dbgl_area+double-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/9516/trunk/basic/dbgl/Templates/dbgl_area+double-.cxx
+END
+dbgl_minimal_container+double-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/7140/trunk/basic/dbgl/Templates/dbgl_minimal_container+double-.cxx
+END
+vnl_vector_fixed+double.7-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/11205/trunk/basic/dbgl/Templates/vnl_vector_fixed+double.7-.cxx
+END

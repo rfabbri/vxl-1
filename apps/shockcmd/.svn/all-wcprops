@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/lemsvxl/!svn/ver/962/trunk/apps/shockcmd
+END
+dbvis_shockcmd.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/951/trunk/apps/shockcmd/dbvis_shockcmd.cxx
+END
+opt.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/lemsvxl/!svn/ver/951/trunk/apps/shockcmd/opt.cpp
+END
+opt.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/lemsvxl/!svn/ver/962/trunk/apps/shockcmd/opt.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/951/trunk/apps/shockcmd/CMakeLists.txt
+END

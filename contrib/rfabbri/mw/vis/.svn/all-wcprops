@@ -1,0 +1,233 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/lemsvxl/!svn/ver/14748/trunk/contrib/rfabbri/mw/vis
+END
+mw_curve_dt_tracing_tool_common.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/13101/trunk/contrib/rfabbri/mw/vis/mw_curve_dt_tracing_tool_common.h
+END
+mw_curve_appearance_tracing_tool_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/13178/trunk/contrib/rfabbri/mw/vis/mw_curve_appearance_tracing_tool_utils.h
+END
+mw_curve_tracing_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/13128/trunk/contrib/rfabbri/mw/vis/mw_curve_tracing_tool.h
+END
+mw_curve_edit_tracing_tool_2.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/vis/mw_curve_edit_tracing_tool_2.cxx
+END
+mw_sel_inliers_to_curve.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/14160/trunk/contrib/rfabbri/mw/vis/mw_sel_inliers_to_curve.cxx
+END
+mw_curve_dt_tracing_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12794/trunk/contrib/rfabbri/mw/vis/mw_curve_dt_tracing_tool.cxx
+END
+mw_sel_geometry_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12599/trunk/contrib/rfabbri/mw/vis/mw_sel_geometry_tool.h
+END
+mw_curve_tracing_tool_rec.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/13128/trunk/contrib/rfabbri/mw/vis/mw_curve_tracing_tool_rec.cxx
+END
+mw_curve_dt_tracing_tool_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/12662/trunk/contrib/rfabbri/mw/vis/mw_curve_dt_tracing_tool_utils.h
+END
+mw_correspond_point_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/13447/trunk/contrib/rfabbri/mw/vis/mw_correspond_point_tool.cxx
+END
+mw_curve_tracing_tool_common.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/13128/trunk/contrib/rfabbri/mw/vis/mw_curve_tracing_tool_common.h
+END
+mw_curve_dt_tracing_tool_2.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/vis/mw_curve_dt_tracing_tool_2.h
+END
+mw_correspond_point_tool_basic.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/12541/trunk/contrib/rfabbri/mw/vis/mw_correspond_point_tool_basic.cxx
+END
+mw_3_correspond_point_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/13447/trunk/contrib/rfabbri/mw/vis/mw_3_correspond_point_tool.h
+END
+mw_curve_appearance_tracing_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/14748/trunk/contrib/rfabbri/mw/vis/mw_curve_appearance_tracing_tool.h
+END
+mw_correspond_point_tool_band.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/12555/trunk/contrib/rfabbri/mw/vis/mw_correspond_point_tool_band.h
+END
+mw_curve_appearance_tracing_tool_rec.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/12541/trunk/contrib/rfabbri/mw/vis/mw_curve_appearance_tracing_tool_rec.cxx
+END
+mw_sel_inliers_to_curve.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/14160/trunk/contrib/rfabbri/mw/vis/mw_sel_inliers_to_curve.h
+END
+mw_curve_edit_tracing_tool_2.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/vis/mw_curve_edit_tracing_tool_2.h
+END
+mw_curve_dt_tracing_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12900/trunk/contrib/rfabbri/mw/vis/mw_curve_dt_tracing_tool.h
+END
+mw_curve_tracing_tool_utils.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/12852/trunk/contrib/rfabbri/mw/vis/mw_curve_tracing_tool_utils.cxx
+END
+mw_curve_dt_tracing_tool_rec.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/12831/trunk/contrib/rfabbri/mw/vis/mw_curve_dt_tracing_tool_rec.cxx
+END
+mw_correspond_point_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/13445/trunk/contrib/rfabbri/mw/vis/mw_correspond_point_tool.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/13447/trunk/contrib/rfabbri/mw/vis/CMakeLists.txt
+END
+mw_curve_tracing_tool_2.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/14748/trunk/contrib/rfabbri/mw/vis/mw_curve_tracing_tool_2.cxx
+END
+mw_correspond_point_tool_basic.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/12541/trunk/contrib/rfabbri/mw/vis/mw_correspond_point_tool_basic.h
+END
+mw_curve_appearance_tracing_tool_utils.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/13178/trunk/contrib/rfabbri/mw/vis/mw_curve_appearance_tracing_tool_utils.cxx
+END
+mw_curve_tracing_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12831/trunk/contrib/rfabbri/mw/vis/mw_curve_tracing_tool.cxx
+END
+mw_sel_geometry_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/12599/trunk/contrib/rfabbri/mw/vis/mw_sel_geometry_tool.cxx
+END
+mw_curve_tracing_tool_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/13128/trunk/contrib/rfabbri/mw/vis/mw_curve_tracing_tool_utils.h
+END
+mw_curve_tracing_tool_2.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/13447/trunk/contrib/rfabbri/mw/vis/mw_curve_tracing_tool_2.h
+END
+mw_curve_dt_tracing_tool_utils.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/12831/trunk/contrib/rfabbri/mw/vis/mw_curve_dt_tracing_tool_utils.cxx
+END
+mw_curve_dt_tracing_tool_2.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/vis/mw_curve_dt_tracing_tool_2.cxx
+END
+mw_curve_appearance_tracing_tool_common.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/12541/trunk/contrib/rfabbri/mw/vis/mw_curve_appearance_tracing_tool_common.h
+END
+mw_curve_tracing_tool_common_2.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/13100/trunk/contrib/rfabbri/mw/vis/mw_curve_tracing_tool_common_2.h
+END
+mw_3_correspond_point_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/13447/trunk/contrib/rfabbri/mw/vis/mw_3_correspond_point_tool.cxx
+END
+mw_curve_appearance_tracing_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/14748/trunk/contrib/rfabbri/mw/vis/mw_curve_appearance_tracing_tool.cxx
+END
+mw_correspond_point_tool_band.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/12584/trunk/contrib/rfabbri/mw/vis/mw_correspond_point_tool_band.cxx
+END

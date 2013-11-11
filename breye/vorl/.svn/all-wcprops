@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/lemsvxl/!svn/ver/13474/trunk/breye/vorl
+END
+introduction_doxy.txt
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/596/trunk/breye/vorl/introduction_doxy.txt
+END
+vorl_manager.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/9380/trunk/breye/vorl/vorl_manager.h
+END
+track.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/lemsvxl/!svn/ver/12406/trunk/breye/vorl/track.cpp
+END
+vorl.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/lemsvxl/!svn/ver/5314/trunk/breye/vorl/vorl.h
+END
+vorl_frame_extractor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/12406/trunk/breye/vorl/vorl_frame_extractor.cxx
+END
+track.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/lemsvxl/!svn/ver/12406/trunk/breye/vorl/track.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/13472/trunk/breye/vorl/CMakeLists.txt
+END
+vorl_manager.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/lemsvxl/!svn/ver/13474/trunk/breye/vorl/vorl_manager.cxx
+END
+vorl_movie_extractor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/12406/trunk/breye/vorl/vorl_movie_extractor.cxx
+END

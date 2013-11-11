@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/lemsvxl/!svn/ver/13254/trunk/contrib/gould/io
+END
+dbcfg_io_amir_conversion.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/13254/trunk/contrib/gould/io/dbcfg_io_amir_conversion.h
+END
+dbcfg_io_seg_conversion.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/13254/trunk/contrib/gould/io/dbcfg_io_seg_conversion.cxx
+END
+dbcfg_io_seg_conversion.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/13254/trunk/contrib/gould/io/dbcfg_io_seg_conversion.h
+END
+dbcfg_io_cem_conversion.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/13254/trunk/contrib/gould/io/dbcfg_io_cem_conversion.cxx
+END
+dbcfg_io_amir_conversion.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/13254/trunk/contrib/gould/io/dbcfg_io_amir_conversion.cxx
+END
+dbcfg_io_cem_conversion.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/13254/trunk/contrib/gould/io/dbcfg_io_cem_conversion.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/13254/trunk/contrib/gould/io/CMakeLists.txt
+END

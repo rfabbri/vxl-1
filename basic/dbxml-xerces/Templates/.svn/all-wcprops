@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/13017/trunk/basic/dbxml-xerces/Templates
+END
+vbl_smart_ptr+dbxml_input_converter-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/13017/trunk/basic/dbxml-xerces/Templates/vbl_smart_ptr+dbxml_input_converter-.cxx
+END
+vcl_vector+dbxml_input_converter_sptr-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/13017/trunk/basic/dbxml-xerces/Templates/vcl_vector+dbxml_input_converter_sptr-.cxx
+END
+vcl_vector+dbxml_generic_ptr-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/13017/trunk/basic/dbxml-xerces/Templates/vcl_vector+dbxml_generic_ptr-.cxx
+END

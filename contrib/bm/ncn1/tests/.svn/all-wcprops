@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/14058/trunk/contrib/bm/ncn1/tests
+END
+test_sampler.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/14001/trunk/contrib/bm/ncn1/tests/test_sampler.cxx
+END
+test_factory.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/14058/trunk/contrib/bm/ncn1/tests/test_factory.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/14023/trunk/contrib/bm/ncn1/tests/test_driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/14020/trunk/contrib/bm/ncn1/tests/CMakeLists.txt
+END

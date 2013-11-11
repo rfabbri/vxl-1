@@ -1,0 +1,46 @@
+\section{Future Directions}
+\subsection{Local TAG structures as feature descriptors}
+As shown in Section \ref{sec:experiments}, critical points are promising interest points. In our experiments, we treated each critical point as a standalone interest point represented by a SIFT descriptor. However, there exists a more natural way to describe critical points: TAG.
+
+\begin{figure}
+\centering
+\subfloat[]{\includegraphics[height=.18\textheight]{img/localtag/loctag1.png}}\;
+\subfloat[]{\includegraphics[height=.18\textheight]{img/localtag/loctag2.png}}\;
+\subfloat[]{\includegraphics[height=.18\textheight]{img/localtag/loctag3.png}}\;
+\subfloat[]{\includegraphics[height=.18\textheight]{img/localtag/loctag4.png}}
+\caption{Local TAG structures. These graphs can be used to describe the critical points.}
+\label{fig:loctag}
+\end{figure}
+
+TAG captures the local neighborhood structure of critical points which seems to be a distinctive representation. See Figure \ref{fig:loctag} for examples of local TAG structures. Our idea for computing the dissimilarity of two critical points is as follows: Given two local TAG structures, we plan to apply certain graph edit operations to convert one of the graphs to the other. The resulting edit distance can then be used as a matching score or dissimilarity. Some possible graph edits are
+\begin{itemize}
+\item Global transformations (rotation and scaling)
+\item Edge deletion
+\item Individual edge rotation
+\item Individual edge scaling
+\item Intensity change
+\item Curvature change.
+\end{itemize}
+
+\subsection{Level-set implementation}
+The current algorithm is processing the water levels using a discrete process which has its own problems. For example (see Figure \ref{fig:saddlecandidates}), in our discrete process, the watershed (or watercourse) lines sometimes form junctions without any critical points. It does not make any sense, since there must pass only one slope line from a regular point. Prof. Kimia believes that this kind of artifacts due to discreteness might be avoided in a level-set framework. 
+
+The proposed idea is to visit the water levels by evolving a level-set function according to the underlying intensity values. Prof. Kimia believes that their paper on ``shape form shading" \cite{Kimmel:Shape:Shading} has a similar level-set formulation. 
+
+\subsection{Organizing the watershed/watercourse pixels}
+
+The current algorithm produces a set of unorganized watershed and watercourse pixels. However, organizing them as curves might help understand some of the problems we are facing (\eg, the watershed junctions making no sense). In addition, it will be useful in getting the subpixel watershed lines.   
+
+\subsection{Image generation}
+
+We had explored the possibility of generating images from given TAGs. Our method for image generation was fixing the intensity values at certain pixels and running the diffusion equation on the image. See the examples in Figure \ref{fig:imagegeneration}.   
+
+
+\begin{figure}
+\centering
+\subfloat[Fixed values at minima and maxima.]{\includegraphics[width=.95\textwidth]{img/max-min-generation.png}}\\
+\subfloat[Fixed values at minima, maxima and saddles.]{\includegraphics[width=.95\textwidth]{img/max-min-saddle-generation.png}}\\
+\subfloat[Fixed values at watershed and watercourse pixels.]{\includegraphics[width=.95\textwidth]{img/wswc-generation}}
+\caption{Image generation with diffusion.}
+\label{fig:imagegeneration}
+\end{figure}

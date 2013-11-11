@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/16757/trunk/contrib/firat/matlab/bspline_tools/deprecated
+END
+filterAPrev1ord.m
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/16757/trunk/contrib/firat/matlab/bspline_tools/deprecated/filterAPrev1ord.m
+END
+calcBsplineRootTable.m
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/16757/trunk/contrib/firat/matlab/bspline_tools/deprecated/calcBsplineRootTable.m
+END
+filterAPfwd1ord.m
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/16757/trunk/contrib/firat/matlab/bspline_tools/deprecated/filterAPfwd1ord.m
+END
+filterFIRmirror.m
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/16757/trunk/contrib/firat/matlab/bspline_tools/deprecated/filterFIRmirror.m
+END
+calcBsplineRoot.m
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/16757/trunk/contrib/firat/matlab/bspline_tools/deprecated/calcBsplineRoot.m
+END

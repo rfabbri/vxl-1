@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/15114/trunk/contrib/firat/dbcvr_2d_shape_descriptors
+END
+dbcvr_2d_curve_matching.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/15114/trunk/contrib/firat/dbcvr_2d_shape_descriptors/dbcvr_2d_curve_matching.cxx
+END
+dbcvr_2d_shape_descriptor_utils.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/lemsvxl/!svn/ver/15114/trunk/contrib/firat/dbcvr_2d_shape_descriptors/dbcvr_2d_shape_descriptor_utils.cxx
+END
+dbcvr_2d_shape_descriptors.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/15108/trunk/contrib/firat/dbcvr_2d_shape_descriptors/dbcvr_2d_shape_descriptors.cxx
+END
+dbcvr_2d_curve_matching.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/15114/trunk/contrib/firat/dbcvr_2d_shape_descriptors/dbcvr_2d_curve_matching.h
+END
+dbcvr_2d_shape_descriptor_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/lemsvxl/!svn/ver/15114/trunk/contrib/firat/dbcvr_2d_shape_descriptors/dbcvr_2d_shape_descriptor_utils.h
+END
+dbcvr_2d_shape_descriptors.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/15108/trunk/contrib/firat/dbcvr_2d_shape_descriptors/dbcvr_2d_shape_descriptors.h
+END
+driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/15114/trunk/contrib/firat/dbcvr_2d_shape_descriptors/driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/15114/trunk/contrib/firat/dbcvr_2d_shape_descriptors/CMakeLists.txt
+END

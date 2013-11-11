@@ -1,0 +1,167 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/lemsvxl/!svn/ver/13838/trunk/brcv/shp/dbsksp/vis
+END
+dbsksp_shock_displayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/shp/dbsksp/vis/dbsksp_shock_displayer.h
+END
+dbsksp_shock_snake_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/9794/trunk/brcv/shp/dbsksp/vis/dbsksp_shock_snake_tool.h
+END
+dbsksp_xshock_design_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/13838/trunk/brcv/shp/dbsksp/vis/dbsksp_xshock_design_tool.h
+END
+dbsksp_xgraph_tableau.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/13838/trunk/brcv/shp/dbsksp/vis/dbsksp_xgraph_tableau.h
+END
+dbsksp_soview.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/8484/trunk/brcv/shp/dbsksp/vis/dbsksp_soview.cxx
+END
+dbsksp_soview_xshock.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/13809/trunk/brcv/shp/dbsksp/vis/dbsksp_soview_xshock.h
+END
+dbsksp_shock_design_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/12246/trunk/brcv/shp/dbsksp/vis/dbsksp_shock_design_tool.h
+END
+dbsksp_shock_displayer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/12298/trunk/brcv/shp/dbsksp/vis/dbsksp_shock_displayer.cxx
+END
+dbsksp_xgraph_tableau_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/13461/trunk/brcv/shp/dbsksp/vis/dbsksp_xgraph_tableau_sptr.h
+END
+dbsksp_average_xgraph_displayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/13701/trunk/brcv/shp/dbsksp/vis/dbsksp_average_xgraph_displayer.h
+END
+dbsksp_shock_snake_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/11207/trunk/brcv/shp/dbsksp/vis/dbsksp_shock_snake_tool.cxx
+END
+dbsksp_xshock_design_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/13838/trunk/brcv/shp/dbsksp/vis/dbsksp_xshock_design_tool.cxx
+END
+dbsksp_xgraph_tableau.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/13838/trunk/brcv/shp/dbsksp/vis/dbsksp_xgraph_tableau.cxx
+END
+dbsksp_soview_shock.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/11910/trunk/brcv/shp/dbsksp/vis/dbsksp_soview_shock.h
+END
+dbsksp_shock_tableau.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/13476/trunk/brcv/shp/dbsksp/vis/dbsksp_shock_tableau.h
+END
+dbsksp_xgraph_displayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/13838/trunk/brcv/shp/dbsksp/vis/dbsksp_xgraph_displayer.h
+END
+dbsksp_soview_xshock.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/13809/trunk/brcv/shp/dbsksp/vis/dbsksp_soview_xshock.cxx
+END
+dbsksp_interp_two_xnodes_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/9283/trunk/brcv/shp/dbsksp/vis/dbsksp_interp_two_xnodes_tool.h
+END
+dbsksp_shock_design_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12246/trunk/brcv/shp/dbsksp/vis/dbsksp_shock_design_tool.cxx
+END
+dbsksp_average_xgraph_displayer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/13701/trunk/brcv/shp/dbsksp/vis/dbsksp_average_xgraph_displayer.cxx
+END
+dbsksp_soview.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/11910/trunk/brcv/shp/dbsksp/vis/dbsksp_soview.h
+END
+dbsksp_shock_tableau_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/8484/trunk/brcv/shp/dbsksp/vis/dbsksp_shock_tableau_sptr.h
+END
+dbsksp_soview_shock.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/12246/trunk/brcv/shp/dbsksp/vis/dbsksp_soview_shock.cxx
+END
+dbsksp_shock_tableau.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/13476/trunk/brcv/shp/dbsksp/vis/dbsksp_shock_tableau.cxx
+END
+dbsksp_xgraph_displayer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/13838/trunk/brcv/shp/dbsksp/vis/dbsksp_xgraph_displayer.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/13701/trunk/brcv/shp/dbsksp/vis/CMakeLists.txt
+END
+dbsksp_interp_two_xnodes_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12246/trunk/brcv/shp/dbsksp/vis/dbsksp_interp_two_xnodes_tool.cxx
+END

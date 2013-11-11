@@ -1,0 +1,221 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/13455/trunk/contrib/dec/psm/Templates
+END
+psm_aux_scene+PSM_AUX_DCDF_IMPLICIT_GREY-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/lemsvxl/!svn/ver/13455/trunk/contrib/dec/psm/Templates/psm_aux_scene+PSM_AUX_DCDF_IMPLICIT_GREY-.cxx
+END
+psm_scene_block_storage_single+psm_sample+PSM_APM_MOG_GREY--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/lemsvxl/!svn/ver/12005/trunk/contrib/dec/psm/Templates/psm_scene_block_storage_single+psm_sample+PSM_APM_MOG_GREY--.cxx
+END
+psm_scene+PSM_APM_SIMPLE_RGB-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/12359/trunk/contrib/dec/psm/Templates/psm_scene+PSM_APM_SIMPLE_RGB-.cxx
+END
+psm_scene_block_storage_single+psm_update_sample-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/lemsvxl/!svn/ver/12103/trunk/contrib/dec/psm/Templates/psm_scene_block_storage_single+psm_update_sample-.cxx
+END
+psm_scene_block_storage_single+psm_sample+PSM_APM_SIMPLE_GREY--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/lemsvxl/!svn/ver/12005/trunk/contrib/dec/psm/Templates/psm_scene_block_storage_single+psm_sample+PSM_APM_SIMPLE_GREY--.cxx
+END
+hsds_fd_tree+psm_dcdf_implicit_sample+vil_rgb+float--.3-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/lemsvxl/!svn/ver/13455/trunk/contrib/dec/psm/Templates/hsds_fd_tree+psm_dcdf_implicit_sample+vil_rgb+float--.3-.cxx
+END
+psm_scene_block_storage_single+float-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/12072/trunk/contrib/dec/psm/Templates/psm_scene_block_storage_single+float-.cxx
+END
+psm_aux_scene+PSM_AUX_VIS_IMPLICIT-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/12339/trunk/contrib/dec/psm/Templates/psm_aux_scene+PSM_AUX_VIS_IMPLICIT-.cxx
+END
+psm_scene_block_storage_single+psm_sample+PSM_APM_SIMPLE_RGB--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/lemsvxl/!svn/ver/12359/trunk/contrib/dec/psm/Templates/psm_scene_block_storage_single+psm_sample+PSM_APM_SIMPLE_RGB--.cxx
+END
+vbl_smart_ptr+psm_scene_base-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/12037/trunk/contrib/dec/psm/Templates/vbl_smart_ptr+psm_scene_base-.cxx
+END
+hsds_fd_tree+psm_sample+PSM_APM_MOG_GREY-.2-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/lemsvxl/!svn/ver/12005/trunk/contrib/dec/psm/Templates/hsds_fd_tree+psm_sample+PSM_APM_MOG_GREY-.2-.cxx
+END
+hsds_fd_tree+psm_sample+PSM_APM_MOG_RGB-.3-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/12359/trunk/contrib/dec/psm/Templates/hsds_fd_tree+psm_sample+PSM_APM_MOG_RGB-.3-.cxx
+END
+hsds_fd_tree+psm_sample+PSM_APM_SIMPLE_GREY-.2-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/lemsvxl/!svn/ver/12005/trunk/contrib/dec/psm/Templates/hsds_fd_tree+psm_sample+PSM_APM_SIMPLE_GREY-.2-.cxx
+END
+psm_scene_block_storage_cached+psm_sample+PSM_APM_MOG_GREY--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/lemsvxl/!svn/ver/12339/trunk/contrib/dec/psm/Templates/psm_scene_block_storage_cached+psm_sample+PSM_APM_MOG_GREY--.cxx
+END
+psm_scene_block_storage_single+psm_dcdf_implicit_sample+vil_rgb+float---.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/lemsvxl/!svn/ver/13455/trunk/contrib/dec/psm/Templates/psm_scene_block_storage_single+psm_dcdf_implicit_sample+vil_rgb+float---.cxx
+END
+psm_scene+PSM_APM_MOG_GREY-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/12037/trunk/contrib/dec/psm/Templates/psm_scene+PSM_APM_MOG_GREY-.cxx
+END
+hsds_fd_tree+psm_sample+PSM_APM_SIMPLE_RGB-.2-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/lemsvxl/!svn/ver/12359/trunk/contrib/dec/psm/Templates/hsds_fd_tree+psm_sample+PSM_APM_SIMPLE_RGB-.2-.cxx
+END
+psm_scene+PSM_APM_MOG_RGB-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/12359/trunk/contrib/dec/psm/Templates/psm_scene+PSM_APM_MOG_RGB-.cxx
+END
+hsds_fd_tree+psm_vis_implicit_sample.3-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/12072/trunk/contrib/dec/psm/Templates/hsds_fd_tree+psm_vis_implicit_sample.3-.cxx
+END
+psm_scene_block_storage_cached+psm_sample+PSM_APM_SIMPLE_GREY--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/lemsvxl/!svn/ver/12339/trunk/contrib/dec/psm/Templates/psm_scene_block_storage_cached+psm_sample+PSM_APM_SIMPLE_GREY--.cxx
+END
+psm_aux_scene+PSM_AUX_UPDATE-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/12339/trunk/contrib/dec/psm/Templates/psm_aux_scene+PSM_AUX_UPDATE-.cxx
+END
+psm_scene+PSM_APM_SIMPLE_GREY-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/12037/trunk/contrib/dec/psm/Templates/psm_scene+PSM_APM_SIMPLE_GREY-.cxx
+END
+psm_aux_scene+PSM_AUX_DCDF_IMPLICIT_RGB-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/13455/trunk/contrib/dec/psm/Templates/psm_aux_scene+PSM_AUX_DCDF_IMPLICIT_RGB-.cxx
+END
+psm_scene_block_storage_cached+psm_sample+PSM_APM_SIMPLE_RGB--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/lemsvxl/!svn/ver/12359/trunk/contrib/dec/psm/Templates/psm_scene_block_storage_cached+psm_sample+PSM_APM_SIMPLE_RGB--.cxx
+END
+psm_scene_block_storage_single+psm_sample+PSM_APM_MOG_RGB--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/lemsvxl/!svn/ver/12359/trunk/contrib/dec/psm/Templates/psm_scene_block_storage_single+psm_sample+PSM_APM_MOG_RGB--.cxx
+END
+hsds_fd_tree+psm_dcdf_implicit_sample+float-.3-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/lemsvxl/!svn/ver/13455/trunk/contrib/dec/psm/Templates/hsds_fd_tree+psm_dcdf_implicit_sample+float-.3-.cxx
+END
+psm_scene_block_storage_single+psm_vis_implicit_sample-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/lemsvxl/!svn/ver/12072/trunk/contrib/dec/psm/Templates/psm_scene_block_storage_single+psm_vis_implicit_sample-.cxx
+END
+hsds_fd_tree+psm_sample+PSM_APM_MOG_GREY-.3-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/lemsvxl/!svn/ver/12005/trunk/contrib/dec/psm/Templates/hsds_fd_tree+psm_sample+PSM_APM_MOG_GREY-.3-.cxx
+END
+hsds_fd_tree+psm_sample+PSM_APM_MOG_RGB-.2-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/lemsvxl/!svn/ver/12359/trunk/contrib/dec/psm/Templates/hsds_fd_tree+psm_sample+PSM_APM_MOG_RGB-.2-.cxx
+END
+hsds_fd_tree+psm_update_sample.3-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/12103/trunk/contrib/dec/psm/Templates/hsds_fd_tree+psm_update_sample.3-.cxx
+END
+hsds_fd_tree+psm_sample+PSM_APM_SIMPLE_GREY-.3-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/lemsvxl/!svn/ver/12005/trunk/contrib/dec/psm/Templates/hsds_fd_tree+psm_sample+PSM_APM_SIMPLE_GREY-.3-.cxx
+END
+psm_aux_scene+PSM_AUX_NULL-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/12339/trunk/contrib/dec/psm/Templates/psm_aux_scene+PSM_AUX_NULL-.cxx
+END
+vbl_smart_ptr+psm_aux_scene_base-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/12072/trunk/contrib/dec/psm/Templates/vbl_smart_ptr+psm_aux_scene_base-.cxx
+END
+psm_scene_block_storage_cached+psm_sample+PSM_APM_MOG_RGB--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/lemsvxl/!svn/ver/12359/trunk/contrib/dec/psm/Templates/psm_scene_block_storage_cached+psm_sample+PSM_APM_MOG_RGB--.cxx
+END
+hsds_fd_tree+psm_sample+PSM_APM_SIMPLE_RGB-.3-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/lemsvxl/!svn/ver/12359/trunk/contrib/dec/psm/Templates/hsds_fd_tree+psm_sample+PSM_APM_SIMPLE_RGB-.3-.cxx
+END
+psm_scene_block_storage_single+psm_dcdf_implicit_sample+float--.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/lemsvxl/!svn/ver/13455/trunk/contrib/dec/psm/Templates/psm_scene_block_storage_single+psm_dcdf_implicit_sample+float--.cxx
+END

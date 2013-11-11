@@ -1,0 +1,99 @@
+//:
+// \file
+// \brief: An application to render a boxm scene
+// \author Isabel Restrepo
+// \date 16-Nov-2010
+
+//#include <dbrec3d/gui/vtk/dbrec3d_octree_widget.h>
+
+#include <QApplication>
+//#include <QVTKWidget.h>
+
+#include <vul/vul_arg.h>
+#include <vcl_fstream.h>
+#include <vnl/vnl_vector.h>
+
+#include <dbrec3d/gui/dbrec3d_line_plot.h>
+
+//
+//void init_tree(boct_tree<short,float> *tree, unsigned i)
+//{
+//  tree-> split(); //now we have 8 cells
+//  vcl_vector<boct_tree_cell<short,float>*> leaves = tree->leaf_cells();
+//  leaves[i]->set_data(0.8f);
+//  leaves[i]->split();
+//}
+//
+//boxm_scene<boct_tree<short, float> >* create_scene(unsigned world_dimx,unsigned world_dimy,unsigned world_dimz)
+//{
+//  //crete the input scene
+//  bgeo_lvcs lvcs(33.33,44.44,10.0, bgeo_lvcs::wgs84, bgeo_lvcs::DEG, bgeo_lvcs::METERS);
+//  vgl_point_3d<double> origin(0,0,0);
+//  
+//  vgl_vector_3d<double> block_dim(10, 10, 10); //world coordinate dimensions of a block
+//  
+//  //number of blocks in a scene
+//  //  unsigned world_dimx = 2;
+//  //  unsigned world_dimy = 2;
+//  //  unsigned world_dimz = 2;
+//  vgl_vector_3d<unsigned> world_dim(world_dimx,world_dimy,world_dimz);
+//  
+//  boxm_scene<boct_tree<short, float> > *scene = new boxm_scene<boct_tree<short, float> >(lvcs, origin, block_dim, world_dim);
+//  vcl_string scene_path("./");
+//  scene->set_paths(scene_path, "test_scene");
+//  
+//  unsigned cell_index = 7;
+//  boxm_block_iterator<boct_tree<short, float> > iter=scene->iterator();
+//  iter.begin();
+//  while (!iter.end())
+//  {
+//    scene->load_block(iter.index());
+//    boxm_block<boct_tree<short, float> > *block = scene->get_active_block();
+//    // Construct an empty tree with 3 maximum levels 1 levele initialized to 0.0
+//    boct_tree<short,float> *tree = new boct_tree<short,float>(0.5f, 3, 1);
+//    //tree->print();
+//    init_tree(tree, cell_index);
+//    //tree->print();
+//    block->init_tree(tree);
+//    scene->write_active_block();
+//    if (cell_index == 0) cell_index = 7;
+//    cell_index--;
+//    ++iter;
+//  }
+//  return scene;
+//}
+//
+//void clean_up()
+//{
+//  //clean temporary files
+//  vul_file_iterator file_it("./*.bin");
+//  for (; file_it; ++file_it)
+//  {
+//    vpl_unlink(file_it());
+//    vul_file::delete_file_glob(file_it());
+//  }
+//}
+//
+//
+//int main(int argc, char** argv) 
+//{
+//  clean_up();
+//  QApplication app(argc, argv);
+//
+//  boxm_scene<boct_tree<short, float> > *scene = create_scene(1,1,1);
+//  
+//   
+//  vtkRenderWindow *window = vtkRenderWindow::New();
+//  dbrec3d_octree_widget* octree_widget = new dbrec3d_octree_widget(window, scene);
+//  //grid_widget_->resize(256,256);
+//  //grid_widget_->init_volume_data();
+//  octree_widget->interactor_->Initialize();
+//  octree_widget->show();
+//  
+//  // Run main loop.
+//  return app.exec();
+//}
+
+
+
+

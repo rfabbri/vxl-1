@@ -1,0 +1,713 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/lemsvxl/!svn/ver/17333/trunk/brcv/shp/dbsk2d
+END
+dbsk2d_ishock_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/4670/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_utils.h
+END
+dbsk2d_lagrangian_cell_bnd.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/5570/trunk/brcv/shp/dbsk2d/dbsk2d_lagrangian_cell_bnd.cxx
+END
+dbsk2d_xshock_sample.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/11645/trunk/brcv/shp/dbsk2d/dbsk2d_xshock_sample.h
+END
+dbsk2d_shock_fragment_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/dbsk2d_shock_fragment_sptr.h
+END
+dbsk2d_transform_manager.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/17356/trunk/brcv/shp/dbsk2d/dbsk2d_transform_manager.h
+END
+dbsk2d_ishock_arcarc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/11758/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_arcarc.cxx
+END
+dbsk2d_ishock_barc.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/11540/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_barc.h
+END
+dbsk2d_xshock_sample_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/dbsk2d_xshock_sample_sptr.h
+END
+dbsk2d_ishock_graph_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_graph_sptr.h
+END
+dbsk2d_bnd_vertex.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/7949/trunk/brcv/shp/dbsk2d/dbsk2d_bnd_vertex.cxx
+END
+dbsk2d_utils.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/dbsk2d_utils.cxx
+END
+dbsk2d_assert.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/7949/trunk/brcv/shp/dbsk2d/dbsk2d_assert.cxx
+END
+dbsk2d_shock_ishock_node.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/3996/trunk/brcv/shp/dbsk2d/dbsk2d_shock_ishock_node.h
+END
+dbsk2d_ishock_elm.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/11625/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_elm.h
+END
+dbsk2d_xshock_node.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/9618/trunk/brcv/shp/dbsk2d/dbsk2d_xshock_node.cxx
+END
+dbsk2d_file_io.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/12391/trunk/brcv/shp/dbsk2d/dbsk2d_file_io.cxx
+END
+dbsk2d_ishock_arcarc_thirdorder.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/11630/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_arcarc_thirdorder.h
+END
+dbsk2d_boundary.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/16952/trunk/brcv/shp/dbsk2d/dbsk2d_boundary.h
+END
+dbsk2d_shock_ishock_node_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/dbsk2d_shock_ishock_node_sptr.h
+END
+dbsk2d_lagrangian_cell_bnd.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/5570/trunk/brcv/shp/dbsk2d/dbsk2d_lagrangian_cell_bnd.h
+END
+dbsk2d_ishock_bnd_key.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/4901/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_bnd_key.cxx
+END
+dbsk2d_ishock_bcurve.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/5446/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_bcurve.h
+END
+dbsk2d_ishock_arcarc.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/11631/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_arcarc.h
+END
+dbsk2d_rich_map.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/4404/trunk/brcv/shp/dbsk2d/dbsk2d_rich_map.cxx
+END
+dbsk2d_bnd_edge_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/4205/trunk/brcv/shp/dbsk2d/dbsk2d_bnd_edge_sptr.h
+END
+dbsk2d_assert.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/7991/trunk/brcv/shp/dbsk2d/dbsk2d_assert.h
+END
+dbsk2d_visual_fragment.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/dbsk2d_visual_fragment.cxx
+END
+dbsk2d_bnd_edge.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/11606/trunk/brcv/shp/dbsk2d/dbsk2d_bnd_edge.cxx
+END
+dbsk2d_bnd_cell.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/4606/trunk/brcv/shp/dbsk2d/dbsk2d_bnd_cell.h
+END
+dbsk2d_shock_edge_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/dbsk2d_shock_edge_sptr.h
+END
+dbsk2d_distance.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/7949/trunk/brcv/shp/dbsk2d/dbsk2d_distance.cxx
+END
+dbsk2d_boundary_belm_iterator.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/4066/trunk/brcv/shp/dbsk2d/dbsk2d_boundary_belm_iterator.cxx
+END
+dbsk2d_ishock_contact.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/11542/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_contact.cxx
+END
+dbsk2d_shock_edge.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/4136/trunk/brcv/shp/dbsk2d/dbsk2d_shock_edge.cxx
+END
+dbsk2d_ishock_bnd_key.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/5446/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_bnd_key.h
+END
+dbsk2d_bnd_contour.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/4699/trunk/brcv/shp/dbsk2d/dbsk2d_bnd_contour.h
+END
+dbsk2d_ishock_pointline.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/11756/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_pointline.cxx
+END
+dbsk2d_ishock_pointpoint.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/11756/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_pointpoint.cxx
+END
+dbsk2d_shock_grouped_ishock_edge.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/4136/trunk/brcv/shp/dbsk2d/dbsk2d_shock_grouped_ishock_edge.h
+END
+dbsk2d_bnd_contour_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/dbsk2d_bnd_contour_sptr.h
+END
+dbsk2d_geometry_utils.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/3978/trunk/brcv/shp/dbsk2d/dbsk2d_geometry_utils.cxx
+END
+dbsk2d_bnd_edge.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/11619/trunk/brcv/shp/dbsk2d/dbsk2d_bnd_edge.h
+END
+dbsk2d_shock_ishock_node.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/3996/trunk/brcv/shp/dbsk2d/dbsk2d_shock_ishock_node.cxx
+END
+dbsk2d_shock_graph.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/9972/trunk/brcv/shp/dbsk2d/dbsk2d_shock_graph.h
+END
+dbsk2d_shock_grouped_ishock_edge_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/dbsk2d_shock_grouped_ishock_edge_sptr.h
+END
+dbsk2d_ishock_belm.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/16798/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_belm.cxx
+END
+dbsk2d_rich_map_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/4061/trunk/brcv/shp/dbsk2d/dbsk2d_rich_map_sptr.h
+END
+dbsk2d_shock_fragment.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/4137/trunk/brcv/shp/dbsk2d/dbsk2d_shock_fragment.h
+END
+dbsk2d_ishock_contact.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/11631/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_contact.h
+END
+dbsk2d_shock_edge.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/5159/trunk/brcv/shp/dbsk2d/dbsk2d_shock_edge.h
+END
+dbsk2d_xshock_edge_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/dbsk2d_xshock_edge_sptr.h
+END
+dbsk2d_lagrangian_cell_bnd_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/5563/trunk/brcv/shp/dbsk2d/dbsk2d_lagrangian_cell_bnd_sptr.h
+END
+dbsk2d_bnd_utils.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/11543/trunk/brcv/shp/dbsk2d/dbsk2d_bnd_utils.cxx
+END
+dbsk2d_exception.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/7960/trunk/brcv/shp/dbsk2d/dbsk2d_exception.h
+END
+dbsk2d_xshock_edge.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/8512/trunk/brcv/shp/dbsk2d/dbsk2d_xshock_edge.cxx
+END
+dbsk2d_containment_graph.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/17351/trunk/brcv/shp/dbsk2d/dbsk2d_containment_graph.h
+END
+dbsk2d_ishock_node.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/16796/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_node.cxx
+END
+dbsk2d_shock_graph_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/dbsk2d_shock_graph_sptr.h
+END
+dbsk2d_ishock_bcurve.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/5446/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_bcurve.cxx
+END
+dbsk2d_ishock_pointline.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/11756/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_pointline.h
+END
+dbsk2d_ishock_pointpoint.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/11756/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_pointpoint.h
+END
+dbsk2d_ishock_edge.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/16796/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_edge.h
+END
+dbsk2d_ishock_bline.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/16655/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_bline.cxx
+END
+dbsk2d_ishock_bpoint.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/11544/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_bpoint.cxx
+END
+dbsk2d_geometry_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/7989/trunk/brcv/shp/dbsk2d/dbsk2d_geometry_utils.h
+END
+dbsk2d_ishock_graph.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/16803/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_graph.cxx
+END
+dbsk2d_shock_node.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/8559/trunk/brcv/shp/dbsk2d/dbsk2d_shock_node.h
+END
+dbsk2d_bnd_cell.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/4735/trunk/brcv/shp/dbsk2d/dbsk2d_bnd_cell.cxx
+END
+dbsk2d_ishock_belm.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/16798/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_belm.h
+END
+dbsk2d_ishock_pointarc_thirdorder.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/11630/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_pointarc_thirdorder.cxx
+END
+dbsk2d_bnd_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/4735/trunk/brcv/shp/dbsk2d/dbsk2d_bnd_utils.h
+END
+dbsk2d_xshock_edge.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/13887/trunk/brcv/shp/dbsk2d/dbsk2d_xshock_edge.h
+END
+introduction_doxy.txt
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/introduction_doxy.txt
+END
+dbsk2d_shock_node_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/dbsk2d_shock_node_sptr.h
+END
+dbsk2d_containment_node.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/17008/trunk/brcv/shp/dbsk2d/dbsk2d_containment_node.h
+END
+dbsk2d_ishock_node.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/5523/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_node.h
+END
+dbsk2d_bnd_contour.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/7949/trunk/brcv/shp/dbsk2d/dbsk2d_bnd_contour.cxx
+END
+dbsk2d_ishock_linearc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/11758/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_linearc.cxx
+END
+dbsk2d_ishock_bline.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/16655/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_bline.h
+END
+dbsk2d_base_gui_geometry.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/12592/trunk/brcv/shp/dbsk2d/dbsk2d_base_gui_geometry.h
+END
+dbsk2d_ishock_pointarc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/11758/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_pointarc.cxx
+END
+dbsk2d_ishock_bpoint.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/11633/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_bpoint.h
+END
+dbsk2d_shock_grouped_ishock_edge.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/8371/trunk/brcv/shp/dbsk2d/dbsk2d_shock_grouped_ishock_edge.cxx
+END
+dbsk2d_containment_node_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/16574/trunk/brcv/shp/dbsk2d/dbsk2d_containment_node_sptr.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/16662/trunk/brcv/shp/dbsk2d/CMakeLists.txt
+END
+dbsk2d_bnd_vertex.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/4511/trunk/brcv/shp/dbsk2d/dbsk2d_bnd_vertex.h
+END
+dbsk2d_closest_point.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/7949/trunk/brcv/shp/dbsk2d/dbsk2d_closest_point.cxx
+END
+dbsk2d_ishock_lineline_thirdorder.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/11755/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_lineline_thirdorder.cxx
+END
+dbsk2d_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/15748/trunk/brcv/shp/dbsk2d/dbsk2d_utils.h
+END
+dbsk2d_ishock_graph.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/16780/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_graph.h
+END
+dbsk2d_shock_graph.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/9972/trunk/brcv/shp/dbsk2d/dbsk2d_shock_graph.cxx
+END
+dbsk2d_xshock_node.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/9618/trunk/brcv/shp/dbsk2d/dbsk2d_xshock_node.h
+END
+dbsk2d_ishock_pointarc_thirdorder.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/11630/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_pointarc_thirdorder.h
+END
+dbsk2d_shock_fragment.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/3755/trunk/brcv/shp/dbsk2d/dbsk2d_shock_fragment.cxx
+END
+dbsk2d_file_io.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/4712/trunk/brcv/shp/dbsk2d/dbsk2d_file_io.h
+END
+dbsk2d_bnd_vertex_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/4205/trunk/brcv/shp/dbsk2d/dbsk2d_bnd_vertex_sptr.h
+END
+dbsk2d_exception.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/7960/trunk/brcv/shp/dbsk2d/dbsk2d_exception.cxx
+END
+dbsk2d_ishock_lineline.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/11785/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_lineline.cxx
+END
+dbsk2d_bnd_cell_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/4205/trunk/brcv/shp/dbsk2d/dbsk2d_bnd_cell_sptr.h
+END
+dbsk2d_containment_graph.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/17358/trunk/brcv/shp/dbsk2d/dbsk2d_containment_graph.cxx
+END
+dbsk2d_ishock_linearc.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/11630/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_linearc.h
+END
+dbsk2d_defines.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/11754/trunk/brcv/shp/dbsk2d/dbsk2d_defines.h
+END
+dbsk2d_ishock_edge.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/11756/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_edge.cxx
+END
+dbsk2d_ishock_pointarc.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/11631/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_pointarc.h
+END
+dbsk2d_transform_manager.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/17356/trunk/brcv/shp/dbsk2d/dbsk2d_transform_manager.cxx
+END
+dbsk2d_ishock_barc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/11540/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_barc.cxx
+END
+dbsk2d_rich_map.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/4105/trunk/brcv/shp/dbsk2d/dbsk2d_rich_map.h
+END
+dbsk2d_closest_point.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/4288/trunk/brcv/shp/dbsk2d/dbsk2d_closest_point.h
+END
+dbsk2d_ishock_lineline_thirdorder.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/11755/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_lineline_thirdorder.h
+END
+dbsk2d_fuzzy_boolean.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/11754/trunk/brcv/shp/dbsk2d/dbsk2d_fuzzy_boolean.h
+END
+dbsk2d_visual_fragment.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/4090/trunk/brcv/shp/dbsk2d/dbsk2d_visual_fragment.h
+END
+dbsk2d_shock_node.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/8559/trunk/brcv/shp/dbsk2d/dbsk2d_shock_node.cxx
+END
+dbsk2d_distance.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/4287/trunk/brcv/shp/dbsk2d/dbsk2d_distance.h
+END
+dbsk2d_boundary_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/4205/trunk/brcv/shp/dbsk2d/dbsk2d_boundary_sptr.h
+END
+dbsk2d_ishock_arcarc_thirdorder.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/11630/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_arcarc_thirdorder.cxx
+END
+dbsk2d_boundary.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/16950/trunk/brcv/shp/dbsk2d/dbsk2d_boundary.cxx
+END
+dbsk2d_ishock_lineline.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/11785/trunk/brcv/shp/dbsk2d/dbsk2d_ishock_lineline.h
+END
+dbsk2d_containment_node.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/16635/trunk/brcv/shp/dbsk2d/dbsk2d_containment_node.cxx
+END

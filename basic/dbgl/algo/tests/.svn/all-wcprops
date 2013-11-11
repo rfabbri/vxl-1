@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/13540/trunk/basic/dbgl/algo/tests
+END
+test_conic_arc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/12128/trunk/basic/dbgl/algo/tests/test_conic_arc.cxx
+END
+test_biarc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/9556/trunk/basic/dbgl/algo/tests/test_biarc.cxx
+END
+test_fit_circ_arc_spline.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/11967/trunk/basic/dbgl/algo/tests/test_fit_circ_arc_spline.cxx
+END
+test_include.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/8492/trunk/basic/dbgl/algo/tests/test_include.cxx
+END
+test_closest_point.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/8026/trunk/basic/dbgl/algo/tests/test_closest_point.cxx
+END
+test_arc_intersect.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/4227/trunk/basic/dbgl/algo/tests/test_arc_intersect.cxx
+END
+test_eulerspiral.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/8329/trunk/basic/dbgl/algo/tests/test_eulerspiral.cxx
+END
+test_distance.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/8656/trunk/basic/dbgl/algo/tests/test_distance.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/13531/trunk/basic/dbgl/algo/tests/test_driver.cxx
+END
+test_compute_symmetry_point.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/13540/trunk/basic/dbgl/algo/tests/test_compute_symmetry_point.cxx
+END
+test_intersect.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/9556/trunk/basic/dbgl/algo/tests/test_intersect.cxx
+END
+test_circ_arc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/11429/trunk/basic/dbgl/algo/tests/test_circ_arc.cxx
+END
+test_pt_tri_dist_3d.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/8672/trunk/basic/dbgl/algo/tests/test_pt_tri_dist_3d.cxx
+END
+test_similarity_3d.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/11214/trunk/basic/dbgl/algo/tests/test_similarity_3d.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/13531/trunk/basic/dbgl/algo/tests/CMakeLists.txt
+END

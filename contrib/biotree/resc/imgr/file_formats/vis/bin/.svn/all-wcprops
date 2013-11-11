@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/3453/trunk/contrib/biotree/resc/imgr/file_formats/vis/bin
+END
+view3d.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/3156/trunk/contrib/biotree/resc/imgr/file_formats/vis/bin/view3d.cxx
+END
+skyscan_view3d_menus.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/lemsvxl/!svn/ver/3453/trunk/contrib/biotree/resc/imgr/file_formats/vis/bin/skyscan_view3d_menus.cxx
+END
+skyscan_view3d_menus.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/lemsvxl/!svn/ver/3453/trunk/contrib/biotree/resc/imgr/file_formats/vis/bin/skyscan_view3d_menus.h
+END
+view3d_menus.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/3430/trunk/contrib/biotree/resc/imgr/file_formats/vis/bin/view3d_menus.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/3452/trunk/contrib/biotree/resc/imgr/file_formats/vis/bin/CMakeLists.txt
+END
+skyscan_view3d.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/3452/trunk/contrib/biotree/resc/imgr/file_formats/vis/bin/skyscan_view3d.cxx
+END
+view3d_menus.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/3430/trunk/contrib/biotree/resc/imgr/file_formats/vis/bin/view3d_menus.h
+END

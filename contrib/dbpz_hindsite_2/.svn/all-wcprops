@@ -1,0 +1,281 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/14030/trunk/contrib/dbpz_hindsite_2
+END
+Point.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/8584/trunk/contrib/dbpz_hindsite_2/Point.h
+END
+DPMatch.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/8584/trunk/contrib/dbpz_hindsite_2/DPMatch.cxx
+END
+xform.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/8739/trunk/contrib/dbpz_hindsite_2/xform.h
+END
+FineDPMatch.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/8584/trunk/contrib/dbpz_hindsite_2/FineDPMatch.cxx
+END
+vgui_soview2D_bfrag2D.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/8584/trunk/contrib/dbpz_hindsite_2/vgui_soview2D_bfrag2D.cxx
+END
+bgui_vsol_soview2D_new.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/8584/trunk/contrib/dbpz_hindsite_2/bgui_vsol_soview2D_new.cxx
+END
+bfrag_Main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/9473/trunk/contrib/dbpz_hindsite_2/bfrag_Main.cxx
+END
+utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/8731/trunk/contrib/dbpz_hindsite_2/utils.h
+END
+bfrag2DManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/9244/trunk/contrib/dbpz_hindsite_2/bfrag2DManager.h
+END
+bfrag_Menu.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/8584/trunk/contrib/dbpz_hindsite_2/bfrag_Menu.h
+END
+PuzzleSolving.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/9479/trunk/contrib/dbpz_hindsite_2/PuzzleSolving.cxx
+END
+bfrag2D_assembly.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/8584/trunk/contrib/dbpz_hindsite_2/bfrag2D_assembly.h
+END
+vgui_bfrag2D_tableau_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/8584/trunk/contrib/dbpz_hindsite_2/vgui_bfrag2D_tableau_sptr.h
+END
+extern_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/9479/trunk/contrib/dbpz_hindsite_2/extern_params.h
+END
+vgui_bfrag2D_tableau.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/9241/trunk/contrib/dbpz_hindsite_2/vgui_bfrag2D_tableau.cxx
+END
+bfrag_Manager.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/9504/trunk/contrib/dbpz_hindsite_2/bfrag_Manager.h
+END
+introduction_doxy.txt
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/8584/trunk/contrib/dbpz_hindsite_2/introduction_doxy.txt
+END
+DPMatch.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/8731/trunk/contrib/dbpz_hindsite_2/DPMatch.h
+END
+bfrag2D.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/9370/trunk/contrib/dbpz_hindsite_2/bfrag2D.cxx
+END
+FineDPMatch.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/8730/trunk/contrib/dbpz_hindsite_2/FineDPMatch.h
+END
+vgui_soview2D_bfrag2D.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/8584/trunk/contrib/dbpz_hindsite_2/vgui_soview2D_bfrag2D.h
+END
+bfrag_Main_Menu.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/8584/trunk/contrib/dbpz_hindsite_2/bfrag_Main_Menu.cxx
+END
+bgui_vsol_soview2D_new.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/8584/trunk/contrib/dbpz_hindsite_2/bgui_vsol_soview2D_new.h
+END
+my_bfrag_Menu.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/9504/trunk/contrib/dbpz_hindsite_2/my_bfrag_Menu.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/13907/trunk/contrib/dbpz_hindsite_2/CMakeLists.txt
+END
+my_bfrag_Main_Menu.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/8845/trunk/contrib/dbpz_hindsite_2/my_bfrag_Main_Menu.cxx
+END
+PuzzleSolving.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/13907/trunk/contrib/dbpz_hindsite_2/PuzzleSolving.h
+END
+vgui_soview2D_bfrag2D_assembly.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/8584/trunk/contrib/dbpz_hindsite_2/vgui_soview2D_bfrag2D_assembly.cxx
+END
+vgui_bfrag2D_tableau.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/9241/trunk/contrib/dbpz_hindsite_2/vgui_bfrag2D_tableau.h
+END
+Curve.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/8584/trunk/contrib/dbpz_hindsite_2/Curve.cxx
+END
+bfrag_curve.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/9413/trunk/contrib/dbpz_hindsite_2/bfrag_curve.cxx
+END
+global.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/8730/trunk/contrib/dbpz_hindsite_2/global.h
+END
+read_write.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/13907/trunk/contrib/dbpz_hindsite_2/read_write.cxx
+END
+my_bfrag_Main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/9473/trunk/contrib/dbpz_hindsite_2/my_bfrag_Main.cxx
+END
+bfrag2D.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/8845/trunk/contrib/dbpz_hindsite_2/bfrag2D.h
+END
+bfrag_Main_Menu.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/8584/trunk/contrib/dbpz_hindsite_2/bfrag_Main_Menu.h
+END
+my_bfrag_Menu.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/9488/trunk/contrib/dbpz_hindsite_2/my_bfrag_Menu.h
+END
+bfrag2DManager.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/9415/trunk/contrib/dbpz_hindsite_2/bfrag2DManager.cxx
+END
+my_bfrag_Main_Menu.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/8845/trunk/contrib/dbpz_hindsite_2/my_bfrag_Main_Menu.h
+END
+bfrag_Menu.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/9370/trunk/contrib/dbpz_hindsite_2/bfrag_Menu.cxx
+END
+bfrag2D_assembly.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/8584/trunk/contrib/dbpz_hindsite_2/bfrag2D_assembly.cxx
+END
+vgui_soview2D_bfrag2D_assembly.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/8584/trunk/contrib/dbpz_hindsite_2/vgui_soview2D_bfrag2D_assembly.h
+END
+params.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/9479/trunk/contrib/dbpz_hindsite_2/params.h
+END
+Curve.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/8584/trunk/contrib/dbpz_hindsite_2/Curve.h
+END
+bfrag_curve.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/9103/trunk/contrib/dbpz_hindsite_2/bfrag_curve.h
+END
+bfrag_Manager.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/13907/trunk/contrib/dbpz_hindsite_2/bfrag_Manager.cxx
+END

@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/lemsvxl/!svn/ver/13499/trunk/brcv/mvg/dbirl/tests
+END
+test_h_computation.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/13499/trunk/brcv/mvg/dbirl/tests/test_h_computation.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/4900/trunk/brcv/mvg/dbirl/tests/test_driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/9293/trunk/brcv/mvg/dbirl/tests/CMakeLists.txt
+END

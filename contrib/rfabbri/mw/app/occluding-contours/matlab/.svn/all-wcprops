@@ -1,0 +1,179 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab
+END
+build_images.m
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/build_images.m
+END
+plotsphere.m
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/plotsphere.m
+END
+sample_circle3.m
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/sample_circle3.m
+END
+sphere_occl.m
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/sphere_occl.m
+END
+my_levelset.m
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/my_levelset.m
+END
+d_pt_circle3.m
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/d_pt_circle3.m
+END
+mysphere.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/mysphere.m
+END
+readcam.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/readcam.m
+END
+sphere_point.m
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/sphere_point.m
+END
+plotcons.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/plotcons.m
+END
+showseg2.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/showseg2.m
+END
+showsegs.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/showsegs.m
+END
+runseg.m
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/runseg.m
+END
+discretize.m
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/discretize.m
+END
+readrec.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/readrec.m
+END
+mycursor3.m
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/mycursor3.m
+END
+plotrec.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/plotrec.m
+END
+overlap.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/overlap.m
+END
+plot_corresp.m
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/plot_corresp.m
+END
+pathdef.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/pathdef.m
+END
+mycursor3_f.m
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/mycursor3_f.m
+END
+read_occl.m
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/read_occl.m
+END
+draw_sphere_point.m
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/draw_sphere_point.m
+END
+plotrec_f.m
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/plotrec_f.m
+END
+mysphere2.m
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/mysphere2.m
+END
+showseg.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/showseg.m
+END
+plot_rec_error.m
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/plot_rec_error.m
+END
+show_occl.m
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/show_occl.m
+END
+delete_sphere_point.m
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/lemsvxl/!svn/ver/6453/trunk/contrib/rfabbri/mw/app/occluding-contours/matlab/delete_sphere_point.m
+END

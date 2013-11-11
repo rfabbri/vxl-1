@@ -1,0 +1,245 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/14748/trunk/contrib/rfabbri/mw/algo
+END
+dvpgl_DG_bundle_adjust.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/12578/trunk/contrib/rfabbri/mw/algo/dvpgl_DG_bundle_adjust.h
+END
+dvcpl_distmap_bundle_adjust.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/algo/dvcpl_distmap_bundle_adjust.h
+END
+mw_dt_curve_stereo.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/algo/mw_dt_curve_stereo.h
+END
+mw_discrete_corresp_algo.txx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/algo/mw_discrete_corresp_algo.txx
+END
+mw_qualitative_epipolar.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12583/trunk/contrib/rfabbri/mw/algo/mw_qualitative_epipolar.cxx
+END
+mw_sel_match.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/12579/trunk/contrib/rfabbri/mw/algo/mw_sel_match.h
+END
+mw_match_tangent_band.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/13445/trunk/contrib/rfabbri/mw/algo/mw_match_tangent_band.h
+END
+mw_discrete_corresp_algo.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/algo/mw_discrete_corresp_algo.h
+END
+mw_match_old.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/13445/trunk/contrib/rfabbri/mw/algo/mw_match_old.cxx
+END
+mw_point_matcher.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/13447/trunk/contrib/rfabbri/mw/algo/mw_point_matcher.cxx
+END
+mw_data.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/14176/trunk/contrib/rfabbri/mw/algo/mw_data.h
+END
+mw_stereo_app.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/13445/trunk/contrib/rfabbri/mw/algo/mw_stereo_app.cxx
+END
+mw_discrete_corresp_algo_defs.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/algo/mw_discrete_corresp_algo_defs.cxx
+END
+mw_match_position_band.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12852/trunk/contrib/rfabbri/mw/algo/mw_match_position_band.cxx
+END
+mw_curve_stereo.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/algo/mw_curve_stereo.cxx
+END
+mw_qualitative_epipolar.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12583/trunk/contrib/rfabbri/mw/algo/mw_qualitative_epipolar.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/14055/trunk/contrib/rfabbri/mw/algo/CMakeLists.txt
+END
+mw_sift_curve_algo.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/14748/trunk/contrib/rfabbri/mw/algo/mw_sift_curve_algo.cxx
+END
+mw_odt_curve_stereo.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/14176/trunk/contrib/rfabbri/mw/algo/mw_odt_curve_stereo.cxx
+END
+dvcpl_distmap_optimize_camera.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/algo/dvcpl_distmap_optimize_camera.cxx
+END
+mw_algo_util.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/13178/trunk/contrib/rfabbri/mw/algo/mw_algo_util.cxx
+END
+mw_match_old.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/12585/trunk/contrib/rfabbri/mw/algo/mw_match_old.h
+END
+mw_point_matcher.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/12587/trunk/contrib/rfabbri/mw/algo/mw_point_matcher.h
+END
+mw_cvmatch_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/7768/trunk/contrib/rfabbri/mw/algo/mw_cvmatch_sptr.h
+END
+stereo-system-notes.txt
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/13300/trunk/contrib/rfabbri/mw/algo/stereo-system-notes.txt
+END
+mw_cvmatch.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/7768/trunk/contrib/rfabbri/mw/algo/mw_cvmatch.cxx
+END
+mw_stereo_app.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/13444/trunk/contrib/rfabbri/mw/algo/mw_stereo_app.h
+END
+dvpgl_DG_bundle_adjust.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12578/trunk/contrib/rfabbri/mw/algo/dvpgl_DG_bundle_adjust.cxx
+END
+dvcpl_distmap_bundle_adjust.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/algo/dvcpl_distmap_bundle_adjust.cxx
+END
+mw_match_position_band.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/13445/trunk/contrib/rfabbri/mw/algo/mw_match_position_band.h
+END
+mw_curve_stereo.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/algo/mw_curve_stereo.h
+END
+mw_dt_curve_stereo.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/13314/trunk/contrib/rfabbri/mw/algo/mw_dt_curve_stereo.cxx
+END
+mw_sel_match.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/12572/trunk/contrib/rfabbri/mw/algo/mw_sel_match.cxx
+END
+mw_odt_curve_stereo.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/14176/trunk/contrib/rfabbri/mw/algo/mw_odt_curve_stereo.h
+END
+mw_match_tangent_band.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12632/trunk/contrib/rfabbri/mw/algo/mw_match_tangent_band.cxx
+END
+mw_sift_curve_algo.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/12579/trunk/contrib/rfabbri/mw/algo/mw_sift_curve_algo.h
+END
+dvcpl_distmap_optimize_camera.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/14034/trunk/contrib/rfabbri/mw/algo/dvcpl_distmap_optimize_camera.h
+END
+mw_algo_util.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/13203/trunk/contrib/rfabbri/mw/algo/mw_algo_util.h
+END
+mw_data.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/14176/trunk/contrib/rfabbri/mw/algo/mw_data.cxx
+END
+mw_cvmatch.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/12538/trunk/contrib/rfabbri/mw/algo/mw_cvmatch.h
+END

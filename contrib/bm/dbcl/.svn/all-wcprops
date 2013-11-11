@@ -1,0 +1,293 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/lemsvxl/!svn/ver/14819/trunk/contrib/bm/dbcl
+END
+dbcl_temporal_feature_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14242/trunk/contrib/bm/dbcl/dbcl_temporal_feature_sptr.h
+END
+smart_ptr+dbcl_state_machine_classifier-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/lemsvxl/!svn/ver/14389/trunk/contrib/bm/dbcl/smart_ptr+dbcl_state_machine_classifier-.cxx
+END
+dbcl_state_machine_classifier.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/14759/trunk/contrib/bm/dbcl/dbcl_state_machine_classifier.h
+END
+dbcl_linear_classifier_vrml_view.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/14359/trunk/contrib/bm/dbcl/dbcl_linear_classifier_vrml_view.h
+END
+smart_ptr+dbcl_ncn_extractor-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/14765/trunk/contrib/bm/dbcl/smart_ptr+dbcl_ncn_extractor-.cxx
+END
+dbcl_ncn_extractor.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/14758/trunk/contrib/bm/dbcl/dbcl_ncn_extractor.h
+END
+dbcl_state_machine_node.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14761/trunk/contrib/bm/dbcl/dbcl_state_machine_node.h
+END
+dbcl_state_machine_image_classifier.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/14760/trunk/contrib/bm/dbcl/dbcl_state_machine_image_classifier.h
+END
+dbcl_classifier_factory.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14384/trunk/contrib/bm/dbcl/dbcl_classifier_factory.h
+END
+dbcl_linear_classifier.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/14357/trunk/contrib/bm/dbcl/dbcl_linear_classifier.h
+END
+dbcl_vgl_point_2d_dist_compare.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/14763/trunk/contrib/bm/dbcl/dbcl_vgl_point_2d_dist_compare.h
+END
+dbcl_ncn_extractor_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14764/trunk/contrib/bm/dbcl/dbcl_ncn_extractor_sptr.h
+END
+dbcl_state_machine_node_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/14379/trunk/contrib/bm/dbcl/dbcl_state_machine_node_sptr.h
+END
+dbcl_classifier_io.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/14232/trunk/contrib/bm/dbcl/dbcl_classifier_io.cxx
+END
+dbcl_classifier_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/14315/trunk/contrib/bm/dbcl/dbcl_classifier_sptr.h
+END
+smart_ptr+dbcl_temporal_feature-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/14243/trunk/contrib/bm/dbcl/smart_ptr+dbcl_temporal_feature-.cxx
+END
+dbcl_temporal_feature.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/14342/trunk/contrib/bm/dbcl/dbcl_temporal_feature.h
+END
+dbcl_image_classifier_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14233/trunk/contrib/bm/dbcl/dbcl_image_classifier_sptr.h
+END
+dbcl_classifier.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/14261/trunk/contrib/bm/dbcl/dbcl_classifier.cxx
+END
+dbcl_image_classifier.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14429/trunk/contrib/bm/dbcl/dbcl_image_classifier.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/14810/trunk/contrib/bm/dbcl/CMakeLists.txt
+END
+dbcl_state_machine_frame_clock.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/14381/trunk/contrib/bm/dbcl/dbcl_state_machine_frame_clock.cxx
+END
+smart_ptr+dbcl_state_machine_node-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/14380/trunk/contrib/bm/dbcl/smart_ptr+dbcl_state_machine_node-.cxx
+END
+dbcl_sift_extractor_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/14819/trunk/contrib/bm/dbcl/dbcl_sift_extractor_sptr.h
+END
+dbcl_state_machine_view.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14728/trunk/contrib/bm/dbcl/dbcl_state_machine_view.cxx
+END
+dbcl_classifier_io.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/14232/trunk/contrib/bm/dbcl/dbcl_classifier_io.h
+END
+dbcl_sift_extractor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/14819/trunk/contrib/bm/dbcl/dbcl_sift_extractor.cxx
+END
+dbcl_classifier_io_defs.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14232/trunk/contrib/bm/dbcl/dbcl_classifier_io_defs.h
+END
+smart_ptr+dbcl_linear_classifier-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/14253/trunk/contrib/bm/dbcl/smart_ptr+dbcl_linear_classifier-.cxx
+END
+dbcl_state_machine_classifier_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/14387/trunk/contrib/bm/dbcl/dbcl_state_machine_classifier_sptr.h
+END
+dbcl_linear_classifier_vrml_view.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/14359/trunk/contrib/bm/dbcl/dbcl_linear_classifier_vrml_view.cxx
+END
+dbcl_state_machine_classifier.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/14773/trunk/contrib/bm/dbcl/dbcl_state_machine_classifier.cxx
+END
+smart_ptr+dbcl_classifier-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/14315/trunk/contrib/bm/dbcl/smart_ptr+dbcl_classifier-.cxx
+END
+dbcl_state_machine_node.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14396/trunk/contrib/bm/dbcl/dbcl_state_machine_node.cxx
+END
+dbcl_ncn_extractor.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/14758/trunk/contrib/bm/dbcl/dbcl_ncn_extractor.cxx
+END
+dbcl_classifier.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/14384/trunk/contrib/bm/dbcl/dbcl_classifier.h
+END
+dbcl_state_machine_image_classifier.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/14728/trunk/contrib/bm/dbcl/dbcl_state_machine_image_classifier.cxx
+END
+smart_ptr+dbcl_image_classifier-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/14234/trunk/contrib/bm/dbcl/smart_ptr+dbcl_image_classifier-.cxx
+END
+dbcl_classifier_factory.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14728/trunk/contrib/bm/dbcl/dbcl_classifier_factory.cxx
+END
+dbcl_image_classifier.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/14770/trunk/contrib/bm/dbcl/dbcl_image_classifier.h
+END
+dbcl_linear_classifier_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/14252/trunk/contrib/bm/dbcl/dbcl_linear_classifier_sptr.h
+END
+smart_ptr+dbcl_state_machine_frame_clock-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/14382/trunk/contrib/bm/dbcl/smart_ptr+dbcl_state_machine_frame_clock-.cxx
+END
+dbcl_state_machine_frame_clock.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/14381/trunk/contrib/bm/dbcl/dbcl_state_machine_frame_clock.h
+END
+dbcl_linear_classifier.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/14358/trunk/contrib/bm/dbcl/dbcl_linear_classifier.cxx
+END
+dbcl_state_machine_view.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14728/trunk/contrib/bm/dbcl/dbcl_state_machine_view.h
+END
+smart_ptr+dbcl_sift_extractor-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/14818/trunk/contrib/bm/dbcl/smart_ptr+dbcl_sift_extractor-.cxx
+END
+dbcl_sift_extractor.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/14819/trunk/contrib/bm/dbcl/dbcl_sift_extractor.h
+END
+dbcl_state_machine_frame_clock_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/14381/trunk/contrib/bm/dbcl/dbcl_state_machine_frame_clock_sptr.h
+END

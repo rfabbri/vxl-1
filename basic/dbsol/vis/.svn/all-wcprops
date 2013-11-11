@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/lemsvxl/!svn/ver/12509/trunk/basic/dbsol/vis
+END
+dbsol_soview2D_circ_arc.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/7485/trunk/basic/dbsol/vis/dbsol_soview2D_circ_arc.h
+END
+dbsol2D_tableau_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/7483/trunk/basic/dbsol/vis/dbsol2D_tableau_sptr.h
+END
+dbsol_cut_contour_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/12509/trunk/basic/dbsol/vis/dbsol_cut_contour_tool.cxx
+END
+dbsol_arc_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/9273/trunk/basic/dbsol/vis/dbsol_arc_tool.cxx
+END
+dbsol_circ_arc_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/9273/trunk/basic/dbsol/vis/dbsol_circ_arc_tool.cxx
+END
+dbsol2D_tableau.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/7684/trunk/basic/dbsol/vis/dbsol2D_tableau.cxx
+END
+dbsol_vsol2D_displayer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/9273/trunk/basic/dbsol/vis/dbsol_vsol2D_displayer.cxx
+END
+dbsol_cut_contour_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/12277/trunk/basic/dbsol/vis/dbsol_cut_contour_tool.h
+END
+dbsol_arc_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/9273/trunk/basic/dbsol/vis/dbsol_arc_tool.h
+END
+dbsol_circ_arc_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/9273/trunk/basic/dbsol/vis/dbsol_circ_arc_tool.h
+END
+dbsol_soview2D_circ_arc.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/7485/trunk/basic/dbsol/vis/dbsol_soview2D_circ_arc.cxx
+END
+dbsol2D_tableau.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/7703/trunk/basic/dbsol/vis/dbsol2D_tableau.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/11641/trunk/basic/dbsol/vis/CMakeLists.txt
+END
+dbsol_vsol2D_displayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/9273/trunk/basic/dbsol/vis/dbsol_vsol2D_displayer.h
+END

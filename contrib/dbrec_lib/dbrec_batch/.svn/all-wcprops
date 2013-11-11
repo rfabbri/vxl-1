@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/13526/trunk/contrib/dbrec_lib/dbrec_batch
+END
+compare_to_PCA.py
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/13094/trunk/contrib/dbrec_lib/dbrec_batch/compare_to_PCA.py
+END
+reg_dbrec.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/13037/trunk/contrib/dbrec_lib/dbrec_batch/reg_dbrec.h
+END
+images.txt
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/13094/trunk/contrib/dbrec_lib/dbrec_batch/images.txt
+END
+train_128_128_on_055_135_classes_3.py
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/lemsvxl/!svn/ver/13095/trunk/contrib/dbrec_lib/dbrec_batch/train_128_128_on_055_135_classes_3.py
+END
+test_128_128_on_055_135_classes_3.py
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/13094/trunk/contrib/dbrec_lib/dbrec_batch/test_128_128_on_055_135_classes_3.py
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/13526/trunk/contrib/dbrec_lib/dbrec_batch/CMakeLists.txt
+END
+classes_3.txt
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/13094/trunk/contrib/dbrec_lib/dbrec_batch/classes_3.txt
+END
+reg_dbrec.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/13526/trunk/contrib/dbrec_lib/dbrec_batch/reg_dbrec.cxx
+END
+classes_and_ids_3.txt
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/13094/trunk/contrib/dbrec_lib/dbrec_batch/classes_and_ids_3.txt
+END

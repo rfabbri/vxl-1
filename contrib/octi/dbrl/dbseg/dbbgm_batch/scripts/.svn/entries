@@ -1,0 +1,31 @@
+9
+
+dir
+15842
+https://visionserver.lems.brown.edu/svn/lemsvxl/trunk/contrib/octi/dbrl/dbseg/dbbgm_batch/scripts
+https://visionserver.lems.brown.edu/svn/lemsvxl
+
+
+
+2011-10-03T17:21:02.922778Z
+15519
+octi
+has-props
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+19b38075-fba0-4a01-96da-394feb402aa5
+
+bbgm_experiments
+dir
+

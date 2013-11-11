@@ -1,0 +1,12 @@
+INCLUDE_DIRECTORIES( ${VXLCORE_INCLUDE_DIR} )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
+
+ADD_EXECUTABLE ( btpl_generate_roc btpl_generate_roc.cxx )
+ADD_EXECUTABLE ( btpl_generate_roc2 btpl_generate_roc2.cxx )
+ADD_EXECUTABLE ( btpl_threshold_prob btpl_threshold_prob.cxx )
+ADD_EXECUTABLE ( btpl_mark_red btpl_mark_red.cxx )
+TARGET_LINK_LIBRARIES( btpl_generate_roc vcl vil vgl vnl vul )
+TARGET_LINK_LIBRARIES( btpl_generate_roc2 vcl vil vgl vnl vul)
+TARGET_LINK_LIBRARIES( btpl_threshold_prob vcl vil vgl vnl vul)
+TARGET_LINK_LIBRARIES( btpl_mark_red vcl vil vgl vnl vul)

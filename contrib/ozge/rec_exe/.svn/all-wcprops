@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/lemsvxl/!svn/ver/12418/trunk/contrib/ozge/rec_exe
+END
+aerial_vehicle_recognition.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/7448/trunk/contrib/ozge/rec_exe/aerial_vehicle_recognition.h
+END
+recognition_main_rigid.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/12409/trunk/contrib/ozge/rec_exe/recognition_main_rigid.cxx
+END
+recognition_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/12409/trunk/contrib/ozge/rec_exe/recognition_main.cxx
+END
+recognition_main_vidl2.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/12418/trunk/contrib/ozge/rec_exe/recognition_main_vidl2.cxx
+END
+recognition_main_curve.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/12409/trunk/contrib/ozge/rec_exe/recognition_main_curve.cxx
+END
+recognition_main_shock.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/12409/trunk/contrib/ozge/rec_exe/recognition_main_shock.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/12418/trunk/contrib/ozge/rec_exe/CMakeLists.txt
+END
+aerial_vehicle_recognition.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12409/trunk/contrib/ozge/rec_exe/aerial_vehicle_recognition.cxx
+END

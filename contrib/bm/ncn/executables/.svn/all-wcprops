@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/14021/trunk/contrib/bm/ncn/executables
+END
+image_sample_example.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/13981/trunk/contrib/bm/ncn/executables/image_sample_example.cxx
+END
+ncn_westin_exp1.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/14021/trunk/contrib/bm/ncn/executables/ncn_westin_exp1.cxx
+END
+exec1.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/13976/trunk/contrib/bm/ncn/executables/exec1.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/13989/trunk/contrib/bm/ncn/executables/CMakeLists.txt
+END
+test_vidl.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/13976/trunk/contrib/bm/ncn/executables/test_vidl.cxx
+END

@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/snakes
+END
+dbseg_snakes_snakes_top.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/snakes/dbseg_snakes_snakes_top.c
+END
+dbseg_snakes_snakes.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/snakes/dbseg_snakes_snakes.h
+END
+dbseg_snakes_matrix_lib.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/snakes/dbseg_snakes_matrix_lib.c
+END
+dbseg_snakes_stop.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/snakes/dbseg_snakes_stop.h
+END
+snakes
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/snakes/snakes
+END
+run.c
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/snakes/run.c
+END
+dbseg_snakes_matrix_lib.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/snakes/dbseg_snakes_matrix_lib.h
+END
+dbseg_snakes_test.c
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/snakes/dbseg_snakes_test.c
+END
+dbseg_snakes_utils.c
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/snakes/dbseg_snakes_utils.c
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/snakes/Makefile
+END
+dbseg_snakes_stop.c
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/snakes/dbseg_snakes_stop.c
+END
+dbseg_snakes_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/12804/trunk/contrib/fine/algos/snakes/dbseg_snakes_utils.h
+END

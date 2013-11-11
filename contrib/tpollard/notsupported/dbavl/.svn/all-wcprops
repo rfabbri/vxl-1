@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/12409/trunk/contrib/tpollard/notsupported/dbavl
+END
+dbavl_manual_camera.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/9571/trunk/contrib/tpollard/notsupported/dbavl/dbavl_manual_camera.h
+END
+dbavl_tracker.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/9571/trunk/contrib/tpollard/notsupported/dbavl/dbavl_tracker.cxx
+END
+dbavl_camera_estimator.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/lemsvxl/!svn/ver/9571/trunk/contrib/tpollard/notsupported/dbavl/dbavl_camera_estimator.cxx
+END
+dbavl_tracker.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/12409/trunk/contrib/tpollard/notsupported/dbavl/dbavl_tracker.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/12409/trunk/contrib/tpollard/notsupported/dbavl/CMakeLists.txt
+END
+dbavl_camera_estimator.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/lemsvxl/!svn/ver/9571/trunk/contrib/tpollard/notsupported/dbavl/dbavl_camera_estimator.h
+END
+dbavl_manual_camera.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/9571/trunk/contrib/tpollard/notsupported/dbavl/dbavl_manual_camera.cxx
+END

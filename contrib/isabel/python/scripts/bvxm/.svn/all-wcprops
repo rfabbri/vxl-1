@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvxm
+END
+vrml_save_app.py
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvxm/vrml_save_app.py
+END
+merge_mixtures.py
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvxm/merge_mixtures.py
+END
+crop_and_save.py
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvxm/crop_and_save.py
+END
+gen_synth_world.py
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvxm/gen_synth_world.py
+END
+save_raw.py
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/13935/trunk/contrib/isabel/python/scripts/bvxm/save_raw.py
+END

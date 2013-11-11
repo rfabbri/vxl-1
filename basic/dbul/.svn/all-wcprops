@@ -1,0 +1,107 @@
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/lemsvxl/!svn/ver/13836/trunk/basic/dbul
+END
+dbul_arg.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/lemsvxl/!svn/ver/12582/trunk/basic/dbul/dbul_arg.cxx
+END
+dbul_handle_files_embedded_in_vxl_source.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/13636/trunk/basic/dbul/dbul_handle_files_embedded_in_vxl_source.h
+END
+dbul_dir_file.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/13707/trunk/basic/dbul/dbul_dir_file.cxx
+END
+dbul_random.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/13743/trunk/basic/dbul/dbul_random.cxx
+END
+dbul_octave.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/13780/trunk/basic/dbul/dbul_octave.cxx
+END
+dbul_parse_simple_file.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/13836/trunk/basic/dbul/dbul_parse_simple_file.cxx
+END
+dbul_handle_files_embedded_in_vxl_source.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/13636/trunk/basic/dbul/dbul_handle_files_embedded_in_vxl_source.cxx
+END
+dbul_matlab.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/13833/trunk/basic/dbul/dbul_matlab.h
+END
+dbul_solar_position.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/4940/trunk/basic/dbul/dbul_solar_position.h
+END
+dbul_arg.h
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/12582/trunk/basic/dbul/dbul_arg.h
+END
+dbul_matlab.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/13833/trunk/basic/dbul/dbul_matlab.cxx
+END
+dbul_dir_file.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/lemsvxl/!svn/ver/13707/trunk/basic/dbul/dbul_dir_file.h
+END
+dbul_solar_position.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/4966/trunk/basic/dbul/dbul_solar_position.cxx
+END
+dbul_random.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/13723/trunk/basic/dbul/dbul_random.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/13780/trunk/basic/dbul/CMakeLists.txt
+END
+dbul_octave.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/lemsvxl/!svn/ver/13780/trunk/basic/dbul/dbul_octave.h
+END
+dbul_parse_simple_file.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/13836/trunk/basic/dbul/dbul_parse_simple_file.h
+END

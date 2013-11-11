@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/lemsvxl/!svn/ver/9275/trunk/breye1/dbvis1/tool
+END
+dbvis1_polyg_select_img_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/9275/trunk/breye1/dbvis1/tool/dbvis1_polyg_select_img_tool.h
+END
+dbvis1_homog_view_tools.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/9275/trunk/breye1/dbvis1/tool/dbvis1_homog_view_tools.h
+END
+dbvis1_shockshape_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/9275/trunk/breye1/dbvis1/tool/dbvis1_shockshape_tool.h
+END
+dbvis1_polyg_select_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/9275/trunk/breye1/dbvis1/tool/dbvis1_polyg_select_tool.h
+END
+dbvis1_classify_curve_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/9275/trunk/breye1/dbvis1/tool/dbvis1_classify_curve_tool.cxx
+END
+dbvis1_edge_selection_tools.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/9275/trunk/breye1/dbvis1/tool/dbvis1_edge_selection_tools.h
+END
+dbvis1_image_intensity_inspector.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/9275/trunk/breye1/dbvis1/tool/dbvis1_image_intensity_inspector.cxx
+END
+dbvis1_edge_transform_tools.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/9275/trunk/breye1/dbvis1/tool/dbvis1_edge_transform_tools.cxx
+END
+dbvis1_so3d_info_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/9275/trunk/breye1/dbvis1/tool/dbvis1_so3d_info_tool.cxx
+END
+dbvis1_polyg_select_img_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/9275/trunk/breye1/dbvis1/tool/dbvis1_polyg_select_img_tool.cxx
+END
+dbvis1_homog_view_tools.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/9275/trunk/breye1/dbvis1/tool/dbvis1_homog_view_tools.cxx
+END
+dbvis1_shockshape_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/9275/trunk/breye1/dbvis1/tool/dbvis1_shockshape_tool.cxx
+END
+dbvis1_polyg_select_tool.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/9275/trunk/breye1/dbvis1/tool/dbvis1_polyg_select_tool.cxx
+END
+dbvis1_edge_selection_tools.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/9275/trunk/breye1/dbvis1/tool/dbvis1_edge_selection_tools.cxx
+END
+dbvis1_classify_curve_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/9275/trunk/breye1/dbvis1/tool/dbvis1_classify_curve_tool.h
+END
+dbvis1_image_intensity_inspector.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/9275/trunk/breye1/dbvis1/tool/dbvis1_image_intensity_inspector.h
+END
+dbvis1_edge_transform_tools.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/9275/trunk/breye1/dbvis1/tool/dbvis1_edge_transform_tools.h
+END
+dbvis1_so3d_info_tool.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/9275/trunk/breye1/dbvis1/tool/dbvis1_so3d_info_tool.h
+END

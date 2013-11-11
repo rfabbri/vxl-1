@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/13848/trunk/basic/dbil/algo/tests
+END
+test_include.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/13848/trunk/basic/dbil/algo/tests/test_include.cxx
+END
+test_exact_distance_transform.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/13848/trunk/basic/dbil/algo/tests/test_exact_distance_transform.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/13848/trunk/basic/dbil/algo/tests/test_driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/13848/trunk/basic/dbil/algo/tests/CMakeLists.txt
+END

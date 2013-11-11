@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/6916/trunk/contrib/biotree/biob/tests
+END
+test_worldpt_transformation.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/3745/trunk/contrib/biotree/biob/tests/test_worldpt_transformation.cxx
+END
+test_worldpt_index.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/2767/trunk/contrib/biotree/biob/tests/test_worldpt_index.cxx
+END
+test_explicit_neighborhood_structure.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/6916/trunk/contrib/biotree/biob/tests/test_explicit_neighborhood_structure.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/5613/trunk/contrib/biotree/biob/tests/test_driver.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/5803/trunk/contrib/biotree/biob/tests/CMakeLists.txt
+END
+test_grid_worldpt_roster.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/2871/trunk/contrib/biotree/biob/tests/test_grid_worldpt_roster.cxx
+END
+test_worldpt_field.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/5621/trunk/contrib/biotree/biob/tests/test_worldpt_field.cxx
+END

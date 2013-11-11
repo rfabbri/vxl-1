@@ -1,0 +1,281 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/lemsvxl/!svn/ver/14426/trunk/contrib/ntrinh/matlab
+END
+convert_ETHZ_manual_trace.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/12186/trunk/contrib/ntrinh/matlab/convert_ETHZ_manual_trace.m
+END
+main_compute_ccm_stat_dist_v2.m
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/14426/trunk/contrib/ntrinh/matlab/main_compute_ccm_stat_dist_v2.m
+END
+main_plot_xgraph_averaging_error.m
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/13826/trunk/contrib/ntrinh/matlab/main_plot_xgraph_averaging_error.m
+END
+main_prepare_vox_data.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/main_prepare_vox_data.m
+END
+main_generate_bhog_train_test.m
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/12045/trunk/contrib/ntrinh/matlab/main_generate_bhog_train_test.m
+END
+analyze_xfrag_bhog.m
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/12013/trunk/contrib/ntrinh/matlab/analyze_xfrag_bhog.m
+END
+main_clean_pb_edgemap.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/main_clean_pb_edgemap.m
+END
+rename_files.m
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/rename_files.m
+END
+main_generate_screenshot_ETHZ_groundtruth.m
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/12383/trunk/contrib/ntrinh/matlab/main_generate_screenshot_ETHZ_groundtruth.m
+END
+pdf_sample_weibull.m
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/pdf_sample_weibull.m
+END
+write_libsvm_datafile.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/write_libsvm_datafile.m
+END
+main_screenshot_CFG.m
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/main_screenshot_CFG.m
+END
+main_svm_on_bhog.m
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/main_svm_on_bhog.m
+END
+plot_libsvm_predict.m
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/plot_libsvm_predict.m
+END
+main_plot_sigmoid_like_curve.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/main_plot_sigmoid_like_curve.m
+END
+main_compare_det_with_competiting_methods.m
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/main_compare_det_with_competiting_methods.m
+END
+read_xgraph_average_data_file.m
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/lemsvxl/!svn/ver/13799/trunk/contrib/ntrinh/matlab/read_xgraph_average_data_file.m
+END
+test.png
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/lemsvxl/!svn/ver/12186/trunk/contrib/ntrinh/matlab/test.png
+END
+main_compute_pb_edges.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/main_compute_pb_edges.m
+END
+main_examine_xgraph_geom.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/main_examine_xgraph_geom.m
+END
+main_hist_error_of_xgraph_average.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/13799/trunk/contrib/ntrinh/matlab/main_hist_error_of_xgraph_average.m
+END
+main_compare_files.m
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/main_compare_files.m
+END
+main_number_edge_points.m
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/main_number_edge_points.m
+END
+xml_io_tools.zip
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/lemsvxl/!svn/ver/12675/trunk/contrib/ntrinh/matlab/xml_io_tools.zip
+END
+distance_matrix.m
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/13849/trunk/contrib/ntrinh/matlab/distance_matrix.m
+END
+load_ethz_manual_trace.m
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/load_ethz_manual_trace.m
+END
+main_eval_vox_det_dr_fppi.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/lemsvxl/!svn/ver/14425/trunk/contrib/ntrinh/matlab/main_eval_vox_det_dr_fppi.m
+END
+main_eval_vox_det_wcm.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/main_eval_vox_det_wcm.m
+END
+analyze_shape_fragments.m
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/12013/trunk/contrib/ntrinh/matlab/analyze_shape_fragments.m
+END
+main_extract_object_ethz.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/main_extract_object_ethz.m
+END
+main_iterative_mean.m
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/13799/trunk/contrib/ntrinh/matlab/main_iterative_mean.m
+END
+main_stats_xfrag_geom.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12045/trunk/contrib/ntrinh/matlab/main_stats_xfrag_geom.m
+END
+main_plot_groudtruth_scales.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/main_plot_groudtruth_scales.m
+END
+main_prune_edgemap_using_Kovesi.m
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/main_prune_edgemap_using_Kovesi.m
+END
+eval_vox_detect_ethz.m
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/13406/trunk/contrib/ntrinh/matlab/eval_vox_detect_ethz.m
+END
+iterative_mean_euclidean.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/iterative_mean_euclidean.m
+END
+main_compute_image_pyramid.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/main_compute_image_pyramid.m
+END
+main_illustrate_iterative_mean.m
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/13799/trunk/contrib/ntrinh/matlab/main_illustrate_iterative_mean.m
+END
+main_compute_ccm_stats_dist_v0.m
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/main_compute_ccm_stats_dist_v0.m
+END
+main_compute_ccm_stats_dist_v1.m
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/main_compute_ccm_stats_dist_v1.m
+END
+main_analyze_det_root_node_distribution.m
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/main_analyze_det_root_node_distribution.m
+END
+eval_bnd_accuracy_ethz.m
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/eval_bnd_accuracy_ethz.m
+END
+main_vis_xfrags.m
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/main_vis_xfrags.m
+END
+main_draw_groundtruth_bbox.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/main_draw_groundtruth_bbox.m
+END
+main_collect_xgraph_edit_distance.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/lemsvxl/!svn/ver/13826/trunk/contrib/ntrinh/matlab/main_collect_xgraph_edit_distance.m
+END
+main_eval_vox_det.m
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/14096/trunk/contrib/ntrinh/matlab/main_eval_vox_det.m
+END

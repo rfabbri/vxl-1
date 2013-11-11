@@ -1,0 +1,5 @@
+
+#include <bpro1/bpro1_storage_sptr.h>
+
+class dbrl_local_global_match_set_storage;
+typedef bpro1_storage_sptr_t<dbrl_local_global_match_set_storage> dbrl_local_global_match_set_storage_sptr;

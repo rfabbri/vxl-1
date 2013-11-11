@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/lemsvxl/!svn/ver/12779/trunk/contrib/rfabbri/mw/app/matlab/qualitative-epipolar/data
+END
+epi_lockheed_data.m
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/lemsvxl/!svn/ver/12779/trunk/contrib/rfabbri/mw/app/matlab/qualitative-epipolar/data/epi_lockheed_data.m
+END
+epi_pot_fragment_point_data.m
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/lemsvxl/!svn/ver/12779/trunk/contrib/rfabbri/mw/app/matlab/qualitative-epipolar/data/epi_pot_fragment_point_data.m
+END
+epi_ox_get_corresp_pts.m
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/lemsvxl/!svn/ver/12779/trunk/contrib/rfabbri/mw/app/matlab/qualitative-epipolar/data/epi_ox_get_corresp_pts.m
+END
+epi_ge_point_data.m
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/lemsvxl/!svn/ver/12779/trunk/contrib/rfabbri/mw/app/matlab/qualitative-epipolar/data/epi_ge_point_data.m
+END
+epi_oxford_corridor_point_data.m
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/lemsvxl/!svn/ver/12779/trunk/contrib/rfabbri/mw/app/matlab/qualitative-epipolar/data/epi_oxford_corridor_point_data.m
+END
+epi_oxford_house_point_data.m
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/lemsvxl/!svn/ver/12779/trunk/contrib/rfabbri/mw/app/matlab/qualitative-epipolar/data/epi_oxford_house_point_data.m
+END

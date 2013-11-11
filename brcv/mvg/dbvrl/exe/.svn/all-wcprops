@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/lemsvxl/!svn/ver/7244/trunk/brcv/mvg/dbvrl/exe
+END
+compute_homographies_exe.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/lemsvxl/!svn/ver/7235/trunk/brcv/mvg/dbvrl/exe/compute_homographies_exe.cxx
+END
+register_images_exe.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/7244/trunk/brcv/mvg/dbvrl/exe/register_images_exe.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/4982/trunk/brcv/mvg/dbvrl/exe/CMakeLists.txt
+END

@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/lemsvxl/!svn/ver/4718/trunk/basic/dbsta/tests
+END
+test_gaussian_sphere.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/lemsvxl/!svn/ver/4328/trunk/basic/dbsta/tests/test_gaussian_sphere.cxx
+END
+test_include.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/4348/trunk/basic/dbsta/tests/test_include.cxx
+END
+test_dbsta_io.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/4718/trunk/basic/dbsta/tests/test_dbsta_io.cxx
+END
+test_gaussian_indep.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/4718/trunk/basic/dbsta/tests/test_gaussian_indep.cxx
+END
+test_driver.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/4718/trunk/basic/dbsta/tests/test_driver.cxx
+END
+test_gaussian_full.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/4333/trunk/basic/dbsta/tests/test_gaussian_full.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/4718/trunk/basic/dbsta/tests/CMakeLists.txt
+END
+test_histogram.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/4348/trunk/basic/dbsta/tests/test_histogram.cxx
+END
+test_mixture.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/lemsvxl/!svn/ver/4328/trunk/basic/dbsta/tests/test_mixture.cxx
+END

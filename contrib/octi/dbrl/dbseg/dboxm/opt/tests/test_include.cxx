@@ -1,0 +1,15 @@
+#include <dboxm/opt/boxm_aux_scene.h>
+#include <dboxm/opt/boxm_aux_traits.h>
+#include <dboxm/opt/boxm_generate_opt_sample_functor.h>
+#include <dboxm/opt/boxm_opt_appearance_estimator.h>
+#include <dboxm/opt/boxm_opt_rt_bayesian_optimizer.h>
+#include <dboxm/opt/boxm_raytrace_function.h>
+#include <dboxm/opt/boxm_render_expected_depth_functor.h>
+#include <dboxm/opt/boxm_render_expected_image_functor.h>
+#include <dboxm/opt/boxm_rt_sample.h>
+#include <dboxm/opt/boxm_update_image_functor.h>
+
+#include <dboxm/opt/pro/boxm_opt_processes.h>
+#include <dboxm/opt/pro/boxm_opt_register.h>
+
+int main() { return 0; }

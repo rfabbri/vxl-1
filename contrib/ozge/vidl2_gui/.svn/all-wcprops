@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/lemsvxl/!svn/ver/12418/trunk/contrib/ozge/vidl2_gui
+END
+vvid_live_video_dshow_tableau.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/12418/trunk/contrib/ozge/vidl2_gui/vvid_live_video_dshow_tableau.cxx
+END
+vvid_live_video_dshow_manager.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/12418/trunk/contrib/ozge/vidl2_gui/vvid_live_video_dshow_manager.h
+END
+vvid_live_video_dshow_tableau.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/lemsvxl/!svn/ver/12418/trunk/contrib/ozge/vidl2_gui/vvid_live_video_dshow_tableau.h
+END
+vvid_live_video_dshow_manager.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/lemsvxl/!svn/ver/12418/trunk/contrib/ozge/vidl2_gui/vvid_live_video_dshow_manager.cxx
+END
+vvid_live_video_dshow_tableau_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/lemsvxl/!svn/ver/8611/trunk/contrib/ozge/vidl2_gui/vvid_live_video_dshow_tableau_sptr.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/lemsvxl/!svn/ver/12418/trunk/contrib/ozge/vidl2_gui/CMakeLists.txt
+END

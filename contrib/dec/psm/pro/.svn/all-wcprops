@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/lemsvxl/!svn/ver/13564/trunk/contrib/dec/psm/pro
+END
+psm_register.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/13564/trunk/contrib/dec/psm/pro/psm_register.cxx
+END
+psm_register.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/12342/trunk/contrib/dec/psm/pro/psm_register.h
+END
+psm_processes.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/13564/trunk/contrib/dec/psm/pro/psm_processes.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/12424/trunk/contrib/dec/psm/pro/CMakeLists.txt
+END

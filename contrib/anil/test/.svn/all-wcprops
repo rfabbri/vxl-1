@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/lemsvxl/!svn/ver/14748/trunk/contrib/anil/test
+END
+dbcvr_cvmatch_intensity.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/14748/trunk/contrib/anil/test/dbcvr_cvmatch_intensity.h
+END
+test_cvmatch_even.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/14748/trunk/contrib/anil/test/test_cvmatch_even.cxx
+END
+test_cvmatch.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/14748/trunk/contrib/anil/test/test_cvmatch.cxx
+END
+test_cvmatch_intensity.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/lemsvxl/!svn/ver/14748/trunk/contrib/anil/test/test_cvmatch_intensity.cxx
+END
+dbcvr_cvmatch_intensity.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/14748/trunk/contrib/anil/test/dbcvr_cvmatch_intensity.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/14748/trunk/contrib/anil/test/CMakeLists.txt
+END

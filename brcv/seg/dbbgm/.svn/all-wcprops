@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/lemsvxl/!svn/ver/15225/trunk/brcv/seg/dbbgm
+END
+dbbgm_distribution_image.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/5518/trunk/brcv/seg/dbbgm/dbbgm_distribution_image.h
+END
+dbbgm_bgmodel_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/3237/trunk/brcv/seg/dbbgm/dbbgm_bgmodel_sptr.h
+END
+dbbgm_update.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/10507/trunk/brcv/seg/dbbgm/dbbgm_update.h
+END
+dbbgm_model_data.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/3300/trunk/brcv/seg/dbbgm/dbbgm_model_data.cxx
+END
+dbbgm_bgmodel.txx
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/lemsvxl/!svn/ver/4718/trunk/brcv/seg/dbbgm/dbbgm_bgmodel.txx
+END
+dbbgm_apply.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/lemsvxl/!svn/ver/10507/trunk/brcv/seg/dbbgm/dbbgm_apply.h
+END
+dbbgm_detect.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/10507/trunk/brcv/seg/dbbgm/dbbgm_detect.h
+END
+dbbgm_bgmodel.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/3300/trunk/brcv/seg/dbbgm/dbbgm_bgmodel.h
+END
+dbbgm_model_data.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/lemsvxl/!svn/ver/3292/trunk/brcv/seg/dbbgm/dbbgm_model_data.h
+END
+dbbgm_distribution_image_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/4114/trunk/brcv/seg/dbbgm/dbbgm_distribution_image_sptr.h
+END
+dbbgm_distribution_image.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/4718/trunk/brcv/seg/dbbgm/dbbgm_distribution_image.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/lemsvxl/!svn/ver/11325/trunk/brcv/seg/dbbgm/CMakeLists.txt
+END
+dbbgm_distribution_image.txx
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/lemsvxl/!svn/ver/5328/trunk/brcv/seg/dbbgm/dbbgm_distribution_image.txx
+END

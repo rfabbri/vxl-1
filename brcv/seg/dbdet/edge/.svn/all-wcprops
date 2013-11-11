@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/lemsvxl/!svn/ver/15944/trunk/brcv/seg/dbdet/edge
+END
+dbdet_edgemap_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/8099/trunk/brcv/seg/dbdet/edge/dbdet_edgemap_sptr.h
+END
+dbdet_gaussian_kernel.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/lemsvxl/!svn/ver/13189/trunk/brcv/seg/dbdet/edge/dbdet_gaussian_kernel.h
+END
+dbdet_edgemap.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/lemsvxl/!svn/ver/8099/trunk/brcv/seg/dbdet/edge/dbdet_edgemap.cxx
+END
+dbdet_kernel.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/lemsvxl/!svn/ver/10090/trunk/brcv/seg/dbdet/edge/dbdet_kernel.h
+END
+dbdet_orient_kernel.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/8097/trunk/brcv/seg/dbdet/edge/dbdet_orient_kernel.h
+END
+dbdet_interp_kernel.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/lemsvxl/!svn/ver/8360/trunk/brcv/seg/dbdet/edge/dbdet_interp_kernel.h
+END
+dbdet_edgemap.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/lemsvxl/!svn/ver/15944/trunk/brcv/seg/dbdet/edge/dbdet_edgemap.h
+END

@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/lemsvxl/!svn/ver/12409/trunk/contrib/ozge/face_gui/vis
+END
+dbru_facedb_tools.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/lemsvxl/!svn/ver/12409/trunk/contrib/ozge/face_gui/vis/dbru_facedb_tools.cxx
+END
+dbru_facedb_displayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/lemsvxl/!svn/ver/9318/trunk/contrib/ozge/face_gui/vis/dbru_facedb_displayer.h
+END
+dbru_facedb_tools.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/lemsvxl/!svn/ver/12409/trunk/contrib/ozge/face_gui/vis/dbru_facedb_tools.h
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/lemsvxl/!svn/ver/9318/trunk/contrib/ozge/face_gui/vis/CMakeLists.txt
+END
+dbru_facedb_displayer.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/lemsvxl/!svn/ver/9318/trunk/contrib/ozge/face_gui/vis/dbru_facedb_displayer.cxx
+END

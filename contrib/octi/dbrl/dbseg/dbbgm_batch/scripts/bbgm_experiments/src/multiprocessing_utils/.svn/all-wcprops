@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/lemsvxl/!svn/ver/15065/trunk/contrib/octi/dbrl/dbseg/dbbgm_batch/scripts/bbgm_experiments/src/multiprocessing_utils
+END
+bbgm_multiprocessing.py
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/svn/lemsvxl/!svn/ver/15065/trunk/contrib/octi/dbrl/dbseg/dbbgm_batch/scripts/bbgm_experiments/src/multiprocessing_utils/bbgm_multiprocessing.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/lemsvxl/!svn/ver/15062/trunk/contrib/octi/dbrl/dbseg/dbbgm_batch/scripts/bbgm_experiments/src/multiprocessing_utils/__init__.py
+END
+bbgm_workers.py
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/lemsvxl/!svn/ver/15065/trunk/contrib/octi/dbrl/dbseg/dbbgm_batch/scripts/bbgm_experiments/src/multiprocessing_utils/bbgm_workers.py
+END
+bbgm_jobs.py
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/lemsvxl/!svn/ver/15065/trunk/contrib/octi/dbrl/dbseg/dbbgm_batch/scripts/bbgm_experiments/src/multiprocessing_utils/bbgm_jobs.py
+END
