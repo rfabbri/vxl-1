@@ -1,7 +1,0 @@
-#!/bin/sh
-
-dname=`dirname $*`
-bname=`echo $* | sed 's/^\([^.-]*\)[-.].*/\1/g'`
-
-echo $dname >/tmp/lemsvxl_mw_bname
-echo $bname >>/tmp/lemsvxl_mw_bname

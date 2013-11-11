@@ -1,80 +1,0 @@
-9
-
-dir
-15842
-https://visionserver.lems.brown.edu/svn/lemsvxl/trunk/contrib/mleotta
-https://visionserver.lems.brown.edu/svn/lemsvxl
-
-
-
-2009-09-04T20:34:28.000000Z
-13360
-mleotta
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-19b38075-fba0-4a01-96da-394feb402aa5
-
-pro
-dir
-
-vidreg
-dir
-
-cmd
-dir
-
-gui
-dir
-
-modrec
-dir
-
-bae_demo
-dir
-
-CMakeLists.txt
-file
-
-
-
-
-2010-05-28T16:09:48.149551Z
-89449cb492a19d9a6b0ccf23bd42681a
-2008-10-02T17:42:24.000000Z
-12001
-mleotta
-has-props
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-510
-

@@ -1,8 +1,0 @@
-# Brown Elastic Curve Matching Library
-# brcv/rec/dbcvr/examples/CMakeLists.txt
-
-ADD_EXECUTABLE(dbcvr_open_space_cvmatch_even_grid_example dbcvr_open_space_cvmatch_even_grid_example.cxx )
-TARGET_LINK_LIBRARIES(dbcvr_open_space_cvmatch_even_grid_example dbcvr dbsol dbsol_algo dbdp)
-
-ADD_EXECUTABLE(dbcvr_open_2d_cvmatch_even_grid_example dbcvr_open_2d_cvmatch_even_grid_example.cxx )
-TARGET_LINK_LIBRARIES(dbcvr_open_2d_cvmatch_even_grid_example dbcvr dbsol dbsol_algo dbdp)

@@ -1,5 +1,0 @@
-#!/bin/sh
-
-fnoext=`echo $* | sed 's/\....$//g'`
-
-ls ${fnoext}*.con >/tmp/lemsvxl_mw_confiles 2>/dev/null

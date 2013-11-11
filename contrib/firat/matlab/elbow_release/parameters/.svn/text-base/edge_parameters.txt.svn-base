@@ -1,6 +1,0 @@
-sigma = 1.0 
-edge_thresh = 5.0 
-hx = 0.5
-hy = 0.5
-hz = 0.5
-

@@ -1,9 +1,0 @@
-K 13
-svm:mime-type
-V 9
-image/bmp
-K 13
-svn:mime-type
-V 24
-application/octet-stream
-END

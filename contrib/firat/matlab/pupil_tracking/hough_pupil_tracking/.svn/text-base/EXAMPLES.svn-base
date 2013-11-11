@@ -1,1 +1,0 @@
-[centers, radii, mov] = pupil_tracker_gui('/media/Transcend/subset', '/home/firat/Desktop/pupil/mat', 1280, 45, 6, 0.999, 0.4, 'MikeLeft2', 300);

@@ -1,37 +1,0 @@
-9
-
-dir
-17056
-https://visionserver.lems.brown.edu/svn/lemsvxl/trunk/contrib/firat/matlab/VOCdevkit/results/VOC2007
-https://visionserver.lems.brown.edu/svn/lemsvxl
-
-
-
-2010-06-05T19:21:59.653908Z
-13968
-firat
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-19b38075-fba0-4a01-96da-394feb402aa5
-
-Main
-dir
-
-Layout
-dir
-
-Segmentation
-dir
-

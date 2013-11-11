@@ -1,83 +1,0 @@
-9
-
-dir
-15842
-https://visionserver.lems.brown.edu/svn/lemsvxl/trunk/contrib/Gregistration
-https://visionserver.lems.brown.edu/svn/lemsvxl
-
-
-
-2011-10-06T19:01:12.118341Z
-15532
-ausumezbas
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-19b38075-fba0-4a01-96da-394feb402aa5
-
-georegister
-dir
-
-pro
-dir
-
-exe
-dir
-
-vis
-dir
-
-cmd
-dir
-
-gui
-dir
-
-dt
-dir
-
-CMakeLists.txt
-file
-
-
-
-
-2011-10-20T22:18:37.887885Z
-44232a7b255d03e3feee9cefb10975e1
-2011-10-06T19:01:12.118341Z
-15532
-ausumezbas
-has-props
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-285
-

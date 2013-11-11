@@ -1,92 +1,0 @@
-9
-
-dir
-15842
-https://visionserver.lems.brown.edu/svn/lemsvxl/trunk/brcv/rec
-https://visionserver.lems.brown.edu/svn/lemsvxl
-
-
-
-2011-10-21T15:21:07.326046Z
-15626
-mn
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-19b38075-fba0-4a01-96da-394feb402aa5
-
-dbcvr
-dir
-
-dbkpr
-dir
-
-dborl
-dir
-
-dbcsi
-dir
-
-dbskr
-dir
-
-dbmsh3dr
-dir
-
-dbasn
-dir
-
-dber
-dir
-
-dbru
-dir
-
-dbsk3dr
-dir
-
-CMakeLists.txt
-file
-
-
-
-
-2010-05-28T16:08:46.677550Z
-1dba39bab5dc5b798b1b65640dbbcffd
-2009-04-24T22:12:27.000000Z
-12629
-rfabbri
-has-props
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-762
-

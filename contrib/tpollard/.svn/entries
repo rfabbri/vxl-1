@@ -1,80 +1,0 @@
-9
-
-dir
-15842
-https://visionserver.lems.brown.edu/svn/lemsvxl/trunk/contrib/tpollard
-https://visionserver.lems.brown.edu/svn/lemsvxl
-
-
-
-2009-03-23T16:16:05.000000Z
-12409
-mleotta
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-19b38075-fba0-4a01-96da-394feb402aa5
-
-btpl
-dir
-
-bvaml
-dir
-
-gui
-dir
-
-notsupported
-dir
-
-dbccl
-dir
-
-baml
-dir
-
-CMakeLists.txt
-file
-
-
-
-
-2010-05-28T16:09:07.301305Z
-e3e93ea24a733d1f034990e6a6efaf5f
-2007-09-27T15:05:27.000000Z
-9761
-tpollard
-has-props
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-255
-

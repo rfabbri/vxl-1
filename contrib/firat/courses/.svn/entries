@@ -1,37 +1,0 @@
-9
-
-dir
-17056
-https://visionserver.lems.brown.edu/svn/lemsvxl/trunk/contrib/firat/courses
-https://visionserver.lems.brown.edu/svn/lemsvxl
-
-
-
-2011-05-27T17:38:00.444395Z
-15141
-firat
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-19b38075-fba0-4a01-96da-394feb402aa5
-
-engn2560
-dir
-
-engn2910x
-dir
-
-engn2500
-dir
-

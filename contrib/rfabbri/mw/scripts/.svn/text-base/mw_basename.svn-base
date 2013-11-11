@@ -1,9 +1,0 @@
-#!/bin/sh
-
-dname=`dirname $*`
-bname=`echo $* | sed 's/^\([^.-]*\)[-.].*/\1/g'`
-noext=`echo $* | sed 's/\.[^.]*$//g'`
-
-echo $dname >$HOME/tmp/lemsvxl_mw_bname
-echo $bname >>$HOME/tmp/lemsvxl_mw_bname
-echo $noext >>$HOME/tmp/lemsvxl_mw_bname

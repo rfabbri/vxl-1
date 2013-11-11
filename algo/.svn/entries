@@ -1,89 +1,0 @@
-9
-
-dir
-15842
-https://visionserver.lems.brown.edu/svn/lemsvxl/trunk/algo
-https://visionserver.lems.brown.edu/svn/lemsvxl
-
-
-
-2007-09-18T23:02:20.000000Z
-9752
-rfabbri
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-19b38075-fba0-4a01-96da-394feb402aa5
-
-bcdg
-dir
-
-softassign
-dir
-
-contourtracing
-dir
-
-curvematch
-dir
-
-extrautils
-dir
-
-loglin
-dir
-
-shock
-dir
-
-susan
-dir
-
-CMakeLists.txt
-file
-
-
-
-
-2010-05-28T16:08:27.813305Z
-ef12a9a485e0b3fcb6e557fcd478d202
-2005-02-23T19:12:12.000000Z
-2322
-rfabbri
-has-props
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-904
-
-bapl
-dir
-

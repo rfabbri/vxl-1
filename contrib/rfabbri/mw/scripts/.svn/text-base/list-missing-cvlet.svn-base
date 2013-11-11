@@ -1,1 +1,0 @@
-for i in `noext *.$1`; do ls $i.cvlet*; done

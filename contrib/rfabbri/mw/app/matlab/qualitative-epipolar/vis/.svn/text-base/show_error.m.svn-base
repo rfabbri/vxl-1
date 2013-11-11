@@ -1,6 +1,0 @@
-
-function err_msg = show_error(vv)
-npts = max(size(vv));
-err_msg = ['rms: ' num2str(sqrt(sum(vv.*vv)/npts)) ', avg:' num2str(mean(vv))...
-           ',   meansq: ' num2str(sqrt(sum(vv.*vv))/npts) ',   ssq: ' num2str(sum(vv.*vv)) ...
-           ',  max:' num2str(max(vv))];

@@ -1,3 +1,0 @@
-
-///#include "wx/msw/wx.rc"
-WXBITMAP_STD_COLOURS    BITMAP  MOVEABLE PURE   "wx/msw/colours.bmp"

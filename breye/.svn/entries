@@ -1,80 +1,0 @@
-9
-
-dir
-15842
-https://visionserver.lems.brown.edu/svn/lemsvxl/trunk/breye
-https://visionserver.lems.brown.edu/svn/lemsvxl
-
-
-
-2009-10-24T21:00:11.000000Z
-13474
-ntrinh
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-19b38075-fba0-4a01-96da-394feb402aa5
-
-bpro
-dir
-
-vorl
-dir
-
-bvis
-dir
-
-vidpro
-dir
-
-dbvis
-dir
-
-b3d
-dir
-
-CMakeLists.txt
-file
-
-
-
-
-2010-05-28T16:10:30.121306Z
-04630f140120b1c5347e2d6b4ff12f87
-2008-02-14T15:46:59.000000Z
-10745
-mir
-has-props
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-573
-

@@ -1,8 +1,0 @@
-
-
-
-# 3 cams at time:
-#
-# call the following then manually add the first line "Initial" to the
-# beginning.
-grep -C 2 -- '---' $1 |egrep '(Initial|Very final)' > $1-summary

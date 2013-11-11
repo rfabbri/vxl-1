@@ -1,217 +1,0 @@
-9
-
-dir
-15842
-https://visionserver.lems.brown.edu/svn/lemsvxl/trunk/contrib/bm
-https://visionserver.lems.brown.edu/svn/lemsvxl
-
-
-
-2011-11-24T22:38:40.750640Z
-15835
-bm
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-19b38075-fba0-4a01-96da-394feb402aa5
-
-vehicleRecognition
-dir
-
-dncn
-dir
-
-courses
-dir
-
-dvrml
-dir
-
-changeDetection
-dir
-
-scripts
-dir
-
-dts
-dir
-
-bmocl
-dir
-
-results
-dir
-
-executables
-dir
-
-dsm2
-dir
-
-temp
-dir
-
-dsm2_batch
-dir
-
-data
-dir
-
-dsmw
-dir
-
-tag
-dir
-
-CMakeLists.txt
-file
-
-
-
-
-2011-10-20T22:18:54.593386Z
-bfe5077a0e0e10fd7e48c56691e778e5
-2011-10-18T15:28:57.036573Z
-15597
-bm
-has-props
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-165
-
-ncn
-dir
-
-bmvrec
-dir
-
-test.cxx
-file
-
-
-
-
-2010-05-28T16:09:38.162036Z
-eb1a3227cdc3fedbaec2fe38bf6c044a
-2009-05-08T18:58:47.000000Z
-12713
-bm
-has-props
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-8
-
-vlfeat
-dir
-
-vlfeat_batch
-dir
-
-dsm
-dir
-
-hist_match
-dir
-
-dsm_batch
-dir
-
-workspace
-dir
-
-ncn1
-dir
-
-dummy_exec.cxx
-file
-
-
-
-
-2011-10-20T22:18:54.593386Z
-d41d8cd98f00b204e9800998ecf8427e
-2010-09-24T20:10:03.996687Z
-14493
-bm
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-0
-
-dbcl
-dir
-
-smw
-dir
-
-oclVectorAdd
-dir
-
-non_compact_neighborhood_experiments
-dir
-

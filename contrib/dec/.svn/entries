@@ -1,89 +1,0 @@
-9
-
-dir
-15842
-https://visionserver.lems.brown.edu/svn/lemsvxl/trunk/contrib/dec
-https://visionserver.lems.brown.edu/svn/lemsvxl
-
-
-
-2010-02-16T19:40:46.000000Z
-13620
-dec
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-19b38075-fba0-4a01-96da-394feb402aa5
-
-psm
-dir
-
-psm_batch
-dir
-
-hsds
-dir
-
-psm_opt
-dir
-
-psm_mfa
-dir
-
-breg3d_old
-dir
-
-breg3d
-dir
-
-breg3d_batch
-dir
-
-psm_camera_opt
-dir
-
-CMakeLists.txt
-file
-
-
-
-
-2010-05-28T16:09:14.235051Z
-737454df5ad52fbd8076d6402cdc5433
-2009-12-07T03:03:09.000000Z
-13557
-dec
-has-props
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-333
-

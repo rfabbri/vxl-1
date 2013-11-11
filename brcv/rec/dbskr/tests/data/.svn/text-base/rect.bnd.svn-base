@@ -1,8 +1,0 @@
-Boundary File v3.0
-width: -1
-height: -1
-number-of-elements: 4
-line-from-to: (40 10) (120 10)
-line-from-to: (120 10) (120 40)
-line-from-to: (120 40) (40 40)
-line-from-to: (40 40) (40 10)
