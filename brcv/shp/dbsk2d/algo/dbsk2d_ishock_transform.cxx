@@ -285,7 +285,10 @@ void dbsk2d_ishock_transform::delete_shock_vertices()
         if ( cshock )
         {
             cshock->set_pSNode(NULL);
-            outer_wavefront_[cshock->cSNode()->id()]=cshock->cSNode();
+            if ( cshock->cSNode() )
+            {
+                outer_wavefront_[cshock->cSNode()->id()]=cshock->cSNode();
+            }
             delete_shock_and_update(cshock);
 
         }
@@ -293,7 +296,10 @@ void dbsk2d_ishock_transform::delete_shock_vertices()
         if ( cshock2 )
         {
             cshock2->set_pSNode(NULL);
-            outer_wavefront_[cshock2->cSNode()->id()]=cshock2->cSNode();
+            if ( cshock2->cSNode() )
+            {
+                outer_wavefront_[cshock2->cSNode()->id()]=cshock2->cSNode();
+            }
             delete_shock_and_update(cshock2);
 
         }
