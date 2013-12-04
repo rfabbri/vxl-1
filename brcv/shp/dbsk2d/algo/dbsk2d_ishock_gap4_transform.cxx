@@ -99,7 +99,12 @@ bool dbsk2d_ishock_gap4_transform::execute_transform()
         delete_belm_shocks(left_line);
         delete_belm_shocks(right_line);
         delete_belm_shocks(bp1);
-        
+
+        if ( interacting_bnd_elements_.count(bp2->id()))
+        {
+            delete_belm_shocks(bp2);
+        }
+
         left_line->set_GUIelm(false);
         right_line->set_GUIelm(false);
         
