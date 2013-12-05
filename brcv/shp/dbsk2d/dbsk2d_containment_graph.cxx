@@ -700,6 +700,12 @@ void dbsk2d_containment_graph::determine_endpoints(
                         dbsk2d_bnd_vertex* bnd_vertex=bpoint->bnd_vertex();
                         edge_list elist;
                         bnd_vertex->edges(elist);
+
+                        if ( elist.size() == 2 )
+                        {
+                            elist.erase(elist.begin());
+                        }
+
                         dbsk2d_bnd_edge* edge=(dbsk2d_bnd_edge*)elist[0].ptr();
                         const vcl_list< vtol_topology_object * > * 
                            superiors  = edge->superiors_list();
@@ -728,6 +734,12 @@ void dbsk2d_containment_graph::determine_endpoints(
                         dbsk2d_bnd_vertex* bnd_vertex=bpoint->bnd_vertex();
                         edge_list elist;
                         bnd_vertex->edges(elist);
+
+                        if ( elist.size() == 2 )
+                        {
+                            elist.erase(elist.begin());
+                        }
+
                         dbsk2d_bnd_edge* edge=(dbsk2d_bnd_edge*)elist[0].ptr();
                         const vcl_list< vtol_topology_object * > * 
                             superiors  = edge->superiors_list();

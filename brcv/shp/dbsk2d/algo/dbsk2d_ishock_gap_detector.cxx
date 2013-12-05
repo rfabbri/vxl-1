@@ -183,6 +183,10 @@ void dbsk2d_ishock_gap_detector::detect_gap1(
             vertex->edges(edges);
             
             edge_list::iterator it;
+            if ( edges.size() == 2)
+            {
+                edges.erase(edges.begin());
+            }
             it=edges.begin();
             
             const vcl_list< vtol_topology_object * > * 
@@ -200,6 +204,10 @@ void dbsk2d_ishock_gap_detector::detect_gap1(
             vertex->edges(edges);
             
             edge_list::iterator it;
+            if ( edges.size() == 2)
+            {
+                edges.erase(edges.begin());
+            }
             it=edges.begin();
             
             const vcl_list< vtol_topology_object * > * 
@@ -319,6 +327,10 @@ void dbsk2d_ishock_gap_detector::detect_all_gaps(
             vertex->edges(edges);
             
             edge_list::iterator it;
+            if ( edges.size() == 2)
+            {
+                edges.erase(edges.begin());
+            }
             it=edges.begin();
             
             const vcl_list< vtol_topology_object * > * 
@@ -336,6 +348,10 @@ void dbsk2d_ishock_gap_detector::detect_all_gaps(
             vertex->edges(edges);
             
             edge_list::iterator it;
+            if ( edges.size() == 2)
+            {
+                edges.erase(edges.begin());
+            }
             it=edges.begin();
             
             const vcl_list< vtol_topology_object * > * 

@@ -578,10 +578,14 @@ get_contour(dbsk2d_ishock_bpoint* bp)
     dbsk2d_bnd_vertex* vertex=bp->bnd_vertex();
     edge_list edges;
     vertex->edges(edges);
-    
+
     edge_list::iterator it;
+    if ( edges.size() == 2)
+    {
+        edges.erase(edges.begin());
+    }
     it=edges.begin();
-    
+
     const vcl_list< vtol_topology_object * > * 
         superiors  = (*it)->superiors_list();
     vcl_list<vtol_topology_object*>::const_iterator tit;
