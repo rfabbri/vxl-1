@@ -318,13 +318,13 @@ void dbsk2d_ishock_gap4_transform::add_connecting_line(
 
     dbsk2d_ishock_bline* bl2(0);
 
-    if ( interacting_bnd_elements_.count(bp2->getElmToTheLeftOf(bl1)->id()))
+    if ( bp2->getElmToTheLeftOf(bl1)->id() == bl1->twinLine()->id())
     {
-        bl2=(dbsk2d_ishock_bline*)bp2->getElmToTheLeftOf(bl1);
+        bl2=(dbsk2d_ishock_bline*)bp2->getElmToTheRightOf(bl1);
     }
     else
     {
-        bl2=(dbsk2d_ishock_bline*)bp2->getElmToTheRightOf(bl1);
+        bl2=(dbsk2d_ishock_bline*)bp2->getElmToTheLeftOf(bl1);
     }
 
     contour_pair_.first= bl1;
