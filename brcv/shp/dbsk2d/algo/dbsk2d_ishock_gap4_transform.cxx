@@ -471,6 +471,25 @@ void dbsk2d_ishock_gap4_transform::add_connecting_line(
 
 bool dbsk2d_ishock_gap4_transform::valid_transform()
 {
+    belm_list belmList;
+    gap_line_pair_.first->get_interacting_belements(belmList);
+
+    bool flag=false;
+    belm_list::iterator it;
+    for ( it = belmList.begin() ; it != belmList.end() ; ++it)
+    {
+        if ( (*it)->id() == gap_line_pair_.second->id())
+        {
+            flag=true;
+            break;
+        }
+    }
+        
+    if ( ! flag )
+    {
+        return false;
+    }
+
     if ( gap_line_pair_.second->get_contour_id() < 0 )
     {
         return false;
