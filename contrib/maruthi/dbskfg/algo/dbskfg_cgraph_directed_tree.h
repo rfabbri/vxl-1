@@ -108,6 +108,9 @@ public:
   //: create and write .shg file to debug splice and contract costs
   bool create_shg(vcl_string fname);
 
+  //: comptue region descriptor
+  void compute_region_descriptor();
+
 protected:
   // Reset / Initalize /////////////////////////////////////////////////////////
 

@@ -783,3 +783,88 @@ bool dbskfg_cgraph_directed_tree::create_shg(vcl_string fname)
   outf.close();
   return true;
 }
+
+//------------------------------------------------------------------------------
+//: compute region descriptor
+void dbskfg_cgraph_directed_tree::compute_region_descriptor()
+{
+  // sampling size
+  double step_size=2.0;
+
+  // Store mates visited
+  vcl_set<int> mates_visited;
+
+  // find contract and delete costs for each dart
+  for (unsigned int di = 0; di<dart_cnt_; di++) 
+  {
+      vcl_pair<int, int> p;
+      p.first = di;
+      p.second = di;
+
+      if ( !dart_path_scurve_map_.count(p) )
+      {
+          continue;
+      }
+      
+      if ( mates_visited.count(di))
+      {
+          continue;
+      }
+
+      mates_visited.insert(mate_[di]);
+
+      vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
+          dart_path_scurve_map_.find(p);
+      dbskr_sc_pair_sptr curve_pair=iter->second;
+      dbskr_scurve_sptr sc=curve_pair->coarse;
+      
+      // vcl_stringstream model_stream;
+      // model_stream<<"Dart_model_"<<di<<"_app_correspondence.txt";
+      // vcl_ofstream model_file(model_stream.str().c_str());
+      
+      for ( int index=0; index < sc->num_points(); ++index)
+      {
+          vgl_point_2d<double> orig_pt=sc->sh_pt(index);
+          double R1=sc->time(index);
+          double theta=sc->theta(index);
+          double r=0;
+
+          while ( r < R1 )
+          {
+              vgl_point_2d<double> pt_plus = 
+                  sc->fragment_pt(index, r);
+              vgl_point_2d<double> pt_minus = 
+                  sc->fragment_pt(index, -r);
+               
+              // model_file<<pt_plus.x()
+              //           <<","
+              //           <<pt_plus.y()
+              //           <<","
+              //           <<R1-r
+              //           <<","
+              //           <<theta<<vcl_endl;
+              // model_file<<pt_minus.x()
+              //           <<","
+              //           <<pt_minus.y()
+              //           <<","
+              //           <<R1-r
+              //           <<","
+              //           <<theta<<vcl_endl;
+              r +=step_size;
+          }
+
+          // model_file<<orig_pt.x()
+          //           <<","
+          //           <<orig_pt.y()
+          //           <<","
+          //           <<R1
+          //           <<","
+          //           <<theta<<vcl_endl;
+          
+      }
+       
+      // model_file.close();
+  }
+
+
+}
