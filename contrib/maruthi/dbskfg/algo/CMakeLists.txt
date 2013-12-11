@@ -12,7 +12,8 @@ INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/maruthi/vlfeat-0.9.16 )
 SET(dbskfg_algo_sources
 
   #algos
-  
+  dbskfg_sift_data.h
+
   # compute graph
   dbskfg_compute_composite_graph.h dbskfg_compute_composite_graph.cxx
 
