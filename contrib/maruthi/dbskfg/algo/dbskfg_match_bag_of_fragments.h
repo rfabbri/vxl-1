@@ -32,6 +32,8 @@
 #include <vcl_utility.h>
 #include <dbskr/dbskr_edit_distance_base.h>
 
+#include <dbskfg/algo/dbskfg_sift_data.h>
+
 //: Form Composite Graph algorithm
 class dbskfg_match_bag_of_fragments
 {
@@ -251,6 +253,11 @@ private:
         vcl_vector< pathtable_key >& path_map,
         bool flag=false);
     
+    vnl_vector<double> compute_second_order_pooling(
+        vcl_map<int,vcl_vector<dbskfg_sift_data> >& fragments,
+        vl_sift_pix* grad_data,
+        VlSiftFilt* filter);
+
     // Make copy ctor private
     dbskfg_match_bag_of_fragments(const dbskfg_match_bag_of_fragments&);
 

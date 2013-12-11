@@ -39,6 +39,7 @@
 #include <vgl/vgl_distance.h>
 #include <string.h>
 #include <vul/vul_timer.h>
+#include <vnl/vnl_vector.h>
 
 dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
 ( 
@@ -524,7 +525,7 @@ bool dbskfg_match_bag_of_fragments::binary_match()
         bool f1=model_tree->acquire
             ((*m_iterator).second.second, elastic_splice_cost_, 
              circular_ends_, combined_edit_);
-        
+
         vcl_map<double,vcl_pair<unsigned int,unsigned int> >
             model_map;
         
@@ -2369,4 +2370,123 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
 
     vcl_pair<double,double> app_diff(sift_diff,norm_val);
     return app_diff;
+}
+
+vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
+    vcl_map<int,vcl_vector<dbskfg_sift_data> >& fragments,
+    vl_sift_pix* grad_data,
+    VlSiftFilt* filter
+)
+{
+    unsigned int total_numb_descriptors=0;
+    vcl_map<int,vcl_vector<dbskfg_sift_data> >::iterator kit;
+    for ( kit = fragments.begin() ; kit != fragments.end() ; ++kit)
+    {
+        total_numb_descriptors=(*kit).second.size()+total_numb_descriptors;
+    }
+
+    vcl_map<unsigned int,vcl_vector<vl_sift_pix> > descriptors;
+    vnl_matrix<vl_sift_pix> total_matrix(128,total_numb_descriptors,0.0);
+
+    unsigned int index=0;
+    vcl_map<int,vcl_vector<dbskfg_sift_data> >::iterator it;
+    for ( it = fragments.begin() ; it != fragments.end() ; ++it)
+    {
+        vcl_vector<dbskfg_sift_data> data=(*it).second;
+        for ( unsigned int i=0; i < data.size() ; ++i)
+        {
+            // Shock Point 2 from Query
+            vgl_point_2d<double> pt = data[i].location_;
+            double radius           = data[i].radius_;
+            double theta            = data[i].phi_;
+
+            vl_sift_pix descr[128];
+            memset(descr, 0, sizeof(vl_sift_pix)*128);
+
+            vl_sift_calc_raw_descriptor(filter,
+                                        grad_data,
+                                        descr,
+                                        filter->width,
+                                        filter->height,
+                                        pt.y(),
+                                        pt.x(),
+                                        radius/2,
+                                        theta);
+
+            total_matrix.set_column(index,descr);
+            vcl_vector<vl_sift_pix> descr_vec;
+            descr_vec.assign(descr,descr+128);
+            descriptors[index]=descr_vec;
+
+            index++;
+        } 
+        
+    }
+    
+    vnl_matrix<vl_sift_pix> total_matrix_transpose=total_matrix.transpose();
+
+    vnl_matrix<vl_sift_pix> second_order_pool = 
+        (total_matrix*total_matrix_transpose)/(total_numb_descriptors);
+
+    vnl_vector<double> upper_triangle(8256,0);
+
+    unsigned int position=0;
+    
+    // Get upper triangle portion
+    for ( unsigned int c=0; c < second_order_pool.columns() ; ++c)
+    {
+        for ( unsigned int r=c; r < second_order_pool.rows() ; ++r)
+        {
+            double scaled_value=vnl_math_sgn(second_order_pool[r][c])*
+                vcl_pow(vcl_abs(second_order_pool[r][c]),0.75);
+            upper_triangle.put(position,scaled_value);
+            position++;
+        }
+    }
+    
+    // {
+    //     vcl_ofstream model_file("All_sift.txt");
+    //     model_file<<descriptors.size()<<vcl_endl;
+    //     vcl_map<unsigned int,vcl_vector<vl_sift_pix> >::iterator dit;
+    //     for ( dit = descriptors.begin() ; dit != descriptors.end() ; ++dit)
+    //     {
+    //         vcl_vector<vl_sift_pix> vec=(*dit).second;
+    //         for  ( unsigned int c=0; c < vec.size() ; ++c)
+    //         {
+    //             model_file<<vec[c]<<vcl_endl;
+    //         }
+    //     }
+    //     model_file.close();
+    
+    // }
+
+
+    // {
+    //     vcl_ofstream model_file("sift2.txt");
+        
+    //     for ( unsigned int c=0; c < second_order_pool.columns() ; ++c)
+    //     {
+    //         for ( unsigned int r=0; r < second_order_pool.rows() ; ++r)
+    //         {
+    //             model_file<<second_order_pool[r][c]<<vcl_endl;
+    //         }
+    //     }
+
+    //     model_file.close();
+    
+    // }
+
+    // {
+    //     vcl_ofstream model_file("final_desc.txt");
+        
+    //     for ( unsigned int c=0; c < upper_triangle.size() ; ++c)
+    //     {
+    //         model_file<<upper_triangle(c)<<vcl_endl;
+    //     }
+
+    //     model_file.close();
+    
+    // }
+
+    return upper_triangle;
 }
