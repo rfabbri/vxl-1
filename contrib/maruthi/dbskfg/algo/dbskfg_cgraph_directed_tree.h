@@ -23,6 +23,8 @@
 #include <dbskfg/dbskfg_composite_link_sptr.h>
 #include <dbskfg/dbskfg_composite_node_sptr.h>
 
+#include <dbskfg/algo/dbskfg_sift_data.h>
+
 //==============================================================================
 // dbskfg_cgraph_directed_tree
 //==============================================================================
@@ -109,7 +111,8 @@ public:
   bool create_shg(vcl_string fname);
 
   //: comptue region descriptor
-  void compute_region_descriptor();
+  void compute_region_descriptor(
+      vcl_map<int,vcl_vector<dbskfg_sift_data> >& fragment);
 
 protected:
   // Reset / Initalize /////////////////////////////////////////////////////////

@@ -786,7 +786,8 @@ bool dbskfg_cgraph_directed_tree::create_shg(vcl_string fname)
 
 //------------------------------------------------------------------------------
 //: compute region descriptor
-void dbskfg_cgraph_directed_tree::compute_region_descriptor()
+void dbskfg_cgraph_directed_tree::compute_region_descriptor(
+vcl_map<int,vcl_vector<dbskfg_sift_data> >& fragment)
 {
   // sampling size
   double step_size=2.0;
@@ -827,7 +828,7 @@ void dbskfg_cgraph_directed_tree::compute_region_descriptor()
           vgl_point_2d<double> orig_pt=sc->sh_pt(index);
           double R1=sc->time(index);
           double theta=sc->theta(index);
-          double r=0;
+          double r=step_size;
 
           while ( r < R1 )
           {
@@ -835,7 +836,19 @@ void dbskfg_cgraph_directed_tree::compute_region_descriptor()
                   sc->fragment_pt(index, r);
               vgl_point_2d<double> pt_minus = 
                   sc->fragment_pt(index, -r);
-               
+              
+              dbskfg_sift_data data_plus;
+              data_plus.location_=pt_plus;
+              data_plus.radius_=R1-r;
+              data_plus.phi_=theta;
+
+              dbskfg_sift_data data_minus;
+              data_minus.location_=pt_minus;
+              data_minus.radius_=R1-r;
+              data_minus.phi_=theta;
+
+              fragment[di].push_back(data_plus);    
+              fragment[di].push_back(data_minus);    
               // model_file<<pt_plus.x()
               //           <<","
               //           <<pt_plus.y()
@@ -860,7 +873,12 @@ void dbskfg_cgraph_directed_tree::compute_region_descriptor()
           //           <<R1
           //           <<","
           //           <<theta<<vcl_endl;
-          
+          dbskfg_sift_data data_orig;
+          data_orig.location_=orig_pt;
+          data_orig.radius_=R1;
+          data_orig.phi_=theta;
+
+          fragment[di].push_back(data_orig);
       }
        
       // model_file.close();
