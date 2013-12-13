@@ -41,6 +41,8 @@
 #include <vul/vul_timer.h>
 #include <vnl/vnl_vector.h>
 
+#include <vnl/algo/vnl_symmetric_eigensystem.h>
+
 dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
 ( 
     vcl_string model_dir,
@@ -2428,17 +2430,33 @@ vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
     vnl_matrix<vl_sift_pix> second_order_pool = 
         (total_matrix*total_matrix_transpose)/(total_numb_descriptors);
 
+    // Numeric scaling
+    vnl_diag_matrix<vl_sift_pix> small_scaling(128,0.001);
+    second_order_pool=second_order_pool+small_scaling;
+
+    vnl_symmetric_eigensystem<vl_sift_pix> eigensystem(second_order_pool);
+    vnl_vector<vl_sift_pix> eigenvalues=(eigensystem.D).get_diagonal();
+
+    for ( unsigned int e=0; e < eigenvalues.size() ; ++e)
+    {
+        vl_sift_pix value=eigenvalues.get(e);
+        eigenvalues.put(e,vcl_log(value));
+    } 
+    
+    (eigensystem.D).set(eigenvalues);
+    vnl_matrix<vl_sift_pix> log_mapping=eigensystem.recompose();
+
     vnl_vector<double> upper_triangle(8256,0);
 
     unsigned int position=0;
     
     // Get upper triangle portion
-    for ( unsigned int c=0; c < second_order_pool.columns() ; ++c)
+    for ( unsigned int c=0; c < log_mapping.columns() ; ++c)
     {
-        for ( unsigned int r=c; r < second_order_pool.rows() ; ++r)
+        for ( unsigned int r=c; r < log_mapping.rows() ; ++r)
         {
-            double scaled_value=vnl_math_sgn(second_order_pool[r][c])*
-                vcl_pow(vcl_abs(second_order_pool[r][c]),0.75);
+            double scaled_value=vnl_math_sgn(log_mapping[r][c])*
+                vcl_pow(vcl_abs(log_mapping[r][c]),0.75);
             upper_triangle.put(position,scaled_value);
             position++;
         }
