@@ -640,6 +640,175 @@ bool dbskfg_match_bag_of_fragments::binary_match()
     return true;
 }
 
+bool dbskfg_match_bag_of_fragments::binary_app_match()
+{
+    if ( model_fragments_.size() == 0 || query_fragments_.size() == 0 )
+    {
+        vcl_cerr<<"Matching fragments sets have one that is zero"<<vcl_endl;
+        return false;
+    }
+
+    vcl_cout<<"Matching "
+            <<model_fragments_.size()
+            <<" model fragments to "
+            <<query_fragments_.size()
+            <<" query fragments using edit distance app"
+            <<vcl_endl;
+ 
+    // Loop over model and query
+    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+        ::iterator m_iterator;
+    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+        ::iterator q_iterator;
+    vcl_map<unsigned int,vnl_vector<double> > query_descriptors;
+
+    for ( m_iterator = model_fragments_.begin() ; 
+          m_iterator != model_fragments_.end() ; ++m_iterator)
+    {
+        //: prepare the trees also
+        dbskfg_cgraph_directed_tree_sptr model_tree = new 
+            dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
+                                        scurve_interpolate_ds_, 
+                                        scurve_matching_R_);
+
+        bool f1=model_tree->acquire
+            ((*m_iterator).second.second, elastic_splice_cost_, 
+             circular_ends_, combined_edit_);
+
+        vcl_map<int,vcl_vector<dbskfg_sift_data> > fragments;
+        model_tree->compute_region_descriptor(fragments);
+        vnl_vector<double>
+            m_descr = compute_second_order_pooling(
+                fragments,
+                model_grad_data_,model_sift_filter_);
+
+        vcl_map<double,vcl_pair<unsigned int,unsigned int> >
+            model_map;
+        
+        for ( q_iterator = query_fragments_.begin() ; 
+              q_iterator != query_fragments_.end() ; ++q_iterator)
+        {
+
+            double distance=0.0;
+
+            //: prepare the trees also                                 
+            if ( !query_descriptors.count((*q_iterator).first ))
+            {
+
+                //: prepare the trees also
+                dbskfg_cgraph_directed_tree_sptr query_tree = new
+                    dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
+                                                scurve_interpolate_ds_, 
+                                                scurve_matching_R_);
+                
+                bool f1=query_tree->acquire
+                    ((*q_iterator).second.second, elastic_splice_cost_, 
+                     circular_ends_, combined_edit_);
+                
+                vcl_map<int,vcl_vector<dbskfg_sift_data> > fragments;
+                query_tree->compute_region_descriptor(fragments);
+                vnl_vector<double>
+                    q_descr = compute_second_order_pooling(
+                        fragments,
+                        query_grad_data_,query_sift_filter_);
+                distance=vnl_vector_ssd(m_descr,q_descr);
+                query_descriptors[(*q_iterator).first]=q_descr;
+
+                query_tree=0;
+            }
+            else
+            {
+                distance=vnl_vector_ssd(
+                    m_descr,query_descriptors[(*q_iterator).first]);
+            }
+                
+            double norm_shape_cost(0.0);
+            double app_diff(0.0);
+            double norm_app_cost(0.0);
+            double rgb_avg_cost(0.0);
+            
+            unsigned int model_id= (*m_iterator).first;
+            unsigned int query_id= (*q_iterator).first;
+            binary_sim_matrix_[model_id][query_id]=distance;
+            binary_app_sim_matrix_[model_id][query_id]=app_diff;
+            binary_app_norm_sim_matrix_[model_id][query_id]=norm_app_cost;
+            binary_app_rgb_sim_matrix_[model_id][query_id]=rgb_avg_cost;
+
+        }
+        vcl_cout<<"Finished "<<(*m_iterator).second.first<<" to all queires"
+                <<vcl_endl;
+        model_tree=0;
+    }
+
+    // write out data
+
+    vcl_ofstream binary_sim_file;
+    binary_sim_file.open(output_binary_file_.c_str(),
+                         vcl_ios::out | 
+                         vcl_ios::app | 
+                         vcl_ios::binary);
+
+  
+    write_binary_fragments(binary_sim_file,model_fragments_);
+    write_binary_fragments(binary_sim_file,query_fragments_);
+
+    double matrix_size=binary_sim_matrix_.columns()*
+        binary_sim_matrix_.rows()*4;
+    binary_sim_file.write(reinterpret_cast<char *>(&matrix_size),
+                          sizeof(double));
+
+    for ( unsigned int c=0; c < binary_sim_matrix_.columns() ; ++c)
+    {
+        for ( unsigned int r=0; r < binary_sim_matrix_.rows() ; ++r)
+        {
+            double value=binary_sim_matrix_[r][c];
+            binary_sim_file.write(reinterpret_cast<char *>(&value),
+                                  sizeof(double));
+
+            value=binary_app_sim_matrix_[r][c];
+            binary_sim_file.write(reinterpret_cast<char *>(&value),
+                                  sizeof(double));
+
+            value=binary_app_norm_sim_matrix_[r][c];
+            binary_sim_file.write(reinterpret_cast<char *>(&value),
+                                  sizeof(double));
+
+            value=binary_app_rgb_sim_matrix_[r][c];
+            binary_sim_file.write(reinterpret_cast<char *>(&value),
+                                  sizeof(double));
+            
+        }
+    } 
+    
+    binary_sim_file.close();
+
+    if ( model_sift_filter_)
+    {
+        vl_sift_delete(model_sift_filter_);
+        model_sift_filter_=0;
+    }
+
+    if ( query_sift_filter_ )
+    {
+        vl_sift_delete(query_sift_filter_);
+        query_sift_filter_=0;
+    }
+
+    if ( model_grad_data_ )
+    {
+        vl_free(model_grad_data_);
+        model_grad_data_=0;
+    }
+
+    if ( query_grad_data_ )
+    {
+        vl_free(query_grad_data_);
+        query_grad_data_=0;
+    }
+   
+    return true;
+}
+
 bool dbskfg_match_bag_of_fragments::binary_scale_match()
 {
     vcl_cout<<"Matching shock graphs with scaling"<<vcl_endl;

@@ -69,6 +69,9 @@ public:
     bool binary_match();
 
     //: Match the fragments
+    bool binary_app_match();
+
+    //: Match the fragments
     bool binary_scale_match();
 
 private:
