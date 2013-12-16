@@ -681,7 +681,7 @@ bool dbskfg_match_bag_of_fragments::binary_app_match()
             m_descr = compute_second_order_pooling(
                 fragments,
                 model_grad_data_,model_sift_filter_);
-
+        exit(0);
         vcl_map<double,vcl_pair<unsigned int,unsigned int> >
             model_map;
         
@@ -2584,6 +2584,11 @@ vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
                                         radius/2,
                                         theta);
 
+            for ( unsigned int dv=0; dv < 128; ++dv)
+            {
+                descr[dv]=vcl_min(512.0F * descr[dv], 255.0F);
+            }
+         
             total_matrix.set_column(index,descr);
             vcl_vector<vl_sift_pix> descr_vec;
             descr_vec.assign(descr,descr+128);
@@ -2620,9 +2625,9 @@ vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
     unsigned int position=0;
     
     // Get upper triangle portion
-    for ( unsigned int c=0; c < log_mapping.columns() ; ++c)
+    for ( unsigned int c=0; c < log_mapping.cols() ; ++c)
     {
-        for ( unsigned int r=c; r < log_mapping.rows() ; ++r)
+        for ( unsigned int r=0; r < c+1 ; ++r)
         {
             double scaled_value=vnl_math_sgn(log_mapping[r][c])*
                 vcl_pow(vcl_abs(log_mapping[r][c]),0.75);
