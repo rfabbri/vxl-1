@@ -681,7 +681,7 @@ bool dbskfg_match_bag_of_fragments::binary_app_match()
             m_descr = compute_second_order_pooling(
                 fragments,
                 model_grad_data_,model_sift_filter_);
-        exit(0);
+
         vcl_map<double,vcl_pair<unsigned int,unsigned int> >
             model_map;
         
