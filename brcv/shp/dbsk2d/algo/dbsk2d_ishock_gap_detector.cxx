@@ -424,7 +424,8 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
     belm->get_interacting_belements(interacting_elms);
 
     dbsk2d_ishock_bpoint* bp1 = (dbsk2d_ishock_bpoint*)belm;
-    dbsk2d_ishock_bline* other_bline=0;
+
+    vcl_map<double,dbsk2d_ishock_bline*> element_maps;
 
     bnd_ishock_map_iter curS = belm->shock_map().begin();
     for ( ; curS != belm->shock_map().end() ; ++curS)
@@ -444,10 +445,11 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
                     {
                         if ( iedge->pSNode()->is_a_source())
                         {
-                            other_bline =
+                            dbsk2d_ishock_bline* other_bline =
                                 (dbsk2d_ishock_bline*)(other_belm);
-                            
-                            break;
+                            element_maps[
+                                vcl_fabs(vnl_math::pi_over_2-curS->first.s_eta)]
+                                =other_bline;
                         }
                     }
                 }
@@ -474,8 +476,14 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
                                 {
                                     if ( (*it)->id() == (*bit)->id())
                                     {
-                                        other_bline=(dbsk2d_ishock_bline*)
+                                        dbsk2d_ishock_bline* 
+                                            other_bline=(dbsk2d_ishock_bline*)
                                             (*it);
+                                        element_maps[
+                                            vcl_fabs
+                                            (vnl_math::pi_over_2-curS
+                                             ->first.s_eta)]
+                                            =other_bline;
                                         flag=true;
                                         break;
                                     }
@@ -485,10 +493,6 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
                                     break;
                                 }
 
-                            }
-                            if ( flag )
-                            {
-                                break;
                             }
                         }
                     } 
@@ -503,10 +507,11 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
                     {
                         if ( iedge->pSNode()->is_a_source())
                         {
-                            other_bline =
+                            dbsk2d_ishock_bline* other_bline =
                                 (dbsk2d_ishock_bline*)(other_belm);
-                   
-                            break;
+                            element_maps[
+                                vcl_fabs(vnl_math::pi_over_2-curS->first.s_eta)]
+                                =other_bline;
                         }
                     }
 
@@ -534,8 +539,14 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
                                 {
                                     if ( (*it)->id() == (*bit)->id())
                                     {
-                                        other_bline=(dbsk2d_ishock_bline*)
+                                        dbsk2d_ishock_bline* other_bline
+                                            =(dbsk2d_ishock_bline*)
                                             (*it);
+                                        element_maps[
+                                            vcl_fabs
+                                            (vnl_math::pi_over_2-curS
+                                             ->first.s_eta)]
+                                            =other_bline;
                                         flag=true;
                                         break;
                                     }
@@ -546,10 +557,6 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
                                 }
 
                             }
-                            if ( flag )
-                            {
-                                break;
-                            }
                         }
                     } 
                 }
@@ -559,10 +566,10 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
         }
     }
 
-    if ( other_bline )
+    if ( element_maps.size() )
     {
         gap4_pair.first=bp1;
-        gap4_pair.second=other_bline;
+        gap4_pair.second=(*element_maps.begin()).second;
         
     }
 
