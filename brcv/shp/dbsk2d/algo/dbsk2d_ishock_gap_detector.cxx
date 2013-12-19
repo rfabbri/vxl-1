@@ -383,7 +383,7 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
     vcl_vector<vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> >& 
     gap_pairs)
 {
-
+    
     vcl_vector<dbsk2d_ishock_belm*> belm_list = boundary_->belm_list();
     for (unsigned int i=0;i < belm_list.size() ; ++i)
     {
@@ -420,6 +420,9 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
     vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>& gap4_pair)
 {
 
+    belm_list interacting_elms;
+    belm->get_interacting_belements(interacting_elms);
+
     dbsk2d_ishock_bpoint* bp1 = (dbsk2d_ishock_bpoint*)belm;
     dbsk2d_ishock_bline* other_bline=0;
 
@@ -448,6 +451,48 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
                         }
                     }
                 }
+                else if(other_belm->is_a_point())
+                {
+                    bool flag=false;
+                    if ( iedge->pSNode())
+                    {
+                        if ( iedge->pSNode()->is_a_source())
+                        {
+                            dbsk2d_ishock_bpoint* other_bpoint =
+                                (dbsk2d_ishock_bpoint*)(other_belm);
+                            belm_list LinkedBElmList=
+                                other_bpoint->LinkedBElmList;
+                            belm_list::iterator it;
+                            for ( it = LinkedBElmList.begin() ; 
+                                  it != LinkedBElmList.end() ; 
+                                  ++it)
+                            {
+                                belm_list::iterator bit;
+                                for ( bit = interacting_elms.begin();
+                                      bit != interacting_elms.end();
+                                      ++bit)
+                                {
+                                    if ( (*it)->id() == (*bit)->id())
+                                    {
+                                        other_bline=(dbsk2d_ishock_bline*)
+                                            (*it);
+                                        flag=true;
+                                        break;
+                                    }
+                                }
+                                if ( flag )
+                                {
+                                    break;
+                                }
+
+                            }
+                            if ( flag )
+                            {
+                                break;
+                            }
+                        }
+                    } 
+                }
             }
             else 
             {
@@ -466,7 +511,48 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
                     }
 
                 }
+                else if(other_belm->is_a_point())
+                {
+                    bool flag=false;
+                    if ( iedge->pSNode())
+                    {
+                        if ( iedge->pSNode()->is_a_source())
+                        {
+                            dbsk2d_ishock_bpoint* other_bpoint =
+                                (dbsk2d_ishock_bpoint*)(other_belm);
+                            belm_list LinkedBElmList=
+                                other_bpoint->LinkedBElmList;
+                            belm_list::iterator it;
+                            for ( it = LinkedBElmList.begin() ; 
+                                  it != LinkedBElmList.end() ; 
+                                  ++it)
+                            {
+                                belm_list::iterator bit;
+                                for ( bit = interacting_elms.begin();
+                                      bit != interacting_elms.end();
+                                      ++bit)
+                                {
+                                    if ( (*it)->id() == (*bit)->id())
+                                    {
+                                        other_bline=(dbsk2d_ishock_bline*)
+                                            (*it);
+                                        flag=true;
+                                        break;
+                                    }
+                                }
+                                if ( flag )
+                                {
+                                    break;
+                                }
 
+                            }
+                            if ( flag )
+                            {
+                                break;
+                            }
+                        }
+                    } 
+                }
             }
                 
 
