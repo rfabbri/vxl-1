@@ -17,7 +17,7 @@ dbsk2d_ishock_gap4_transform::dbsk2d_ishock_gap4_transform(
     vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>& pair,
     int euler_spiral_id)
     :dbsk2d_ishock_transform(intrinsic_shock_graph,
-                             dbsk2d_ishock_transform::GAP),
+                             dbsk2d_ishock_transform::GAP4),
      gap_line_pair_(pair),
      anchor_pt_(0),
      euler_spiral_id_(euler_spiral_id)
