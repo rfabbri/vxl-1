@@ -39,7 +39,8 @@ public:
     enum TransformType
     {
         GAP,
-        LOOP
+        LOOP,
+        GAP4
     };
 
     //: Constructor
