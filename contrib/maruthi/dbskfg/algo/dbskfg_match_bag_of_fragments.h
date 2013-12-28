@@ -34,6 +34,8 @@
 
 #include <dbskfg/algo/dbskfg_sift_data.h>
 
+#include <vsol/vsol_box_2d.h>
+
 //: Form Composite Graph algorithm
 class dbskfg_match_bag_of_fragments
 {
@@ -259,7 +261,8 @@ private:
     vnl_vector<double> compute_second_order_pooling(
         vcl_map<int,vcl_vector<dbskfg_sift_data> >& fragments,
         vl_sift_pix* grad_data,
-        VlSiftFilt* filter);
+        VlSiftFilt* filter,
+        vsol_box_2d_sptr& bbox);
 
     // Make copy ctor private
     dbskfg_match_bag_of_fragments(const dbskfg_match_bag_of_fragments&);

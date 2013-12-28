@@ -676,11 +676,12 @@ bool dbskfg_match_bag_of_fragments::binary_app_match()
              circular_ends_, combined_edit_);
 
         vcl_map<int,vcl_vector<dbskfg_sift_data> > fragments;
-        model_tree->compute_region_descriptor(fragments);
+        vsol_box_2d_sptr bbox(0);
+        model_tree->compute_region_descriptor(fragments,bbox);
         vnl_vector<double>
             m_descr = compute_second_order_pooling(
                 fragments,
-                model_grad_data_,model_sift_filter_);
+                model_grad_data_,model_sift_filter_,bbox);
 
         vcl_map<double,vcl_pair<unsigned int,unsigned int> >
             model_map;
@@ -706,11 +707,12 @@ bool dbskfg_match_bag_of_fragments::binary_app_match()
                      circular_ends_, combined_edit_);
                 
                 vcl_map<int,vcl_vector<dbskfg_sift_data> > fragments;
-                query_tree->compute_region_descriptor(fragments);
+                vsol_box_2d_sptr bbox(0);
+                query_tree->compute_region_descriptor(fragments,bbox);
                 vnl_vector<double>
                     q_descr = compute_second_order_pooling(
                         fragments,
-                        query_grad_data_,query_sift_filter_);
+                        query_grad_data_,query_sift_filter_,bbox);
                 distance=vnl_vector_ssd(m_descr,q_descr);
                 query_descriptors[(*q_iterator).first]=q_descr;
 
@@ -2546,9 +2548,12 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
 vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
     vcl_map<int,vcl_vector<dbskfg_sift_data> >& fragments,
     vl_sift_pix* grad_data,
-    VlSiftFilt* filter
+    VlSiftFilt* filter,
+    vsol_box_2d_sptr& bbox
 )
 {
+
+
     unsigned int total_numb_descriptors=0;
     vcl_map<int,vcl_vector<dbskfg_sift_data> >::iterator kit;
     for ( kit = fragments.begin() ; kit != fragments.end() ; ++kit)
@@ -2556,8 +2561,13 @@ vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
         total_numb_descriptors=(*kit).second.size()+total_numb_descriptors;
     }
 
+    vgl_point_2d<double> corner=vgl_point_2d<double>(bbox->get_min_x(),
+                                                     bbox->get_min_y());
+    double width=bbox->width();
+    double height=bbox->height();
+
     vcl_map<unsigned int,vcl_vector<vl_sift_pix> > descriptors;
-    vnl_matrix<vl_sift_pix> total_matrix(128,total_numb_descriptors,0.0);
+    vnl_matrix<vl_sift_pix> total_matrix(132,total_numb_descriptors,0.0);
 
     unsigned int index=0;
     vcl_map<int,vcl_vector<dbskfg_sift_data> >::iterator it;
@@ -2571,8 +2581,14 @@ vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
             double radius           = data[i].radius_;
             double theta            = data[i].phi_;
 
-            vl_sift_pix descr[128];
-            memset(descr, 0, sizeof(vl_sift_pix)*128);
+            double d1=(pt.x()-corner.x())/width;
+            double d2=(pt.x()-corner.x())/height;
+            double d3=(pt.y()-corner.y())/width;
+            double d4=(pt.y()-corner.y())/height;
+
+            //double min_x =
+            vl_sift_pix descr[132];
+            memset(descr, 0, sizeof(vl_sift_pix)*132);
 
             vl_sift_calc_raw_descriptor(filter,
                                         grad_data,
@@ -2589,9 +2605,14 @@ vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
                 descr[dv]=vcl_min(512.0F * descr[dv], 255.0F);
             }
          
+            descr[128]=d1;
+            descr[129]=d2;
+            descr[130]=d3;
+            descr[131]=d4;
+
             total_matrix.set_column(index,descr);
             vcl_vector<vl_sift_pix> descr_vec;
-            descr_vec.assign(descr,descr+128);
+            descr_vec.assign(descr,descr+132);
             descriptors[index]=descr_vec;
 
             index++;
@@ -2620,7 +2641,7 @@ vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
     (eigensystem.D).set(eigenvalues);
     vnl_matrix<vl_sift_pix> log_mapping=eigensystem.recompose();
 
-    vnl_vector<double> upper_triangle(8256,0);
+    vnl_vector<double> upper_triangle(8778,0);
 
     unsigned int position=0;
     
