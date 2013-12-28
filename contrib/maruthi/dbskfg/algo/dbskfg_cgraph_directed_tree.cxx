@@ -787,13 +787,16 @@ bool dbskfg_cgraph_directed_tree::create_shg(vcl_string fname)
 //------------------------------------------------------------------------------
 //: compute region descriptor
 void dbskfg_cgraph_directed_tree::compute_region_descriptor(
-vcl_map<int,vcl_vector<dbskfg_sift_data> >& fragment)
+    vcl_map<int,vcl_vector<dbskfg_sift_data> >& fragment,
+    vsol_box_2d_sptr& bbox)
 {
   // sampling size
   double step_size=2.0;
 
   // Store mates visited
   vcl_set<int> mates_visited;
+
+  bbox=new vsol_box_2d();
 
   // find contract and delete costs for each dart
   for (unsigned int di = 0; di<dart_cnt_; di++) 
@@ -877,6 +880,13 @@ vcl_map<int,vcl_vector<dbskfg_sift_data> >& fragment)
           data_orig.location_=orig_pt;
           data_orig.radius_=R1;
           data_orig.phi_=theta;
+
+          vgl_point_2d<double> boundary_plus =  sc->fragment_pt(index, R1);
+          vgl_point_2d<double> boundary_minus = sc->fragment_pt(index, -R1);
+          
+          bbox->add_point(orig_pt.x(),orig_pt.y());
+          bbox->add_point(boundary_plus.x(),boundary_plus.y());
+          bbox->add_point(boundary_minus.x(),boundary_minus.y());
 
           fragment[di].push_back(data_orig);
       }

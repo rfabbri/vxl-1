@@ -25,6 +25,8 @@
 
 #include <dbskfg/algo/dbskfg_sift_data.h>
 
+#include <vsol/vsol_box_2d.h>
+
 //==============================================================================
 // dbskfg_cgraph_directed_tree
 //==============================================================================
@@ -112,7 +114,8 @@ public:
 
   //: comptue region descriptor
   void compute_region_descriptor(
-      vcl_map<int,vcl_vector<dbskfg_sift_data> >& fragment);
+      vcl_map<int,vcl_vector<dbskfg_sift_data> >& fragment,
+      vsol_box_2d_sptr& bbox);
 
 protected:
   // Reset / Initalize /////////////////////////////////////////////////////////
