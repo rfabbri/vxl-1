@@ -2626,7 +2626,7 @@ vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
         (total_matrix*total_matrix_transpose)/(total_numb_descriptors);
 
     // Numeric scaling
-    vnl_diag_matrix<vl_sift_pix> small_scaling(128,0.001);
+    vnl_diag_matrix<vl_sift_pix> small_scaling(132,0.001);
     second_order_pool=second_order_pool+small_scaling;
 
     vnl_symmetric_eigensystem<vl_sift_pix> eigensystem(second_order_pool);
