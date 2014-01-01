@@ -170,66 +170,34 @@ bool dbsk2d_ishock_gap4_transform::execute_transform()
             if ( iteration == 5 )
             {
                 vcl_cerr<<"Error: Disconnecting Euler Spiral"<<vcl_endl;
-                // Not Hidden need hide everything
-                // if ( local_belm_list_[1]->is_a_GUIelm())
-                // {
+                dbsk2d_ishock_belm* left_line=local_belm_list_[0];
+                dbsk2d_ishock_belm* right_line=local_belm_list_[1];
 
-                //     // We are undoing this gap
-                //     // 1 Remove euler spiral from endpoints
-                //     bp1->disconnectFrom(local_belm_list_[1]);
-                //     bp1->disconnectFrom(local_belm_list_[2]);
-    
-                //     if ( local_belm_list_.size() > 4 )
-                //     {
-                //         bp2->disconnectFrom(
-                //             local_belm_list_[local_belm_list_.size()-2]);
-                //         bp2->disconnectFrom(
-                //             local_belm_list_[local_belm_list_.size()-3]);
-                //     }
-                //     else
-                //     {
-                //         bp2->disconnectFrom(local_belm_list_[1]);
-                //         bp2->disconnectFrom(local_belm_list_[2]);
-                 
-                //     }
-         
-                //     // Hide curve
-                //     for ( unsigned int i=1; i < local_belm_list_.size()-1; ++i)
-                //     {
-                    
-                //         local_belm_list_[i]->set_GUIelm(false);
+                dbsk2d_ishock_bpoint* bp2=(left_line->s_pt()->id()==bp1->id())
+                    ?left_line->e_pt():left_line->s_pt();
 
-                //         dbsk2d_ishock_bpoint* startpt=
-                //             local_belm_list_[i]->s_pt();
-                //         dbsk2d_ishock_bpoint* endpt=
-                //             local_belm_list_[i]->e_pt();
+                // We are undoing this gap
+                // 1 Remove line from endpoints
+                bp1->disconnectFrom(left_line);
+                bp1->disconnectFrom(right_line);
 
-                //         if ( startpt->is_a_GUIelm() && 
-                //              startpt->id() != bp1->id() &&
-                //              startpt->id() != bp2->id() )
-                //         {                            
-                //             startpt->set_GUIelm(false);
-                //         }
+                bp2->disconnectFrom(left_line);
+                bp2->disconnectFrom(right_line);
 
-                //         if ( endpt->is_a_GUIelm() &&
-                //              endpt->id() != bp1->id() &&
-                //              endpt->id() != bp2->id() )
-                //         {
-                //             endpt->set_GUIelm(false);
-                //         }
-             
-   
-                //     }
+                left_line->set_GUIelm(false);
+                right_line->set_GUIelm(false);
+        
+                bp1->set_visibility(true);
+                bp2->set_visibility(true);            
+                bp1->set_max_eta(2.0*vnl_math::pi);
+                bp2->set_max_eta(2.0*vnl_math::pi);
+                bp1->set_vref(-1);
+                bp2->set_vref(-1);
             
-                   
-                // }
-               
-                // bp1->set_visibility(true);
-                // bp2->set_visibility(true);            
-                // bp1->set_max_eta(2.0*vnl_math::pi);
-                // bp2->set_max_eta(2.0*vnl_math::pi);
-                // bp1->set_vref(-1);
-                // bp2->set_vref(-1);
+                local_belm_list_.clear();
+                boundary_->remove_a_bnd_contour(contour_);
+        
+                contour_=0;
 
                 return false;
             }
@@ -437,23 +405,49 @@ void dbsk2d_ishock_gap4_transform::add_connecting_line(
     if ( bp2->getElmToTheLeftOf(bl1)->id() == left_line->id() ||
          bp2->getElmToTheLeftOf(bl1)->id() == right_line->id())
     {
-        form_contact_shocks(bp2->getElmToTheLeftOf(bl1),bl1,bp2);
+        try 
+        {
+            form_contact_shocks(bp2->getElmToTheLeftOf(bl1),bl1,bp2);
+        }
+        catch (dbsk2d_exception_topology_error &e)
+        {
+            return;
+        }
     }
     else
     {
-        form_contact_shocks(bl1,bp2->getElmToTheRightOf(bl1),bp2);
+        try
+        {
+            form_contact_shocks(bl1,bp2->getElmToTheRightOf(bl1),bp2);
+        }
+        catch (dbsk2d_exception_topology_error &e)
+        {
+            return;
+        }
     }
     
     if ( bp2->getElmToTheLeftOf(bl2)->id() == left_line->id() ||
          bp2->getElmToTheLeftOf(bl2)->id() == right_line->id())
     {
-        form_contact_shocks(bp2->getElmToTheLeftOf(bl2),bl2,bp2);
-
+        try
+        {
+            form_contact_shocks(bp2->getElmToTheLeftOf(bl2),bl2,bp2);
+        }
+        catch (dbsk2d_exception_topology_error &e)
+        {
+            return;
+        }
     }
     else
     {
-        form_contact_shocks(bl2,bp2->getElmToTheRightOf(bl2),bp2);
-        
+        try
+        {
+            form_contact_shocks(bl2,bp2->getElmToTheRightOf(bl2),bp2);
+        }
+        catch (dbsk2d_exception_topology_error &e)
+        {
+            return;
+        }
     }
 
     
