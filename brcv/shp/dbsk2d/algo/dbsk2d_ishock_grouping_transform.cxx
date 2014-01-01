@@ -349,14 +349,26 @@ bool dbsk2d_ishock_grouping_transform::region_within_image(
 
     vil_image_resource_sptr img=dbsk2d_transform_manager::Instance().
         get_image();
+   
+    vcl_vector<dbsk2d_ishock_belm*> belms  = region_belms_[index];
     
-    vcl_vector<dbsk2d_ishock_edge*> shock_edges  = region_nodes_[index];
-    
-    for ( unsigned int i=0; i < shock_edges.size() ; ++i)
+    for ( unsigned int i=0; i < belms.size() ; ++i)
     {
-        vgl_point_2d<double> pt1=shock_edges[i]->source()->origin();
-        vgl_point_2d<double> pt2=shock_edges[i]->target()->origin();
-        
+        dbsk2d_ishock_belm* belm=belms[i];
+        vgl_point_2d<double> pt1,pt2;
+        if ( belm->is_a_line() )
+        {
+            dbsk2d_ishock_bline* bline = (dbsk2d_ishock_bline*)(belm);
+            pt1=bline->s_pt()->pt();
+            pt2=bline->e_pt()->pt();
+        }
+        else if ( belm->is_a_point())
+        {
+            dbsk2d_ishock_bpoint* bpoint = ( dbsk2d_ishock_bpoint*)(belm);
+            pt1=bpoint->pt();
+            pt2=bpoint->pt();
+        }
+
         if ( pt1.x() < 0 || pt1.y() < 0 ||
              pt1.x() >= img->ni() || pt1.y() >= img->nj() || 
              pt2.x() < 0 || pt2.y() < 0 ||
