@@ -128,10 +128,10 @@ bool dbsk2d_ishock_gap4_transform::execute_transform()
         interacting_bnd_elements_[bp1->id()]=bp1;
         interacting_bnd_elements_[bp2->id()]=bp2;
         
-        local_belm_list_.clear();
-        boundary_->remove_a_bnd_contour(contour_);
+        // local_belm_list_.clear();
+        // boundary_->remove_a_bnd_contour(contour_);
         
-        contour_=0;
+        // contour_=0;
     }
     else
     {
