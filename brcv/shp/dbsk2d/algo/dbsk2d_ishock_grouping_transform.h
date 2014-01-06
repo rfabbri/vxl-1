@@ -101,7 +101,8 @@ public:
     void inline rag_nodes(vcl_vector<dbsk2d_ishock_belm*> region_elements,
                           vcl_set<int> region_contour_ids,
                           dbsk2d_ishock_transform_sptr transform,
-                          vcl_set<unsigned int>& rag_nodes_matched)
+                          vcl_set<unsigned int>& rag_nodes_matched,
+                          int compare)
     {
         /* if ( region_contour_ids.size() == 1 ) */
         /* { */
@@ -195,7 +196,7 @@ public:
                                      region_contour_ids.end(),
                                      con_insert);
                 
-                if ( cont.size() >= region_contour_ids.size() )
+                if ( cont.size() >= compare )
                 {
                     rag_nodes_matched.insert((*it).first);
                 }
