@@ -359,7 +359,9 @@ void dbsk2d_containment_graph::construct_graph()
     // }
     // else
     {
-
+   
+        vcl_cout<<"Writing out "<<all_region_belms_.size()
+                <<" Fragments"<<vcl_endl;
         vcl_map<vcl_set<int>,vcl_vector<dbsk2d_ishock_belm*> >::iterator mit;
         for ( mit = all_region_belms_.begin() ; mit != all_region_belms_.end();
               ++mit)
@@ -890,6 +892,8 @@ void dbsk2d_containment_graph::write_stats(vcl_ofstream& ofstream)
         
     }
 
+    ofstream<<vcl_endl;
+    ofstream<<"Number of Regions: "<<all_region_belms_.size()<<vcl_endl;
 }
 
 void dbsk2d_containment_graph::cluster_fragments()
