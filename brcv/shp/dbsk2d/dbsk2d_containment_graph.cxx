@@ -567,6 +567,8 @@ void dbsk2d_containment_graph::expand_node(
         endpoints.push_back((*mit).second);
     }
 
+    vcl_set<vcl_pair<int,int> > loop_pairs;
+
     for ( unsigned int e=0; e < endpoints.size() ; ++e )
     {
         vcl_set<int> local_copy(belms_key);
@@ -577,6 +579,21 @@ void dbsk2d_containment_graph::expand_node(
         vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*>
             contour_pair=trans_loop1->get_contour_pair();
 
+        vcl_pair<int,int> lp1(contour_pair.first->id(),
+                             contour_pair.second->id());
+
+        vcl_pair<int,int> lp2(contour_pair.second->id(),
+                             contour_pair.first->id());
+        
+        if ( loop_pairs.count(lp1) || loop_pairs.count(lp2))
+        {
+            trans_loop1=0;
+            continue;
+        }
+        
+        loop_pairs.insert(lp1);
+        loop_pairs.insert(lp2); 
+        
         trans_loop1->get_belms(local_copy);
         
         double prob=0.0;
