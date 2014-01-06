@@ -58,6 +58,10 @@ public:
 
     vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >&
         get_parent_regions(){return parent_regions_;}
+
+    vcl_map<unsigned int,unsigned int >&
+        get_parent_regions_outer_shock_nodes()
+    {return parent_regions_outer_shock_nodes_;}
         
     bool children_visited(){
         bool flag=true;
@@ -86,13 +90,15 @@ public:
 
     void set_prob(double prob){prob_=prob;}
 
-    void set_parent_regions(vcl_vector<dbsk2d_ishock_belm*> region_belms)
+    void set_parent_regions(vcl_vector<dbsk2d_ishock_belm*> region_belms,
+                            unsigned int outer_shock_nodes)
     {
         unsigned int index=parent_regions_.size();
         for ( unsigned int i=0; i < region_belms.size() ; ++i)
         {
             this->parent_regions_[index].push_back(region_belms[i]);
         }
+        this->parent_regions_outer_shock_nodes_[index]=outer_shock_nodes;
     }
 
     //------------------------- Modifiers -----------------------------------
@@ -159,6 +165,9 @@ private:
 
     // Keep track of regions that spawned this node
     vcl_map< unsigned int,vcl_vector<dbsk2d_ishock_belm*> > parent_regions_;
+
+    // Keep track of regions that spawned this node
+    vcl_map< unsigned int,unsigned int > parent_regions_outer_shock_nodes_;
 
     // Make copy ctor private
     dbsk2d_containment_node(const dbsk2d_containment_node&);

@@ -115,11 +115,15 @@ void dbsk2d_containment_graph::construct_graph()
 
             vcl_vector<dbsk2d_ishock_belm*> root_node_belms=
                 frag_belms[(*it).first];
+            unsigned int outer_shock_nodes_size =
+                fragments[(*it).first].size();
+
             vcl_vector<dbsk2d_containment_node_sptr> children=
                 root_node->get_children();
             for ( unsigned int c=0; c < children.size(); ++c)
             {
-                children[c]->set_parent_regions(root_node_belms);
+                children[c]->set_parent_regions(root_node_belms,
+                                                outer_shock_nodes_size);
             } 
 
             // dbsk2d_ishock_transform temp_trans(ishock_graph_,
@@ -208,6 +212,11 @@ void dbsk2d_containment_graph::construct_graph()
             vcl_set<int> transform_belms;
             node->get_parent_transform()->get_belms(transform_belms);
 
+            vcl_map<unsigned int,unsigned int> 
+                parent_os_nodes=node->get_parent_regions_outer_shock_nodes();
+            int compare=parent_os_nodes[(*pit).first];
+
+            bool flag=false;
             vcl_set<int> frag_belms_contour_ids;
             for ( unsigned int r=0; r < parent_belms.size() ; ++r)
             {
@@ -216,13 +225,32 @@ void dbsk2d_containment_graph::construct_graph()
                     frag_belms_contour_ids.insert(
                         parent_belms[r]->get_contour_id());
                 }
+                else
+                {
+                    if ( !flag )
+                    {
+                        compare--;
+                        flag=true;
+                    }
+                }
 
+            }
+
+            if ( compare == 0 )
+            {
+                compare=frag_belms_contour_ids.size();
+            }
+            else if ( compare == parent_os_nodes[(*pit).first] ||
+                      compare == frag_belms_contour_ids.size() )
+            {
+                compare=frag_belms_contour_ids.size();
             }
 
             grouper.rag_nodes(parent_belms,
                               frag_belms_contour_ids,
                               node->get_parent_transform(),
-                              rag_matched_nodes);
+                              rag_matched_nodes,
+                              compare);
         }
  
         vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_node*> >
@@ -314,7 +342,10 @@ void dbsk2d_containment_graph::construct_graph()
                 fit;
             for ( fit = frag_belms.begin() ; fit != frag_belms.end() ; ++fit)
             {
-                children[c]->set_parent_regions((*fit).second);
+                unsigned int outer_shock_nodes_size =
+                    region_outer_nodes[(*fit).first].size();
+                children[c]->set_parent_regions((*fit).second,
+                                                outer_shock_nodes_size);
             }
         } 
 
