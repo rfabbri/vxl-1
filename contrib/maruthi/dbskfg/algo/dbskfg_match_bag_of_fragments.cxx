@@ -496,6 +496,10 @@ bool dbskfg_match_bag_of_fragments::match()
 
 bool dbskfg_match_bag_of_fragments::binary_match()
 {
+    // Let time how long this takes
+    // Start timer
+    vul_timer t;
+
     if ( model_fragments_.size() == 0 || query_fragments_.size() == 0 )
     {
         vcl_cerr<<"Matching fragments sets have one that is zero"<<vcl_endl;
@@ -637,6 +641,16 @@ bool dbskfg_match_bag_of_fragments::binary_match()
         query_grad_data_=0;
     }
    
+    double vox_time = t.real()/1000.0;
+    t.mark();
+    vcl_cout<<vcl_endl;
+    vcl_cout<<"MatchTime "
+            <<model_fragments_.size()
+            <<" model fragments to "
+            <<query_fragments_.size()
+            <<" query fragments is"
+            <<vox_time<<" sec"<<vcl_endl;
+
     return true;
 }
 
@@ -1788,29 +1802,33 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
 
     //vcl_cerr<<"************ Shape Time taken: "<<shape_time<<" sec"<<vcl_endl;
     
-    vul_timer app_timer;
-    app_timer.mark();
-    vcl_pair<double,double> app_cost=compute_sift_cost(curve_list1,
-                                                      curve_list2,
-                                                      map_list,
-                                                      path_map,
-                                                      flag);
-    vcl_pair<double,double> sift_rgb_cost=compute_rgb_sift_cost(curve_list1,
-                                                                curve_list2,
-                                                                map_list,
-                                                                path_map,
-                                                                flag);
+    if ( app_sift_ )
+    {
+        vul_timer app_timer;
+        app_timer.mark();
+        vcl_pair<double,double> app_cost=compute_sift_cost(curve_list1,
+                                                           curve_list2,
+                                                           map_list,
+                                                           path_map,
+                                                           flag);
+        vcl_pair<double,double> sift_rgb_cost=compute_rgb_sift_cost(curve_list1,
+                                                                    curve_list2,
+                                                                    map_list,
+                                                                    path_map,
+                                                                    flag);
+        
+        double app_time = app_timer.real()/1000.0;
+        app_timer.mark();
+        
+        //vcl_cerr<<"************ App   Time taken: "<<app_time<<" sec"<<vcl_endl;
+        app_diff        = app_cost.first;
+        norm_app_cost   = app_cost.second;
+        rgb_avg_cost    = sift_rgb_cost.second;
 
-    double app_time = app_timer.real()/1000.0;
-    app_timer.mark();
-
-    //vcl_cerr<<"************ App   Time taken: "<<app_time<<" sec"<<vcl_endl;
-
+    }
+   
     norm_shape_cost = shape_cost;
-    app_diff        = app_cost.first;
-    norm_app_cost   = app_cost.second;
-    rgb_avg_cost    = sift_rgb_cost.second;
-
+   
     // vcl_cout<<" Norm Shape Cost: "<<norm_shape_cost<<vcl_endl;
     // vcl_cout<<" Norm App   Cost: "<<norm_app_cost<<vcl_endl;
     // vcl_cout<<" App Cost       : "<<app_diff<<vcl_endl;
