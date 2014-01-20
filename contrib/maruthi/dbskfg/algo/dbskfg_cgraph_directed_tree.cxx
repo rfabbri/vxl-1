@@ -896,3 +896,129 @@ void dbskfg_cgraph_directed_tree::compute_region_descriptor(
 
 
 }
+
+//: return the total length of the reconstructed boundary with this tree
+// (trees from the same shock graph may return different values 
+// since they may be constructed with different parameters,
+// e.g. with our without circular completions at the leaves, etc.)
+double  dbskfg_cgraph_directed_tree::
+compute_total_reconstructed_boundary_length()
+{
+  //: find the set of darts to use
+  vcl_vector<unsigned> to_use;
+  for (unsigned i = 0; i < dart_cnt_; i++) {
+    if (leaf_[i]) {
+      to_use.push_back(i);
+      continue;
+    }
+
+    if (leaf_[mate_[i]]) 
+      continue;
+    
+    bool contain = false;
+    for (unsigned j = 0; j < to_use.size(); j++) {
+      if (to_use[j] == mate_[i]) {
+        contain = true;
+        break;
+      }
+    }
+
+    if (!contain)
+      to_use.push_back(i);
+  }
+
+  //: now add up the scurves lengths
+  float sum = 0;
+  for (unsigned j = 0; j < to_use.size(); j++) 
+  {
+    unsigned i = to_use[j];
+
+    vcl_pair<int, int> p;
+    p.first = i;
+    p.second = i;
+    vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
+        dart_path_scurve_map_.find(p);
+
+    dbskr_scurve_sptr sc = (iter->second)->coarse;
+    double total = (double)(sc->boundary_minus_length() + 
+                            sc->boundary_plus_length());
+    sum += total;
+    
+  }
+  return sum;
+}
+
+//------------------------------------------------------------------------------
+//: uses the already existing scurves, so if circular_ends = true 
+// while acquiring the tree then the outline will have circular completions
+void dbskfg_cgraph_directed_tree::compute_reconstructed_boundary_polygon
+(vgl_polygon<double>& poly)
+{
+  //: find the set of darts to use
+  vcl_vector<unsigned> to_use;
+  for (unsigned i = 0; i < dart_cnt_; i++) {
+    if (leaf_[i]) {
+      to_use.push_back(i);
+      continue;
+    }
+
+    if (leaf_[mate_[i]]) 
+      continue;
+    
+    bool contain = false;
+    for (unsigned j = 0; j < to_use.size(); j++) {
+      if (to_use[j] == mate_[i]) {
+        contain = true;
+        break;
+      }
+    }
+
+    if (!contain)
+      to_use.push_back(i);
+  }
+
+  //: now concatanate the scurves  
+  vcl_vector<vsol_point_2d_sptr> points;
+  unsigned j = 0;
+  for (unsigned i = 0; i < dart_cnt_; i++) 
+  { 
+    // push the minus boundary for each dart
+    if (i == to_use[j]) 
+    {
+
+        vcl_pair<int, int> p;
+        p.first = i;
+        p.second = i;
+        vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
+            dart_path_scurve_map_.find(p);
+        dbskr_scurve_sptr sc = (iter->second)->coarse;
+
+        for (unsigned k = 0; k < sc->bdry_minus().size(); k++)
+        {
+            poly.push_back(sc->bdry_minus_pt(k).x(),
+                           sc->bdry_minus_pt(k).y());
+
+        }
+        j++;
+    } 
+    else 
+    {  
+
+        // then mate of i is in to_use
+        vcl_pair<int, int> p;
+        p.first = mate_[i];
+        p.second = mate_[i];
+        vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
+            dart_path_scurve_map_.find(p);
+        dbskr_scurve_sptr sc = (iter->second)->coarse;
+
+
+        for (int k = int(sc->bdry_plus().size()-1); k >=0 ; k--)
+        {
+            poly.push_back(sc->bdry_plus_pt(k).x(),
+                           sc->bdry_plus_pt(k).y());
+        }
+    }
+  }
+
+ }

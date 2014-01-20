@@ -117,6 +117,18 @@ public:
       vcl_map<int,vcl_vector<dbskfg_sift_data> >& fragment,
       vsol_box_2d_sptr& bbox);
 
+
+  //: Compute total length of the shape boundary
+  // If "construct_circular_ends" is true, each branch is closed 
+  // with a circular arc (instead of being left open). This depends on node
+  // being virtual 
+  double compute_total_reconstructed_boundary_length();
+
+  //------------------------------------------------------------------------
+  //: uses the already existing scurves, so if circular_ends = true 
+  //while acquiring the tree then the outline will have circular completions
+  void compute_reconstructed_boundary_polygon(vgl_polygon<double>& poly);
+
 protected:
   // Reset / Initalize /////////////////////////////////////////////////////////
 
