@@ -141,6 +141,9 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
         binary_sim_matrix_.set_size(model_contours_.size(),
                                     query_contours_.size());
 
+        binary_sim_length_matrix_.set_size(model_contours_.size(),
+                                           query_contours_.size());
+
         binary_app_sim_matrix_.set_size(model_contours_.size(),
                                         query_contours_.size());
 
@@ -156,6 +159,9 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
 
         binary_sim_matrix_.set_size(model_fragments_.size(),
                                     query_fragments_.size());
+
+        binary_sim_length_matrix_.set_size(model_fragments_.size(),
+                                           query_fragments_.size());
 
         binary_app_sim_matrix_.set_size(model_fragments_.size(),
                                         query_fragments_.size());
@@ -534,7 +540,7 @@ bool dbskfg_match_bag_of_fragments::binary_match()
 
         vcl_map<double,vcl_pair<unsigned int,unsigned int> >
             model_map;
-        
+
         for ( q_iterator = query_fragments_.begin() ; 
               q_iterator != query_fragments_.end() ; ++q_iterator)
         {
@@ -552,11 +558,13 @@ bool dbskfg_match_bag_of_fragments::binary_match()
             double app_diff(0.0);
             double norm_app_cost(0.0);
             double rgb_avg_cost(0.0);
+            double norm_shape_cost_length(0.0);
 
             // Match model to query
             match_two_graphs(model_tree,
                              query_tree,
                              norm_shape_cost,
+                             norm_shape_cost_length,
                              app_diff,
                              norm_app_cost,
                              rgb_avg_cost);
@@ -564,6 +572,8 @@ bool dbskfg_match_bag_of_fragments::binary_match()
             unsigned int model_id= (*m_iterator).first;
             unsigned int query_id= (*q_iterator).first;
             binary_sim_matrix_[model_id][query_id]=norm_shape_cost;
+            binary_sim_length_matrix_[model_id][query_id]=
+                norm_shape_cost_length;
             binary_app_sim_matrix_[model_id][query_id]=app_diff;
             binary_app_norm_sim_matrix_[model_id][query_id]=norm_app_cost;
             binary_app_rgb_sim_matrix_[model_id][query_id]=rgb_avg_cost;
@@ -588,7 +598,7 @@ bool dbskfg_match_bag_of_fragments::binary_match()
     write_binary_fragments(binary_sim_file,query_fragments_);
 
     double matrix_size=binary_sim_matrix_.columns()*
-        binary_sim_matrix_.rows()*4;
+        binary_sim_matrix_.rows()*2;
     binary_sim_file.write(reinterpret_cast<char *>(&matrix_size),
                           sizeof(double));
 
@@ -600,17 +610,21 @@ bool dbskfg_match_bag_of_fragments::binary_match()
             binary_sim_file.write(reinterpret_cast<char *>(&value),
                                   sizeof(double));
 
-            value=binary_app_sim_matrix_[r][c];
+            value=binary_sim_length_matrix_[r][c];
             binary_sim_file.write(reinterpret_cast<char *>(&value),
                                   sizeof(double));
 
-            value=binary_app_norm_sim_matrix_[r][c];
-            binary_sim_file.write(reinterpret_cast<char *>(&value),
-                                  sizeof(double));
+            // value=binary_app_sim_matrix_[r][c];
+            // binary_sim_file.write(reinterpret_cast<char *>(&value),
+            //                       sizeof(double));
 
-            value=binary_app_rgb_sim_matrix_[r][c];
-            binary_sim_file.write(reinterpret_cast<char *>(&value),
-                                  sizeof(double));
+            // value=binary_app_norm_sim_matrix_[r][c];
+            // binary_sim_file.write(reinterpret_cast<char *>(&value),
+            //                       sizeof(double));
+
+            // value=binary_app_rgb_sim_matrix_[r][c];
+            // binary_sim_file.write(reinterpret_cast<char *>(&value),
+            //                       sizeof(double));
             
         }
     } 
@@ -648,7 +662,7 @@ bool dbskfg_match_bag_of_fragments::binary_match()
             <<model_fragments_.size()
             <<" model fragments to "
             <<query_fragments_.size()
-            <<" query fragments is"
+            <<" query fragments is "
             <<vox_time<<" sec"<<vcl_endl;
 
     return true;
@@ -1533,6 +1547,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
     dbskfg_cgraph_directed_tree_sptr& model_tree, 
     dbskfg_cgraph_directed_tree_sptr& query_tree,
     double& norm_shape_cost,
+    double& norm_shape_cost_length,
     double& app_diff,
     double& norm_app_cost,
     double& rgb_avg_cost)
@@ -1569,7 +1584,8 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
     bool flag=false;
 
     // Keep vector of costs
-    double shape_cost=1.0e6;
+    double shape_cost_splice=1.0e6;
+    double shape_cost_length=1.0e6;
 
     //instantiate the edit distance algorithms
     dbskr_tree_edit edit(model_tree.ptr(), 
@@ -1627,9 +1643,26 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
                 double query_tree_splice_cost = 
                     ( isnan(query_tree->total_splice_cost()) )
                     ? 0.0 : query_tree->total_splice_cost();
-                
+
+                double model_tree_arc_length = 
+                    ( isnan(
+                        model_tree->
+                        compute_total_reconstructed_boundary_length()) )
+                    ? 0.0 : model_tree->
+                    compute_total_reconstructed_boundary_length();
+
+                double query_tree_arc_length = 
+                    ( isnan(
+                        query_tree->
+                        compute_total_reconstructed_boundary_length()) )
+                    ? 0.0 : query_tree->
+                    compute_total_reconstructed_boundary_length();
+
                 double norm_val = val/
                     (model_tree_splice_cost+query_tree_splice_cost );
+
+                double norm_val_length = val/
+                    (model_tree_arc_length+query_tree_arc_length );
                 
                 // vcl_cout << "final cost: " << val 
                 //          << " final norm cost: " << norm_val 
@@ -1640,9 +1673,9 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
                 // vcl_cout<<"Root1 "<<(*it)<<" Root2 "<<(*bit)<<" cost: "
                 //         <<norm_val<<vcl_endl;
 
-                if ( norm_val < shape_cost )
+                if ( norm_val < shape_cost_splice )
                 {
-                    shape_cost = norm_val;
+                    shape_cost_splice = norm_val;
 
                     curve_list1.clear();
                     curve_list2.clear();
@@ -1663,6 +1696,10 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
                     flag=false;
                 }
                 
+                if ( norm_val_length < shape_cost_length )
+                {
+                    shape_cost_length=norm_val_length;
+                }
             }
             else if ( (*it) > 0 )
             {
@@ -1701,8 +1738,25 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
                     ( isnan(query_tree->total_splice_cost()) )
                     ? 0.0 : query_tree->total_splice_cost();
                 
+                double model_tree_arc_length = 
+                    ( isnan(
+                        model_tree->
+                        compute_total_reconstructed_boundary_length()) )
+                    ? 0.0 : model_tree->
+                    compute_total_reconstructed_boundary_length();
+
+                double query_tree_arc_length = 
+                    ( isnan(
+                        query_tree->
+                        compute_total_reconstructed_boundary_length()) )
+                    ? 0.0 : query_tree->
+                    compute_total_reconstructed_boundary_length();
+
                 double norm_val = val/
                     (model_tree_splice_cost+query_tree_splice_cost );
+
+                double norm_val_length = val/
+                    (model_tree_arc_length+query_tree_arc_length );
   
                 // vcl_cout << "final cost: " << val 
                 //          << " final norm cost: " << norm_val 
@@ -1715,9 +1769,9 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
                 // vcl_cout<<"Root1 "<<(*it)<<" Root2 "<<(*bit)<<" cost: "
                 //         <<norm_val<<vcl_endl;
 
-                if ( norm_val < shape_cost )
+                if ( norm_val < shape_cost_splice )
                 {
-                    shape_cost = norm_val;
+                    shape_cost_splice = norm_val;
 
                     curve_list1.clear();
                     curve_list2.clear();
@@ -1736,6 +1790,11 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
                     query_final_branches=curve_list1.size();
 
                     flag=true;
+                }
+         
+                if ( norm_val_length < shape_cost_length )
+                {
+                    shape_cost_length=norm_val_length;
                 }
           
             }
@@ -1827,8 +1886,9 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
 
     }
    
-    norm_shape_cost = shape_cost;
-   
+    norm_shape_cost = shape_cost_splice;
+    norm_shape_cost_length=shape_cost_length;
+
     // vcl_cout<<" Norm Shape Cost: "<<norm_shape_cost<<vcl_endl;
     // vcl_cout<<" Norm App   Cost: "<<norm_app_cost<<vcl_endl;
     // vcl_cout<<" App Cost       : "<<app_diff<<vcl_endl;

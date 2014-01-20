@@ -157,6 +157,9 @@ private:
     // Holds shape data
     vnl_matrix<double> binary_sim_matrix_;
 
+    // Holds shape data normalized by length
+    vnl_matrix<double> binary_sim_length_matrix_;
+
     // Holds appearance data
     vnl_matrix<double> binary_app_sim_matrix_;
 
@@ -226,6 +229,7 @@ private:
     void match_two_graphs(dbskfg_cgraph_directed_tree_sptr& model_tree,
                           dbskfg_cgraph_directed_tree_sptr& query_tree,
                           double& norm_shape_cost,
+                          double& norm_shape_length,
                           double& app_diff,
                           double& norm_app_cost,
                           double& rgb_avg_cost);
