@@ -1,8 +1,5 @@
-function data_til = rf_pca(data, n_compress)
-  % zero-mean
-  media = mean(data,2);
-  [nr,nc] = size(data);
-  data = data - media*ones(1,nc)
-  [u,s] = svds(data)
-  data_til = u*s
-
+function [data_db, mean_db] = rf_pca(data, n_compress)
+  mean_db = mean(data,2);
+  data = data - mean_db*ones(1,size(data,2))
+  [u,s] = svds(data, n_compress)
+  data_db = u*s
