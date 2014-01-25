@@ -1021,4 +1021,11 @@ void dbskfg_cgraph_directed_tree::compute_reconstructed_boundary_polygon
     }
   }
 
+  vgl_point_2d<double> first_point = poly[0][0];
+  vgl_point_2d<double> last_point=poly[0][poly[0].size()-1];
+  if ( first_point != last_point )
+  {
+      poly.push_back(first_point);
+  }
+
  }
