@@ -35,6 +35,7 @@
 #include <dbskfg/algo/dbskfg_sift_data.h>
 
 #include <vsol/vsol_box_2d.h>
+#include <vgl/algo/vgl_h_matrix_2d_compute_linear.h>
 
 //: Form Composite Graph algorithm
 class dbskfg_match_bag_of_fragments
@@ -216,6 +217,19 @@ private:
 
     void create_html_match_file();
     void write_out_sim_matrix();
+
+    void compute_transformation(vgl_h_matrix_2d<double>& H,
+                                vcl_vector<dbskr_scurve_sptr>& curve_list1,
+                                vcl_vector<dbskr_scurve_sptr>& curve_list2,
+                                vcl_vector< vcl_vector 
+                                < vcl_pair <int,int> > >& map_list,
+                                vcl_vector< pathtable_key >& path_map,
+                                unsigned int sampling_interval,
+                                bool flag);
+
+    void compute_transformed_polygon(vgl_h_matrix_2d<double>& H,
+                                     dbskfg_cgraph_directed_tree_sptr& tree);
+
 
     // Load a composite graph
     dbskfg_composite_graph_sptr load_composite_graph(vcl_string filename);

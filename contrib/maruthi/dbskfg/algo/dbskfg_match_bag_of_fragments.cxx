@@ -36,6 +36,7 @@
 #include <vil/vil_transpose.h>
 #include <vl/mathop.h>
 
+#include <vgl/vgl_homg_point_2d.h>
 #include <vgl/vgl_distance.h>
 #include <string.h>
 #include <vul/vul_timer.h>
@@ -1894,6 +1895,21 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
     // vcl_cout<<" App Cost       : "<<app_diff<<vcl_endl;
     // vcl_cout<<" Norm Rgb Sift Cost    : "<< sift_rgb_cost.second<<vcl_endl;
     // vcl_cout<<" Unnorm Rgb Sift Cost  : "<< sift_rgb_cost.first<<vcl_endl;
+    
+    // unsigned int ds=scurve_sample_ds_;
+    // vgl_h_matrix_2d<double> H;
+    // compute_transformation(H,
+    //                        curve_list1,
+    //                        curve_list2,
+    //                        map_list,
+    //                        path_map,
+    //                        ds,
+    //                        flag);
+    
+
+    // compute_transformed_polygon(H,query_tree);
+    
+
 }
 
 
@@ -2780,4 +2796,106 @@ vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
     // }
 
     return upper_triangle;
+}
+
+void dbskfg_match_bag_of_fragments::compute_transformation(
+    vgl_h_matrix_2d<double>& H,
+    vcl_vector<dbskr_scurve_sptr>& curve_list1,
+    vcl_vector<dbskr_scurve_sptr>& curve_list2,
+    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    vcl_vector< pathtable_key >& path_map,
+    unsigned int sampling_interval,
+    bool flag)
+{
+
+    vcl_vector<vgl_homg_point_2d<double> > model_points,query_points;
+
+    // Get matching pairs
+    for (unsigned i = 0; i < map_list.size(); i++) 
+    {
+        dbskr_scurve_sptr sc1 = curve_list1[i];
+        dbskr_scurve_sptr sc2 = curve_list2[i];
+
+        for (unsigned j = 0; j < map_list[i].size(); j+=sampling_interval) 
+        {
+            vcl_pair<int, int> cor = map_list[i][j];
+
+            vgl_homg_point_2d<double> pm1(sc1->bdry_minus_pt(cor.first));
+            vgl_homg_point_2d<double> pm2(sc2->bdry_minus_pt(cor.second));
+            
+            vgl_homg_point_2d<double> pp1(sc1->bdry_plus_pt(cor.first));
+            vgl_homg_point_2d<double> pp2(sc2->bdry_plus_pt(cor.second));
+            
+            if (! flag )
+            {
+                model_points.push_back(pm1);
+                model_points.push_back(pp1);
+
+                query_points.push_back(pm2);
+                query_points.push_back(pp2);
+
+            }
+            else
+            {
+                query_points.push_back(pm1);
+                query_points.push_back(pp1);
+
+                model_points.push_back(pm2);
+                model_points.push_back(pp2);
+
+
+            }
+        }
+    }
+
+    vgl_h_matrix_2d_compute_linear comp;
+    comp.compute(query_points,model_points,H);
+    
+}
+
+void dbskfg_match_bag_of_fragments::compute_transformed_polygon(
+    vgl_h_matrix_2d<double>& H,dbskfg_cgraph_directed_tree_sptr& tree)
+{
+    vgl_polygon<double> poly(1);
+    vgl_polygon<double> transformed_poly(1);
+    tree->compute_reconstructed_boundary_polygon(poly);
+
+    for (unsigned int s = 0; s < poly.num_sheets(); ++s)
+    {
+        for (unsigned int p = 0; p < poly[s].size(); ++p)
+        {
+            vgl_homg_point_2d<double> pt(poly[s][p].x(),
+                                         poly[s][p].y());
+            vgl_homg_point_2d<double> transformed=H(pt);
+            vgl_point_2d<double> pt_t(transformed);
+            transformed_poly.push_back(pt_t);
+        } 
+    
+    }
+
+    // {
+    //     vcl_ofstream model_file("orig_poly.txt");
+    //     for (unsigned int s = 0; s < poly.num_sheets(); ++s)
+    //     {
+    //         for (unsigned int p = 0; p < poly[s].size(); ++p)
+    //         {
+    //             model_file<<poly[s][p].x()<<","<<poly[s][p].y()<<vcl_endl;
+    //         }
+    //     }
+    //     model_file.close();
+    // }
+
+    // {
+    //     vcl_ofstream model_file("transformed_poly.txt");
+    //     for (unsigned int s = 0; s < transformed_poly.num_sheets(); ++s)
+    //     {
+    //         for (unsigned int p = 0; p < transformed_poly[s].size(); ++p)
+    //         {
+    //             model_file<<transformed_poly[s][p].x()<<","
+    //                       <<transformed_poly[s][p].y()<<vcl_endl;
+    //         }
+    //     }
+    //     model_file.close();
+    // }
+
 }
