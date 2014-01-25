@@ -227,6 +227,15 @@ private:
                                 unsigned int sampling_interval,
                                 bool flag);
 
+    void compute_similarity(vgl_h_matrix_2d<double>& H,
+                            vcl_vector<dbskr_scurve_sptr>& curve_list1,
+                            vcl_vector<dbskr_scurve_sptr>& curve_list2,
+                            vcl_vector< vcl_vector 
+                            < vcl_pair <int,int> > >& map_list,
+                            vcl_vector< pathtable_key >& path_map,
+                            unsigned int sampling_interval,
+                            bool flag);
+
     void compute_transformed_polygon(vgl_h_matrix_2d<double>& H,
                                      dbskfg_cgraph_directed_tree_sptr& tree);
 

@@ -44,6 +44,11 @@
 
 #include <vnl/algo/vnl_symmetric_eigensystem.h>
 
+#include <rgrl/rgrl_est_similarity2d.h>
+#include <rgrl/rgrl_feature_point.h>
+#include <rgrl/rgrl_match_set.h>
+#include <rgrl/rgrl_trans_similarity.h>
+
 dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
 ( 
     vcl_string model_dir,
@@ -1907,7 +1912,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
     //                        flag);
     
 
-    // compute_transformed_polygon(H,query_tree);
+    // compute_transformed_polygon(H,model_tree);
     
 
 }
@@ -2847,11 +2852,100 @@ void dbskfg_match_bag_of_fragments::compute_transformation(
             }
         }
     }
-
-    vgl_h_matrix_2d_compute_linear comp;
-    comp.compute(query_points,model_points,H);
-    
 }
+
+void dbskfg_match_bag_of_fragments::compute_similarity(
+    vgl_h_matrix_2d<double>& H,
+    vcl_vector<dbskr_scurve_sptr>& curve_list1,
+    vcl_vector<dbskr_scurve_sptr>& curve_list2,
+    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    vcl_vector< pathtable_key >& path_map,
+    unsigned int sampling_interval,
+    bool flag)
+{
+
+    vcl_vector< rgrl_feature_sptr > pts1;
+    vcl_vector< rgrl_feature_sptr > pts2;
+    for (unsigned i = 0; i < map_list.size(); i++)
+    {
+        
+        dbskr_scurve_sptr sc1 = curve_list1[i];
+        dbskr_scurve_sptr sc2 = curve_list2[i];
+        
+        for (unsigned j = 0; j < map_list[i].size(); j+=sampling_interval) 
+        {
+            vcl_pair<int, int> cor = map_list[i][j];
+            
+            vnl_vector<double> v(2);
+
+            v[0] = sc1->bdry_minus_pt(cor.first).x();
+            v[1] = sc1->bdry_minus_pt(cor.first).y();
+            pts1.push_back(new rgrl_feature_point(v));
+            
+            v[0] = sc2->bdry_minus_pt(cor.second).x();
+            v[1] = sc2->bdry_minus_pt(cor.second).y();
+            pts2.push_back(new rgrl_feature_point(v));
+        
+            v[0] = sc1->bdry_plus_pt(cor.first).x();
+            v[1] = sc1->bdry_plus_pt(cor.first).y();
+            pts1.push_back(new rgrl_feature_point(v));
+        
+            v[0] = sc2->bdry_plus_pt(cor.second).x();
+            v[1] = sc2->bdry_plus_pt(cor.second).y();
+            pts2.push_back(new rgrl_feature_point(v));
+        }
+    }
+ 
+    rgrl_match_set_sptr ms = new 
+        rgrl_match_set( rgrl_feature_point::type_id() );
+
+    if (!flag) 
+    {
+        for ( unsigned i=0; i < pts1.size(); ++i ) 
+        {
+            ms->add_feature_and_match( pts1[i], 0, pts2[i] );
+        }
+
+    } 
+    else 
+    {
+        for ( unsigned i=0; i < pts2.size(); ++i ) 
+        {
+            ms->add_feature_and_match( pts2[i], 0, pts1[i] );
+        }
+    }
+   
+    rgrl_estimator_sptr est = new rgrl_est_similarity2d(2);
+    rgrl_trans_similarity dummy_trans(2);
+    rgrl_transformation_sptr trans = est->estimate( ms, dummy_trans );
+    if (!trans) 
+    {
+        vcl_cout << "transformation could not be estimated by rgrl\n";
+    }
+
+    rgrl_trans_similarity* s_trans = 
+        dynamic_cast<rgrl_trans_similarity*>(trans.as_pointer());
+    if (!s_trans) 
+    {
+        vcl_cout << "transformation pointer could not be retrieved\n";
+    }
+  
+    H.set_identity();
+    vnl_matrix_fixed<double, 3, 3> t_matrix;
+    t_matrix(0,0) = s_trans->A()(0,0);
+    t_matrix(0,1) = s_trans->A()(0,1);
+    t_matrix(1,0) = s_trans->A()(1,0);
+    t_matrix(1,1) = s_trans->A()(1,1);
+    t_matrix(0,2) = 0;
+    t_matrix(1,2) = 0;
+    t_matrix(2,0) = 0;
+    t_matrix(2,1) = 0;
+    t_matrix(2,2) = 1;
+    H.set(t_matrix);
+    H.set_translation(s_trans->t()[0], s_trans->t()[1]);
+
+}
+
 
 void dbskfg_match_bag_of_fragments::compute_transformed_polygon(
     vgl_h_matrix_2d<double>& H,dbskfg_cgraph_directed_tree_sptr& tree)
