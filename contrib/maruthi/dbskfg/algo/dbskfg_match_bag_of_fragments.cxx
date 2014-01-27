@@ -49,6 +49,9 @@
 #include <rgrl/rgrl_match_set.h>
 #include <rgrl/rgrl_trans_similarity.h>
 
+#include <vgl/vgl_clip.h>
+#include <vgl/vgl_area.h>
+
 dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
 ( 
     vcl_string model_dir,
@@ -1907,16 +1910,16 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
     
     // unsigned int ds=scurve_sample_ds_;
     // vgl_h_matrix_2d<double> H;
-    // compute_transformation(H,
-    //                        curve_list1,
-    //                        curve_list2,
-    //                        map_list,
-    //                        path_map,
-    //                        ds,
-    //                        flag);
+    // compute_similarity(H,
+    //                    curve_list1,
+    //                    curve_list2,
+    //                    map_list,
+    //                    path_map,
+    //                    ds,
+    //                    flag);
     
-
-    // compute_transformed_polygon(H,model_tree);
+    // vcl_pair<double,double> p1=
+    //     compute_transformed_polygon(H,model_tree,query_tree);
     
 
 }
@@ -2951,49 +2954,112 @@ void dbskfg_match_bag_of_fragments::compute_similarity(
 }
 
 
-void dbskfg_match_bag_of_fragments::compute_transformed_polygon(
-    vgl_h_matrix_2d<double>& H,dbskfg_cgraph_directed_tree_sptr& tree)
+vcl_pair<double,double> 
+dbskfg_match_bag_of_fragments::compute_transformed_polygon(
+    vgl_h_matrix_2d<double>& H,dbskfg_cgraph_directed_tree_sptr& model_tree,
+    dbskfg_cgraph_directed_tree_sptr& query_tree)
 {
-    vgl_polygon<double> poly(1);
-    vgl_polygon<double> transformed_poly(1);
-    tree->compute_reconstructed_boundary_polygon(poly);
+    vgl_polygon<double> model_poly(1);
+    model_tree->compute_reconstructed_boundary_polygon(model_poly);
 
-    for (unsigned int s = 0; s < poly.num_sheets(); ++s)
+    vgl_polygon<double> query_poly(1);
+    query_tree->compute_reconstructed_boundary_polygon(query_poly);
+
+    
+    vgl_polygon<double> model_transformed_poly(1);
+    for (unsigned int s = 0; s < model_poly.num_sheets(); ++s)
     {
-        for (unsigned int p = 0; p < poly[s].size(); ++p)
+        for (unsigned int p = 0; p < model_poly[s].size(); ++p)
         {
-            vgl_homg_point_2d<double> pt(poly[s][p].x(),
-                                         poly[s][p].y());
+            vgl_homg_point_2d<double> pt(model_poly[s][p].x(),
+                                         model_poly[s][p].y());
             vgl_homg_point_2d<double> transformed=H(pt);
             vgl_point_2d<double> pt_t(transformed);
-            transformed_poly.push_back(pt_t);
+            model_transformed_poly.push_back(pt_t);
         } 
     
     }
+    
+    double m_m_area_of_intersection(0);
+    double m_q_area_of_intersection(0);
+
+    // Store result of model intersection with itself
+    {
+        int value;
+
+        vgl_polygon<double> m_m_intersection;
+        
+        //Take union of two polygons
+        m_m_intersection = vgl_clip(model_poly,              // p1
+                                    model_transformed_poly,  // p2
+                                    vgl_clip_type_intersect, // p1 |  p2
+                                    &value);                 // test if success
+        
+        m_m_area_of_intersection
+            =vgl_area(m_m_intersection)/vgl_area(model_poly);
+    }
+    
+    // Store result of model intersection with query
+    {
+        int value;
+
+        vgl_polygon<double> m_q_intersection;
+        
+        //Take union of two polygons
+        m_q_intersection = vgl_clip(model_transformed_poly,   // p1
+                                    query_poly,               // p2
+                                    vgl_clip_type_intersect,  // p1 |  p2
+                                    &value);                  // test if success
+        m_q_area_of_intersection
+            =vgl_area(m_q_intersection)/vgl_area(query_poly);
+
+    }
+   
+    vcl_pair<double,double> result;
+    result.first=m_m_area_of_intersection;
+    result.second=m_q_area_of_intersection;
+
+    return result;
+
+    // vcl_cout<<"Model to model: "<<result.first<<vcl_endl;
+    // vcl_cout<<"Model to query: "<<result.second<<vcl_endl;
 
     // {
-    //     vcl_ofstream model_file("orig_poly.txt");
-    //     for (unsigned int s = 0; s < poly.num_sheets(); ++s)
+    //     vcl_ofstream model_file("model_poly.txt");
+    //     for (unsigned int s = 0; s < model_poly.num_sheets(); ++s)
     //     {
-    //         for (unsigned int p = 0; p < poly[s].size(); ++p)
+    //         for (unsigned int p = 0; p < model_poly[s].size(); ++p)
     //         {
-    //             model_file<<poly[s][p].x()<<","<<poly[s][p].y()<<vcl_endl;
+    //             model_file<<model_poly[s][p].x()
+    //                       <<","<<model_poly[s][p].y()<<vcl_endl;
     //         }
     //     }
     //     model_file.close();
     // }
 
     // {
-    //     vcl_ofstream model_file("transformed_poly.txt");
-    //     for (unsigned int s = 0; s < transformed_poly.num_sheets(); ++s)
+    //     vcl_ofstream model_file("model_transformed_poly.txt");
+    //     for (unsigned int s = 0; s < model_transformed_poly.num_sheets(); ++s)
     //     {
-    //         for (unsigned int p = 0; p < transformed_poly[s].size(); ++p)
+    //         for (unsigned int p = 0; p < model_transformed_poly[s].size(); ++p)
     //         {
-    //             model_file<<transformed_poly[s][p].x()<<","
-    //                       <<transformed_poly[s][p].y()<<vcl_endl;
+    //             model_file<<model_transformed_poly[s][p].x()<<","
+    //                       <<model_transformed_poly[s][p].y()<<vcl_endl;
     //         }
     //     }
     //     model_file.close();
     // }
 
+    // {
+    //     vcl_ofstream query_file("query_poly.txt");
+    //     for (unsigned int s = 0; s < query_poly.num_sheets(); ++s)
+    //     {
+    //         for (unsigned int p = 0; p < query_poly[s].size(); ++p)
+    //         {
+    //             query_file<<query_poly[s][p].x()
+    //                       <<","<<query_poly[s][p].y()<<vcl_endl;
+    //         }
+    //     }
+    //     query_file.close();
+    // }
 }

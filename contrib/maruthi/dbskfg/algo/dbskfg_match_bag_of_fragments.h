@@ -236,8 +236,10 @@ private:
                             unsigned int sampling_interval,
                             bool flag);
 
-    void compute_transformed_polygon(vgl_h_matrix_2d<double>& H,
-                                     dbskfg_cgraph_directed_tree_sptr& tree);
+    vcl_pair<double,double> compute_transformed_polygon(
+        vgl_h_matrix_2d<double>& H,
+        dbskfg_cgraph_directed_tree_sptr& model_tree,
+        dbskfg_cgraph_directed_tree_sptr& query_tree);
 
 
     // Load a composite graph
