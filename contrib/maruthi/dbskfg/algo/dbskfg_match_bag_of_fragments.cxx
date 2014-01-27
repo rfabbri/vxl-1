@@ -1592,6 +1592,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
     // Keep vector of costs
     double shape_cost_splice=1.0e6;
     double shape_cost_length=1.0e6;
+    double unorm_shape_cost=1.0e6;
 
     //instantiate the edit distance algorithms
     dbskr_tree_edit edit(model_tree.ptr(), 
@@ -1682,6 +1683,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
                 if ( norm_val < shape_cost_splice )
                 {
                     shape_cost_splice = norm_val;
+                    unorm_shape_cost = val;
 
                     curve_list1.clear();
                     curve_list2.clear();
@@ -1777,7 +1779,9 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
 
                 if ( norm_val < shape_cost_splice )
                 {
+
                     shape_cost_splice = norm_val;
+                    unorm_shape_cost = val;
 
                     curve_list1.clear();
                     curve_list2.clear();
