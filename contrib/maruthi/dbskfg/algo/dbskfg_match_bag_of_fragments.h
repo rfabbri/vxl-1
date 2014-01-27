@@ -271,8 +271,11 @@ private:
     void compute_grad_color_maps(vil_image_resource_sptr& input_image,
                                  vl_sift_pix** grad_data,
                                  unsigned int channel);
-
-
+    
+    double compute_curve_matching_cost(
+        dbskfg_cgraph_directed_tree_sptr& model_tree,
+        dbskfg_cgraph_directed_tree_sptr& query_tree);
+                          
     vcl_pair<double,double> compute_sift_cost(
         vcl_vector<dbskr_scurve_sptr>& curve_list1,
         vcl_vector<dbskr_scurve_sptr>& curve_list2,

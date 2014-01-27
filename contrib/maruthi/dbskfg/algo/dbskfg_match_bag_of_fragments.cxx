@@ -52,6 +52,12 @@
 #include <vgl/vgl_clip.h>
 #include <vgl/vgl_area.h>
 
+#include <bbas/bsol/bsol_intrinsic_curve_2d_sptr.h>
+#include <bbas/bsol/bsol_intrinsic_curve_2d.h>
+
+#include <dbcvr/dbcvr_clsd_cvmatch.h>
+#include <dbcvr/dbcvr_clsd_cvmatch_sptr.h>
+
 dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
 ( 
     vcl_string model_dir,
@@ -1920,7 +1926,6 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
     
     // vcl_pair<double,double> p1=
     //     compute_transformed_polygon(H,model_tree,query_tree);
-    
 
 }
 
@@ -3062,4 +3067,60 @@ dbskfg_match_bag_of_fragments::compute_transformed_polygon(
     //     }
     //     query_file.close();
     // }
+}
+
+
+double
+dbskfg_match_bag_of_fragments::compute_curve_matching_cost(
+    dbskfg_cgraph_directed_tree_sptr& model_tree,
+    dbskfg_cgraph_directed_tree_sptr& query_tree)
+{
+    vgl_polygon<double> model_poly(1);
+    model_tree->compute_reconstructed_boundary_polygon(model_poly);
+
+    vgl_polygon<double> query_poly(1);
+    query_tree->compute_reconstructed_boundary_polygon(query_poly);
+
+    bsol_intrinsic_curve_2d_sptr c1=new bsol_intrinsic_curve_2d();
+    bsol_intrinsic_curve_2d_sptr c2=new bsol_intrinsic_curve_2d();
+
+    for (unsigned int s = 0; s < model_poly.num_sheets(); ++s)
+    {
+        for (unsigned int p = 0; p < model_poly[s].size(); ++p)
+        {
+            c1->add_vertex(model_poly[s][p].x(),
+                           model_poly[s][p].y());
+        }
+    }
+
+
+    for (unsigned int s = 0; s < query_poly.num_sheets(); ++s)
+    {
+        for (unsigned int p = 0; p < query_poly[s].size(); ++p)
+        {
+            c2->add_vertex(query_poly[s][p].x(),
+                           query_poly[s][p].y());
+        }
+    }
+
+    c1->setOpen(false);        
+    c2->setOpen(false);
+
+    dbcvr_clsd_cvmatch_sptr clsd_cvmatch = new 
+        dbcvr_clsd_cvmatch(c1,c2,(double)10.0f,3);
+    clsd_cvmatch->setStretchCostFlag(false);
+    clsd_cvmatch->Match();  
+    
+    double minCost=1E10;
+    int minIndex;
+    for (int count=0;count<c1->size();count++)
+    {
+        if (minCost>clsd_cvmatch->finalCost(count))
+        {
+            minCost=clsd_cvmatch->finalCost(count);
+            minIndex=count;
+        }
+    }
+    
+    return minCost;
 }
