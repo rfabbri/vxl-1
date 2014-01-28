@@ -177,7 +177,14 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     
     if (!scale_bbox)
     {
-        match_frags.binary_match();
+        if ( !scale_root) 
+        {
+            match_frags.binary_match();
+        }
+        else
+        {
+            match_frags.binary_scale_root_match();
+        }
     }
     else
     {
