@@ -77,6 +77,9 @@ public:
     //: Match the fragments
     bool binary_scale_match();
 
+    //: Match the fragments
+    bool binary_scale_root_match();
+
 private:
 
     // Keep track of model trees
