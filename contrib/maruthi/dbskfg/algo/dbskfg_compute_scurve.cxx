@@ -74,7 +74,7 @@ dbskr_scurve_sptr dbskfg_compute_scurve::compute_curve(
                 double scaled_y=pt.y()*scale_ratio;
                 vgl_point_2d<double> scaled_pt(scaled_x,scaled_y);
 
-                sh_pt.push_back(scaled_pt);
+                sh_pt.push_back(sample->pt);
                 time.push_back(sample->radius*scale_ratio); 
                 //100000 signals infinity
                 if (sample->speed != 0 && sample->speed < 99990)
@@ -100,7 +100,7 @@ dbskr_scurve_sptr dbskfg_compute_scurve::compute_curve(
                 dbsk2d_xshock_sample_sptr sample = cur_edge.sample(i);
 
                 sh_pt.push_back(sample->pt);
-                time.push_back(sample->radius); 
+                time.push_back(sample->radius*scale_ratio); 
                 //100000 signals infinity
                 if (sample->speed != 0 && sample->speed < 99990)
                 { 
