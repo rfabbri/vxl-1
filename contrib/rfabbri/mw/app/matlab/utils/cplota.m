@@ -1,9 +1,9 @@
 % plot adjacency matrix of a graph in 3 dimensions.
 % The graph is represented by list of xyz vertices pts
 %
-% The input adjacency matrix is W.
+% The input adjacency matrix is W, points is pts.
 
-pts = X19  % lucia helix for now
+%pts = X19  % lucia helix for now
 
 % for fun: compute average distances
 w_threshold = 0.98
