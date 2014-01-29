@@ -11,3 +11,4 @@ c = [x y]
 cplot2(c)
 
 plot2d([0; 8], [0; 4],2);
+xs2svg(gcf(), '/tmp/fran_plot_c.svg');

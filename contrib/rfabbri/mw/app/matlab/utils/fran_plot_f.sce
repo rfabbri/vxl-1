@@ -20,3 +20,6 @@ a.isoview = 'on';
 a.auto_clear = 'off';
 a.data_bounds = [1.4 0.4; 2.6 1.6];
 a.tight_limits='on';
+[fc,cc] = circle_any_theta(theta, r, x0, y0)
+//plot2d(cc(:,1),cc(:,2),2);
+xs2svg(gcf(), '/tmp/fran_plot_f.svg');
