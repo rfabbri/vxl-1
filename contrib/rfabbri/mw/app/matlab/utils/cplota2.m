@@ -11,7 +11,7 @@ maxalpha = 0.1
 
 figure
 clf
-h = cplot(pts,'.b')
+h = cplot2(pts,'.b')
 npts = size(pts,1)
 %axis equal
 
@@ -19,7 +19,7 @@ maxw = max(W(:))
 for i=2:npts
   for j=1:i
     if W(i,j) > w_threshold
-      h = cplot([pts(i,:); pts(j,:)],[1 0 0],(W(i,j)/maxw)*maxalpha);
+      h = cplot([pts(i,:) 0; pts(j,:) 0],[1 0 0],(W(i,j)/maxw)*maxalpha);
     end
   end
 end
