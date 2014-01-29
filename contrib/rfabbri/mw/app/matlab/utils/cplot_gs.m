@@ -21,11 +21,13 @@ pts = [...
 10 -10 
 17 0]
 
-pts1 = pts + ones(9,1)*[10 90]
+pts1 = pts + ones(9,1)*[10 55]
 
-pts2 = pts + ones(9,1)*[90 10]
+pts2 = pts + ones(9,1)*[55 10]
 
 pts = [pts ; pts1; pts2]
+
+pts = pts + 5*rand(size(pts))
 
 % call cplota
 %figure
@@ -38,5 +40,5 @@ cplota2
 hold on
 cplot2_img(pts,img_db,2)
 
-
+set(gca,'visible','off')
 
