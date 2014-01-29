@@ -11,3 +11,11 @@ a.isoview = 'on'
 a.auto_clear = 'off'
 a.data_bounds = [1.4 0.4; 2.6 1.6]
 a.tight_limits='on'
+
+theta = linspace(0,2*%pi,n);
+theta = theta';
+[fc,cc] = circle_any_theta(theta, 0.5, 2, 1)
+//plot2d(cc(:,1),cc(:,2),2);
+
+
+xs2svg(gcf(), '/tmp/fran_plot_e.svg');
