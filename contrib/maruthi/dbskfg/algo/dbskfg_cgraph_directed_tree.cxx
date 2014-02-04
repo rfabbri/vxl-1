@@ -771,12 +771,19 @@ bool dbskfg_cgraph_directed_tree::create_shg(vcl_string fname)
   for (int nn=0;nn<node_size();nn++)
   {
     vcl_vector<int>& odarts = out_darts(nn) ;
+    dbskfg_composite_node_sptr cg_node = this->starting_nodes_[odarts.front()];
+    dbskfg_shock_node* snode=(dbskfg_shock_node*)(&(*cg_node));
+    outf<<snode->pt().x()<<" "<<snode->pt().y()<<" "<<
+        snode->get_radius()<<vcl_endl;
 
     for (unsigned j=0; j<odarts.size(); j++)
-      outf << this->head(odarts[j]) << " "   << 
-          this->contract_cost(odarts[j]) << " " << 
-          this->delete_cost(odarts[j]) << vcl_endl;
+    {
+        outf << this->head(odarts[j]) << " "   << 
+            this->contract_cost(odarts[j]) << " " << 
+            this->delete_cost(odarts[j]) << vcl_endl;
+    }
 
+    
     outf << vcl_endl;
   }
 
