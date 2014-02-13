@@ -158,7 +158,14 @@ public:
     return prev(parent_dart_ccw(dart)); 
   }
 
-
+  //: reset up flags
+  void reset_up_flags()
+  {
+      for (unsigned int s=0; s <  up_.size() ; ++s)
+      {
+          up_[s]=false;
+      }
+  }
 
   // Access cost variables -----------------------------------------------------
 
