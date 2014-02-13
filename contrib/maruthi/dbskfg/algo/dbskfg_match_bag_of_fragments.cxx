@@ -2100,6 +2100,10 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
                 {
                     shape_cost_length=norm_val_length;
                 }
+
+                model_tree->reset_up_flags();
+                query_tree->reset_up_flags();
+
             }
             else if ( (*it) > 0 )
             {
@@ -2198,7 +2202,10 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
                 {
                     shape_cost_length=norm_val_length;
                 }
-          
+
+                model_tree->reset_up_flags();
+                query_tree->reset_up_flags();
+
             }
 
             
