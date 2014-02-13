@@ -72,6 +72,9 @@ public:
     bool binary_match();
 
     //: Match the fragments
+    bool binary_debug_match();
+
+    //: Match the fragments
     bool binary_app_match();
 
     //: Match the fragments
@@ -261,6 +264,16 @@ private:
                           double& app_diff,
                           double& norm_app_cost,
                           double& rgb_avg_cost);
+
+    //Match two graphs
+    void match_two_debug_graphs(dbskfg_cgraph_directed_tree_sptr& model_tree,
+                                dbskfg_cgraph_directed_tree_sptr& query_tree,
+                                double& norm_shape_cost,
+                                double& norm_shape_length,
+                                double& app_diff,
+                                double& norm_app_cost,
+                                double& rgb_avg_cost,
+                                vcl_string prefix);
     
     void write_binary_fragments(vcl_ofstream& binary_sim_file,
                                 vcl_map<unsigned int,
