@@ -96,6 +96,7 @@ protected:
 
   void reconstruct_boundary();
   void compute_arclengths();
+  void compute_areas();
 
 public:
   // return the data points
@@ -212,6 +213,8 @@ protected:
   vcl_vector<double> bdry_minus_arclength_;       ///< arclength along the - bndry curve
   vcl_vector<double> bdry_minus_angle_;           ///< tangent to the - bndry curve
 
+  vcl_vector<double> area_; // area of intervals as a function of length
+  double total_area_; // total area of this scurve shock branch
 };
 
 #endif  // _dbskr_scurve_h

@@ -2,6 +2,8 @@
 #include <dbskr/dbskr_scurve.h>
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_distance.h>
+#include <vgl/vgl_polygon.h>
+#include <vgl/vgl_area.h>
 
 #include <vcl_cstdio.h>
 #include <vcl_algorithm.h>
@@ -75,6 +77,10 @@ dbskr_scurve::dbskr_scurve(int num_points,
 
   //now compute the arclengths
   compute_arclengths();
+
+  // now compute the areas
+  compute_areas();
+
 }
 
 //Interpolate/copy constructor
@@ -520,6 +526,39 @@ void dbskr_scurve::compute_arclengths()
     px=cx;
     py=cy;
   }
+}
+
+//: compute areas along shock curve
+void dbskr_scurve::compute_areas() 
+{
+  vgl_point_2d<double> curr,prev;
+  double dA;
+  double shock_area=0.0;
+
+  area_.clear();
+  area_.reserve(num_points_);
+  area_.push_back(0.0);
+  total_area_=0;
+
+  for (unsigned int i = 1; i < num_points_; i++) 
+  {
+      vgl_polygon<double> poly(1);
+      poly.push_back(sh_pt_[i-1].x(),sh_pt_[i-1].y());
+      poly.push_back(bdry_plus_[i-1].x(),bdry_plus_[i-1].y());
+      poly.push_back(bdry_plus_[i].x(),bdry_plus_[i].y());
+
+      poly.push_back(sh_pt_[i].x(),sh_pt_[i].y());
+      poly.push_back(bdry_minus_[i].x(),bdry_minus_[i].y());
+      poly.push_back(bdry_minus_[i-1].x(),bdry_minus_[i-1].y());
+
+      dA=vgl_area(poly);
+      shock_area+=dA;
+      total_area_+=dA;
+
+      area_.push_back(shock_area);
+  }    
+  
+  
 }
 
 //: return an extrinsic point corresponding to the intrinsic 
@@ -1023,6 +1062,7 @@ void dbskr_scurve::writeData(vcl_string fname)
     outfp.precision(15);
     outfp << bdry_minus_angle_[i] << " ";
     outfp.precision(15);
+    outfp<< area_[i];
     outfp << vcl_endl;
   }
 
