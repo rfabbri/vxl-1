@@ -163,6 +163,7 @@ public:
 
   void stretch_cost(int i, int ip, vcl_vector<double> &a);
   void bend_cost(int i, int ip, vcl_vector<double> &a);
+  void area_cost(int i, int ip, vcl_vector<double> &a);
 
   void stretch_cost_combined(int i, int ip, vcl_vector<double> &a);
   void bend_cost_combined(int i, int ip, vcl_vector<double> &a);

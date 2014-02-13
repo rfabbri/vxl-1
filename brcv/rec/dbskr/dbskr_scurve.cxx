@@ -707,6 +707,11 @@ void dbskr_scurve::bend_cost(int i, int ip, vcl_vector<double> &a)
 #endif
 }
 
+void dbskr_scurve::area_cost(int i, int ip, vcl_vector<double> &a) 
+{
+  a[0]=vcl_fabs(area_[i]-area_[ip]);
+}
+
 //: In the original implementation of Sebastian et al. PAMI 2006, the interval cost is given by:
 //  (|d_r1 - d_r2| + |d_phi1 - d_phi2|) where d_r1 = |r1_i - r1_ip|, 
 //                                            d_r2 = |r1_j - r1_jp|, 
