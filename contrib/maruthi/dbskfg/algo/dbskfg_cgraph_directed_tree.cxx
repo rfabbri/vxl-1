@@ -548,6 +548,11 @@ compute_delete_and_contract_costs(bool elastic_splice_cost,
               dbskr_scurve_sptr sc = this->get_curve(i, i, 
                                                      circ_flag);
 
+              if ( !circ_flag )
+              {
+                  sc->set_euler_spiral_completion_length();
+              }
+
               //: for leaf darts, compute the splice cost with or without 
               //  the circular completions depending on the 
               //  construct_circular_ends flag!!          
