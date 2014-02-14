@@ -58,7 +58,8 @@ class dbskr_scurve : public vbl_ref_count
 public:
   
   //: default constructor
-  dbskr_scurve() : interpolate_ds_(1.0), subsample_ds_(5.0), num_points_(0) {}
+  dbskr_scurve() : interpolate_ds_(1.0), subsample_ds_(5.0), num_points_(0) , 
+        virtual_length_(0.0) {}
 
   //: contructor with data
   dbskr_scurve(int num_points,
@@ -179,6 +180,7 @@ public:
   // construct the shock curves involved in splicing operations
   dbskr_scurve_sptr get_original_scurve(bool construct_circular_ends);
   dbskr_scurve_sptr get_replacement_scurve(int num_pts);
+  void set_euler_spiral_completion_length();
 
   //: for visualization purposes
   void get_polys(vcl_vector<vsol_polygon_2d_sptr>& polys);
@@ -216,6 +218,8 @@ protected:
 
   vcl_vector<double> area_; // area of intervals as a function of length
   double total_area_; // total area of this scurve shock branch
+
+  double virtual_length_; // If set use this
 };
 
 #endif  // _dbskr_scurve_h

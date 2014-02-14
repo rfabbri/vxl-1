@@ -4,6 +4,8 @@
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_polygon.h>
 #include <vgl/vgl_area.h>
+#include <vgl/vgl_line_2d.h>
+#include <dbgl/algo/dbgl_eulerspiral.h>
 
 #include <vcl_cstdio.h>
 #include <vcl_algorithm.h>
@@ -50,7 +52,8 @@ dbskr_scurve::dbskr_scurve(int num_points,
                            vcl_vector<double> &phi, 
                            bool binterpolate, double interpolate_ds,
                            bool bsub_sample, double subsample_ds): 
-  interpolate_ds_(interpolate_ds), subsample_ds_(subsample_ds) 
+    interpolate_ds_(interpolate_ds), subsample_ds_(subsample_ds),
+    virtual_length_(0.0) 
 {
   if (binterpolate){
     vcl_vector<int> lmap; //dummy map 
@@ -862,6 +865,57 @@ dbskr_scurve_sptr dbskr_scurve::get_replacement_scurve(int num_pts)
   return pruned_scurve;
 }
 
+
+void dbskr_scurve::set_euler_spiral_completion_length()
+{
+
+    virtual_length_=0.0;
+
+    // Compute Euler Spiral
+
+    // 1) Determine tangent pairs first
+    vgl_point_2d<double> minus_last_point=bdry_minus_.back();
+    vgl_point_2d<double> minus_next_to_last_point=
+        bdry_minus_[bdry_minus_.size()-2];
+
+    vgl_point_2d<double> plus_last_point=bdry_plus_.back();
+    vgl_point_2d<double> plus_next_to_last_point=
+        bdry_plus_[bdry_plus_.size()-2];
+    
+    vgl_line_2d<double> minus_line(minus_next_to_last_point,
+                                   minus_last_point);
+
+    vgl_line_2d<double> plus_line(plus_last_point,
+                                  plus_next_to_last_point);
+    
+    // 2) Compute Euler Spiral
+    dbgl_eulerspiral es(
+        plus_last_point,
+        plus_line.slope_radians(),
+        minus_last_point,
+        minus_line.slope_radians());
+
+    // For debugging purposes
+    // vcl_vector<vgl_point_2d<double> > samples;
+    // es.compute_spiral(samples, 0.1);
+    
+    // vcl_cout<<"curve=[";
+    // for ( unsigned int s=0; s < samples.size() ; ++s)
+    // {
+    //     if ( s == samples.size()-1)
+    //     {
+    //         vcl_cout<<samples[s].x()<<" "<<samples[s].y()<<"];"<<vcl_endl;
+    //         break;
+    //     }
+    //     vcl_cout<<samples[s].x()<<" "<<samples[s].y()<<"; ..."<<vcl_endl;
+    // }
+
+    // vcl_cout<<"Es length: "<<es.length()<<vcl_endl;
+
+    virtual_length_ = es.length();
+
+}
+
 //: new splice cost definition that uses joint curve matching to compute
 //  the splice cost instead of the simplified version of the cost function
 //  Amir: passed the R constant to the splice cost function for elastic splice cost
@@ -942,7 +996,7 @@ double dbskr_scurve::splice_cost(double R_const, bool new_def, bool construct_ci
     R = time_[n];
 
     //the length of the contour to be deleted
-    delLen = bdry_plus_length_+bdry_minus_length_;
+    delLen = bdry_plus_length_+bdry_minus_length_+virtual_length_;
     //0.9 was replaced with 1.0 by Fatih, since Sebastian had 1.0 in his original version (which original version?). 05/01/08
     //replLen = 1.0*R*vcl_fabs(dt);
     replLen = 0.9*R*vcl_fabs(dt); //Amir: As in Matching-Tek
