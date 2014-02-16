@@ -41,7 +41,8 @@ public:
   //: Constructor
   dbskfg_cgraph_directed_tree(float scurve_sample_ds=5.0f, 
                               float interpolate_ds=1.0f, 
-                              float matching_R=6.0f);
+                              float matching_R=6.0f,
+                              bool mirror=false);
 
   //: Destructor;
   /* virtual */ ~dbskfg_cgraph_directed_tree();
@@ -183,6 +184,7 @@ protected:
   
   void compute_bounding_box();
 
+  bool mirror_;
 
 };
 

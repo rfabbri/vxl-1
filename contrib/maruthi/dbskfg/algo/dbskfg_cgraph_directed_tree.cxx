@@ -28,13 +28,14 @@
 //: Constructor
 dbskfg_cgraph_directed_tree::
 dbskfg_cgraph_directed_tree(
-    float scurve_sample_ds,float interpolate_ds,float matching_R)
+    float scurve_sample_ds,float interpolate_ds,float matching_R,bool mirror)
     :scurve_sample_ds_(scurve_sample_ds),
      interpolate_ds_(interpolate_ds),
      scurve_matching_R_(matching_R),
      scale_ratio_(1.0),
      root_node_radius_(0.0),
-     bbox_(0)
+     bbox_(0),
+     mirror_(mirror)
 { 
 }
 
@@ -114,7 +115,25 @@ acquire_tree_topology(const dbskfg_composite_graph_sptr& composite_graph)
 
   this->composite_graph_=composite_graph;
 
-  this->compute_bounding_box();
+  if ( mirror_)
+  {
+
+      // Grab all degree 3 nodes first
+      for (dbskfg_composite_graph::vertex_iterator vit =
+               composite_graph->vertices_begin();
+           vit != composite_graph->vertices_end(); ++vit)
+      {
+          dbskfg_composite_node_sptr node = *vit;
+          if ( node->node_type() == dbskfg_composite_node::SHOCK_NODE )
+          {
+              node->reverse_in_edges();
+              node->reverse_out_edges();
+          }
+          
+      }
+
+      this->compute_bounding_box();
+  }
 
   // Grab all shock links from this node
   vcl_map<unsigned int,dbskfg_shock_link*> shock_links;
@@ -687,7 +706,7 @@ get_curve_pair(int start_dart, int end_dart, bool construct_circular_ends)
     this->get_edge_list(dart_list, start_node, edges);
     
     //Curve reconstruct object
-    dbskfg_compute_scurve reconstructor;
+    dbskfg_compute_scurve reconstructor(bbox_);
 
     dbskr_scurve_sptr sc;
 
@@ -700,7 +719,8 @@ get_curve_pair(int start_dart, int end_dart, bool construct_circular_ends)
                                          vcl_min((float)scurve_sample_ds_, 
                                                  interpolate_ds_), 
                                          scurve_sample_ds_,
-                                         scale_ratio_);
+                                         scale_ratio_,
+                                         mirror_);
 
     }
     else
@@ -711,7 +731,8 @@ get_curve_pair(int start_dart, int end_dart, bool construct_circular_ends)
                                          vcl_min((float)scurve_sample_ds_, 
                                                  interpolate_ds_), 
                                          scurve_sample_ds_,
-                                         scale_ratio_);
+                                         scale_ratio_,
+                                         mirror_);
     }
 
     dbskr_sc_pair_sptr curve_pair = new dbskr_sc_pair();
