@@ -26,7 +26,7 @@
 #include <dbskr/dbskr_scurve.h>
 
 //: Constructor
-dbskfg_compute_scurve::dbskfg_compute_scurve()
+dbskfg_compute_scurve::dbskfg_compute_scurve(vsol_box_2d_sptr bbox):bbox_(bbox)
 {
 
 }
@@ -34,7 +34,7 @@ dbskfg_compute_scurve::dbskfg_compute_scurve()
 //: Destructor
 dbskfg_compute_scurve::~dbskfg_compute_scurve() 
 {
-  
+    bbox_=0;
 }
 
 // compute shock curve
@@ -44,7 +44,8 @@ dbskr_scurve_sptr dbskfg_compute_scurve::compute_curve(
     bool leaf_edge, 
     bool binterpolate, bool bsub_sample,
     double interpolate_ds, double subsample_ds,
-    double scale_ratio)
+    double scale_ratio,
+    bool mirror)
 {
     vcl_vector< vgl_point_2d<double> > sh_pt;
     vcl_vector<double> time, theta, phi;
@@ -59,7 +60,7 @@ dbskr_scurve_sptr dbskfg_compute_scurve::compute_curve(
         dbsk2d_shock_node_sptr parent_node = new dbsk2d_shock_node();
         dbsk2d_shock_node_sptr child_node  = new dbsk2d_shock_node();
         dbsk2d_xshock_edge cur_edge(1,parent_node,child_node);
-        sample_shock_link(*e_it,cur_edge); 
+        sample_shock_link(*e_it,cur_edge,mirror); 
    
         if (cur_start_node == (*e_it)->source())
         {
@@ -159,7 +160,8 @@ dbskr_scurve_sptr dbskfg_compute_scurve::compute_curve(
 }
 
 void dbskfg_compute_scurve::sample_shock_link(dbskfg_composite_link_sptr link,
-                                              dbsk2d_xshock_edge& xshock_edge)
+                                              dbsk2d_xshock_edge& xshock_edge,
+                                              bool mirror)
 {
     dbskfg_shock_link* shock_link = dynamic_cast<dbskfg_shock_link*>
         (&(*link));
@@ -198,6 +200,54 @@ void dbskfg_compute_scurve::sample_shock_link(dbskfg_composite_link_sptr link,
                                    &xshock_edge);
  
     }
+
+
+    if ( mirror )
+    {
+        mirror_shock(xshock_edge);
+    }
+}
+
+void dbskfg_compute_scurve::mirror_shock(dbsk2d_xshock_edge& xshock_edge)
+{
+
+    double width = bbox_->width();
+    xshock_edge.clear_ex_pts();
+
+    for(unsigned int i=0; i<xshock_edge.num_samples(); ++i)
+    {
+        dbsk2d_xshock_sample_sptr cur_sample = xshock_edge.sample(i);
+        dbsk2d_xshock_sample_sptr new_sample = cur_sample;
+
+        vgl_point_2d<double> cur_point = cur_sample->pt;
+        vgl_point_2d<double> new_point(width-cur_point.x(),cur_point.y());
+        new_sample->pt = new_point;
+            
+        vgl_point_2d<double> cur_right_bnd_pt = cur_sample->right_bnd_pt;
+        vgl_point_2d<double> new_left_bnd_pt(width-cur_right_bnd_pt.x(),
+                                             cur_right_bnd_pt.y());
+        vgl_point_2d<double> cur_left_bnd_pt = cur_sample->left_bnd_pt;
+        vgl_point_2d<double> new_right_bnd_pt(width-cur_left_bnd_pt.x(),
+                                              cur_left_bnd_pt.y());
+        new_sample->left_bnd_pt = new_left_bnd_pt;
+        new_sample->right_bnd_pt = new_right_bnd_pt;
+
+        double new_theta = vnl_math::pi - cur_sample->theta;
+        new_sample->theta = new_theta;
+
+        double new_left_bnd_tangent = vnl_math::pi - 
+            cur_sample->right_bnd_tangent;
+        double new_right_bnd_tangent = vnl_math::pi - 
+            cur_sample->left_bnd_tangent;
+        new_sample->left_bnd_tangent = new_left_bnd_tangent;
+        new_sample->right_bnd_tangent = new_right_bnd_tangent;
+
+        xshock_edge.set_sample(i,new_sample);
+    }
+
+    xshock_edge.compute_extrinsic_locus();
+
+    
 
 
 }

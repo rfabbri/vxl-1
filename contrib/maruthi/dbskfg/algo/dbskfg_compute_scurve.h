@@ -20,6 +20,7 @@
 #include <dbskfg/dbskfg_composite_node_sptr.h>
 #include <dbskfg/dbskfg_composite_link_sptr.h>
 #include <vcl_vector.h>
+#include <vsol/vsol_box_2d_sptr.h>
 
 class dbsk2d_xshock_edge;
 
@@ -28,7 +29,7 @@ class dbskfg_compute_scurve
 public: 
     
     // Constructor
-    dbskfg_compute_scurve();
+    dbskfg_compute_scurve(vsol_box_2d_sptr bbox=0);
 
     // Destructor
     ~dbskfg_compute_scurve();
@@ -39,19 +40,27 @@ public:
                                     bool leaf_edge, 
                                     bool binterpolate, bool bsub_sample,
                                     double interpolate_ds, double subsample_ds,
-                                    double scale_ratio=1.0);
+                                    double scale_ratio=1.0,
+                                    bool mirror=false);
 
 private:
 
     // sample shock
     void sample_shock_link(dbskfg_composite_link_sptr link,
-                           dbsk2d_xshock_edge& xshock_edge);
+                           dbsk2d_xshock_edge& xshock_edge,
+                           bool mirror=false);
+    
+    // mirror shock
+    void mirror_shock(dbsk2d_xshock_edge& xshock_edge);
 
     // Make copy constructor private
     dbskfg_compute_scurve(const dbskfg_compute_scurve&);
 
     // Make assignment operator private
     dbskfg_compute_scurve& operator=(const dbskfg_compute_scurve&);
+
+    // Have a bounding box
+    vsol_box_2d_sptr bbox_;
 
 };
 
