@@ -174,10 +174,15 @@ protected:
   float scurve_matching_R_;
   double scale_ratio_;
 
+  vsol_box_2d_sptr bbox_;
+
   static bool compare_node_radius_pairs(
       const vcl_pair<double,unsigned int>& pair1,
       const vcl_pair<double,unsigned int>& pair2)
   {return pair1.first > pair2.first; }
+  
+  void compute_bounding_box();
+
 
 };
 

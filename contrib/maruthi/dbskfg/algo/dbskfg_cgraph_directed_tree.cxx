@@ -33,7 +33,8 @@ dbskfg_cgraph_directed_tree(
      interpolate_ds_(interpolate_ds),
      scurve_matching_R_(matching_R),
      scale_ratio_(1.0),
-     root_node_radius_(0.0)
+     root_node_radius_(0.0),
+     bbox_(0)
 { 
 }
 
@@ -43,6 +44,7 @@ dbskfg_cgraph_directed_tree::
 ~dbskfg_cgraph_directed_tree()
 {
     this->clear();
+    bbox_=0;
 }
 
 
@@ -111,6 +113,8 @@ acquire_tree_topology(const dbskfg_composite_graph_sptr& composite_graph)
 {
 
   this->composite_graph_=composite_graph;
+
+  this->compute_bounding_box();
 
   // Grab all shock links from this node
   vcl_map<unsigned int,dbskfg_shock_link*> shock_links;
@@ -1032,7 +1036,7 @@ void dbskfg_cgraph_directed_tree::compute_reconstructed_boundary_polygon
         }
     }
   }
-
+  
   // vgl_point_2d<double> first_point = poly[0][0];
   // vgl_point_2d<double> last_point=poly[0][poly[0].size()-1];
   // if ( first_point != last_point )
@@ -1040,4 +1044,38 @@ void dbskfg_cgraph_directed_tree::compute_reconstructed_boundary_polygon
   //     poly.push_back(first_point);
   // }
 
- }
+}
+
+void dbskfg_cgraph_directed_tree::compute_bounding_box()
+{
+
+    bbox_=new vsol_box_2d();
+
+    // On the off chance that radius will be exact lets use multiple map
+    // Grab all degree 1 nodes first
+    for (dbskfg_composite_graph::edge_iterator eit =
+             composite_graph_->edges_begin();
+         eit != composite_graph_->edges_end(); ++eit)
+    {
+        dbskfg_composite_link_sptr link = *eit;
+        if ( link->link_type() == dbskfg_composite_link::SHOCK_LINK )
+        {
+            
+            dbskfg_shock_link* shock_link=
+              dynamic_cast<dbskfg_shock_link*>(&(*link));
+            
+            if ( shock_link->shock_link_type() == 
+                 dbskfg_shock_link::SHOCK_EDGE )
+            {
+                dbskfg_composite_node_sptr source_node = shock_link->source();
+                dbskfg_composite_node_sptr target_node = shock_link->target();
+                
+                bbox_->add_point(source_node->pt().x(),source_node->pt().y());
+                bbox_->add_point(target_node->pt().x(),target_node->pt().y());
+            }
+        }
+    }
+    
+    
+    
+}
