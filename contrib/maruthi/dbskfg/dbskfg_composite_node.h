@@ -69,6 +69,9 @@ public:
     //: Is this node virtual
     bool virtual_node(){return virtual_node_;}
 
+    //: Set pt
+    void set_pt(vgl_point_2d<double> pt){pt_=pt;}
+
 protected:
 
     // Attributes
