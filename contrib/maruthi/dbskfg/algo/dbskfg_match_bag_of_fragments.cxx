@@ -591,13 +591,13 @@ bool dbskfg_match_bag_of_fragments::binary_match()
             double norm_shape_cost_length(0.0);
 
             // Match model to query
-            match_two_graphs(model_tree,
-                             query_tree,
-                             norm_shape_cost,
-                             norm_shape_cost_length,
-                             app_diff,
-                             norm_app_cost,
-                             rgb_avg_cost);
+            match_two_graphs_root_node_orig(model_tree,
+                                            query_tree,
+                                            norm_shape_cost,
+                                            norm_shape_cost_length,
+                                            app_diff,
+                                            norm_app_cost,
+                                            rgb_avg_cost);
             
             if ( mirror_)
             {
@@ -619,13 +619,13 @@ bool dbskfg_match_bag_of_fragments::binary_match()
                 double norm_shape_mirror_cost_length(0.0);
                 
                 // Match model to query
-                match_two_graphs(model_tree,
-                                 query_mirror_tree,
-                                 norm_shape_mirror_cost,
-                                 norm_shape_mirror_cost_length,
-                                 app_mirror_diff,
-                                 norm_app_mirror_cost,
-                                 rgb_avg_mirror_cost);
+                match_two_graphs_root_node_orig(model_tree,
+                                                query_mirror_tree,
+                                                norm_shape_mirror_cost,
+                                                norm_shape_mirror_cost_length,
+                                                app_mirror_diff,
+                                                norm_app_mirror_cost,
+                                                rgb_avg_mirror_cost);
 
                 norm_shape_cost = ( norm_shape_cost < norm_shape_mirror_cost)
                     ? norm_shape_cost : norm_shape_mirror_cost;
@@ -2536,7 +2536,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //          << ", tree2: " << query_tree_splice_cost
         //          << ")" << vcl_endl;
         
-        // vcl_cout<<"Root1 "<<(*it)<<" Root2 "<<(*bit)<<" cost: "
+        // vcl_cout<<"Root1 "<<0<<" Root2 "<<query_tree->centroid()<<" cost: "
         //         <<norm_val<<vcl_endl;
         
         if ( norm_val < shape_cost_splice )
@@ -2627,13 +2627,11 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         
         // vcl_cout << "final cost: " << val 
         //          << " final norm cost: " << norm_val 
-        //          << "( tree1 tot splice: " << model_tree_splice_cost
-        //          << ", tree2: " << query_tree_splice_cost
+        //          << "( tree1 tot splice: " << query_tree_splice_cost
+        //          << ", tree2: " << model_tree_splice_cost
         //          << ")" << vcl_endl;
-        
-        
-        
-        // vcl_cout<<"Root1 "<<(*it)<<" Root2 "<<(*bit)<<" cost: "
+                
+        // vcl_cout<<"Root1 "<<0<<" Root2 "<<model_tree->centroid()<<" cost: "
         //         <<norm_val<<vcl_endl;
         
         if ( norm_val < shape_cost_splice )
