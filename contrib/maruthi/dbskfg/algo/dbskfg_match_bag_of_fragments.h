@@ -269,6 +269,16 @@ private:
                           double& norm_app_cost,
                           double& rgb_avg_cost);
 
+    //Match two graphs using original root node selection scheme
+    void match_two_graphs_root_node_orig(
+        dbskfg_cgraph_directed_tree_sptr& model_tree,
+        dbskfg_cgraph_directed_tree_sptr& query_tree,
+        double& norm_shape_cost,
+        double& norm_shape_length,
+        double& app_diff,
+        double& norm_app_cost,
+        double& rgb_avg_cost);
+
     //Match two graphs
     void match_two_debug_graphs(dbskfg_cgraph_directed_tree_sptr& model_tree,
                                 dbskfg_cgraph_directed_tree_sptr& query_tree,

@@ -605,7 +605,8 @@ bool dbskfg_match_bag_of_fragments::binary_match()
                 dbskfg_cgraph_directed_tree_sptr query_mirror_tree = new
                     dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
                                                 scurve_interpolate_ds_, 
-                                                scurve_matching_R_);
+                                                scurve_matching_R_,
+                                                mirror_);
                 
                 f1=query_mirror_tree->acquire
                     ((*q_iterator).second.second, elastic_splice_cost_, 
@@ -833,26 +834,36 @@ bool dbskfg_match_bag_of_fragments::binary_debug_match()
                 dbskfg_cgraph_directed_tree_sptr query_mirror_tree = new
                     dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
                                                 scurve_interpolate_ds_, 
-                                                scurve_matching_R_);
+                                                scurve_matching_R_,
+                                                mirror_);
                 
                 f1=query_mirror_tree->acquire
                     ((*q_iterator).second.second, elastic_splice_cost_, 
                      circular_ends_, combined_edit_);
                 
+                vcl_string query_mirror_filename=
+                    (*q_iterator).second.first+"_mirror_tree.shg";
+                query_mirror_tree->create_shg(query_mirror_filename.c_str());
+
                 double norm_shape_mirror_cost(0.0);
                 double app_mirror_diff(0.0);
                 double norm_app_mirror_cost(0.0);
                 double rgb_avg_mirror_cost(0.0);
                 double norm_shape_mirror_cost_length(0.0);
                 
+                vcl_string match_mirror_prefix =
+                    (*m_iterator).second.first + "_vs_mirror_" +
+                    (*q_iterator).second.first;
+
                 // Match model to query
-                match_two_graphs(model_tree,
-                                 query_mirror_tree,
-                                 norm_shape_mirror_cost,
-                                 norm_shape_mirror_cost_length,
-                                 app_mirror_diff,
-                                 norm_app_mirror_cost,
-                                 rgb_avg_mirror_cost);
+                match_two_debug_graphs(model_tree,
+                                       query_mirror_tree,
+                                       norm_shape_mirror_cost,
+                                       norm_shape_mirror_cost_length,
+                                       app_mirror_diff,
+                                       norm_app_mirror_cost,
+                                       rgb_avg_mirror_cost,
+                                       match_mirror_prefix);
 
                 norm_shape_cost = ( norm_shape_cost < norm_shape_mirror_cost)
                     ? norm_shape_cost : norm_shape_mirror_cost;
@@ -2308,6 +2319,356 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
 
             
         }
+    }
+
+    // if ( (model_tree_branches != model_final_branches) 
+    //      &&
+    //      (query_tree_branches != query_final_branches))
+    // {
+        
+    //     dbskfg_cgraph_directed_tree_sptr model_app_tree = new 
+    //         dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
+    //                                     scurve_interpolate_ds_, 
+    //                                     scurve_matching_R_);
+    //     dbskfg_cgraph_directed_tree_sptr query_app_tree = new 
+    //         dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
+    //                                     scurve_interpolate_ds_, 
+    //                                     scurve_matching_R_);
+    //     bool f1=model_app_tree->acquire
+    //         (model_tree->get_cgraph(), elastic_splice_cost_, 
+    //          circular_ends_, combined_edit_,1.0e6);
+    //     bool f2=query_app_tree->acquire
+    //         (query_tree->get_cgraph(), elastic_splice_cost_, 
+    //          circular_ends_, combined_edit_,1.0e6);
+
+
+    //     //instantiate the edit distance algorithms
+    //     dbskr_tree_edit edit_app(model_app_tree.ptr(), 
+    //                              query_app_tree.ptr(), 
+    //                              circular_ends_, 
+    //                              localized_edit_);
+        
+    //     if ( flag ) 
+    //     {
+    //         edit_app.set_tree1(query_app_tree.ptr());
+    //         edit_app.set_tree2(model_app_tree.ptr());
+    //     }
+
+    //     edit_app.save_path(true);
+    //     edit_app.set_curvematching_R(scurve_matching_R_);
+    //     edit_app.set_use_approx(use_approx_);
+    //     edit_app.set_root_node_selection(min_root_selection);
+    //     bool flag = edit_app.edit();
+
+    //     curve_list1.clear();
+    //     curve_list2.clear();
+    //     map_list.clear();
+    //     path_map.clear();
+
+    //     edit_app.get_correspondence(curve_list1,
+    //                                 curve_list2,
+    //                                 map_list,
+    //                                 path_map);
+
+    //     model_app_tree=0;
+    //     query_app_tree=0;
+    // }
+
+    double shape_time = shape_timer.real()/1000.0;
+    shape_timer.mark();
+
+    //vcl_cerr<<"************ Shape Time taken: "<<shape_time<<" sec"<<vcl_endl;
+    
+    if ( app_sift_ )
+    {
+        vul_timer app_timer;
+        app_timer.mark();
+        vcl_pair<double,double> app_cost=compute_sift_cost(curve_list1,
+                                                           curve_list2,
+                                                           map_list,
+                                                           path_map,
+                                                           flag);
+        vcl_pair<double,double> sift_rgb_cost=compute_rgb_sift_cost(curve_list1,
+                                                                    curve_list2,
+                                                                    map_list,
+                                                                    path_map,
+                                                                    flag);
+        
+        double app_time = app_timer.real()/1000.0;
+        app_timer.mark();
+        
+        //vcl_cerr<<"************ App   Time taken: "<<app_time<<" sec"<<vcl_endl;
+        app_diff        = app_cost.first;
+        norm_app_cost   = app_cost.second;
+        rgb_avg_cost    = sift_rgb_cost.second;
+
+    }
+   
+    norm_shape_cost = shape_cost_splice;
+    norm_shape_cost_length=shape_cost_length;
+
+    // vcl_cout<<" Norm Shape Cost: "<<norm_shape_cost<<vcl_endl;
+    // vcl_cout<<" Norm App   Cost: "<<norm_app_cost<<vcl_endl;
+    // vcl_cout<<" App Cost       : "<<app_diff<<vcl_endl;
+    // vcl_cout<<" Norm Rgb Sift Cost    : "<< sift_rgb_cost.second<<vcl_endl;
+    // vcl_cout<<" Unnorm Rgb Sift Cost  : "<< sift_rgb_cost.first<<vcl_endl;
+    
+    // unsigned int ds=scurve_sample_ds_;
+    // vgl_h_matrix_2d<double> H;
+    // compute_similarity(H,
+    //                    curve_list1,
+    //                    curve_list2,
+    //                    map_list,
+    //                    path_map,
+    //                    ds,
+    //                    flag);
+    
+    // vcl_pair<double,double> p1=
+    //     compute_transformed_polygon(H,model_tree,query_tree);
+
+}
+
+void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
+    dbskfg_cgraph_directed_tree_sptr& model_tree, 
+    dbskfg_cgraph_directed_tree_sptr& query_tree,
+    double& norm_shape_cost,
+    double& norm_shape_cost_length,
+    double& app_diff,
+    double& norm_app_cost,
+    double& rgb_avg_cost)
+{
+
+    vul_timer shape_timer;
+    shape_timer.mark();
+
+    // grab model roots
+    vcl_set<int> model_roots;
+    vcl_set<int> query_roots;
+    
+    //: Curve list 1
+    vcl_vector<dbskr_scurve_sptr> curve_list1;
+    
+    //: Curve list 2
+    vcl_vector<dbskr_scurve_sptr> curve_list2;
+
+    //: Map points from curve list 1 to curve list 2
+    vcl_vector< vcl_vector < vcl_pair <int,int> > > map_list;
+
+    //: Get path key
+    vcl_vector< pathtable_key > path_map;
+
+    // Keep track where tree1 and tree2 have switch
+    bool flag=false;
+
+    // Keep vector of costs
+    double shape_cost_splice=1.0e6;
+    double shape_cost_length=1.0e6;
+    double unorm_shape_cost=1.0e6;
+
+    //instantiate the edit distance algorithms
+    dbskr_tree_edit edit(model_tree.ptr(), 
+                         query_tree.ptr(), circular_ends_, 
+                         localized_edit_);
+
+    dbskr_edit_distance_base::RootNodeSelection min_root_selection
+        (dbskr_edit_distance_base::DEFAULT);
+
+    unsigned int model_tree_branches=model_tree->size()/2;
+    unsigned int query_tree_branches=query_tree->size()/2;
+
+    unsigned int model_final_branches(0);
+    unsigned int query_final_branches(0);
+
+    {
+        edit.clear();
+        edit.set_tree1(model_tree.ptr());
+        edit.set_tree2(query_tree.ptr());
+        edit.save_path(true);
+        edit.set_curvematching_R(scurve_matching_R_);
+        edit.set_use_approx(use_approx_);
+                
+        dbskr_edit_distance_base::RootNodeSelection value =  
+            dbskr_edit_distance_base::DEFAULT;
+        
+        edit.set_root_node_selection(value);
+        
+        if (!edit.edit()) 
+        {
+            vcl_cerr << "Problems in editing trees"<<vcl_endl;
+        }
+        
+        double val = edit.final_cost();
+        
+        // Only doing by splice cost
+        
+        // Get splice costs
+        // isnan found from math.h
+        double model_tree_splice_cost = 
+            ( isnan(model_tree->total_splice_cost()) )
+            ? 0.0 : model_tree->total_splice_cost();
+        double query_tree_splice_cost = 
+            ( isnan(query_tree->total_splice_cost()) )
+            ? 0.0 : query_tree->total_splice_cost();
+        
+        double model_tree_arc_length = 
+            ( isnan(
+                model_tree->
+                compute_total_reconstructed_boundary_length()) )
+            ? 0.0 : model_tree->
+            compute_total_reconstructed_boundary_length();
+        
+        double query_tree_arc_length = 
+            ( isnan(
+                query_tree->
+                compute_total_reconstructed_boundary_length()) )
+            ? 0.0 : query_tree->
+            compute_total_reconstructed_boundary_length();
+        
+        double norm_val = val/
+            (model_tree_splice_cost+query_tree_splice_cost );
+        
+        double norm_val_length = val/
+            (model_tree_arc_length+query_tree_arc_length );
+        
+        // vcl_cout << "final cost: " << val 
+        //          << " final norm cost: " << norm_val 
+        //          << "( tree1 tot splice: " << model_tree_splice_cost
+        //          << ", tree2: " << query_tree_splice_cost
+        //          << ")" << vcl_endl;
+        
+        // vcl_cout<<"Root1 "<<(*it)<<" Root2 "<<(*bit)<<" cost: "
+        //         <<norm_val<<vcl_endl;
+        
+        if ( norm_val < shape_cost_splice )
+        {
+            shape_cost_splice = norm_val;
+            unorm_shape_cost = val;
+            
+            curve_list1.clear();
+            curve_list2.clear();
+            map_list.clear();
+            path_map.clear();
+            
+            min_root_selection=value;
+            
+            // Get correspondece
+            edit.get_correspondence(curve_list1,
+                                    curve_list2,
+                                    map_list,
+                                    path_map);
+            
+            model_final_branches=curve_list1.size();
+            query_final_branches=curve_list2.size();
+            
+            flag=false;
+        }
+                
+        if ( norm_val_length < shape_cost_length )
+        {
+            shape_cost_length=norm_val_length;
+        }
+        
+        model_tree->reset_up_flags();
+        query_tree->reset_up_flags();
+        
+    }
+    
+  
+    {
+        
+        edit.clear();
+        edit.set_tree1(query_tree.ptr());
+        edit.set_tree2(model_tree.ptr());
+        edit.save_path(true);
+        edit.set_curvematching_R(scurve_matching_R_);
+        edit.set_use_approx(use_approx_);
+        
+        dbskr_edit_distance_base::RootNodeSelection value =  
+            dbskr_edit_distance_base::DEFAULT;
+        edit.set_root_node_selection(value);
+        
+        if (!edit.edit()) 
+        {
+            vcl_cerr << "Problems in editing trees"<<vcl_endl;
+        }
+        
+        double val = edit.final_cost();
+        
+        // Only doing by splice cost
+        
+        // Get splice costs
+        // isnan found from math.h
+        double model_tree_splice_cost = 
+            ( isnan(model_tree->total_splice_cost()) )
+            ? 0.0 : model_tree->total_splice_cost();
+        double query_tree_splice_cost = 
+            ( isnan(query_tree->total_splice_cost()) )
+            ? 0.0 : query_tree->total_splice_cost();
+        
+        double model_tree_arc_length = 
+            ( isnan(
+                model_tree->
+                compute_total_reconstructed_boundary_length()) )
+            ? 0.0 : model_tree->
+            compute_total_reconstructed_boundary_length();
+        
+        double query_tree_arc_length = 
+            ( isnan(
+                query_tree->
+                compute_total_reconstructed_boundary_length()) )
+            ? 0.0 : query_tree->
+            compute_total_reconstructed_boundary_length();
+        
+        double norm_val = val/
+            (model_tree_splice_cost+query_tree_splice_cost );
+        
+        double norm_val_length = val/
+            (model_tree_arc_length+query_tree_arc_length );
+        
+        // vcl_cout << "final cost: " << val 
+        //          << " final norm cost: " << norm_val 
+        //          << "( tree1 tot splice: " << model_tree_splice_cost
+        //          << ", tree2: " << query_tree_splice_cost
+        //          << ")" << vcl_endl;
+        
+        
+        
+        // vcl_cout<<"Root1 "<<(*it)<<" Root2 "<<(*bit)<<" cost: "
+        //         <<norm_val<<vcl_endl;
+        
+        if ( norm_val < shape_cost_splice )
+        {
+            
+            shape_cost_splice = norm_val;
+            unorm_shape_cost = val;
+            
+            curve_list1.clear();
+            curve_list2.clear();
+            map_list.clear();
+            path_map.clear();
+            
+            min_root_selection=value;
+            
+            // Get correspondece
+            edit.get_correspondence(curve_list1,
+                                    curve_list2,
+                                    map_list,
+                                    path_map);
+            
+            model_final_branches=curve_list2.size();
+            query_final_branches=curve_list1.size();
+            
+            flag=true;
+        }
+        
+        if ( norm_val_length < shape_cost_length )
+        {
+            shape_cost_length=norm_val_length;
+        }
+        
+        model_tree->reset_up_flags();
+        query_tree->reset_up_flags();
+        
     }
 
     // if ( (model_tree_branches != model_final_branches) 
