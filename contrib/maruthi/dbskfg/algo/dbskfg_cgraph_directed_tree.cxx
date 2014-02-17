@@ -115,8 +115,13 @@ acquire_tree_topology(const dbskfg_composite_graph_sptr& composite_graph)
 
   this->composite_graph_=composite_graph;
 
+  vcl_map<unsigned int,vgl_point_2d<double> > orig_coordinates;
+
   if ( mirror_)
   {
+
+      this->compute_bounding_box();
+      double width = bbox_->width();
 
       // Grab all degree 3 nodes first
       for (dbskfg_composite_graph::vertex_iterator vit =
@@ -124,15 +129,20 @@ acquire_tree_topology(const dbskfg_composite_graph_sptr& composite_graph)
            vit != composite_graph->vertices_end(); ++vit)
       {
           dbskfg_composite_node_sptr node = *vit;
-          if ( node->node_type() == dbskfg_composite_node::SHOCK_NODE )
-          {
-              node->reverse_in_edges();
-              node->reverse_out_edges();
-          }
+
+          node->reverse_in_edges();
+          node->reverse_out_edges();
+          
+          vgl_point_2d<double> pt_location = node->pt();
+          vgl_point_2d<double> new_pt_location(width-pt_location.x(),
+                                               pt_location.y());
+          
+          orig_coordinates[(*vit)->id()]=pt_location;
+          node->set_pt(new_pt_location);
           
       }
 
-      this->compute_bounding_box();
+
   }
 
   // Grab all shock links from this node
@@ -514,6 +524,32 @@ acquire_tree_topology(const dbskfg_composite_graph_sptr& composite_graph)
           }
       }
     }
+  }
+
+
+  // reset composite graph back to original state
+  if ( mirror_)
+  {
+   
+      double width = bbox_->width();
+
+      // Grab all degree 3 nodes first
+      for (dbskfg_composite_graph::vertex_iterator vit =
+               composite_graph->vertices_begin();
+           vit != composite_graph->vertices_end(); ++vit)
+      {
+
+          dbskfg_composite_node_sptr node = *vit;
+
+          node->reverse_in_edges();
+          node->reverse_out_edges();
+          
+          
+          node->set_pt(orig_coordinates[node->id()]);
+          
+      }
+
+
   }
 
   return ok;
