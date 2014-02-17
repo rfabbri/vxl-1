@@ -47,7 +47,10 @@ dbskfg_match_bag_of_fragments_process::dbskfg_match_bag_of_fragments_process()
         !parameters()->add("scale root node correspondences",
                            "-scale_root", (bool) false) ||
         !parameters()->add("compute sift appearance cost",
-                           "-app_sift", (bool) false) 
+                           "-app_sift", (bool) false) ||
+        !parameters()->add("horizontal mirror query shape",
+                           "-mirror", (bool) false) 
+
         )
 
     {
@@ -143,6 +146,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     bool scale_bbox             = false;
     bool scale_root             = false;
     bool app_sift               = false;
+    bool mirror                 = false;
 
     parameters()->get_value("-elastic_splice_cost"  , elastic_splice_cost); 
     parameters()->get_value("-scurve_sample_ds"     , scurve_sample_ds);
@@ -155,6 +159,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     parameters()->get_value("-scale_bbox"           , scale_bbox);
     parameters()->get_value("-scale_root"           , scale_root);
     parameters()->get_value("-app_sift"             , app_sift);
+    parameters()->get_value("-mirror"               , mirror);
  
     dbskfg_match_bag_of_fragments match_frags(model_dir,
                                               query_dir,
@@ -170,6 +175,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
                                               scale_bbox,
                                               scale_root,
                                               app_sift,
+                                              mirror,
                                               model_image,
                                               query_image);
    
