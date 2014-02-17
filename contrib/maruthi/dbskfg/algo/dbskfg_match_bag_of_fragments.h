@@ -59,6 +59,7 @@ public:
           bool scale_bbox             = false,
           bool scale_root             = false,
           bool app_sift               = false,
+          bool mirror                 = false,
           vil_image_resource_sptr model_image=0,
           vil_image_resource_sptr query_image=0);
 
@@ -214,6 +215,9 @@ private:
 
     // Use appearance 
     bool app_sift_;
+
+    // Mirror matching of query shape
+    bool mirror_;
 
     void load_model(vcl_string model_dir);
     void load_query(vcl_string query_dir);
