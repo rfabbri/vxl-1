@@ -591,7 +591,7 @@ compute_delete_and_contract_costs(bool elastic_splice_cost,
       // for leaf darts, only compute for one direction
       else
       {
-          info_[i].first = 1000.0f; // contract cost
+          info_[i].first = 1000000.0f; // contract cost
 
           if (parent_dart(i) == static_cast<int>(i)) 
           {
@@ -667,7 +667,7 @@ set_delete_and_contract_costs(bool elastic_splice_cost,
       // for leaf darts, only compute for one direction
       else
       {
-          info_[i].first = 1000.0f; // contract cost
+          info_[i].first = 1000000.0f; // contract cost
 
           if (parent_dart(i) == static_cast<int>(i)) 
           {
