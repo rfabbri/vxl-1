@@ -277,7 +277,8 @@ private:
         double& norm_shape_length,
         double& app_diff,
         double& norm_app_cost,
-        double& rgb_avg_cost);
+        double& rgb_avg_cost,
+        vcl_string match_file_prefix="");
 
     //Match two graphs
     void match_two_debug_graphs(dbskfg_cgraph_directed_tree_sptr& model_tree,

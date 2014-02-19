@@ -819,17 +819,19 @@ bool dbskfg_match_bag_of_fragments::binary_debug_match()
                 (*q_iterator).second.first;
 
             // Match model to query
-            match_two_debug_graphs(model_tree,
-                                   query_tree,
-                                   norm_shape_cost,
-                                   norm_shape_cost_length,
-                                   app_diff,
-                                   norm_app_cost,
-                                   rgb_avg_cost,
-                                   match_prefix);
+            match_two_graphs_root_node_orig(model_tree,
+                                            query_tree,
+                                            norm_shape_cost,
+                                            norm_shape_cost_length,
+                                            app_diff,
+                                            norm_app_cost,
+                                            rgb_avg_cost,
+                                            match_prefix);
 
             if ( mirror_)
             {
+                vcl_cout<<"Computing Mirror"<<vcl_endl;
+
                 //: prepare the trees also
                 dbskfg_cgraph_directed_tree_sptr query_mirror_tree = new
                     dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
@@ -856,14 +858,14 @@ bool dbskfg_match_bag_of_fragments::binary_debug_match()
                     (*q_iterator).second.first;
 
                 // Match model to query
-                match_two_debug_graphs(model_tree,
-                                       query_mirror_tree,
-                                       norm_shape_mirror_cost,
-                                       norm_shape_mirror_cost_length,
-                                       app_mirror_diff,
-                                       norm_app_mirror_cost,
-                                       rgb_avg_mirror_cost,
-                                       match_mirror_prefix);
+                match_two_graphs_root_node_orig(model_tree,
+                                                query_mirror_tree,
+                                                norm_shape_mirror_cost,
+                                                norm_shape_mirror_cost_length,
+                                                app_mirror_diff,
+                                                norm_app_mirror_cost,
+                                                rgb_avg_mirror_cost,
+                                                match_mirror_prefix);
 
                 norm_shape_cost = ( norm_shape_cost < norm_shape_mirror_cost)
                     ? norm_shape_cost : norm_shape_mirror_cost;
@@ -2435,7 +2437,8 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     double& norm_shape_cost_length,
     double& app_diff,
     double& norm_app_cost,
-    double& rgb_avg_cost)
+    double& rgb_avg_cost,
+    vcl_string match_file_prefix)
 {
 
     vul_timer shape_timer;
@@ -2561,6 +2564,31 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
             query_final_branches=curve_list2.size();
             
             flag=false;
+
+            if ( match_file_prefix.size() )
+            {
+
+                vcl_cout << "final cost: " << val 
+                         << " final norm cost: " << norm_val 
+                         << "( tree1 tot splice: " << model_tree_splice_cost
+                         << ", tree2: " << query_tree_splice_cost
+                         << ")" << vcl_endl;
+        
+                vcl_cout<<"Root1 "<<0<<" Root2 "<<query_tree->centroid()
+                        <<" cost: "
+                        <<norm_val<<vcl_endl;
+
+                vcl_string match_cost_table=match_file_prefix 
+                    + "_match_table.shgm";
+                vcl_string match_file=match_file_prefix 
+                    + "_match_file.shgm";
+                
+                edit.populate_table(match_cost_table.c_str());
+                edit.write_shgm(match_file.c_str());
+                
+            }
+                
+
         }
                 
         if ( norm_val_length < shape_cost_length )
@@ -2657,6 +2685,29 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
             query_final_branches=curve_list1.size();
             
             flag=true;
+
+            if ( match_file_prefix.size() )
+            {
+
+                vcl_cout << "final cost: " << val 
+                         << " final norm cost: " << norm_val 
+                         << "( tree1 tot splice: " << query_tree_splice_cost
+                         << ", tree2: " << model_tree_splice_cost
+                         << ")" << vcl_endl;
+                
+                vcl_cout<<"Root1 "<<0<<" Root2 "<<
+                    model_tree->centroid()<<" cost: "
+                        <<norm_val<<vcl_endl;
+
+                vcl_string match_cost_table=match_file_prefix 
+                    + "_match_table.shgm";
+                vcl_string match_file=match_file_prefix 
+                    + "_match_file.shgm";
+                
+                edit.populate_table(match_cost_table.c_str());
+                edit.write_shgm(match_file.c_str());
+                
+            }
         }
         
         if ( norm_val_length < shape_cost_length )
