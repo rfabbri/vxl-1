@@ -2806,6 +2806,56 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     norm_shape_cost = shape_cost_splice;
     norm_shape_cost_length=shape_cost_length;
 
+    if ( match_file_prefix.size() )
+    {
+        // Get matching pairs
+        for (unsigned i = 0; i < map_list.size(); i++) 
+        {
+            dbskr_scurve_sptr sc1 = curve_list1[i];
+            dbskr_scurve_sptr sc2 = curve_list2[i];
+
+            vcl_stringstream stream;
+            stream<<i;
+
+            vcl_string temp=match_file_prefix+"_dart_"+stream.str()
+                + "_curve_list.txt";
+            
+            vcl_ofstream model_file(temp.c_str());            
+            for (unsigned j = 0; j < map_list[i].size(); ++j) 
+            {
+                vcl_pair<int, int> cor = map_list[i][j];
+
+                vgl_point_2d<double> ps1 = sc1->sh_pt(cor.first);
+                vgl_point_2d<double> ps2 = sc2->sh_pt(cor.second);
+
+                if ( !flag )
+                {
+                    model_file<<ps1.x()
+                              <<" "
+                              <<ps1.y()
+                              <<" "
+                              <<ps2.x()
+                              <<" "
+                              <<ps2.y()<<vcl_endl;
+                }
+                else
+                {
+                    model_file<<ps2.x()
+                              <<" "
+                              <<ps2.y()
+                              <<" "
+                              <<ps1.x()
+                              <<" "
+                              <<ps1.y()<<vcl_endl;
+
+
+
+                }
+            }
+            model_file.close();
+        }
+    }
+
     // vcl_cout<<" Norm Shape Cost: "<<norm_shape_cost<<vcl_endl;
     // vcl_cout<<" Norm App   Cost: "<<norm_app_cost<<vcl_endl;
     // vcl_cout<<" App Cost       : "<<app_diff<<vcl_endl;
