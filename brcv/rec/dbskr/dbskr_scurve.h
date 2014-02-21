@@ -82,6 +82,12 @@ public:
   //: Assignment operator
   dbskr_scurve& operator=(const dbskr_scurve &rhs);
 
+  // set area factor
+  void set_area_factor(double area_factor){area_factor_=area_factor;}
+
+  // get area factor
+  double get_area_factor(){return area_factor_;}
+
 protected:
   //: This function takes a sampled shock curve and interpolates it.
   void interpolate( int num_points,
@@ -220,6 +226,8 @@ protected:
   double total_area_; // total area of this scurve shock branch
 
   double virtual_length_; // If set use this
+
+  double area_factor_;
 };
 
 #endif  // _dbskr_scurve_h

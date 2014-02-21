@@ -111,6 +111,8 @@ void dbskr_dpmatch::initializeDPCosts()
 double dbskr_dpmatch::computeIntervalCost(int i, int ip, int j, int jp) 
 {
   double cost,dF=0,dK=0;
+  double dA1(0.0),dA2(0.0);
+  double area_cost(0.0);
 
   int k;
   scurve1_->stretch_cost(i,ip,ds1_);
@@ -123,8 +125,14 @@ double dbskr_dpmatch::computeIntervalCost(int i, int ip, int j, int jp)
   
   for (k=0;k<num_cost_elems_;k++)
     dK = dK+vcl_fabs(dt1_[k]-dt2_[k]);
-
-  cost = dF+R1_*dK;
+ 
+  if ( scurve1_->get_area_factor() > 0.0)
+  {
+      scurve1_->area_cost(i,ip,dA1);
+      scurve2_->area_cost(j,jp,dA2);  
+      area_cost=scurve1_->get_area_factor()*vcl_fabs(dA1-dA2);
+  }
+  cost = dF+R1_*dK+area_cost;
   return cost;
 } 
 
