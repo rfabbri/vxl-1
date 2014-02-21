@@ -999,12 +999,26 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
         return false;
     }
 
-    vcl_cout<<"Matching "
-            <<model_fragments_.size()
-            <<" model fragments to "
-            <<query_fragments_.size()
-            <<" query fragments using root node scaling"
-            <<vcl_endl;
+    if ( !mirror_)
+    {
+        vcl_cout<<"Matching "
+                <<model_fragments_.size()
+                <<" model fragments to "
+                <<query_fragments_.size()
+                <<" query fragments using root node scaling"
+                <<vcl_endl;
+    }
+    else
+    {
+        vcl_cout<<"Matching "
+                <<model_fragments_.size()
+                <<" model fragments to "
+                <<query_fragments_.size()
+                <<" query fragments with horizontal mirroring of query "
+                <<" and root node scaling"
+                <<vcl_endl;
+
+    }
  
     // Loop over model and query
     vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
@@ -1019,7 +1033,9 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
         dbskfg_cgraph_directed_tree_sptr model_tree = new 
             dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
                                         scurve_interpolate_ds_, 
-                                        scurve_matching_R_);
+                                        scurve_matching_R_,
+                                        false,
+                                        area_weight_);
 
         model_tree->acquire_tree_topology((*m_iterator).second.second);
         double model_radius=model_tree->get_root_node_radius();
@@ -1034,7 +1050,9 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             dbskfg_cgraph_directed_tree_sptr query_tree = new
                 dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
                                             scurve_interpolate_ds_, 
-                                            scurve_matching_R_);
+                                            scurve_matching_R_,
+                                            false,
+                                            area_weight_);
             
             query_tree->acquire_tree_topology((*q_iterator).second.second);
             double query_radius=query_tree->get_root_node_radius();
@@ -1082,13 +1100,55 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             double norm_shape_cost_length(0.0);
 
             // Match model to query
-            match_two_graphs(model_tree,
-                             query_tree,
-                             norm_shape_cost,
-                             norm_shape_cost_length,
-                             app_diff,
-                             norm_app_cost,
-                             rgb_avg_cost);
+            match_two_graphs_root_node_orig(model_tree,
+                                            query_tree,
+                                            norm_shape_cost,
+                                            norm_shape_cost_length,
+                                            app_diff,
+                                            norm_app_cost,
+                                            rgb_avg_cost);
+
+            if ( mirror_)
+            {
+                //: prepare the trees also
+                dbskfg_cgraph_directed_tree_sptr query_mirror_tree = new
+                    dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
+                                                scurve_interpolate_ds_, 
+                                                scurve_matching_R_,
+                                                mirror_,
+                                                area_weight_);
+                
+                if ( query_scale )
+                {
+                    query_mirror_tree->set_scale_ratio(scale_ratio);
+                }
+
+                query_mirror_tree->acquire
+                    ((*q_iterator).second.second, elastic_splice_cost_, 
+                     circular_ends_, combined_edit_);
+                
+                double norm_shape_mirror_cost(0.0);
+                double app_mirror_diff(0.0);
+                double norm_app_mirror_cost(0.0);
+                double rgb_avg_mirror_cost(0.0);
+                double norm_shape_mirror_cost_length(0.0);
+                
+                // Match model to query
+                match_two_graphs_root_node_orig(model_tree,
+                                                query_mirror_tree,
+                                                norm_shape_mirror_cost,
+                                                norm_shape_mirror_cost_length,
+                                                app_mirror_diff,
+                                                norm_app_mirror_cost,
+                                                rgb_avg_mirror_cost);
+
+                norm_shape_cost = ( norm_shape_cost < norm_shape_mirror_cost)
+                    ? norm_shape_cost : norm_shape_mirror_cost;
+                norm_shape_cost_length = ( norm_shape_cost_length 
+                                           < norm_shape_mirror_cost_length)
+                    ? norm_shape_cost_length : norm_shape_mirror_cost_length;
+
+            }
 
             unsigned int model_id= (*m_iterator).first;
             unsigned int query_id= (*q_iterator).first;
