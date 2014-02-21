@@ -75,6 +75,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
     bool scale_root,
     bool app_sift,
     bool mirror,
+    double area_weight,
     vil_image_resource_sptr model_image,
     vil_image_resource_sptr query_image
     ):elastic_splice_cost_(elastic_splice_cost),
@@ -93,6 +94,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
       scale_root_(scale_root),
       app_sift_(app_sift),
       mirror_(mirror),
+      area_weight_(area_weight),
       model_image_(model_image),
       query_image_(query_image),
       model_grad_data_(0),
@@ -562,7 +564,9 @@ bool dbskfg_match_bag_of_fragments::binary_match()
         dbskfg_cgraph_directed_tree_sptr model_tree = new 
             dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
                                         scurve_interpolate_ds_, 
-                                        scurve_matching_R_);
+                                        scurve_matching_R_,
+                                        false,
+                                        area_weight_);
 
         bool f1=model_tree->acquire
             ((*m_iterator).second.second, elastic_splice_cost_, 
@@ -578,7 +582,9 @@ bool dbskfg_match_bag_of_fragments::binary_match()
             dbskfg_cgraph_directed_tree_sptr query_tree = new
                 dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
                                             scurve_interpolate_ds_, 
-                                            scurve_matching_R_);
+                                            scurve_matching_R_,
+                                            false,
+                                            area_weight_);
             
             bool f1=query_tree->acquire
                 ((*q_iterator).second.second, elastic_splice_cost_, 
@@ -606,7 +612,8 @@ bool dbskfg_match_bag_of_fragments::binary_match()
                     dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
                                                 scurve_interpolate_ds_, 
                                                 scurve_matching_R_,
-                                                mirror_);
+                                                mirror_,
+                                                area_weight_);
                 
                 f1=query_mirror_tree->acquire
                     ((*q_iterator).second.second, elastic_splice_cost_, 
@@ -780,7 +787,9 @@ bool dbskfg_match_bag_of_fragments::binary_debug_match()
         dbskfg_cgraph_directed_tree_sptr model_tree = new 
             dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
                                         scurve_interpolate_ds_, 
-                                        scurve_matching_R_);
+                                        scurve_matching_R_,
+                                        false,
+                                        area_weight_);
 
         bool f1=model_tree->acquire
             ((*m_iterator).second.second, elastic_splice_cost_, 
@@ -800,7 +809,9 @@ bool dbskfg_match_bag_of_fragments::binary_debug_match()
             dbskfg_cgraph_directed_tree_sptr query_tree = new
                 dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
                                             scurve_interpolate_ds_, 
-                                            scurve_matching_R_);
+                                            scurve_matching_R_,
+                                            false,
+                                            area_weight_);
             
             bool f1=query_tree->acquire
                 ((*q_iterator).second.second, elastic_splice_cost_, 
@@ -837,7 +848,8 @@ bool dbskfg_match_bag_of_fragments::binary_debug_match()
                     dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
                                                 scurve_interpolate_ds_, 
                                                 scurve_matching_R_,
-                                                mirror_);
+                                                mirror_,
+                                                area_weight_);
                 
                 f1=query_mirror_tree->acquire
                     ((*q_iterator).second.second, elastic_splice_cost_, 

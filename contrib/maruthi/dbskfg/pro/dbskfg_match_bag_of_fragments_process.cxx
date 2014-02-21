@@ -49,7 +49,9 @@ dbskfg_match_bag_of_fragments_process::dbskfg_match_bag_of_fragments_process()
         !parameters()->add("compute sift appearance cost",
                            "-app_sift", (bool) false) ||
         !parameters()->add("horizontal mirror query shape",
-                           "-mirror", (bool) false) 
+                           "-mirror", (bool) false) ||
+        !parameters()->add("weight area cost term",
+                           "-area_weight", (double) 0.0f) 
 
         )
 
@@ -147,6 +149,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     bool scale_root             = false;
     bool app_sift               = false;
     bool mirror                 = false;
+    double area_weight          = 0.0f;
 
     parameters()->get_value("-elastic_splice_cost"  , elastic_splice_cost); 
     parameters()->get_value("-scurve_sample_ds"     , scurve_sample_ds);
@@ -160,6 +163,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     parameters()->get_value("-scale_root"           , scale_root);
     parameters()->get_value("-app_sift"             , app_sift);
     parameters()->get_value("-mirror"               , mirror);
+    parameters()->get_value("-area_weight"          , area_weight);
  
     dbskfg_match_bag_of_fragments match_frags(model_dir,
                                               query_dir,
@@ -176,6 +180,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
                                               scale_root,
                                               app_sift,
                                               mirror,
+                                              area_weight,
                                               model_image,
                                               query_image);
    

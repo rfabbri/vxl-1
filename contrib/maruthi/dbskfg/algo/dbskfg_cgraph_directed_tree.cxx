@@ -28,14 +28,16 @@
 //: Constructor
 dbskfg_cgraph_directed_tree::
 dbskfg_cgraph_directed_tree(
-    float scurve_sample_ds,float interpolate_ds,float matching_R,bool mirror)
+    float scurve_sample_ds,float interpolate_ds,float matching_R,bool mirror,
+    double area_weight)
     :scurve_sample_ds_(scurve_sample_ds),
      interpolate_ds_(interpolate_ds),
      scurve_matching_R_(matching_R),
      scale_ratio_(1.0),
      root_node_radius_(0.0),
      bbox_(0),
-     mirror_(mirror)
+     mirror_(mirror),
+     area_weight_(area_weight)
 { 
 }
 
@@ -782,6 +784,8 @@ get_curve_pair(int start_dart, int end_dart, bool construct_circular_ends)
     //curve_pair->dense = new dbskr_scurve(*sc, curve_pair->c_d_map, vcl_min(scurve_sample_ds_, interpolate_ds_));
 
     dart_path_scurve_map_[p] = curve_pair;
+
+    sc->set_area_factor(area_weight_);
 
     return curve_pair;
   } 

@@ -42,7 +42,8 @@ public:
   dbskfg_cgraph_directed_tree(float scurve_sample_ds=5.0f, 
                               float interpolate_ds=1.0f, 
                               float matching_R=6.0f,
-                              bool mirror=false);
+                              bool mirror=false,
+                              double area_weight=0.0f);
 
   //: Destructor;
   /* virtual */ ~dbskfg_cgraph_directed_tree();
@@ -185,6 +186,8 @@ protected:
   void compute_bounding_box();
 
   bool mirror_;
+
+  double area_weight_;
 
 };
 
