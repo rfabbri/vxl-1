@@ -56,6 +56,8 @@ public:
                      vcl_set<unsigned int>& contour_ids,
                      vcl_pair<unsigned int,unsigned int>& image_size,
                      bool prune_degree_three_nodes=true);
+  
+  bool compute_outer_shock(vidpro1_vsol2D_storage_sptr& input_vsol);
 
   void get_first_graph(dbskfg_composite_graph_sptr& pointer)
   {pointer=(*(cgraphs_.begin())).second;}

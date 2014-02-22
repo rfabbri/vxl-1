@@ -566,3 +566,261 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
 
     return status;
 }
+
+
+
+
+bool dbskfg_load_binary_composite_graph_process::
+compute_outer_shock(vidpro1_vsol2D_storage_sptr& input_vsol)
+{
+    
+    /*********************** Shock Compute **********************************/
+    // Grab output from shock computation
+    bool status=true;
+    // Create empty image stroage
+    vidpro1_image_storage_sptr image_storage = vidpro1_image_storage_new();
+    
+    vcl_vector<bpro1_storage_sptr> shock_results;
+    {
+        // 3) Create shock pro process and assign inputs 
+        dbsk2d_compute_ishock_process shock_pro;
+
+        shock_pro.clear_input();
+        shock_pro.clear_output();
+
+
+        shock_pro.add_input(image_storage);
+        shock_pro.add_input(input_vsol);
+
+        // Set params
+        shock_pro.parameters()->set_value("-exist_ids",true);
+        shock_pro.parameters()->set_value("-fit_lines",true);
+        shock_pro.parameters()->set_value("-b_prune",true);
+        status = shock_pro.execute();
+
+        if ( status == false)
+        {
+            return status;
+        }
+
+        shock_pro.finish();
+
+        shock_results = shock_pro.get_output();
+
+        // Clean up after ourselves
+        shock_pro.clear_input();
+        shock_pro.clear_output();
+
+    }
+
+
+
+    /*********************** Compute Composite Graph ************************/
+    vcl_vector<bpro1_storage_sptr> cg_results;
+    {
+        // Lets vertical cast to shock stroge
+        // Holds shock storage
+        dbsk2d_shock_storage_sptr shock_storage;
+        shock_storage.vertical_cast(shock_results[0]);
+
+        dbskfg_form_composite_graph_process cg_pro;
+
+        cg_pro.clear_input();
+        cg_pro.clear_output();
+        
+        // Set params
+
+        cg_pro.add_input(shock_storage);
+        cg_pro.add_input(image_storage);
+
+        status = cg_pro.execute();
+
+        cg_pro.finish();
+
+        if ( status == false)
+        {
+            return status;
+        }
+  
+        cg_results = cg_pro.get_output();
+
+        cg_pro.clear_input();
+        cg_pro.clear_output();
+    }
+
+
+    // Grab composite graph storage
+    dbskfg_composite_graph_storage_sptr cg_storage;
+    cg_storage.vertical_cast(cg_results[0]);
+
+    dbskfg_rag_node_sptr retain_region(0);
+    int int_size=0;
+    dbskfg_rag_graph_sptr rag_graph = cg_storage->get_rag_graph();
+    for (dbskfg_rag_graph::vertex_iterator vit = rag_graph->vertices_begin(); 
+         vit != rag_graph->vertices_end(); ++vit)
+    {
+        dbskfg_rag_node_sptr node = *vit;
+        if ( !node->endpoint_spawned_node() &&
+             node->get_wavefront().size() == 2 )
+        {
+            retain_region=node;
+            break;
+        }
+        
+    }
+
+    if ( !retain_region )
+    {
+        vcl_cerr<<"Fragment is outside image"<<vcl_endl;
+        cg_storage=0;
+        return false;
+
+    }
+
+    dbskfg_composite_graph_sptr cgraph = cg_storage->get_composite_graph();
+    vcl_vector<dbskfg_rag_node_sptr> regions_to_remove;
+
+    for (dbskfg_rag_graph::vertex_iterator vit = rag_graph->vertices_begin(); 
+         vit != rag_graph->vertices_end(); ++vit)
+    {
+        dbskfg_rag_node_sptr node = *vit;
+
+        if ( node->id() != retain_region->id() )
+        {
+            vcl_map<unsigned int,dbskfg_shock_link*> shock_links=
+                node->get_shock_links();
+            vcl_map<unsigned int,dbskfg_shock_link*>::iterator it;
+            for ( it= shock_links.begin() ; it != shock_links.end(); ++it)
+            {
+
+                vcl_vector<dbskfg_composite_link_sptr> left_links=
+                    (*it).second->left_contour_links();
+
+                for ( unsigned int k=0; k < left_links.size() ; ++k)
+                {
+                    dbskfg_contour_link* clink=
+                        dynamic_cast<dbskfg_contour_link*>(&(*left_links[k]));
+                    clink->delete_shock((*it).second->id());    
+                    
+                }
+
+                vcl_vector<dbskfg_composite_link_sptr> right_links=
+                    (*it).second->right_contour_links();
+
+                for ( unsigned int k=0; k < right_links.size() ; ++k)
+                {
+                    dbskfg_contour_link* clink=
+                        dynamic_cast<dbskfg_contour_link*>(&(*right_links[k]));
+                    clink->delete_shock((*it).second->id());    
+                    
+                }
+
+                dbskfg_contour_node* left_point=(*it).second->get_left_point();
+                dbskfg_contour_node* right_point=
+                    (*it).second->get_right_point();
+                
+                if ( left_point )
+                {
+                    left_point->delete_shock((*it).second->id());
+
+                }
+
+                if ( right_point )
+                {
+                    right_point->delete_shock((*it).second->id());
+
+                }
+
+                cgraph->remove_edge((*it).second);
+                
+            }
+            regions_to_remove.push_back(node);
+        }
+        else
+        {
+            vcl_map<unsigned int,dbskfg_shock_node*> wavefront=
+                node->get_wavefront();
+            vcl_map<unsigned int,dbskfg_shock_node*>::iterator wit;
+            for ( wit = wavefront.begin() ; wit != wavefront.end() ; ++wit)
+            {
+                (*wit).second->set_virtual(true);
+                (*wit).second->set_composite_degree(1);
+            }
+        }
+        
+    }
+    
+    for ( unsigned int i=0; i < regions_to_remove.size() ; ++i)
+    {
+
+        rag_graph->remove_vertex(regions_to_remove[i]);
+    }
+
+    unsigned int numb_shock_edges=0;
+    vcl_vector<dbskfg_composite_link_sptr> contours_to_erase;
+    vcl_set<unsigned int> shock_nodes;
+    for (dbskfg_composite_graph::edge_iterator eit = cgraph->edges_begin(); 
+         eit != cgraph->edges_end(); ++eit)
+    {
+        if ( (*eit)->link_type() == dbskfg_composite_link::CONTOUR_LINK)
+        {
+            dbskfg_contour_link* clink=dynamic_cast<dbskfg_contour_link*>
+                (&*(*eit));
+            if ( clink->contour_id() == 10e6 )
+            {
+                contours_to_erase.push_back(*eit);
+            }
+        }
+        else
+        {
+            numb_shock_edges++;
+            shock_nodes.insert((*eit)->source()->id());
+            shock_nodes.insert((*eit)->target()->id());
+        }
+
+        
+
+    }
+
+    for ( unsigned int c=0; c < contours_to_erase.size() ; ++c)
+    {
+        cgraph->remove_edge(contours_to_erase[c]);
+    }
+
+    cgraph->purge_isolated_vertices();
+    dbskfg_utilities::classify_nodes(cgraph);
+
+    unsigned int degree_three_nodes=0;
+    unsigned int numb_shock_nodes=0;
+
+    for (dbskfg_composite_graph::vertex_iterator vit = 
+             cgraph->vertices_begin(); 
+         vit != cgraph->vertices_end(); ++vit)
+    {
+        if ( (*vit)->node_type() == dbskfg_composite_node::SHOCK_NODE )
+        {
+            if ( (*vit)->get_composite_degree() == 3 )
+            {
+                degree_three_nodes++;
+            }
+        }
+    }
+
+    if ( numb_shock_edges > (shock_nodes.size()-1) )
+    {
+        vcl_cerr<<"Fragment has a cycle"<<vcl_endl;
+        vcl_cerr<<"Numb shock edges: "<<numb_shock_edges<<vcl_endl;
+        vcl_cerr<<"Numb shock nodes: "<<shock_nodes.size()<<vcl_endl;
+        shock_results.clear();
+        cg_storage=0;
+        return false;
+    }
+
+    unsigned int id=cgraphs_.size();
+    cgraphs_[id]=cgraph;
+
+    // clear_output();
+    // output_data_[0].push_back(cg_storage);
+
+    return status;
+}
