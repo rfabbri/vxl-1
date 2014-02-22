@@ -17,6 +17,7 @@
 #include <dbskfg/dbskfg_composite_graph_sptr.h>
 #include <dbskfg/dbskfg_composite_graph.h>
 #include <dbskfg/dbskfg_shock_link.h>
+#include <dbskfg/algo/dbskfg_composite_graph_fileio.h>
 #include <vcl_algorithm.h>
 #include <vsol/vsol_spatial_object_2d.h>
 #include <vsol/vsol_curve_2d.h>
@@ -57,6 +58,12 @@
 
 #include <dbcvr/dbcvr_clsd_cvmatch.h>
 #include <dbcvr/dbcvr_clsd_cvmatch_sptr.h>
+
+#include <bsol/bsol_algs.h>
+#include <vsol/vsol_polygon_2d.h>
+#include <vsol/vsol_polyline_2d.h>
+
+#include <dbsol/dbsol_file_io.h>
 
 dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
 ( 
@@ -4534,6 +4541,79 @@ dbskfg_match_bag_of_fragments::compute_transformed_polygon(
     //     }
     //     query_file.close();
     // }
+}
+
+double dbskfg_match_bag_of_fragments::compute_outer_shock_edit_distance(
+    dbskfg_cgraph_directed_tree_sptr& model_tree,
+    dbskfg_cgraph_directed_tree_sptr& query_tree)
+{
+    vgl_polygon<double> model_poly(1);
+    model_tree->compute_reconstructed_boundary_polygon(model_poly);
+
+    vgl_polygon<double> query_poly(1);
+    query_tree->compute_reconstructed_boundary_polygon(query_poly);
+    
+
+    // create new bounding box
+    vsol_box_2d_sptr bbox = new vsol_box_2d();
+    
+    // Enlarge bounding box from size
+    // Calculate xcenter, ycenter
+    double xcenter = 500/2.0;
+    double ycenter = 500/2.0;
+    
+    // Translate to center and scale
+    double xmin_scaled = ((0-xcenter)*5)+xcenter;
+    double ymin_scaled = ((0-ycenter)*5)+ycenter;
+    double xmax_scaled = ((500-xcenter)*5)+xcenter;
+    double ymax_scaled = ((500-ycenter)*5)+ycenter;
+    
+    vcl_vector<vsol_point_2d_sptr> points;
+    points.push_back(new vsol_point_2d(xmin_scaled,249));
+    points.push_back(new vsol_point_2d(xmin_scaled,ymin_scaled));
+    points.push_back(new vsol_point_2d(xmax_scaled,ymin_scaled));
+    points.push_back(new vsol_point_2d(xmax_scaled,ymax_scaled));
+    points.push_back(new vsol_point_2d(xmin_scaled,ymax_scaled));
+    points.push_back(new vsol_point_2d(xmin_scaled,251));
+
+    vsol_polyline_2d_sptr polyline=new vsol_polyline_2d(points);
+    vsol_polyline_2d_sptr model_polyline=new vsol_polyline_2d(points);
+    polyline->set_id(10e6);
+    vsol_polygon_2d_sptr model_contours = bsol_algs::poly_from_vgl(model_poly);
+    vsol_polygon_2d_sptr query_contours = bsol_algs::poly_from_vgl(query_poly);
+
+
+    vidpro1_vsol2D_storage_sptr model_vsol = vidpro1_vsol2D_storage_new();
+    model_vsol->add_object(model_polyline->cast_to_spatial_object());
+    model_vsol->add_object(model_contours->cast_to_spatial_object());
+
+    vidpro1_vsol2D_storage_sptr query_vsol = vidpro1_vsol2D_storage_new();
+    query_vsol->add_object(polyline->cast_to_spatial_object());
+    query_vsol->add_object(query_contours->cast_to_spatial_object());
+
+    dbskfg_load_binary_composite_graph_process load_model_pro,load_query_pro;
+
+    bool status=load_model_pro.compute_outer_shock(model_vsol);
+    status=load_query_pro.compute_outer_shock(query_vsol);
+    
+    dbskfg_composite_graph_sptr model_cg(0),query_cg(0);
+    load_model_pro.get_first_graph(model_cg);
+    load_query_pro.get_first_graph(query_cg);
+
+    // dbskfg_composite_graph_fileio fileio;
+    // fileio.write_contour_composite_graph(model_cg,"model_cg_outer");
+    // fileio.write_contour_composite_graph(query_cg,"query_cg_outer");
+
+    // vcl_vector< vsol_spatial_object_2d_sptr > model_list = 
+    //     model_vsol->all_data();
+
+    // vcl_vector< vsol_spatial_object_2d_sptr > query_list = 
+    //     query_vsol->all_data();
+
+    // dbsol_save_cem(query_list,"query_list.cem");
+    // dbsol_save_cem(model_list,"model_list.cem");
+    // exit(0);
+    return 0.0;
 }
 
 

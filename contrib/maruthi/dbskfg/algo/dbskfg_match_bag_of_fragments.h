@@ -255,6 +255,9 @@ private:
         dbskfg_cgraph_directed_tree_sptr& model_tree,
         dbskfg_cgraph_directed_tree_sptr& query_tree);
 
+    double compute_outer_shock_edit_distance(
+        dbskfg_cgraph_directed_tree_sptr& model_tree,
+        dbskfg_cgraph_directed_tree_sptr& query_tree);
 
     // Load a composite graph
     dbskfg_composite_graph_sptr load_composite_graph(vcl_string filename);
