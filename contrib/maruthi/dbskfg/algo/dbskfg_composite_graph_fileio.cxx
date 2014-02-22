@@ -2132,8 +2132,8 @@ void dbskfg_composite_graph_fileio::write_contour_composite_graph(
 
     vcl_string shock_filename=filename + "_shock.bnd";
     vcl_string contour_filename=filename + "_contour.bnd";
-    dbsk2d_file_io::save_bnd_v3_0(shock_filename,contour_objects);
-    dbsk2d_file_io::save_bnd_v3_0(contour_filename,shock_objects);
+    dbsk2d_file_io::save_bnd_v3_0(shock_filename,shock_objects);
+    dbsk2d_file_io::save_bnd_v3_0(contour_filename,contour_objects);
 
 
 }
