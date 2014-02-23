@@ -62,7 +62,8 @@ public:
           bool mirror                 = false,
           double area_weight          = 0.0f,
           vil_image_resource_sptr model_image=0,
-          vil_image_resource_sptr query_image=0);
+          vil_image_resource_sptr query_image=0,
+          vcl_string model_image_path="");
 
     //: Destructor
     ~dbskfg_match_bag_of_fragments();
@@ -124,6 +125,9 @@ private:
     
     // Keep track of query image size
     vcl_pair<unsigned int,unsigned int> query_image_size_;
+
+    // Keep track of mulitple model grad data
+    vcl_map<vcl_string,vil_image_resource_sptr> model_images_grad_data_;
 
     // Keep track of gradient image data
     vl_sift_pix* model_grad_data_;

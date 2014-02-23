@@ -21,6 +21,8 @@ dbskfg_match_bag_of_fragments_process::dbskfg_match_bag_of_fragments_process()
                             "-model_folder" , bpro1_filepath("", "")) ||
         !parameters()->add( "Query folder:" , 
                             "-query_folder" , bpro1_filepath("", "")) ||
+        !parameters()->add( "Model image file:" , 
+                            "-model_image_file" , bpro1_filepath("", "")) ||
         !parameters()->add( "Output folder:", 
                             "-output_folder", bpro1_filepath("", "")) ||
         !parameters()->add( "Output file prefix:" , 
@@ -127,6 +129,10 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     this->parameters()->get_value("-query_folder", query_folder_filepath);
     vcl_string query_dir = query_folder_filepath.path;
 
+    bpro1_filepath model_image_file;
+    this->parameters()->get_value("-model_image_file" , model_image_file);
+    vcl_string model_image_path=model_image_file.path;
+    
     bpro1_filepath output_folder_filepath;
     this->parameters()->get_value("-output_folder", output_folder_filepath);
     vcl_string output_folder = output_folder_filepath.path;
@@ -182,7 +188,8 @@ bool dbskfg_match_bag_of_fragments_process::execute()
                                               mirror,
                                               area_weight,
                                               model_image,
-                                              query_image);
+                                              query_image,
+                                              model_image_path);
    
     bool status(true);
     

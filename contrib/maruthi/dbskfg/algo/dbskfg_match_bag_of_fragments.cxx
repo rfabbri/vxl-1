@@ -84,7 +84,8 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
     bool mirror,
     double area_weight,
     vil_image_resource_sptr model_image,
-    vil_image_resource_sptr query_image
+    vil_image_resource_sptr query_image,
+    vcl_string model_image_path
     ):elastic_splice_cost_(elastic_splice_cost),
       scurve_sample_ds_(scurve_sample_ds),
       scurve_interpolate_ds_(scurve_interpolate_ds),
@@ -162,6 +163,26 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
         load_query(query_dir);
     }
     
+    // Load multiple images
+    if ( model_image_path.size())
+    {
+        unsigned int index=0;
+        vcl_ifstream myfile (model_image_path.c_str());
+        if (myfile.is_open())
+        {
+            vcl_string line;
+            while ( vcl_getline (myfile,line) )
+            {
+                vil_image_resource_sptr model_img_sptr = 
+                    vil_load_image_resource(line.c_str());
+                vcl_stringstream title_stream;
+                title_stream<<"model_"<<index;
+                model_images_grad_data_[title_stream.str()]=model_img_sptr;
+                ++index;
+            }
+        }
+    }
+
     if ( scale_bbox_)
     {
         binary_sim_matrix_.set_size(model_contours_.size(),
