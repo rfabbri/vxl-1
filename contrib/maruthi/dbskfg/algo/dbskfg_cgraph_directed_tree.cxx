@@ -29,7 +29,7 @@
 dbskfg_cgraph_directed_tree::
 dbskfg_cgraph_directed_tree(
     float scurve_sample_ds,float interpolate_ds,float matching_R,bool mirror,
-    double area_weight)
+    double area_weight,vl_sift_pix* grad_data,VlSiftFilt* filter)
     :scurve_sample_ds_(scurve_sample_ds),
      interpolate_ds_(interpolate_ds),
      scurve_matching_R_(matching_R),
@@ -37,7 +37,9 @@ dbskfg_cgraph_directed_tree(
      root_node_radius_(0.0),
      bbox_(0),
      mirror_(mirror),
-     area_weight_(area_weight)
+     area_weight_(area_weight),
+     grad_data_(grad_data),
+     sift_filter_(filter)
 { 
 }
 
@@ -787,6 +789,34 @@ get_curve_pair(int start_dart, int end_dart, bool construct_circular_ends)
 
     sc->set_area_factor(area_weight_);
 
+    if ( grad_data_ )
+    {
+        unsigned int num_points = sc->num_points();
+        vcl_vector<vnl_vector_fixed<vl_sift_pix,128> > sift_descrs;
+        sift_descrs.reserve(num_points);
+        for ( unsigned int i=0; i < num_points; ++i)
+        {
+            vgl_point_2d<double> ps1 = sc->sh_pt(i);
+            double radius= sc->time(i);
+            double theta = sc->theta(i);
+            vl_sift_pix descr_ps1[128];
+            
+            vl_sift_calc_raw_descriptor(sift_filter_,
+                                        grad_data_,
+                                        descr_ps1,
+                                        sift_filter_->width,
+                                        sift_filter_->height,
+                                        ps1.y(),
+                                        ps1.x(),
+                                        radius/2,
+                                        theta);
+            
+            vnl_vector_fixed<vl_sift_pix,128> sift(descr_ps1);
+            sift_descrs.push_back(sift);
+        }
+        dart_path_sift_map_[p]=sift_descrs;
+
+    }
     return curve_pair;
   } 
   else 

@@ -27,10 +27,12 @@
 
 #include <vsol/vsol_box_2d.h>
 
+#include <vl/sift.h>
+#include <vnl/vnl_vector_fixed.h>
+
 //==============================================================================
 // dbskfg_cgraph_directed_tree
 //==============================================================================
-
 
 //: A directed tree built from a dbsk2d_shock_graph
 class dbskfg_cgraph_directed_tree : public dbskr_directed_tree
@@ -43,7 +45,9 @@ public:
                               float interpolate_ds=1.0f, 
                               float matching_R=6.0f,
                               bool mirror=false,
-                              double area_weight=0.0f);
+                              double area_weight=0.0f,
+                              vl_sift_pix* grad_data=0,
+                              VlSiftFilt* sift_filter=0);
 
   //: Destructor;
   /* virtual */ ~dbskfg_cgraph_directed_tree();
@@ -166,6 +170,9 @@ protected:
   //: cache the shock curves for future use for each path of darts
   vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr> dart_path_scurve_map_;
 
+  //: cache the sift points computed
+  vcl_map<vcl_pair<int,int>, vcl_vector<
+      vnl_vector_fixed<vl_sift_pix,128> > > dart_path_sift_map_;
 
   // Cost-related parameters /////////////////////////////////////////////
   // For now only, may change later
@@ -188,6 +195,11 @@ protected:
   bool mirror_;
 
   double area_weight_;
+
+  vl_sift_pix* grad_data_;
+  
+  VlSiftFilt* sift_filter_;
+  
 
 };
 

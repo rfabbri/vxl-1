@@ -127,7 +127,10 @@ private:
     vcl_pair<unsigned int,unsigned int> query_image_size_;
 
     // Keep track of mulitple model grad data
-    vcl_map<vcl_string,vil_image_resource_sptr> model_images_grad_data_;
+    vcl_map<vcl_string,VlSiftFilt*> model_images_sift_filter_;
+
+    // Keep track of mulitple model grad data
+    vcl_map<vcl_string,vl_sift_pix*> model_images_grad_data_;
 
     // Keep track of gradient image data
     vl_sift_pix* model_grad_data_;

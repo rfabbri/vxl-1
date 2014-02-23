@@ -177,7 +177,16 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                     vil_load_image_resource(line.c_str());
                 vcl_stringstream title_stream;
                 title_stream<<"model_"<<index;
-                model_images_grad_data_[title_stream.str()]=model_img_sptr;
+                
+                vl_sift_pix* grad_data(0);
+                VlSiftFilt* sift_filter(0);
+
+                compute_grad_maps(model_img_sptr,
+                                  &grad_data,
+                                  &sift_filter);
+                                  
+                model_images_grad_data_[title_stream.str()]=grad_data;
+                model_images_sift_filter_[title_stream.str()]=sift_filter;
                 ++index;
             }
         }
@@ -594,7 +603,12 @@ bool dbskfg_match_bag_of_fragments::binary_match()
                                         scurve_interpolate_ds_, 
                                         scurve_matching_R_,
                                         false,
-                                        area_weight_);
+                                        area_weight_,
+                                        model_images_grad_data_
+                                        [(*m_iterator).second.first],
+                                        model_images_sift_filter_
+                                        [(*m_iterator).second.first]);
+
 
         bool f1=model_tree->acquire
             ((*m_iterator).second.second, elastic_splice_cost_, 
