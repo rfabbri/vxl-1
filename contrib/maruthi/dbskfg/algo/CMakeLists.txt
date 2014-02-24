@@ -62,6 +62,10 @@ SET(dbskfg_algo_sources
 
   # fast cluster data
   fastcluster.cpp
+
+  #add new file
+  dbskfg_cg_tree_edit.h dbskfg_cg_tree_edit.cxx
+
 )
 
 ADD_LIBRARY(dbskfg_algo ${dbskfg_algo_sources})
