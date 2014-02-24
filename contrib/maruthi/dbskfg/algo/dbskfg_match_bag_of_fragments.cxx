@@ -184,7 +184,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                 compute_grad_maps(model_img_sptr,
                                   &grad_data,
                                   &sift_filter);
-                                  
+                
                 model_images_grad_data_[title_stream.str()]=grad_data;
                 model_images_sift_filter_[title_stream.str()]=sift_filter;
                 ++index;
@@ -626,7 +626,11 @@ bool dbskfg_match_bag_of_fragments::binary_match()
                                             scurve_interpolate_ds_, 
                                             scurve_matching_R_,
                                             false,
-                                            area_weight_);
+                                            area_weight_,
+                                            model_images_grad_data_
+                                            [(*m_iterator).second.first],
+                                            model_images_sift_filter_
+                                            [(*m_iterator).second.first]);
             
             bool f1=query_tree->acquire
                 ((*q_iterator).second.second, elastic_splice_cost_, 
@@ -3451,12 +3455,9 @@ void dbskfg_match_bag_of_fragments::compute_grad_maps(
             0.5870,
             0.1140,
             input_image->get_view());
-
-    vil_image_view<vxl_byte> temp2=
-        vil_transpose(temp);
     
     vil_image_view<double> image;
-    vil_convert_cast(temp2,image);
+    vil_convert_cast(temp,image);
 
     unsigned int width  = image.ni();
     unsigned int height = image.nj();
@@ -3484,15 +3485,11 @@ void dbskfg_match_bag_of_fragments::compute_grad_maps(
     unsigned int index=0;
     for ( unsigned int i=0; i < width*height; ++i)
     {
-        double value=gradient_magnitude[i];
-        (*grad_data)[index]=value;
+        double mag  = gradient_magnitude[i];
+        double angle= gradient_angle[i];
+        (*grad_data)[index]=mag;
         ++index;
-    }
-
-    for ( unsigned int i=0; i < width*height; ++i)
-    {
-        double value=gradient_angle[i];
-        (*grad_data)[index]=value;
+        (*grad_data)[index]=angle;
         ++index;
     }
 
