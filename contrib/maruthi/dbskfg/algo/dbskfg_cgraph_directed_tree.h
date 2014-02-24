@@ -92,6 +92,11 @@ public:
   // if not already cached
   /* virtual */ dbskr_scurve_sptr get_curve(int start_dart, int end_dart,
                                             bool construst_circular_ends);
+  
+  //: find and cache the sift along shock curve for this pair of darts, 
+  // if not already cached
+  vcl_vector<vnl_vector_fixed<vl_sift_pix,128> >& 
+      get_sift_along_curve(int start_dart, int end_dart);
 
   //: returns both the coarse and dense version of shock curve
   /* virtual */ dbskr_sc_pair_sptr get_curve_pair(int start_dart, int end_dart,
@@ -134,6 +139,19 @@ public:
   //: uses the already existing scurves, so if circular_ends = true 
   //while acquiring the tree then the outline will have circular completions
   void compute_reconstructed_boundary_polygon(vgl_polygon<double>& poly);
+
+  // compute appeance
+  bool compute_appearance()
+  {
+      if ( grad_data_==0 || sift_filter_==0 )
+      {
+          return false;
+      }
+      else
+      {
+          return true;
+      }
+  }
 
 protected:
   // Reset / Initalize /////////////////////////////////////////////////////////

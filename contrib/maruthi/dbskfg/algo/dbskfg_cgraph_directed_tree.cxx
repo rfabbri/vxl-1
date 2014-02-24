@@ -723,6 +723,21 @@ get_curve(int start_dart, int end_dart, bool construct_circular_ends)
 
 }
 
+//------------------------------------------------------------------------------
+//: find and cache the shock curve for this pair of darts, if not already cached
+// \todo write this
+vcl_vector<vnl_vector_fixed<vl_sift_pix,128> >& dbskfg_cgraph_directed_tree::
+get_sift_along_curve(int start_dart, int end_dart)
+{
+
+  vcl_pair<int, int> p;
+  p.first = start_dart;
+  p.second = end_dart;
+  vcl_cout<<dart_path_sift_map_.count(p)<<vcl_endl;
+  return dart_path_sift_map_[p];
+    
+}
+
 
 //------------------------------------------------------------------------------
 //: returns both the coarse and dense version of shock curve
@@ -806,8 +821,8 @@ get_curve_pair(int start_dart, int end_dart, bool construct_circular_ends)
                                         descr_ps1,
                                         sift_filter_->width,
                                         sift_filter_->height,
-                                        ps1.y(),
                                         ps1.x(),
+                                        ps1.y(),
                                         radius/2,
                                         theta);
             
