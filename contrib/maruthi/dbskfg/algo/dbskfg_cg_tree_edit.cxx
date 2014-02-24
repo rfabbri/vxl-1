@@ -15,8 +15,11 @@
 #include <dbskr/dbskr_localize_match.h>
 #include <dbskr/dbskr_sc_pair.h>
 #include <dbskr/dbskr_sm_cor.h>
-
+#include <dbskr/dbskr_scurve.h>
 #include <vbl/vbl_array_1d.h>
+
+#include <dbskfg/algo/dbskfg_cgraph_directed_tree.h>
+#include <dbskfg/algo/dbskfg_cgraph_directed_tree_sptr.h>
 
 #include <vcl_cstdio.h>
 
@@ -280,6 +283,74 @@ get_cost(int td1, int d1, int td2, int d2)
                     lmatch.match();
                     match_cost = lmatch.finalCost() + init_dr + init_alp;
                 }
+                
+                double app_distance(0.0);
+
+                dbskfg_cgraph_directed_tree_sptr cg_tree1=
+                    reinterpret_cast<dbskfg_cgraph_directed_tree*>(
+                        tree1_.ptr());
+
+                dbskfg_cgraph_directed_tree_sptr cg_tree2=
+                    reinterpret_cast<dbskfg_cgraph_directed_tree*>(
+                        tree2_.ptr());
+
+                if ( cg_tree1->compute_appearance())
+                {
+                    vcl_vector<vnl_vector_fixed<vl_sift_pix,128 > > tree1_sift;
+                    vcl_vector<vnl_vector_fixed<vl_sift_pix,128 > > tree2_sift;
+                    
+                    tree1_sift = cg_tree1->get_sift_along_curve(td1, d1);
+                    tree2_sift = cg_tree2->get_sift_along_curve(td2, d2);
+                    
+                    // {
+                    //     vcl_stringstream model_stream;
+                    //     model_stream<<"tree1_app_correspondence.txt";
+                    //     vcl_stringstream query_stream;
+                    //     query_stream<<"tree2_app_correspondence.txt";
+
+                    //     vcl_ofstream model_file(model_stream.str().c_str());
+                    //     model_file<<tree1_sift.size()<<vcl_endl;
+                    //     for ( unsigned int b=0; b < tree1_sift.size() ; ++b)
+                    //     {
+                    //         vnl_vector_fixed<vl_sift_pix,128 > vec=
+                    //             tree1_sift[b];
+                    //         for  ( unsigned int c=0; c < vec.size() ; ++c)
+                    //         {
+                    //             model_file<<vec[c]<<vcl_endl;
+                    //         }
+                    //     }
+                    //     model_file.close();
+
+                    //     vcl_ofstream query_file(query_stream.str().c_str());
+                    //     query_file<<tree2_sift.size()<<vcl_endl;
+                    //     for ( unsigned int b=0; b < tree2_sift.size() ; ++b)
+                    //     {
+                    //         vnl_vector_fixed<vl_sift_pix,128 > vec
+                    //             =tree2_sift[b];
+                    //         for  ( unsigned int c=0; c < vec.size() ; ++c)
+                    //         {
+                    //             query_file<<vec[c]<<vcl_endl;
+                    //         }
+                    //     }
+                    //     query_file.close();
+ 
+                    // }
+
+                    vcl_vector<vcl_pair<int,int> >::iterator pit;
+
+                    for ( pit = fmap.begin() ; pit != fmap.end() ; ++pit )
+                    {
+                        vcl_pair<int,int> pair=(*pit);
+                        double ssd=vnl_vector_ssd(tree1_sift[pair.first],
+                                                  tree2_sift[pair.second]);
+                        app_distance+=ssd;
+                    }
+
+                    double factor=1.0;
+                    app_distance *=factor;
+                }
+                
+                match_cost=app_distance+match_cost;
 
                 //: shock curve map is using darts as key
                 pathtable_key key_scm;
