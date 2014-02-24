@@ -4635,6 +4635,45 @@ double dbskfg_match_bag_of_fragments::compute_outer_shock_edit_distance(
     load_model_pro.get_first_graph(model_cg);
     load_query_pro.get_first_graph(query_cg);
 
+    //: prepare the trees also
+    dbskfg_cgraph_directed_tree_sptr model_os_tree = new 
+        dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
+                                    scurve_interpolate_ds_, 
+                                    scurve_matching_R_,
+                                    false,
+                                    area_weight_);
+    
+    bool f1=model_os_tree->acquire
+        (model_cg, elastic_splice_cost_, 
+         circular_ends_, combined_edit_);
+
+    //: prepare the trees also
+    dbskfg_cgraph_directed_tree_sptr query_os_tree = new 
+        dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
+                                    scurve_interpolate_ds_, 
+                                    scurve_matching_R_,
+                                    false,
+                                    area_weight_);
+    
+    f1=query_os_tree->acquire
+        (query_cg, elastic_splice_cost_, 
+         circular_ends_, combined_edit_);
+    
+    double norm_shape_cost(0.0);
+    double app_diff(0.0);
+    double norm_app_cost(0.0);
+    double rgb_avg_cost(0.0);
+    double norm_shape_cost_length(0.0);
+    
+    // Match model to query
+    match_two_graphs_root_node_orig(model_os_tree,
+                                    query_os_tree,
+                                    norm_shape_cost,
+                                    norm_shape_cost_length,
+                                    app_diff,
+                                    norm_app_cost,
+                                    rgb_avg_cost);
+
     // dbskfg_composite_graph_fileio fileio;
     // fileio.write_contour_composite_graph(model_cg,"model_cg_outer");
     // fileio.write_contour_composite_graph(query_cg,"query_cg_outer");
@@ -4648,7 +4687,12 @@ double dbskfg_match_bag_of_fragments::compute_outer_shock_edit_distance(
     // dbsol_save_cem(query_list,"query_list.cem");
     // dbsol_save_cem(model_list,"model_list.cem");
     // exit(0);
-    return 0.0;
+
+    model_os_tree=0;
+    query_os_tree=0;
+    model_vsol=0;
+    query_vsol=0;
+    return norm_shape_cost;
 }
 
 
