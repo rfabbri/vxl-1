@@ -8,6 +8,7 @@
 #include <dbskfg/pro/dbskfg_match_composite_graph_process.h>
 #include <dbskfg/pro/dbskfg_load_composite_graph_process.h>
 #include <dbskfg/pro/dbskfg_load_binary_composite_graph_process.h>
+#include <dbskfg/algo/dbskfg_cg_tree_edit.h>
 #include <dbskfg/dbskfg_utilities.h>
 #include <vul/vul_file_iterator.h>
 #include <vul/vul_file.h>
@@ -25,7 +26,6 @@
 #include <vsol/vsol_line_2d.h>
 #include <vsol/vsol_point_2d.h>
 #include <dbsk2d/dbsk2d_file_io.h>
-#include <dbskr/dbskr_tree_edit.h>
 
 #include <vil/vil_rgb.h>
 #include <vil/vil_load.h>
@@ -2212,7 +2212,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
     double unorm_shape_cost=1.0e6;
 
     //instantiate the edit distance algorithms
-    dbskr_tree_edit edit(model_tree.ptr(), 
+    dbskfg_cg_tree_edit edit(model_tree.ptr(), 
                          query_tree.ptr(), circular_ends_, 
                          localized_edit_);
 
@@ -2459,7 +2459,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
 
 
     //     //instantiate the edit distance algorithms
-    //     dbskr_tree_edit edit_app(model_app_tree.ptr(), 
+    //     dbskfg_cg_tree_edit edit_app(model_app_tree.ptr(), 
     //                              query_app_tree.ptr(), 
     //                              circular_ends_, 
     //                              localized_edit_);
@@ -2583,7 +2583,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     double unorm_shape_cost=1.0e6;
 
     //instantiate the edit distance algorithms
-    dbskr_tree_edit edit(model_tree.ptr(), 
+    dbskfg_cg_tree_edit edit(model_tree.ptr(), 
                          query_tree.ptr(), circular_ends_, 
                          localized_edit_);
 
@@ -2856,7 +2856,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
 
 
     //     //instantiate the edit distance algorithms
-    //     dbskr_tree_edit edit_app(model_app_tree.ptr(), 
+    //     dbskfg_cg_tree_edit edit_app(model_app_tree.ptr(), 
     //                              query_app_tree.ptr(), 
     //                              circular_ends_, 
     //                              localized_edit_);
@@ -3038,7 +3038,7 @@ void dbskfg_match_bag_of_fragments::match_two_debug_graphs(
     double unorm_shape_cost=1.0e6;
 
     //instantiate the edit distance algorithms
-    dbskr_tree_edit edit(model_tree.ptr(), 
+    dbskfg_cg_tree_edit edit(model_tree.ptr(), 
                          query_tree.ptr(), circular_ends_, 
                          localized_edit_);
 
@@ -3301,7 +3301,7 @@ void dbskfg_match_bag_of_fragments::match_two_debug_graphs(
 
 
     //     //instantiate the edit distance algorithms
-    //     dbskr_tree_edit edit_app(model_app_tree.ptr(), 
+    //     dbskfg_cg_tree_edit edit_app(model_app_tree.ptr(), 
     //                              query_app_tree.ptr(), 
     //                              circular_ends_, 
     //                              localized_edit_);
