@@ -29,7 +29,9 @@
 #include <dbskfg/pro/dbskfg_composite_graph_storage.h>
 #include <dbskfg/pro/dbskfg_form_composite_graph_process.h>
 
+#include <dbsk2d/algo/dbsk2d_ishock_grouping_transform.h>
 #include <vcl_algorithm.h>
+#include <vgl/vgl_area.h>
 
 //: Constructor
 dbskfg_load_binary_composite_graph_process::dbskfg_load_binary_composite_graph_process():image_ni_(0),image_nj_(0)
@@ -48,6 +50,7 @@ dbskfg_load_binary_composite_graph_process::
 {
     cgraphs_.clear();
     frags_removed_.clear();
+    area_cgraphs_.clear();
 }
 
 //: Clone the process
@@ -307,10 +310,61 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
 
         shock_results = shock_pro.get_output();
 
+        dbsk2d_shock_storage_sptr shock_storage;
+        shock_storage.vertical_cast(shock_results[0]);
+
+        dbsk2d_ishock_grouping_transform grouper(
+            shock_storage->get_ishock_graph());
+        grouper.grow_regions();
+
+        vcl_map<unsigned int, vcl_set<int> > region_belms_contour_ids
+            = grouper.get_region_belms_contour_ids();
+
+        int int_size=0;
+        double area=0.0;
+        vcl_map<unsigned int, vcl_set<int> >::iterator it;
+        for ( it = region_belms_contour_ids.begin() ; it != 
+                  region_belms_contour_ids.end() ; ++it)
+        {
+            
+            vcl_set<int> rag_con_ids=(*it).second;
+
+            vcl_set<int>::iterator fit=rag_con_ids.find(10e6);
+            if ( fit != rag_con_ids.end())
+            {
+                continue;
+            }
+
+            vcl_vector<unsigned int> intersection(10000);
+            vcl_vector<unsigned int>::iterator start_iterator;
+            start_iterator=intersection.begin();
+            vcl_vector<unsigned int>::iterator out_iterator;
+        
+            out_iterator=vcl_set_intersection(cons.begin(),
+                                              cons.end(),
+                                              rag_con_ids.begin(),
+                                              rag_con_ids.end(),
+                                              start_iterator);
+            int temp = int(out_iterator-start_iterator);
+
+            if ( temp > int_size )
+            {
+                // Grab polygon fragment
+                vgl_polygon<double> poly;
+                grouper.polygon_fragment((*it).first,poly);
+
+                area=vgl_area(poly);
+                int_size=temp;
+            }
+            
+        }
+
         // Clean up after ourselves
         shock_pro.clear_input();
         shock_pro.clear_output();
 
+        unsigned int id=area_cgraphs_.size();
+        area_cgraphs_[id]=area;
     }
 
 

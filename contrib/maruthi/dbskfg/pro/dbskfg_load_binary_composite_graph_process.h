@@ -77,7 +77,7 @@ private:
   unsigned int image_nj_;
 
   vcl_map<unsigned int,dbskfg_composite_graph_sptr > cgraphs_;
-
+  vcl_map<unsigned int,double> area_cgraphs_;
   vcl_vector<unsigned int> frags_removed_;
 
 };
