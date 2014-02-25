@@ -733,7 +733,6 @@ get_sift_along_curve(int start_dart, int end_dart)
   vcl_pair<int, int> p;
   p.first = start_dart;
   p.second = end_dart;
-  vcl_cout<<dart_path_sift_map_.count(p)<<vcl_endl;
   return dart_path_sift_map_[p];
     
 }
