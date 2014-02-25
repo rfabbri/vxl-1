@@ -70,10 +70,6 @@ dbskr_scurve_sptr dbskfg_compute_scurve::compute_curve(
             for (int i=0; i< cur_edge.num_samples(); i++)
             {
                 dbsk2d_xshock_sample_sptr sample = cur_edge.sample(i);
-                vgl_point_2d<double> pt=sample->pt;
-                double scaled_x=pt.x()*scale_ratio;
-                double scaled_y=pt.y()*scale_ratio;
-                vgl_point_2d<double> scaled_pt(scaled_x,scaled_y);
 
                 sh_pt.push_back(sample->pt);
                 time.push_back(sample->radius*scale_ratio); 
