@@ -359,6 +359,7 @@ void dbskfg_match_bag_of_fragments::load_binary_model(vcl_string model_dir)
 
     vcl_map<unsigned int,dbskfg_composite_graph_sptr> cgraphs = 
         load_pro.get_cgraphs();
+    vcl_map<unsigned int,double> cgraph_area = load_pro.get_cgraph_area();
 
     vcl_map<unsigned int,dbskfg_composite_graph_sptr>::iterator it;
     for ( it = cgraphs.begin() ; it != cgraphs.end() ; ++it)
@@ -366,6 +367,9 @@ void dbskfg_match_bag_of_fragments::load_binary_model(vcl_string model_dir)
         vcl_stringstream stream;
         stream<<"model_"<<(*it).first;
         model_fragments_[(*it).first]=vcl_make_pair(stream.str(),(*it).second);
+        model_fragments_area_[(*it).first]=vcl_make_pair(
+            stream.str(),
+            cgraph_area[(*it).first]);
     }
 
 
@@ -446,6 +450,7 @@ void dbskfg_match_bag_of_fragments::load_binary_query(vcl_string query_dir)
 
     vcl_map<unsigned int,dbskfg_composite_graph_sptr> cgraphs = 
         load_pro.get_cgraphs();
+    vcl_map<unsigned int,double> cgraph_area = load_pro.get_cgraph_area();
 
     vcl_map<unsigned int,dbskfg_composite_graph_sptr>::iterator it;
     for ( it = cgraphs.begin() ; it != cgraphs.end() ; ++it)
@@ -453,6 +458,10 @@ void dbskfg_match_bag_of_fragments::load_binary_query(vcl_string query_dir)
         vcl_stringstream stream;
         stream<<"query_"<<(*it).first;
         query_fragments_[(*it).first]=vcl_make_pair(stream.str(),(*it).second);
+        query_fragments_area_[(*it).first]=vcl_make_pair(
+            stream.str(),
+            cgraph_area[(*it).first]);
+
     }
 
     vcl_vector<unsigned int> regions_removed=load_pro.get_frags_removed();
@@ -597,6 +606,16 @@ bool dbskfg_match_bag_of_fragments::binary_match()
     for ( m_iterator = model_fragments_.begin() ; 
           m_iterator != model_fragments_.end() ; ++m_iterator)
     {
+        vl_sift_pix* model_images_grad_data=
+            model_images_grad_data_.count((*m_iterator).second.first)?
+            model_images_grad_data_[(*m_iterator).second.first]:
+            0;
+
+        VlSiftFilt*model_images_sift_filter=
+            model_images_sift_filter_.count((*m_iterator).second.first)?
+            model_images_sift_filter_[(*m_iterator).second.first]:
+            0;
+            
         //: prepare the trees also
         dbskfg_cgraph_directed_tree_sptr model_tree = new 
             dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
@@ -604,10 +623,8 @@ bool dbskfg_match_bag_of_fragments::binary_match()
                                         scurve_matching_R_,
                                         false,
                                         area_weight_,
-                                        model_images_grad_data_
-                                        [(*m_iterator).second.first],
-                                        model_images_sift_filter_
-                                        [(*m_iterator).second.first]);
+                                        model_images_grad_data,
+                                        model_images_sift_filter);
 
 
         bool f1=model_tree->acquire
@@ -620,6 +637,17 @@ bool dbskfg_match_bag_of_fragments::binary_match()
         for ( q_iterator = query_fragments_.begin() ; 
               q_iterator != query_fragments_.end() ; ++q_iterator)
         {
+
+            vl_sift_pix* model_images_grad_data=
+                model_images_grad_data_.count((*m_iterator).second.first)?
+                model_images_grad_data_[(*m_iterator).second.first]:
+                0;
+            
+            VlSiftFilt*model_images_sift_filter=
+                model_images_sift_filter_.count((*m_iterator).second.first)?
+                model_images_sift_filter_[(*m_iterator).second.first]:
+                0;
+
             //: prepare the trees also
             dbskfg_cgraph_directed_tree_sptr query_tree = new
                 dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
@@ -627,10 +655,8 @@ bool dbskfg_match_bag_of_fragments::binary_match()
                                             scurve_matching_R_,
                                             false,
                                             area_weight_,
-                                            model_images_grad_data_
-                                            [(*m_iterator).second.first],
-                                            model_images_sift_filter_
-                                            [(*m_iterator).second.first]);
+                                            model_images_grad_data,
+                                            model_images_sift_filter);
             
             bool f1=query_tree->acquire
                 ((*q_iterator).second.second, elastic_splice_cost_, 

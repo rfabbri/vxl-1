@@ -106,6 +106,14 @@ private:
     vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> > 
         query_fragments_;
 
+    // Keep a map of all model patches
+    vcl_map<unsigned int,vcl_pair<vcl_string,double> > 
+        model_fragments_area_;
+
+    // Keep a map of all query patches
+    vcl_map<unsigned int,vcl_pair<vcl_string,double> > 
+        query_fragments_area_;
+
     // Keep a map of all model contours
     vcl_map<unsigned int,vcl_vector< vsol_spatial_object_2d_sptr > >
         model_contours_;
