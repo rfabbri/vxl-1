@@ -30,6 +30,7 @@
 #include <bsol/bsol_algs.h>
 
 #include <vgl/vgl_distance.h>
+#include <vgl/algo/vgl_fit_lines_2d.h>
 #include <vul/vul_timer.h>
 
 //: Constructor
@@ -259,7 +260,28 @@ bool dbsk2d_compute_containment_graph_process::execute()
                     // Create polygon
                     vgl_polygon<double> poly(points);
 
-                    closed_polys.push_back(poly);
+
+                    int min_fit_length = 2;
+                    vgl_fit_lines_2d<double> fitter;
+                    fitter.set_min_fit_length(min_fit_length);
+                    fitter.set_rms_error_tol(0.05f);
+                    fitter.add_curve(poly[0]);
+
+                    vcl_vector<vgl_line_segment_2d<double> > segs;
+                    fitter.fit();
+                    segs= fitter.get_line_segs();
+
+                    vgl_polygon<double> fitted_poly(1);
+                    fitted_poly.push_back(segs[0].point1());
+                    fitted_poly.push_back(segs[0].point2());
+
+                    // See if segs intersects any bnd elements
+                    for ( unsigned int i=1; i < segs.size() ; ++i)
+                    {
+                        fitted_poly.push_back(segs[i].point2());
+                    }
+
+                    closed_polys.push_back(fitted_poly);
                 }
                 else
                 {
