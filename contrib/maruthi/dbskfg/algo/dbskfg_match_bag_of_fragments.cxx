@@ -196,9 +196,11 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
     {
         binary_sim_matrix_.set_size(model_contours_.size(),
                                     query_contours_.size());
+        binary_sim_matrix_.fill(0.0);
 
         binary_sim_length_matrix_.set_size(model_contours_.size(),
                                            query_contours_.size());
+        binary_sim_length_matrix_.fill(0.0);
 
         binary_app_sim_matrix_.set_size(model_contours_.size(),
                                         query_contours_.size());
@@ -215,9 +217,11 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
 
         binary_sim_matrix_.set_size(model_fragments_.size(),
                                     query_fragments_.size());
+        binary_sim_matrix_.fill(0.0);
 
         binary_sim_length_matrix_.set_size(model_fragments_.size(),
                                            query_fragments_.size());
+        binary_sim_length_matrix_.fill(0.0);
 
         binary_app_sim_matrix_.set_size(model_fragments_.size(),
                                         query_fragments_.size());
