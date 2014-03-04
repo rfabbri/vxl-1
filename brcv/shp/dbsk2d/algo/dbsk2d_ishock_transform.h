@@ -148,6 +148,37 @@ public:
 
     }
 
+    dbsk2d_ishock_bpoint* endpoint_in_elms(int contour_id)
+    {
+        vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
+        for ( it = interacting_bnd_elements_.begin() ; 
+              it != interacting_bnd_elements_.end(); 
+              ++it)
+        {
+            if ( (*it).second->is_a_line())
+            {
+                dbsk2d_ishock_bline* bline=(dbsk2d_ishock_bline*)
+                    ((*it).second);
+                dbsk2d_ishock_bpoint* s_pt=bline->s_pt();
+                dbsk2d_ishock_bpoint* e_pt=bline->e_pt();
+
+                if ( s_pt->is_an_end_point() && 
+                     bline->get_contour_id() == contour_id)
+                {
+                    s_pt->getInfo(vcl_cout);
+                    return s_pt;
+                }
+                else if ( e_pt->is_an_end_point() && 
+                          bline->get_contour_id() == contour_id)
+                {
+                    e_pt->getInfo(vcl_cout);
+                    return e_pt;
+                }
+            }
+        }
+        return 0;
+    }
+
 protected:
 
     // Attributes
