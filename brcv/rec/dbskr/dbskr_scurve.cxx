@@ -913,7 +913,10 @@ void dbskr_scurve::set_euler_spiral_completion_length()
     // vcl_cout<<"Es length: "<<es.length()<<vcl_endl;
 
     virtual_length_ = es.length();
-
+    if ( isinf(es.length()) || isnan(es.length()))
+    {
+        virtual_length_=0.0;
+    }
 }
 
 //: new splice cost definition that uses joint curve matching to compute
