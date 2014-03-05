@@ -165,13 +165,11 @@ public:
                 if ( s_pt->is_an_end_point() && 
                      bline->get_contour_id() == contour_id)
                 {
-                    s_pt->getInfo(vcl_cout);
                     return s_pt;
                 }
                 else if ( e_pt->is_an_end_point() && 
                           bline->get_contour_id() == contour_id)
                 {
-                    e_pt->getInfo(vcl_cout);
                     return e_pt;
                 }
             }
