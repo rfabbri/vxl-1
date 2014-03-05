@@ -4506,17 +4506,47 @@ dbskfg_match_bag_of_fragments::compute_transformed_polygon(
     vgl_polygon<double> query_poly(1);
     query_tree->compute_reconstructed_boundary_polygon(query_poly);
 
+    vgl_point_2d<double> centroid=vgl_centroid(model_poly);
     
+    vgl_h_matrix_2d<double> model_H(H);
+    model_H.set_translation(0,0);
+
+    vgl_polygon<double> model_model_poly(1);
     vgl_polygon<double> model_transformed_poly(1);
     for (unsigned int s = 0; s < model_poly.num_sheets(); ++s)
     {
         for (unsigned int p = 0; p < model_poly[s].size(); ++p)
         {
-            vgl_homg_point_2d<double> pt(model_poly[s][p].x(),
-                                         model_poly[s][p].y());
-            vgl_homg_point_2d<double> transformed=H(pt);
-            vgl_point_2d<double> pt_t(transformed);
-            model_transformed_poly.push_back(pt_t);
+            // Compute model to model poly
+            {
+                // 1. Subtract off Centroid
+                vgl_homg_point_2d<double> pt(model_poly[s][p].x()-centroid.x(),
+                                             model_poly[s][p].y()-centroid.y());
+                
+                // 2. Transform Point
+                vgl_homg_point_2d<double> transformed=model_H(pt);
+                
+                // 3. Move point back
+                vgl_point_2d<double> temp(transformed);
+                vgl_point_2d<double> pt_t(temp.x() + centroid.x(), 
+                                          temp.y() + centroid.y());
+                
+                model_model_poly.push_back(pt_t);
+            }
+
+            // Compute model to query poly
+            {
+                // 1. Get Pt
+                vgl_homg_point_2d<double> pt(model_poly[s][p].x(),
+                                             model_poly[s][p].y());
+                
+                // 2. Transform Point
+                vgl_homg_point_2d<double> transformed=H(pt);
+                
+                vgl_point_2d<double> pt_t(transformed);
+                
+                model_transformed_poly.push_back(pt_t);
+            }
         } 
     
     }
@@ -4532,7 +4562,7 @@ dbskfg_match_bag_of_fragments::compute_transformed_polygon(
         
         //Take union of two polygons
         m_m_intersection = vgl_clip(model_poly,              // p1
-                                    model_transformed_poly,  // p2
+                                    model_model_poly,        // p2
                                     vgl_clip_type_intersect, // p1 |  p2
                                     &value);                 // test if success
         
@@ -4560,7 +4590,6 @@ dbskfg_match_bag_of_fragments::compute_transformed_polygon(
     result.first=m_m_area_of_intersection;
     result.second=m_q_area_of_intersection;
 
-    return result;
 
     // vcl_cout<<"Model to model: "<<result.first<<vcl_endl;
     // vcl_cout<<"Model to query: "<<result.second<<vcl_endl;
@@ -4592,6 +4621,19 @@ dbskfg_match_bag_of_fragments::compute_transformed_polygon(
     // }
 
     // {
+    //     vcl_ofstream model_file("model_model_poly.txt");
+    //     for (unsigned int s = 0; s < model_model_poly.num_sheets(); ++s)
+    //     {
+    //         for (unsigned int p = 0; p < model_model_poly[s].size(); ++p)
+    //         {
+    //             model_file<<model_model_poly[s][p].x()<<","
+    //                       <<model_model_poly[s][p].y()<<vcl_endl;
+    //         }
+    //     }
+    //     model_file.close();
+    // }
+
+    // {
     //     vcl_ofstream query_file("query_poly.txt");
     //     for (unsigned int s = 0; s < query_poly.num_sheets(); ++s)
     //     {
@@ -4603,6 +4645,8 @@ dbskfg_match_bag_of_fragments::compute_transformed_polygon(
     //     }
     //     query_file.close();
     // }
+
+    return result;
 }
 
 double dbskfg_match_bag_of_fragments::compute_outer_shock_edit_distance(
