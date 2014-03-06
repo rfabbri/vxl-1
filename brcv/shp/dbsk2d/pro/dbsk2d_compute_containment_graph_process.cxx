@@ -399,6 +399,37 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
                      double gap_distance)
 {
     
+    vcl_vector<dbsk2d_ishock_belm*> belm_list = ishock_graph->
+        boundary()->belm_list();
+    for (unsigned int i=0;i < belm_list.size() ; ++i)
+    {
+        if ( belm_list[i]->is_a_point() )
+        {
+            dbsk2d_ishock_bpoint* bpoint = 
+                dynamic_cast<dbsk2d_ishock_bpoint*>
+                (belm_list[i]);
+
+            if ( bpoint->is_an_end_point() && bpoint->is_a_GUIelm())
+            {
+
+                dbsk2d_ishock_loop_transform transformer(ishock_graph,
+                                                         bpoint);
+
+                vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> pair =
+                    transformer.get_contour_pair();
+                double length_of_gap=vgl_distance(pair.first->pt(),
+                                                  pair.second->pt());
+
+                if ( length_of_gap < 1.0 )
+                {
+                    transformer.execute_transform();
+                }
+        
+            }
+        }
+
+    }
+
     dbsk2d_ishock_gap_detector detector(ishock_graph);
     vcl_vector<
     vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> > gap_pairs;
