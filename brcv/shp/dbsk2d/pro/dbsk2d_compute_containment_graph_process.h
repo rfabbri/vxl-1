@@ -49,7 +49,8 @@ public:
 private:
 
   void pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
-                            double preprocess_threshold);
+                            double preprocess_threshold,
+                            double gap_distance);
   
   dbsk2d_bnd_contour_sptr get_contour(dbsk2d_ishock_bpoint* bp);
 

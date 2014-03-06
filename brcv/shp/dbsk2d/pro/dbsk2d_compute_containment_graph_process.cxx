@@ -54,6 +54,9 @@ dbsk2d_compute_containment_graph_process()
         !parameters()->add( "Threshold on Preprocessing transforms:" , 
                             "-preprocess_threshold" , 
                             (double) 0.12 ) ||
+        !parameters()->add( "Minimum Gap distance:" , 
+                            "-gap_distance" , 
+                            (double) 2.0 ) ||
         !parameters()->add( "Euler Sprial Completion" , "-ess" , 
                             (double)0.25) ||
         !parameters()->add( "Remove closed contours" , "-closed" , 
@@ -131,7 +134,7 @@ bool dbsk2d_compute_containment_graph_process::execute()
     bool add_bbox(true);
     double preprocess_threshold(0.12);
     unsigned int loop_cost(1);
-
+    double gap_distance(2.0);
 
 
     bpro1_filepath output_folder_filepath;
@@ -146,6 +149,7 @@ bool dbsk2d_compute_containment_graph_process::execute()
     parameters()->get_value( "-add_bbox", add_bbox);
     parameters()->get_value( "-preprocess_threshold" , preprocess_threshold ); 
     parameters()->get_value( "-loop_cost" , loop_cost);
+    parameters()->get_value( "-gap_distance" , gap_distance );
 
     bool status = true;
     
@@ -355,7 +359,8 @@ bool dbsk2d_compute_containment_graph_process::execute()
     shock_storage.vertical_cast(shock_results[0]);
 
     pre_process_contours(shock_storage->get_ishock_graph(),
-                         preprocess_threshold);
+                         preprocess_threshold,
+                         gap_distance);
 
     dbsk2d_containment_graph cgraph(shock_storage->get_ishock_graph(),
                                     path_threshold,
@@ -390,7 +395,8 @@ bool dbsk2d_compute_containment_graph_process::finish()
 
 void dbsk2d_compute_containment_graph_process::
 pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
-                     double preprocess_threshold)
+                     double preprocess_threshold,
+                     double gap_distance)
 {
     
     dbsk2d_ishock_gap_detector detector(ishock_graph);
@@ -458,8 +464,8 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
                     pair.first);
                 loop_trans.execute_transform();
             }
-            else if ( (*it).first >= preprocess_threshold || 
-                      length_of_gap <= 3.0)
+            else if ( (*it).first >= preprocess_threshold && 
+                      length_of_gap <= gap_distance)
             {
                 dbsk2d_bnd_contour_sptr con1 = this->get_contour(pair.first);
                 dbsk2d_bnd_contour_sptr con2 = this->get_contour(pair.second);
@@ -574,7 +580,8 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
         {
             if ( (*it).second->valid_transform() )
             {
-                if ( (*it).first >= 0.4 || length_of_gap <= 3.0 )
+                if ( (*it).first >= preprocess_threshold &&
+                     length_of_gap <= gap_distance )
                 {
                     (*it).second->execute_transform();
                 }

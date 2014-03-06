@@ -59,6 +59,9 @@ dbskfg_form_containment_graph_region_process()
         !parameters()->add( "Threshold on Preprocessing transforms:" , 
                             "-preprocess_threshold" , 
                             (double) 0.12 ) ||
+        !parameters()->add( "Minimum Gap distance:" , 
+                            "-gap_distance" , 
+                            (double) 2.0 ) ||
         !parameters()->add( "Euler Sprial Completion" , "-ess" , 
                             (double)0.25) ||
         !parameters()->add( "Remove closed contours" , "-closed" , 
