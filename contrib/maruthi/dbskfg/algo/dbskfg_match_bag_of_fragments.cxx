@@ -953,7 +953,23 @@ bool dbskfg_match_bag_of_fragments::binary_debug_match()
                                                 app_mirror_diff,
                                                 norm_app_mirror_cost,
                                                 rgb_avg_mirror_cost,
-                                                match_mirror_prefix);
+                                                match_mirror_prefix,
+                                                true);
+
+                if ( norm_shape_cost < norm_shape_mirror_cost )
+                {
+                    vcl_string delete_prefix=match_mirror_prefix+"*";
+
+                    vul_file::delete_file_glob(delete_prefix);
+                    vul_file::delete_file_glob(query_mirror_filename);
+                }
+                else
+                {
+                    vcl_string delete_prefix=match_prefix+"*";
+
+                    vul_file::delete_file_glob(delete_prefix);
+                    vul_file::delete_file_glob(query_filename);
+                }
 
                 norm_shape_cost = ( norm_shape_cost < norm_shape_mirror_cost)
                     ? norm_shape_cost : norm_shape_mirror_cost;
@@ -2586,7 +2602,8 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     double& app_diff,
     double& norm_app_cost,
     double& rgb_avg_cost,
-    vcl_string match_file_prefix)
+    vcl_string match_file_prefix,
+    bool mirror)
 {
 
     vul_timer shape_timer;
@@ -2956,6 +2973,12 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
 
     if ( match_file_prefix.size() )
     {
+        double width=0.0;
+        if ( mirror )
+        {
+            width=query_tree->bbox()->width();
+        }
+
         // Get matching pairs
         for (unsigned i = 0; i < map_list.size(); i++) 
         {
@@ -2982,7 +3005,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                               <<" "
                               <<ps1.y()
                               <<" "
-                              <<ps2.x()
+                              <<vcl_fabs(width-ps2.x())
                               <<" "
                               <<ps2.y()<<vcl_endl;
                 }
@@ -2992,7 +3015,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                               <<" "
                               <<ps2.y()
                               <<" "
-                              <<ps1.x()
+                              <<vcl_fabs(width-ps1.x())
                               <<" "
                               <<ps1.y()<<vcl_endl;
 

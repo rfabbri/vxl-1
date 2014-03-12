@@ -153,6 +153,10 @@ public:
       }
   }
 
+  // get bounding box
+  vsol_box_2d_sptr bbox(){return bbox_;}
+
+
 protected:
   // Reset / Initalize /////////////////////////////////////////////////////////
 
