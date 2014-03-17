@@ -2945,13 +2945,21 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     
     if ( app_sift_ )
     {
+
+        double width=0.0;
+        if ( mirror )
+        {
+            width=query_tree->bbox()->width();
+        }
+
         vul_timer app_timer;
         app_timer.mark();
         vcl_pair<double,double> app_cost=compute_sift_cost(curve_list1,
                                                            curve_list2,
                                                            map_list,
                                                            path_map,
-                                                           flag);
+                                                           flag,
+                                                           width);
         vcl_pair<double,double> sift_rgb_cost=compute_rgb_sift_cost(curve_list1,
                                                                     curve_list2,
                                                                     map_list,
@@ -3610,7 +3618,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
     vcl_vector<dbskr_scurve_sptr>& curve_list2,
     vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
     vcl_vector< pathtable_key >& path_map,
-    bool flag)
+    bool flag,
+    double width)
 {
  
 
@@ -3662,13 +3671,15 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
 
             if ( !flag )
             {
+                ps2.set(vcl_fabs(width-ps2.x()),ps2.y());
+                
                 vl_sift_calc_raw_descriptor(model_sift_filter_,
                                             model_grad_data_,
                                             descr_ps1,
                                             model_sift_filter_->width,
                                             model_sift_filter_->height,
-                                            ps1.y(),
                                             ps1.x(),
+                                            ps1.y(),
                                             radius_ps1/2,
                                             theta_ps1);
 
@@ -3677,20 +3688,22 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
                                             descr_ps2,
                                             query_sift_filter_->width,
                                             query_sift_filter_->height,
-                                            ps2.y(),
                                             ps2.x(),
+                                            ps2.y(),
                                             radius_ps2/2,
                                             theta_ps2);
             }
             else
             {
+                ps1.set(vcl_fabs(width-ps1.x()),ps1.y());
+
                 vl_sift_calc_raw_descriptor(model_sift_filter_,
                                             model_grad_data_,
                                             descr_ps2,
                                             model_sift_filter_->width,
                                             model_sift_filter_->height,
-                                            ps2.y(),
                                             ps2.x(),
+                                            ps2.y(),
                                             radius_ps2/2,
                                             theta_ps2);
 
@@ -3699,8 +3712,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
                                             descr_ps1,
                                             query_sift_filter_->width,
                                             query_sift_filter_->height,
-                                            ps1.y(),
                                             ps1.x(),
+                                            ps1.y(),
                                             radius_ps1/2,
                                             theta_ps1);
           
@@ -3920,8 +3933,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                                             descr_ps1_red,
                                             model_sift_filter_->width,
                                             model_sift_filter_->height,
-                                            ps1_red.y(),
                                             ps1_red.x(),
+                                            ps1_red.y(),
                                             radius_ps1_red/2,
                                             theta_ps1_red);
 
@@ -3930,8 +3943,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                                             descr_ps1_green,
                                             model_sift_filter_->width,
                                             model_sift_filter_->height,
-                                            ps1_green.y(),
                                             ps1_green.x(),
+                                            ps1_green.y(),
                                             radius_ps1_green/2,
                                             theta_ps1_green);
 
@@ -3940,8 +3953,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                                             descr_ps1_blue,
                                             model_sift_filter_->width,
                                             model_sift_filter_->height,
-                                            ps1_blue.y(),
                                             ps1_blue.x(),
+                                            ps1_blue.y(),
                                             radius_ps1_blue/2,
                                             theta_ps1_blue);
 
@@ -3950,8 +3963,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                                             descr_ps2_red,
                                             query_sift_filter_->width,
                                             query_sift_filter_->height,
-                                            ps2_red.y(),
                                             ps2_red.x(),
+                                            ps2_red.y(),
                                             radius_ps2_red/2,
                                             theta_ps2_red);
 
@@ -3960,8 +3973,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                                             descr_ps2_green,
                                             query_sift_filter_->width,
                                             query_sift_filter_->height,
-                                            ps2_green.y(),
                                             ps2_green.x(),
+                                            ps2_green.y(),
                                             radius_ps2_green/2,
                                             theta_ps2_green);
 
@@ -3970,8 +3983,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                                             descr_ps2_blue,
                                             query_sift_filter_->width,
                                             query_sift_filter_->height,
-                                            ps2_blue.y(),
                                             ps2_blue.x(),
+                                            ps2_blue.y(),
                                             radius_ps2_blue/2,
                                             theta_ps2_blue);
 
@@ -3985,8 +3998,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                                             descr_ps2_red,
                                             model_sift_filter_->width,
                                             model_sift_filter_->height,
-                                            ps2_red.y(),
                                             ps2_red.x(),
+                                            ps2_red.y(),
                                             radius_ps2_red/2,
                                             theta_ps2_red);
 
@@ -3995,8 +4008,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                                             descr_ps2_green,
                                             model_sift_filter_->width,
                                             model_sift_filter_->height,
-                                            ps2_green.y(),
                                             ps2_green.x(),
+                                            ps2_green.y(),
                                             radius_ps2_green/2,
                                             theta_ps2_green);
 
@@ -4005,8 +4018,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                                             descr_ps2_blue,
                                             model_sift_filter_->width,
                                             model_sift_filter_->height,
-                                            ps2_blue.y(),
                                             ps2_blue.x(),
+                                            ps2_blue.y(),
                                             radius_ps2_blue/2,
                                             theta_ps2_blue);
 
@@ -4015,8 +4028,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                                             descr_ps1_red,
                                             query_sift_filter_->width,
                                             query_sift_filter_->height,
-                                            ps1_red.y(),
                                             ps1_red.x(),
+                                            ps1_red.y(),
                                             radius_ps1_red/2,
                                             theta_ps1_red);
 
@@ -4025,8 +4038,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                                             descr_ps1_green,
                                             query_sift_filter_->width,
                                             query_sift_filter_->height,
-                                            ps1_green.y(),
                                             ps1_green.x(),
+                                            ps1_green.y(),
                                             radius_ps1_green/2,
                                             theta_ps1_green);
 
@@ -4035,8 +4048,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                                             descr_ps1_blue,
                                             query_sift_filter_->width,
                                             query_sift_filter_->height,
-                                            ps1_blue.y(),
                                             ps1_blue.x(),
+                                            ps1_blue.y(),
                                             radius_ps1_blue/2,
                                             theta_ps1_blue);
 

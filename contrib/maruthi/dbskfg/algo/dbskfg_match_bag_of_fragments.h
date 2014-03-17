@@ -335,7 +335,8 @@ private:
         vcl_vector<dbskr_scurve_sptr>& curve_list2,
         vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
         vcl_vector< pathtable_key >& path_map,
-        bool flag=false);
+        bool flag=false,
+        double width=0.0);
 
     vcl_pair<double,double> compute_rgb_sift_cost(
         vcl_vector<dbskr_scurve_sptr>& curve_list1,
