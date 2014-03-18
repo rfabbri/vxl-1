@@ -2952,6 +2952,12 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
             width=query_tree->bbox()->width();
         }
 
+        vl_sift_pix* model_grad_data=model_tree->get_grad_data();
+        vl_sift_pix* query_grad_data=query_tree->get_grad_data();
+
+        VlSiftFilt* model_sift_filter=model_tree->get_sift_filter();
+        VlSiftFilt* query_sift_filter=query_tree->get_sift_filter();
+
         vul_timer app_timer;
         app_timer.mark();
         vcl_pair<double,double> app_cost=compute_sift_cost(curve_list1,
@@ -2959,7 +2965,11 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                                                            map_list,
                                                            path_map,
                                                            flag,
-                                                           width);
+                                                           width,
+                                                           model_grad_data,
+                                                           model_sift_filter,
+                                                           query_grad_data,
+                                                           query_sift_filter);
         vcl_pair<double,double> sift_rgb_cost=compute_rgb_sift_cost(curve_list1,
                                                                     curve_list2,
                                                                     map_list,
@@ -3619,7 +3629,11 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
     vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
     vcl_vector< pathtable_key >& path_map,
     bool flag,
-    double width)
+    double width,
+    vl_sift_pix* model_grad_data,
+    VlSiftFilt*  model_sift_filter,
+    vl_sift_pix* query_grad_data,
+    VlSiftFilt*  query_sift_filter)
 {
  
 
@@ -3673,21 +3687,21 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
             {
                 ps2.set(vcl_fabs(width-ps2.x()),ps2.y());
                 
-                vl_sift_calc_raw_descriptor(model_sift_filter_,
-                                            model_grad_data_,
+                vl_sift_calc_raw_descriptor(model_sift_filter,
+                                            model_grad_data,
                                             descr_ps1,
-                                            model_sift_filter_->width,
-                                            model_sift_filter_->height,
+                                            model_sift_filter->width,
+                                            model_sift_filter->height,
                                             ps1.x(),
                                             ps1.y(),
                                             radius_ps1/2,
                                             theta_ps1);
 
-                vl_sift_calc_raw_descriptor(query_sift_filter_,
-                                            query_grad_data_,
+                vl_sift_calc_raw_descriptor(query_sift_filter,
+                                            query_grad_data,
                                             descr_ps2,
-                                            query_sift_filter_->width,
-                                            query_sift_filter_->height,
+                                            query_sift_filter->width,
+                                            query_sift_filter->height,
                                             ps2.x(),
                                             ps2.y(),
                                             radius_ps2/2,
@@ -3697,21 +3711,21 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
             {
                 ps1.set(vcl_fabs(width-ps1.x()),ps1.y());
 
-                vl_sift_calc_raw_descriptor(model_sift_filter_,
-                                            model_grad_data_,
+                vl_sift_calc_raw_descriptor(model_sift_filter,
+                                            model_grad_data,
                                             descr_ps2,
-                                            model_sift_filter_->width,
-                                            model_sift_filter_->height,
+                                            model_sift_filter->width,
+                                            model_sift_filter->height,
                                             ps2.x(),
                                             ps2.y(),
                                             radius_ps2/2,
                                             theta_ps2);
 
-                vl_sift_calc_raw_descriptor(query_sift_filter_,
-                                            query_grad_data_,
+                vl_sift_calc_raw_descriptor(query_sift_filter,
+                                            query_grad_data,
                                             descr_ps1,
-                                            query_sift_filter_->width,
-                                            query_sift_filter_->height,
+                                            query_sift_filter->width,
+                                            query_sift_filter->height,
                                             ps1.x(),
                                             ps1.y(),
                                             radius_ps1/2,

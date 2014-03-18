@@ -156,6 +156,12 @@ public:
   // get bounding box
   vsol_box_2d_sptr bbox(){return bbox_;}
 
+  // get grad data
+  vl_sift_pix* get_grad_data(){return grad_data_;}
+  
+  // get sift filter
+  VlSiftFilt* get_sift_filter(){return sift_filter_;}
+
 
 protected:
   // Reset / Initalize /////////////////////////////////////////////////////////

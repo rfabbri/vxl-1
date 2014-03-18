@@ -336,7 +336,11 @@ private:
         vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
         vcl_vector< pathtable_key >& path_map,
         bool flag=false,
-        double width=0.0);
+        double width=0.0,
+        vl_sift_pix* model_grad_data=0,
+        VlSiftFilt*  model_sift_filter=0,
+        vl_sift_pix* query_grad_data=0,
+        VlSiftFilt*  query_sift_filter=0);
 
     vcl_pair<double,double> compute_rgb_sift_cost(
         vcl_vector<dbskr_scurve_sptr>& curve_list1,
