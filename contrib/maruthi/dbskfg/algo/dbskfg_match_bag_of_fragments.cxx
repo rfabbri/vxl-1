@@ -715,7 +715,10 @@ bool dbskfg_match_bag_of_fragments::binary_match()
                 norm_shape_cost_length = ( norm_shape_cost_length 
                                            < norm_shape_mirror_cost_length)
                     ? norm_shape_cost_length : norm_shape_mirror_cost_length;
-
+                app_diff = ( app_diff < app_mirror_diff )
+                    ? app_diff: app_mirror_diff;
+                norm_app_cost = ( norm_app_cost < norm_app_mirror_cost )
+                    ? norm_app_cost: norm_app_mirror_cost;
             }
 
             unsigned int model_id= (*m_iterator).first;
@@ -747,7 +750,7 @@ bool dbskfg_match_bag_of_fragments::binary_match()
     write_binary_fragments(binary_sim_file,query_fragments_);
 
     double matrix_size=binary_sim_matrix_.columns()*
-        binary_sim_matrix_.rows()*2;
+        binary_sim_matrix_.rows()*4;
     binary_sim_file.write(reinterpret_cast<char *>(&matrix_size),
                           sizeof(double));
 
@@ -763,13 +766,13 @@ bool dbskfg_match_bag_of_fragments::binary_match()
             binary_sim_file.write(reinterpret_cast<char *>(&value),
                                   sizeof(double));
 
-            // value=binary_app_sim_matrix_[r][c];
-            // binary_sim_file.write(reinterpret_cast<char *>(&value),
-            //                       sizeof(double));
+            value=binary_app_sim_matrix_[r][c];
+            binary_sim_file.write(reinterpret_cast<char *>(&value),
+                                  sizeof(double));
 
-            // value=binary_app_norm_sim_matrix_[r][c];
-            // binary_sim_file.write(reinterpret_cast<char *>(&value),
-            //                       sizeof(double));
+            value=binary_app_norm_sim_matrix_[r][c];
+            binary_sim_file.write(reinterpret_cast<char *>(&value),
+                                  sizeof(double));
 
             // value=binary_app_rgb_sim_matrix_[r][c];
             // binary_sim_file.write(reinterpret_cast<char *>(&value),
