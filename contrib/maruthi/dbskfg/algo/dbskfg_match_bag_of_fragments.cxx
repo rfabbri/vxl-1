@@ -689,7 +689,9 @@ bool dbskfg_match_bag_of_fragments::binary_match()
                                                 scurve_interpolate_ds_, 
                                                 scurve_matching_R_,
                                                 mirror_,
-                                                area_weight_);
+                                                area_weight_,
+                                                model_images_grad_data,
+                                                model_images_sift_filter);
                 
                 f1=query_mirror_tree->acquire
                     ((*q_iterator).second.second, elastic_splice_cost_, 
@@ -708,7 +710,9 @@ bool dbskfg_match_bag_of_fragments::binary_match()
                                                 norm_shape_mirror_cost_length,
                                                 app_mirror_diff,
                                                 norm_app_mirror_cost,
-                                                rgb_avg_mirror_cost);
+                                                rgb_avg_mirror_cost,
+                                                "",
+                                                true);
 
                 norm_shape_cost = ( norm_shape_cost < norm_shape_mirror_cost)
                     ? norm_shape_cost : norm_shape_mirror_cost;
@@ -2973,11 +2977,11 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                                                            model_sift_filter,
                                                            query_grad_data,
                                                            query_sift_filter);
-        vcl_pair<double,double> sift_rgb_cost=compute_rgb_sift_cost(curve_list1,
-                                                                    curve_list2,
-                                                                    map_list,
-                                                                    path_map,
-                                                                    flag);
+        // vcl_pair<double,double> sift_rgb_cost=compute_rgb_sift_cost(curve_list1,
+        //                                                             curve_list2,
+        //                                                             map_list,
+        //                                                             path_map,
+        //                                                             flag);
         
         double app_time = app_timer.real()/1000.0;
         app_timer.mark();
@@ -2985,7 +2989,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //vcl_cerr<<"************ App   Time taken: "<<app_time<<" sec"<<vcl_endl;
         app_diff        = app_cost.first;
         norm_app_cost   = app_cost.second;
-        rgb_avg_cost    = sift_rgb_cost.second;
+        rgb_avg_cost    = 0; //sift_rgb_cost.second;
 
     }
    
