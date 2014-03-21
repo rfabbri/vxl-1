@@ -4721,39 +4721,62 @@ double dbskfg_match_bag_of_fragments::compute_outer_shock_edit_distance(
 
     vgl_polygon<double> query_poly(1);
     query_tree->compute_reconstructed_boundary_polygon(query_poly);
-    
 
     // create new bounding box
     vsol_box_2d_sptr bbox = new vsol_box_2d();
     
+    for (unsigned int s = 0; s < model_poly.num_sheets(); ++s)
+    {
+        for (unsigned int p = 0; p < model_poly[s].size(); ++p)
+        {
+            bbox->add_point(model_poly[s][p].x(),
+                            model_poly[s][p].y());
+        }
+    }
+
+
+    for (unsigned int s = 0; s < query_poly.num_sheets(); ++s)
+    {
+        for (unsigned int p = 0; p < query_poly[s].size(); ++p)
+        {
+            bbox->add_point(query_poly[s][p].x(),
+                            query_poly[s][p].y());
+        }
+    }
+
     // Enlarge bounding box from size
     // Calculate xcenter, ycenter
-    double xcenter = 500/2.0;
-    double ycenter = 500/2.0;
+    double xcenter = bbox->width()/2.0;
+    double ycenter = bbox->height()/2.0;
     
     // Translate to center and scale
-    double xmin_scaled = ((0-xcenter)*5)+xcenter;
-    double ymin_scaled = ((0-ycenter)*5)+ycenter;
-    double xmax_scaled = ((500-xcenter)*5)+xcenter;
-    double ymax_scaled = ((500-ycenter)*5)+ycenter;
-    
+    double xmin_scaled = ((0-xcenter)*2)+xcenter;
+    double ymin_scaled = ((0-ycenter)*2)+ycenter;
+    double xmax_scaled = ((bbox->width()-xcenter)*2)+xcenter;
+    double ymax_scaled = ((bbox->height()-ycenter)*2)+ycenter;
+
+    bbox->add_point(xmin_scaled,ymin_scaled);
+    bbox->add_point(xmax_scaled,ymax_scaled);
+
+    double start=(bbox->height()/2)-0.5;
+    double stop=(bbox->height()/2)+0.5;
+
     vcl_vector<vsol_point_2d_sptr> points;
-    points.push_back(new vsol_point_2d(xmin_scaled,249));
-    points.push_back(new vsol_point_2d(xmin_scaled,ymin_scaled));
-    points.push_back(new vsol_point_2d(xmax_scaled,ymin_scaled));
-    points.push_back(new vsol_point_2d(xmax_scaled,ymax_scaled));
-    points.push_back(new vsol_point_2d(xmin_scaled,ymax_scaled));
-    points.push_back(new vsol_point_2d(xmin_scaled,251));
+    points.push_back(new vsol_point_2d(bbox->get_min_x(),start));
+    points.push_back(new vsol_point_2d(bbox->get_min_x(),bbox->get_min_y()));
+    points.push_back(new vsol_point_2d(bbox->get_max_x(),bbox->get_min_y()));
+    points.push_back(new vsol_point_2d(bbox->get_max_x(),bbox->get_max_y()));
+    points.push_back(new vsol_point_2d(bbox->get_min_x(),bbox->get_max_y()));
+    points.push_back(new vsol_point_2d(bbox->get_min_x(),stop));
 
     vsol_polyline_2d_sptr polyline=new vsol_polyline_2d(points);
-    vsol_polyline_2d_sptr model_polyline=new vsol_polyline_2d(points);
     polyline->set_id(10e6);
     vsol_polygon_2d_sptr model_contours = bsol_algs::poly_from_vgl(model_poly);
     vsol_polygon_2d_sptr query_contours = bsol_algs::poly_from_vgl(query_poly);
 
 
     vidpro1_vsol2D_storage_sptr model_vsol = vidpro1_vsol2D_storage_new();
-    model_vsol->add_object(model_polyline->cast_to_spatial_object());
+    model_vsol->add_object(polyline->cast_to_spatial_object());
     model_vsol->add_object(model_contours->cast_to_spatial_object());
 
     vidpro1_vsol2D_storage_sptr query_vsol = vidpro1_vsol2D_storage_new();
@@ -4764,7 +4787,7 @@ double dbskfg_match_bag_of_fragments::compute_outer_shock_edit_distance(
 
     bool status=load_model_pro.compute_outer_shock(model_vsol);
     status=load_query_pro.compute_outer_shock(query_vsol);
-    
+
     dbskfg_composite_graph_sptr model_cg(0),query_cg(0);
     load_model_pro.get_first_graph(model_cg);
     load_query_pro.get_first_graph(query_cg);
