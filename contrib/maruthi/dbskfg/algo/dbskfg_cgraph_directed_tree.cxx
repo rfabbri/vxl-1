@@ -9,7 +9,6 @@
 #include <dbskr/dbskr_scurve.h>
 #include <dbskr/dbskr_sc_pair.h>
 
-#include <vcl_algorithm.h> 
 #include <vcl_fstream.h>
 #include <vcl_cstdio.h>
 #include <vcl_cassert.h>

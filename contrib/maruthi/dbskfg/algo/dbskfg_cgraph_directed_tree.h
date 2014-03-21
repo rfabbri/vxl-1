@@ -29,6 +29,7 @@
 
 #include <vl/sift.h>
 #include <vnl/vnl_vector_fixed.h>
+#include <vcl_algorithm.h>
 
 //==============================================================================
 // dbskfg_cgraph_directed_tree
@@ -162,6 +163,21 @@ public:
   // get sift filter
   VlSiftFilt* get_sift_filter(){return sift_filter_;}
 
+  // See if dart has a virtual node on it
+  bool virtual_node_dart(int dart)
+  {
+      
+      vcl_vector<int>::iterator find_it = vcl_find(
+          darts_virtual_nodes_.begin(),
+          darts_virtual_nodes_.end(),
+          dart);
+      
+      bool circ_flag = (find_it == darts_virtual_nodes_.end())
+          ? false : true;
+
+      return circ_flag;
+
+  }
 
 protected:
   // Reset / Initalize /////////////////////////////////////////////////////////
