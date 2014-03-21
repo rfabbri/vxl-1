@@ -80,6 +80,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
     bool use_approx,
     bool scale_bbox,
     bool scale_root,
+    bool scale_area,
     bool app_sift,
     bool mirror,
     double area_weight,
@@ -100,6 +101,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
       output_removed_regions_(output_file),
       scale_bbox_(scale_bbox),
       scale_root_(scale_root),
+      scale_area_(scale_area),
       app_sift_(app_sift),
       mirror_(mirror),
       area_weight_(area_weight),
@@ -1104,8 +1106,16 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                 <<model_fragments_.size()
                 <<" model fragments to "
                 <<query_fragments_.size()
-                <<" query fragments using root node scaling"
-                <<vcl_endl;
+                <<" query fragments using root node scaling";
+
+        if ( scale_area_ )
+        {
+            vcl_cout<<" by area"<<vcl_endl;
+        }
+        else
+        {
+            vcl_cout<<" by radii"<<vcl_endl;
+        }
     }
     else
     {
@@ -1113,9 +1123,17 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                 <<model_fragments_.size()
                 <<" model fragments to "
                 <<query_fragments_.size()
-                <<" query fragments with horizontal mirroring of query "
-                <<" and root node scaling"
-                <<vcl_endl;
+                <<" query fragments with horizontal mirroring of query"
+                <<" and root node scaling";
+        
+        if ( scale_area_ )
+        {
+            vcl_cout<<" by area"<<vcl_endl;
+        }
+        else
+        {
+            vcl_cout<<" by radii"<<vcl_endl;
+        }
 
     }
  
@@ -1136,8 +1154,13 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                                         false,
                                         area_weight_);
 
-        model_tree->acquire_tree_topology((*m_iterator).second.second);
+        bool f1=model_tree->acquire
+            ((*m_iterator).second.second, elastic_splice_cost_, 
+             circular_ends_, combined_edit_);
+
         double model_radius=model_tree->get_root_node_radius();
+        double model_area=model_fragments_area_[(*m_iterator).first]
+            .second;
 
         vcl_map<double,vcl_pair<unsigned int,unsigned int> >
             model_map;
@@ -1154,44 +1177,30 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                                             area_weight_);
             
             query_tree->acquire_tree_topology((*q_iterator).second.second);
+            
             double query_radius=query_tree->get_root_node_radius();
+            double query_area=query_fragments_area_[(*q_iterator).first]
+                .second;
 
-            double scale_ratio=0;
-            bool query_scale=true;
-
-            if ( model_radius > query_radius )
+            double scale_ratio=1.0;
+            
+            if ( scale_area_)
             {
-                scale_ratio=model_radius/query_radius;
+                scale_ratio=vcl_sqrt(model_area/query_area);
             }
             else
             {
-                query_scale=false;
-                scale_ratio=query_radius/model_radius;
-            }
-           
-            if ( scale_ratio > 1 && scale_ratio <= 2 )
-            {
-                if ( query_scale )
-                {
-                    query_tree->set_scale_ratio(scale_ratio);
-                }
-                else
-                {
-                    model_tree->set_scale_ratio(scale_ratio);
-                }
+                scale_ratio=vcl_sqrt(model_radius/query_radius);
             }
 
-            model_tree->compute_delete_and_contract_costs(
-                elastic_splice_cost_, 
-                circular_ends_, 
-                combined_edit_);
-            
+            query_tree->set_scale_ratio(scale_ratio);
 
             query_tree->compute_delete_and_contract_costs(
                 elastic_splice_cost_, 
                 circular_ends_, 
                 combined_edit_);
             
+
             double norm_shape_cost(0.0);
             double app_diff(0.0);
             double norm_app_cost(0.0);
@@ -1217,10 +1226,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                                                 mirror_,
                                                 area_weight_);
                 
-                if ( query_scale )
-                {
-                    query_mirror_tree->set_scale_ratio(scale_ratio);
-                }
+                query_mirror_tree->set_scale_ratio(scale_ratio);
 
                 query_mirror_tree->acquire
                     ((*q_iterator).second.second, elastic_splice_cost_, 

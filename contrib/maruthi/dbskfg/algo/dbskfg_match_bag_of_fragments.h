@@ -58,6 +58,7 @@ public:
           bool use_approx             = true,
           bool scale_bbox             = false,
           bool scale_root             = false,
+          bool scale_area             = false,
           bool app_sift               = false,
           bool mirror                 = false,
           double area_weight          = 0.0f,
@@ -228,6 +229,9 @@ private:
 
     // Use radius root node distance
     bool scale_root_;
+
+    // Use area to scale graphs
+    bool scale_area_;
 
     // Use appearance 
     bool app_sift_;
