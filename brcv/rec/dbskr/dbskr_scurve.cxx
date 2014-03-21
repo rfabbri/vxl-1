@@ -875,13 +875,28 @@ void dbskr_scurve::set_euler_spiral_completion_length()
 
     // 1) Determine tangent pairs first
     vgl_point_2d<double> minus_last_point=bdry_minus_.back();
-    vgl_point_2d<double> minus_next_to_last_point=
-        bdry_minus_[bdry_minus_.size()-2];
+    vgl_point_2d<double> minus_next_to_last_point;
+    for ( unsigned int n=bdry_minus_.size()-2; n >= 0 ; n--)
+    {
+        if ( bdry_minus_[n] != minus_last_point )
+        {
+            minus_next_to_last_point=bdry_minus_[n];
+            break;
+        }
+    }
 
     vgl_point_2d<double> plus_last_point=bdry_plus_.back();
-    vgl_point_2d<double> plus_next_to_last_point=
-        bdry_plus_[bdry_plus_.size()-2];
-    
+    vgl_point_2d<double> plus_next_to_last_point;
+    for ( unsigned int n=bdry_plus_.size()-2; n >= 0 ; n--)
+    {
+        if ( bdry_plus_[n] != plus_last_point )
+        {
+            plus_next_to_last_point=bdry_plus_[n];
+            break;
+        }
+    }
+
+
     vgl_line_2d<double> minus_line(minus_next_to_last_point,
                                    minus_last_point);
 
