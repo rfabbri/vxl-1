@@ -48,6 +48,8 @@ dbskfg_match_bag_of_fragments_process::dbskfg_match_bag_of_fragments_process()
                            "-scale_bbox", (bool) false) ||
         !parameters()->add("scale root node correspondences",
                            "-scale_root", (bool) false) ||
+        !parameters()->add("scale by area",
+                           "-scale_area", (bool) false) ||
         !parameters()->add("compute sift appearance cost",
                            "-app_sift", (bool) false) ||
         !parameters()->add("horizontal mirror query shape",
@@ -153,6 +155,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     bool use_approx             = true;
     bool scale_bbox             = false;
     bool scale_root             = false;
+    bool scale_area             = false;
     bool app_sift               = false;
     bool mirror                 = false;
     double area_weight          = 0.0f;
@@ -167,6 +170,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     parameters()->get_value("-use_approx"           , use_approx);
     parameters()->get_value("-scale_bbox"           , scale_bbox);
     parameters()->get_value("-scale_root"           , scale_root);
+    parameters()->get_value("-scale_area"           , scale_area);
     parameters()->get_value("-app_sift"             , app_sift);
     parameters()->get_value("-mirror"               , mirror);
     parameters()->get_value("-area_weight"          , area_weight);
@@ -184,6 +188,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
                                               use_approx,
                                               scale_bbox,
                                               scale_root,
+                                              scale_area,
                                               app_sift,
                                               mirror,
                                               area_weight,
@@ -195,7 +200,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     
     if (!scale_bbox)
     {
-        if ( !scale_root) 
+        if ( !scale_root && !scale_area) 
         {
             match_frags.binary_match();
         }
