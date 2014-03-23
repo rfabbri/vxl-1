@@ -903,6 +903,16 @@ void dbskr_scurve::set_euler_spiral_completion_length()
     vgl_line_2d<double> plus_line(plus_last_point,
                                   plus_next_to_last_point);
     
+    vgl_line_2d<double> ref_line(minus_last_point,
+                                 plus_last_point);
+
+    if ( signed_angle(plus_line.direction(),ref_line.direction()) >0 )
+    {
+        vgl_line_2d<double> temp_line(plus_next_to_last_point,
+                                      plus_last_point);
+        plus_line=temp_line;
+    }
+
     // 2) Compute Euler Spiral
     dbgl_eulerspiral es(
         plus_last_point,
