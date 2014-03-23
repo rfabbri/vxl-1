@@ -758,6 +758,19 @@ get_curve_pair(int start_dart, int end_dart, bool construct_circular_ends)
     // get the underlying shock graph edge list for this dart path on the tree
     this->get_edge_list(dart_list, start_node, edges);
     
+    dbskfg_composite_link_sptr last_edge=edges.back();
+    if ( last_edge->source()->virtual_node() 
+         && last_edge->source() != start_node)
+    {
+        construct_circular_ends=false;
+    }
+    else if ( last_edge->target()->virtual_node() 
+              && last_edge->target() != start_node)
+    {
+        construct_circular_ends=false;
+    }
+
+
     //Curve reconstruct object
     dbskfg_compute_scurve reconstructor(bbox_);
 
