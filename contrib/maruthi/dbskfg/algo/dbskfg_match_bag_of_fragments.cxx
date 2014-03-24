@@ -4758,8 +4758,8 @@ double dbskfg_match_bag_of_fragments::compute_outer_shock_edit_distance(
     bbox->add_point(xmin_scaled,ymin_scaled);
     bbox->add_point(xmax_scaled,ymax_scaled);
 
-    double start=(bbox->height()/2)-0.5;
-    double stop=(bbox->height()/2)+0.5;
+    double start=((bbox->height()/2)+bbox->get_min_y())-0.5;
+    double stop=((bbox->height()/2)+bbox->get_min_y())+0.5;
 
     vcl_vector<vsol_point_2d_sptr> points;
     points.push_back(new vsol_point_2d(bbox->get_min_x(),start));
