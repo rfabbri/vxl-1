@@ -1188,7 +1188,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             {
                 scale_ratio=vcl_sqrt(model_area/query_area);
             }
-            else
+            else if ( scale_root_)
             {
                 scale_ratio=vcl_sqrt(model_radius/query_radius);
             }
