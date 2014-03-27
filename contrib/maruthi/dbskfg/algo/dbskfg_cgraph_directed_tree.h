@@ -179,6 +179,8 @@ public:
 
   }
 
+  double get_scale_ratio(){return scale_ratio_;}
+
 protected:
   // Reset / Initalize /////////////////////////////////////////////////////////
 

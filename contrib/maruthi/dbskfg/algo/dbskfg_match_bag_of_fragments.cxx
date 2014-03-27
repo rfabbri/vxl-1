@@ -3342,15 +3342,16 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                               <<" "
                               <<ps1.y()
                               <<" "
-                              <<vcl_fabs(width-ps2.x())
+                              <<vcl_fabs(width-(ps2.x()/query_tree
+                                                ->get_scale_ratio()))
                               <<" "
-                              <<ps2.y()<<vcl_endl;
+                              <<ps2.y()/query_tree->get_scale_ratio()<<vcl_endl;
                 }
                 else
                 {
-                    model_file<<ps2.x()
+                    model_file<<ps2.x()/query_tree->get_scale_ratio()
                               <<" "
-                              <<ps2.y()
+                              <<ps2.y()/query_tree->get_scale_ratio()
                               <<" "
                               <<vcl_fabs(width-ps1.x())
                               <<" "
