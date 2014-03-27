@@ -1354,6 +1354,312 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
     return true;
 }
 
+
+bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
+{
+    // Let time how long this takes
+    // Start timer
+    vul_timer t;
+
+    if ( model_fragments_.size() == 0 || query_fragments_.size() == 0 )
+    {
+        vcl_cerr<<"Matching fragments sets have one that is zero"<<vcl_endl;
+        return false;
+    }
+
+    if ( !mirror_)
+    {
+        vcl_cout<<"Matching "
+                <<model_fragments_.size()
+                <<" model fragments to "
+                <<query_fragments_.size()
+                <<" query fragments in debug mode using root node scaling";
+
+        if ( scale_area_ )
+        {
+            vcl_cout<<" by area"<<vcl_endl;
+        }
+        else
+        {
+            vcl_cout<<" by radii"<<vcl_endl;
+        }
+    }
+    else
+    {
+        vcl_cout<<"Matching "
+                <<model_fragments_.size()
+                <<" model fragments to "
+                <<query_fragments_.size()
+                <<" query fragments in debug mode with "
+                <<"horizontal mirroring of query"
+                <<" and root node scaling";
+        
+        if ( scale_area_ )
+        {
+            vcl_cout<<" by area"<<vcl_endl;
+        }
+        else
+        {
+            vcl_cout<<" by radii"<<vcl_endl;
+        }
+
+    }
+ 
+    // Loop over model and query
+    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+        ::iterator m_iterator;
+    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+        ::iterator q_iterator;
+
+    for ( m_iterator = model_fragments_.begin() ; 
+          m_iterator != model_fragments_.end() ; ++m_iterator)
+    {
+
+        //: prepare the trees also
+        dbskfg_cgraph_directed_tree_sptr model_tree = new 
+            dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
+                                        scurve_interpolate_ds_, 
+                                        scurve_matching_R_,
+                                        false,
+                                        area_weight_);
+
+        bool f1=model_tree->acquire
+            ((*m_iterator).second.second, elastic_splice_cost_, 
+             circular_ends_, combined_edit_);
+
+        vcl_string model_filename=(*m_iterator).second.first+"_tree.shg";
+        model_tree->create_shg(model_filename.c_str());
+
+        double model_radius=model_tree->get_root_node_radius();
+        double model_area=model_fragments_area_[(*m_iterator).first]
+            .second;
+
+        vcl_map<double,vcl_pair<unsigned int,unsigned int> >
+            model_map;
+
+        for ( q_iterator = query_fragments_.begin() ; 
+              q_iterator != query_fragments_.end() ; ++q_iterator)
+        {
+
+            //: prepare the trees also
+            dbskfg_cgraph_directed_tree_sptr query_tree = new
+                dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
+                                            scurve_interpolate_ds_, 
+                                            scurve_matching_R_,
+                                            false,
+                                            area_weight_);
+            
+            query_tree->acquire_tree_topology((*q_iterator).second.second);
+            
+            double query_radius=query_tree->get_root_node_radius();
+            double query_area=query_fragments_area_[(*q_iterator).first]
+                .second;
+
+            double scale_ratio=1.0;
+            
+            if ( scale_area_)
+            {
+                scale_ratio=vcl_sqrt(model_area/query_area);
+            }
+            else if ( scale_root_)
+            {
+                scale_ratio=vcl_sqrt(model_radius/query_radius);
+            }
+
+            query_tree->set_scale_ratio(scale_ratio);
+
+            query_tree->compute_delete_and_contract_costs(
+                elastic_splice_cost_, 
+                circular_ends_, 
+                combined_edit_);
+            
+            vcl_string query_filename=(*q_iterator).second.first+"_tree.shg";
+            query_tree->create_shg(query_filename.c_str());
+
+            double norm_shape_cost(0.0);
+            double app_diff(0.0);
+            double norm_app_cost(0.0);
+            double rgb_avg_cost(0.0);
+            double norm_shape_cost_length(0.0);
+
+            vcl_string match_prefix =(*m_iterator).second.first + "_vs_" +
+                (*q_iterator).second.first;
+
+            // Match model to query
+            match_two_graphs_root_node_orig(model_tree,
+                                            query_tree,
+                                            norm_shape_cost,
+                                            norm_shape_cost_length,
+                                            app_diff,
+                                            norm_app_cost,
+                                            rgb_avg_cost,
+                                            match_prefix);
+
+            if ( mirror_)
+            {
+                vcl_cout<<"Computing Mirror"<<vcl_endl;
+
+                //: prepare the trees also
+                dbskfg_cgraph_directed_tree_sptr query_mirror_tree = new
+                    dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
+                                                scurve_interpolate_ds_, 
+                                                scurve_matching_R_,
+                                                mirror_,
+                                                area_weight_);
+                
+                query_mirror_tree->set_scale_ratio(scale_ratio);
+
+                query_mirror_tree->acquire
+                    ((*q_iterator).second.second, elastic_splice_cost_, 
+                     circular_ends_, combined_edit_);
+                
+                vcl_string query_mirror_filename=
+                    (*q_iterator).second.first+"_mirror_tree.shg";
+                query_mirror_tree->create_shg(query_mirror_filename.c_str());
+
+                double norm_shape_mirror_cost(0.0);
+                double app_mirror_diff(0.0);
+                double norm_app_mirror_cost(0.0);
+                double rgb_avg_mirror_cost(0.0);
+                double norm_shape_mirror_cost_length(0.0);
+                       
+                vcl_string match_mirror_prefix =
+                    (*m_iterator).second.first + "_vs_mirror_" +
+                    (*q_iterator).second.first;
+
+                // Match model to query
+                match_two_graphs_root_node_orig(model_tree,
+                                                query_mirror_tree,
+                                                norm_shape_mirror_cost,
+                                                norm_shape_mirror_cost_length,
+                                                app_mirror_diff,
+                                                norm_app_mirror_cost,
+                                                rgb_avg_mirror_cost,
+                                                match_mirror_prefix,
+                                                true);
+
+                if ( norm_shape_cost < norm_shape_mirror_cost )
+                {
+                    vcl_string delete_prefix=match_mirror_prefix+"*";
+
+                    vul_file::delete_file_glob(delete_prefix);
+                    vul_file::delete_file_glob(query_mirror_filename);
+                }
+                else
+                {
+                    vcl_string delete_prefix=match_prefix+"*";
+
+                    vul_file::delete_file_glob(delete_prefix);
+                    vul_file::delete_file_glob(query_filename);
+                }
+
+                norm_shape_cost = ( norm_shape_cost < norm_shape_mirror_cost)
+                    ? norm_shape_cost : norm_shape_mirror_cost;
+                norm_shape_cost_length = ( norm_shape_cost_length 
+                                           < norm_shape_mirror_cost_length)
+                    ? norm_shape_cost_length : norm_shape_mirror_cost_length;
+
+            }
+
+            unsigned int model_id= (*m_iterator).first;
+            unsigned int query_id= (*q_iterator).first;
+            binary_sim_matrix_[model_id][query_id]=norm_shape_cost;
+            binary_sim_length_matrix_[model_id][query_id]=
+                norm_shape_cost_length;
+            binary_app_sim_matrix_[model_id][query_id]=app_diff;
+            binary_app_norm_sim_matrix_[model_id][query_id]=norm_app_cost;
+            binary_app_rgb_sim_matrix_[model_id][query_id]=rgb_avg_cost;
+
+            query_tree=0;
+        }
+        vcl_cout<<"Finished "<<(*m_iterator).second.first<<" to all queires"
+                <<vcl_endl;
+        model_tree=0;
+    }
+
+    // write out data
+
+    vcl_ofstream binary_sim_file;
+    binary_sim_file.open(output_binary_file_.c_str(),
+                         vcl_ios::out | 
+                         vcl_ios::app | 
+                         vcl_ios::binary);
+
+  
+    write_binary_fragments(binary_sim_file,model_fragments_);
+    write_binary_fragments(binary_sim_file,query_fragments_);
+
+    double matrix_size=binary_sim_matrix_.columns()*
+        binary_sim_matrix_.rows()*2;
+    binary_sim_file.write(reinterpret_cast<char *>(&matrix_size),
+                          sizeof(double));
+
+    for ( unsigned int c=0; c < binary_sim_matrix_.columns() ; ++c)
+    {
+        for ( unsigned int r=0; r < binary_sim_matrix_.rows() ; ++r)
+        {
+            double value=binary_sim_matrix_[r][c];
+            binary_sim_file.write(reinterpret_cast<char *>(&value),
+                                  sizeof(double));
+
+            value=binary_sim_length_matrix_[r][c];
+            binary_sim_file.write(reinterpret_cast<char *>(&value),
+                                  sizeof(double));
+
+            // value=binary_app_sim_matrix_[r][c];
+            // binary_sim_file.write(reinterpret_cast<char *>(&value),
+            //                       sizeof(double));
+
+            // value=binary_app_norm_sim_matrix_[r][c];
+            // binary_sim_file.write(reinterpret_cast<char *>(&value),
+            //                       sizeof(double));
+
+            // value=binary_app_rgb_sim_matrix_[r][c];
+            // binary_sim_file.write(reinterpret_cast<char *>(&value),
+            //                       sizeof(double));
+            
+        }
+    } 
+    
+    binary_sim_file.close();
+
+    if ( model_sift_filter_)
+    {
+        vl_sift_delete(model_sift_filter_);
+        model_sift_filter_=0;
+    }
+
+    if ( query_sift_filter_ )
+    {
+        vl_sift_delete(query_sift_filter_);
+        query_sift_filter_=0;
+    }
+
+    if ( model_grad_data_ )
+    {
+        vl_free(model_grad_data_);
+        model_grad_data_=0;
+    }
+
+    if ( query_grad_data_ )
+    {
+        vl_free(query_grad_data_);
+        query_grad_data_=0;
+    }
+   
+    double vox_time = t.real()/1000.0;
+    t.mark();
+    vcl_cout<<vcl_endl;
+    vcl_cout<<"MatchTime "
+            <<model_fragments_.size()
+            <<" model fragments to "
+            <<query_fragments_.size()
+            <<" query fragments is "
+            <<vox_time<<" sec"<<vcl_endl;
+
+    return true;
+}
+
 bool dbskfg_match_bag_of_fragments::binary_app_match()
 {
     if ( model_fragments_.size() == 0 || query_fragments_.size() == 0 )
