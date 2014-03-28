@@ -81,6 +81,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
     bool scale_bbox,
     bool scale_root,
     bool scale_area,
+    bool scale_length,
     bool app_sift,
     bool mirror,
     double area_weight,
@@ -102,6 +103,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
       scale_bbox_(scale_bbox),
       scale_root_(scale_root),
       scale_area_(scale_area),
+      scale_length_(scale_length),
       app_sift_(app_sift),
       mirror_(mirror),
       area_weight_(area_weight),
@@ -366,6 +368,7 @@ void dbskfg_match_bag_of_fragments::load_binary_model(vcl_string model_dir)
     vcl_map<unsigned int,dbskfg_composite_graph_sptr> cgraphs = 
         load_pro.get_cgraphs();
     vcl_map<unsigned int,double> cgraph_area = load_pro.get_cgraph_area();
+    vcl_map<unsigned int,double> cgraph_length = load_pro.get_cgraph_length();
 
     vcl_map<unsigned int,dbskfg_composite_graph_sptr>::iterator it;
     for ( it = cgraphs.begin() ; it != cgraphs.end() ; ++it)
@@ -376,6 +379,10 @@ void dbskfg_match_bag_of_fragments::load_binary_model(vcl_string model_dir)
         model_fragments_area_[(*it).first]=vcl_make_pair(
             stream.str(),
             cgraph_area[(*it).first]);
+        model_fragments_length_[(*it).first]=vcl_make_pair(
+            stream.str(),
+            cgraph_length[(*it).first]);
+
     }
 
 
@@ -457,6 +464,7 @@ void dbskfg_match_bag_of_fragments::load_binary_query(vcl_string query_dir)
     vcl_map<unsigned int,dbskfg_composite_graph_sptr> cgraphs = 
         load_pro.get_cgraphs();
     vcl_map<unsigned int,double> cgraph_area = load_pro.get_cgraph_area();
+    vcl_map<unsigned int,double> cgraph_length = load_pro.get_cgraph_length();
 
     vcl_map<unsigned int,dbskfg_composite_graph_sptr>::iterator it;
     for ( it = cgraphs.begin() ; it != cgraphs.end() ; ++it)
@@ -467,6 +475,9 @@ void dbskfg_match_bag_of_fragments::load_binary_query(vcl_string query_dir)
         query_fragments_area_[(*it).first]=vcl_make_pair(
             stream.str(),
             cgraph_area[(*it).first]);
+        query_fragments_length_[(*it).first]=vcl_make_pair(
+            stream.str(),
+            cgraph_length[(*it).first]);
 
     }
 
@@ -1112,10 +1123,15 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
         {
             vcl_cout<<" by area"<<vcl_endl;
         }
-        else
+        else if ( scale_root_ )
         {
             vcl_cout<<" by radii"<<vcl_endl;
         }
+        else
+        {
+            vcl_cout<<" by length"<<vcl_endl;
+        }
+
     }
     else
     {
@@ -1130,9 +1146,13 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
         {
             vcl_cout<<" by area"<<vcl_endl;
         }
-        else
+        else if ( scale_root_ )
         {
             vcl_cout<<" by radii"<<vcl_endl;
+        }
+        else
+        {
+            vcl_cout<<" by length"<<vcl_endl;
         }
 
     }
@@ -1161,6 +1181,8 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
         double model_radius=model_tree->get_root_node_radius();
         double model_area=model_fragments_area_[(*m_iterator).first]
             .second;
+        double model_length=model_fragments_length_[(*m_iterator).first]
+            .second;
 
         vcl_map<double,vcl_pair<unsigned int,unsigned int> >
             model_map;
@@ -1181,6 +1203,8 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             double query_radius=query_tree->get_root_node_radius();
             double query_area=query_fragments_area_[(*q_iterator).first]
                 .second;
+            double query_length=query_fragments_length_[(*q_iterator).first]
+                .second;
 
             double scale_ratio=1.0;
             
@@ -1191,6 +1215,11 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             else if ( scale_root_)
             {
                 scale_ratio=vcl_sqrt(model_radius/query_radius);
+
+            }
+            else 
+            {
+                scale_ratio=vcl_sqrt(model_length/query_length);
             }
 
             query_tree->set_scale_ratio(scale_ratio);

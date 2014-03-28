@@ -59,6 +59,7 @@ public:
           bool scale_bbox             = false,
           bool scale_root             = false,
           bool scale_area             = false,
+          bool scale_length           = false,
           bool app_sift               = false,
           bool mirror                 = false,
           double area_weight          = 0.0f,
@@ -114,9 +115,17 @@ private:
     vcl_map<unsigned int,vcl_pair<vcl_string,double> > 
         model_fragments_area_;
 
+    // Keep a map of all model patches
+    vcl_map<unsigned int,vcl_pair<vcl_string,double> > 
+        model_fragments_length_;
+
     // Keep a map of all query patches
     vcl_map<unsigned int,vcl_pair<vcl_string,double> > 
         query_fragments_area_;
+
+    // Keep a map of all query patches
+    vcl_map<unsigned int,vcl_pair<vcl_string,double> > 
+        query_fragments_length_;
 
     // Keep a map of all model contours
     vcl_map<unsigned int,vcl_vector< vsol_spatial_object_2d_sptr > >
@@ -235,6 +244,9 @@ private:
 
     // Use area to scale graphs
     bool scale_area_;
+
+    // Use contour length to scale graphs
+    bool scale_length_;
 
     // Use appearance 
     bool app_sift_;
