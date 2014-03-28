@@ -53,6 +53,9 @@ public:
   vcl_map<unsigned int,double > get_cgraph_area()
   {return area_cgraphs_;}
 
+  vcl_map<unsigned int,double > get_cgraph_length()
+  {return arc_length_cgraphs_;}
+
   vcl_vector<unsigned int> get_frags_removed(){return frags_removed_;}
 
   bool compute_graph(vcl_vector<vsol_spatial_object_2d_sptr>& contours,
@@ -81,6 +84,7 @@ private:
 
   vcl_map<unsigned int,dbskfg_composite_graph_sptr > cgraphs_;
   vcl_map<unsigned int,double> area_cgraphs_;
+  vcl_map<unsigned int,double> arc_length_cgraphs_;
   vcl_vector<unsigned int> frags_removed_;
 
 };

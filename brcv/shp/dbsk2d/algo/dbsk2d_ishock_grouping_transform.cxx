@@ -343,6 +343,48 @@ double dbsk2d_ishock_grouping_transform::contour_ratio(
     return contour_ratio;
 }
 
+double dbsk2d_ishock_grouping_transform::real_contour_length(unsigned int index)
+{
+    double real_distance=0.0;
+
+    vcl_vector<dbsk2d_ishock_edge*> shock_edges = region_nodes_[index];
+
+    for ( unsigned int s=0; s < shock_edges.size() ; ++s)
+    {  
+        dbsk2d_ishock_edge* edge=shock_edges[s];
+
+        //Line/Line
+        if ( edge->lBElement()->is_a_line() && 
+             edge->rBElement()->is_a_line())
+        {
+            
+            real_distance += vgl_distance(edge->getLFootPt(edge->sTau()),
+                                          edge->getLFootPt(edge->eTau()));
+            real_distance += vgl_distance(edge->getRFootPt(edge->eTau()),
+                                          edge->getRFootPt(edge->sTau()));
+
+        }
+        //Left line/Right Point
+        else if ( edge->lBElement()->is_a_line() && 
+                  edge->rBElement()->is_a_point())
+        {
+            real_distance += vgl_distance(edge->getLFootPt(edge->sTau()),
+                                          edge->getLFootPt(edge->eTau()));     
+
+        }
+        //Right Line/Left Point
+        else if ( edge->lBElement()->is_a_point() && 
+                  edge->rBElement()->is_a_line())
+        {      
+            real_distance += vgl_distance(edge->getRFootPt(edge->sTau()),
+                                          edge->getRFootPt(edge->eTau()));
+
+        }
+    }
+
+    return real_distance;
+}
+
 bool dbsk2d_ishock_grouping_transform::region_within_image(
     unsigned int index)
 {

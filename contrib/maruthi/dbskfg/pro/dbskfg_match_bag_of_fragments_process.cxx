@@ -50,6 +50,8 @@ dbskfg_match_bag_of_fragments_process::dbskfg_match_bag_of_fragments_process()
                            "-scale_root", (bool) false) ||
         !parameters()->add("scale by area",
                            "-scale_area", (bool) false) ||
+        !parameters()->add("scale by contour length",
+                           "-scale_length", (bool) false) ||
         !parameters()->add("compute sift appearance cost",
                            "-app_sift", (bool) false) ||
         !parameters()->add("horizontal mirror query shape",
@@ -156,6 +158,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     bool scale_bbox             = false;
     bool scale_root             = false;
     bool scale_area             = false;
+    bool scale_length           = false;
     bool app_sift               = false;
     bool mirror                 = false;
     double area_weight          = 0.0f;
@@ -171,6 +174,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     parameters()->get_value("-scale_bbox"           , scale_bbox);
     parameters()->get_value("-scale_root"           , scale_root);
     parameters()->get_value("-scale_area"           , scale_area);
+    parameters()->get_value("-scale_length"         , scale_length);
     parameters()->get_value("-app_sift"             , app_sift);
     parameters()->get_value("-mirror"               , mirror);
     parameters()->get_value("-area_weight"          , area_weight);
@@ -189,6 +193,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
                                               scale_bbox,
                                               scale_root,
                                               scale_area,
+                                              scale_length,
                                               app_sift,
                                               mirror,
                                               area_weight,
@@ -200,9 +205,9 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     
     if (!scale_bbox)
     {
-        if ( !scale_root && !scale_area) 
+        if ( !scale_root && !scale_area && !scale_length) 
         {
-            match_frags.binary_match();
+            match_frags.binary_debug_match();
         }
         else
         {

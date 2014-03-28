@@ -58,6 +58,9 @@ public:
     //: contour_ratio
     double contour_ratio(unsigned int index);
 
+    //: contour_ratio
+    double real_contour_length(unsigned int index);
+
     // See if region is within class
     bool region_within_image(unsigned int index);
 
