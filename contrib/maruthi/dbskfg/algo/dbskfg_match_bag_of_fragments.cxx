@@ -1219,7 +1219,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             }
             else 
             {
-                scale_ratio=vcl_sqrt(model_length/query_length);
+                scale_ratio=model_length/query_length;
             }
 
             query_tree->set_scale_ratio(scale_ratio);
