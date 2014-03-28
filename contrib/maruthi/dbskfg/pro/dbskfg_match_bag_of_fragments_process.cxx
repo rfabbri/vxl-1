@@ -207,7 +207,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     {
         if ( !scale_root && !scale_area && !scale_length) 
         {
-            match_frags.binary_debug_match();
+            match_frags.binary_match();
         }
         else
         {
