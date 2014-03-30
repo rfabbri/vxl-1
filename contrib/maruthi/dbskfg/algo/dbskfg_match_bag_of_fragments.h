@@ -88,6 +88,9 @@ public:
     //: Match the fragments
     bool binary_scale_root_match();
 
+    //: binary scale to mean shape 
+    bool binary_scale_mean_shape();
+
     //: Match the fragments
     bool binary_scale_root_debug_match();
 
