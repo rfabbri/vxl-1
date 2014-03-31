@@ -1711,6 +1711,8 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
         double model_radius=model_tree->get_root_node_radius();
         double model_area=model_fragments_area_[(*m_iterator).first]
             .second;
+        double model_length=model_fragments_length_[(*m_iterator).first]
+            .second;
 
         vcl_map<double,vcl_pair<unsigned int,unsigned int> >
             model_map;
@@ -1732,17 +1734,32 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
             double query_radius=query_tree->get_root_node_radius();
             double query_area=query_fragments_area_[(*q_iterator).first]
                 .second;
+            double query_length=query_fragments_length_[(*q_iterator).first]
+                .second;
 
             double scale_ratio=1.0;
             
             if ( scale_area_)
             {
+                vcl_cout<<"Model Area: "<<model_area<<vcl_endl;
+                vcl_cout<<"Query Area: "<<query_area<<vcl_endl;
                 scale_ratio=vcl_sqrt(model_area/query_area);
             }
             else if ( scale_root_)
             {
+                vcl_cout<<"Model Radius: "<<model_radius<<vcl_endl;
+                vcl_cout<<"Query Radius: "<<query_radius<<vcl_endl;
                 scale_ratio=vcl_sqrt(model_radius/query_radius);
+
             }
+            else 
+            {
+                vcl_cout<<"Model Length: "<<model_length<<vcl_endl;
+                vcl_cout<<"Query Length: "<<query_length<<vcl_endl;
+                scale_ratio=model_length/query_length;
+            }
+
+            vcl_cout<<"Scale ratio: "<<scale_ratio<<vcl_endl;
 
             query_tree->set_scale_ratio(scale_ratio);
 
