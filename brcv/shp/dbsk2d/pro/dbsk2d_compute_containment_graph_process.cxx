@@ -361,7 +361,7 @@ bool dbsk2d_compute_containment_graph_process::execute()
     pre_process_contours(shock_storage->get_ishock_graph(),
                          preprocess_threshold,
                          gap_distance);
-    exit(0);
+
     dbsk2d_containment_graph cgraph(shock_storage->get_ishock_graph(),
                                     path_threshold,
                                     loop_cost);
