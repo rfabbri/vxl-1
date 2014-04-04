@@ -361,7 +361,7 @@ bool dbsk2d_compute_containment_graph_process::execute()
     pre_process_contours(shock_storage->get_ishock_graph(),
                          preprocess_threshold,
                          gap_distance);
-
+    exit(0);
     dbsk2d_containment_graph cgraph(shock_storage->get_ishock_graph(),
                                     path_threshold,
                                     loop_cost);
@@ -591,6 +591,7 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
     vcl_vector<
     vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> > gap4_pairs;
     detector.detect_gap4(gap4_pairs);
+    vcl_map<double,int> gap4_con_ids;
 
     for ( unsigned int i=0; i < gap4_pairs.size(); ++i)
     {
@@ -598,6 +599,8 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
         dbsk2d_ishock_transform_sptr trans = new 
             dbsk2d_ishock_gap4_transform(ishock_graph,gap4_pairs[i],contour_id);
         transforms[trans->likelihood()]=trans;
+        gap4_con_ids[trans->likelihood()]=
+            gap4_pairs[i].second->get_contour_id();
     }
 
     for ( it = transforms.rbegin() ; it != transforms.rend() ; ++it)
@@ -615,6 +618,20 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
                      length_of_gap <= gap_distance )
                 {
                     (*it).second->execute_transform();
+
+                    dbsk2d_ishock_bpoint* point=
+                        (*it).second->endpoint_in_elms(
+                            gap4_con_ids[(*it).first]);
+
+                    if ( point && (point->id() != pair.second->id()) )
+                    {
+                        dbsk2d_ishock_loop_transform loop_trans(
+                            ishock_graph,
+                            point);
+                        loop_trans.execute_transform();
+
+                    }
+
                 }
             }
         }
