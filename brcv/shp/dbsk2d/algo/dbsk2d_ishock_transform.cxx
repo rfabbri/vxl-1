@@ -187,48 +187,95 @@ void dbsk2d_ishock_transform::local_shock_compute()
 //: Recompute full shock graph 
 void dbsk2d_ishock_transform::recompute_full_shock_graph()
 {
-    ishock_detector_.clear();
-    this->clear();
+    
+    bool add_noise=false;
+    bool valid_shock_computation=false;
 
-    vcl_vector<dbsk2d_ishock_belm*> belm_list=boundary_->belm_list();
-    ishock_detector_.initialize_contacts_and_A3s_recompute();
-
-    vcl_vector< vcl_vector<dbsk2d_ishock_belm*> > gaps=
-        boundary_->gaps();
-
-    for ( unsigned int i=0; i < gaps.size() ; ++i)
+    do
     {
-        vcl_vector< dbsk2d_ishock_belm*>  euler_spiral = gaps[i];
-        if (euler_spiral[0]->is_a_GUIelm())
-        {
-            ishock_detector_.initialize_contacts_and_A3s(euler_spiral);
-        }
-    }  
+        ishock_detector_.clear();
+        this->clear();
 
-    vcl_vector<dbsk2d_ishock_belm*>::iterator bit;
-    for ( bit = belm_list.begin(); bit != belm_list.end(); ++bit)
-    {
-        if ( (*bit)->is_a_GUIelm() )
-        {
-            vcl_vector<dbsk2d_ishock_belm*>::iterator dit=bit;
-            ++dit;
+        vcl_vector<dbsk2d_ishock_belm*> belm_list=boundary_->belm_list();
 
-            for ( ; dit != belm_list.end(); ++dit)
+        vnl_random mz_random;
+        mz_random.reseed((unsigned long)time(NULL));
+        float noise_radius=0.002f;
+
+        vcl_vector<dbsk2d_ishock_belm*>::iterator bit;
+        for ( bit = belm_list.begin(); bit != belm_list.end(); ++bit)
+        {
+            if ( (*bit)->is_a_point())
             {
-                if ( (*dit)->is_a_GUIelm() )
-                {
-                    ishock_detector_.init_cand_src_between(*bit,*dit);
-                }
-                
-            }
-            
-        }
-    }
 
-    ishock_detector_.propagate_shocks();
-    ishock_graph_->update_shocks();
-    vcl_cout<<"Shock Computation Valid: "<< 
-        ishock_graph_->valid_shock_graph()<<vcl_endl;
+                dbsk2d_ishock_bpoint* bpoint=(dbsk2d_ishock_bpoint*)(*bit);
+
+                bpoint->set_max_eta(2*vnl_math::pi);
+                bpoint->set_vref(-1);
+            
+                if ( add_noise )
+                {
+                    vgl_point_2d<double> point=bpoint->pt();
+                    double x=point.x();
+                    double y=point.y();
+                    double rand_x = mz_random.drand32(1.0);
+                    x += 2.0*noise_radius*(rand_x-0.5);
+                    double rand_y = mz_random.drand32(1.0);
+                    y += 2.0*noise_radius*(rand_y-0.5);
+                    bpoint->set_pt(x,y);
+                }
+            }
+        }
+
+        ishock_detector_.initialize_contacts_and_A3s_recompute();
+
+        vcl_vector< vcl_vector<dbsk2d_ishock_belm*> > gaps=
+            boundary_->gaps();
+
+        for ( unsigned int i=0; i < gaps.size() ; ++i)
+        {
+            vcl_vector< dbsk2d_ishock_belm*>  euler_spiral = gaps[i];
+            if (euler_spiral[0]->is_a_GUIelm())
+            {
+                ishock_detector_.initialize_contacts_and_A3s(euler_spiral);
+            }
+        }  
+
+        for ( bit = belm_list.begin(); bit != belm_list.end(); ++bit)
+        {
+            if ( (*bit)->is_a_GUIelm() )
+            {
+                vcl_vector<dbsk2d_ishock_belm*>::iterator dit=bit;
+                ++dit;
+
+                for ( ; dit != belm_list.end(); ++dit)
+                {
+                    if ( (*dit)->is_a_GUIelm() )
+                    {
+                        ishock_detector_.init_cand_src_between(*bit,*dit);
+                    }
+                
+                }
+            
+            }
+        }
+
+        ishock_detector_.propagate_shocks();
+        ishock_graph_->update_shocks();
+        valid_shock_computation=ishock_graph_->valid_shock_graph();
+
+        if ( !valid_shock_computation )
+        {
+            add_noise=true;
+            vcl_cout<<"Rerun with Noise"<<vcl_endl;
+        }
+        else
+        {
+            vcl_cout<<"Valid shock graph: "<<valid_shock_computation<<vcl_endl;
+        }
+
+    }while( valid_shock_computation == false);
+
 }
 
 //: Delete shock vertices
