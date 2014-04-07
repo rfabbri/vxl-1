@@ -202,6 +202,8 @@ void dbsk2d_ishock_transform::recompute_full_shock_graph()
         mz_random.reseed((unsigned long)time(NULL));
         float noise_radius=0.002f;
 
+        vcl_map<int,bool> visibility_map;
+
         vcl_vector<dbsk2d_ishock_belm*>::iterator bit;
         for ( bit = belm_list.begin(); bit != belm_list.end(); ++bit)
         {
@@ -212,7 +214,8 @@ void dbsk2d_ishock_transform::recompute_full_shock_graph()
 
                 bpoint->set_max_eta(2*vnl_math::pi);
                 bpoint->set_vref(-1);
-            
+                visibility_map[bpoint->id()]=bpoint->is_visible();
+
                 if ( add_noise )
                 {
                     vgl_point_2d<double> point=bpoint->pt();
@@ -243,6 +246,12 @@ void dbsk2d_ishock_transform::recompute_full_shock_graph()
 
         for ( bit = belm_list.begin(); bit != belm_list.end(); ++bit)
         {
+            if ( (*bit)->is_a_point() )
+            {
+                dbsk2d_ishock_bpoint* bpoint=(dbsk2d_ishock_bpoint*)(*bit);
+                bpoint->set_visibility(visibility_map[bpoint->id()]);
+            }
+
             if ( (*bit)->is_a_GUIelm() )
             {
                 vcl_vector<dbsk2d_ishock_belm*>::iterator dit=bit;
