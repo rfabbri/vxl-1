@@ -44,7 +44,10 @@ bool dbsk2d_lagrangian_ishock_detector::propagate_shocks ()
   catch (const dbsk2d_exception_topology_error &e)
   {
     vcl_cout << e.what() << vcl_endl;
-    
+
+    delete_the_active_selm_list();
+    delete_the_candidate_src_list();
+
     //this shock is no longer valid so delete the shock graph completely
     //clear();
   }
