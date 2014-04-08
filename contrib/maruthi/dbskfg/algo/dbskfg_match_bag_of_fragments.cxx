@@ -3583,7 +3583,9 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                                                            model_grad_data,
                                                            model_sift_filter,
                                                            query_grad_data,
-                                                           query_sift_filter);
+                                                           query_sift_filter,
+                                                           query_tree
+                                                           ->get_scale_ratio());
         // vcl_pair<double,double> sift_rgb_cost=compute_rgb_sift_cost(curve_list1,
         //                                                             curve_list2,
         //                                                             map_list,
@@ -3644,15 +3646,15 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                 }
                 else
                 {
-                    model_file<<ps2.x()/query_tree->get_scale_ratio()
-                              <<" "
-                              <<ps2.y()/query_tree->get_scale_ratio()
-                              <<" "
-                              <<vcl_fabs(width-ps1.x())
-                              <<" "
-                              <<ps1.y()<<vcl_endl;
 
-
+                    model_file<<ps2.x()
+                              <<" "
+                              <<ps2.y()
+                              <<" "
+                              <<vcl_fabs(width-(ps1.x()/query_tree
+                                                ->get_scale_ratio()))
+                              <<" "
+                              <<ps1.y()/query_tree->get_scale_ratio()<<vcl_endl;
 
                 }
             }
@@ -4248,7 +4250,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
     vl_sift_pix* model_grad_data,
     VlSiftFilt*  model_sift_filter,
     vl_sift_pix* query_grad_data,
-    VlSiftFilt*  query_sift_filter)
+    VlSiftFilt*  query_sift_filter,
+    double scale_ratio)
 {
  
 
@@ -4300,8 +4303,9 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
 
             if ( !flag )
             {
-                ps2.set(vcl_fabs(width-ps2.x()),ps2.y());
-                
+                ps2.set(vcl_fabs(width-(ps2.x()/scale_ratio)),
+                        ps2.y()/scale_ratio);
+
                 vl_sift_calc_raw_descriptor(model_sift_filter,
                                             model_grad_data,
                                             descr_ps1,
@@ -4319,12 +4323,15 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
                                             query_sift_filter->height,
                                             ps2.x(),
                                             ps2.y(),
-                                            radius_ps2/2,
+                                            (radius_ps2/scale_ratio)/2,
                                             theta_ps2);
+                
+                radius_ps2=(radius_ps2/scale_ratio);
             }
             else
             {
-                ps1.set(vcl_fabs(width-ps1.x()),ps1.y());
+                ps1.set(vcl_fabs(width-(ps1.x()/scale_ratio)),
+                        ps1.y()/scale_ratio);
 
                 vl_sift_calc_raw_descriptor(model_sift_filter,
                                             model_grad_data,
@@ -4343,11 +4350,11 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
                                             query_sift_filter->height,
                                             ps1.x(),
                                             ps1.y(),
-                                            radius_ps1/2,
+                                            (radius_ps1/scale_ratio)/2,
                                             theta_ps1);
           
 
-
+                radius_ps1=(radius_ps1/scale_ratio);
             }
 
             vcl_vector<vl_sift_pix> descr_vec1;
