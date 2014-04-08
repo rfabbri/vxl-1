@@ -1166,13 +1166,25 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
     for ( m_iterator = model_fragments_.begin() ; 
           m_iterator != model_fragments_.end() ; ++m_iterator)
     {
+        vl_sift_pix* model_images_grad_data=
+            model_images_grad_data_.count((*m_iterator).second.first)?
+            model_images_grad_data_[(*m_iterator).second.first]:
+            0;
+        
+        VlSiftFilt*model_images_sift_filter=
+            model_images_sift_filter_.count((*m_iterator).second.first)?
+            model_images_sift_filter_[(*m_iterator).second.first]:
+            0;
+
         //: prepare the trees also
         dbskfg_cgraph_directed_tree_sptr model_tree = new 
             dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
                                         scurve_interpolate_ds_, 
                                         scurve_matching_R_,
                                         false,
-                                        area_weight_);
+                                        area_weight_,
+                                        model_images_grad_data,
+                                        model_images_sift_filter);
 
         bool f1=model_tree->acquire
             ((*m_iterator).second.second, elastic_splice_cost_, 
@@ -1190,13 +1202,28 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
         for ( q_iterator = query_fragments_.begin() ; 
               q_iterator != query_fragments_.end() ; ++q_iterator)
         {
+            vcl_string key = model_fragments_
+                [(*q_iterator).first].first;
+
+            vl_sift_pix* model_images_grad_data=
+                model_images_grad_data_.count(key)?
+                model_images_grad_data_[key]:
+                0;
+            
+            VlSiftFilt*model_images_sift_filter=
+                model_images_sift_filter_.count(key)?
+                model_images_sift_filter_[key]:
+                0;
+
             //: prepare the trees also
             dbskfg_cgraph_directed_tree_sptr query_tree = new
                 dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
                                             scurve_interpolate_ds_, 
                                             scurve_matching_R_,
                                             false,
-                                            area_weight_);
+                                            area_weight_,
+                                            model_images_grad_data,
+                                            model_images_sift_filter);
             
             query_tree->acquire_tree_topology((*q_iterator).second.second);
             
@@ -1253,8 +1280,10 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                                                 scurve_interpolate_ds_, 
                                                 scurve_matching_R_,
                                                 mirror_,
-                                                area_weight_);
-                
+                                                area_weight_,
+                                                model_images_grad_data,
+                                                model_images_sift_filter);
+
                 query_mirror_tree->set_scale_ratio(scale_ratio);
 
                 query_mirror_tree->acquire
@@ -1274,14 +1303,19 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                                                 norm_shape_mirror_cost_length,
                                                 app_mirror_diff,
                                                 norm_app_mirror_cost,
-                                                rgb_avg_mirror_cost);
+                                                rgb_avg_mirror_cost,
+                                                "",
+                                                true);
 
                 norm_shape_cost = ( norm_shape_cost < norm_shape_mirror_cost)
                     ? norm_shape_cost : norm_shape_mirror_cost;
                 norm_shape_cost_length = ( norm_shape_cost_length 
                                            < norm_shape_mirror_cost_length)
                     ? norm_shape_cost_length : norm_shape_mirror_cost_length;
-
+                app_diff = ( app_diff < app_mirror_diff )
+                    ? app_diff: app_mirror_diff;
+                norm_app_cost = ( norm_app_cost < norm_app_mirror_cost )
+                    ? norm_app_cost: norm_app_mirror_cost;
             }
 
             unsigned int model_id= (*m_iterator).first;
@@ -1313,7 +1347,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
     write_binary_fragments(binary_sim_file,query_fragments_);
 
     double matrix_size=binary_sim_matrix_.columns()*
-        binary_sim_matrix_.rows()*2;
+        binary_sim_matrix_.rows()*4;
     binary_sim_file.write(reinterpret_cast<char *>(&matrix_size),
                           sizeof(double));
 
@@ -1329,13 +1363,13 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             binary_sim_file.write(reinterpret_cast<char *>(&value),
                                   sizeof(double));
 
-            // value=binary_app_sim_matrix_[r][c];
-            // binary_sim_file.write(reinterpret_cast<char *>(&value),
-            //                       sizeof(double));
+            value=binary_app_sim_matrix_[r][c];
+            binary_sim_file.write(reinterpret_cast<char *>(&value),
+                                  sizeof(double));
 
-            // value=binary_app_norm_sim_matrix_[r][c];
-            // binary_sim_file.write(reinterpret_cast<char *>(&value),
-            //                       sizeof(double));
+            value=binary_app_norm_sim_matrix_[r][c];
+            binary_sim_file.write(reinterpret_cast<char *>(&value),
+                                  sizeof(double));
 
             // value=binary_app_rgb_sim_matrix_[r][c];
             // binary_sim_file.write(reinterpret_cast<char *>(&value),
