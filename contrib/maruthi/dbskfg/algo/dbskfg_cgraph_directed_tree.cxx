@@ -1163,6 +1163,93 @@ void dbskfg_cgraph_directed_tree::compute_reconstructed_boundary_polygon
 
 }
 
+
+//: return the total length of the reconstructed boundary with this tree
+// (trees from the same shock graph may return different values 
+// since they may be constructed with different parameters,
+// e.g. with our without circular completions at the leaves, etc.)
+void  dbskfg_cgraph_directed_tree::compute_average_ds()
+{
+  //: find the set of darts to use
+  vcl_vector<unsigned> to_use;
+  for (unsigned i = 0; i < dart_cnt_; i++) {
+    if (leaf_[i]) {
+      to_use.push_back(i);
+      continue;
+    }
+
+    if (leaf_[mate_[i]]) 
+      continue;
+    
+    bool contain = false;
+    for (unsigned j = 0; j < to_use.size(); j++) {
+      if (to_use[j] == mate_[i]) {
+        contain = true;
+        break;
+      }
+    }
+
+    if (!contain)
+      to_use.push_back(i);
+  }
+  vcl_vector<double> ds_boundary;
+  vcl_vector<double> ds_shock;
+
+  //: now add up the scurves lengths
+  for (unsigned j = 0; j < to_use.size(); j++) 
+  {
+    unsigned i = to_use[j];
+
+    vcl_pair<int, int> p;
+    p.first = i;
+    p.second = i;
+    vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
+        dart_path_scurve_map_.find(p);
+
+    dbskr_scurve_sptr sc = (iter->second)->coarse;
+    
+    for ( unsigned int kk=1 ; kk<sc->num_points() ; ++kk)
+    {
+        double ds=vcl_fabs(sc->boundary_plus_arclength(kk)-
+                           sc->boundary_plus_arclength(kk-1));
+        ds_boundary.push_back(ds);
+    }
+
+    for ( unsigned int kk=1 ; kk<sc->num_points() ; ++kk)
+    {
+        double ds=vcl_fabs(sc->boundary_minus_arclength(kk)-
+                           sc->boundary_minus_arclength(kk-1));
+        ds_boundary.push_back(ds);
+    }
+
+    for ( unsigned int kk=1 ; kk<sc->num_points() ; ++kk)
+    {
+        double ds=vcl_fabs(sc->arclength(kk)-
+                           sc->arclength(kk-1));
+        ds_shock.push_back(ds);
+    }
+
+  }
+
+  
+  double ds_bnd_sum(0.0);
+  for ( unsigned int d=0; d < ds_boundary.size() ; ++d)
+  {
+      ds_bnd_sum += ds_boundary[d];
+  }
+
+  
+  double ds_shock_sum(0.0);
+  for ( unsigned int d=0; d < ds_shock.size() ; ++d)
+  {
+      ds_shock_sum += ds_shock[d];
+  }
+  
+  average_ds_.push_back(ds_bnd_sum/ds_boundary.size());
+  average_ds_.push_back(ds_shock_sum/ds_shock.size());
+
+}
+
 void dbskfg_cgraph_directed_tree::compute_bounding_box()
 {
 

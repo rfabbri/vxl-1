@@ -181,6 +181,10 @@ public:
 
   double get_scale_ratio(){return scale_ratio_;}
 
+  void compute_average_ds();
+
+  vcl_vector<double>& get_average_ds(){return average_ds_;}
+
 protected:
   // Reset / Initalize /////////////////////////////////////////////////////////
 
@@ -246,6 +250,7 @@ protected:
   
   VlSiftFilt* sift_filter_;
   
+  vcl_vector<double> average_ds_;
 
 };
 
