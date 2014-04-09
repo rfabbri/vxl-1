@@ -28,7 +28,9 @@
 dbskfg_cgraph_directed_tree::
 dbskfg_cgraph_directed_tree(
     float scurve_sample_ds,float interpolate_ds,float matching_R,bool mirror,
-    double area_weight,vl_sift_pix* grad_data,VlSiftFilt* filter)
+    double area_weight,vl_sift_pix* grad_data,VlSiftFilt* filter,
+    vl_sift_pix* red_grad_data,vl_sift_pix* green_grad_data,
+    vl_sift_pix* blue_grad_data)
     :scurve_sample_ds_(scurve_sample_ds),
      interpolate_ds_(interpolate_ds),
      scurve_matching_R_(matching_R),
@@ -38,7 +40,10 @@ dbskfg_cgraph_directed_tree(
      mirror_(mirror),
      area_weight_(area_weight),
      grad_data_(grad_data),
-     sift_filter_(filter)
+     sift_filter_(filter),
+     red_grad_data_(red_grad_data),
+     green_grad_data_(green_grad_data),
+     blue_grad_data_(blue_grad_data)
 { 
 }
 

@@ -48,7 +48,10 @@ public:
                               bool mirror=false,
                               double area_weight=0.0f,
                               vl_sift_pix* grad_data=0,
-                              VlSiftFilt* sift_filter=0);
+                              VlSiftFilt* sift_filter=0,
+                              vl_sift_pix* red_grad_data=0,
+                              vl_sift_pix* green_grad_data=0,
+                              vl_sift_pix* blue_grad_data=0);
 
   //: Destructor;
   /* virtual */ ~dbskfg_cgraph_directed_tree();
@@ -163,6 +166,15 @@ public:
   // get sift filter
   VlSiftFilt* get_sift_filter(){return sift_filter_;}
 
+  // get grad data
+  vl_sift_pix* get_red_grad_data(){return red_grad_data_;}
+
+  // get grad data
+  vl_sift_pix* get_green_grad_data(){return green_grad_data_;}
+
+  // get grad data
+  vl_sift_pix* get_blue_grad_data(){return blue_grad_data_;}
+
   // See if dart has a virtual node on it
   bool virtual_node_dart(int dart)
   {
@@ -249,6 +261,12 @@ protected:
   vl_sift_pix* grad_data_;
   
   VlSiftFilt* sift_filter_;
+
+  vl_sift_pix* red_grad_data_;
+
+  vl_sift_pix* green_grad_data_;
+
+  vl_sift_pix* blue_grad_data_;
   
   vcl_vector<double> average_ds_;
 
