@@ -200,7 +200,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                                         &green_data,
                                         1);
                 
-                compute_grad_color_maps(model_image_,
+                compute_grad_color_maps(model_img_sptr,
                                         &blue_data,
                                         2);
 
