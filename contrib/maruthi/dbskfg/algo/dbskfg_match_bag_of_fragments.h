@@ -156,6 +156,15 @@ private:
     // Keep track of mulitple model grad data
     vcl_map<vcl_string,vl_sift_pix*> model_images_grad_data_;
 
+    // Keep track of mulitple model grad data
+    vcl_map<vcl_string,vl_sift_pix*> model_images_grad_data_red_;
+
+    // Keep track of mulitple model grad data
+    vcl_map<vcl_string,vl_sift_pix*> model_images_grad_data_blue_;
+
+    // Keep track of mulitple model grad data
+    vcl_map<vcl_string,vl_sift_pix*> model_images_grad_data_green_;
+
     // Keep track of gradient image data
     vl_sift_pix* model_grad_data_;
 
@@ -370,7 +379,17 @@ private:
         vcl_vector<dbskr_scurve_sptr>& curve_list2,
         vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
         vcl_vector< pathtable_key >& path_map,
-        bool flag=false);
+        bool flag=false,
+        double width=0.0,
+        vl_sift_pix* model_red_grad_data=0,
+        vl_sift_pix* query_red_grad_data=0,
+        vl_sift_pix* model_green_grad_data=0,
+        vl_sift_pix* query_green_grad_data=0,
+        vl_sift_pix* model_blue_grad_data=0,
+        vl_sift_pix* query_blue_grad_data=0,
+        VlSiftFilt* model_sift_filter=0,
+        VlSiftFilt* query_sift_filter=0,
+        double scale_ratio=1.0);
     
     vnl_vector<double> compute_second_order_pooling(
         vcl_map<int,vcl_vector<dbskfg_sift_data> >& fragments,
