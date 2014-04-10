@@ -1375,6 +1375,9 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                     ? app_diff: app_mirror_diff;
                 norm_app_cost = ( norm_app_cost < norm_app_mirror_cost )
                     ? norm_app_cost: norm_app_mirror_cost;
+                rgb_avg_cost = ( rgb_avg_cost < rgb_avg_mirror_cost )
+                    ? rgb_avg_cost: rgb_avg_mirror_cost;
+
             }
 
             unsigned int model_id= (*m_iterator).first;
@@ -1406,7 +1409,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
     write_binary_fragments(binary_sim_file,query_fragments_);
 
     double matrix_size=binary_sim_matrix_.columns()*
-        binary_sim_matrix_.rows()*4;
+        binary_sim_matrix_.rows()*5;
     binary_sim_file.write(reinterpret_cast<char *>(&matrix_size),
                           sizeof(double));
 
@@ -1430,9 +1433,9 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             binary_sim_file.write(reinterpret_cast<char *>(&value),
                                   sizeof(double));
 
-            // value=binary_app_rgb_sim_matrix_[r][c];
-            // binary_sim_file.write(reinterpret_cast<char *>(&value),
-            //                       sizeof(double));
+            value=binary_app_rgb_sim_matrix_[r][c];
+            binary_sim_file.write(reinterpret_cast<char *>(&value),
+                                  sizeof(double));
             
         }
     } 
@@ -3659,7 +3662,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //vcl_cerr<<"************ App   Time taken: "<<app_time<<" sec"<<vcl_endl;
         app_diff        = app_cost.first;
         norm_app_cost   = app_cost.second;
-        rgb_avg_cost    = 0; //sift_rgb_cost.second;
+        rgb_avg_cost    = sift_rgb_cost.second;
 
     }
    
@@ -4939,8 +4942,9 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
  
         //}   
     }
-
-    double norm_val=sift_diff/(overall_index);
+    //double norm_val=sift_diff/(overall_index);
+    double norm_val=sift_diff/(arclength_shock_curve1+
+                               arclength_shock_curve2);
 
     // vcl_cout << "final cost: " << sift_diff 
     //          << " final norm cost: " << norm_val 
