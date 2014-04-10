@@ -22,6 +22,7 @@
 #include <dbskfg/dbskfg_composite_graph_sptr.h>
 #include <vcl_set.h>
 #include <vcl_utility.h>
+#include <rsdl/rsdl_kd_tree_sptr.h>
 
 class dbskfg_load_binary_composite_graph_process : public bpro1_process 
 {
@@ -49,6 +50,9 @@ public:
 
   vcl_map<unsigned int,dbskfg_composite_graph_sptr > get_cgraphs()
   {return cgraphs_;}
+
+  vcl_map<unsigned int,rsdl_kd_tree_sptr > get_kd_trees()
+  {return kd_trees_;}
 
   vcl_map<unsigned int,double > get_cgraph_area()
   {return area_cgraphs_;}
@@ -86,6 +90,8 @@ private:
   vcl_map<unsigned int,double> area_cgraphs_;
   vcl_map<unsigned int,double> arc_length_cgraphs_;
   vcl_vector<unsigned int> frags_removed_;
+
+  vcl_map<unsigned int,rsdl_kd_tree_sptr> kd_trees_;
 
 };
 

@@ -30,6 +30,7 @@
 #include <dbskfg/pro/dbskfg_form_composite_graph_process.h>
 
 #include <dbsk2d/algo/dbsk2d_ishock_grouping_transform.h>
+#include <dbsk2d/algo/dbsk2d_sample_ishock.h>
 #include <vcl_algorithm.h>
 #include <vgl/vgl_area.h>
 
@@ -283,6 +284,7 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
     // Create empty image stroage
     vidpro1_image_storage_sptr image_storage = vidpro1_image_storage_new();
     
+    vcl_map<vcl_pair<double,double>,double> kd_points;
     vcl_vector<bpro1_storage_sptr> shock_results;
     {
         // 3) Create shock pro process and assign inputs 
@@ -319,8 +321,11 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
 
         vcl_map<unsigned int, vcl_set<int> > region_belms_contour_ids
             = grouper.get_region_belms_contour_ids();
+        vcl_map<unsigned int, vcl_vector<dbsk2d_ishock_edge*> > region_shocks
+            = grouper.get_region_nodes();
 
         int int_size=0;
+        unsigned int index=0;
         double area=0.0;
         double arc_length=0.0;
         vcl_map<unsigned int, vcl_set<int> >::iterator it;
@@ -354,11 +359,88 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
                 vgl_polygon<double> poly;
                 grouper.polygon_fragment((*it).first,poly);
 
+                index=(*it).first;
                 area=vgl_area(poly);
                 arc_length=grouper.real_contour_length((*it).first);
                 int_size=temp;
             }
             
+        }
+
+        dbsk2d_ishock_graph_sptr ishock_graph = 
+            shock_storage->get_ishock_graph();
+
+        vcl_vector<dbsk2d_ishock_edge*> edges= region_shocks[index];
+
+        vcl_map<int,vcl_string> key_map;
+        for ( unsigned int i=0; i < edges.size() ; ++i)
+        {
+            key_map[edges[i]->id()]="temp";
+        }
+
+        //go through the edge_list and insert it into the list
+        dbsk2d_ishock_graph::edge_iterator curE = 
+            ishock_graph->all_edges().begin();
+        for (; curE != ishock_graph->all_edges().end(); ++curE)
+        {
+            dbsk2d_ishock_edge* cur_iedge = (*curE);
+            
+            if ( key_map.count(cur_iedge->id()))
+            {
+                continue;
+            } 
+
+            // Make a dummy coarse shock graph
+            dbsk2d_shock_graph_sptr coarse_graph;
+            dbsk2d_sample_ishock sampler(coarse_graph);
+            sampler.set_sample_resolution(1.0);
+            
+            dbsk2d_shock_node_sptr parent_node = new 
+                dbsk2d_shock_node();
+            dbsk2d_shock_node_sptr child_node  = new 
+                dbsk2d_shock_node();
+            dbsk2d_xshock_edge xshock_edge(1,parent_node,child_node);
+
+            switch (cur_iedge->type())
+            {
+            case dbsk2d_ishock_elm::POINTPOINT:
+                sampler.sample_ishock_edge(
+                    (dbsk2d_ishock_pointpoint*)cur_iedge, 
+                    &xshock_edge);
+                break;
+            case dbsk2d_ishock_elm::POINTLINE:
+                sampler.sample_ishock_edge(
+                    (dbsk2d_ishock_pointline*)cur_iedge, 
+                    &xshock_edge);
+                break;
+            case dbsk2d_ishock_elm::LINELINE:
+                sampler.sample_ishock_edge(
+                    (dbsk2d_ishock_lineline*)cur_iedge, 
+                    &xshock_edge);
+                break;
+            default: break;
+            }
+
+            for (int i=0; i< xshock_edge.num_samples(); ++i)
+            {
+                dbsk2d_xshock_sample_sptr sample = 
+                    xshock_edge.sample(i);
+                    
+                vgl_point_2d<double> left_bnd_pt=sample->left_bnd_pt;
+                vgl_point_2d<double> right_bnd_pt=sample->right_bnd_pt;
+                double radius=sample->radius;
+            
+                vcl_pair<double,double> left_pair=vcl_make_pair(
+                    left_bnd_pt.x(),
+                    left_bnd_pt.y());
+
+                vcl_pair<double,double> right_pair=vcl_make_pair(
+                    right_bnd_pt.x(),
+                    right_bnd_pt.y());
+
+                kd_points[left_pair]=radius;
+                kd_points[right_pair]=radius;
+            }
         }
 
         // Clean up after ourselves
