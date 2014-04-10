@@ -137,6 +137,9 @@ public:
     //: Figure out shock extrinsinc points for this link
     void construct_locus();
 
+    //: Figure out shock
+    void compute_shock(dbsk2d_ishock_edge** edge,double scale_ratio=1.0);
+
     //: Add rag node apart of 
     void set_rag_node(dbskfg_rag_node_sptr rag_node)
     {rag_node_ = rag_node;}

@@ -652,6 +652,277 @@ void dbskfg_shock_link::construct_locus()
     
 }
 
+void dbskfg_shock_link::compute_shock(dbsk2d_ishock_edge** elm,
+                                      double scale_ratio)
+{
+    double source_radius(0);
+    double target_radius(0);
+
+    if ( this->source()->node_type() == dbskfg_composite_node::CONTOUR_NODE )
+    {
+        source_radius = 0;
+    }
+    else
+    {
+        dbskfg_shock_node* source_node = dynamic_cast<dbskfg_shock_node*>
+            (&(*this->source()));
+  
+        source_radius = source_node->get_radius(); 
+        
+    }
+
+    if ( this->target()->node_type() == dbskfg_composite_node::CONTOUR_NODE )
+    {
+
+        target_radius=0;
+    }
+    else
+    {
+        dbskfg_shock_node* target_node = dynamic_cast<dbskfg_shock_node*>
+            (&(*this->target()));
+  
+        target_radius = target_node->get_radius(); 
+   
+    }
+
+    source_radius=source_radius*scale_ratio;
+    target_radius=target_radius*scale_ratio;
+    
+    vgl_point_2d<double> source_pt=this->source()->pt();
+    source_pt.set(source_pt.x()*scale_ratio,source_pt.y()*scale_ratio);
+
+    dbsk2d_ishock_node parent_node(this->source()->id(),
+                                   source_radius,
+                                   source_pt);
+
+    if ( left_contour_links_.size() > 0 && right_contour_links_.size() > 0)
+    {
+
+        dbsk2d_ishock_bpoint* startleftpt = new dbsk2d_ishock_bpoint(
+            left_boundary_.contour_.back().x()*scale_ratio,
+            left_boundary_.contour_.back().y()*scale_ratio);
+
+
+        dbsk2d_ishock_bpoint* endleftpt=new dbsk2d_ishock_bpoint(
+            left_boundary_.contour_.front().x()*scale_ratio,
+            left_boundary_.contour_.front().y()*scale_ratio);
+
+        dbsk2d_ishock_bline* leftline = new dbsk2d_ishock_bline(
+            startleftpt,endleftpt);
+     
+        dbsk2d_ishock_bpoint* startrightpt= new dbsk2d_ishock_bpoint(
+            right_boundary_.contour_.back().x()*scale_ratio,
+            right_boundary_.contour_.back().y()*scale_ratio);
+
+        dbsk2d_ishock_bpoint* endrightpt = new dbsk2d_ishock_bpoint(
+            right_boundary_.contour_.front().x()*scale_ratio,
+            right_boundary_.contour_.front().y()*scale_ratio);
+
+        dbsk2d_ishock_bline* rightline = new dbsk2d_ishock_bline(
+            startrightpt,endrightpt);
+
+        *elm = new dbsk2d_ishock_lineline
+            (1,               // arbitrary id
+             source_radius,   // arbitrary radius
+             &parent_node,    // dummy parent node
+             leftline,        // left boundary element
+             rightline,       // right boundary element
+             leftline->len(), // Left start eta
+             0,               // right start eta
+             UNCONSTRAINED);  // constraint flag
+
+        (*elm)->setEndTime(target_radius);
+        (*elm)->setSimTime(target_radius);
+       
+    }
+    else if( left_contour_links_.size() > 0 && right_point_ != 0 )
+    {
+        // We know we have a left line / right point combination
+        dbsk2d_ishock_bpoint* startleftpt = new dbsk2d_ishock_bpoint(
+            left_boundary_.contour_.back().x()*scale_ratio,
+            left_boundary_.contour_.back().y()*scale_ratio);
+
+        dbsk2d_ishock_bpoint* endleftpt = new dbsk2d_ishock_bpoint(
+            left_boundary_.contour_.front().x()*scale_ratio,
+            left_boundary_.contour_.front().y()*scale_ratio);
+
+        dbsk2d_ishock_bline* leftline = new dbsk2d_ishock_bline(
+            startleftpt,endleftpt);
+        dbsk2d_ishock_bline* twinline = new dbsk2d_ishock_bline(endleftpt,
+                                                                startleftpt);
+        leftline->set_twinLine(twinline);
+
+        dbsk2d_ishock_bpoint* rightpt = new dbsk2d_ishock_bpoint(
+            right_point_->pt().x()*scale_ratio,
+            right_point_->pt().y()*scale_ratio);
+        
+        //1) determine the half line the point is interacting with
+        //1) determine the half line the point is interacting with
+        dbsk2d_ishock_bline* hl;
+
+        if (_isPointAboveLine(rightpt->pt(),leftline->start(), leftline->end()))
+        {
+            hl = leftline; //point_is_above_GUI_line
+        }
+        else
+        {
+            hl = leftline->twinLine();
+        }
+
+        //2) compute the projection of the point on to the line
+        double eta2 = _deltaPointLine (rightpt->pt(), hl->start(), hl->end(), 
+                                       hl->l());
+
+        if (LisL(eta2, 0))
+        {
+            //compute the Lsp->P vector
+            double pp_vec = _vPointPoint (hl->start(), rightpt->pt());
+            rightpt->vec_to_eta(angle0To2Pi(pp_vec+vnl_math::pi));
+        }
+        else if (LisG(eta2, leftline->l()))
+        {            
+            double pp_vec = _vPointPoint (hl->end(),rightpt->pt());
+            rightpt->vec_to_eta(angle0To2Pi(pp_vec+vnl_math::pi));
+
+        }
+        else
+        {
+            rightpt->vec_to_eta( 
+                _vPointLine (rightpt->pt(), hl->start(), hl->end()));
+
+
+        } 
+
+        *elm = new dbsk2d_ishock_pointline
+            (1,               // arbitrary id
+             source_radius,   // arbitrary radius
+             &parent_node,    // dummy parent node
+             leftline,        // left boundary element
+             rightpt,         // right boundary element
+             leftline->l(),   // Left start eta
+             0,               // right start eta
+             UNCONSTRAINED);  // constraint flag
+
+        (*elm)->setReTau((*elm)->getRTauFromTime(
+                          target_radius));
+        (*elm)->setEndTime(target_radius);
+
+    }
+    else if( right_contour_links_.size() > 0 && left_point_ != 0 )
+    {
+        // We know we have a left line / right point combination
+        dbsk2d_ishock_bpoint* startrightpt = new dbsk2d_ishock_bpoint(
+            right_boundary_.contour_.back().x()*scale_ratio,
+            right_boundary_.contour_.back().y()*scale_ratio);
+
+        dbsk2d_ishock_bpoint* endrightpt = new dbsk2d_ishock_bpoint(
+            right_boundary_.contour_.front().x()*scale_ratio,
+            right_boundary_.contour_.front().y()*scale_ratio);
+
+        dbsk2d_ishock_bline* rightline = new dbsk2d_ishock_bline(
+            startrightpt,endrightpt);
+        dbsk2d_ishock_bline* twinline = new dbsk2d_ishock_bline(endrightpt,
+                                                                startrightpt);
+        rightline->set_twinLine(twinline);
+
+        dbsk2d_ishock_bpoint* leftpt = new dbsk2d_ishock_bpoint(
+            left_point_->pt().x()*scale_ratio,
+            left_point_->pt().y()*scale_ratio);
+
+        //1) determine the half line the point is interacting with
+        //1) determine the half line the point is interacting with
+        dbsk2d_ishock_bline* hl;
+
+        if (_isPointAboveLine(leftpt->pt(),rightline->start(),rightline->end()))
+        {
+            hl = rightline; //point_is_above_GUI_line
+        }
+        else
+        {
+            hl = rightline->twinLine();
+        }
+
+        //2) compute the projection of the point on to the line
+        double eta2 = _deltaPointLine (leftpt->pt(), hl->start(), hl->end(), 
+                                       hl->l());
+
+        if (LisL(eta2, 0))
+        {
+            //compute the Lsp->P vector
+            double pp_vec = _vPointPoint (hl->start(), leftpt->pt());
+            leftpt->vec_to_eta(angle0To2Pi(pp_vec+vnl_math::pi));
+        }
+        else if (LisG(eta2, rightline->l()))
+        {            
+            double pp_vec = _vPointPoint (hl->end(),leftpt->pt());
+            leftpt->vec_to_eta(angle0To2Pi(pp_vec+vnl_math::pi));
+
+        }
+        else
+        {
+            leftpt->vec_to_eta( 
+                _vPointLine (leftpt->pt(), hl->start(), hl->end()));
+
+
+        } 
+
+        *elm = new dbsk2d_ishock_pointline
+            (1,               // arbitrary id
+             source_radius,   // arbitrary radius
+             &parent_node,    // dummy parent node
+             leftpt,          // left boundary element
+             rightline,       // right boundary element
+             0,               // Left start eta
+             0,               // right start eta
+             UNCONSTRAINED);  // constraint flag
+
+        (*elm)->setLeTau((*elm)->getLTauFromTime(
+                          target_radius));
+        (*elm)->setEndTime(target_radius);
+
+    }
+    else if ( left_point_ != 0 && right_point_ != 0 )
+    {
+        dbsk2d_ishock_bpoint* rightpt = new dbsk2d_ishock_bpoint(
+            right_point_->pt().x()*scale_ratio,
+            right_point_->pt().y()*scale_ratio);
+        
+        dbsk2d_ishock_bpoint* leftpt = new dbsk2d_ishock_bpoint(
+            left_point_->pt().x()*scale_ratio,
+            left_point_->pt().y()*scale_ratio);
+
+        //1) compute the etas (actually just vectors)
+        double eta1 = _vPointPoint (rightpt->pt(), leftpt->pt());
+        double eta2 = angle0To2Pi(eta1+vnl_math::pi);
+        leftpt->vec_to_eta(eta2);
+        rightpt->vec_to_eta(eta1);
+        
+        *elm = new dbsk2d_ishock_pointpoint
+            (1,               // arbitrary id
+             source_radius,   // arbitrary radius
+             &parent_node,    // dummy parent node
+             leftpt,          // left boundary element
+             rightpt,         // right boundary element
+             0,               // Left start eta
+             0,               // right start eta
+             UNCONSTRAINED);  // constraint flag
+
+        (*elm)->setLsTau((*elm)->getLTauFromTime(
+                          source_radius));
+        (*elm)->setRsTau((*elm)->getRTauFromTime(
+                          source_radius));
+
+        (*elm)->setLeTau((*elm)->getLTauFromTime(
+                          target_radius));
+        (*elm)->setReTau((*elm)->getRTauFromTime(
+                          target_radius));
+        (*elm)->setSimTime(target_radius);
+        (*elm)->setEndTime(target_radius);
+
+    }
+
+}
+
 void dbskfg_shock_link::form_shock_fragment()
 {
     
