@@ -31,6 +31,7 @@
 
 #include <dbsk2d/algo/dbsk2d_ishock_grouping_transform.h>
 #include <dbsk2d/algo/dbsk2d_sample_ishock.h>
+#include <dbsk2d/dbsk2d_xshock_node.h>
 #include <vcl_algorithm.h>
 #include <vgl/vgl_area.h>
 
@@ -385,7 +386,7 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
         {
             dbsk2d_ishock_edge* cur_iedge = (*curE);
             
-            if ( key_map.count(cur_iedge->id()))
+            if ( key_map.count(cur_iedge->id()) || cur_iedge->isHidden())
             {
                 continue;
             } 
@@ -441,6 +442,82 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
                 kd_points[left_pair]=radius;
                 kd_points[right_pair]=radius;
             }
+
+            dbsk2d_shock_graph_sptr pruned_graph =
+                shock_storage->get_shock_graph();
+            dbsk2d_shock_node_sptr pSNode=pruned_graph->get_node(
+                cur_iedge->pSNode()->id());
+            dbsk2d_shock_node_sptr cSNode=pruned_graph->get_node(
+                cur_iedge->cSNode()->id());
+            
+            if ( pSNode )
+            {
+                //instantiate new extrinsic shock node
+                dbsk2d_xshock_node* xshock_node = new dbsk2d_xshock_node(
+                    pSNode->id());
+                sampler.sample_shock_node(pSNode,xshock_node);
+
+                for (int i=0; i< xshock_node->num_samples(); ++i)
+                {
+                    dbsk2d_xshock_sample_sptr sample = 
+                        xshock_node->sample(i);
+                    
+                    vgl_point_2d<double> left_bnd_pt=sample->left_bnd_pt;
+                    vgl_point_2d<double> right_bnd_pt=sample->right_bnd_pt;
+                    double radius=sample->radius;
+            
+                    vcl_pair<double,double> left_pair=vcl_make_pair(
+                        left_bnd_pt.x(),
+                        left_bnd_pt.y());
+
+                    vcl_pair<double,double> right_pair=vcl_make_pair(
+                        right_bnd_pt.x(),
+                        right_bnd_pt.y());
+
+                    kd_points[left_pair]=radius;
+                    kd_points[right_pair]=radius;
+
+                }
+
+                delete xshock_node;
+                xshock_node=0;
+            }
+
+            if ( cSNode )
+            {
+                //instantiate new extrinsic shock node
+                dbsk2d_xshock_node* xshock_node = new dbsk2d_xshock_node(
+                    cSNode->id());
+                sampler.sample_shock_node(cSNode,xshock_node);
+
+                for (int i=0; i< xshock_node->num_samples(); ++i)
+                {
+                    dbsk2d_xshock_sample_sptr sample = 
+                        xshock_node->sample(i);
+                    
+                    vgl_point_2d<double> left_bnd_pt=sample->left_bnd_pt;
+                    vgl_point_2d<double> right_bnd_pt=sample->right_bnd_pt;
+                    double radius=sample->radius;
+            
+                    vcl_pair<double,double> left_pair=vcl_make_pair(
+                        left_bnd_pt.x(),
+                        left_bnd_pt.y());
+
+                    vcl_pair<double,double> right_pair=vcl_make_pair(
+                        right_bnd_pt.x(),
+                        right_bnd_pt.y());
+
+                    kd_points[left_pair]=radius;
+                    kd_points[right_pair]=radius;
+
+                }
+                
+                delete xshock_node;
+                xshock_node=0;
+            }
+
+            parent_node=0;
+            child_node=0;
         }
 
         // Clean up after ourselves
