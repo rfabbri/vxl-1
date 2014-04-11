@@ -147,14 +147,15 @@ public:
   // compute appeance
   bool compute_appearance()
   {
-      if ( grad_data_==0 || sift_filter_==0 )
-      {
-          return false;
-      }
-      else
-      {
-          return true;
-      }
+      return false;
+      /* if ( grad_data_==0 || sift_filter_==0 ) */
+      /* { */
+      /*     return false; */
+      /* } */
+      /* else */
+      /* { */
+      /*     return true; */
+      /* } */
   }
 
   // get bounding box

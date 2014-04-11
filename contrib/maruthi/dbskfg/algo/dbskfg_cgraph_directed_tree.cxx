@@ -820,34 +820,34 @@ get_curve_pair(int start_dart, int end_dart, bool construct_circular_ends)
 
     sc->set_area_factor(area_weight_);
 
-    if ( grad_data_ )
-    {
-        unsigned int num_points = sc->num_points();
-        vcl_vector<vnl_vector_fixed<vl_sift_pix,128> > sift_descrs;
-        sift_descrs.reserve(num_points);
-        for ( unsigned int i=0; i < num_points; ++i)
-        {
-            vgl_point_2d<double> ps1 = sc->sh_pt(i);
-            double radius= sc->time(i);
-            double theta = sc->theta(i);
-            vl_sift_pix descr_ps1[128];
+    // if ( grad_data_ )
+    // {
+    //     unsigned int num_points = sc->num_points();
+    //     vcl_vector<vnl_vector_fixed<vl_sift_pix,128> > sift_descrs;
+    //     sift_descrs.reserve(num_points);
+    //     for ( unsigned int i=0; i < num_points; ++i)
+    //     {
+    //         vgl_point_2d<double> ps1 = sc->sh_pt(i);
+    //         double radius= sc->time(i);
+    //         double theta = sc->theta(i);
+    //         vl_sift_pix descr_ps1[128];
             
-            vl_sift_calc_raw_descriptor(sift_filter_,
-                                        grad_data_,
-                                        descr_ps1,
-                                        sift_filter_->width,
-                                        sift_filter_->height,
-                                        ps1.x(),
-                                        ps1.y(),
-                                        radius/2,
-                                        theta);
+    //         vl_sift_calc_raw_descriptor(sift_filter_,
+    //                                     grad_data_,
+    //                                     descr_ps1,
+    //                                     sift_filter_->width,
+    //                                     sift_filter_->height,
+    //                                     ps1.x(),
+    //                                     ps1.y(),
+    //                                     radius/2,
+    //                                     theta);
             
-            vnl_vector_fixed<vl_sift_pix,128> sift(descr_ps1);
-            sift_descrs.push_back(sift);
-        }
-        dart_path_sift_map_[p]=sift_descrs;
+    //         vnl_vector_fixed<vl_sift_pix,128> sift(descr_ps1);
+    //         sift_descrs.push_back(sift);
+    //     }
+    //     dart_path_sift_map_[p]=sift_descrs;
 
-    }
+    // }
     return curve_pair;
   } 
   else 
