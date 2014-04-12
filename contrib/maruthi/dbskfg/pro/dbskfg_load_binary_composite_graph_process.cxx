@@ -378,6 +378,25 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
 
         kd_points_.clear();
         sample_outside_shock(shock_storage->get_shock_graph());
+        
+        vcl_cout<<"Numb points in kd tree: "<<kd_points_.size()<<vcl_endl;
+        vcl_cout<<"Building kd tree"<<vcl_endl;
+        unsigned int tree_id=kd_trees_.size();
+        
+        // Uncomment for debugging
+
+        // vcl_ofstream file("kd_tree_points.txt");
+        // vcl_map<vcl_pair<double,double>,double>::iterator kit;
+        // for ( kit = kd_points_.begin() ; kit != kd_points_.end() ; ++kit)
+        // {
+        //     file<<(*kit).first.first
+        //         <<" "
+        //         <<(*kit).first.second
+        //         <<" "
+        //         <<(*kit).second
+        //         <<vcl_endl;
+        // }
+        // file.close();
 
         // Clean up after ourselves
         shock_pro.clear_input();
@@ -1042,41 +1061,42 @@ void dbskfg_load_binary_composite_graph_process::sample_outside_shock(
   
       }
 
-      if ( resampled_left_contour.size() )
-      {
-          vcl_stringstream stream;
-          stream<<"Coarse_shock_brand_id_left_"<<cur_edge->id()<<".txt";
+      // Uncomment for debugging
+      // if ( resampled_left_contour.size() )
+      // {
+      //     vcl_stringstream stream;
+      //     stream<<"Coarse_shock_brand_id_left_"<<cur_edge->id()<<".txt";
 
-          vcl_ofstream file(stream.str().c_str());
-          for ( unsigned int c=0; c < resampled_left_contour.size() ; ++c)
-          {
-              file<<resampled_left_contour[c].first.x()
-                  <<" "
-                  <<resampled_left_contour[c].first.y()
-                  <<" "
-                  <<resampled_left_contour[c].second
-                  <<vcl_endl;
-          }
-          file.close();
-      }
+      //     vcl_ofstream file(stream.str().c_str());
+      //     for ( unsigned int c=0; c < resampled_left_contour.size() ; ++c)
+      //     {
+      //         file<<resampled_left_contour[c].first.x()
+      //             <<" "
+      //             <<resampled_left_contour[c].first.y()
+      //             <<" "
+      //             <<resampled_left_contour[c].second
+      //             <<vcl_endl;
+      //     }
+      //     file.close();
+      // }
 
-      if ( resampled_right_contour.size() )
-      {
-          vcl_stringstream stream;
-          stream<<"Coarse_shock_brand_id_right_"<<cur_edge->id()<<".txt";
+      // if ( resampled_right_contour.size() )
+      // {
+      //     vcl_stringstream stream;
+      //     stream<<"Coarse_shock_brand_id_right_"<<cur_edge->id()<<".txt";
 
-          vcl_ofstream file(stream.str().c_str());
-          for ( unsigned int c=0; c < resampled_right_contour.size() ; ++c)
-          {
-              file<<resampled_right_contour[c].first.x()
-                  <<" "
-                  <<resampled_right_contour[c].first.y()
-                  <<" "
-                  <<resampled_right_contour[c].second
-                  <<vcl_endl;
-          }
-          file.close();
-      }
+      //     vcl_ofstream file(stream.str().c_str());
+      //     for ( unsigned int c=0; c < resampled_right_contour.size() ; ++c)
+      //     {
+      //         file<<resampled_right_contour[c].first.x()
+      //             <<" "
+      //             <<resampled_right_contour[c].first.y()
+      //             <<" "
+      //             <<resampled_right_contour[c].second
+      //             <<vcl_endl;
+      //     }
+      //     file.close();
+      // }
 
 
   }
