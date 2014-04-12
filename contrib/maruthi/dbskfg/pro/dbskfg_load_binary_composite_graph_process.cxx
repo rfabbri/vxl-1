@@ -20,7 +20,8 @@
 #include <dbsk2d/pro/dbsk2d_shock_storage.h>
 #include <dbsk2d/pro/dbsk2d_shock_storage_sptr.h>
 #include <dbsk2d/pro/dbsk2d_compute_ishock_process.h>
-
+#include <dbsk2d/dbsk2d_shock_grouped_ishock_edge.h>
+#include <dbsk2d/dbsk2d_shock_ishock_node.h>
 
 #include <dbskfg/dbskfg_rag_graph.h>
 #include <dbskfg/dbskfg_contour_link.h>
@@ -31,9 +32,10 @@
 
 #include <dbsk2d/algo/dbsk2d_ishock_grouping_transform.h>
 #include <dbsk2d/algo/dbsk2d_sample_ishock.h>
-#include <dbsk2d/dbsk2d_xshock_node.h>
 #include <vcl_algorithm.h>
 #include <vgl/vgl_area.h>
+#include <vgl/vgl_distance.h>
+
 
 //: Constructor
 dbskfg_load_binary_composite_graph_process::dbskfg_load_binary_composite_graph_process():image_ni_(0),image_nj_(0)
@@ -285,7 +287,6 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
     // Create empty image stroage
     vidpro1_image_storage_sptr image_storage = vidpro1_image_storage_new();
     
-    vcl_map<vcl_pair<double,double>,double> kd_points;
     vcl_vector<bpro1_storage_sptr> shock_results;
     {
         // 3) Create shock pro process and assign inputs 
@@ -368,157 +369,15 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
             
         }
 
-        dbsk2d_ishock_graph_sptr ishock_graph = 
-            shock_storage->get_ishock_graph();
-
         vcl_vector<dbsk2d_ishock_edge*> edges= region_shocks[index];
 
-        vcl_map<int,vcl_string> key_map;
         for ( unsigned int i=0; i < edges.size() ; ++i)
         {
-            key_map[edges[i]->id()]="temp";
+            key_map_[edges[i]->id()]="temp";
         }
 
-        //go through the edge_list and insert it into the list
-        dbsk2d_ishock_graph::edge_iterator curE = 
-            ishock_graph->all_edges().begin();
-        for (; curE != ishock_graph->all_edges().end(); ++curE)
-        {
-            dbsk2d_ishock_edge* cur_iedge = (*curE);
-            
-            if ( key_map.count(cur_iedge->id()) || cur_iedge->isHidden())
-            {
-                continue;
-            } 
-
-            // Make a dummy coarse shock graph
-            dbsk2d_shock_graph_sptr coarse_graph;
-            dbsk2d_sample_ishock sampler(coarse_graph);
-            sampler.set_sample_resolution(1.0);
-            
-            dbsk2d_shock_node_sptr parent_node = new 
-                dbsk2d_shock_node();
-            dbsk2d_shock_node_sptr child_node  = new 
-                dbsk2d_shock_node();
-            dbsk2d_xshock_edge xshock_edge(1,parent_node,child_node);
-
-            switch (cur_iedge->type())
-            {
-            case dbsk2d_ishock_elm::POINTPOINT:
-                sampler.sample_ishock_edge(
-                    (dbsk2d_ishock_pointpoint*)cur_iedge, 
-                    &xshock_edge);
-                break;
-            case dbsk2d_ishock_elm::POINTLINE:
-                sampler.sample_ishock_edge(
-                    (dbsk2d_ishock_pointline*)cur_iedge, 
-                    &xshock_edge);
-                break;
-            case dbsk2d_ishock_elm::LINELINE:
-                sampler.sample_ishock_edge(
-                    (dbsk2d_ishock_lineline*)cur_iedge, 
-                    &xshock_edge);
-                break;
-            default: break;
-            }
-
-            for (int i=0; i< xshock_edge.num_samples(); ++i)
-            {
-                dbsk2d_xshock_sample_sptr sample = 
-                    xshock_edge.sample(i);
-                    
-                vgl_point_2d<double> left_bnd_pt=sample->left_bnd_pt;
-                vgl_point_2d<double> right_bnd_pt=sample->right_bnd_pt;
-                double radius=sample->radius;
-            
-                vcl_pair<double,double> left_pair=vcl_make_pair(
-                    left_bnd_pt.x(),
-                    left_bnd_pt.y());
-
-                vcl_pair<double,double> right_pair=vcl_make_pair(
-                    right_bnd_pt.x(),
-                    right_bnd_pt.y());
-
-                kd_points[left_pair]=radius;
-                kd_points[right_pair]=radius;
-            }
-
-            dbsk2d_shock_graph_sptr pruned_graph =
-                shock_storage->get_shock_graph();
-            dbsk2d_shock_node_sptr pSNode=pruned_graph->get_node(
-                cur_iedge->pSNode()->id());
-            dbsk2d_shock_node_sptr cSNode=pruned_graph->get_node(
-                cur_iedge->cSNode()->id());
-            
-            if ( pSNode )
-            {
-                //instantiate new extrinsic shock node
-                dbsk2d_xshock_node* xshock_node = new dbsk2d_xshock_node(
-                    pSNode->id());
-                sampler.sample_shock_node(pSNode,xshock_node);
-
-                for (int i=0; i< xshock_node->num_samples(); ++i)
-                {
-                    dbsk2d_xshock_sample_sptr sample = 
-                        xshock_node->sample(i);
-                    
-                    vgl_point_2d<double> left_bnd_pt=sample->left_bnd_pt;
-                    vgl_point_2d<double> right_bnd_pt=sample->right_bnd_pt;
-                    double radius=sample->radius;
-            
-                    vcl_pair<double,double> left_pair=vcl_make_pair(
-                        left_bnd_pt.x(),
-                        left_bnd_pt.y());
-
-                    vcl_pair<double,double> right_pair=vcl_make_pair(
-                        right_bnd_pt.x(),
-                        right_bnd_pt.y());
-
-                    kd_points[left_pair]=radius;
-                    kd_points[right_pair]=radius;
-
-                }
-
-                delete xshock_node;
-                xshock_node=0;
-            }
-
-            if ( cSNode )
-            {
-                //instantiate new extrinsic shock node
-                dbsk2d_xshock_node* xshock_node = new dbsk2d_xshock_node(
-                    cSNode->id());
-                sampler.sample_shock_node(cSNode,xshock_node);
-
-                for (int i=0; i< xshock_node->num_samples(); ++i)
-                {
-                    dbsk2d_xshock_sample_sptr sample = 
-                        xshock_node->sample(i);
-                    
-                    vgl_point_2d<double> left_bnd_pt=sample->left_bnd_pt;
-                    vgl_point_2d<double> right_bnd_pt=sample->right_bnd_pt;
-                    double radius=sample->radius;
-            
-                    vcl_pair<double,double> left_pair=vcl_make_pair(
-                        left_bnd_pt.x(),
-                        left_bnd_pt.y());
-
-                    vcl_pair<double,double> right_pair=vcl_make_pair(
-                        right_bnd_pt.x(),
-                        right_bnd_pt.y());
-
-                    kd_points[left_pair]=radius;
-                    kd_points[right_pair]=radius;
-
-                }
-                
-                delete xshock_node;
-                xshock_node=0;
-            }
-
-            parent_node=0;
-            child_node=0;
-        }
+        kd_points_.clear();
+        sample_outside_shock(shock_storage->get_shock_graph());
 
         // Clean up after ourselves
         shock_pro.clear_input();
@@ -1039,4 +898,385 @@ compute_outer_shock(vidpro1_vsol2D_storage_sptr& input_vsol)
     // output_data_[0].push_back(cg_storage);
 
     return status;
+}
+
+
+void dbskfg_load_binary_composite_graph_process::sample_outside_shock(
+    dbsk2d_shock_graph_sptr shock_graph)
+{
+
+    
+  //go through all the shock edges of the coarse shock graph and sample them
+  dbsk2d_shock_graph::edge_iterator curE = shock_graph->edges_begin();
+  for (; curE != shock_graph->edges_end(); curE++)
+  {
+      dbsk2d_shock_grouped_ishock_edge* cur_edge = 
+          (dbsk2d_shock_grouped_ishock_edge*)curE->ptr();
+
+      dbsk2d_ishock_node* src_inode = ((dbsk2d_shock_ishock_node*)
+                                       cur_edge->source().ptr())->ishock_node();
+      dbsk2d_ishock_node* tgt_inode = ((dbsk2d_shock_ishock_node*)
+                                       cur_edge->target().ptr())->ishock_node();
+
+      vcl_list<dbsk2d_ishock_edge*>& ishock_edges = cur_edge->edges();
+
+      vcl_vector<vcl_pair<vgl_point_2d<double>,double > > left_curve;
+      vcl_vector<vcl_pair<vgl_point_2d<double>,double > > right_curve;
+
+
+      dbsk2d_ishock_node* cur_node = src_inode;
+      for(ishock_edge_list::iterator eit = ishock_edges.begin();
+          eit != ishock_edges.end(); ++eit)
+      {
+          
+          if (!(*eit)) //A1-Ainf node
+          {
+              continue;
+          }
+          
+          if ( cur_node == (*eit)->source())
+          {
+              sample_shock_link((*eit),left_curve,right_curve,shock_graph,
+                                false);   
+              cur_node=(*eit)->target();
+          }
+          else
+          {
+              sample_shock_link((*eit),left_curve,right_curve,shock_graph,
+                                true);
+              cur_node=(*eit)->source();
+          }
+      }
+
+      vcl_vector<vcl_pair<vgl_point_2d<double>,double> > 
+          resampled_right_contour;
+      if ( right_curve.size() )
+      {
+          resampled_right_contour.push_back(right_curve[0]);
+          kd_points_[vcl_make_pair(
+                  right_curve[0].first.x(),
+                  right_curve[0].first.y())]=right_curve[0].second;
+          for ( unsigned int i=1; i < right_curve.size() ; ++i)
+          {
+              double dx=right_curve[i].first.x()-right_curve[i-1].first.x();
+              double dy=right_curve[i].first.y()-right_curve[i-1].first.y();
+              double ds=vgl_distance(right_curve[i].first,
+                                     right_curve[i-1].first);
+              double dt=right_curve[i].second-right_curve[i-1].second;
+
+              if ( ds > 2.0 )
+              {
+                  int num=int(ds);
+                  
+                  for ( int j=1; j < num; j++)
+                  {
+                      float ratio = (float)j/(float)num;
+                      vgl_point_2d<double> p_int(
+                          right_curve[i-1].first.x()+ratio*dx,
+                          right_curve[i-1].first.y()+ratio*dy);
+                      double time_int = right_curve[i-1].second + ratio*dt;
+
+                      
+                      resampled_right_contour.push_back(vcl_make_pair(
+                                                            p_int,
+                                                            time_int));
+                      kd_points_[vcl_make_pair(p_int.x(),
+                                               p_int.y())]=time_int;
+
+                  } 
+              }
+
+              resampled_right_contour.push_back(right_curve[i]);
+              kd_points_[vcl_make_pair(
+                      right_curve[i].first.x(),
+                      right_curve[i].first.y())]=right_curve[i].second;
+              
+          }
+  
+      }
+
+      vcl_vector<vcl_pair<vgl_point_2d<double>,double> > 
+          resampled_left_contour;
+      if ( left_curve.size() )
+      {
+          resampled_left_contour.push_back(left_curve[0]);
+          kd_points_[vcl_make_pair(
+                  left_curve[0].first.x(),
+                  left_curve[0].first.y())]=left_curve[0].second;
+          for ( unsigned int i=1; i < left_curve.size() ; ++i)
+          {
+              double dx=left_curve[i].first.x()-left_curve[i-1].first.x();
+              double dy=left_curve[i].first.y()-left_curve[i-1].first.y();
+              double ds=vgl_distance(left_curve[i].first,
+                                     left_curve[i-1].first);
+              double dt=left_curve[i].second-left_curve[i-1].second;
+
+              if ( ds > 2.0 )
+              {
+                  int num=int(ds);
+                  
+                  for ( int j=1; j < num; j++)
+                  {
+                      float ratio = (float)j/(float)num;
+                      vgl_point_2d<double> p_int(
+                          left_curve[i-1].first.x()+ratio*dx,
+                          left_curve[i-1].first.y()+ratio*dy);
+                      double time_int = left_curve[i-1].second + ratio*dt;
+
+                      
+                      resampled_left_contour.push_back(vcl_make_pair(
+                                                            p_int,
+                                                            time_int));
+                      kd_points_[vcl_make_pair(p_int.x(),
+                                               p_int.y())]=time_int;
+
+                  } 
+              }
+
+              resampled_left_contour.push_back(left_curve[i]);
+              kd_points_[vcl_make_pair(
+                      left_curve[i].first.x(),
+                      left_curve[i].first.y())]=left_curve[i].second;
+              
+          }
+  
+      }
+
+      if ( resampled_left_contour.size() )
+      {
+          vcl_stringstream stream;
+          stream<<"Coarse_shock_brand_id_left_"<<cur_edge->id()<<".txt";
+
+          vcl_ofstream file(stream.str().c_str());
+          for ( unsigned int c=0; c < resampled_left_contour.size() ; ++c)
+          {
+              file<<resampled_left_contour[c].first.x()
+                  <<" "
+                  <<resampled_left_contour[c].first.y()
+                  <<" "
+                  <<resampled_left_contour[c].second
+                  <<vcl_endl;
+          }
+          file.close();
+      }
+
+      if ( resampled_right_contour.size() )
+      {
+          vcl_stringstream stream;
+          stream<<"Coarse_shock_brand_id_right_"<<cur_edge->id()<<".txt";
+
+          vcl_ofstream file(stream.str().c_str());
+          for ( unsigned int c=0; c < resampled_right_contour.size() ; ++c)
+          {
+              file<<resampled_right_contour[c].first.x()
+                  <<" "
+                  <<resampled_right_contour[c].first.y()
+                  <<" "
+                  <<resampled_right_contour[c].second
+                  <<vcl_endl;
+          }
+          file.close();
+      }
+
+
+  }
+
+}
+
+void dbskfg_load_binary_composite_graph_process::sample_shock_link(
+    dbsk2d_ishock_edge* cur_iedge,
+    vcl_vector<vcl_pair<vgl_point_2d<double>,double > >& left_curve,
+    vcl_vector<vcl_pair<vgl_point_2d<double>,double > >& right_curve,
+    dbsk2d_shock_graph_sptr pruned_graph,
+    bool reverse)
+{
+            
+    if ( key_map_.count(cur_iedge->id()) || cur_iedge->isHidden())
+    {
+        return;
+    } 
+
+    bool ignore_left=(cur_iedge->lBElement()->get_contour_id() == 10e6)
+        ?true:false;
+    bool ignore_right=(cur_iedge->rBElement()->get_contour_id() == 10e6)
+        ?true:false;
+
+    // Make a dummy coarse shock graph
+    dbsk2d_shock_graph_sptr coarse_graph;
+    dbsk2d_sample_ishock sampler(coarse_graph);
+    sampler.set_sample_resolution(1.0);
+            
+    dbsk2d_shock_node_sptr parent_node = new 
+        dbsk2d_shock_node();
+    dbsk2d_shock_node_sptr child_node  = new 
+        dbsk2d_shock_node();
+    dbsk2d_xshock_edge xshock_edge(1,parent_node,child_node);
+
+    switch (cur_iedge->type())
+    {
+    case dbsk2d_ishock_elm::POINTPOINT:
+        sampler.sample_ishock_edge(
+            (dbsk2d_ishock_pointpoint*)cur_iedge, 
+            &xshock_edge);
+        break;
+    case dbsk2d_ishock_elm::POINTLINE:
+        sampler.sample_ishock_edge(
+            (dbsk2d_ishock_pointline*)cur_iedge, 
+            &xshock_edge);
+        break;
+    case dbsk2d_ishock_elm::LINELINE:
+        sampler.sample_ishock_edge(
+            (dbsk2d_ishock_lineline*)cur_iedge, 
+            &xshock_edge);
+        break;
+    default: break;
+    }
+    
+    if ( reverse )
+    {
+        for (int i=xshock_edge.num_samples()-1; i >= 0 ; --i)
+        {
+            dbsk2d_xshock_sample_sptr sample = 
+                xshock_edge.sample(i);
+            
+            vgl_point_2d<double> left_bnd_pt=sample->left_bnd_pt;
+            vgl_point_2d<double> right_bnd_pt=sample->right_bnd_pt;
+            double radius=sample->radius;
+            
+            vcl_pair<double,double> left_pair=vcl_make_pair(
+                left_bnd_pt.x(),
+                left_bnd_pt.y());
+            
+            vcl_pair<double,double> right_pair=vcl_make_pair(
+                right_bnd_pt.x(),
+                right_bnd_pt.y());
+
+            if ( !ignore_left )
+            {
+                left_curve.push_back(vcl_make_pair(left_bnd_pt,radius));
+            }
+
+            if ( !ignore_right )
+            {
+                right_curve.push_back(vcl_make_pair(right_bnd_pt,radius));
+            }
+        }
+
+    }
+    else
+    {
+        for (int i=0; i< xshock_edge.num_samples(); ++i)
+        {
+            dbsk2d_xshock_sample_sptr sample = 
+                xshock_edge.sample(i);
+            
+            vgl_point_2d<double> left_bnd_pt=sample->left_bnd_pt;
+            vgl_point_2d<double> right_bnd_pt=sample->right_bnd_pt;
+            double radius=sample->radius;
+            
+            vcl_pair<double,double> left_pair=vcl_make_pair(
+                left_bnd_pt.x(),
+                left_bnd_pt.y());
+            
+            vcl_pair<double,double> right_pair=vcl_make_pair(
+                right_bnd_pt.x(),
+                right_bnd_pt.y());
+
+            if ( !ignore_left )
+            {
+                left_curve.push_back(vcl_make_pair(left_bnd_pt,radius));
+            }
+
+            if ( !ignore_right )
+            {
+                right_curve.push_back(vcl_make_pair(right_bnd_pt,radius));
+            }
+
+        }
+    }
+
+    dbsk2d_shock_node_sptr pSNode=pruned_graph->get_node(
+        cur_iedge->pSNode()->id());
+    dbsk2d_shock_node_sptr cSNode=pruned_graph->get_node(
+        cur_iedge->cSNode()->id());
+            
+    if ( pSNode )
+    {
+        //instantiate new extrinsic shock node
+        dbsk2d_xshock_node* xshock_node = new dbsk2d_xshock_node(
+            pSNode->id());
+        sampler.sample_shock_node(pSNode,xshock_node);
+
+        for (int i=0; i< xshock_node->num_samples(); ++i)
+        {
+            dbsk2d_xshock_sample_sptr sample = 
+                xshock_node->sample(i);
+                    
+            vgl_point_2d<double> left_bnd_pt=sample->left_bnd_pt;
+            vgl_point_2d<double> right_bnd_pt=sample->right_bnd_pt;
+            double radius=sample->radius;
+            
+            vcl_pair<double,double> left_pair=vcl_make_pair(
+                left_bnd_pt.x(),
+                left_bnd_pt.y());
+
+            vcl_pair<double,double> right_pair=vcl_make_pair(
+                right_bnd_pt.x(),
+                right_bnd_pt.y());
+
+            kd_points_[left_pair]=radius;
+            kd_points_[right_pair]=radius;
+
+        }
+
+        delete xshock_node;
+        xshock_node=0;
+    }
+
+    if ( cSNode )
+    {
+        //instantiate new extrinsic shock node
+        dbsk2d_xshock_node* xshock_node = new dbsk2d_xshock_node(
+            cSNode->id());
+        sampler.sample_shock_node(cSNode,xshock_node);
+
+        for (int i=0; i< xshock_node->num_samples(); ++i)
+        {
+            dbsk2d_xshock_sample_sptr sample = 
+                xshock_node->sample(i);
+                    
+            vgl_point_2d<double> left_bnd_pt=sample->left_bnd_pt;
+            vgl_point_2d<double> right_bnd_pt=sample->right_bnd_pt;
+            double radius=sample->radius;
+            
+            vcl_pair<double,double> left_pair=vcl_make_pair(
+                left_bnd_pt.x(),
+                left_bnd_pt.y());
+
+            vcl_pair<double,double> right_pair=vcl_make_pair(
+                right_bnd_pt.x(),
+                right_bnd_pt.y());
+
+            kd_points_[left_pair]=radius;
+            kd_points_[right_pair]=radius;
+
+        }
+                
+        delete xshock_node;
+        xshock_node=0;
+    }
+
+    parent_node=0;
+    child_node=0;
+
+
+
+
+
+
+
+
+
+
+
 }

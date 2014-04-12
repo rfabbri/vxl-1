@@ -19,10 +19,14 @@
 #include <vsol/vsol_spatial_object_2d_sptr.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
 
+#include <dbsk2d/dbsk2d_shock_graph_sptr.h>
 #include <dbskfg/dbskfg_composite_graph_sptr.h>
 #include <vcl_set.h>
 #include <vcl_utility.h>
 #include <rsdl/rsdl_kd_tree_sptr.h>
+#include <vgl/vgl_point_2d.h>
+
+class dbsk2d_ishock_edge;
 
 class dbskfg_load_binary_composite_graph_process : public bpro1_process 
 {
@@ -83,6 +87,15 @@ private:
                                vcl_set<unsigned int>& cons,
                                bool prune_degree_three_nodes=true);
 
+  void sample_outside_shock(dbsk2d_shock_graph_sptr shock_graph);
+
+  void sample_shock_link(
+      dbsk2d_ishock_edge* edge,
+      vcl_vector<vcl_pair<vgl_point_2d<double>,double > >& left_curve,
+      vcl_vector<vcl_pair<vgl_point_2d<double>,double > >& right_curve,
+      dbsk2d_shock_graph_sptr pruned_graph,
+      bool reverse);
+
   unsigned int image_ni_;
   unsigned int image_nj_;
 
@@ -90,8 +103,9 @@ private:
   vcl_map<unsigned int,double> area_cgraphs_;
   vcl_map<unsigned int,double> arc_length_cgraphs_;
   vcl_vector<unsigned int> frags_removed_;
-
+  vcl_map<int,vcl_string> key_map_;
   vcl_map<unsigned int,rsdl_kd_tree_sptr> kd_trees_;
+  vcl_map<vcl_pair<double,double>,double> kd_points_;
 
 };
 
