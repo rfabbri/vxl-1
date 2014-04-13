@@ -1297,6 +1297,11 @@ void dbskfg_cgraph_directed_tree::compute_bounding_box()
 
 void dbskfg_cgraph_directed_tree::compute_outer_shock(dbskr_scurve_sptr sc)
 {
+    if ( sc->get_bdry_plus_outside_shock_radius().size() )
+    {
+        return;
+    }
+
     vcl_vector<double> bdry_plus_outer_shock_radius;
     vcl_vector<double> bdry_minus_outer_shock_radius;
 
