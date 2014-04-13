@@ -100,6 +100,18 @@ public:
       bdry_minus_outer_shock_radius_=radius; ///< outer shock radius
   }
 
+  // get outside shock radius
+  vcl_vector<double> get_bdry_plus_outside_shock_radius()
+  {
+      return bdry_plus_outer_shock_radius_;
+  }
+
+  // get outside shock radius
+  vcl_vector<double>  get_bdry_minus_outside_shock_radius()
+  {
+      return bdry_minus_outer_shock_radius_;
+  }
+
 
 protected:
   //: This function takes a sampled shock curve and interpolates it.
