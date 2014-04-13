@@ -23,7 +23,6 @@
 #include <dbskfg/dbskfg_composite_graph_sptr.h>
 #include <vcl_set.h>
 #include <vcl_utility.h>
-#include <rsdl/rsdl_kd_tree_sptr.h>
 #include <vgl/vgl_point_2d.h>
 
 class dbsk2d_ishock_edge;
@@ -55,9 +54,6 @@ public:
   vcl_map<unsigned int,dbskfg_composite_graph_sptr > get_cgraphs()
   {return cgraphs_;}
 
-  vcl_map<unsigned int,rsdl_kd_tree_sptr > get_kd_trees()
-  {return kd_trees_;}
-
   vcl_map<unsigned int,double > get_cgraph_area()
   {return area_cgraphs_;}
 
@@ -85,7 +81,8 @@ private:
 
   bool compute_composite_graph(vidpro1_vsol2D_storage_sptr output_vsol,
                                vcl_set<unsigned int>& cons,
-                               bool prune_degree_three_nodes=true);
+                               bool prune_degree_three_nodes=true,
+                               bool outside_shock=false);
 
   void sample_outside_shock(dbsk2d_shock_graph_sptr shock_graph);
 
@@ -104,7 +101,6 @@ private:
   vcl_map<unsigned int,double> arc_length_cgraphs_;
   vcl_vector<unsigned int> frags_removed_;
   vcl_map<int,vcl_string> key_map_;
-  vcl_map<unsigned int,rsdl_kd_tree_sptr> kd_trees_;
   vcl_map<vcl_pair<double,double>,double> kd_points_;
 
 };

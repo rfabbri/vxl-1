@@ -17,9 +17,10 @@
 #include <dbskfg/dbskfg_composite_node.h>
 #include <dbskfg/dbskfg_composite_link.h>
 #include <dbskfg/dbskfg_composite_link_sptr.h>
-
+#include <rsdl/rsdl_kd_tree_sptr.h>
+#include <rsdl/rsdl_kd_tree.h>
 #include <vcl_string.h>
-
+#include <vnl/vnl_double_2.h>
 
 //: 
 class dbskfg_composite_graph : 
@@ -71,6 +72,25 @@ public:
   //: Get flag of whether locus should be constructed
   bool construct_locus(){return construct_locus_;}
 
+  //: set outer shock kd tree
+  void set_kd_tree(rsdl_kd_tree_sptr kd_tree){kd_tree_=kd_tree;}
+
+  //: set outer shock radisu
+  void set_outer_shock_radius(vcl_vector<double>& radius)
+  {outer_shock_radius_=radius;}
+
+  // get nearest radius
+  double get_nn_radius(vgl_point_2d<double> pt)
+  {
+      rsdl_point test_pt(vnl_double_2(pt.x(),pt.y()));
+
+      vcl_vector<rsdl_point> closest_points;
+      vcl_vector<int> indices;
+
+      kd_tree_->n_nearest(test_pt,1,closest_points,indices);
+      return outer_shock_radius_[indices.front()];
+  }
+
 protected:
   
 
@@ -82,6 +102,10 @@ private:
 
   vcl_map<unsigned int,dbskfg_composite_node_sptr> all_nodes_;
   vcl_map<unsigned int,dbskfg_composite_link_sptr> all_links_;
+
+  rsdl_kd_tree_sptr kd_tree_;
+
+  vcl_vector<double> outer_shock_radius_;
 
 };
 

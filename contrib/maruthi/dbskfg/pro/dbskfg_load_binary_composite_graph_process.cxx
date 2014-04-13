@@ -35,13 +35,16 @@
 #include <vcl_algorithm.h>
 #include <vgl/vgl_area.h>
 #include <vgl/vgl_distance.h>
-
+#include <rsdl/rsdl_point.h>
+#include <rsdl/rsdl_kd_tree.h>
 
 //: Constructor
 dbskfg_load_binary_composite_graph_process::dbskfg_load_binary_composite_graph_process():image_ni_(0),image_nj_(0)
 {
     if( !parameters()->add( "Input file <filename...>" , "-cginput" , 
-                            bpro1_filepath("","*.bin") ) )
+                            bpro1_filepath("","*.bin") ) ||
+        !parameters()->add("use outside shock ",
+                           "-outside_shock", (bool) false))
     {
         vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
     }
@@ -55,6 +58,8 @@ dbskfg_load_binary_composite_graph_process::
     cgraphs_.clear();
     frags_removed_.clear();
     area_cgraphs_.clear();
+    key_map_.clear();
+    kd_points_.clear();
 }
 
 //: Clone the process
@@ -100,7 +105,9 @@ bool dbskfg_load_binary_composite_graph_process::execute()
 {
     // get input file path
     bpro1_filepath input;
+    bool outside_shock(false);
     parameters()->get_value( "-cginput" , input);
+    parameters()->get_value( "-outside_shock" , outside_shock);
     vcl_string input_file_path = input.path;
 
     int num_of_files = 0;
@@ -156,7 +163,9 @@ bool dbskfg_load_binary_composite_graph_process::execute()
         vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
         output_vsol->add_objects((*git).second);
         output_vsol->add_object(box_poly->cast_to_spatial_object());
-        bool status=compute_composite_graph(output_vsol, con_ids[(*git).first]);
+        bool status=compute_composite_graph(output_vsol, 
+                                            con_ids[(*git).first],
+                                            outside_shock);
         if ( status == false)
         {
             frags_removed_.push_back(g);
@@ -278,7 +287,8 @@ compute_graph(vcl_vector<vsol_spatial_object_2d_sptr>& contours,
 bool dbskfg_load_binary_composite_graph_process::
 compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
                         vcl_set<unsigned int>& cons,
-                        bool prune_degree_three_nodes)
+                        bool prune_degree_three_nodes,
+                        bool outside_shock)
 {
     
     /*********************** Shock Compute **********************************/
@@ -286,6 +296,10 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
     bool status=true;
     // Create empty image stroage
     vidpro1_image_storage_sptr image_storage = vidpro1_image_storage_new();
+
+
+    vcl_vector<double> outside_shock_radius;
+    rsdl_kd_tree_sptr kd_tree(0);
     
     vcl_vector<bpro1_storage_sptr> shock_results;
     {
@@ -369,34 +383,52 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
             
         }
 
-        vcl_vector<dbsk2d_ishock_edge*> edges= region_shocks[index];
-
-        for ( unsigned int i=0; i < edges.size() ; ++i)
+        if ( outside_shock)
         {
-            key_map_[edges[i]->id()]="temp";
+            kd_points_.clear();
+            key_map_.clear();
+
+            vcl_vector<dbsk2d_ishock_edge*> edges= region_shocks[index];
+            
+            for ( unsigned int i=0; i < edges.size() ; ++i)
+            {
+                key_map_[edges[i]->id()]="temp";
+            }
+            
+            sample_outside_shock(shock_storage->get_shock_graph());
+        
+            vcl_cout<<"Numb points in kd tree: "<<kd_points_.size()<<vcl_endl;
+            vcl_cout<<"Building kd tree"<<vcl_endl;
+            
+            vcl_vector<rsdl_point> points;
+            vcl_map<vcl_pair<double,double>,double>::iterator kit;
+            for ( kit = kd_points_.begin() ; kit != kd_points_.end() ; ++kit)
+            {
+                vnl_double_2 vec((*kit).first.first,(*kit).first.second);
+                points.push_back(rsdl_point(vec));
+                outside_shock_radius.push_back((*kit).second);
+            }
+            
+            kd_tree=new rsdl_kd_tree(points);
+            
+            // Uncomment for debugging
+            
+            // vcl_ofstream file("kd_tree_points.txt");
+            // vcl_map<vcl_pair<double,double>,double>::iterator kit;
+            // for ( kit = kd_points_.begin() ; kit != kd_points_.end() ; ++kit)
+            // {
+            //     file<<(*kit).first.first
+            //         <<" "
+            //         <<(*kit).first.second
+            //         <<" "
+            //         <<(*kit).second
+            //         <<vcl_endl;
+            // }
+            // file.close();
+
+            kd_points_.clear();
+            key_map_.clear();
         }
-
-        kd_points_.clear();
-        sample_outside_shock(shock_storage->get_shock_graph());
-        
-        vcl_cout<<"Numb points in kd tree: "<<kd_points_.size()<<vcl_endl;
-        vcl_cout<<"Building kd tree"<<vcl_endl;
-        unsigned int tree_id=kd_trees_.size();
-        
-        // Uncomment for debugging
-
-        // vcl_ofstream file("kd_tree_points.txt");
-        // vcl_map<vcl_pair<double,double>,double>::iterator kit;
-        // for ( kit = kd_points_.begin() ; kit != kd_points_.end() ; ++kit)
-        // {
-        //     file<<(*kit).first.first
-        //         <<" "
-        //         <<(*kit).first.second
-        //         <<" "
-        //         <<(*kit).second
-        //         <<vcl_endl;
-        // }
-        // file.close();
 
         // Clean up after ourselves
         shock_pro.clear_input();
@@ -652,6 +684,11 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
 
     }
 
+    if ( outside_shock )
+    {
+        cgraph->set_kd_tree(kd_tree);
+        cgraph->set_outer_shock_radius(outside_shock_radius);
+    }
     unsigned int id=cgraphs_.size();
     cgraphs_[id]=cgraph;
 
