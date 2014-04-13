@@ -255,6 +255,8 @@ protected:
   
   void compute_bounding_box();
 
+  void compute_outer_shock(dbskr_scurve_sptr sc);
+
   bool mirror_;
 
   double area_weight_;

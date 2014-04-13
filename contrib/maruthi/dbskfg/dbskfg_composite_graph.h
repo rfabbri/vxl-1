@@ -75,6 +75,9 @@ public:
   //: set outer shock kd tree
   void set_kd_tree(rsdl_kd_tree_sptr kd_tree){kd_tree_=kd_tree;}
 
+  //: get outer shock kd tree
+  rsdl_kd_tree_sptr get_kd_tree(){return kd_tree_;}
+
   //: set outer shock radisu
   void set_outer_shock_radius(vcl_vector<double>& radius)
   {outer_shock_radius_=radius;}

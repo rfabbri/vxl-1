@@ -720,6 +720,12 @@ get_curve(int start_dart, int end_dart, bool construct_circular_ends)
   dbskr_sc_pair_sptr sc_pair = this->get_curve_pair(start_dart, 
                                                     end_dart, 
                                                     construct_circular_ends);
+
+  if ( this->composite_graph_->get_kd_tree())
+  {
+      this->compute_outer_shock(sc_pair->coarse);
+  }
+
   if (!sc_pair)
     return 0;
   else
@@ -1287,4 +1293,26 @@ void dbskfg_cgraph_directed_tree::compute_bounding_box()
     
     
     
+}
+
+void dbskfg_cgraph_directed_tree::compute_outer_shock(dbskr_scurve_sptr sc)
+{
+    vcl_vector<double> bdry_plus_outer_shock_radius;
+    vcl_vector<double> bdry_minus_outer_shock_radius;
+
+    unsigned int num_points = sc->num_points();
+    for ( unsigned int i=0; i < num_points; ++i)
+    {
+        vgl_point_2d<double> plus_pt=sc->bdry_plus_pt(i);
+        vgl_point_2d<double> minus_pt=sc->bdry_minus_pt(i);
+
+        double plus_radius = this->composite_graph_->get_nn_radius(plus_pt);
+        double minus_radius = this->composite_graph_->get_nn_radius(minus_pt);
+
+        bdry_plus_outer_shock_radius.push_back(plus_radius);
+        bdry_minus_outer_shock_radius.push_back(minus_radius);
+    }
+
+    sc->set_bdry_plus_outside_shock_radius(bdry_plus_outer_shock_radius);
+    sc->set_bdry_minus_outside_shock_radius(bdry_minus_outer_shock_radius);
 }

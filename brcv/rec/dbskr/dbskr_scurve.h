@@ -88,6 +88,19 @@ public:
   // get area factor
   double get_area_factor(){return area_factor_;}
 
+  // set outside shock radius
+  void set_bdry_plus_outside_shock_radius(vcl_vector<double>& radius)
+  {
+      bdry_plus_outer_shock_radius_=radius; ///< outer shock radius
+  }
+
+  // set outside shock radius
+  void set_bdry_minus_outside_shock_radius(vcl_vector<double>& radius)
+  {
+      bdry_minus_outer_shock_radius_=radius; ///< outer shock radius
+  }
+
+
 protected:
   //: This function takes a sampled shock curve and interpolates it.
   void interpolate( int num_points,
@@ -171,6 +184,7 @@ public:
   void stretch_cost(int i, int ip, vcl_vector<double> &a);
   void bend_cost(int i, int ip, vcl_vector<double> &a);
   void area_cost(int i, int ip, double& dA);
+  void outer_shock_cost(int i,int ip,vcl_vector<double> &a);
 
   void stretch_cost_combined(int i, int ip, vcl_vector<double> &a);
   void bend_cost_combined(int i, int ip, vcl_vector<double> &a);
@@ -215,12 +229,14 @@ protected:
   double bdry_plus_length_;                      ///< total length of the + bndry curve
   vcl_vector<double> bdry_plus_arclength_;       ///< arclength along the + bndry curve
   vcl_vector<double> bdry_plus_angle_;           ///< tangent to the + bndry curve
+  vcl_vector<double> bdry_plus_outer_shock_radius_; ///< outer shock radius
 
   // -
   vcl_vector< vgl_point_2d<double> > bdry_minus_; ///< corresponding bndry pt on the - side 
   double bdry_minus_length_;                      ///< total length of the - bndry curve
   vcl_vector<double> bdry_minus_arclength_;       ///< arclength along the - bndry curve
   vcl_vector<double> bdry_minus_angle_;           ///< tangent to the - bndry curve
+  vcl_vector<double> bdry_minus_outer_shock_radius_; ///< outer shock radius
 
   vcl_vector<double> area_; // area of intervals as a function of length
   double total_area_; // total area of this scurve shock branch

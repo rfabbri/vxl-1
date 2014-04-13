@@ -715,6 +715,17 @@ void dbskr_scurve::area_cost(int i, int ip, double& dA)
   dA=vcl_fabs(area_[i]-area_[ip]);
 }
 
+//: Stretch Cost of the outer shock radius
+// The difference in lengths of the corresponding boundarys segments
+void dbskr_scurve::outer_shock_cost(int i, int ip, vcl_vector<double> &a) 
+{
+  a[0]=vcl_fabs(bdry_plus_outer_shock_radius_[i]-
+                bdry_plus_outer_shock_radius_[ip]);
+  a[1]=vcl_fabs(bdry_minus_outer_shock_radius_[i]-
+                bdry_minus_outer_shock_radius_[ip]);
+
+}
+
 //: In the original implementation of Sebastian et al. PAMI 2006, the interval cost is given by:
 //  (|d_r1 - d_r2| + |d_phi1 - d_phi2|) where d_r1 = |r1_i - r1_ip|, 
 //                                            d_r2 = |r1_j - r1_jp|, 
@@ -1150,6 +1161,12 @@ void dbskr_scurve::writeData(vcl_string fname)
     outfp << bdry_minus_angle_[i] << " ";
     outfp.precision(15);
     outfp<< area_[i];
+    outfp.precision(15);
+    if ( bdry_plus_outer_shock_radius_.size())
+    {
+        outfp<<" "<<bdry_plus_outer_shock_radius_[i]
+             <<" "<<bdry_minus_outer_shock_radius_[i];
+    }
     outfp << vcl_endl;
   }
 
