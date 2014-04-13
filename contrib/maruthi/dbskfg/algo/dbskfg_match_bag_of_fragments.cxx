@@ -4350,7 +4350,6 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
             double theta_ps1         = sc1->theta(cor.first);
             vl_sift_pix descr_ps1[128];
             memset(descr_ps1, 0, sizeof(vl_sift_pix)*128);
-            shock_curve1.push_back(ps1);
 
             // Shock Point 2 from Query
             vgl_point_2d<double> ps2 = sc2->sh_pt(cor.second);
@@ -4358,12 +4357,14 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
             double theta_ps2         = sc2->theta(cor.second);
             vl_sift_pix descr_ps2[128];
             memset(descr_ps2, 0, sizeof(vl_sift_pix)*128);
-            shock_curve2.push_back(ps2);
 
             if ( !flag )
             {
                 ps2.set(vcl_fabs(width-(ps2.x()/scale_ratio)),
                         ps2.y()/scale_ratio);
+
+                shock_curve1.push_back(ps1);
+                shock_curve2.push_back(ps2);
 
                 vl_sift_calc_raw_descriptor(model_sift_filter,
                                             model_grad_data,
@@ -4391,6 +4392,9 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
             {
                 ps1.set(vcl_fabs(width-(ps1.x()/scale_ratio)),
                         ps1.y()/scale_ratio);
+
+                shock_curve1.push_back(ps1);
+                shock_curve2.push_back(ps2);
 
                 vl_sift_calc_raw_descriptor(model_sift_filter,
                                             model_grad_data,
@@ -4534,7 +4538,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
     //          << ", tree2 total length: " << arclength_shock_curve2
     //          << ")" << vcl_endl;
 
-    vcl_pair<double,double> app_diff(sift_diff,norm_val);
+    vcl_pair<double,double> app_diff(sift_diff/arclength_shock_curve1,norm_val);
     return app_diff;
 }
 
@@ -4593,21 +4597,18 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
             double theta_ps1_red         = sc1->theta(cor.first);
             vl_sift_pix descr_ps1_red[128];
             memset(descr_ps1_red, 0, sizeof(vl_sift_pix)*128);
-            shock_curve1.push_back(ps1_red);
       
             vgl_point_2d<double> ps1_green = sc1->sh_pt(cor.first);
             double radius_ps1_green        = sc1->time(cor.first);
             double theta_ps1_green         = sc1->theta(cor.first);
             vl_sift_pix descr_ps1_green[128];
             memset(descr_ps1_green, 0, sizeof(vl_sift_pix)*128);
-            shock_curve1.push_back(ps1_green);
 
             vgl_point_2d<double> ps1_blue = sc1->sh_pt(cor.first);
             double radius_ps1_blue        = sc1->time(cor.first);
             double theta_ps1_blue         = sc1->theta(cor.first);
             vl_sift_pix descr_ps1_blue[128];
             memset(descr_ps1_blue, 0, sizeof(vl_sift_pix)*128);
-            shock_curve1.push_back(ps1_blue);
 
             // Shock Point 2 from Query
             vgl_point_2d<double> ps2_red = sc2->sh_pt(cor.second);
@@ -4615,21 +4616,18 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
             double theta_ps2_red         = sc2->theta(cor.second);
             vl_sift_pix descr_ps2_red[128];
             memset(descr_ps2_red, 0, sizeof(vl_sift_pix)*128);
-            shock_curve2.push_back(ps2_red);
 
             vgl_point_2d<double> ps2_green = sc2->sh_pt(cor.second);
             double radius_ps2_green        = sc2->time(cor.second);
             double theta_ps2_green         = sc2->theta(cor.second);
             vl_sift_pix descr_ps2_green[128];
             memset(descr_ps2_green, 0, sizeof(vl_sift_pix)*128);
-            shock_curve2.push_back(ps2_green);
 
             vgl_point_2d<double> ps2_blue = sc2->sh_pt(cor.second);
             double radius_ps2_blue        = sc2->time(cor.second);
             double theta_ps2_blue         = sc2->theta(cor.second);
             vl_sift_pix descr_ps2_blue[128];
             memset(descr_ps2_blue, 0, sizeof(vl_sift_pix)*128);
-            shock_curve2.push_back(ps2_blue);
 
             if ( !flag )
             {
@@ -4640,6 +4638,9 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                             ps2_green.y()/scale_ratio);
                 ps2_blue.set(vcl_fabs(width-(ps2_blue.x()/scale_ratio)),
                             ps2_blue.y()/scale_ratio);
+
+                shock_curve1.push_back(ps1_red);
+                shock_curve2.push_back(ps2_red);
 
                 vl_sift_calc_raw_descriptor(model_sift_filter,
                                             model_red_grad_data,
@@ -4716,6 +4717,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                 ps1_blue.set(vcl_fabs(width-(ps1_blue.x()/scale_ratio)),
                         ps1_blue.y()/scale_ratio);
 
+                shock_curve1.push_back(ps1_red);
+                shock_curve2.push_back(ps2_red);
 
                 vl_sift_calc_raw_descriptor(model_sift_filter,
                                             model_red_grad_data,
