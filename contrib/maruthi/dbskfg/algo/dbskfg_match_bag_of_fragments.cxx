@@ -204,6 +204,8 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                                         &blue_data,
                                         2);
 
+                vl_sift_set_magnif(sift_filter,1.0);
+
                 model_images_grad_data_[title_stream.str()]=grad_data;
                 model_images_sift_filter_[title_stream.str()]=sift_filter;
                 model_images_grad_data_red_[title_stream.str()]=red_data;
