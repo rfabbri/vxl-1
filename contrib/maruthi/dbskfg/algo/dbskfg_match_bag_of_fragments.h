@@ -62,6 +62,7 @@ public:
           bool scale_length           = false,
           bool app_sift               = false,
           bool mirror                 = false,
+          bool outside_shock          = false,
           double area_weight          = 0.0f,
           vil_image_resource_sptr model_image=0,
           vil_image_resource_sptr query_image=0,
@@ -265,6 +266,9 @@ private:
 
     // Mirror matching of query shape
     bool mirror_;
+
+    // Use outside shock in shock computation
+    bool outside_shock_;
 
     // Weighting of area cost term
     double area_weight_;

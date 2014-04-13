@@ -84,6 +84,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
     bool scale_length,
     bool app_sift,
     bool mirror,
+    bool outside_shock,
     double area_weight,
     vil_image_resource_sptr model_image,
     vil_image_resource_sptr query_image,
@@ -106,6 +107,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
       scale_length_(scale_length),
       app_sift_(app_sift),
       mirror_(mirror),
+      outside_shock_(outside_shock),
       area_weight_(area_weight),
       model_image_(model_image),
       query_image_(query_image),
@@ -382,6 +384,7 @@ void dbskfg_match_bag_of_fragments::load_binary_model(vcl_string model_dir)
     load_pro.clear_output();
 
     load_pro.parameters()->set_value( "-cginput" ,filepath);
+    load_pro.parameters()->set_value( "-outside_shock" ,outside_shock_);
 
     bool flag=load_pro.execute();
     load_pro.finish();
@@ -478,6 +481,7 @@ void dbskfg_match_bag_of_fragments::load_binary_query(vcl_string query_dir)
     load_pro.clear_output();
 
     load_pro.parameters()->set_value( "-cginput" ,filepath);
+    load_pro.parameters()->set_value( "-outside_shock" ,outside_shock_);
 
     bool flag=load_pro.execute();
     load_pro.finish();

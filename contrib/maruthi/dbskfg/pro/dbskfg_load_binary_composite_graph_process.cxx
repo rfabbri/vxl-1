@@ -165,6 +165,7 @@ bool dbskfg_load_binary_composite_graph_process::execute()
         output_vsol->add_object(box_poly->cast_to_spatial_object());
         bool status=compute_composite_graph(output_vsol, 
                                             con_ids[(*git).first],
+                                            true, // prune degree threes
                                             outside_shock);
         if ( status == false)
         {
