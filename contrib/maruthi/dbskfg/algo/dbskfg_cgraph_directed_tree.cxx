@@ -1314,8 +1314,8 @@ void dbskfg_cgraph_directed_tree::compute_outer_shock(dbskr_scurve_sptr sc)
         double plus_radius = this->composite_graph_->get_nn_radius(plus_pt);
         double minus_radius = this->composite_graph_->get_nn_radius(minus_pt);
 
-        bdry_plus_outer_shock_radius.push_back(plus_radius);
-        bdry_minus_outer_shock_radius.push_back(minus_radius);
+        bdry_plus_outer_shock_radius.push_back(plus_radius*scale_ratio_);
+        bdry_minus_outer_shock_radius.push_back(minus_radius*scale_ratio_);
     }
 
     sc->set_bdry_plus_outside_shock_radius(bdry_plus_outer_shock_radius);
