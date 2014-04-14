@@ -721,11 +721,6 @@ get_curve(int start_dart, int end_dart, bool construct_circular_ends)
                                                     end_dart, 
                                                     construct_circular_ends);
 
-  if ( this->composite_graph_->get_kd_tree())
-  {
-      this->compute_outer_shock(sc_pair->coarse);
-  }
-
   if (!sc_pair)
     return 0;
   else
@@ -825,6 +820,11 @@ get_curve_pair(int start_dart, int end_dart, bool construct_circular_ends)
     dart_path_scurve_map_[p] = curve_pair;
 
     sc->set_area_factor(area_weight_);
+
+    if ( this->composite_graph_->get_kd_tree())
+    {
+        this->compute_outer_shock(sc);
+    }
 
     // if ( grad_data_ )
     // {
@@ -1297,10 +1297,6 @@ void dbskfg_cgraph_directed_tree::compute_bounding_box()
 
 void dbskfg_cgraph_directed_tree::compute_outer_shock(dbskr_scurve_sptr sc)
 {
-    if ( sc->get_bdry_plus_outside_shock_radius().size() )
-    {
-        return;
-    }
 
     vcl_vector<double> bdry_plus_outer_shock_radius;
     vcl_vector<double> bdry_minus_outer_shock_radius;
@@ -1310,6 +1306,16 @@ void dbskfg_cgraph_directed_tree::compute_outer_shock(dbskr_scurve_sptr sc)
     {
         vgl_point_2d<double> plus_pt=sc->bdry_plus_pt(i);
         vgl_point_2d<double> minus_pt=sc->bdry_minus_pt(i);
+        
+        plus_pt.set(plus_pt.x()/scale_ratio_,plus_pt.y()/scale_ratio_);
+        minus_pt.set(minus_pt.x()/scale_ratio_,minus_pt.y()/scale_ratio_);
+
+        if ( mirror_)
+        {
+            double width = bbox_->width();
+            plus_pt.set(vcl_fabs(width-plus_pt.x()),plus_pt.y());
+            minus_pt.set(vcl_fabs(width-minus_pt.x()),minus_pt.y());
+        }
 
         double plus_radius = this->composite_graph_->get_nn_radius(plus_pt);
         double minus_radius = this->composite_graph_->get_nn_radius(minus_pt);

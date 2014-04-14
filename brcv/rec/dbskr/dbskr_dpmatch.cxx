@@ -113,6 +113,9 @@ double dbskr_dpmatch::computeIntervalCost(int i, int ip, int j, int jp)
   double cost,dF=0,dK=0;
   double dA1(0.0),dA2(0.0);
   double area_cost(0.0);
+  double outside_shock_cost(0.0);
+  vcl_vector<double> os_cost_sc1(2,0.0);
+  vcl_vector<double> os_cost_sc2(2,0.0);
 
   int k;
   scurve1_->stretch_cost(i,ip,ds1_);
@@ -132,7 +135,17 @@ double dbskr_dpmatch::computeIntervalCost(int i, int ip, int j, int jp)
       scurve2_->area_cost(j,jp,dA2);  
       area_cost=scurve1_->get_area_factor()*vcl_fabs(dA1-dA2);
   }
-  cost = dF+R1_*dK+area_cost;
+
+  if ( scurve1_->get_bdry_plus_outside_shock_radius().size() )
+  {
+      scurve1_->outer_shock_cost(i,ip,os_cost_sc1);
+      scurve2_->outer_shock_cost(j,jp,os_cost_sc2);
+            
+      outside_shock_cost=vcl_fabs(os_cost_sc1[0]-os_cost_sc2[0])+
+                         vcl_fabs(os_cost_sc1[1]-os_cost_sc2[1]);
+  }
+
+  cost = dF+R1_*dK+area_cost+outside_shock_cost;
   return cost;
 } 
 

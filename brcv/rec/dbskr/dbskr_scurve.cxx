@@ -719,10 +719,10 @@ void dbskr_scurve::area_cost(int i, int ip, double& dA)
 // The difference in lengths of the corresponding boundarys segments
 void dbskr_scurve::outer_shock_cost(int i, int ip, vcl_vector<double> &a) 
 {
-  a[0]=vcl_fabs(bdry_plus_outer_shock_radius_[i]-
-                bdry_plus_outer_shock_radius_[ip]);
-  a[1]=vcl_fabs(bdry_minus_outer_shock_radius_[i]-
-                bdry_minus_outer_shock_radius_[ip]);
+  a[0]=2.0*vcl_fabs(bdry_plus_outer_shock_radius_[i]-
+                    bdry_plus_outer_shock_radius_[ip]);
+  a[1]=2.0*vcl_fabs(bdry_minus_outer_shock_radius_[i]-
+                    bdry_minus_outer_shock_radius_[ip]);
 
 }
 
