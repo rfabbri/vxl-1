@@ -4280,6 +4280,9 @@ void dbskfg_match_bag_of_fragments::compute_edge_maps(
     pro_color_edg.clear_input();
     pro_color_edg.clear_output();
 
+    pro_color_edg.parameters()->set_value( "-breduce" , true );
+    pro_color_edg.parameters()->set_value( "-sigma" , 1.5 );
+
     pro_color_edg.add_input(inp);
     bool to_c_status = pro_color_edg.execute();
     pro_color_edg.finish();
