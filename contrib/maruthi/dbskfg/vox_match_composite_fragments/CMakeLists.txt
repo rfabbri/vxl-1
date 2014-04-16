@@ -14,7 +14,7 @@ SET( vox_match_composite_fragments_sources
 )
 
 ADD_EXECUTABLE (vox_match_composite_fragments ${vox_match_composite_fragments_sources} )
-TARGET_LINK_LIBRARIES (vox_match_composite_fragments dbskfg dborl_algo dbsk2d_pro dbskfg_pro dbskfg_algo)
+TARGET_LINK_LIBRARIES (vox_match_composite_fragments dbskfg dborl_algo dbsk2d_pro dbskfg_pro dbskfg_algo dbdet_pro )
 
 
 
