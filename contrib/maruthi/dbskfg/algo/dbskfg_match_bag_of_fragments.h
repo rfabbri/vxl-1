@@ -357,6 +357,10 @@ private:
                            vl_sift_pix** grad_data,
                            VlSiftFilt** filter);
 
+    void compute_edge_maps(vil_image_resource_sptr& input_image,
+                           vl_sift_pix** grad_data,
+                           VlSiftFilt** filter);
+
     void compute_grad_color_maps(vil_image_resource_sptr& input_image,
                                  vl_sift_pix** grad_data,
                                  unsigned int channel);

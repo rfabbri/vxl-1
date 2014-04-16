@@ -63,7 +63,15 @@
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_polyline_2d.h>
 
+#include <dbdet/pro/dbdet_third_order_color_edge_detector_process.h>
+
 #include <dbsol/dbsol_file_io.h>
+
+#include <vidpro1/storage/vidpro1_image_storage.h>
+
+#include <dbdet/pro/dbdet_edgemap_storage.h>
+#include <dbdet/pro/dbdet_edgemap_storage_sptr.h>
+#include <dbdet/edge/dbdet_edgemap_sptr.h>
 
 dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
 ( 
@@ -4250,6 +4258,110 @@ void dbskfg_match_bag_of_fragments::compute_grad_maps(
         (*grad_data)[index]=angle;
         ++index;
     }
+
+    vl_free(gradient_magnitude);
+    vl_free(gradient_angle);
+
+}
+
+void dbskfg_match_bag_of_fragments::compute_edge_maps(
+    vil_image_resource_sptr& input_image,
+    vl_sift_pix** grad_data,
+    VlSiftFilt** filter)
+{
+
+    // Create vid pro storage
+    vidpro1_image_storage_sptr inp = new vidpro1_image_storage();
+    inp->set_image(input_image);
+
+    dbdet_third_order_color_edge_detector_process pro_color_edg;
+
+    // Before we start the process lets clean input output
+    pro_color_edg.clear_input();
+    pro_color_edg.clear_output();
+
+    pro_color_edg.add_input(inp);
+    bool to_c_status = pro_color_edg.execute();
+    pro_color_edg.finish();
+
+    // Create output storage for edge detection
+    vcl_vector<bpro1_storage_sptr> edge_det_results;
+
+    // Grab output from color third order edge detection
+    // if process did not fail
+    if ( to_c_status )
+    {
+        edge_det_results = pro_color_edg.get_output();
+    }
+
+    //Clean up after ourselves
+    pro_color_edg.clear_input();
+    pro_color_edg.clear_output();
+
+    dbdet_edgemap_storage_sptr input_edgemap;
+    input_edgemap.vertical_cast(edge_det_results[0]);
+    dbdet_edgemap_sptr edgemap = input_edgemap->get_edgemap();
+
+    vil_image_view<vl_sift_pix> grad_map(input_image->ni(),input_image->nj());
+    vil_image_view<vl_sift_pix> orient_map(input_image->ni(),input_image->nj());
+    grad_map.fill(0.0);
+    orient_map.fill(0.0);
+
+    for (vcl_vector<dbdet_edgel *>::const_iterator 
+             e_it = edgemap->edgels.begin(); 
+         e_it != edgemap->edgels.end(); ++e_it)
+    {
+        dbdet_edgel* e = *e_it;
+        
+        const vgl_point_2d<double > &pt = (e->pt);
+        int pt_x = dbdet_round(pt.x());
+        int pt_y = dbdet_round(pt.y());
+        
+        if ( grad_map.in_range(pt_x,pt_y))
+        {
+            grad_map(pt_x,pt_y)=e->strength;
+            orient_map(pt_x,pt_y)=e->tangent;
+        }
+    }
+
+    unsigned int width  = input_image->ni();
+    unsigned int height = input_image->nj();
+
+    double* gradient_magnitude = (double*) 
+        vl_malloc(width*height*sizeof(double));
+    double* gradient_angle     = (double*) 
+        vl_malloc(width*height*sizeof(double));
+
+    *filter = vl_sift_new(width,height,3,3,0);
+    *grad_data=(vl_sift_pix*) vl_malloc(sizeof(vl_sift_pix)*width*height*2);
+    
+    unsigned int index=0;
+    for (unsigned j=0;j<input_image->nj();++j)
+    {
+        for (unsigned i=0;i<input_image->ni();++i)
+        {
+            double mag  = grad_map(i,j);
+            double angle= orient_map(i,j);
+            (*grad_data)[index]=mag;
+            ++index;
+            (*grad_data)[index]=angle;
+            ++index;
+            
+        }
+    }
+
+    // For Debugging purposes
+    // vcl_cout<<index<<vcl_endl;
+    // vcl_cout<<width*height*2<<vcl_endl;
+    // vcl_ofstream grad_angle_data("grad_map_data.txt");
+    // vcl_cout<<width<<" "<<height<<vcl_endl;
+    // for (unsigned int w=0; w < width*height*2 ; w=w+2)
+    // {
+    //     grad_angle_data<<(*grad_data)[w]<<vcl_endl;
+    //     grad_angle_data<<(*grad_data)[w+1]<<vcl_endl;
+
+    // }
+    // grad_angle_data.close();
 
     vl_free(gradient_magnitude);
     vl_free(gradient_angle);
