@@ -4320,8 +4320,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
 {
  
 
-    VlFloatVectorComparisonFunction L2_distance =    
-      vl_get_vector_comparison_function_f (VlDistanceL2) ;
+    VlFloatVectorComparisonFunction Chi2_distance =    
+      vl_get_vector_comparison_function_f (VlDistanceChi2) ;
     double sift_diff= 0.0;
     
     double arclength_shock_curve1=0.0;
@@ -4448,7 +4448,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
                                                      1,
                                                      descr_ps2,
                                                      1,
-                                                     L2_distance);
+                                                     Chi2_distance);
 
             sift_diff=sift_diff+result[0];
             local_distance=local_distance+result[0];
@@ -4567,8 +4567,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
 {
  
 
-    VlFloatVectorComparisonFunction L2_distance =    
-      vl_get_vector_comparison_function_f (VlDistanceL2) ;
+    VlFloatVectorComparisonFunction Chi2_distance =    
+      vl_get_vector_comparison_function_f (VlDistanceChi2) ;
     double sift_diff= 0.0;
     
     double arclength_shock_curve1=0.0;
@@ -4846,7 +4846,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                                                      1,
                                                      descr_ps2_red,
                                                      1,
-                                                     L2_distance);
+                                                     Chi2_distance);
 
             vl_eval_vector_comparison_on_all_pairs_f(result_green,
                                                      128,
@@ -4854,7 +4854,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                                                      1,
                                                      descr_ps2_green,
                                                      1,
-                                                     L2_distance);
+                                                     Chi2_distance);
 
             vl_eval_vector_comparison_on_all_pairs_f(result_blue,
                                                      128,
@@ -4862,7 +4862,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                                                      1,
                                                      descr_ps2_blue,
                                                      1,
-                                                     L2_distance);
+                                                     Chi2_distance);
 
 
             sift_diff=sift_diff+result_red[0]+result_green[0]+result_blue[0];
