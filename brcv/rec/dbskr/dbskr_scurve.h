@@ -68,7 +68,8 @@ public:
                vcl_vector<double> &theta,
                vcl_vector<double> &phi, 
                bool binterpolate=true, double interpolate_ds=1.0, 
-               bool bsub_sample=true, double subsample_ds=1.0);
+               bool bsub_sample=true, double subsample_ds=1.0,
+               bool leaf_edge=false);
 
   //: Interpolate/copy constructor
   //  Constructs and interpolated copy of an scurve
@@ -87,6 +88,9 @@ public:
 
   // get area factor
   double get_area_factor(){return area_factor_;}
+
+  // get whether leaf edge
+  bool is_leaf_edge(){return leaf_edge_;}
 
   // set outside shock radius
   void set_bdry_plus_outside_shock_radius(vcl_vector<double>& radius)
@@ -256,6 +260,8 @@ protected:
   double virtual_length_; // If set use this
 
   double area_factor_;
+
+  bool leaf_edge_;
 };
 
 #endif  // _dbskr_scurve_h

@@ -156,7 +156,8 @@ dbskr_scurve_sptr dbskfg_compute_scurve::compute_curve(
                                                      sh_pt, time, theta, phi,
                                                      binterpolate, 
                                                      interpolate_ds,
-                                                     bsub_sample, subsample_ds);
+                                                     bsub_sample, subsample_ds,
+                                                     leaf_edge);
 
     return shock_curve;
 }

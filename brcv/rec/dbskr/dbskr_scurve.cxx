@@ -51,9 +51,10 @@ dbskr_scurve::dbskr_scurve(int num_points,
                            vcl_vector<double> &theta,
                            vcl_vector<double> &phi, 
                            bool binterpolate, double interpolate_ds,
-                           bool bsub_sample, double subsample_ds): 
+                           bool bsub_sample, double subsample_ds,
+                           bool leaf_edge): 
     interpolate_ds_(interpolate_ds), subsample_ds_(subsample_ds),
-    virtual_length_(0.0),area_factor_(0.0) 
+    virtual_length_(0.0),area_factor_(0.0),leaf_edge_(leaf_edge) 
 {
   if (binterpolate){
     vcl_vector<int> lmap; //dummy map 
