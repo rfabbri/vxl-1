@@ -4442,6 +4442,9 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
     double arclength_shock_curve1=0.0;
     double arclength_shock_curve2=0.0;
     
+    double splice_cost_shock_curve1=0.0;
+    double splice_cost_shock_curve2=0.0;
+
     // Get matching pairs
     for (unsigned i = 0; i < map_list.size(); i++) 
     {
@@ -4458,6 +4461,20 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
 
         double local_arclength_shock_curve1=0.0;
         double local_arclength_shock_curve2=0.0;
+        
+        splice_cost_shock_curve1=sc1->splice_cost(
+            scurve_matching_R_,
+            elastic_splice_cost_,
+            false,
+            combined_edit_,
+            sc1->is_leaf_edge())+splice_cost_shock_curve1;
+
+        splice_cost_shock_curve2=sc2->splice_cost(
+            scurve_matching_R_,
+            elastic_splice_cost_,
+            false,
+            combined_edit_,
+            sc2->is_leaf_edge())+splice_cost_shock_curve2;
 
         for (unsigned j = 0; j < map_list[i].size(); ++j) 
         {
@@ -4650,16 +4667,18 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
         //}
     }
 
-    double norm_val=sift_diff/(arclength_shock_curve1+
-                               arclength_shock_curve2);
+    double length_norm=sift_diff/(arclength_shock_curve1+
+                                  arclength_shock_curve2);
+    double splice_norm=sift_diff/(splice_cost_shock_curve1+
+                                  splice_cost_shock_curve2);
 
     // vcl_cout << "final cost: " << sift_diff 
-    //          << " final norm cost: " << norm_val 
-    //          << "( tree1 total length: " << arclength_shock_curve1
-    //          << ", tree2 total length: " << arclength_shock_curve2
+    //          << " final norm cost: " << splice_norm 
+    //          << "( tree1 total splice: " << splice_cost_shock_curve1
+    //          << ", tree2 total splice: " << splice_cost_shock_curve2
     //          << ")" << vcl_endl;
 
-    vcl_pair<double,double> app_diff(sift_diff/arclength_shock_curve1,norm_val);
+    vcl_pair<double,double> app_diff(splice_norm,length_norm);
     return app_diff;
 }
 
