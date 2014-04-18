@@ -351,7 +351,8 @@ void dbskfg_compute_composite_graph_streamlined::compile_shock_elements()
                     target_node,
                     composite_graph_->next_available_id(),
                     dbskfg_shock_link::SHOCK_EDGE,
-                    frag_type);
+                    frag_type,
+                    edge->id());
             composite_graph_->add_edge(shock_edge);
 
             source_node->add_outgoing_edge(shock_edge);
