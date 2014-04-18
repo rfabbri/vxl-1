@@ -29,6 +29,9 @@
 #include <vcl_utility.h>
 #include <vcl_set.h>
 
+#include <dbsk2d/dbsk2d_xshock_sample.h>
+#include <dbsk2d/dbsk2d_xshock_sample_sptr.h>
+
 class dbskfg_contour_node;
 class dbskfg_contour_link;
 
@@ -49,7 +52,8 @@ public:
                       unsigned int id,
                       ShockType shock_type,
                       dbskfg_utilities::Fragment_Type type=
-                      dbskfg_utilities::REGULAR);
+                      dbskfg_utilities::REGULAR,
+                      int original_ishock_id=-1);
 
     // Destructor
 
@@ -118,6 +122,16 @@ public:
     //: set polygon
     void set_polygon(vgl_polygon<double> poly);
 
+    //: set extrinsinc points
+    void set_sampled_shock_points(
+        vcl_vector<dbsk2d_xshock_sample_sptr>& samples){samples_=samples;}
+
+    //: set extrinsinc points
+    vcl_vector<dbsk2d_xshock_sample_sptr>& get_sampled_shock_points()
+    {return samples_;}
+
+    // get original shock id
+    int get_original_shock_id(){return original_ishock_id_;}
 
     //: Function tell whether this contour id spawned this shock
     //: from either left or right side
@@ -207,6 +221,11 @@ private:
     dbsk2d_ishock_edge* elm_;
 
     vcl_vector<dbsk2d_ishock_belm*> belm_;
+
+    vcl_vector<dbsk2d_xshock_sample_sptr> samples_;
+
+    // store original ishock id
+    int original_ishock_id_;
 
     // Private methods
 

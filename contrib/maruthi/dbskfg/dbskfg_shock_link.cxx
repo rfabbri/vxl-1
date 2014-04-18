@@ -31,7 +31,8 @@ dbskfg_shock_link::dbskfg_shock_link(dbskfg_composite_node_sptr source,
                                      dbskfg_composite_node_sptr target,
                                      unsigned int id,
                                      dbskfg_shock_link::ShockType shock_type,
-                                     dbskfg_utilities::Fragment_Type frag_type) 
+                                     dbskfg_utilities::Fragment_Type frag_type,
+                                     int original_ishock_id) 
     : dbskfg_composite_link(source,target,
                             dbskfg_composite_link::SHOCK_LINK,id),
       shock_link_type_(shock_type),
@@ -42,7 +43,8 @@ dbskfg_shock_link::dbskfg_shock_link(dbskfg_composite_node_sptr source,
       left_boundary_(),
       right_boundary_(),
       rag_node_(0),
-      elm_(0)
+      elm_(0),
+      original_ishock_id_(original_ishock_id)
 {
  
 }

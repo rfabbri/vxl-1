@@ -334,7 +334,7 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
         shock_storage.vertical_cast(shock_results[0]);
 
         dbsk2d_sample_ishock sampler(shock_storage->get_shock_graph());
-        sampler.sample(1.0,INSIDE);
+        sampler.sample(1.0,BOTHSIDE);
 
         ishock_sample_map = sampler.get_ishock_samples();
 
@@ -614,6 +614,22 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
         }
         else
         {
+            vcl_map<unsigned int,dbskfg_shock_link*> shock_links=
+                node->get_shock_links();
+            vcl_map<unsigned int,dbskfg_shock_link*>::iterator it;
+            for ( it= shock_links.begin() ; it != shock_links.end(); ++it)
+            {
+                int orig_shock_id=(*it).second->get_original_shock_id();
+                if ( !ishock_sample_map.count(orig_shock_id))
+                {
+                    vcl_cout<<"BIG ERROR SHOCK SAMPLE NOT FOUND"<<vcl_endl;
+                }
+                vcl_vector<dbsk2d_xshock_sample_sptr> samples=ishock_sample_map
+                    [orig_shock_id];
+
+                (*it).second->set_sampled_shock_points(samples);
+
+            }
             vcl_map<unsigned int,dbskfg_shock_node*> wavefront=
                 node->get_wavefront();
             vcl_map<unsigned int,dbskfg_shock_node*>::iterator wit;
