@@ -323,10 +323,22 @@ void dbsk2d_sample_ishock::sample_all_edges(int option)
       //if there is a degenerate (A1-Ainf) node on the list, sample it as such
       if (cur_iedge == 0) 
       {
+        unsigned int start=((dbsk2d_xshock_edge*)new_xedge.ptr())
+            ->num_samples();  
         //sample the A1-Ainf node between the last edge and the next edge
         sample_A1_Ainf_node(last_iedge->cSNode(), (dbsk2d_xshock_edge*)new_xedge.ptr());
+        unsigned int stop=((dbsk2d_xshock_edge*)new_xedge.ptr())
+            ->num_samples();
+        
+        for ( unsigned int s=start; s < stop ; ++s)
+        {
+            ishock_sample_map_[last_iedge->id()].push_back(
+                ((dbsk2d_xshock_edge*)new_xedge.ptr())->sample(s));
+        }
         continue;
       }
+
+      unsigned int start=((dbsk2d_xshock_edge*)new_xedge.ptr())->num_samples();
 
       //sample the regular intrinsic shock edges (A1^2) here
       switch (cur_iedge->type()){
@@ -357,6 +369,13 @@ void dbsk2d_sample_ishock::sample_all_edges(int option)
         default: break;
       }
 
+      unsigned int stop=((dbsk2d_xshock_edge*)new_xedge.ptr())->num_samples();
+      for ( unsigned int s=start; s < stop ; ++s)
+      {
+          ishock_sample_map_[cur_iedge->id()].push_back(
+              ((dbsk2d_xshock_edge*)new_xedge.ptr())->sample(s));
+      }
+      
       last_iedge = cur_iedge;
     }
 
@@ -366,6 +385,20 @@ void dbsk2d_sample_ishock::sample_all_edges(int option)
     //This is not the best place to do this (FIX ME!!!)
     new_xedge->form_shock_fragment();
   }
+
+  // Uncomment for debugging
+  // vcl_ofstream file("actual_shock_sample.txt");
+  // vcl_map<int,vcl_vector<dbsk2d_xshock_sample_sptr> >::iterator mit;
+  // for ( mit = ishock_sample_map_.begin(); mit != ishock_sample_map_.end() ; ++mit)
+  // {
+  //     for ( unsigned int k=0; k < (*mit).second.size() ; ++k)
+  //     {
+  //         file<<(*mit).second[k]->pt.x()<<" "
+  //             <<(*mit).second[k]->pt.y()<<vcl_endl;
+  //     }
+  // }
+  // file.close();
+
 }
 
 //: Sample each shock branch

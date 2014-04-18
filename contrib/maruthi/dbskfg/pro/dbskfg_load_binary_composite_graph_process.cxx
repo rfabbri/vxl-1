@@ -299,6 +299,7 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
     vidpro1_image_storage_sptr image_storage = vidpro1_image_storage_new();
 
 
+    vcl_map<int,vcl_vector<dbsk2d_xshock_sample_sptr> > ishock_sample_map;
     vcl_vector<double> outside_shock_radius;
     rsdl_kd_tree_sptr kd_tree(0);
     
@@ -331,6 +332,28 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
 
         dbsk2d_shock_storage_sptr shock_storage;
         shock_storage.vertical_cast(shock_results[0]);
+
+        dbsk2d_sample_ishock sampler(shock_storage->get_shock_graph());
+        sampler.sample(1.0,INSIDE);
+
+        ishock_sample_map = sampler.get_ishock_samples();
+
+        // uncomment for debugging
+        // vcl_ofstream file("actual_shock_sample_pro.txt");
+        // vcl_map<int,vcl_vector<dbsk2d_xshock_sample_sptr> >::iterator mit;
+        // for ( mit = ishock_sample_map.begin(); mit != ishock_sample_map.end()
+        //           ; ++mit)
+        // {
+        //     for ( unsigned int k=0; k < (*mit).second.size() ; ++k)
+        //     {
+        //         file<<(*mit).second[k]->left_bnd_pt.x()<<" "
+        //             <<(*mit).second[k]->left_bnd_pt.y()<<" "
+        //             <<(*mit).second[k]->right_bnd_pt.x()<<" "
+        //             <<(*mit).second[k]->right_bnd_pt.y()<<vcl_endl;
+
+        //     }
+        // }
+        // file.close();
 
         dbsk2d_ishock_grouping_transform grouper(
             shock_storage->get_ishock_graph());

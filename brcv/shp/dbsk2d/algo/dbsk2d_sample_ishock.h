@@ -70,6 +70,9 @@ protected:
 
   double delta_sample; ///< sampling resolution
 
+  //: mapping of intrinsinc shock id to edges
+  vcl_map<int,vcl_vector<dbsk2d_xshock_sample_sptr> > ishock_sample_map_;
+
 public:
   //: Constructor
   dbsk2d_sample_ishock(dbsk2d_shock_graph_sptr coarse_shock_graph);
@@ -115,6 +118,10 @@ public:
 
   //: Add the edge adjacency info to the nodes (respecting the ordering)
   void add_edge_adjacency_info(int option);
+
+  //: Get ishock samples map
+  vcl_map<int,vcl_vector<dbsk2d_xshock_sample_sptr> >& get_ishock_samples()
+  {return ishock_sample_map_;}
 
 };
 
