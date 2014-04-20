@@ -199,7 +199,10 @@ double dbsk2d_transform_manager::transform_probability(
     
 
     double average_gPb = summation/curve.size();
-
+    if ( average_gPb > normalization_ )
+    {
+        average_gPb = normalization_;
+    }
     return average_gPb/normalization_;
 
 }
