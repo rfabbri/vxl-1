@@ -368,7 +368,7 @@ bool dbsk2d_compute_containment_graph_process::execute()
     dbsk2d_containment_graph cgraph(shock_storage->get_ishock_graph(),
                                     path_threshold,
                                     loop_cost,
-                                    outside_shock);
+                                    outside);
 
     cgraph.construct_graph();
     cgraph.write_stats(stats_filestream);
