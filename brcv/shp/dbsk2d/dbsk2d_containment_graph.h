@@ -36,7 +36,8 @@ public:
     //: Constructor
     dbsk2d_containment_graph(dbsk2d_ishock_graph_sptr ishock_graph,
                              double path_threshold,
-                             unsigned int loop_type);
+                             unsigned int loop_type,
+                             bool expand_outside=false);
 
     //:Destructor
     ~dbsk2d_containment_graph();
@@ -82,6 +83,9 @@ private:
 
     // store id for nodes
     unsigned int next_available_id_;
+
+    // store whether expanding outside
+    bool expand_outside_;
 
     //: get next available id 
     unsigned int next_available_id()

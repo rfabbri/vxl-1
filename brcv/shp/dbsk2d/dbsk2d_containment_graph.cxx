@@ -24,14 +24,15 @@ dbsk2d_containment_graph::dbsk2d_containment_graph
 (
     dbsk2d_ishock_graph_sptr ishock_graph,
     double path_threshold,
-    unsigned int loop_type
+    unsigned int loop_type,
+    bool expand_outside
 ):ishock_graph_(ishock_graph),
   path_threshold_(path_threshold),
   loop_type_(loop_type),
   next_available_id_(0),
-  gap_id_(0)
+  gap_id_(0),
+  expand_outside_(expand_outside)
 {
-
 }
 
 //: desctructor
@@ -66,12 +67,10 @@ void dbsk2d_containment_graph::construct_graph()
         // double con_ratio= grouper.contour_ratio((*it).first,poly);
 
         double con_ratio= grouper.contour_ratio((*it).first);
-
         if ( con_ratio >= 0.4 &&
              frag_edges[(*it).first].size() > 1  &&
-             grouper.region_within_image((*it).first))
+             (expand_outside_ || grouper.region_within_image((*it).first)))
         {
-
             // Create  a new root node
             dbsk2d_containment_node_sptr root_node = new 
                 dbsk2d_containment_node(0,  // Incoming transform
@@ -269,7 +268,8 @@ void dbsk2d_containment_graph::construct_graph()
             vgl_polygon<double> poly;
             grouper.polygon_fragment((*it).first,poly);
 
-            if ( !grouper.region_within_image((*it).first) ||
+            if ( (expand_outside_ && !grouper.region_within_image((*it).first)) 
+                 ||
                  !frag_edges[(*it).first].size() || 
                  !rag_matched_nodes.count((*it).first) )
             {
@@ -290,7 +290,7 @@ void dbsk2d_containment_graph::construct_graph()
                  rag_matched_nodes.count((*it).first) &&
                  frag_edges[(*it).first].size() &&
                  node->get_prob() >= path_threshold_ &&
-                 grouper.region_within_image((*it).first))
+                 (expand_outside_ || grouper.region_within_image((*it).first)))
             {
                 // vcl_stringstream filename;
                 // filename<<"Depth_"<<depth<<"_id_"<<

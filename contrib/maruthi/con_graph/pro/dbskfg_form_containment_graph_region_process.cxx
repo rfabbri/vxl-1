@@ -68,6 +68,8 @@ dbskfg_form_containment_graph_region_process()
                             (bool)false) ||
         !parameters()->add( "Loop cost type (0,1)" , "-loop_cost" , 
                             (unsigned int) 1) ||
+        !parameters()->add( "Expand Outside" , "-outside" , 
+                            (bool) false) ||
         !parameters()->add( "Output folder:" , 
                             "-output_folder", bpro1_filepath("", "")) ||
         !parameters()->add( "Output file prefix:" , 
