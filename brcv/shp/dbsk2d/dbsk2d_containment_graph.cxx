@@ -268,8 +268,10 @@ void dbsk2d_containment_graph::construct_graph()
             vgl_polygon<double> poly;
             grouper.polygon_fragment((*it).first,poly);
 
-            if ( (expand_outside_ && !grouper.region_within_image((*it).first)) 
-                 ||
+            bool flag=(expand_outside_)?false:
+                !grouper.region_within_image((*it).first);
+
+            if ( flag || 
                  !frag_edges[(*it).first].size() || 
                  !rag_matched_nodes.count((*it).first) )
             {
@@ -842,6 +844,10 @@ void dbsk2d_containment_graph::write_graph(vcl_string filename)
                 if ( ttype == dbsk2d_ishock_transform::GAP)
                 {
                     prefix=" [ label=\"G={";
+                }
+                else if ( ttype == dbsk2d_ishock_transform::GAP4)
+                {
+                    prefix=" [ label=\"G4={";
                 }
                 else
                 {
