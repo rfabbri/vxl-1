@@ -70,6 +70,9 @@ public:
     /*virtual */ vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> 
         get_contour_pair(){return contour_pair_;}
 
+    vcl_vector<dbsk2d_ishock_bpoint*> get_ordered_contour(){
+        return ordered_contour_;}
+
 private: 
     
     // Detect contour 
@@ -89,6 +92,9 @@ private:
 
     // Keep track whether transform is valid
     bool valid_transform_;
+
+    // Keep ordered set of contour points
+    vcl_vector<dbsk2d_ishock_bpoint*> ordered_contour_;
 
     // Keep track of any degree three nodes to reinitialize contact shocks
     vcl_map<unsigned int, dbsk2d_ishock_belm*> higher_degree_nodes_;

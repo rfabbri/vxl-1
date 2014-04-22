@@ -93,7 +93,7 @@ double dbsk2d_ishock_loop_transform::likelihood()
 //: remove boundary element
 void dbsk2d_ishock_loop_transform::detect_contour()
 {
-
+    ordered_contour_.clear();
 
     // Determine all parts involved in this contour
     interacting_bnd_elements_[contour_point_->id()]=contour_point_;
@@ -105,6 +105,7 @@ void dbsk2d_ishock_loop_transform::detect_contour()
     {
         removal_bnd_elements_[contour_point_->id()]=contour_point_;
     }
+    ordered_contour_.push_back(contour_point_);
 
     // Since this a degree three put something back on right away
     dbsk2d_ishock_belm* first_belm = *(contour_point_->LinkedBElmList.begin());
@@ -117,12 +118,14 @@ void dbsk2d_ishock_loop_transform::detect_contour()
     if ( bline->s_pt()->id()==contour_point_->id())
     {
         stack.push_back(bline->e_pt());
+        ordered_contour_.push_back(stack.back());
         removal_bnd_elements_[stack.back()->id()]=stack.back();
 
     }
     else
     {
         stack.push_back(bline->s_pt());
+        ordered_contour_.push_back(stack.back());
         removal_bnd_elements_[stack.back()->id()]=stack.back();
     }
 
@@ -164,6 +167,7 @@ void dbsk2d_ishock_loop_transform::detect_contour()
                   {
                       removal_bnd_elements_[bline->s_pt()->id()]=bline->s_pt();
                       stack.push_back(bline->s_pt());
+                      ordered_contour_.push_back(stack.back());
                   }
                   else if ( removal_bnd_elements_.count(bline->e_pt()->id())==0
                             && 
@@ -171,6 +175,7 @@ void dbsk2d_ishock_loop_transform::detect_contour()
                   {
                       removal_bnd_elements_[bline->e_pt()->id()]=bline->e_pt();
                       stack.push_back(bline->e_pt());
+                      ordered_contour_.push_back(stack.back());
                   }
               }
               
