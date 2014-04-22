@@ -471,6 +471,40 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
                 vcl_vector<vgl_point_2d<double> > gap_filler
                     = gap_transform->get_es_samples();
 
+                dbsk2d_ishock_loop_transform loop_trans(
+                    ishock_graph,
+                    pair.first);
+                vcl_vector<dbsk2d_ishock_bpoint*> ordered_contour=
+                    loop_trans.get_ordered_contour();
+
+                vcl_vector<vgl_point_2d<double> > final_contour;
+                if ( gap_filler[0] == ordered_contour[0]->pt())
+                {
+                    vcl_vector<vgl_point_2d<double> >::reverse_iterator rit;
+                    for ( rit = gap_filler.rbegin(); rit != gap_filler.rend();
+                          ++rit)
+                    {
+                        final_contour.push_back((*rit));
+                    }
+                }
+                else
+                {
+                    vcl_vector<vgl_point_2d<double> >::iterator fit;
+                    for ( fit = gap_filler.begin(); fit != gap_filler.end();
+                          ++fit)
+                    {
+                        final_contour.push_back((*fit));
+                    }
+                }
+
+                for ( unsigned int s=0; s < ordered_contour.size() ; ++s)
+                {
+                    final_contour.push_back(ordered_contour[s]->pt());
+                    
+                }
+
+                vgl_polygon<double> poly(final_contour);
+
                 dbsk2d_bnd_contour_sptr con1 = this->get_contour(pair.first);
                 if ( gap_trans.count(con1->get_id()))
                 {
@@ -479,7 +513,7 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
                     dbsk2d_transform_manager::Instance().write_output_region
                         (gap_trans[con1->get_id()],gap_filler);
                     dbsk2d_transform_manager::Instance().write_output_polygon
-                        (gap_trans[con1->get_id()],gap_filler);
+                        (poly);
 
                 }
                 else
@@ -490,13 +524,11 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
                     dbsk2d_transform_manager::Instance().write_output_region
                         (cons,gap_filler);
                     dbsk2d_transform_manager::Instance().write_output_polygon
-                        (cons,gap_filler);
+                        (poly);
 
                 }
 
-                dbsk2d_ishock_loop_transform loop_trans(
-                    ishock_graph,
-                    pair.first);
+
                 loop_trans.execute_transform();
             }
             else if ( (*it).first >= preprocess_threshold && 
