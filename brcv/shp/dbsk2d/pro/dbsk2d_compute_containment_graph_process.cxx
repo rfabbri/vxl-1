@@ -290,22 +290,11 @@ bool dbsk2d_compute_containment_graph_process::execute()
 
                     closed_polys.push_back(fitted_poly);
                 }
-                else
-                {
-                    double prob=dbsk2d_transform_manager::Instance().
-                        transform_probability(curve);
-                    if ( prob > max_gPb_value )
-                    {
-                        max_gPb_value=prob;
-                    }
-                }
             }
         }
 
         
     }
-
-    dbsk2d_transform_manager::Instance().set_normalization(max_gPb_value);
 
     if ( remove_closed )
     {

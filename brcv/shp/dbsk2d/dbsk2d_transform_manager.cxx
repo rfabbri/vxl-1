@@ -108,6 +108,7 @@ void dbsk2d_transform_manager::read_in_gpb_data(vcl_string filename)
     vcl_ifstream file (filename.c_str(), 
                        vcl_ios::in|vcl_ios::binary|vcl_ios::ate);
     double* memblock(0);
+    double max_gPb_value=0.0;
     if (file.is_open())
     {
         vcl_ifstream::pos_type size = file.tellg();
@@ -132,6 +133,10 @@ void dbsk2d_transform_manager::read_in_gpb_data(vcl_string filename)
             {
                 double value = memblock[index];
                 gPb_image_(i,j)=value;
+                if ( value > max_gPb_value )
+                {
+                    max_gPb_value=value;
+                }
                 index++;
             }
         }
@@ -141,7 +146,7 @@ void dbsk2d_transform_manager::read_in_gpb_data(vcl_string filename)
         memblock=0;
     }
 
-    
+    normalization_=max_gPb_value;
 }
 
 double dbsk2d_transform_manager::transform_probability(
@@ -190,9 +195,9 @@ double dbsk2d_transform_manager::transform_probability(
         double y=curve[c].x();
         double x=curve[c].y();
 
-        double gPb = vil_bilin_interp_safe(gPb_image_,
-                                           x,
-                                           y);
+        double gPb = vil_bilin_interp_safe_extend(gPb_image_,
+                                                  x,
+                                                  y);
 
         summation = summation + gPb;
     }
