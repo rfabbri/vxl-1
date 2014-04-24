@@ -352,7 +352,8 @@ bool dbsk2d_compute_containment_graph_process::execute()
 
     pre_process_contours(shock_storage->get_ishock_graph(),
                          preprocess_threshold,
-                         gap_distance);
+                         gap_distance,
+                         remove_closed);
 
     dbsk2d_containment_graph cgraph(shock_storage->get_ishock_graph(),
                                     path_threshold,
@@ -389,7 +390,8 @@ bool dbsk2d_compute_containment_graph_process::finish()
 void dbsk2d_compute_containment_graph_process::
 pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
                      double preprocess_threshold,
-                     double gap_distance)
+                     double gap_distance,
+                     bool remove_closed)
 {
     
     vcl_vector<dbsk2d_ishock_belm*> belm_list = ishock_graph->
@@ -517,8 +519,14 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
 
                 }
 
-
-                loop_trans.execute_transform();
+                if ( remove_closed )
+                {
+                    loop_trans.execute_transform();
+                }
+                else
+                {
+                    (*it).second->execute_transform();
+                }
             }
             else if ( (*it).first >= preprocess_threshold && 
                       length_of_gap <= gap_distance)
