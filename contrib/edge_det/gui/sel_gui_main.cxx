@@ -76,6 +76,8 @@
 #include <dbdet/pro/dbdet_detect_topographic_curves_process.h>
 #include <dbdet/pro/dbdet_generic_color_edge_detector_process.h>
 #include <dbdet/pro/dbdet_third_order_color_edge_detector_process.h>
+//Third order using vxl implementation
+#include "dbdet/pro/dbdet_third_order_edge_detector_vxl_process.h"
 
 #if OCTAVE_FOUND
 #include <dbdet/pro/dbdet_pb_edge_detector_process.h>
@@ -169,7 +171,8 @@ int main(int argc, char** argv)
   REG_PROCESS( dbdet_detect_topographic_curves_process );
   REG_PROCESS( dbdet_generic_color_edge_detector_process );
   REG_PROCESS( dbdet_third_order_color_edge_detector_process );
-  
+  //VXL third order edge detection
+  REG_PROCESS( dbdet_third_order_edge_detector_vxl_process );
   
 
 #if OCTAVE_FOUND
