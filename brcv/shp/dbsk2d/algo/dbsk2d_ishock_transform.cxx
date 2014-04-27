@@ -237,8 +237,17 @@ void dbsk2d_ishock_transform::recompute_full_shock_graph()
 
         for ( unsigned int i=0; i < gaps.size() ; ++i)
         {
-            vcl_vector< dbsk2d_ishock_belm*>  euler_spiral = gaps[i];
-            if (euler_spiral[0]->is_a_GUIelm())
+            vcl_vector< dbsk2d_ishock_belm*>  temp_euler_spiral = gaps[i];
+            vcl_vector< dbsk2d_ishock_belm*>  euler_spiral;
+            for ( unsigned int e=0; e < temp_euler_spiral.size() ; ++e )
+            {
+                if ( temp_euler_spiral[e]->is_a_GUIelm())
+                {
+                    euler_spiral.push_back(temp_euler_spiral[e]);
+                }
+            }
+
+            if (euler_spiral.size())
             {
                 ishock_detector_.initialize_contacts_and_A3s(euler_spiral);
             }
