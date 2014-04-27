@@ -650,21 +650,28 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
                 if ( (*it).first >= preprocess_threshold &&
                      length_of_gap <= gap_distance )
                 {
-                    (*it).second->execute_transform();
+                    bool flag=(*it).second->execute_transform();
 
-                    dbsk2d_ishock_bpoint* point=
-                        (*it).second->endpoint_in_elms(
-                            gap4_con_ids[(*it).first]);
-
-                    if ( point && (point->id() != pair.second->id()) )
+                    if ( flag )
                     {
-                        dbsk2d_ishock_loop_transform loop_trans(
-                            ishock_graph,
-                            point);
-                        loop_trans.execute_transform();
+                        dbsk2d_ishock_bpoint* point=
+                            (*it).second->endpoint_in_elms(
+                                gap4_con_ids[(*it).first]);
 
+                        if ( point && (point->id() != pair.second->id()) )
+                        {
+                            dbsk2d_ishock_loop_transform loop_trans(
+                                ishock_graph,
+                                point);
+                            loop_trans.execute_transform();
+
+                        }
                     }
+                    else
+                    {
 
+                        (*it).second->recompute_full_shock_graph();
+                    }
                 }
             }
         }
