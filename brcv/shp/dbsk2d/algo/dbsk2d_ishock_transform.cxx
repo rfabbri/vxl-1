@@ -259,6 +259,14 @@ void dbsk2d_ishock_transform::recompute_full_shock_graph()
 
                 for ( ; dit != belm_list.end(); ++dit)
                 {
+
+                    if ( (*dit)->is_a_point() )
+                    {
+                        dbsk2d_ishock_bpoint* bpoint=(dbsk2d_ishock_bpoint*)
+                            (*dit);
+                        bpoint->set_visibility(visibility_map[bpoint->id()]);
+                    }
+
                     if ( (*dit)->is_a_GUIelm() )
                     {
                         ishock_detector_.init_cand_src_between(*bit,*dit);
