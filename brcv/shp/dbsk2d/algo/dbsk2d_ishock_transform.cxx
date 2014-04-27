@@ -239,11 +239,12 @@ void dbsk2d_ishock_transform::recompute_full_shock_graph()
         {
             vcl_vector< dbsk2d_ishock_belm*>  temp_euler_spiral = gaps[i];
             vcl_vector< dbsk2d_ishock_belm*>  euler_spiral;
-            for ( unsigned int e=0; e < temp_euler_spiral.size() ; ++e )
+            for ( unsigned int e=0; e < temp_euler_spiral.size() ; e=e+2 )
             {
                 if ( temp_euler_spiral[e]->is_a_GUIelm())
                 {
                     euler_spiral.push_back(temp_euler_spiral[e]);
+                    euler_spiral.push_back(temp_euler_spiral[e+1]);
                 }
             }
 
