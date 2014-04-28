@@ -300,13 +300,14 @@ void dbsk2d_ishock_gap4_transform::add_connecting_line(
 
     if ( interacting_bnd_elements_.count(bl2->id())==0)
     {
-        belm_list belm_list=bp1->LinkedBElmList;    
-        dbsk2d_ishock_belm* left = *(belm_list.begin());
-        dbsk2d_ishock_belm* right = *(++belm_list.begin());
+        dbsk2d_ishock_belm::throw_exception = false;
+        // belm_list belm_list=bp1->LinkedBElmList;    
+        // dbsk2d_ishock_belm* left = *(belm_list.begin());
+        // dbsk2d_ishock_belm* right = *(++belm_list.begin());
 
-        form_contact_shocks(left,right,bp1);
+        // form_contact_shocks(left,right,bp1);
 
-        return;
+        // return;
     }
 
     bnd_ishock_map_iter curS = bl1->shock_map().begin();
