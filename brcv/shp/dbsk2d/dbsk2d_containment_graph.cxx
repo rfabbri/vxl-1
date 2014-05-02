@@ -66,6 +66,9 @@ void dbsk2d_containment_graph::construct_graph()
         grouper.polygon_fragment((*it).first,poly);
         // double con_ratio= grouper.contour_ratio((*it).first,poly);
 
+        bool closed_region=(fragments[(*it).first].size()==0)?
+            true:false;
+
         double con_ratio= grouper.contour_ratio((*it).first);
         if ( con_ratio >= 0.4 &&
              frag_edges[(*it).first].size() > 1  &&
@@ -110,6 +113,13 @@ void dbsk2d_containment_graph::construct_graph()
                 }
                 
                 all_region_polys_[key]=poly;
+
+
+                if ( closed_region )
+                {
+                    closed_regions_[key]="temp";
+                }
+
             }
 
             vcl_vector<dbsk2d_ishock_belm*> root_node_belms=
@@ -268,6 +278,9 @@ void dbsk2d_containment_graph::construct_graph()
             vgl_polygon<double> poly;
             grouper.polygon_fragment((*it).first,poly);
 
+            bool closed_region=(region_outer_nodes[(*it).first].size()==0)?
+                true:false;
+
             bool flag=(expand_outside_)?false:
                 !grouper.region_within_image((*it).first);
 
@@ -322,6 +335,11 @@ void dbsk2d_containment_graph::construct_graph()
                     }
                     
                     all_region_polys_[key]=poly;
+
+                    if ( closed_region )
+                    {
+                        closed_regions_[key]="temp";
+                    }
                 }
             }
             

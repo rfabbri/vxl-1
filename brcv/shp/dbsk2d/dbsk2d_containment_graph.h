@@ -72,6 +72,9 @@ private:
     // Keep track of polygons
     vcl_map<vcl_set<int>, vgl_polygon<double> > all_region_polys_;
 
+    // Keep track of polygons
+    vcl_map<vcl_set<int>, vcl_string > closed_regions_;
+
     // store path threshold
     double path_threshold_;
 
