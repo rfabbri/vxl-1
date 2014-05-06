@@ -52,9 +52,11 @@ dbskr_scurve::dbskr_scurve(int num_points,
                            vcl_vector<double> &phi, 
                            bool binterpolate, double interpolate_ds,
                            bool bsub_sample, double subsample_ds,
-                           bool leaf_edge): 
+                           bool leaf_edge,
+                           double scale_ratio): 
     interpolate_ds_(interpolate_ds), subsample_ds_(subsample_ds),
-    virtual_length_(0.0),area_factor_(0.0),leaf_edge_(leaf_edge) 
+    virtual_length_(0.0),area_factor_(0.0),leaf_edge_(leaf_edge),
+    scale_ratio_(scale_ratio)
 {
   if (binterpolate){
     vcl_vector<int> lmap; //dummy map 
@@ -77,6 +79,11 @@ dbskr_scurve::dbskr_scurve(int num_points,
 
     //reconstruct the boundary points and tangents after subsampling
     reconstruct_boundary();
+  }
+
+  if ( scale_ratio != 1.0 )
+  {
+      reconstruct_boundary(scale_ratio_);
   }
 
   //now compute the arclengths
@@ -118,6 +125,8 @@ dbskr_scurve::dbskr_scurve(dbskr_scurve& old,
     bdry_minus_arclength_ = old.bdry_minus_arclength_;
     bdry_plus_angle_ = old.bdry_plus_angle_;
     bdry_minus_angle_ = old.bdry_minus_angle_;
+
+    scale_ratio_=old.scale_ratio_;
 
     //just a one to one map since nothing was changed
     lmap.clear();
@@ -358,7 +367,7 @@ void dbskr_scurve::subsample()
 //----------------------------------------------------
 
 //: reconstruct the plus and minus boundary points from the shock parameters
-void dbskr_scurve::reconstruct_boundary()
+void dbskr_scurve::reconstruct_boundary(double scale_ratio)
 {
   // clear old data
   this->bdry_plus_.clear();
@@ -376,6 +385,17 @@ void dbskr_scurve::reconstruct_boundary()
   //reconstruct the bnd points from the intrinsic parameters
   for (int i=0; i<num_points_; i++)
   {
+    if ( scale_ratio != 1.0 )
+    {
+        vgl_point_2d<double> sh_pt_scaled=sh_pt_[i];
+        sh_pt_scaled.set(sh_pt_scaled.x()*scale_ratio,
+                         sh_pt_scaled.y()*scale_ratio);
+        sh_pt_[i]=sh_pt_scaled;
+
+        time_[i]=time_[i]*scale_ratio;
+        
+    }
+
     vgl_point_2d<double> pt_p = _translatePoint(sh_pt_[i], 
                                   theta_[i]+phi_[i], 
                                   time_[i]);

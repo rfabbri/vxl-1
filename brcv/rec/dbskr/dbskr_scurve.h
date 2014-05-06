@@ -69,7 +69,8 @@ public:
                vcl_vector<double> &phi, 
                bool binterpolate=true, double interpolate_ds=1.0, 
                bool bsub_sample=true, double subsample_ds=1.0,
-               bool leaf_edge=false);
+               bool leaf_edge=false,
+               double scale_ratio=1.0);
 
   //: Interpolate/copy constructor
   //  Constructs and interpolated copy of an scurve
@@ -91,6 +92,9 @@ public:
 
   // get whether leaf edge
   bool is_leaf_edge(){return leaf_edge_;}
+
+  // get scale_ratio
+  double get_scale_ratio(){return scale_ratio_;}
 
   // set outside shock radius
   void set_bdry_plus_outside_shock_radius(vcl_vector<double>& radius)
@@ -130,7 +134,7 @@ protected:
   // and also to speed up shock curve matching.
   void subsample();
 
-  void reconstruct_boundary();
+  void reconstruct_boundary(double scale_ratio=1.0);
   void compute_arclengths();
   void compute_areas();
 
@@ -262,6 +266,9 @@ protected:
   double area_factor_;
 
   bool leaf_edge_;
+
+  double scale_ratio_;
+
 };
 
 #endif  // _dbskr_scurve_h
