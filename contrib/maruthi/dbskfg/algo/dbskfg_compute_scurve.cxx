@@ -70,12 +70,9 @@ dbskr_scurve_sptr dbskfg_compute_scurve::compute_curve(
             for (int i=0; i< cur_edge.num_samples(); i++)
             {
                 dbsk2d_xshock_sample_sptr sample = cur_edge.sample(i);
-                vgl_point_2d<double> old_shock_pt=sample->pt;
-                vgl_point_2d<double> new_shock_pt(old_shock_pt.x()*scale_ratio,
-                                                  old_shock_pt.y()*scale_ratio);
 
-                sh_pt.push_back(new_shock_pt);
-                time.push_back(sample->radius*scale_ratio); 
+                sh_pt.push_back(sample->pt);
+                time.push_back(sample->radius); 
                 //100000 signals infinity
                 if (sample->speed != 0 && sample->speed < 99990)
                 {
@@ -98,12 +95,9 @@ dbskr_scurve_sptr dbskfg_compute_scurve::compute_curve(
             for (int i=cur_edge.num_samples()-1; i>=0 ; i--)
             {
                 dbsk2d_xshock_sample_sptr sample = cur_edge.sample(i);
-                vgl_point_2d<double> old_shock_pt=sample->pt;
-                vgl_point_2d<double> new_shock_pt(old_shock_pt.x()*scale_ratio,
-                                                  old_shock_pt.y()*scale_ratio);
-                
-                sh_pt.push_back(new_shock_pt);
-                time.push_back(sample->radius*scale_ratio); 
+
+                sh_pt.push_back(sample->pt);
+                time.push_back(sample->radius); 
                 //100000 signals infinity
                 if (sample->speed != 0 && sample->speed < 99990)
                 { 
@@ -157,7 +151,8 @@ dbskr_scurve_sptr dbskfg_compute_scurve::compute_curve(
                                                      binterpolate, 
                                                      interpolate_ds,
                                                      bsub_sample, subsample_ds,
-                                                     leaf_edge);
+                                                     leaf_edge,
+                                                     scale_ratio);
 
     return shock_curve;
 }
