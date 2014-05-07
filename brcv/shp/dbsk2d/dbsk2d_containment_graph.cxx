@@ -304,7 +304,6 @@ void dbsk2d_containment_graph::construct_graph()
             if ( contour_ratio >= 0.4 &&
                  rag_matched_nodes.count((*it).first) &&
                  frag_edges[(*it).first].size() &&
-                 node->get_prob() >= path_threshold_ &&
                  (expand_outside_ || grouper.region_within_image((*it).first)))
             {
                 // vcl_stringstream filename;
