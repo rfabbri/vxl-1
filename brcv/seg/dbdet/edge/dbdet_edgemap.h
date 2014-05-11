@@ -117,6 +117,36 @@ public:
 	yy=height()-1;
     insert(e, xx, yy);
   }
+
+  bool operator ==(dbdet_edgemap & map) {
+
+    bool ret = true;
+    if (this==&map) {
+      return ret;
+    }
+    ret &= (this->num_edgels() == map.num_edgels());
+    ret &= (this->width() == map.width());
+    ret &= (this->height() == map.height());
+
+    if (ret) {
+      for (unsigned int xx=0; xx<width(); xx++) {
+        for(unsigned int yy=0; yy<height(); yy++) {
+          vcl_vector<dbdet_edgel*> cellA = this->cell(xx,yy);
+          vcl_vector<dbdet_edgel*> cellB = this->cell(xx,yy);
+          if (ret && cellA.size() == cellB.size()) {
+            for (unsigned int i=0; i<cellA.size(); i++) {
+              ret &= cellA[i]->pt == cellB[i]->pt;
+              ret &= cellA[i]->tangent == cellB[i]->tangent;
+              ret &= cellA[i]->strength == cellB[i]->strength;
+            }
+          } else {
+            return false;
+          }
+        }
+      }
+    }
+    return ret;
+  }
 };
 
 
