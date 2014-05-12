@@ -466,19 +466,19 @@ void dbsk2d_ishock_grouping_transform::polygon_fragment(
 
     for (unsigned int s = 0; s < start_poly.num_sheets(); ++s)
     { 
-       
-        vgl_polygon<double> tempy(start_poly[s]);
-        double area_temp = vgl_area(tempy);
-        if ( area_temp > area )
-        {
-            area = area_temp;
-            f_index=s;
+        poly.push_back(start_poly[s]);
+        // vgl_polygon<double> tempy(start_poly[s]);
+        // double area_temp = vgl_area(tempy);
+        // if ( area_temp > area )
+        // {
+        //     area = area_temp;
+        //     f_index=s;
 
-        }
+        // }
         
     }
     
-     poly.push_back(start_poly[f_index]); 
+//     poly.push_back(start_poly[f_index]); 
     
 }
 

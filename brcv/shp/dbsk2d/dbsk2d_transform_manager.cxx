@@ -297,21 +297,28 @@ void dbsk2d_transform_manager::write_output_polygon(vgl_polygon<double>& poly)
                             vcl_ios::app | 
                             vcl_ios::binary);
     
-    double num_vertices= poly[0].size();
-    output_binary_file.write(reinterpret_cast<char *>(&num_vertices),
+    double num_sheets=poly.num_sheets();
+    output_binary_file.write(reinterpret_cast<char *>(&num_sheets),
                               sizeof(double));
 
-    for (unsigned int p = 0; p < poly[0].size(); ++p)
-    {
-        double xcoord = poly[0][p].x();
-        double ycoord = poly[0][p].y();
+    for (unsigned int s = 0; s < poly.num_sheets(); ++s)
+    { 
 
-        output_binary_file.write(reinterpret_cast<char *>(&xcoord),
-                                  sizeof(double));
-        output_binary_file.write(reinterpret_cast<char *>(&ycoord),
-                                  sizeof(double));
-        
-    
+        double num_vertices= poly[s].size();
+        output_binary_file.write(reinterpret_cast<char *>(&num_vertices),
+                                 sizeof(double));
+
+        for (unsigned int p = 0; p < poly[s].size(); ++p)
+        {
+            double xcoord=poly[s][p].x();
+            double ycoord=poly[s][p].y();
+
+            output_binary_file.write(reinterpret_cast<char *>(&xcoord),
+                                     sizeof(double));
+            output_binary_file.write(reinterpret_cast<char *>(&ycoord),
+                                     sizeof(double));
+
+        }
     }
 
     output_binary_file.close();
