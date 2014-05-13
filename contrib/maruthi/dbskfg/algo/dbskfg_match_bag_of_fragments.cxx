@@ -32,10 +32,12 @@
 #include <vil/vil_image_view.h>
 #include <vil/vil_convert.h>
 #include <vil/vil_plane.h>
+#include <vil/vil_transpose.h>
+extern "C" {
 #include <vl/imopv.h>
 #include <vl/generic.h>
-#include <vil/vil_transpose.h>
 #include <vl/mathop.h>
+}
 
 #include <vgl/vgl_homg_point_2d.h>
 #include <vgl/vgl_distance.h>
