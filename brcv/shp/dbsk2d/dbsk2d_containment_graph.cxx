@@ -1008,11 +1008,14 @@ void dbsk2d_containment_graph::merge_closed_regions()
           ++mit)
     {
         vcl_set<int> closed_region_key;
+        vcl_set<int> closed_region_key_orig;
         vgl_polygon<double> poly;
 
         if ( closed_regions_.count((*mit).first))
         {   
+
             vcl_vector<dbsk2d_ishock_belm*> belms=(*mit).second;
+            closed_region_key_orig=(*mit).first;
             for ( unsigned int i=0; i < belms.size() ; ++i)
             {
                 dbsk2d_ishock_bline* bline=(dbsk2d_ishock_bline*)belms[i];
@@ -1031,35 +1034,39 @@ void dbsk2d_containment_graph::merge_closed_regions()
         for ( nit = all_region_belms_.begin() ; nit != all_region_belms_.end();
               ++nit)
         {
-            vcl_set<int> test_region_key=(*nit).first;
-            vgl_polygon<double> poly_test=all_region_polys_[(*nit).first];   
-            if ( test_region_key != closed_region_key)
-            {
-                vcl_set<int> intersection;
-                vcl_insert_iterator<vcl_set<int> > 
-                    inserter(intersection,intersection.begin());
-                
-                vcl_set_intersection(closed_region_key.begin(),
-                                     closed_region_key.end(),
-                                     test_region_key.begin(),
-                                     test_region_key.end(),
-                                     inserter);
 
-                if ( intersection.size())
+            if ( closed_regions_.count((*nit).first))
+            {   
+                vcl_set<int> test_region_key=(*nit).first;
+                vgl_polygon<double> poly_test=all_region_polys_[(*nit).first];
+                if ( test_region_key != closed_region_key_orig)
                 {
-                    //Keep a flag for status
-                    int value;
+                    vcl_set<int> intersection;
+                    vcl_insert_iterator<vcl_set<int> > 
+                        inserter(intersection,intersection.begin());
                     
-                    //Take union of two polygons
-                    poly = vgl_clip(poly,                   // p1
-                                    poly_test,              // p2
-                                    vgl_clip_type_union,    // p1 U p2
-                                    &value);                // test if success
+                    vcl_set_intersection(closed_region_key.begin(),
+                                         closed_region_key.end(),
+                                         test_region_key.begin(),
+                                         test_region_key.end(),
+                                         inserter);
+                    
+                    if ( intersection.size())
+                    {
+                        //Keep a flag for status
+                        int value;
+                        
+                        //Take union of two polygons
+                        poly = vgl_clip(poly,                // p1
+                                        poly_test,           // p2
+                                        vgl_clip_type_union, // p1 U p2
+                                        &value);             // test if success
+                        
+                        write_out=true;
+                    }
+                    
 
-                    write_out=true;
                 }
-
-
             }
 
         }
