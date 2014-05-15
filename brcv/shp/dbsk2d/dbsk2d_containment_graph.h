@@ -130,6 +130,9 @@ private:
     // cluster patches and keep mediods
     void cluster_fragments();
 
+    // merge closed regions
+    void merge_closed_regions();
+
     // Make copy ctor private
     dbsk2d_containment_graph(const dbsk2d_containment_graph&);
 
