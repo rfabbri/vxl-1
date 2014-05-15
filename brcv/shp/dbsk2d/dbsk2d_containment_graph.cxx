@@ -18,6 +18,8 @@
 #include <vil/vil_image_resource.h>
 
 #include <bsta/bsta_k_medoid.h>
+#include <vgl/vgl_polygon.h>
+#include <vgl/vgl_clip.h>
 
 //: constructor
 dbsk2d_containment_graph::dbsk2d_containment_graph
@@ -378,7 +380,7 @@ void dbsk2d_containment_graph::construct_graph()
     // }
     // else
     {
-   
+        
         vcl_cout<<"Writing out "<<all_region_belms_.size()
                 <<" Fragments"<<vcl_endl;
         vcl_map<vcl_set<int>,vcl_vector<dbsk2d_ishock_belm*> >::iterator mit;
@@ -994,5 +996,86 @@ void dbsk2d_containment_graph::cluster_fragments()
             (all_region_polys_[(*ait).first]);
         
     }
+
+}
+
+
+void dbsk2d_containment_graph::merge_closed_regions()
+{
+
+    vcl_map<vcl_set<int>,vcl_vector<dbsk2d_ishock_belm*> >::iterator mit;
+    for ( mit = all_region_belms_.begin() ; mit != all_region_belms_.end();
+          ++mit)
+    {
+        vcl_set<int> closed_region_key;
+        vgl_polygon<double> poly;
+
+        if ( closed_regions_.count((*mit).first))
+        {   
+            vcl_vector<dbsk2d_ishock_belm*> belms=(*mit).second;
+            for ( unsigned int i=0; i < belms.size() ; ++i)
+            {
+                dbsk2d_ishock_bline* bline=(dbsk2d_ishock_bline*)belms[i];
+                closed_region_key.insert(bline->twinLine()->id());
+            }
+            poly=all_region_polys_[(*mit).first];
+        }
+        else
+        {
+            continue;
+        }
+        
+
+        bool write_out=false;
+        vcl_map<vcl_set<int>,vcl_vector<dbsk2d_ishock_belm*> >::iterator nit;
+        for ( nit = all_region_belms_.begin() ; nit != all_region_belms_.end();
+              ++nit)
+        {
+            vcl_set<int> test_region_key=(*nit).first;
+            vgl_polygon<double> poly_test=all_region_polys_[(*nit).first];   
+            if ( test_region_key != closed_region_key)
+            {
+                vcl_set<int> intersection;
+                vcl_insert_iterator<vcl_set<int> > 
+                    inserter(intersection,intersection.begin());
+                
+                vcl_set_intersection(closed_region_key.begin(),
+                                     closed_region_key.end(),
+                                     test_region_key.begin(),
+                                     test_region_key.end(),
+                                     inserter);
+
+                if ( intersection.size())
+                {
+                    //Keep a flag for status
+                    int value;
+                    
+                    //Take union of two polygons
+                    poly = vgl_clip(poly,                   // p1
+                                    poly_test,              // p2
+                                    vgl_clip_type_union,    // p1 U p2
+                                    &value);                // test if success
+
+                    write_out=true;
+                }
+
+
+            }
+
+        }
+        
+        if ( write_out )
+        {
+            dbsk2d_transform_manager::Instance().write_output_polygon(poly);
+        }
+
+    }
+    
+
+
+
+
+
+
 
 }
