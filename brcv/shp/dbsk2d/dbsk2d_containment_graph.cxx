@@ -1038,6 +1038,15 @@ void dbsk2d_containment_graph::merge_closed_regions()
             if ( closed_regions_.count((*nit).first))
             {   
                 vcl_set<int> test_region_key=(*nit).first;
+                vcl_map<int,int> mapping_twinline;
+
+                vcl_vector<dbsk2d_ishock_belm*> belms=(*nit).second;
+                for ( unsigned int i=0; i < belms.size() ; ++i)
+                {
+                    dbsk2d_ishock_bline* bline=(dbsk2d_ishock_bline*)belms[i];
+                    mapping_twinline[bline->id()]=bline->twinLine()->id();
+                }
+
                 vgl_polygon<double> poly_test=all_region_polys_[(*nit).first];
                 if ( test_region_key != closed_region_key_orig)
                 {
@@ -1063,6 +1072,26 @@ void dbsk2d_containment_graph::merge_closed_regions()
                                         &value);             // test if success
                         
                         write_out=true;
+
+                        
+                        vcl_set<int> difference;
+                        vcl_insert_iterator<vcl_set<int> > 
+                            insert_diff(difference,difference.begin());
+                    
+                        vcl_set_difference(test_region_key.begin(),
+                                           test_region_key.end(),
+                                           closed_region_key.begin(),
+                                           closed_region_key.end(),
+                                           insert_diff);
+                        
+                        vcl_set<int>::iterator sit;
+                        for ( sit=difference.begin() ; sit != difference.end()
+                                  ;++sit)
+                        {
+                            closed_region_key.insert(mapping_twinline[*sit]);
+                        }
+                        
+                        
                     }
                     
 
