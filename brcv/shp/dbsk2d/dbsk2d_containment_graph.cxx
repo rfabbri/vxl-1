@@ -393,6 +393,7 @@ void dbsk2d_containment_graph::construct_graph()
                 (all_region_polys_[(*mit).first]);
         }
         
+        merge_closed_regions();
     }
 }
 
