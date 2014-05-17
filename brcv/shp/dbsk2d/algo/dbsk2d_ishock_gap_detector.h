@@ -80,6 +80,13 @@ public:
     void detect_gap4(dbsk2d_ishock_belm* belm,
                      vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>& 
                      gap4_pair);
+
+    //: Detect for endpoint
+    void detect_gap4(dbsk2d_ishock_belm* belm,
+                     vcl_vector<
+                     vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> >& 
+                     gap4_pair,
+                     int contour_id);
     
 
 private: 

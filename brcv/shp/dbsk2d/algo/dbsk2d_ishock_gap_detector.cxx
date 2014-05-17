@@ -579,6 +579,199 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
 }
 
 
+//: Detect all gap 1 
+void dbsk2d_ishock_gap_detector::detect_gap4(
+    dbsk2d_ishock_belm* belm,
+    vcl_vector< vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> > 
+    & gap4_pair,
+    int contour_id)
+{
+
+    belm_list interacting_elms;
+    belm->get_interacting_belements(interacting_elms);
+
+    dbsk2d_ishock_bpoint* bp1 = (dbsk2d_ishock_bpoint*)belm;
+
+    vcl_map<double,dbsk2d_ishock_bline*> element_maps;
+
+    bnd_ishock_map_iter curS = belm->shock_map().begin();
+    for ( ; curS != belm->shock_map().end() ; ++curS)
+    {
+        dbsk2d_ishock_elm* selm = curS->second;
+
+        if ( selm->is_a_link())
+        {
+            dbsk2d_ishock_edge* iedge = (dbsk2d_ishock_edge*)(curS->second);
+            dbsk2d_ishock_belm* lbe = iedge->lBElement();
+            if ( lbe->id() == belm->id())
+            {
+                dbsk2d_ishock_belm* other_belm = iedge->rBElement();
+                if ( other_belm->is_a_line())
+                {
+                    if ( iedge->pSNode())
+                    {
+                        if ( iedge->pSNode()->is_a_source())
+                        {
+                            dbsk2d_ishock_bline* other_bline =
+                                (dbsk2d_ishock_bline*)(other_belm);
+                            element_maps[
+                                vcl_fabs(vnl_math::pi_over_2-curS->first.s_eta)]
+                                =other_bline;
+                        }
+                    }
+                }
+                else if(other_belm->is_a_point())
+                {
+                    bool flag=false;
+                    if ( iedge->pSNode())
+                    {
+                        if ( iedge->pSNode()->is_a_source())
+                        {
+                            dbsk2d_ishock_bpoint* other_bpoint =
+                                (dbsk2d_ishock_bpoint*)(other_belm);
+
+                            if ( other_bpoint->is_an_end_point())
+                            {
+                                continue;
+                            }
+
+                            belm_list LinkedBElmList=
+                                other_bpoint->LinkedBElmList;
+                            belm_list::iterator it;
+                            for ( it = LinkedBElmList.begin() ; 
+                                  it != LinkedBElmList.end() ; 
+                                  ++it)
+                            {
+                                belm_list::iterator bit;
+                                for ( bit = interacting_elms.begin();
+                                      bit != interacting_elms.end();
+                                      ++bit)
+                                {
+                                    if ( (*it)->id() == (*bit)->id())
+                                    {
+                                        dbsk2d_ishock_bline* 
+                                            other_bline=(dbsk2d_ishock_bline*)
+                                            (*it);
+                                        element_maps[
+                                            vcl_fabs
+                                            (vnl_math::pi_over_2-curS
+                                             ->first.s_eta)]
+                                            =other_bline;
+                                    }
+                                }
+                            }
+                        }
+                    } 
+                }
+            }
+            else 
+            {
+                dbsk2d_ishock_belm* other_belm = iedge->lBElement();
+                if ( other_belm->is_a_line())
+                {
+                    if ( iedge->pSNode())
+                    {
+                        if ( iedge->pSNode()->is_a_source())
+                        {
+                            dbsk2d_ishock_bline* other_bline =
+                                (dbsk2d_ishock_bline*)(other_belm);
+                            element_maps[
+                                vcl_fabs(vnl_math::pi_over_2-curS->first.s_eta)]
+                                =other_bline;
+                        }
+                    }
+
+                }
+                else if(other_belm->is_a_point())
+                {
+                    bool flag=false;
+                    if ( iedge->pSNode())
+                    {
+                        if ( iedge->pSNode()->is_a_source())
+                        {
+                            dbsk2d_ishock_bpoint* other_bpoint =
+                                (dbsk2d_ishock_bpoint*)(other_belm);
+
+                            if ( other_bpoint->is_an_end_point())
+                            {
+                                continue;
+                            }
+
+                            belm_list LinkedBElmList=
+                                other_bpoint->LinkedBElmList;
+                            belm_list::iterator it;
+                            for ( it = LinkedBElmList.begin() ; 
+                                  it != LinkedBElmList.end() ; 
+                                  ++it)
+                            {
+                                belm_list::iterator bit;
+                                for ( bit = interacting_elms.begin();
+                                      bit != interacting_elms.end();
+                                      ++bit)
+                                {
+                                    if ( (*it)->id() == (*bit)->id())
+                                    {
+                                        dbsk2d_ishock_bline* other_bline
+                                            =(dbsk2d_ishock_bline*)
+                                            (*it);
+                                        element_maps[
+                                            vcl_fabs
+                                            (vnl_math::pi_over_2-curS
+                                             ->first.s_eta)]
+                                            =other_bline;
+                                    }
+                                }
+                            }
+                        }
+                    } 
+                }
+            }
+                
+
+        }
+    }
+
+    if ( element_maps.size() == 1 )
+    {
+        vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>
+            pair=vcl_make_pair(bp1,(*element_maps.begin()).second);
+        gap4_pair.push_back(pair);
+        
+    }
+    else
+    {
+        vcl_map<int,vcl_set<double> > local_map;
+        vcl_map<double,dbsk2d_ishock_bline*>::iterator it;
+        for ( it = element_maps.begin() ; it != element_maps.end() ; ++it)
+        {
+            if ( (*it).second->get_contour_id() != contour_id )
+            {
+                local_map[(*it).second->get_contour_id()].insert((*it).first);
+            }
+            
+        }
+    
+        vcl_map<int,vcl_set<double> >::iterator lit;
+        for ( lit=local_map.begin() ; lit != local_map.end() ; ++lit)
+        {
+
+            vcl_set<double> angles=(*lit).second;
+            double key=*(angles.begin());
+            
+            vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>
+                pair=vcl_make_pair(bp1,element_maps[key]);
+            gap4_pair.push_back(pair);
+
+            
+        }
+        
+    }
+
+
+
+}
+
+
 //: remove boundary element
 void dbsk2d_ishock_gap_detector::gap_endpoint(
     dbsk2d_ishock_bpoint* bp,
