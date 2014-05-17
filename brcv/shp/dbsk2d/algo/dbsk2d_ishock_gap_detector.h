@@ -23,6 +23,7 @@
 #include <vcl_utility.h>
 #include <vcl_map.h>
 #include <vcl_string.h>
+#include <vcl_set.h>
 
 class dbsk2d_ishock_belm;
 class dbsk2d_ishock_bpoint;
@@ -86,7 +87,7 @@ public:
                      vcl_vector<
                      vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> >& 
                      gap4_pair,
-                     int contour_id);
+                     vcl_set<int>& contour_id);
     
 
 private: 

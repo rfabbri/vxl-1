@@ -584,7 +584,7 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
     dbsk2d_ishock_belm* belm,
     vcl_vector< vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> > 
     & gap4_pair,
-    int contour_id)
+    vcl_set<int>& contour_id)
 {
 
     belm_list interacting_elms;
@@ -744,7 +744,7 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
         vcl_map<double,dbsk2d_ishock_bline*>::iterator it;
         for ( it = element_maps.begin() ; it != element_maps.end() ; ++it)
         {
-            if ( (*it).second->get_contour_id() != contour_id )
+            if ( contour_id.count((*it).second->get_contour_id()) == 0)
             {
                 local_map[(*it).second->get_contour_id()].insert((*it).first);
             }
