@@ -104,7 +104,8 @@ private:
         vcl_map< vcl_pair<int,int>,
                  vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >& 
         gaps_visited,
-        bool& flag);
+        bool& flag,
+        vcl_set<int>& contour_ids);
 
     // Make copy ctor private
     dbsk2d_ishock_gap_detector(const dbsk2d_ishock_gap_detector&);

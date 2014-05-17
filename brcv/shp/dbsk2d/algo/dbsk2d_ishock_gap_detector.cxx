@@ -38,7 +38,8 @@ void dbsk2d_ishock_gap_detector::detect_gap1(
             if ( bpoint->is_an_end_point() && bpoint->is_a_GUIelm())
             {
                 bool flag=false;
-                gap_endpoint(bpoint,gaps_visited,flag);
+                vcl_set<int> contour_ids;
+                gap_endpoint(bpoint,gaps_visited,flag,contour_ids);
             }
 
         }
@@ -148,7 +149,8 @@ void dbsk2d_ishock_gap_detector::detect_gap1(
                     if ( bpoint->is_an_end_point())
                     {
                         bool flag=false;
-                        gap_endpoint(bpoint,gaps_visited,flag);
+                        vcl_set<int> contour_ids;
+                        gap_endpoint(bpoint,gaps_visited,flag,contour_ids);
                     }
                 }
                 
@@ -159,7 +161,8 @@ void dbsk2d_ishock_gap_detector::detect_gap1(
                     if ( bpoint->is_an_end_point())
                     {
                         bool flag=false;
-                        gap_endpoint(bpoint,gaps_visited,flag);
+                        vcl_set<int> contour_ids;
+                        gap_endpoint(bpoint,gaps_visited,flag,contour_ids);
 
                     }
                     
@@ -265,22 +268,25 @@ void dbsk2d_ishock_gap_detector::detect_all_gaps(
                     if ( bpoint->is_an_end_point())
                     {
                         bool flag=false;
-                        gap_endpoint(bpoint,gaps_visited,flag);
+                        vcl_set<int> contour_ids;
+                        gap_endpoint(bpoint,gaps_visited,flag,contour_ids);
 
-                        if ( !flag )
+                        vcl_vector<
+                            vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>
+                                > gap4_pairs;
+                        detect_gap4(bpoint,gap4_pairs,contour_ids);
+                      
+                        for ( unsigned int v=0; v < gap4_pairs.size() ; ++v)
                         {
                             vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>
-                                pair(0,0);
-                            detect_gap4(bpoint,pair);
+                                pair=gap4_pairs[v];
+                            gaps4_visited[vcl_make_pair(pair.first->id(),
+                                                        pair.second->id())]
+                                =pair;
                             
-                            if ( pair.first )
-                            {
-                                gaps4_visited[vcl_make_pair(pair.first->id(),
-                                                            pair.second->id())]
-                                    =pair;
-                            }
                         }
                     }
+                    
                 }
                 
                 if(edge->rBElement()->is_a_point())
@@ -290,20 +296,22 @@ void dbsk2d_ishock_gap_detector::detect_all_gaps(
                     if ( bpoint->is_an_end_point())
                     {
                         bool flag=false;
-                        gap_endpoint(bpoint,gaps_visited,flag);
-
-                        if ( !flag )
+                        vcl_set<int> contour_ids;
+                        gap_endpoint(bpoint,gaps_visited,flag,contour_ids);
+                    
+                        vcl_vector<
+                            vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>
+                                > gap4_pairs;
+                        detect_gap4(bpoint,gap4_pairs,contour_ids);
+                      
+                        for ( unsigned int v=0; v < gap4_pairs.size() ; ++v)
                         {
                             vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>
-                                pair(0,0);
-                            detect_gap4(bpoint,pair);
+                                pair=gap4_pairs[v];
+                            gaps4_visited[vcl_make_pair(pair.first->id(),
+                                                        pair.second->id())]
+                                =pair;
                             
-                            if ( pair.first )
-                            {
-                                gaps4_visited[vcl_make_pair(pair.first->id(),
-                                                            pair.second->id())]
-                                    =pair;
-                            }
                         }
                     }
                     
@@ -738,7 +746,7 @@ void dbsk2d_ishock_gap_detector::detect_gap4(
         gap4_pair.push_back(pair);
         
     }
-    else
+    else if ( element_maps.size() > 1 )
     {
         vcl_map<int,vcl_set<double> > local_map;
         vcl_map<double,dbsk2d_ishock_bline*>::iterator it;
@@ -777,7 +785,8 @@ void dbsk2d_ishock_gap_detector::gap_endpoint(
     dbsk2d_ishock_bpoint* bp,
     vcl_map<vcl_pair<int,int>,
     vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> >& gaps_visited,
-    bool& flag)
+    bool& flag,
+    vcl_set<int>& contour_ids)
 {
     bnd_ishock_map_iter curS = bp->shock_map().begin();
     for ( ; curS != bp->shock_map().end() ; ++curS)
@@ -796,8 +805,14 @@ void dbsk2d_ishock_gap_detector::gap_endpoint(
                     dbsk2d_ishock_bpoint* other_bpoint =
                         (dbsk2d_ishock_bpoint*)(other_bp);
                     if ( other_bpoint->is_an_end_point())
-                    {
+                    {                        
                         flag=true;
+
+                        belm_list LinkedBElmList=
+                            other_bpoint->LinkedBElmList;
+                        contour_ids.insert(
+                            LinkedBElmList.front()->get_contour_id());
+
                         vcl_pair<int, int> pair1(
                             bp->id(),
                             other_bpoint->id());
@@ -825,6 +840,12 @@ void dbsk2d_ishock_gap_detector::gap_endpoint(
                     if ( other_bpoint->is_an_end_point())
                     {
                         flag=true;
+
+                        belm_list LinkedBElmList=
+                            other_bpoint->LinkedBElmList;
+                        contour_ids.insert(
+                            LinkedBElmList.front()->get_contour_id());
+
                         vcl_pair<unsigned int, unsigned int> pair1(
                             bp->id(),
                             other_bpoint->id());
