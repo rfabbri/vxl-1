@@ -43,6 +43,15 @@ class dbskfg_match_bag_of_fragments
 
 public:
 
+    //: Enum
+    enum ShapeAlgorithmArea
+    {
+        SCALE_TO_REF,
+        SCALE_TO_MEAN,
+        SCALE_TO_MAX,
+        SCALE_TO_MIN
+    };
+
     //: Constructor
     dbskfg_match_bag_of_fragments
         ( vcl_string model_file,
@@ -64,6 +73,8 @@ public:
           bool mirror                 = false,
           bool outside_shock          = false,
           double area_weight          = 0.0f,
+          double ref_area             = 10000.0f,
+          ShapeAlgorithmArea shape_alg= SCALE_TO_MEAN,
           vil_image_resource_sptr model_image=0,
           vil_image_resource_sptr query_image=0,
           vcl_string model_image_path="");
@@ -272,6 +283,12 @@ private:
 
     // Weighting of area cost term
     double area_weight_;
+
+    // Reference area
+    double ref_area_;
+
+    // Algorithm for shape coice
+    ShapeAlgorithmArea shape_alg_;
 
     void load_model(vcl_string model_dir);
     void load_query(vcl_string query_dir);

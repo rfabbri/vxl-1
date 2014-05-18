@@ -96,6 +96,8 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
     bool mirror,
     bool outside_shock,
     double area_weight,
+    double ref_area,
+    ShapeAlgorithmArea shape_alg,
     vil_image_resource_sptr model_image,
     vil_image_resource_sptr query_image,
     vcl_string model_image_path
@@ -119,6 +121,8 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
       mirror_(mirror),
       outside_shock_(outside_shock),
       area_weight_(area_weight),
+      ref_area_(ref_area),
+      shape_alg_(shape_alg),
       model_image_(model_image),
       query_image_(query_image),
       model_grad_data_(0),

@@ -11,12 +11,20 @@
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
 
+#include <dbskfg/algo/dbskfg_match_bag_of_fragments.h>
+
 //: Constructor
 dbskfg_match_bag_of_fragments_process::dbskfg_match_bag_of_fragments_process()
 {    
     vcl_string interp_ds = "Interpolation ds to get densely interpolated versions of the scurves: meaningful if localized_edit option is ON";
     vcl_string local_edit = "Local Edit Improves elastic matching cost of scurves using the densely interpolated version";
     
+    vcl_vector<vcl_string> choices;
+    choices.push_back("Scale to Ref Area");
+    choices.push_back("Scale to Mean Shape");
+    choices.push_back("Scale to Larger Shape");
+    choices.push_back("Scale to Smaller Shape");
+
     if (!parameters()->add( "Model folder:" , 
                             "-model_folder" , bpro1_filepath("", "")) ||
         !parameters()->add( "Query folder:" , 
@@ -59,7 +67,10 @@ dbskfg_match_bag_of_fragments_process::dbskfg_match_bag_of_fragments_process()
         !parameters()->add("use outside shock",
                            "-outside_shock", (bool) false) ||
         !parameters()->add("weight area cost term",
-                           "-area_weight", (double) 0.0f) 
+                           "-area_weight", (double) 0.0f) ||
+        !parameters()->add("reference area",
+                           "-ref_area", (double) 10000.0f)||
+        !parameters()->add("shape algorithm", "-shape_alg",choices,4)
 
         )
 
@@ -165,6 +176,8 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     bool mirror                 = false;
     bool outside_shock          = false;
     double area_weight          = 0.0f;
+    double ref_area             = 10000.0f;
+    unsigned int shape_alg      = 2;
 
     parameters()->get_value("-elastic_splice_cost"  , elastic_splice_cost); 
     parameters()->get_value("-scurve_sample_ds"     , scurve_sample_ds);
@@ -182,6 +195,31 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     parameters()->get_value("-mirror"               , mirror);
     parameters()->get_value("-outside_shock"        , outside_shock);
     parameters()->get_value("-area_weight"          , area_weight);
+    parameters()->get_value("-ref_area"             , ref_area);
+    parameters()->get_value("-shape_alg"            , shape_alg );
+
+    dbskfg_match_bag_of_fragments::ShapeAlgorithmArea shape_alg_area=
+        dbskfg_match_bag_of_fragments::SCALE_TO_MEAN;
+
+    if ( shape_alg == 0 )
+    {
+        shape_alg_area=dbskfg_match_bag_of_fragments::SCALE_TO_REF;
+
+    }
+    else if ( shape_alg == 1 )
+    {
+        shape_alg_area=dbskfg_match_bag_of_fragments::SCALE_TO_MEAN;
+        
+    }
+    else if ( shape_alg == 2 )
+    {
+        shape_alg_area=dbskfg_match_bag_of_fragments::SCALE_TO_MAX;
+    }
+    else if (shape_alg ==  3)
+    {
+        shape_alg_area=dbskfg_match_bag_of_fragments::SCALE_TO_MIN;
+        
+    }
 
     dbskfg_match_bag_of_fragments match_frags(model_dir,
                                               query_dir,
@@ -202,6 +240,8 @@ bool dbskfg_match_bag_of_fragments_process::execute()
                                               mirror,
                                               outside_shock,
                                               area_weight,
+                                              ref_area,
+                                              shape_alg_area,
                                               model_image,
                                               query_image,
                                               model_image_path);
