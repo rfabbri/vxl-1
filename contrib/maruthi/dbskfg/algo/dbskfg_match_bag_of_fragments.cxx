@@ -1798,7 +1798,10 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
         }
 
     }
- 
+    vcl_cout<<"Ref area: "<<ref_area_<<vcl_endl;
+
+    double backup=scurve_matching_R_;
+
     // Loop over model and query
     vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
         ::iterator m_iterator;
@@ -1809,22 +1812,6 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
           m_iterator != model_fragments_.end() ; ++m_iterator)
     {
 
-        //: prepare the trees also
-        dbskfg_cgraph_directed_tree_sptr model_tree = new 
-            dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
-                                        scurve_interpolate_ds_, 
-                                        scurve_matching_R_,
-                                        false,
-                                        area_weight_);
-
-        bool f1=model_tree->acquire
-            ((*m_iterator).second.second, elastic_splice_cost_, 
-             circular_ends_, combined_edit_);
-
-        vcl_string model_filename=(*m_iterator).second.first+"_tree.shg";
-        model_tree->create_shg(model_filename.c_str());
-
-        double model_radius=model_tree->get_root_node_radius();
         double model_area=model_fragments_area_[(*m_iterator).first]
             .second;
         double model_length=model_fragments_length_[(*m_iterator).first]
@@ -1833,11 +1820,147 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
         vcl_map<double,vcl_pair<unsigned int,unsigned int> >
             model_map;
 
+
         for ( q_iterator = query_fragments_.begin() ; 
               q_iterator != query_fragments_.end() ; ++q_iterator)
         {
+            scurve_matching_R_=backup;
+            double query_area=query_fragments_area_[(*q_iterator).first]
+                .second;
+            double query_length=query_fragments_length_[(*q_iterator).first]
+                .second;
+           
+            double mean_area=(model_area+query_area)/2.0;
+            double mean_length=(model_length+query_length)/2.0;
 
-            //: prepare the trees also
+            double max_area=(model_area > query_area )?model_area: query_area;
+            double min_area=(model_area < query_area )?model_area: query_area;
+
+            double max_length=(model_length > query_length )?
+                model_length: query_length;
+            double min_length=(model_length < query_length )?
+                model_length: query_length;
+
+
+            double model_scale_ratio=1.0;
+            double query_scale_ratio=1.0;
+            
+            if ( shape_alg_ == SCALE_TO_REF)
+            {
+                vcl_cout<<"Scaling to ref area "<<ref_area_<<vcl_endl;
+                if ( scale_area_ )
+                {
+                    model_scale_ratio = vcl_sqrt(ref_area_/model_area);
+                    query_scale_ratio = vcl_sqrt(ref_area_/query_area);
+                }
+                else if ( scale_length_ )
+                {
+                    model_scale_ratio = ref_area_/model_length;
+                    query_scale_ratio = ref_area_/query_length;
+                }
+                
+            }
+            else if ( shape_alg_ == SCALE_TO_MEAN )
+            {
+                vcl_cout<<"Scaling to Mean using ";
+                if ( scale_area_ )
+                {
+                    vcl_cout<<mean_area<<" area"<<vcl_endl;
+                    model_scale_ratio = vcl_sqrt(mean_area/model_area);
+                    query_scale_ratio = vcl_sqrt(mean_area/query_area);
+                }
+                else if ( scale_length_ )
+                {
+                    vcl_cout<<mean_length<<" length"<<vcl_endl;
+                    model_scale_ratio = mean_length/model_length;
+                    query_scale_ratio = mean_length/query_length;
+                }
+
+                if ( mean_area > ref_area_)
+                {
+                    scurve_matching_R_=scurve_matching_R_*
+                        vcl_max(model_scale_ratio,query_scale_ratio);
+                }
+                else if ( mean_area < ref_area_)
+                {
+                    scurve_matching_R_=scurve_matching_R_*
+                        vcl_min(model_scale_ratio,query_scale_ratio);
+                }
+
+            }
+            else if ( shape_alg_ == SCALE_TO_MAX )
+            {
+                vcl_cout<<"Scaling to MAX using ";
+                if ( scale_area_ )
+                {
+                    vcl_cout<<max_area<<" area"<<vcl_endl;
+
+                    model_scale_ratio = vcl_sqrt(max_area/model_area);
+                    query_scale_ratio = vcl_sqrt(max_area/query_area);
+                }
+                else if ( scale_length_ )
+                {
+                    vcl_cout<<max_length<<" length"<<vcl_endl;
+                    model_scale_ratio = max_length/model_length;
+                    query_scale_ratio = max_length/query_length;
+                }
+
+                if ( max_area > ref_area_)
+                {
+                    scurve_matching_R_=scurve_matching_R_*
+                        vcl_max(model_scale_ratio,query_scale_ratio);
+                }
+                else if ( max_area < ref_area_)
+                {
+                    scurve_matching_R_=scurve_matching_R_*
+                        vcl_min(model_scale_ratio,query_scale_ratio);
+                }
+                
+
+            }
+            else if ( shape_alg_ == SCALE_TO_MIN )
+            {
+                vcl_cout<<"Scaling to MIN using ";
+                if ( scale_area_ )
+                {
+                    vcl_cout<<min_area<<" area"<<vcl_endl;
+                    model_scale_ratio = vcl_sqrt(min_area/model_area);
+                    query_scale_ratio = vcl_sqrt(min_area/query_area);
+                }
+                else if ( scale_length_ )
+                {
+                    vcl_cout<<min_length<<" length"<<vcl_endl;
+                    model_scale_ratio = min_length/model_length;
+                    query_scale_ratio = min_length/query_length;
+                }
+
+                if ( min_area > ref_area_)
+                {
+                    scurve_matching_R_=scurve_matching_R_*
+                        vcl_max(model_scale_ratio,query_scale_ratio);
+                }
+                else if ( min_area < ref_area_)
+                {
+                    scurve_matching_R_=scurve_matching_R_*
+                        vcl_min(model_scale_ratio,query_scale_ratio);
+                }
+
+
+            }
+            vcl_cout<<"Scurve Matching R: "<<scurve_matching_R_<<vcl_endl;
+
+            //: prepare the model tree
+            dbskfg_cgraph_directed_tree_sptr model_tree = new 
+                dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
+                                            scurve_interpolate_ds_, 
+                                            scurve_matching_R_,
+                                            false,
+                                            area_weight_);
+            
+            model_tree->acquire_tree_topology((*m_iterator).second.second);
+                        
+
+            //: prepare the query tree
             dbskfg_cgraph_directed_tree_sptr query_tree = new
                 dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
                                             scurve_interpolate_ds_, 
@@ -1846,43 +1969,34 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
                                             area_weight_);
             
             query_tree->acquire_tree_topology((*q_iterator).second.second);
+            vcl_cout<<"Model Scale Ratio: "<<model_scale_ratio<<vcl_endl;
+            vcl_cout<<"Query Scale Ratio: "<<query_scale_ratio<<vcl_endl;
             
-            double query_radius=query_tree->get_root_node_radius();
-            double query_area=query_fragments_area_[(*q_iterator).first]
-                .second;
-            double query_length=query_fragments_length_[(*q_iterator).first]
-                .second;
+            model_tree->set_scale_ratio(model_scale_ratio);
 
-            double scale_ratio=1.0;
-            
-            if ( scale_area_)
-            {
-                vcl_cout<<"Model Area: "<<model_area<<vcl_endl;
-                vcl_cout<<"Query Area: "<<query_area<<vcl_endl;
-                scale_ratio=vcl_sqrt(model_area/query_area);
-            }
-            else if ( scale_root_)
-            {
-                vcl_cout<<"Model Radius: "<<model_radius<<vcl_endl;
-                vcl_cout<<"Query Radius: "<<query_radius<<vcl_endl;
-                scale_ratio=vcl_sqrt(model_radius/query_radius);
+            model_tree->compute_delete_and_contract_costs(
+                elastic_splice_cost_, 
+                circular_ends_, 
+                combined_edit_);
 
-            }
-            else 
-            {
-                vcl_cout<<"Model Length: "<<model_length<<vcl_endl;
-                vcl_cout<<"Query Length: "<<query_length<<vcl_endl;
-                scale_ratio=model_length/query_length;
-            }
-
-            vcl_cout<<"Scale ratio: "<<scale_ratio<<vcl_endl;
-
-            query_tree->set_scale_ratio(scale_ratio);
+            query_tree->set_scale_ratio(query_scale_ratio);
 
             query_tree->compute_delete_and_contract_costs(
                 elastic_splice_cost_, 
                 circular_ends_, 
                 combined_edit_);
+
+            vgl_polygon<double> model_poly(1);
+            vgl_polygon<double> query_poly(1);
+
+            model_tree->compute_reconstructed_boundary_polygon(model_poly);
+            query_tree->compute_reconstructed_boundary_polygon(query_poly);
+
+            vcl_cout<<"Model area: "<<vgl_area(model_poly)<<vcl_endl;
+            vcl_cout<<"Query area: "<<vgl_area(query_poly)<<vcl_endl;
+
+            vcl_string model_filename=(*m_iterator).second.first+"_tree.shg";
+            model_tree->create_shg(model_filename.c_str());
             
             vcl_string query_filename=(*q_iterator).second.first+"_tree.shg";
             query_tree->create_shg(query_filename.c_str());
@@ -1918,7 +2032,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
                                                 mirror_,
                                                 area_weight_);
                 
-                query_mirror_tree->set_scale_ratio(scale_ratio);
+                query_mirror_tree->set_scale_ratio(query_scale_ratio);
 
                 query_mirror_tree->acquire
                     ((*q_iterator).second.second, elastic_splice_cost_, 
@@ -1982,10 +2096,10 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
             binary_app_rgb_sim_matrix_[model_id][query_id]=rgb_avg_cost;
 
             query_tree=0;
+            model_tree=0;
         }
         vcl_cout<<"Finished "<<(*m_iterator).second.first<<" to all queires"
                 <<vcl_endl;
-        model_tree=0;
     }
 
     // write out data
