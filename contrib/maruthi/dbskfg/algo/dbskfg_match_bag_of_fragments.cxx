@@ -1876,16 +1876,8 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
                     query_scale_ratio = mean_length/query_length;
                 }
 
-                if ( mean_area > ref_area_)
-                {
-                    scurve_matching_R_=scurve_matching_R_*
-                        vcl_max(model_scale_ratio,query_scale_ratio);
-                }
-                else if ( mean_area < ref_area_)
-                {
-                    scurve_matching_R_=scurve_matching_R_*
-                        vcl_min(model_scale_ratio,query_scale_ratio);
-                }
+                scurve_matching_R_=scurve_matching_R_*
+                    vcl_sqrt(mean_area/ref_area_);
 
             }
             else if ( shape_alg_ == SCALE_TO_MAX )
@@ -1905,17 +1897,8 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
                     query_scale_ratio = max_length/query_length;
                 }
 
-                if ( max_area > ref_area_)
-                {
-                    scurve_matching_R_=scurve_matching_R_*
-                        vcl_max(model_scale_ratio,query_scale_ratio);
-                }
-                else if ( max_area < ref_area_)
-                {
-                    scurve_matching_R_=scurve_matching_R_*
-                        vcl_min(model_scale_ratio,query_scale_ratio);
-                }
-                
+                scurve_matching_R_=scurve_matching_R_*
+                    vcl_sqrt(max_area/ref_area_);
 
             }
             else if ( shape_alg_ == SCALE_TO_MIN )
@@ -1934,17 +1917,8 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
                     query_scale_ratio = min_length/query_length;
                 }
 
-                if ( min_area > ref_area_)
-                {
-                    scurve_matching_R_=scurve_matching_R_*
-                        vcl_max(model_scale_ratio,query_scale_ratio);
-                }
-                else if ( min_area < ref_area_)
-                {
-                    scurve_matching_R_=scurve_matching_R_*
-                        vcl_min(model_scale_ratio,query_scale_ratio);
-                }
-
+                scurve_matching_R_=scurve_matching_R_*
+                    vcl_sqrt(min_area/ref_area_);
 
             }
             vcl_cout<<"Scurve Matching R: "<<scurve_matching_R_<<vcl_endl;
