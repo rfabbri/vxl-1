@@ -1845,6 +1845,14 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
             double model_scale_ratio=1.0;
             double query_scale_ratio=1.0;
             
+            double model_sample_ds=scurve_sample_ds_;
+            double query_sample_ds=scurve_sample_ds_;
+            
+            model_sample_ds=scurve_sample_ds_*vcl_sqrt(model_area
+                                                       /ref_area_);
+            query_sample_ds=scurve_sample_ds_*vcl_sqrt(query_area
+                                                       /ref_area_);
+
             if ( shape_alg_ == SCALE_TO_REF)
             {
                 vcl_cout<<"Scaling to ref area "<<ref_area_<<vcl_endl;
@@ -1925,7 +1933,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
 
             //: prepare the model tree
             dbskfg_cgraph_directed_tree_sptr model_tree = new 
-                dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
+                dbskfg_cgraph_directed_tree(model_sample_ds, 
                                             scurve_interpolate_ds_, 
                                             scurve_matching_R_,
                                             false,
@@ -1936,7 +1944,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
 
             //: prepare the query tree
             dbskfg_cgraph_directed_tree_sptr query_tree = new
-                dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
+                dbskfg_cgraph_directed_tree(query_sample_ds, 
                                             scurve_interpolate_ds_, 
                                             scurve_matching_R_,
                                             false,
@@ -1981,6 +1989,15 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
             double rgb_avg_cost(0.0);
             double norm_shape_cost_length(0.0);
 
+            model_tree->compute_average_ds();
+            query_tree->compute_average_ds();
+
+            vcl_vector<double> model_ds=model_tree->get_average_ds();
+            vcl_vector<double> query_ds=query_tree->get_average_ds();
+
+            vcl_cout<<"Model bnd ds: "<<model_ds[0]<<vcl_endl;
+            vcl_cout<<"Query bnd ds: "<<query_ds[0]<<vcl_endl;
+
             vcl_string match_prefix =(*m_iterator).second.first + "_vs_" +
                 (*q_iterator).second.first;
 
@@ -2000,7 +2017,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
 
                 //: prepare the trees also
                 dbskfg_cgraph_directed_tree_sptr query_mirror_tree = new
-                    dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
+                    dbskfg_cgraph_directed_tree(query_sample_ds, 
                                                 scurve_interpolate_ds_, 
                                                 scurve_matching_R_,
                                                 mirror_,
@@ -2071,6 +2088,8 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
 
             query_tree=0;
             model_tree=0;
+
+            vcl_cout<<vcl_endl;
         }
         vcl_cout<<"Finished "<<(*m_iterator).second.first<<" to all queires"
                 <<vcl_endl;
