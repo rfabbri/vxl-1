@@ -13,5 +13,5 @@ AUX_SOURCE_DIRECTORY(Templates bpro1_sources)
 
 ADD_LIBRARY(bpro1  ${bpro1_sources})
 
-TARGET_LINK_LIBRARIES(bpro1 vbl)
+TARGET_LINK_LIBRARIES(bpro1 vsl vbl)
 
