@@ -31,9 +31,16 @@ extraction technology towards such goal:
     code.
   - cross-library tests in dbdet/algo/tests compare the sdet and dbdet versions of the
     code, so we can track significant changes and API compatibility.
+- Brown eyes processes and visualizesrs in dbdet/pro and dbdet/vis will be
+  added for sdet, so that a Brown Eyes GUI can have both dbdet and sdet
+  versions, the latter being suffixed with 'VXL'.  In order to avoid rewriting
+  visualizers / renderers for sdet_edgemap and other structures, the VXL
+  version of the processes will convert the structures to dbdet versions. That
+  is, we will not create sdet versions of dbdet_edgemap_storage,
+  dbdet_sel_storage, dbdet_edgemap_tableau, etc, for now.
+
 - We encourage new users to use the more stable sdet library unless there is
   significant experimental functionality in dbdet.
-  
 
 The main changes we have carried out are outlined as follows
 
@@ -46,13 +53,31 @@ The main changes we have carried out are outlined as follows
     - the dbdet edge detector API is just a function call
     - the sdet one is a class with separate parameters, which we also think
       works best and is more extensible.
-  - The only internal difference from sdet to dbdet is the orientation inside
-    the sdet edgel class (currently vdgl_edgel) which is represented by an angle
-    theta sdet and by its tangent tan(theta) in dbdet. We are thinking about
-    changing this to be uniform as well, to avoid slow conversions.
-  - 
+  - The only internal difference between the sdet and dbdet edge detectors is
+    that the sdet edge detector returns a vector of vdgl_edgels, in which the
+    orientation is represented by an angle. The symbolic edge linker requires an
+    edge map which uses sdet_edgel (dbdet_edgel) which stores orientation as
+    tan(angle). So currently one has to convert between the two prior to
+    applying the symbolic edge linker.  We are thinking about changing this to
+    be uniform as well, to avoid slow conversions. Perhaps default to sdet_edgel
+    and have a conversion function to vdgl_edgel? Not sure.
 
-- Some pre and post-processing that was present in the symbolic edge linker
-  process from dbdet/pro were put inside a dbpro-independent class/function
+- The symbolic edge linker has been ported as-is
+  - the new sdet API is the same as the dbdet one, as can beseen from these
+    identical tests: dbdet/algo/tests/test_sel.cxx and sel/tests/test_sel.cxx
+  - some useful pre and post-processing that was present in the symbolic edge linker
+    process from dbdet/pro were put inside a dbpro-independent class
+    sdet_symbolic_edge_linker class.
+  - certain internal depencencies to lems that was generally useful were
+    published into VXL, namely:
+    - brl/bbas/bvgl/bvgl_param_curve, bvgl_eulerspiral, bvgl_biarc
+    - 
 
+Minor changes
+- dbdet_sel_base_CFTG_algo.cxx's content were merged into dbdet_sel_base.cxx,
+insetad of creating sdet_sel_base_CFTG_algo. Perhaps Caio could comment on this
+choice.
+- a few functions were implemented in-place on the .h instead of the .cxx
 
+--
+Ricardo Fabbri.
