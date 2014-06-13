@@ -1,0 +1,58 @@
+Dear LEMS VXL developers,
+
+My student Caio Souza and I have recently promoted edge linker code from 
+
+LEMS' brcv/seg/dbdet 
+to 
+VXL's contrib/brl/bseg/sdet
+
+These initial efforts were coordinated with the original authors of both
+the edge linker and the VXL sdet libraries (Amir Tamrakar, Ben Kimia et. al.).  
+
+The main goal here is to be able execute the basic subpixel edge detector and
+symbolic edge linker without disclosing the entire LEMS repository. We propose
+the following policy to maintain the LEMS and the VXL versions of the edge
+extraction technology towards such goal:
+
+- Both the sdet and dbdet versions of the code will be lying around. The sdet
+  version is meant to be stable, and the dbdet code is more experimental.
+- Both sdet and dbdet will diverge in the future. The interested parties manage
+  this as follows:
+  - Improvements made to sdet are typically of the incremental kind which may
+    introduce cleanups and API improvements. By monitoring these changes in git
+    we can backport them to dbdet when needed.
+  - Improvements made to dbdet are typically experimental, and so by monitoring
+    the LEMS code and community we know when something new works well and should
+    be promoted to sdet
+  - Both of these situations require a closely monitored and hand-crafted
+    approach which is only made feasible since the stable sdet code is useful on
+    its on (even if the cross-merging of changes doesn't get carried out). These
+    are not two git branches but are separate repositories tracking similar
+    code.
+  - cross-library tests in dbdet/algo/tests compare the sdet and dbdet versions of the
+    code, so we can track significant changes and API compatibility.
+- We encourage new users to use the more stable sdet library unless there is
+  significant experimental functionality in dbdet.
+  
+
+The main changes we have carried out are outlined as follows
+
+- We have implemented minor improvements to the available third order
+  edge detector in sdet using recent changes from dbdet.
+  - These improvements did not change the functionality of the edge detector,
+  as shown by an automated test to compare the sdet and dbdet versions in
+  dbdet/algo/test_edgemap 
+  - Such test documents the API differences:
+    - the dbdet edge detector API is just a function call
+    - the sdet one is a class with separate parameters, which we also think
+      works best and is more extensible.
+  - The only internal difference from sdet to dbdet is the orientation inside
+    the sdet edgel class (currently vdgl_edgel) which is represented by an angle
+    theta sdet and by its tangent tan(theta) in dbdet. We are thinking about
+    changing this to be uniform as well, to avoid slow conversions.
+  - 
+
+- Some pre and post-processing that was present in the symbolic edge linker
+  process from dbdet/pro were put inside a dbpro-independent class/function
+
+
