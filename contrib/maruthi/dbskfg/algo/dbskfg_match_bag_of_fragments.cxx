@@ -1196,6 +1196,8 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
 
     }
  
+    double backup=scurve_matching_R_;
+
     // Loop over model and query
     vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
         ::iterator m_iterator;
@@ -1230,24 +1232,6 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             model_images_grad_data_blue_[(*m_iterator).second.first]:
             0;
 
-        //: prepare the trees also
-        dbskfg_cgraph_directed_tree_sptr model_tree = new 
-            dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
-                                        scurve_interpolate_ds_, 
-                                        scurve_matching_R_,
-                                        false,
-                                        area_weight_,
-                                        model_images_grad_data,
-                                        model_images_sift_filter,
-                                        model_images_grad_data_red,
-                                        model_images_grad_data_green,
-                                        model_images_grad_data_blue);
-
-        bool f1=model_tree->acquire
-            ((*m_iterator).second.second, elastic_splice_cost_, 
-             circular_ends_, combined_edit_);
-
-        double model_radius=model_tree->get_root_node_radius();
         double model_area=model_fragments_area_[(*m_iterator).first]
             .second;
         double model_length=model_fragments_length_[(*m_iterator).first]
@@ -1259,6 +1243,114 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
         for ( q_iterator = query_fragments_.begin() ; 
               q_iterator != query_fragments_.end() ; ++q_iterator)
         {
+
+            scurve_matching_R_=backup;
+            double query_area=query_fragments_area_[(*q_iterator).first]
+                .second;
+            double query_length=query_fragments_length_[(*q_iterator).first]
+                .second;
+           
+            double mean_area=(model_area+query_area)/2.0;
+            double mean_length=(model_length+query_length)/2.0;
+
+            double max_area=(model_area > query_area )?model_area: query_area;
+            double min_area=(model_area < query_area )?model_area: query_area;
+
+            double max_length=(model_length > query_length )?
+                model_length: query_length;
+            double min_length=(model_length < query_length )?
+                model_length: query_length;
+
+
+            double model_scale_ratio=1.0;
+            double query_scale_ratio=1.0;
+            
+            double model_sample_ds=scurve_sample_ds_;
+            double query_sample_ds=scurve_sample_ds_;
+            
+            model_sample_ds=scurve_sample_ds_*vcl_sqrt(model_area
+                                                       /ref_area_);
+            query_sample_ds=scurve_sample_ds_*vcl_sqrt(query_area
+                                                       /ref_area_);
+
+            if ( shape_alg_ == SCALE_TO_REF)
+            {
+                vcl_cout<<"Scaling to ref area "<<ref_area_<<vcl_endl;
+                if ( scale_area_ )
+                {
+                    model_scale_ratio = vcl_sqrt(ref_area_/model_area);
+                    query_scale_ratio = vcl_sqrt(ref_area_/query_area);
+                }
+                else if ( scale_length_ )
+                {
+                    model_scale_ratio = ref_area_/model_length;
+                    query_scale_ratio = ref_area_/query_length;
+                }
+                
+            }
+            else if ( shape_alg_ == SCALE_TO_MEAN )
+            {
+                vcl_cout<<"Scaling to Mean using ";
+                if ( scale_area_ )
+                {
+                    vcl_cout<<mean_area<<" area"<<vcl_endl;
+                    model_scale_ratio = vcl_sqrt(mean_area/model_area);
+                    query_scale_ratio = vcl_sqrt(mean_area/query_area);
+                }
+                else if ( scale_length_ )
+                {
+                    vcl_cout<<mean_length<<" length"<<vcl_endl;
+                    model_scale_ratio = mean_length/model_length;
+                    query_scale_ratio = mean_length/query_length;
+                }
+
+                scurve_matching_R_=scurve_matching_R_*
+                    vcl_sqrt(mean_area/ref_area_);
+
+            }
+            else if ( shape_alg_ == SCALE_TO_MAX )
+            {
+                vcl_cout<<"Scaling to MAX using ";
+                if ( scale_area_ )
+                {
+                    vcl_cout<<max_area<<" area"<<vcl_endl;
+
+                    model_scale_ratio = vcl_sqrt(max_area/model_area);
+                    query_scale_ratio = vcl_sqrt(max_area/query_area);
+                }
+                else if ( scale_length_ )
+                {
+                    vcl_cout<<max_length<<" length"<<vcl_endl;
+                    model_scale_ratio = max_length/model_length;
+                    query_scale_ratio = max_length/query_length;
+                }
+
+                scurve_matching_R_=scurve_matching_R_*
+                    vcl_sqrt(max_area/ref_area_);
+
+            }
+            else if ( shape_alg_ == SCALE_TO_MIN )
+            {
+                vcl_cout<<"Scaling to MIN using ";
+                if ( scale_area_ )
+                {
+                    vcl_cout<<min_area<<" area"<<vcl_endl;
+                    model_scale_ratio = vcl_sqrt(min_area/model_area);
+                    query_scale_ratio = vcl_sqrt(min_area/query_area);
+                }
+                else if ( scale_length_ )
+                {
+                    vcl_cout<<min_length<<" length"<<vcl_endl;
+                    model_scale_ratio = min_length/model_length;
+                    query_scale_ratio = min_length/query_length;
+                }
+
+                scurve_matching_R_=scurve_matching_R_*
+                    vcl_sqrt(min_area/ref_area_);
+
+            }
+            vcl_cout<<"Scurve Matching R: "<<scurve_matching_R_<<vcl_endl;
+
             vcl_string key = model_fragments_
                 [(*q_iterator).first].first;
 
@@ -1289,8 +1381,23 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                 0;
 
             //: prepare the trees also
+            dbskfg_cgraph_directed_tree_sptr model_tree = new 
+                dbskfg_cgraph_directed_tree(model_sample_ds, 
+                                            scurve_interpolate_ds_, 
+                                            scurve_matching_R_,
+                                            false,
+                                            area_weight_,
+                                            model_images_grad_data,
+                                            model_images_sift_filter,
+                                            model_images_grad_data_red,
+                                            model_images_grad_data_green,
+                                            model_images_grad_data_blue);
+
+            model_tree->acquire_tree_topology((*m_iterator).second.second);
+
+            //: prepare the trees also
             dbskfg_cgraph_directed_tree_sptr query_tree = new
-                dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
+                dbskfg_cgraph_directed_tree(query_sample_ds, 
                                             scurve_interpolate_ds_, 
                                             scurve_matching_R_,
                                             false,
@@ -1303,29 +1410,14 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             
             query_tree->acquire_tree_topology((*q_iterator).second.second);
             
-            double query_radius=query_tree->get_root_node_radius();
-            double query_area=query_fragments_area_[(*q_iterator).first]
-                .second;
-            double query_length=query_fragments_length_[(*q_iterator).first]
-                .second;
+            model_tree->set_scale_ratio(model_scale_ratio);
 
-            double scale_ratio=1.0;
-            
-            if ( scale_area_)
-            {
-                scale_ratio=vcl_sqrt(model_area/query_area);
-            }
-            else if ( scale_root_)
-            {
-                scale_ratio=vcl_sqrt(model_radius/query_radius);
+            model_tree->compute_delete_and_contract_costs(
+                elastic_splice_cost_, 
+                circular_ends_, 
+                combined_edit_);
 
-            }
-            else 
-            {
-                scale_ratio=model_length/query_length;
-            }
-
-            query_tree->set_scale_ratio(scale_ratio);
+            query_tree->set_scale_ratio(query_scale_ratio);
 
             query_tree->compute_delete_and_contract_costs(
                 elastic_splice_cost_, 
@@ -1352,7 +1444,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             {
                 //: prepare the trees also
                 dbskfg_cgraph_directed_tree_sptr query_mirror_tree = new
-                    dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
+                    dbskfg_cgraph_directed_tree(query_sample_ds, 
                                                 scurve_interpolate_ds_, 
                                                 scurve_matching_R_,
                                                 mirror_,
@@ -1363,7 +1455,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                                                 query_images_grad_data_green,
                                                 query_images_grad_data_blue);
 
-                query_mirror_tree->set_scale_ratio(scale_ratio);
+                query_mirror_tree->set_scale_ratio(query_scale_ratio);
 
                 query_mirror_tree->acquire
                     ((*q_iterator).second.second, elastic_splice_cost_, 
@@ -1410,10 +1502,10 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             binary_app_rgb_sim_matrix_[model_id][query_id]=rgb_avg_cost;
 
             query_tree=0;
+            model_tree=0;
         }
         vcl_cout<<"Finished "<<(*m_iterator).second.first<<" to all queires"
                 <<vcl_endl;
-        model_tree=0;
     }
 
     // write out data
