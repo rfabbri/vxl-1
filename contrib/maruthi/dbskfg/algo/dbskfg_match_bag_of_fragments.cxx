@@ -1275,7 +1275,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
 
             if ( shape_alg_ == SCALE_TO_REF)
             {
-                vcl_cout<<"Scaling to ref area "<<ref_area_<<vcl_endl;
+                
                 if ( scale_area_ )
                 {
                     model_scale_ratio = vcl_sqrt(ref_area_/model_area);
@@ -1290,16 +1290,16 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             }
             else if ( shape_alg_ == SCALE_TO_MEAN )
             {
-                vcl_cout<<"Scaling to Mean using ";
+                
                 if ( scale_area_ )
                 {
-                    vcl_cout<<mean_area<<" area"<<vcl_endl;
+                    
                     model_scale_ratio = vcl_sqrt(mean_area/model_area);
                     query_scale_ratio = vcl_sqrt(mean_area/query_area);
                 }
                 else if ( scale_length_ )
                 {
-                    vcl_cout<<mean_length<<" length"<<vcl_endl;
+                    
                     model_scale_ratio = mean_length/model_length;
                     query_scale_ratio = mean_length/query_length;
                 }
@@ -1310,17 +1310,17 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             }
             else if ( shape_alg_ == SCALE_TO_MAX )
             {
-                vcl_cout<<"Scaling to MAX using ";
+                
                 if ( scale_area_ )
                 {
-                    vcl_cout<<max_area<<" area"<<vcl_endl;
+                    
 
                     model_scale_ratio = vcl_sqrt(max_area/model_area);
                     query_scale_ratio = vcl_sqrt(max_area/query_area);
                 }
                 else if ( scale_length_ )
                 {
-                    vcl_cout<<max_length<<" length"<<vcl_endl;
+                    
                     model_scale_ratio = max_length/model_length;
                     query_scale_ratio = max_length/query_length;
                 }
@@ -1331,16 +1331,16 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             }
             else if ( shape_alg_ == SCALE_TO_MIN )
             {
-                vcl_cout<<"Scaling to MIN using ";
+
                 if ( scale_area_ )
                 {
-                    vcl_cout<<min_area<<" area"<<vcl_endl;
+                    
                     model_scale_ratio = vcl_sqrt(min_area/model_area);
                     query_scale_ratio = vcl_sqrt(min_area/query_area);
                 }
                 else if ( scale_length_ )
                 {
-                    vcl_cout<<min_length<<" length"<<vcl_endl;
+                    
                     model_scale_ratio = min_length/model_length;
                     query_scale_ratio = min_length/query_length;
                 }
@@ -1349,7 +1349,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                     vcl_sqrt(min_area/ref_area_);
 
             }
-            vcl_cout<<"Scurve Matching R: "<<scurve_matching_R_<<vcl_endl;
+
 
             vcl_string key = model_fragments_
                 [(*q_iterator).first].first;
@@ -1439,6 +1439,8 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                                             app_diff,
                                             norm_app_cost,
                                             rgb_avg_cost);
+
+
 
             if ( mirror_)
             {
