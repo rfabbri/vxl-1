@@ -37,6 +37,9 @@ SET(dbdet_pro_sources
    
    dbdet_third_order_edge_detector_process.h
    dbdet_third_order_edge_detector_process.cxx
+
+   dbdet_third_order_edge_detector_vxl_process.h
+   dbdet_third_order_edge_detector_vxl_process.cxx
    
    dbdet_third_order_color_edge_detector_process.cxx
    dbdet_third_order_color_edge_detector_process.h

@@ -1,0 +1,84 @@
+Dear LEMS VXL developers,
+
+My student Caio Souza and I have recently promoted edge linker code from
+LEMS' brcv/seg/dbdet to VXL's contrib/brl/bseg/sdet
+
+The symbolic edge linker builds and the tests all pass.The main goal here is to be able execute the basic subpixel edge detector and
+symbolic edge linker without disclosing the entire LEMS repository to collaborators.
+These initial efforts were coordinated with the original authors of both
+the edge linker and the VXL sdet libraries (Amir Tamrakar, Ben Kimia et. al.).
+
+We propose the following policy to maintain the LEMS and the VXL versions of the edge extraction technology:
+
+- Both the sdet and dbdet versions of the code will be lying around. The sdet
+  version is meant to be stable, and the dbdet code is more experimental.
+- Both sdet and dbdet will diverge in the future. The interested parties manage
+  this as follows:
+  - Improvements made to sdet are typically of the incremental kind which may
+    introduce cleanups and API improvements. By monitoring these changes in git
+    we can backport them to dbdet when needed.
+  - Improvements made to dbdet are typically experimental, and so by monitoring
+    the LEMS code we know when something new works well and should
+    be promoted to sdet
+  - Both of these situations require a closely monitored and hand-crafted
+    maintanence approach which is only made feasible since the stable sdet code
+    is useful on its own (even if the cross-merging of changes doesn't get
+    carried out); these are not two git branches but are separate repositories
+    tracking similar code.
+  - cross-library tests in dbdet/algo/tests compare the sdet and dbdet versions of the
+    code, so we can detect significant changes and API compatibility.
+
+- Brown eyes processes in dbdet/pro will be
+  added for sdet, so that a Brown Eyes GUI can have both dbdet and sdet
+  versions, the latter being suffixed with 'VXL'.  In order to avoid rewriting
+  visualizers / tableaux renderers for sdet_edgemap and other structures, the VXL
+  version of the processes will convert the structures to dbdet versions. That
+  is, we will not create sdet versions of dbdet_edgemap_storage,
+  dbdet_sel_storage, dbdet_edgemap_tableau, etc, for now.
+
+- We encourage new users to use the more stable sdet library unless there is
+  significant experimental functionality in dbdet to be used.
+
+The main changes we have carried out are outlined as follows
+
+- We have implemented minor improvements to the available third order
+  edge detector in sdet using recent changes from dbdet.
+  - These improvements did not change the functionality of the edge detector,
+  as shown by an automated test to compare the sdet and dbdet versions in
+  dbdet/algo/test_edgemap
+  - Such test documents the API differences:
+    - the dbdet edge detector API is just a function call
+    - the sdet one is a class with separate parameters, which was there in sdet
+      aready and we also think it works best and is more extensible.
+  - The only internal difference between the sdet and dbdet edge detectors is
+    that the sdet edge detector returns a vector of vdgl_edgels, in which the
+    orientation is represented by an angle. The symbolic edge linker requires an
+    edge map which uses sdet_edgel (equal to dbdet_edgel) which stores orientation as
+    tan(angle). So currently one has to convert between the two prior to
+    applying the symbolic edge linker.  We are thinking about changing this to
+    be uniform as well, to avoid slow conversions. Perhaps default to sdet_edgel
+    and have a conversion function to vdgl_edgel? Not sure.
+
+- The symbolic edge linker has been ported as-is
+  - the new sdet API is the same as the dbdet one, as can beseen from these
+    identical tests: dbdet/algo/tests/test_sel.cxx and sel/tests/test_sel.cxx
+  - some useful pre and post-processing that was present in the symbolic edge linker
+    process from dbdet/pro were put inside a dbpro-independent class
+    sdet_symbolic_edge_linker class.
+  - certain internal depencencies to lems that was generally useful were
+    promoted  to VXL, namely:
+    - brl/bbas/bvgl/bvgl_param_curve, bvgl_eulerspiral, bvgl_biarc
+
+Minor changes
+- dbdet_sel_base_CFTG_algo.cxx's content were merged into dbdet_sel_base.cxx,
+  insetad of creating sdet_sel_base_CFTG_algo. Perhaps Caio could comment on
+  this choice.
+- a few functions were implemented in-place on the .h instead of the .cxx
+
+Our next steps consist in further optimizing the code for speed.
+
+We look forward to your opinions on this process.
+Best,
+
+--
+Dr Ricardo Fabbri

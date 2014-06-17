@@ -597,3 +597,14 @@ ENDIF(BUILD_CONTRIB_octi)
 # IF(BUILD_CONTRIB_Anant)
 #     SUBDIRS( Anant )
 # ENDIF(BUILD_CONTRIB_Anant)
+
+# Contrib Project: mauro
+IF( DART_ROOT )
+  OPTION(BUILD_CONTRIB_mauro "Build contrib/mauro" YES)
+ELSE( DART_ROOT )
+  OPTION(BUILD_CONTRIB_mauro "Build contrib/mauro" NO)
+ENDIF( DART_ROOT )
+IF(BUILD_CONTRIB_mauro)
+    SUBDIRS( mauro )
+ENDIF(BUILD_CONTRIB_mauro)
+

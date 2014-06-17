@@ -127,6 +127,7 @@ sel_gui_menu::setup_menu()
 
     MENU_ADD_PROCESS_NAME( "Generic Edge Detector", edge_detection_group_menu );
     MENU_ADD_PROCESS_NAME( "Third Order Edge Detector", edge_detection_group_menu );
+    MENU_ADD_PROCESS_NAME( "Third Order Edge Detector VXL", edge_detection_group_menu );
     MENU_ADD_PROCESS_NAME( "Compass Edge Detector", edge_detection_group_menu );
     
     edge_detection_group_menu.separator();
