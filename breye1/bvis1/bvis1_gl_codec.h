@@ -13,7 +13,7 @@
 #include <vcl_string.h>
 #include <vcl_cstring.h>
 #include <bvis1/bvis1_gl_codec_sptr.h>
-#include <vidl1/vidl1_codec.h>
+//#include <vidl1/vidl1_codec.h>
 #include <vil/vil_image_resource.h>
 #include <vcl_list.h>
 #include <vcl_vector.h>
