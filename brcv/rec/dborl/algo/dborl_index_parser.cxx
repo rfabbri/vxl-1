@@ -15,6 +15,7 @@
 #include <dborl/dborl_index_leaf.h>
 #include <dborl/dborl_index.h>
 #include <vcl_cstring.h>
+#include <vcl_sstream.h>
 
 //: a function used in the parsers
 template <typename T>
