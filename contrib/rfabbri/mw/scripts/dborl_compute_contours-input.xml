@@ -5,9 +5,11 @@ standalone="yes"?>
 Contour_Tracer-bSub_con="off"
 Contour_Tracer-beta="0.3"
 Contour_Tracer-c_ds="1"
+Contour_Tracer-desired_area="3448"
 Contour_Tracer-intensity_threshold="-1"
 Contour_Tracer-len_threshold="20"
 Contour_Tracer-nsteps="1"
+Contour_Tracer-perform_area_normalization="off"
 Contour_Tracer-sigma="1">
 </Contour_Tracer>
 <Edge_Detection_Color Edge_Detection_Color-bLoadComps="off"
@@ -33,11 +35,14 @@ Edge_Detection_Gray-thresh="2">
 <Edge_Linking Edge_Linking-app_thresh="0.2"
 Edge_Linking-app_usage="0"
 Edge_Linking-bFormCompleteCvletMap="off"
+Edge_Linking-bFormLinkGraph="on"
+Edge_Linking-bGetfinalcontours="on"
 Edge_Linking-badap_uncer="on"
 Edge_Linking-curve_model="5"
 Edge_Linking-cvlet_type="0"
 Edge_Linking-dt="15"
 Edge_Linking-dx="0.4"
+Edge_Linking-gap="2"
 Edge_Linking-grouping_algo="2"
 Edge_Linking-linking_algo="2"
 Edge_Linking-max_size_to_group="7"
@@ -65,6 +70,12 @@ Prune_Contours-color_thres="0.4"
 Prune_Contours-intensity_gamma="15"
 Prune_Contours-region_width="5">
 </Prune_Contours>
+<Prune_Contours_Logistic Prune_Contours_Logistic-color_gamma="14"
+Prune_Contours_Logistic-color_thres="0.4"
+Prune_Contours_Logistic-intensity_gamma="15"
+Prune_Contours_Logistic-prob="0.3"
+Prune_Contours_Logistic-region_width="5">
+</Prune_Contours_Logistic>
 <io edge_extension=".edg"
 input_extention="@IMGEXT@"
 input_object_dir="@INPUTDIR@"
@@ -72,10 +83,12 @@ input_object_name="@IMGBASENAME@"
 output_edge_link_folder="@OUTPUTDIR@"
 output_extension=".cemv.gz"
 prune_contours="off"
+prune_contours_logistic="off"
 save_curvelets="off"
 save_edges="off"
 save_to_object_folder="off"
-trace_contours="off">
+trace_contours="off"
+use_existing_edges="off">
 </io>
 <web_directive categorization_file="categorization.xml"
 evaluation_file="evaluation.xml"
@@ -85,4 +98,3 @@ print_params_only="off"
 status_block="status.xml">
 </web_directive>
 </dborl_edge_det_link>
-
