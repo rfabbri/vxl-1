@@ -19,9 +19,6 @@
 
 #include <vil/vil_new.h>
 #include <vil/vil_image_resource_sptr.h>
-#include <vidl1/vidl1_movie.h>
-#include <vidl1/vidl1_frame.h>
-#include <vidl1/vidl1_io.h>
 #include <vcl_cmath.h>
 #include <vcl_algorithm.h>
 #include <vul/vul_file_iterator.h>
@@ -115,6 +112,7 @@ vidpro1_load_video_and_polys_process::output_frames()
 bool
 vidpro1_load_video_and_polys_process::execute()
 {
+#if 0
     bpro1_filepath video_path;
     bpro1_filepath poly_path;
     float mina, maxa, gamma;
@@ -179,15 +177,17 @@ vidpro1_load_video_and_polys_process::execute()
     vcl_vector<vcl_string> video_files;
     for(vul_file_iterator fn = video_path.path; fn; ++fn)
       video_files.push_back(fn());
-    while(!video_files.empty())
-    {
-      vidl1_movie_sptr my_movie = vidl1_io::load_movie(video_files.back().c_str());
+//    while(!video_files.empty())
+ //   {
+  //    vidl1_movie_sptr my_movie = 0;
+      //vidl1_io::load_movie(video_files.back().c_str());
   
-      if (!my_movie) {
+//      if (!my_movie) {
           vcl_cerr << "Failed to load movie file: "<< video_files.back() << vcl_endl;
           return false;
-      }
+//      }
   
+/* FIXME vidl1 Bug
       vidl1_movie::frame_iterator pframe = my_movie->last();
       for (; pframe >= my_movie->first(); --pframe){
           vidpro1_image_storage_sptr image_storage = vidpro1_image_storage_new();
@@ -199,6 +199,7 @@ vidpro1_load_video_and_polys_process::execute()
       
       num_frames_ += my_movie->length();
       video_files.pop_back();
+*/
     }
 
     vcl_cout << "number of frames " << num_frames_ << "\n";
@@ -227,6 +228,7 @@ vidpro1_load_video_and_polys_process::execute()
       output_data_[oi].push_back(output_vsol);
     }
       
+#endif
     return true;
 }
 
