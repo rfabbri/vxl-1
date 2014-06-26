@@ -326,6 +326,57 @@ void dbsk2d_transform_manager::write_output_polygon(vgl_polygon<double>& poly)
 
 }
 
+void dbsk2d_transform_manager::write_output_region_stats
+(vcl_map< vcl_set<int>,vcl_vector<double> >& region_stats)
+{
+
+
+    vcl_ofstream output_binary_file;
+    output_binary_file.open(output_region_stats_file_.c_str(),
+                            vcl_ios::out | 
+                            vcl_ios::app | 
+                            vcl_ios::binary);
+    
+
+ 
+    double num_regions = region_stats.size();
+    output_binary_file.write(reinterpret_cast<char *>(&num_regions),
+                             sizeof(double));
+
+    vcl_map<vcl_set<int>,vcl_vector<double> >::iterator mit;
+    for ( mit = region_stats.begin() ; mit != region_stats.end() ; ++mit)
+    {
+        vcl_vector<double> stats=(*mit).second;
+        double depth         = stats[0];
+        double path_prob     = stats[1];
+        double gap_prob      = stats[2];
+        double contour_ratio = stats[3];
+        double area          = stats[4];
+
+        output_binary_file.write(reinterpret_cast<char *>(&depth),
+                                 sizeof(double));
+
+        output_binary_file.write(reinterpret_cast<char *>(&path_prob),
+                                 sizeof(double));
+
+        output_binary_file.write(reinterpret_cast<char *>(&gap_prob),
+                                 sizeof(double));
+
+        output_binary_file.write(reinterpret_cast<char *>(&contour_ratio),
+                                 sizeof(double));
+
+        output_binary_file.write(reinterpret_cast<char *>(&area),
+                                 sizeof(double));
+        
+
+
+    }
+
+    output_binary_file.close();
+
+
+}
+
 
 void dbsk2d_transform_manager::write_output_region(vgl_polygon<double>& poly)
 {

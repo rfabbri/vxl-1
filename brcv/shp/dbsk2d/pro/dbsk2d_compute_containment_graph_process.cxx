@@ -178,12 +178,16 @@ bool dbsk2d_compute_containment_graph_process::execute()
             output_prefix+"_regions_binary.bin";
         vcl_string output_binary_regions_contours_file = output_folder+"/"+
             output_prefix+"_regions_contours_binary.bin";
+        vcl_string output_region_stats_file = output_folder+"/"+
+            output_prefix+"_regions_stats.bin";
   
         dbsk2d_transform_manager::Instance().set_image(image);
         dbsk2d_transform_manager::Instance().start_binary_file(
             output_binary_file);
         dbsk2d_transform_manager::Instance().start_region_file(
             output_binary_regions_contours_file);
+        dbsk2d_transform_manager::Instance().start_region_stats_file(
+           output_region_stats_file);
             
     }
 

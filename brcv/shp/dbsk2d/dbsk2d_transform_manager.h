@@ -66,6 +66,10 @@ public:
     // Start binary file output
     void start_region_file(vcl_string binary_file_output);
 
+    // Start region stats file
+    void start_region_stats_file(vcl_string binary_file_output)
+    {output_region_stats_file_=binary_file_output;}
+
     // Get image
     vil_image_resource_sptr get_image()
     {return image_;}
@@ -86,6 +90,10 @@ public:
     // Get output stream
     void write_output_polygon(vgl_polygon<double>& poly);
  
+    // Write output region stats
+    void write_output_region_stats(vcl_map<vcl_set<int>,vcl_vector<double> >& 
+                                   region_stats);
+
     // Get output stream
     void write_output_region(vcl_vector<dbsk2d_ishock_belm*>& region);
 
@@ -183,6 +191,9 @@ private:
 
     // Keep binary file
     vcl_string output_region_file_;
+
+    // Keep binary file
+    vcl_string output_region_stats_file_;
 
     //: First Coefficient of logistic function 
     double logistic_beta0_;
