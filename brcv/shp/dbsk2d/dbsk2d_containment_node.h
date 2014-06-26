@@ -73,6 +73,8 @@ public:
     }
 
     double get_prob(){return prob_;}
+    
+    double get_gap_prob(){return gap_prob_;}
 
     //------------------------- Setters -----------------------------------
     void set_id(unsigned int id){id_=id;}
@@ -89,6 +91,8 @@ public:
     }
 
     void set_prob(double prob){prob_=prob;}
+
+    void set_gap_prob(double gap_prob){gap_prob_=gap_prob;}
 
     void set_parent_regions(vcl_vector<dbsk2d_ishock_belm*> region_belms,
                             unsigned int outer_shock_nodes)
@@ -162,6 +166,9 @@ private:
 
     // Keep track of probability of this node
     double prob_;
+
+    // Keep track of gap probability
+    double gap_prob_;
 
     // Keep track of regions that spawned this node
     vcl_map< unsigned int,vcl_vector<dbsk2d_ishock_belm*> > parent_regions_;

@@ -8,6 +8,7 @@
 #include <vgl/vgl_clip.h>
 #include <vgl/vgl_area.h>
 #include <vgl/vgl_distance.h>
+#include <vgl/vgl_convex.h>
 #include <vcl_algorithm.h>
 #include <dbsk2d/algo/dbsk2d_ishock_transform.h>
 #include <dbsk2d/dbsk2d_transform_manager.h>
@@ -246,6 +247,27 @@ void dbsk2d_ishock_grouping_transform::extract_polygon(
                 (vcl_floor((poly[s][p].y()/G)+0.5))*G;
         }
     }
+}
+
+double dbsk2d_ishock_grouping_transform::convex_area(unsigned int index)
+{
+    
+    vcl_vector<dbsk2d_ishock_belm*> frag_belms = region_belms_[index];
+
+
+    vcl_vector<vgl_point_2d<double> > points;
+  
+    vcl_vector<dbsk2d_ishock_belm*>::iterator lit;  
+    for (lit = frag_belms.begin() ; lit != frag_belms.end() ; ++lit)
+    {
+        dbsk2d_ishock_bline* bline = (dbsk2d_ishock_bline*)(*lit);
+        points.push_back(bline->s_pt()->pt());
+
+    }     
+
+    vgl_polygon<double> poly=vgl_convex_hull(points);
+    
+    return vgl_area(poly);
 }
 
 double dbsk2d_ishock_grouping_transform::contour_ratio(

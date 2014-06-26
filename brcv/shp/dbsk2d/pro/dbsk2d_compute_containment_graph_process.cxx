@@ -65,6 +65,8 @@ dbsk2d_compute_containment_graph_process()
                             (unsigned int) 1) ||
         !parameters()->add( "Expand Outside" , "-outside" , 
                             (bool) false) ||
+        !parameters()->add( "Train" , "-train" , 
+                            (bool) false) ||
         !parameters()->add( "Output folder:" , 
                             "-output_folder", bpro1_filepath("", "")) ||
         !parameters()->add( "Output file prefix:" , 
@@ -138,6 +140,7 @@ bool dbsk2d_compute_containment_graph_process::execute()
     unsigned int loop_cost(1);
     double gap_distance(2.0);
     bool outside(false);
+    bool train(false);
 
     bpro1_filepath output_folder_filepath;
     this->parameters()->get_value("-output_folder", output_folder_filepath);
@@ -153,6 +156,7 @@ bool dbsk2d_compute_containment_graph_process::execute()
     parameters()->get_value( "-loop_cost" , loop_cost);
     parameters()->get_value( "-gap_distance" , gap_distance );
     parameters()->get_value( "-outside" ,  outside ); 
+    parameters()->get_value( "-train" , train );
 
     bool status = true;
     
@@ -362,7 +366,8 @@ bool dbsk2d_compute_containment_graph_process::execute()
     dbsk2d_containment_graph cgraph(shock_storage->get_ishock_graph(),
                                     path_threshold,
                                     loop_cost,
-                                    outside);
+                                    outside,
+                                    train);
 
     cgraph.construct_graph();
     cgraph.write_stats(stats_filestream);

@@ -70,6 +70,8 @@ dbskfg_form_containment_graph_region_process()
                             (unsigned int) 1) ||
         !parameters()->add( "Expand Outside" , "-outside" , 
                             (bool) false) ||
+        !parameters()->add( "Train" , "-train" , 
+                            (bool) false) ||
         !parameters()->add( "Output folder:" , 
                             "-output_folder", bpro1_filepath("", "")) ||
         !parameters()->add( "Output file prefix:" , 

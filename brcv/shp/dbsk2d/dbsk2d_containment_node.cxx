@@ -18,7 +18,8 @@ dbsk2d_containment_node::dbsk2d_containment_node(
      visited_(false),
      depth_(depth),
      id_(id),
-     prob_(1.0)
+     prob_(1.0),
+     gap_prob_(1.0)
 {
 
 }
