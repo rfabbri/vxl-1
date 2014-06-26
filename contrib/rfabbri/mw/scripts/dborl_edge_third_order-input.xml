@@ -1,0 +1,37 @@
+<?xml version="1.0"
+encoding="UTF-8"
+standalone="yes"?>
+<dborl_third_order_edge_det>
+<io input_extension="@IMGEXT@"
+input_object_dir="@INPUTDIR@"
+input_object_name="@IMGBASENAME@"
+output_edge_folder="@OUTPUTDIR@"
+output_extension=".edg.gz"
+save_edges="on"
+save_to_object_folder="off">
+</io>
+<toe toe-badap_thresh="off"
+toe-binterp_grid="off"
+toe-breduce="on"
+toe-conv_algo="0"
+toe-grad_op="0"
+toe-int_factor="1"
+toe-parabola_fit="0"
+toe-sigma="1"
+toe-thresh="5">
+</toe>
+<!-- Reduce edgel tokens is the only difference from the default.
+     I also use, by default:
+     - for forming curve frags:
+        - grad threshold default of 2, and reduce edgel tokens = on
+     - for confirmation views:
+        - grad threshold default of 5, and, perhaps, reduce edgel tokens = off?
+-->
+<web_directive categorization_file="categorization.xml"
+evaluation_file="evaluation.xml"
+perf_block="perf.xml"
+print_params_file="params.xml"
+print_params_only="off"
+status_block="status.xml">
+</web_directive>
+</dborl_third_order_edge_det>

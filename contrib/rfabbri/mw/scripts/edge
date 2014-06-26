@@ -4,7 +4,7 @@
 
 
 vorlexecname=dborl_edge_third_order
-vorldirname=/home/anilusumezbas/lemsvxl/bin/brcv/rec/dborl/algo/edge/dborl_edge_third_order
+vorldirname=$HOME/src/vxlprg/lemsvxl-bin/brcv/rec/dborl/algo/edge/dborl_edge_third_order
 
 # set -x
 case $# in
@@ -21,9 +21,9 @@ echo image base: $img_base
 xmlorig="$HOME/.$vorlexecname-input.xml"
 tmpfile=/tmp/$$-tmp-$vorlexecname-input.xml
 
-sed "s/@IMGEXT@/$img_ext/g
-s/@IMGBASENAME@/$img_base/g
-s/@INPUTDIR@/$img_dir/g
-s/@OUTPUTDIR@/$img_dir/g" $xmlorig  > $tmpfile
+sed "s%@IMGEXT@%$img_ext%g
+s%@IMGBASENAME@%$img_base%g
+s%@INPUTDIR@%$img_dir%g
+s%@OUTPUTDIR@%$img_dir%g" $xmlorig  > $tmpfile
 
 $vorldirname -x $tmpfile
