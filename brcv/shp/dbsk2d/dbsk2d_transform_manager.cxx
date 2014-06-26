@@ -391,6 +391,8 @@ void dbsk2d_transform_manager::write_output_region_stats
         double gap_prob      = stats[2];
         double contour_ratio = stats[3];
         double area          = stats[4];
+        double convex_area   = stats[5];
+        double convexity     = stats[6];
 
         output_binary_file.write(reinterpret_cast<char *>(&depth),
                                  sizeof(double));
@@ -406,6 +408,14 @@ void dbsk2d_transform_manager::write_output_region_stats
 
         output_binary_file.write(reinterpret_cast<char *>(&area),
                                  sizeof(double));
+       
+        output_binary_file.write(reinterpret_cast<char *>(&convex_area),
+                                 sizeof(double));
+
+        output_binary_file.write(reinterpret_cast<char *>(&convexity),
+                                 sizeof(double));
+        
+        
         
 
 

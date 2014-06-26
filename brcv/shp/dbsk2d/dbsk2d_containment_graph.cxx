@@ -127,15 +127,19 @@ void dbsk2d_containment_graph::construct_graph()
 
                 if ( train_ )
                 {
+                    double area=vgl_area(poly);
+
                     // stats
                     region_stats_[key].push_back(0.0);       //depth
                     region_stats_[key].push_back(1.0);       //path prob
                     region_stats_[key].push_back(1.0);       //region gap cost
                     region_stats_[key].push_back(con_ratio); //contour_ratio
-                    region_stats_[key].push_back(vgl_area(poly)); //area
+                    region_stats_[key].push_back(area);      //area
                     
                     double convex_area=grouper.convex_area((*it).first);
                     region_stats_[key].push_back(convex_area);
+                    region_stats_[key].push_back(area/convex_area);
+                    // convexity
                 }
                 
                 
@@ -362,15 +366,19 @@ void dbsk2d_containment_graph::construct_graph()
 
                     if ( train_ )
                     {
+                        double area=vgl_area(poly);
+
                         // stats
                         region_stats_[key].push_back(node->get_depth());
                         region_stats_[key].push_back(node->get_prob()); 
                         region_stats_[key].push_back(node->get_gap_prob());
                         region_stats_[key].push_back(contour_ratio); 
-                        region_stats_[key].push_back(vgl_area(poly));
+                        region_stats_[key].push_back(area);
 
                         double convex_area=grouper.convex_area((*it).first);
                         region_stats_[key].push_back(convex_area);
+                        region_stats_[key].push_back(area/convex_area);
+
                     }
 
                 }
