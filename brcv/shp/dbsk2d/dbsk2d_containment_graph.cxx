@@ -20,6 +20,7 @@
 #include <bsta/bsta_k_medoid.h>
 #include <vgl/vgl_polygon.h>
 #include <vgl/vgl_clip.h>
+#include <vgl/vgl_area.h>
 
 //: constructor
 dbsk2d_containment_graph::dbsk2d_containment_graph
@@ -27,13 +28,15 @@ dbsk2d_containment_graph::dbsk2d_containment_graph
     dbsk2d_ishock_graph_sptr ishock_graph,
     double path_threshold,
     unsigned int loop_type,
-    bool expand_outside
+    bool expand_outside,
+    bool train
 ):ishock_graph_(ishock_graph),
   path_threshold_(path_threshold),
   loop_type_(loop_type),
   next_available_id_(0),
   gap_id_(0),
-  expand_outside_(expand_outside)
+  expand_outside_(expand_outside),
+  train_(train)
 {
 }
 
@@ -121,6 +124,21 @@ void dbsk2d_containment_graph::construct_graph()
                 {
                     closed_regions_[key]="temp";
                 }
+
+                if ( train_ )
+                {
+                    // stats
+                    region_stats_[key].push_back(0.0);       //depth
+                    region_stats_[key].push_back(1.0);       //path prob
+                    region_stats_[key].push_back(1.0);       //region gap cost
+                    region_stats_[key].push_back(con_ratio); //contour_ratio
+                    region_stats_[key].push_back(vgl_area(poly)); //area
+                    
+                    double convex_area=grouper.convex_area((*it).first);
+                    region_stats_[key].push_back(convex_area);
+                }
+                
+                
 
             }
 
@@ -341,6 +359,20 @@ void dbsk2d_containment_graph::construct_graph()
                     {
                         closed_regions_[key]="temp";
                     }
+
+                    if ( train_ )
+                    {
+                        // stats
+                        region_stats_[key].push_back(node->get_depth());
+                        region_stats_[key].push_back(node->get_prob()); 
+                        region_stats_[key].push_back(node->get_gap_prob());
+                        region_stats_[key].push_back(contour_ratio); 
+                        region_stats_[key].push_back(vgl_area(poly));
+
+                        double convex_area=grouper.convex_area((*it).first);
+                        region_stats_[key].push_back(convex_area);
+                    }
+
                 }
             }
             
@@ -394,6 +426,14 @@ void dbsk2d_containment_graph::construct_graph()
         }
         
         merge_closed_regions();
+
+        if ( train_ )
+        {
+            vcl_cout<<"Writing out training data"<<vcl_endl;
+            dbsk2d_transform_manager::Instance().write_output_region_stats
+                (region_stats_);
+        }
+
     }
 }
 
@@ -511,6 +551,7 @@ void dbsk2d_containment_graph::expand_node(
             stack_.push(child);
             node->set_child_node(child);
             child->set_prob(node->get_prob()*prob);
+            child->set_gap_prob(node->get_gap_prob()*prob);
             cgraph_nodes_[child->get_depth()].push_back(child);
         }
 
@@ -565,6 +606,7 @@ void dbsk2d_containment_graph::expand_node(
             stack_.push(child);
             node->set_child_node(child);
             child->set_prob(node->get_prob()*prob);
+            child->set_gap_prob(node->get_gap_prob()*prob);
             cgraph_nodes_[child->get_depth()].push_back(child);
         }
 

@@ -127,6 +127,9 @@ public:
     // Set beta1 for logitic function
     void set_beta1_logit(double beta1){logistic_beta1_ = beta1;}
 
+    // edge gpb value
+    double contour_gpb_value(vcl_vector<dbsk2d_ishock_belm*>& frag_belms);
+
     // Determine gap cost
     double transform_probability(double gamma_norm,double k0_norm, 
                                  double length);

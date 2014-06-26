@@ -37,7 +37,8 @@ public:
     dbsk2d_containment_graph(dbsk2d_ishock_graph_sptr ishock_graph,
                              double path_threshold,
                              unsigned int loop_type,
-                             bool expand_outside=false);
+                             bool expand_outside=false,
+                             bool train=false);
 
     //:Destructor
     ~dbsk2d_containment_graph();
@@ -75,6 +76,9 @@ private:
     // Keep track of polygons
     vcl_map<vcl_set<int>, vcl_string > closed_regions_;
 
+    // Keep track of stats on regions
+    vcl_map<vcl_set<int>, vcl_vector<double> > region_stats_;
+
     // store path threshold
     double path_threshold_;
 
@@ -89,6 +93,9 @@ private:
 
     // store whether expanding outside
     bool expand_outside_;
+
+    // write out training data
+    bool train_;
 
     //: get next available id 
     unsigned int next_available_id()
