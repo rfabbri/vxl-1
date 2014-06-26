@@ -249,6 +249,46 @@ void dbsk2d_ishock_grouping_transform::extract_polygon(
     }
 }
 
+double dbsk2d_ishock_grouping_transform::convex_area(vgl_polygon<double>& 
+                                                     poly)
+{
+    unsigned int f_index=0;
+    vgl_polygon<double> start_poly(poly[f_index]);
+    double area=vgl_area(start_poly);
+
+    for (unsigned int s = 1; s < poly.num_sheets(); ++s)
+    { 
+        
+        vgl_polygon<double> tempy(poly[s]);
+        double area_temp = vgl_area(tempy);
+        if ( area_temp > area )
+        {
+             area = area_temp;
+             f_index=s;
+
+        }
+        
+    }
+    
+    vcl_vector<vgl_point_2d<double>  > points;
+
+    vgl_polygon<double> final_poly(poly[f_index]);
+
+    for ( unsigned int k=0; k < final_poly.num_sheets() ; ++k)
+    {
+        for (unsigned int p = 0; p < final_poly[k].size(); ++p)
+        {
+            points.push_back(final_poly[k][p]);
+            
+        }
+        
+    }
+    
+    vgl_polygon<double> hull=vgl_convex_hull(points);
+    
+    return vgl_area(hull);
+}
+
 double dbsk2d_ishock_grouping_transform::convex_area(unsigned int index)
 {
     

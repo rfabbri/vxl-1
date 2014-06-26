@@ -136,7 +136,7 @@ void dbsk2d_containment_graph::construct_graph()
                     region_stats_[key].push_back(con_ratio); //contour_ratio
                     region_stats_[key].push_back(area);      //area
                     
-                    double convex_area=grouper.convex_area((*it).first);
+                    double convex_area=grouper.convex_area(poly);
                     region_stats_[key].push_back(convex_area);
                     region_stats_[key].push_back(area/convex_area);
                     // convexity
@@ -375,7 +375,7 @@ void dbsk2d_containment_graph::construct_graph()
                         region_stats_[key].push_back(contour_ratio); 
                         region_stats_[key].push_back(area);
 
-                        double convex_area=grouper.convex_area((*it).first);
+                        double convex_area=grouper.convex_area(poly);
                         region_stats_[key].push_back(convex_area);
                         region_stats_[key].push_back(area/convex_area);
 
