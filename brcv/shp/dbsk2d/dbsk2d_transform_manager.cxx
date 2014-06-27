@@ -365,8 +365,8 @@ void dbsk2d_transform_manager::write_output_polygon(vgl_polygon<double>& poly)
 
 }
 
-void dbsk2d_transform_manager::write_output_region_stats
-(vcl_map< vcl_set<int>,vcl_vector<double> >& region_stats)
+void dbsk2d_transform_manager::write_output_region_stats(
+    vcl_vector<double>& region_stats)
 {
 
 
@@ -376,51 +376,36 @@ void dbsk2d_transform_manager::write_output_region_stats
                             vcl_ios::app | 
                             vcl_ios::binary);
     
-
- 
-    double num_regions = region_stats.size();
-    output_binary_file.write(reinterpret_cast<char *>(&num_regions),
+    double depth         = region_stats[0];
+    double path_prob     = region_stats[1];
+    double gap_prob      = region_stats[2];
+    double contour_ratio = region_stats[3];
+    double area          = region_stats[4];
+    double convex_area   = region_stats[5];
+    double convexity     = region_stats[6];
+    
+    output_binary_file.write(reinterpret_cast<char *>(&depth),
                              sizeof(double));
-
-    vcl_map<vcl_set<int>,vcl_vector<double> >::iterator mit;
-    for ( mit = region_stats.begin() ; mit != region_stats.end() ; ++mit)
-    {
-        vcl_vector<double> stats=(*mit).second;
-        double depth         = stats[0];
-        double path_prob     = stats[1];
-        double gap_prob      = stats[2];
-        double contour_ratio = stats[3];
-        double area          = stats[4];
-        double convex_area   = stats[5];
-        double convexity     = stats[6];
-
-        output_binary_file.write(reinterpret_cast<char *>(&depth),
-                                 sizeof(double));
-
-        output_binary_file.write(reinterpret_cast<char *>(&path_prob),
-                                 sizeof(double));
-
-        output_binary_file.write(reinterpret_cast<char *>(&gap_prob),
-                                 sizeof(double));
-
-        output_binary_file.write(reinterpret_cast<char *>(&contour_ratio),
-                                 sizeof(double));
-
-        output_binary_file.write(reinterpret_cast<char *>(&area),
-                                 sizeof(double));
-       
-        output_binary_file.write(reinterpret_cast<char *>(&convex_area),
-                                 sizeof(double));
-
-        output_binary_file.write(reinterpret_cast<char *>(&convexity),
-                                 sizeof(double));
-        
-        
-        
-
-
-    }
-
+    
+    output_binary_file.write(reinterpret_cast<char *>(&path_prob),
+                             sizeof(double));
+    
+    output_binary_file.write(reinterpret_cast<char *>(&gap_prob),
+                             sizeof(double));
+    
+    output_binary_file.write(reinterpret_cast<char *>(&contour_ratio),
+                             sizeof(double));
+    
+    output_binary_file.write(reinterpret_cast<char *>(&area),
+                             sizeof(double));
+    
+    output_binary_file.write(reinterpret_cast<char *>(&convex_area),
+                             sizeof(double));
+    
+    output_binary_file.write(reinterpret_cast<char *>(&convexity),
+                             sizeof(double));
+    
+    
     output_binary_file.close();
 
 

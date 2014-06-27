@@ -91,8 +91,7 @@ public:
     void write_output_polygon(vgl_polygon<double>& poly);
  
     // Write output region stats
-    void write_output_region_stats(vcl_map<vcl_set<int>,vcl_vector<double> >& 
-                                   region_stats);
+    void write_output_region_stats(vcl_vector<double>& region_stats);
 
     // Get output stream
     void write_output_region(vcl_vector<dbsk2d_ishock_belm*>& region);

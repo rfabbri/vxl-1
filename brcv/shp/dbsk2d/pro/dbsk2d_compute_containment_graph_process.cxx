@@ -14,6 +14,8 @@
 #include <dbsk2d/algo/dbsk2d_ishock_gap_transform.h>
 #include <dbsk2d/algo/dbsk2d_ishock_loop_transform.h>
 #include <dbsk2d/algo/dbsk2d_ishock_gap4_transform.h>
+#include <dbsk2d/algo/dbsk2d_ishock_grouping_transform.h>
+#include <vgl/vgl_area.h>
 
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
@@ -381,6 +383,12 @@ bool dbsk2d_compute_containment_graph_process::execute()
         dbsk2d_transform_manager::Instance().write_output_polygon
             (closed_polys[c]);
 
+        vcl_vector<double> stats;
+        this->region_stats(closed_polys[c],stats,
+                           shock_storage->get_ishock_graph());
+        dbsk2d_transform_manager::Instance().
+            write_output_region_stats(stats);
+        
     }
 
     double vox_time = t.real()/1000.0;
@@ -515,6 +523,11 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
                     dbsk2d_transform_manager::Instance().write_output_polygon
                         (poly);
 
+                    vcl_vector<double> stats;
+                    this->region_stats(poly,stats,ishock_graph);
+                    dbsk2d_transform_manager::Instance().
+                        write_output_region_stats(stats);
+
                 }
                 else
                 {
@@ -525,6 +538,12 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
                         (cons,gap_filler);
                     dbsk2d_transform_manager::Instance().write_output_polygon
                         (poly);
+
+                    vcl_vector<double> stats;
+                    this->region_stats(poly,stats,ishock_graph);
+                    dbsk2d_transform_manager::Instance().
+                        write_output_region_stats(stats);
+
 
                 }
 
@@ -719,4 +738,26 @@ get_contour(dbsk2d_ishock_bpoint* bp)
 
     return (dbsk2d_bnd_contour*)(*tit);
 
+}
+
+void dbsk2d_compute_containment_graph_process::
+region_stats(vgl_polygon<double>& poly,vcl_vector<double>& stats,
+             dbsk2d_ishock_graph_sptr ishock_graph)
+{
+    
+    double area=vgl_area(poly);
+    
+    // stats
+    stats.push_back(0.0);       //depth
+    stats.push_back(1.0);       //path prob
+    stats.push_back(1.0);       //region gap cost
+    stats.push_back(1.0);       //contour_ratio
+    stats.push_back(area);      //area
+    
+    dbsk2d_ishock_grouping_transform grouper(ishock_graph);
+    
+    double convex_area=grouper.convex_area(poly);
+    stats.push_back(convex_area);
+    stats.push_back(area/convex_area);
+    
 }

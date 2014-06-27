@@ -423,6 +423,12 @@ void dbsk2d_containment_graph::construct_graph()
         
         vcl_cout<<"Writing out "<<all_region_belms_.size()
                 <<" Fragments"<<vcl_endl;
+
+        if ( train_ )
+        {
+            vcl_cout<<"Writing out training data"<<vcl_endl;
+        }
+
         vcl_map<vcl_set<int>,vcl_vector<dbsk2d_ishock_belm*> >::iterator mit;
         for ( mit = all_region_belms_.begin() ; mit != all_region_belms_.end();
               ++mit)
@@ -431,15 +437,13 @@ void dbsk2d_containment_graph::construct_graph()
                 ((*mit).second);
             dbsk2d_transform_manager::Instance().write_output_polygon
                 (all_region_polys_[(*mit).first]);
-        }
-        
-        merge_closed_regions();
 
-        if ( train_ )
-        {
-            vcl_cout<<"Writing out training data"<<vcl_endl;
-            dbsk2d_transform_manager::Instance().write_output_region_stats
-                (region_stats_);
+            if ( train_)
+            {
+                dbsk2d_transform_manager::Instance().write_output_region_stats
+                    (region_stats_[(*mit).first]);
+
+            }
         }
 
     }
