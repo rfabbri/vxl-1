@@ -364,7 +364,7 @@ bool dbsk2d_compute_containment_graph_process::execute()
                          preprocess_threshold,
                          gap_distance,
                          remove_closed);
-
+    
     dbsk2d_containment_graph cgraph(shock_storage->get_ishock_graph(),
                                     path_threshold,
                                     loop_cost,
@@ -449,7 +449,7 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
     detector.detect_gap1(gap_pairs);
 
     vcl_map<double,dbsk2d_ishock_transform_sptr> transforms;
-
+    vcl_map<int,unsigned int> gaps_visited;
     for ( unsigned int i=0; i < gap_pairs.size(); ++i)
     {
         int contour_id=vcl_min(gap_pairs[i].first->get_contour_id(),
@@ -458,6 +458,26 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
         dbsk2d_ishock_transform_sptr trans = new 
             dbsk2d_ishock_gap_transform(ishock_graph,gap_pairs[i],contour_id);
         transforms[trans->likelihood()]=trans;
+
+        if ( gaps_visited.count(gap_pairs[i].first->id()) == 0 )
+        {
+            gaps_visited[gap_pairs[i].first->id()]=1;
+        }
+        else
+        {
+            gaps_visited[gap_pairs[i].first->id()]=
+                gaps_visited[gap_pairs[i].first->id()]+1;;
+        }
+
+        if ( gaps_visited.count(gap_pairs[i].second->id()) == 0 )
+        {
+            gaps_visited[gap_pairs[i].second->id()]=1;
+        }
+        else
+        {
+            gaps_visited[gap_pairs[i].second->id()]=
+                gaps_visited[gap_pairs[i].second->id()]+1;;
+        }
     }
 
     vcl_map<int,vcl_vector<dbsk2d_bnd_contour_sptr> > gap_trans;
@@ -466,6 +486,13 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
     {
         vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> pair =
             (*it).second->get_contour_pair();
+
+        if ( gaps_visited.count(pair.first->id())==1 &&
+             gaps_visited.count(pair.second->id()) == 1 )
+        {
+            continue;
+        }
+
         double length_of_gap=vgl_distance(pair.first->pt(),pair.second->pt());
         if ( (pair.first->is_an_end_point() && pair.second->is_an_end_point()) 
              &&
