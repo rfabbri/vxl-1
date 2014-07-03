@@ -364,7 +364,7 @@ bool dbsk2d_compute_containment_graph_process::execute()
                          preprocess_threshold,
                          gap_distance,
                          remove_closed);
-    
+
     dbsk2d_containment_graph cgraph(shock_storage->get_ishock_graph(),
                                     path_threshold,
                                     loop_cost,
@@ -487,12 +487,6 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
         vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> pair =
             (*it).second->get_contour_pair();
 
-        if ( gaps_visited.count(pair.first->id())==1 &&
-             gaps_visited.count(pair.second->id()) == 1 )
-        {
-            continue;
-        }
-
         double length_of_gap=vgl_distance(pair.first->pt(),pair.second->pt());
         if ( (pair.first->is_an_end_point() && pair.second->is_an_end_point()) 
              &&
@@ -501,6 +495,12 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
             if ( this->get_contour(pair.first)->get_id() == 
                  this->get_contour(pair.second)->get_id())
             {
+                if ( gaps_visited[pair.first->id()] > 1 ||
+                     gaps_visited[pair.second->id()] > 1 )
+                {
+                    continue;
+                }
+
                 dbsk2d_ishock_gap_transform* gap_transform
                     = (dbsk2d_ishock_gap_transform*)((*it).second.ptr());
                 vcl_vector<vgl_point_2d<double> > gap_filler
