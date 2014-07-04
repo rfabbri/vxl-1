@@ -28,6 +28,10 @@
 #include <vgl/algo/vgl_fit_lines_2d.h>
 #include <vsol/vsol_polyline_2d.h>
 
+#include <dbsk2d/dbsk2d_shock_graph_sptr.h>
+#include <dbsk2d/dbsk2d_xshock_edge.h>
+#include <dbsk2d/algo/dbsk2d_sample_ishock.h>
+
 dbsk2d_transform_manager::dbsk2d_transform_manager()
     :image_(0),
      threshold_(0),
@@ -186,6 +190,91 @@ double dbsk2d_transform_manager::contour_gpb_value(
 
 
     return summation/perimeter;
+}
+
+
+void dbsk2d_transform_manager::
+foreground_grid_points(vcl_vector<dbsk2d_ishock_edge*>& region,
+                       vcl_vector<vgl_point_2d<double> >& foreground_grid)
+{
+ 
+    // Make a dummy coarse shock graph
+    dbsk2d_shock_graph_sptr coarse_graph;
+    dbsk2d_sample_ishock sampler(coarse_graph);
+    sampler.set_sample_resolution(0.5);
+
+    double step_size=1.0;
+
+    for ( unsigned int i=0; i < region.size() ; ++i)
+    {
+        dbsk2d_ishock_edge* cur_iedge=region[i];
+ 
+        // Create a dummy xshock edge
+        dbsk2d_shock_node_sptr parent_node = new dbsk2d_shock_node();
+        dbsk2d_shock_node_sptr child_node  = new dbsk2d_shock_node();
+        dbsk2d_xshock_edge cur_edge(1,parent_node,child_node);
+       
+        switch (cur_iedge->type())
+        {
+        case dbsk2d_ishock_elm::POINTPOINT:
+            sampler.sample_ishock_edge((dbsk2d_ishock_pointpoint*)cur_iedge, 
+                                       &cur_edge);
+            break;
+        case dbsk2d_ishock_elm::POINTLINE:
+            sampler.sample_ishock_edge((dbsk2d_ishock_pointline*)cur_iedge, 
+                                       &cur_edge);
+            break;
+        case dbsk2d_ishock_elm::LINELINE:
+            sampler.sample_ishock_edge((dbsk2d_ishock_lineline*)cur_iedge, 
+                                       &cur_edge);
+            break;
+        defualt:
+            break;
+        }
+
+        for ( unsigned int s=0; s < cur_edge.num_samples() ; ++s)
+        {
+            dbsk2d_xshock_sample_sptr sample=cur_edge.sample(s);
+
+            double R1=sample->radius;
+            vgl_point_2d<double> pt =sample->pt;
+            double theta=sample->theta;
+            double phi=0.0;
+            double r=step_size;
+            
+
+            if (sample->speed != 0 && sample->speed < 99990)
+            {
+                phi=vcl_acos(-1.0/sample->speed);
+            }
+            else
+            {
+                phi=vnl_math::pi/2;
+            }
+
+            double vec1=theta+phi;
+            double vec2=theta-phi;
+
+            while ( r < R1)
+            {
+
+                vgl_point_2d<double> plus_pt=_translatePoint(pt,vec1,r);
+                vgl_point_2d<double> minus_pt=_translatePoint(pt,vec2,r);
+                
+
+
+                foreground_grid.push_back(plus_pt);
+                foreground_grid.push_back(minus_pt);
+
+
+
+                r+=step_size;
+            }
+            
+            foreground_grid.push_back(pt);
+
+        }
+    }
 }
 
 double dbsk2d_transform_manager::transform_probability(

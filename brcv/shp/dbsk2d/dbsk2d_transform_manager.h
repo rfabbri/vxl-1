@@ -129,6 +129,11 @@ public:
     // edge gpb value
     double contour_gpb_value(vcl_vector<dbsk2d_ishock_belm*>& frag_belms);
 
+    // get internal grid points
+    void foreground_grid_points(vcl_vector<dbsk2d_ishock_edge*>& region,
+                                vcl_vector<vgl_point_2d<double> >& 
+                                foreground_grid);
+
     // Determine gap cost
     double transform_probability(double gamma_norm,double k0_norm, 
                                  double length);
