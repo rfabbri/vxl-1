@@ -16,6 +16,7 @@
 
 
 #include <vil/vil_image_view.h>
+#include <vil/vil_image_resource.h>
 #include <vil/vil_image_resource_sptr.h>
 #include <vil3d/vil3d_image_view.h>
 #include <vcl_string.h>
@@ -26,6 +27,7 @@
 #include <dbsk2d/dbsk2d_ishock_bline.h>
 #include <vgl/vgl_distance.h>
 #include <vcl_set.h>
+#include <bbas/bil/algo/bil_color_conversions.h>
 
 class dbsk2d_ishock_belm;
 
@@ -46,7 +48,21 @@ public:
     // ************************ Setters/Getters *******************************
 
     // Set image
-    void set_image(vil_image_resource_sptr image){image_=image;}
+    void set_image(vil_image_resource_sptr image)
+    {
+        image_=image;
+
+        L_img_.set_size(image_->ni(),image_->nj());
+        a_img_.set_size(image_->ni(),image_->nj());
+        b_img_.set_size(image_->ni(),image_->nj());
+        
+
+        convert_RGB_to_Lab(image_->get_view(),
+                           L_img_,
+                           a_img_,
+                           b_img_);
+
+    }
 
     // Set threshold cost
     void set_threshold(double threshold){threshold_ = threshold;}
@@ -73,6 +89,11 @@ public:
     // Get image
     vil_image_resource_sptr get_image()
     {return image_;}
+
+    void get_appearance_stats(vcl_vector<dbsk2d_ishock_edge*>& region,
+                              vcl_vector<dbsk2d_ishock_belm*>& belms,
+                              double area,
+                              vcl_vector<double> app_stats);
 
     // Get threshold cost
     double get_threshold(){return threshold_;}
@@ -125,15 +146,6 @@ public:
 
     // Set beta1 for logitic function
     void set_beta1_logit(double beta1){logistic_beta1_ = beta1;}
-
-    // edge gpb value
-    double contour_gpb_value(vcl_vector<dbsk2d_ishock_belm*>& frag_belms);
-
-    // get internal grid points
-    void grid_points(vcl_vector<dbsk2d_ishock_edge*>& region,
-                     vcl_vector<dbsk2d_ishock_belm*>& belms,
-                     vcl_vector<vgl_point_2d<double> >& foreground_grid,
-                     vcl_vector<vgl_point_2d<double> >& background_grid);
 
     // Determine gap cost
     double transform_probability(double gamma_norm,double k0_norm, 
@@ -214,6 +226,34 @@ private:
 
     //: Keep track of normalization
     double normalization_;
+    
+    // Keep track of a LAB channels
+    vil_image_view<double> L_img_;
+
+    // A channel
+    vil_image_view<double> a_img_;
+
+    // B channel
+    vil_image_view<double> b_img_;
+
+    // get internal grid points
+    void grid_points(vcl_vector<dbsk2d_ishock_edge*>& region,
+                     vcl_vector<dbsk2d_ishock_belm*>& belms,
+                     vcl_vector<vgl_point_2d<double> >& foreground_grid,
+                     vcl_vector<vgl_point_2d<double> >& background_grid);
+
+    // edge gpb value
+    double contour_gpb_value(vcl_vector<dbsk2d_ishock_belm*>& frag_belms);
+    
+    // area gpb value
+    double region_gpb_value(vcl_vector<vgl_point_2d<double> >& grid);
+
+    // chi squared distance
+    double chi_squared_color_distance(
+        vcl_vector<vgl_point_2d<double> > foreground,
+        vcl_vector<vgl_point_2d<double> > background,
+        vil_image_view<double>& channel,
+        double max, double min,unsigned int nbins);
 
     // Make default constructor private
     dbsk2d_transform_manager();

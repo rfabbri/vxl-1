@@ -12,6 +12,7 @@
 #include <vil/vil_plane.h>
 #include <vil/vil_save.h>
 #include <vil/vil_new.h>
+#include <vnl/algo/vnl_chi_squared.h>
 
 #include <vsol/vsol_box_2d.h>
 #include <vsol/vsol_polygon_2d.h>
@@ -31,6 +32,7 @@
 #include <dbsk2d/dbsk2d_shock_graph_sptr.h>
 #include <dbsk2d/dbsk2d_xshock_edge.h>
 #include <dbsk2d/algo/dbsk2d_sample_ishock.h>
+#include <bbas/bsta/bsta_histogram.h>
 
 dbsk2d_transform_manager::dbsk2d_transform_manager()
     :image_(0),
@@ -190,6 +192,75 @@ double dbsk2d_transform_manager::contour_gpb_value(
 
 
     return summation/perimeter;
+}
+
+
+double dbsk2d_transform_manager::region_gpb_value(
+    vcl_vector<vgl_point_2d<double> >& grid)
+{
+
+    double summation=0.0;
+    for ( unsigned int g=0; g < grid.size() ; ++g)
+    {
+        double y=grid[g].x();
+        double x=grid[g].y();
+
+        double gPb = vil_bilin_interp_safe_extend(gPb_image_,
+                                                  x,
+                                                  y);
+
+        summation = summation + gPb;
+    }
+
+    return summation;
+}
+
+// chi squared distance
+double dbsk2d_transform_manager::chi_squared_color_distance(
+    vcl_vector<vgl_point_2d<double> > foreground,
+    vcl_vector<vgl_point_2d<double> > background,
+    vil_image_view<double>& channel,
+    double min, double max,unsigned int nbins)
+{
+
+    bsta_histogram<double> foreground_pdf(min,max,nbins);
+    bsta_histogram<double> background_pdf(min,max,nbins);
+    
+    {
+        for ( unsigned int f=0; f < foreground.size() ; ++f)
+        {
+            double x=foreground[f].x();
+            double y=foreground[f].y();
+            
+            double value = vil_bilin_interp_safe_extend(channel,
+                                                        x,
+                                                        y);
+            foreground_pdf.upcount(value,1);
+        }
+    }
+
+    {
+        for ( unsigned int f=0; f < background.size() ; ++f)
+        {
+            double x=background[f].x();
+            double y=background[f].y();
+            
+            double value = vil_bilin_interp_safe_extend(channel,
+                                                        x,
+                                                        y);
+            background_pdf.upcount(value,1);
+        }
+    }
+
+    double* fg_pdf_ptr=&(foreground_pdf.count_array()[0]);
+    double* bg_pdf_ptr=&(background_pdf.count_array()[0]);
+
+    double chi_squared=1/2*vnl_chi_squared_statistic_12(fg_pdf_ptr,
+                                                        bg_pdf_ptr,
+                                                        nbins,
+                                                        true);
+
+    return chi_squared;
 }
 
 
@@ -706,6 +777,59 @@ void dbsk2d_transform_manager::write_output_region(vgl_polygon<double>& poly)
 
     output_region_file.close();
 
+
+}
+
+void dbsk2d_transform_manager::get_appearance_stats(
+    vcl_vector<dbsk2d_ishock_edge*>& region,
+    vcl_vector<dbsk2d_ishock_belm*>& belms,
+    double area,
+    vcl_vector<double> app_stats)
+{
+    vcl_vector<vgl_point_2d<double> > foreground_grid;
+    vcl_vector<vgl_point_2d<double> > background_grid;
+
+
+    this->grid_points(region,
+                      belms,
+                      foreground_grid,
+                      background_grid);
+    
+    // 1) get region gpb value
+    double region_gpb=this->region_gpb_value(foreground_grid)/area;
+
+    // 2) get contour gpb value
+    double contour_gpb=this->contour_gpb_value(belms);
+
+    // 3) Get L difference in a LAB color space
+    double L_chi2 = chi_squared_color_distance(foreground_grid,
+                                               background_grid,
+                                               L_img_,
+                                               0,
+                                               100,
+                                               50);
+
+    // 4) Get a difference in a LAB color space
+    double a_chi2 = chi_squared_color_distance(foreground_grid,
+                                               background_grid,
+                                               a_img_,
+                                               -110,
+                                               110,
+                                               100);
+    
+    // 5) Get b difference in a LAB color space
+    double b_chi2 = chi_squared_color_distance(foreground_grid,
+                                               background_grid,
+                                               b_img_,
+                                               -110,
+                                               110,
+                                               100);
+
+    app_stats.push_back(region_gpb);
+    app_stats.push_back(contour_gpb);
+    app_stats.push_back(L_chi2);
+    app_stats.push_back(a_chi2);
+    app_stats.push_back(b_chi2);
 
 }
 
