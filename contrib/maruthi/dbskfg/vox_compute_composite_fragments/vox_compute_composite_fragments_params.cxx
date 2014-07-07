@@ -82,6 +82,14 @@ vox_compute_composite_fragments_params(vcl_string algo_name) :
        "-io: input path to training data ", 
        "/home/mn/Desktop/training", "/home/mn/Desktop/training");
 
+  //: texton path directory
+  this->texton_path_.set_values
+      (this->param_list_, 
+       "io", 
+       "texton_path", 
+       "-io: input path to texton data ", 
+       "/home/mn/Desktop/texton", "/home/mn/Desktop/texton");
+
   //: First Coefficient of logistic function 
   this->logistic_beta0_.set_values
       (this->param_list_, 

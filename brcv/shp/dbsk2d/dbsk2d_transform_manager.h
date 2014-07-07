@@ -141,6 +141,9 @@ public:
     // Read in training data
     void read_in_gpb_data(vcl_string filename);
 
+    // Read in texton data
+    void read_in_texton_data(vcl_string filename);
+
     // Set beta0 for logitic function
     void set_beta0_logit(double beta0){logistic_beta0_ = beta0;}
 
@@ -199,6 +202,9 @@ private:
 
     // Keeps a 2d image for holding gpb values
     vil_image_view<double> gPb_image_;
+
+    // Keeps a 2d image for holding gpb values
+    vil_image_view<int> texton_image_;
 
     // Keep output folder for fragments
     vcl_string out_folder_;

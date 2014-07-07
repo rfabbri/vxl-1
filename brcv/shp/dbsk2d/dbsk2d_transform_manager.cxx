@@ -155,6 +155,48 @@ void dbsk2d_transform_manager::read_in_gpb_data(vcl_string filename)
     normalization_=max_gPb_value;
 }
 
+void dbsk2d_transform_manager::read_in_texton_data(vcl_string filename)
+{
+
+    vcl_ifstream file (filename.c_str(), 
+                       vcl_ios::in|vcl_ios::binary|vcl_ios::ate);
+    double* memblock(0);
+
+    if (file.is_open())
+    {
+        vcl_ifstream::pos_type size = file.tellg();
+        memblock = new double[size/sizeof(double)];
+        file.seekg (0, vcl_ios::beg);
+        file.read ((char *) memblock, size);
+        file.close();
+
+        // Read in dimensions
+        unsigned int ni=memblock[0];
+        unsigned int nj=memblock[1];
+
+        vcl_cout<<"Reading in a "<<ni<<" by "<<nj<<" texton values"
+                <<vcl_endl;
+
+        texton_image_.set_size(ni,nj);
+        unsigned int index=2;
+
+        for (unsigned j=0;j<nj;++j)
+        {
+            for (unsigned i=0;i<ni;++i)
+            {
+                double value = memblock[index];
+                texton_image_(i,j)=value;
+                index++;
+            }
+        }
+        
+
+        delete[] memblock;
+        memblock=0;
+    }
+
+}
+
 double dbsk2d_transform_manager::contour_gpb_value(
     vcl_vector<dbsk2d_ishock_belm*>& belms)
 {

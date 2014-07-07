@@ -274,10 +274,13 @@ int main(int argc, char *argv[])
     vcl_cout<<"************  Loading Training Data  *************"<<vcl_endl;
 
     vcl_string training_directory = params->training_path_();
+    vcl_string texton_directory   = params->texton_path_();
 
     dbsk2d_transform_manager::Instance().
         read_in_gpb_data(training_directory);
-
+    dbsk2d_transform_manager::Instance().
+        read_in_texton_data(texton_directory);
+    
     double beta0 = params->logistic_beta0_();
     double beta1 = params->logistic_beta1_();
 

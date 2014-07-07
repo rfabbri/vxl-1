@@ -59,6 +59,9 @@ public:
   //: String for training data
   dborl_parameter<vcl_string> training_path_;
 
+  //: String for training data
+  dborl_parameter<vcl_string> texton_path_;
+
   //: String for training extension
   dborl_parameter<vcl_string> training_extension_;
 
