@@ -109,14 +109,26 @@ void dbsk2d_containment_graph::construct_graph()
                 // dbsk2d_transform_manager::Instance().write_output_region
                 //     (frag_belms[(*it).first]);
                 
-                    
-                vcl_map<int, dbsk2d_ishock_bline* >::iterator oit;
-                for (oit = extra_belms.begin() ; 
-                     oit != extra_belms.end() ; ++oit)
-                {
-                    all_region_belms_[key].push_back((*oit).second);
-                }
                 
+                if ( train_ )
+                {
+                    vcl_vector<dbsk2d_ishock_belm*> belms=
+                        frag_belms[(*it).first];
+                    for ( unsigned int b=0; b < belms.size() ; ++b)
+                    {
+                        all_region_belms_[key].push_back(belms[b]);
+                    }
+
+                }
+                else
+                {
+                    vcl_map<int, dbsk2d_ishock_bline* >::iterator oit;
+                    for (oit = extra_belms.begin() ; 
+                         oit != extra_belms.end() ; ++oit)
+                    {
+                        all_region_belms_[key].push_back((*oit).second);
+                    }
+                }
                 all_region_polys_[key]=poly;
 
 
@@ -139,7 +151,9 @@ void dbsk2d_containment_graph::construct_graph()
                     double convex_area=grouper.convex_area(poly);
                     region_stats_[key].push_back(convex_area);
                     region_stats_[key].push_back(area/convex_area);
+                    
                     // convexity
+
                 }
                 
                 
@@ -350,13 +364,26 @@ void dbsk2d_containment_graph::construct_graph()
                     //     write_output_region(frag_belms[(*it).first]);
 
                     
-                    vcl_map<int, dbsk2d_ishock_bline* >::iterator oit;
-                    for (oit = extra_belms.begin() ; 
-                         oit != extra_belms.end() ; ++oit)
+                    if ( train_ )
                     {
-                        all_region_belms_[key].push_back((*oit).second);
+                        vcl_vector<dbsk2d_ishock_belm*> belms=
+                            frag_belms[(*it).first];
+                        for ( unsigned int b=0; b < belms.size() ; ++b)
+                        {
+                            all_region_belms_[key].push_back(belms[b]);
+                        }
+
                     }
-                    
+                    else
+                    {
+                        vcl_map<int, dbsk2d_ishock_bline* >::iterator oit;
+                        for (oit = extra_belms.begin() ; 
+                             oit != extra_belms.end() ; ++oit)
+                        {
+                            all_region_belms_[key].push_back((*oit).second);
+                        }
+                    }
+   
                     all_region_polys_[key]=poly;
 
                     if ( closed_region )
