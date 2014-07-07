@@ -259,10 +259,10 @@ double dbsk2d_transform_manager::region_gpb_value(
 
 // chi squared distance
 double dbsk2d_transform_manager::chi_squared_color_distance(
-    vcl_vector<vgl_point_2d<double> > foreground,
-    vcl_vector<vgl_point_2d<double> > background,
+    vcl_vector<vgl_point_2d<double> >& foreground,
+    vcl_vector<vgl_point_2d<double> >& background,
     vil_image_view<double>& channel,
-    double min, double max,unsigned int nbins)
+    double min, double max,unsigned int nbins,bool flip)
 {
 
     bsta_histogram<double> foreground_pdf(min,max,nbins);
@@ -274,6 +274,12 @@ double dbsk2d_transform_manager::chi_squared_color_distance(
             double x=foreground[f].x();
             double y=foreground[f].y();
             
+            if ( flip )
+            {
+                x=foreground[f].y();
+                y=foreground[f].x();
+            }
+
             double value = vil_bilin_interp_safe_extend(channel,
                                                         x,
                                                         y);
@@ -287,6 +293,12 @@ double dbsk2d_transform_manager::chi_squared_color_distance(
             double x=background[f].x();
             double y=background[f].y();
             
+            if ( flip )
+            {
+                x=background[f].y();
+                y=background[f].x();
+            }
+
             double value = vil_bilin_interp_safe_extend(channel,
                                                         x,
                                                         y);
@@ -303,6 +315,51 @@ double dbsk2d_transform_manager::chi_squared_color_distance(
                                                         true);
 
     return chi_squared;
+}
+
+
+
+// chi squared distance
+double dbsk2d_transform_manager::mean_LAB_distance(
+    vcl_vector<vgl_point_2d<double> >& foreground,
+    vcl_vector<vgl_point_2d<double> >& background)
+{
+    
+    vnl_vector_fixed<double,3> foreground_mean(0.0); 
+    vnl_vector_fixed<double,3> background_mean(0.0); 
+    {
+        for ( unsigned int f=0; f < foreground.size() ; ++f)
+        {
+            double x=foreground[f].x();
+            double y=foreground[f].y();
+
+            vnl_vector_fixed<double, 3> v;
+            v[0] = vil_bilin_interp_safe(L_img_,x,y);
+            v[1] = vil_bilin_interp_safe(a_img_,x,y);
+            v[2] = vil_bilin_interp_safe(b_img_,x,y);
+            foreground_mean += v;
+        }
+    }
+
+    {
+        for ( unsigned int f=0; f < background.size() ; ++f)
+        {
+            double x=background[f].x();
+            double y=background[f].y();
+
+            vnl_vector_fixed<double, 3> v;
+            v[0] = vil_bilin_interp_safe(L_img_,x,y);
+            v[1] = vil_bilin_interp_safe(a_img_,x,y);
+            v[2] = vil_bilin_interp_safe(b_img_,x,y);
+            background_mean += v;
+        }
+    }
+
+
+    foreground_mean /= foreground.size();
+    background_mean /= background.size();
+
+    return distance_LAB(foreground_mean,background_mean,14.0);
 }
 
 
@@ -826,7 +883,7 @@ void dbsk2d_transform_manager::get_appearance_stats(
     vcl_vector<dbsk2d_ishock_edge*>& region,
     vcl_vector<dbsk2d_ishock_belm*>& belms,
     double area,
-    vcl_vector<double> app_stats)
+    vcl_vector<double>& app_stats)
 {
     vcl_vector<vgl_point_2d<double> > foreground_grid;
     vcl_vector<vgl_point_2d<double> > background_grid;
@@ -867,12 +924,26 @@ void dbsk2d_transform_manager::get_appearance_stats(
                                                110,
                                                100);
 
+    // 5) Get b difference in a LAB color space
+    double texton_chi2 = chi_squared_color_distance(foreground_grid,
+                                                    background_grid,
+                                                    texton_image_,
+                                                    0,
+                                                    63,
+                                                    63,
+                                                    true);
+
+    // 6) Get mean LAB difference
+    double mean_LAB = mean_LAB_distance(foreground_grid,
+                                        background_grid);
+
     app_stats.push_back(region_gpb);
     app_stats.push_back(contour_gpb);
     app_stats.push_back(L_chi2);
     app_stats.push_back(a_chi2);
     app_stats.push_back(b_chi2);
-
+    app_stats.push_back(texton_chi2);
+    app_stats.push_back(mean_LAB);
 }
 
 void dbsk2d_transform_manager::get_extra_belms(

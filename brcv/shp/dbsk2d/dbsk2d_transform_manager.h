@@ -93,7 +93,7 @@ public:
     void get_appearance_stats(vcl_vector<dbsk2d_ishock_edge*>& region,
                               vcl_vector<dbsk2d_ishock_belm*>& belms,
                               double area,
-                              vcl_vector<double> app_stats);
+                              vcl_vector<double>& app_stats);
 
     // Get threshold cost
     double get_threshold(){return threshold_;}
@@ -204,7 +204,7 @@ private:
     vil_image_view<double> gPb_image_;
 
     // Keeps a 2d image for holding gpb values
-    vil_image_view<int> texton_image_;
+    vil_image_view<double> texton_image_;
 
     // Keep output folder for fragments
     vcl_string out_folder_;
@@ -256,10 +256,15 @@ private:
 
     // chi squared distance
     double chi_squared_color_distance(
-        vcl_vector<vgl_point_2d<double> > foreground,
-        vcl_vector<vgl_point_2d<double> > background,
+        vcl_vector<vgl_point_2d<double> >& foreground,
+        vcl_vector<vgl_point_2d<double> >& background,
         vil_image_view<double>& channel,
-        double max, double min,unsigned int nbins);
+        double max, double min,unsigned int nbins,bool flip=false);
+
+    // compute average LAB difference
+    double mean_LAB_distance(        
+        vcl_vector<vgl_point_2d<double> >& foreground,
+        vcl_vector<vgl_point_2d<double> >& background);
 
     // Make default constructor private
     dbsk2d_transform_manager();
