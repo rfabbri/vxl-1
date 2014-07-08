@@ -152,7 +152,20 @@ void dbsk2d_containment_graph::construct_graph()
                     region_stats_[key].push_back(convex_area);
                     region_stats_[key].push_back(area/convex_area);
                     
-                    // convexity
+                    vcl_vector<double> app_stats;
+                    
+                    dbsk2d_transform_manager::Instance().get_appearance_stats
+                        (frag_edges[(*it).first],
+                         frag_belms[(*it).first],
+                         area,
+                         app_stats);
+
+                    for ( unsigned int a=0; a < app_stats.size() ; ++a)
+                    {
+                        region_stats_[key].push_back(app_stats[a]);
+                    }
+
+                    
 
                 }
                 
@@ -405,6 +418,20 @@ void dbsk2d_containment_graph::construct_graph()
                         double convex_area=grouper.convex_area(poly);
                         region_stats_[key].push_back(convex_area);
                         region_stats_[key].push_back(area/convex_area);
+
+                        vcl_vector<double> app_stats;
+                    
+                        dbsk2d_transform_manager::Instance().
+                            get_appearance_stats
+                            (frag_edges[(*it).first],
+                             frag_belms[(*it).first],
+                             area,
+                             app_stats);
+
+                        for ( unsigned int a=0; a < app_stats.size() ; ++a)
+                        {
+                            region_stats_[key].push_back(app_stats[a]);
+                        }
 
                     }
 

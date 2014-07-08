@@ -185,7 +185,7 @@ void dbsk2d_transform_manager::read_in_texton_data(vcl_string filename)
             for (unsigned i=0;i<ni;++i)
             {
                 double value = memblock[index];
-                texton_image_(i,j)=value;
+                texton_image_(i,j)=value+1.0;
                 index++;
             }
         }
@@ -268,6 +268,14 @@ double dbsk2d_transform_manager::chi_squared_color_distance(
     bsta_histogram<double> foreground_pdf(min,max,nbins);
     bsta_histogram<double> background_pdf(min,max,nbins);
     
+    // Initialize foregound bin and background pdf to uniform one
+    
+    for ( unsigned int i=0; i < nbins; ++i)
+    {
+        foreground_pdf.set_count(i,1.0);
+        background_pdf.set_count(i,1.0);
+    }
+
     {
         for ( unsigned int f=0; f < foreground.size() ; ++f)
         {
@@ -283,7 +291,7 @@ double dbsk2d_transform_manager::chi_squared_color_distance(
             double value = vil_bilin_interp_safe_extend(channel,
                                                         x,
                                                         y);
-            foreground_pdf.upcount(value,1);
+            foreground_pdf.upcount(value,1.0);
         }
     }
 
@@ -302,14 +310,14 @@ double dbsk2d_transform_manager::chi_squared_color_distance(
             double value = vil_bilin_interp_safe_extend(channel,
                                                         x,
                                                         y);
-            background_pdf.upcount(value,1);
+            background_pdf.upcount(value,1.0);
         }
     }
 
     double* fg_pdf_ptr=&(foreground_pdf.count_array()[0]);
     double* bg_pdf_ptr=&(background_pdf.count_array()[0]);
 
-    double chi_squared=1/2*vnl_chi_squared_statistic_12(fg_pdf_ptr,
+    double chi_squared=0.5*vnl_chi_squared_statistic_12(fg_pdf_ptr,
                                                         bg_pdf_ptr,
                                                         nbins,
                                                         true);
@@ -800,34 +808,15 @@ void dbsk2d_transform_manager::write_output_region_stats(
                             vcl_ios::app | 
                             vcl_ios::binary);
     
-    double depth         = region_stats[0];
-    double path_prob     = region_stats[1];
-    double gap_prob      = region_stats[2];
-    double contour_ratio = region_stats[3];
-    double area          = region_stats[4];
-    double convex_area   = region_stats[5];
-    double convexity     = region_stats[6];
-    
-    output_binary_file.write(reinterpret_cast<char *>(&depth),
-                             sizeof(double));
-    
-    output_binary_file.write(reinterpret_cast<char *>(&path_prob),
-                             sizeof(double));
-    
-    output_binary_file.write(reinterpret_cast<char *>(&gap_prob),
-                             sizeof(double));
-    
-    output_binary_file.write(reinterpret_cast<char *>(&contour_ratio),
-                             sizeof(double));
-    
-    output_binary_file.write(reinterpret_cast<char *>(&area),
-                             sizeof(double));
-    
-    output_binary_file.write(reinterpret_cast<char *>(&convex_area),
-                             sizeof(double));
-    
-    output_binary_file.write(reinterpret_cast<char *>(&convexity),
-                             sizeof(double));
+
+    for ( unsigned int f=0; f < region_stats.size() ; ++f)
+    {
+
+        double feature=region_stats[f];
+        output_binary_file.write(reinterpret_cast<char *>(&feature),
+                                 sizeof(double));
+
+    }
     
     
     output_binary_file.close();
@@ -904,33 +893,33 @@ void dbsk2d_transform_manager::get_appearance_stats(
     double L_chi2 = chi_squared_color_distance(foreground_grid,
                                                background_grid,
                                                L_img_,
-                                               0,
-                                               100,
+                                               0.0,
+                                               100.0,
                                                50);
 
     // 4) Get a difference in a LAB color space
     double a_chi2 = chi_squared_color_distance(foreground_grid,
                                                background_grid,
                                                a_img_,
-                                               -110,
-                                               110,
+                                               -110.0,
+                                               110.0,
                                                100);
     
     // 5) Get b difference in a LAB color space
     double b_chi2 = chi_squared_color_distance(foreground_grid,
                                                background_grid,
                                                b_img_,
-                                               -110,
-                                               110,
+                                               -110.0,
+                                               110.0,
                                                100);
 
     // 5) Get b difference in a LAB color space
     double texton_chi2 = chi_squared_color_distance(foreground_grid,
                                                     background_grid,
                                                     texton_image_,
-                                                    0,
-                                                    63,
-                                                    63,
+                                                    1.0,
+                                                    64.0,
+                                                    64,
                                                     true);
 
     // 6) Get mean LAB difference
