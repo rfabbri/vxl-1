@@ -221,8 +221,8 @@ double dbsk2d_transform_manager::contour_gpb_value(
     vcl_map<int,vgl_point_2d<double> >::iterator it;
     for ( it = output_points.begin() ; it != output_points.end(); ++it)
     {
-        double y=(*it).second.x();
-        double x=(*it).second.y();
+        double x=(*it).second.x();
+        double y=(*it).second.y();
 
         double gPb = vil_bilin_interp_safe_extend(gPb_image_,
                                                   x,
@@ -244,8 +244,8 @@ double dbsk2d_transform_manager::region_gpb_value(
     double summation=0.0;
     for ( unsigned int g=0; g < grid.size() ; ++g)
     {
-        double y=grid[g].x();
-        double x=grid[g].y();
+        double x=grid[g].x();
+        double y=grid[g].y();
 
         double gPb = vil_bilin_interp_safe_extend(gPb_image_,
                                                   x,
@@ -585,8 +585,8 @@ void dbsk2d_transform_manager::grid_points(
 
                     if ( plus_pt.x() >= 0 && 
                          plus_pt.y() >= 0 &&
-                         plus_pt.x() < image_->ni() && 
-                         plus_pt.y() < image_->nj())
+                         plus_pt.x() <= (image_->ni()-1) && 
+                         plus_pt.y() <= (image_->nj()-1))
                     {
                         background_grid.push_back(plus_pt);
                         
@@ -594,8 +594,8 @@ void dbsk2d_transform_manager::grid_points(
 
                     if ( minus_pt.x() >= 0 && 
                          minus_pt.y() >= 0 &&
-                         minus_pt.x() < image_->ni() && 
-                         minus_pt.y() < image_->nj())
+                         minus_pt.x() <= (image_->ni()-1) && 
+                         minus_pt.y() <= (image_->nj()-1))
                     {
                         background_grid.push_back(minus_pt);
                         
@@ -608,8 +608,8 @@ void dbsk2d_transform_manager::grid_points(
             
                 if ( pt.x() >= 0 && 
                      pt.y() >= 0 &&
-                     pt.x() < image_->ni() && 
-                     pt.y() < image_->nj())
+                     pt.x() <= (image_->ni()-1) && 
+                     pt.y() <= (image_->nj()-1))
                 {
                     background_grid.push_back(pt);
                 }
@@ -663,8 +663,8 @@ double dbsk2d_transform_manager::transform_probability(
     double summation=0.0;
     for ( unsigned int c=0; c < curve.size() ; ++c)
     {
-        double y=curve[c].x();
-        double x=curve[c].y();
+        double x=curve[c].x();
+        double y=curve[c].y();
 
         double gPb = vil_bilin_interp_safe_extend(gPb_image_,
                                                   x,
@@ -695,8 +695,8 @@ double dbsk2d_transform_manager::transform_probability(
     double summation=0.0;
     for ( unsigned int c=0; c < curve->size() ; ++c)
     {
-        double y=curve->vertex(c)->get_p().x();
-        double x=curve->vertex(c)->get_p().y();
+        double x=curve->vertex(c)->get_p().x();
+        double y=curve->vertex(c)->get_p().y();
 
         double gPb = vil_bilin_interp_safe(gPb_image_,
                                            x,
@@ -876,8 +876,7 @@ void dbsk2d_transform_manager::get_appearance_stats(
 {
     vcl_vector<vgl_point_2d<double> > foreground_grid;
     vcl_vector<vgl_point_2d<double> > background_grid;
-
-
+    
     this->grid_points(region,
                       belms,
                       foreground_grid,
@@ -919,8 +918,7 @@ void dbsk2d_transform_manager::get_appearance_stats(
                                                     texton_image_,
                                                     1.0,
                                                     64.0,
-                                                    64,
-                                                    true);
+                                                    63);
 
     // 6) Get mean LAB difference
     double mean_LAB = mean_LAB_distance(foreground_grid,

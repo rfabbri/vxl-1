@@ -259,7 +259,7 @@ private:
         vcl_vector<vgl_point_2d<double> >& foreground,
         vcl_vector<vgl_point_2d<double> >& background,
         vil_image_view<double>& channel,
-        double max, double min,unsigned int nbins,bool flip=false);
+        double min, double max,unsigned int nbins,bool flip=false);
 
     // compute average LAB difference
     double mean_LAB_distance(        
