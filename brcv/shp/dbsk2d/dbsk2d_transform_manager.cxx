@@ -918,7 +918,7 @@ void dbsk2d_transform_manager::get_appearance_stats(
                                                     texton_image_,
                                                     1.0,
                                                     64.0,
-                                                    63);
+                                                    64);
 
     // 6) Get mean LAB difference
     double mean_LAB = mean_LAB_distance(foreground_grid,
@@ -943,6 +943,7 @@ void dbsk2d_transform_manager::get_extra_belms(
     {
         dbsk2d_ishock_bline* bline = (dbsk2d_ishock_bline*)(*lit);
         output_lines[bline->id()]=bline;
+        key.insert(bline->id());
     }     
 
     for (lit = region_belms.begin() ; lit != region_belms.end() ; ++lit)
@@ -992,11 +993,11 @@ void dbsk2d_transform_manager::get_extra_belms(
    
     }
 
-    vcl_map<int, dbsk2d_ishock_bline*>::iterator oit;
-    for (oit = output_lines.begin() ; oit != output_lines.end() ; ++oit)
-    {
-        key.insert((*oit).first);
-    }
+    // vcl_map<int, dbsk2d_ishock_bline*>::iterator oit;
+    // for (oit = output_lines.begin() ; oit != output_lines.end() ; ++oit)
+    // {
+    //     key.insert((*oit).first);
+    // }
 }
 
 void dbsk2d_transform_manager::write_output_region(
