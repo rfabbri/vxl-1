@@ -249,6 +249,93 @@ void dbsk2d_ishock_grouping_transform::extract_polygon(
     }
 }
 
+void dbsk2d_ishock_grouping_transform::get_polygon_stats(vgl_polygon<double>&
+                                                         poly,
+                                                         vcl_vector<double>&
+                                                         poly_stats)
+{
+
+
+    unsigned int f_index=0;
+    vgl_polygon<double> start_poly(poly[f_index]);
+    double area=vgl_area(start_poly);
+
+    for (unsigned int s = 1; s < poly.num_sheets(); ++s)
+    { 
+        
+        vgl_polygon<double> tempy(poly[s]);
+        double area_temp = vgl_area(tempy);
+        if ( area_temp > area )
+        {
+             area = area_temp;
+             f_index=s;
+
+        }
+        
+    }
+
+    vgl_box_2d<double> bbox;
+
+    vcl_vector<vgl_point_2d<double>  > points;
+
+    vgl_polygon<double> final_poly(poly[f_index]);
+
+    for ( unsigned int k=0; k < final_poly.num_sheets() ; ++k)
+    {
+        for (unsigned int p = 0; p < final_poly[k].size(); ++p)
+        {
+            points.push_back(final_poly[k][p]);
+            bbox.add(final_poly[k][p]);
+        }
+        
+    }
+    
+    // Compute area poly stats
+    vgl_polygon<double> hull=vgl_convex_hull(points);
+    double convex_area=vgl_area(hull);
+        
+    
+    // Area of final poly
+    area=vgl_area(final_poly);
+    
+    // Convexity
+    double ratio=area/convex_area;
+    
+    // Distance to image center
+    vgl_point_2d<double> centroid=vgl_centroid(final_poly);
+    vil_image_resource_sptr img=dbsk2d_transform_manager::Instance().
+        get_image();
+    vgl_point_2d<double> image_center(img->ni()/2,img->nj()/2);
+    double distance_to_center=vgl_distance(centroid,image_center);
+        
+   
+    // Compute total length of this polygon
+    double length = 0.0;
+
+    // Take first sheet
+    vgl_point_2d<double> p0(final_poly[0][0].x(),final_poly[0][0].y());
+    for (unsigned int p = 1; p < final_poly[0].size(); ++p) 
+    {
+        vgl_point_2d<double> c0(final_poly[0][p].x(),final_poly[0][p].y());
+        length += vgl_distance(p0,c0);
+        p0=c0;
+    }
+
+
+    double bb_width=bbox.width();
+    double bb_height=bbox.height();
+
+    poly_stats.push_back(area);           //Area of polygon
+    poly_stats.push_back(convex_area);    //Convex area of polygon
+    poly_stats.push_back(ratio);          //Ratio of area/convex area
+    poly_stats.push_back(length);         //Perimiter of region
+    
+    
+    poly_stats.push_back(bb_width);           // Bounding box width
+    poly_stats.push_back(bb_height);          // Bounding box height
+    poly_stats.push_back(distance_to_center); // Distance to center of image 
+}
+
 double dbsk2d_ishock_grouping_transform::convex_area(vgl_polygon<double>& 
                                                      poly)
 {

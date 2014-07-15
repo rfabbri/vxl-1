@@ -13,6 +13,7 @@
 #include <vil/vil_save.h>
 #include <vil/vil_new.h>
 #include <vnl/algo/vnl_chi_squared.h>
+#include <vnl/algo/vnl_svd.h>
 
 #include <vsol/vsol_box_2d.h>
 #include <vsol/vsol_polygon_2d.h>
@@ -368,6 +369,66 @@ double dbsk2d_transform_manager::mean_LAB_distance(
     background_mean /= background.size();
 
     return distance_LAB(foreground_mean,background_mean,14.0);
+}
+
+
+
+// chi squared distance
+void dbsk2d_transform_manager::ellipse_fitting(
+    vcl_vector<vgl_point_2d<double> >& foreground,
+    vcl_vector<double>& ellipse_stats)
+{
+    double xo=0.0;
+    double yo=0.0;
+    
+    double npts=foreground.size();
+
+    for (unsigned int i=0; i < foreground.size() ; ++i)
+    {
+        vgl_point_2d<double> pt=foreground[i];
+
+        xo+=pt.x();
+        yo+=pt.y();
+    }
+
+    double xcenter=xo/npts;
+    double ycenter=yo/npts;
+
+    double X2=0.0;
+    double Y2=0.0;
+    double XY=0.0;
+
+    for ( unsigned int i=0; i < foreground.size() ; ++i)
+    {
+        vgl_point_2d<double> pt=foreground[i];
+
+        double diffx=pt.x()-xcenter;
+        double diffy=pt.y()-ycenter;
+
+        XY += diffx*diffy;
+        X2 += diffx*diffx;
+        Y2 += diffy*diffy;
+    }
+
+    X2=X2/npts;
+    Y2=Y2/npts;
+    XY=XY/npts;
+ 
+    vnl_double_2x2 Si;
+    Si(0,0)=X2;
+    Si(0,1)=XY;
+    Si(1,0)=XY;
+    Si(1,1)=Y2;
+
+    vnl_svd<double> svd(Si);
+    
+    double major_axis = 2.0*vcl_sqrt(vcl_fabs(svd.W(0)));
+    double minor_axis = 2.0*vcl_sqrt(vcl_fabs(svd.W(1)));
+
+    
+    ellipse_stats.push_back(major_axis);
+    ellipse_stats.push_back(minor_axis);
+
 }
 
 
@@ -924,6 +985,11 @@ void dbsk2d_transform_manager::get_appearance_stats(
     double mean_LAB = mean_LAB_distance(foreground_grid,
                                         background_grid);
 
+    // 7) Do ellipse fitting
+    vcl_vector<double> ellipse_stats;
+    ellipse_fitting(foreground_grid,
+                    ellipse_stats);
+
     app_stats.push_back(region_gpb);
     app_stats.push_back(contour_gpb);
     app_stats.push_back(L_chi2);
@@ -931,6 +997,9 @@ void dbsk2d_transform_manager::get_appearance_stats(
     app_stats.push_back(b_chi2);
     app_stats.push_back(texton_chi2);
     app_stats.push_back(mean_LAB);
+    app_stats.push_back(ellipse_stats[0]); // major axis length
+    app_stats.push_back(ellipse_stats[1]); // minor axis length
+
 }
 
 void dbsk2d_transform_manager::get_extra_belms(

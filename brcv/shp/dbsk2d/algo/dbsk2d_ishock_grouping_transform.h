@@ -64,6 +64,11 @@ public:
     // convex area
     double convex_area(vgl_polygon<double>& poly);
 
+
+    // get statistics of polygon
+    void get_polygon_stats(vgl_polygon<double>& poly,
+                           vcl_vector<double>& poly_stats);
+
     //: contour_ratio
     double real_contour_length(unsigned int index);
 

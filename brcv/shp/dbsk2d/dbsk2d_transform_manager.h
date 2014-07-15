@@ -266,6 +266,11 @@ private:
         vcl_vector<vgl_point_2d<double> >& foreground,
         vcl_vector<vgl_point_2d<double> >& background);
 
+    void ellipse_fitting(  
+        vcl_vector<vgl_point_2d<double> >& foreground,
+        vcl_vector<double>& stats);
+
+
     // Make default constructor private
     dbsk2d_transform_manager();
 
