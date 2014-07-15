@@ -139,25 +139,26 @@ void dbsk2d_containment_graph::construct_graph()
 
                 if ( train_ )
                 {
-                    double area=vgl_area(poly);
-
-                    // stats
+                    // containment graph stats
                     region_stats_[key].push_back(0.0);       //depth
                     region_stats_[key].push_back(1.0);       //path prob
                     region_stats_[key].push_back(1.0);       //region gap cost
-                    region_stats_[key].push_back(con_ratio); //contour_ratio
-                    region_stats_[key].push_back(area);      //area
-                    
-                    double convex_area=grouper.convex_area(poly);
-                    region_stats_[key].push_back(convex_area);
-                    region_stats_[key].push_back(area/convex_area);
-                    
+
+                    // get polygon stats
+                    vcl_vector<double> polygon_stats;
+                    grouper.get_polygon_stats(poly,polygon_stats);
+
+                    for ( unsigned int p=0; p < polygon_stats.size() ; ++p)
+                    {
+                        region_stats_[key].push_back(polygon_stats[p]);
+                    }
+
                     vcl_vector<double> app_stats;
                     
                     dbsk2d_transform_manager::Instance().get_appearance_stats
                         (frag_edges[(*it).first],
                          frag_belms[(*it).first],
-                         area,
+                         polygon_stats[0],
                          app_stats);
 
                     for ( unsigned int a=0; a < app_stats.size() ; ++a)
@@ -406,26 +407,28 @@ void dbsk2d_containment_graph::construct_graph()
 
                     if ( train_ )
                     {
-                        double area=vgl_area(poly);
 
                         // stats
                         region_stats_[key].push_back(node->get_depth());
                         region_stats_[key].push_back(node->get_prob()); 
                         region_stats_[key].push_back(node->get_gap_prob());
-                        region_stats_[key].push_back(contour_ratio); 
-                        region_stats_[key].push_back(area);
-
-                        double convex_area=grouper.convex_area(poly);
-                        region_stats_[key].push_back(convex_area);
-                        region_stats_[key].push_back(area/convex_area);
-
+                        
+                        // get polygon stats
+                        vcl_vector<double> polygon_stats;
+                        grouper.get_polygon_stats(poly,polygon_stats);
+                        
+                        for ( unsigned int p=0; p < polygon_stats.size() ; ++p)
+                        {
+                            region_stats_[key].push_back(polygon_stats[p]);
+                        }
+                        
                         vcl_vector<double> app_stats;
                     
                         dbsk2d_transform_manager::Instance().
                             get_appearance_stats
                             (frag_edges[(*it).first],
                              frag_belms[(*it).first],
-                             area,
+                             polygon_stats[0],
                              app_stats);
 
                         for ( unsigned int a=0; a < app_stats.size() ; ++a)
