@@ -492,6 +492,106 @@ double dbsk2d_ishock_grouping_transform::contour_ratio(
     return contour_ratio;
 }
 
+
+
+double dbsk2d_ishock_grouping_transform::real_contour_ratio(
+    unsigned int index)
+{
+
+    double virtual_boundary_length=0;
+    vcl_vector<dbsk2d_ishock_node*> outer_nodes = outer_shock_nodes_[index];
+    
+    unsigned int i=0; 
+    for ( ; i < outer_nodes.size() ; ++i)
+    {
+        virtual_boundary_length+=2*outer_nodes[i]->startTime();
+
+    }
+
+    // Compute total length of this polygon
+    double total_length = 0.0;
+
+    double real_distance=0.0;
+    double gap_distance=0.0;
+
+    vcl_vector<dbsk2d_ishock_edge*> shock_edges = region_nodes_[index];
+
+    for ( unsigned int s=0; s < shock_edges.size() ; ++s)
+    {  
+        dbsk2d_ishock_edge* edge=shock_edges[s];
+
+        double temp_distance1(0.0);
+        double temp_distance2(0.0);
+
+        //Line/Line
+        if ( edge->lBElement()->is_a_line() && 
+             edge->rBElement()->is_a_line())
+        {
+            
+            temp_distance1 = vgl_distance(edge->getLFootPt(edge->sTau()),
+                                          edge->getLFootPt(edge->eTau()));
+            temp_distance2 = vgl_distance(edge->getRFootPt(edge->eTau()),
+                                          edge->getRFootPt(edge->sTau()));
+
+            if ( edge->lBElement()->get_contour_id()<0)
+            {
+                gap_distance += temp_distance1;                
+            }
+            else
+            {
+                real_distance += temp_distance1;
+            }
+
+            if ( edge->rBElement()->get_contour_id()<0)
+            {
+                gap_distance += temp_distance2;                
+            }
+            else
+            {
+                real_distance += temp_distance2;
+            }
+
+        }
+        //Left line/Right Point
+        else if ( edge->lBElement()->is_a_line() && 
+                  edge->rBElement()->is_a_point())
+        {
+            temp_distance1 = vgl_distance(edge->getLFootPt(edge->sTau()),
+                                          edge->getLFootPt(edge->eTau()));
+     
+            if ( edge->lBElement()->get_contour_id()<0)
+            {
+                gap_distance += temp_distance1;    
+            }
+            else
+            {
+                real_distance += temp_distance1;
+            }
+
+        }
+        //Right Line/Left Point
+        else if ( edge->lBElement()->is_a_point() && 
+                  edge->rBElement()->is_a_line())
+        {      
+            temp_distance1 = vgl_distance(edge->getRFootPt(edge->sTau()),
+                                          edge->getRFootPt(edge->eTau()));
+
+            if ( edge->rBElement()->get_contour_id()<0)
+            {
+                gap_distance += temp_distance1;    
+            }
+            else
+            {
+                real_distance += temp_distance1;
+            }
+
+        }
+    }
+    total_length=real_distance+gap_distance+virtual_boundary_length;
+    double contour_ratio = real_distance/total_length;
+    return contour_ratio;
+}
+
 double dbsk2d_ishock_grouping_transform::real_contour_length(unsigned int index)
 {
     double real_distance=0.0;

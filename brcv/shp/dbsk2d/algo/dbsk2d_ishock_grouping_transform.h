@@ -58,6 +58,9 @@ public:
     //: contour_ratio
     double contour_ratio(unsigned int index);
 
+    //: real contour ratio 
+    double real_contour_ratio(unsigned int index);
+
     // convex area
     double convex_area(unsigned int index);
 
