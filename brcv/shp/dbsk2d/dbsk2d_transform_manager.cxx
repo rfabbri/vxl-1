@@ -422,13 +422,29 @@ void dbsk2d_transform_manager::ellipse_fitting(
 
     vnl_svd<double> svd(Si);
     
-    double major_axis = 2.0*vcl_sqrt(vcl_fabs(svd.W(0)));
-    double minor_axis = 2.0*vcl_sqrt(vcl_fabs(svd.W(1)));
+    double major_axis_radius = 2.0*vcl_sqrt(vcl_fabs(svd.W(0)));
+    double minor_axis_radius = 2.0*vcl_sqrt(vcl_fabs(svd.W(1)));
+
+    vnl_matrix<double> v=svd.V();
+
+    double orientation(0.0);
+
+    double angle=vcl_fabs(vcl_atan2(v(1,0),v(0,0)));
+    
+    if ( angle > vnl_math::pi_over_2 )
+    {
+        orientation=vcl_fmod(vnl_math::pi,angle);
+    }
+    else
+    {
+        orientation=angle;
+    }
+
+    ellipse_stats.push_back(major_axis_radius*2.0);
+    ellipse_stats.push_back(minor_axis_radius*2.0);
+    ellipse_stats.push_back(orientation);
 
     
-    ellipse_stats.push_back(major_axis);
-    ellipse_stats.push_back(minor_axis);
-
 }
 
 
@@ -997,8 +1013,11 @@ void dbsk2d_transform_manager::get_appearance_stats(
     app_stats.push_back(b_chi2);
     app_stats.push_back(texton_chi2);
     app_stats.push_back(mean_LAB);
-    app_stats.push_back(ellipse_stats[0]); // major axis length
-    app_stats.push_back(ellipse_stats[1]); // minor axis length
+
+    for ( unsigned int i=0; i < ellipse_stats.size() ; ++i)
+    {
+        app_stats.push_back(ellipse_stats[i]); // major axis length
+    }
 
 }
 
