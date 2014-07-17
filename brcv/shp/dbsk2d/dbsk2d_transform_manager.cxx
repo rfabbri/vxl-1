@@ -268,14 +268,6 @@ double dbsk2d_transform_manager::chi_squared_color_distance(
 
     bsta_histogram<double> foreground_pdf(min,max,nbins);
     bsta_histogram<double> background_pdf(min,max,nbins);
-    
-    // Initialize foregound bin and background pdf to uniform one
-    
-    for ( unsigned int i=0; i < nbins; ++i)
-    {
-        foreground_pdf.set_count(i,1.0);
-        background_pdf.set_count(i,1.0);
-    }
 
     {
         for ( unsigned int f=0; f < foreground.size() ; ++f)
@@ -315,13 +307,11 @@ double dbsk2d_transform_manager::chi_squared_color_distance(
         }
     }
 
-    double* fg_pdf_ptr=&(foreground_pdf.count_array()[0]);
-    double* bg_pdf_ptr=&(background_pdf.count_array()[0]);
-
-    double chi_squared=0.5*vnl_chi_squared_statistic_12(fg_pdf_ptr,
-                                                        bg_pdf_ptr,
-                                                        nbins,
-                                                        true);
+    double chi_squared=0.5*vnl_chi_squared_statistic_12(
+        &(foreground_pdf.count_array()[0]),
+        &(background_pdf.count_array()[0]),
+        nbins,
+        true);
 
     return chi_squared;
 }
