@@ -12,6 +12,7 @@
 #include <vcl_algorithm.h>
 #include <dbsk2d/algo/dbsk2d_ishock_transform.h>
 #include <dbsk2d/dbsk2d_transform_manager.h>
+#include <dbsk2d/algo/dbsk2d_prune_ishock.h>
 
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_image_resource.h>
@@ -249,10 +250,9 @@ void dbsk2d_ishock_grouping_transform::extract_polygon(
     }
 }
 
-void dbsk2d_ishock_grouping_transform::get_polygon_stats(vgl_polygon<double>&
-                                                         poly,
-                                                         vcl_vector<double>&
-                                                         poly_stats)
+void dbsk2d_ishock_grouping_transform::get_region_stats(
+    unsigned int index, vgl_polygon<double>& poly,
+    vcl_vector<double>& region_stats)
 {
 
 
@@ -325,15 +325,47 @@ void dbsk2d_ishock_grouping_transform::get_polygon_stats(vgl_polygon<double>&
     double bb_width=bbox.width();
     double bb_height=bbox.height();
 
-    poly_stats.push_back(area);           //Area of polygon
-    poly_stats.push_back(convex_area);    //Convex area of polygon
-    poly_stats.push_back(ratio);          //Ratio of area/convex area
-    poly_stats.push_back(length);         //Perimiter of region
+    double con_ratio=this->contour_ratio(index);
+    double gt_ratio(0.0),gap_ratio(0.0);
+    this->real_contour_ratio(index,gt_ratio,gap_ratio);
+
+
+    vcl_vector<dbsk2d_ishock_edge*> edges=region_nodes_[index];
+
     
-    
-    poly_stats.push_back(bb_width);           // Bounding box width
-    poly_stats.push_back(bb_height);          // Bounding box height
-    poly_stats.push_back(distance_to_center); // Distance to center of image 
+    dbsk2d_shock_graph_sptr shock_graph=new dbsk2d_shock_graph();
+    dbsk2d_prune_ishock pruner(ishock_graph_,shock_graph);
+
+    unsigned int total_edges=0;
+    double total_splice_cost=0.0;
+
+    for ( unsigned int s=0; s < edges.size() ; ++s)
+    {
+        double sc=pruner.splice_cost(edges[s]);
+        total_splice_cost+=sc;
+
+        if ( sc >= 1.0 )
+        {
+            total_edges+=1;
+        }
+        
+    }
+
+    region_stats.push_back(area);           //Area of polygon
+    region_stats.push_back(convex_area);    //Convex area of polygon
+    region_stats.push_back(ratio);          //Ratio of area/convex area
+    region_stats.push_back(length);         //Perimiter of region
+
+    region_stats.push_back(bb_width);           // Bounding box width
+    region_stats.push_back(bb_height);          // Bounding box height
+    region_stats.push_back(distance_to_center); // Distance to center of image 
+
+    region_stats.push_back(con_ratio);      // ratio=(contour+gap)/length
+    region_stats.push_back(gt_ratio);       // ratio=(contour)/length
+    region_stats.push_back(gap_ratio);      // ratio=(gap)/length 
+
+    region_stats.push_back(total_splice_cost);  // total splice cost
+    region_stats.push_back(total_edges);        // edges above threshold 
 }
 
 double dbsk2d_ishock_grouping_transform::convex_area(vgl_polygon<double>& 
@@ -494,8 +526,10 @@ double dbsk2d_ishock_grouping_transform::contour_ratio(
 
 
 
-double dbsk2d_ishock_grouping_transform::real_contour_ratio(
-    unsigned int index)
+void dbsk2d_ishock_grouping_transform::real_contour_ratio(
+    unsigned int index,
+    double& gt_con_ratio,
+    double& gap_ratio)
 {
 
     double virtual_boundary_length=0;
@@ -588,8 +622,8 @@ double dbsk2d_ishock_grouping_transform::real_contour_ratio(
         }
     }
     total_length=real_distance+gap_distance+virtual_boundary_length;
-    double contour_ratio = real_distance/total_length;
-    return contour_ratio;
+    gt_con_ratio = real_distance/total_length;
+    gap_ratio    = gap_distance/total_length;
 }
 
 double dbsk2d_ishock_grouping_transform::real_contour_length(unsigned int index)

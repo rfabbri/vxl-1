@@ -145,12 +145,13 @@ void dbsk2d_containment_graph::construct_graph()
                     region_stats_[key].push_back(1.0);       //region gap cost
 
                     // get polygon stats
-                    vcl_vector<double> polygon_stats;
-                    grouper.get_polygon_stats(poly,polygon_stats);
+                    vcl_vector<double> region_stats;
+                    grouper.get_region_stats((*it).first,
+                                             poly,region_stats);
 
-                    for ( unsigned int p=0; p < polygon_stats.size() ; ++p)
+                    for ( unsigned int p=0; p < region_stats.size() ; ++p)
                     {
-                        region_stats_[key].push_back(polygon_stats[p]);
+                        region_stats_[key].push_back(region_stats[p]);
                     }
 
                     vcl_vector<double> app_stats;
@@ -158,7 +159,7 @@ void dbsk2d_containment_graph::construct_graph()
                     dbsk2d_transform_manager::Instance().get_appearance_stats
                         (frag_edges[(*it).first],
                          frag_belms[(*it).first],
-                         polygon_stats[0],
+                         region_stats[0],
                          app_stats);
 
                     for ( unsigned int a=0; a < app_stats.size() ; ++a)
@@ -414,12 +415,13 @@ void dbsk2d_containment_graph::construct_graph()
                         region_stats_[key].push_back(node->get_gap_prob());
                         
                         // get polygon stats
-                        vcl_vector<double> polygon_stats;
-                        grouper.get_polygon_stats(poly,polygon_stats);
+                        vcl_vector<double> region_stats;
+                        grouper.get_region_stats((*it).first,
+                                                 poly,region_stats);
                         
-                        for ( unsigned int p=0; p < polygon_stats.size() ; ++p)
+                        for ( unsigned int p=0; p < region_stats.size() ; ++p)
                         {
-                            region_stats_[key].push_back(polygon_stats[p]);
+                            region_stats_[key].push_back(region_stats[p]);
                         }
                         
                         vcl_vector<double> app_stats;
@@ -428,7 +430,7 @@ void dbsk2d_containment_graph::construct_graph()
                             get_appearance_stats
                             (frag_edges[(*it).first],
                              frag_belms[(*it).first],
-                             polygon_stats[0],
+                             region_stats[0],
                              app_stats);
 
                         for ( unsigned int a=0; a < app_stats.size() ; ++a)

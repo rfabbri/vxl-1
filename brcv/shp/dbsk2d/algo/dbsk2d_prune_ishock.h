@@ -73,6 +73,9 @@ public:
 
   //: Destructor
   virtual ~dbsk2d_prune_ishock() {}
+
+
+  double splice_cost(dbsk2d_ishock_elm* selm);
   
   //: return the intrinsic shock graph
   dbsk2d_ishock_graph_sptr intrinsic_shock_graph() { return ishock_graph; }

@@ -59,7 +59,9 @@ public:
     double contour_ratio(unsigned int index);
 
     //: real contour ratio 
-    double real_contour_ratio(unsigned int index);
+    void real_contour_ratio(unsigned int index,
+                            double& gt_con_ratio,
+                            double& gap_ratio);
 
     // convex area
     double convex_area(unsigned int index);
@@ -69,8 +71,10 @@ public:
 
 
     // get statistics of polygon
-    void get_polygon_stats(vgl_polygon<double>& poly,
-                           vcl_vector<double>& poly_stats);
+    void get_region_stats(
+        unsigned int index,
+        vgl_polygon<double>& poly,
+        vcl_vector<double>& region_stats);
 
     //: contour_ratio
     double real_contour_length(unsigned int index);

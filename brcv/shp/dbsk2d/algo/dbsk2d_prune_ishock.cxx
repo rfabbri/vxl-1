@@ -275,6 +275,251 @@ void dbsk2d_prune_ishock::compute_shock_saliency(dbsk2d_ishock_elm* selm)
   shock_saliency_map[sedge->id()].dPnCost = dPnCost;
 }
 
+
+//: compute the salency of this shock element (edge/node)
+double dbsk2d_prune_ishock::splice_cost(dbsk2d_ishock_elm* selm)
+{
+  double  dOC = 0;      // change in the original contour length by the removal of the current shock
+  double  dNC = 0;      // length of the new contour added
+  double  dPnCost = 0;  // cost of pruning this shock
+                        //dPnCost = |_dOC + _dNC(parents) - _dNC| + dPnCost(parents)
+
+  double R, thetaE;
+
+  switch (selm->type())
+  {
+    case dbsk2d_ishock_elm::SNODE:
+    {
+      dbsk2d_ishock_node* snode = (dbsk2d_ishock_node*)selm;
+
+      //second order nodes (don't know how to handle them yet)
+      if (snode->is_a_source() || snode->is_a_sink()){
+        dPnCost = ISHOCK_DIST_HUGE;
+      }
+      else {
+        //Accumulate all the information from the parent edges.
+        VECTOR_TYPE start_angle=-1;
+        VECTOR_TYPE end_angle = -1;
+        R = snode->startTime();
+        dPnCost = 0;
+
+        //we know we are going counter clockwise over the shocks
+        //coming into the junction
+        ishock_edge_list::iterator curS = snode->pShocks().begin();
+        for(; curS!=snode->pShocks().end(); ++curS)
+        {
+          if ((*curS)->is_a_contact())
+          {
+            if ((*curS)->rBElement()->is_an_arc() && start_angle<0)
+              start_angle = ((dbsk2d_ishock_contact*)(*curS))->n();
+          
+            if ((*curS)->lBElement()->is_an_arc() && !(start_angle<0))
+            {
+              end_angle = ((dbsk2d_ishock_contact*)(*curS))->n();
+
+              dOC += R*CCW(start_angle, end_angle);
+              dNC += R*CCW(start_angle, end_angle);
+              start_angle = -1;
+            }
+          }
+          else {
+            dOC += shock_saliency_map[(*curS)->id()].dOC;
+            dNC += shock_saliency_map[(*curS)->id()].dNC;
+          }
+          dPnCost += shock_saliency_map[(*curS)->id()].dPnCost;
+        }
+      }
+      shock_saliency_map[selm->id()].dOC = dOC;
+      shock_saliency_map[selm->id()].dNC = dNC;
+      shock_saliency_map[selm->id()].dPnCost = dPnCost;
+
+      return dPnCost;
+    }
+    case dbsk2d_ishock_elm::CONTACTSHOCK:
+    {
+      shock_saliency_map[selm->id()].dOC = 0;
+      shock_saliency_map[selm->id()].dNC = 0;
+      shock_saliency_map[selm->id()].dPnCost = 0;
+
+      return 0;
+    }
+    case dbsk2d_ishock_elm::POINTPOINT:
+    {  
+      dbsk2d_ishock_pointpoint* spp = (dbsk2d_ishock_pointpoint*)selm;
+
+      R  = spp->endTime();
+      dOC = 0; //because formed by two points
+
+      if (R > MAX_RADIUS) {
+        dNC = spp->H();
+      }
+      else {
+        double thetaE = vnl_math::pi - 2*spp->LeTau();
+        dNC = R*thetaE;
+      }
+      break;
+    }
+    case dbsk2d_ishock_elm::POINTLINE:
+    {  
+      dbsk2d_ishock_pointline* spl = (dbsk2d_ishock_pointline*)selm;
+
+      R  = spl->endTime();
+      
+      if (spl->nu()==1) {
+        dOC = spl->ReTau() - spl->RsTau();
+        thetaE = CCW(spl->u()+spl->LeTau()+vnl_math::pi, spl->u());
+      }
+      else {
+        dOC = spl->LeTau() - spl->LsTau();
+        thetaE = CCW(spl->u(), spl->u()+spl->ReTau()+vnl_math::pi);
+      }
+
+      dNC = R*thetaE;
+      break;
+    }
+    case dbsk2d_ishock_elm::LINELINE:
+    {  
+      dbsk2d_ishock_lineline* sll = (dbsk2d_ishock_lineline*)selm;
+
+      R  = sll->endTime();
+      dOC = 2*(sll->ReTau() - sll->RsTau());
+      thetaE = CCW (sll->ul(), sll->ur());
+      dNC = R*thetaE;
+
+      break;
+    }
+    case dbsk2d_ishock_elm::POINTARC:
+    {  
+      dbsk2d_ishock_pointarc* spa = (dbsk2d_ishock_pointarc*)selm;
+
+      R  = spa->endTime();
+      thetaE=0;
+
+      if (spa->nu()==1)
+        dOC = spa->Rr()*vcl_fabs(spa->ReTau() - spa->RsTau());
+      else 
+        dOC = spa->Rl()*vcl_fabs(spa->LeTau() - spa->LsTau());
+
+      if (R > MAX_RADIUS) {
+        vgl_point_2d<double> start  = spa->getLFootPt(spa->LeTau());
+        vgl_point_2d<double>  end  = spa->getRFootPt(spa->ReTau());
+        dNC = _distPointPoint(start, end); 
+      }
+      else {
+        if (spa->s()==1)
+          thetaE = CCW(spa->u()+spa->LeTau()+vnl_math::pi, spa->u()+vnl_math::pi+spa->ReTau()+vnl_math::pi);
+        else
+          thetaE = CCW(spa->u()+spa->LeTau()+vnl_math::pi, spa->u()+vnl_math::pi+spa->ReTau());
+
+        dNC = R*thetaE;
+      }
+      break;
+    }
+    case dbsk2d_ishock_elm::LINEARC:
+    {  
+      dbsk2d_ishock_linearc* sla = (dbsk2d_ishock_linearc*)selm;
+
+      R  = sla->endTime();
+      thetaE=0;
+
+      if (sla->nu()==1)
+        dOC = sla->R()*vcl_fabs(sla->LeTau() - sla->LsTau()) + (sla->ReTau() - sla->RsTau());
+      else 
+        dOC = sla->R()*vcl_fabs(sla->ReTau() - sla->RsTau()) + (sla->LeTau() - sla->LsTau());
+
+      vgl_point_2d<double> start, end;
+      if (R > MAX_RADIUS) {
+        if (sla->nu()==1){ //arc on the left
+          start  = sla->getLFootPt(sla->LeTau());
+          //end  = getRFootPt(_LeTau);
+          if (sla->nud()==1)
+            end = sla->rBLine()->end();
+          else
+            end = sla->foot();
+        }
+        else {
+          //start  = getLFootPt(_ReTau);
+          if (sla->nud()==1)
+            start = sla->lBLine()->start();
+          else
+            start = sla->foot();
+          end  = sla->getRFootPt(sla->ReTau());
+        }
+        dNC = _distPointPoint(start, end); 
+      }
+      else {
+        if (sla->nu()==1){
+          if (sla->s()==1)
+            thetaE = CCW(sla->u()+sla->LeTau()+vnl_math::pi, sla->u());
+          else
+            thetaE = CCW(sla->u()+sla->LeTau()+vnl_math::pi, sla->u()+vnl_math::pi);
+        }
+        else {
+          if (sla->s()==1)
+            thetaE = CCW(sla->u(), sla->u()+sla->ReTau()+vnl_math::pi);
+          else
+            thetaE = CCW(sla->u()+vnl_math::pi, sla->u()+sla->ReTau()+vnl_math::pi);
+        }
+        dNC = R*thetaE;
+      }
+      break;
+    }
+    case dbsk2d_ishock_elm::ARCARC:
+    {  
+      dbsk2d_ishock_arcarc* saa = (dbsk2d_ishock_arcarc*)selm;
+
+      R  = saa->endTime();
+      thetaE=0;
+
+      dOC = saa->Rr()*vcl_fabs(saa->ReTau() - saa->RsTau()) + saa->Rl()*vcl_fabs(saa->LeTau() - saa->LsTau());
+
+      if (R > MAX_RADIUS) {
+        vgl_point_2d<double> start  = saa->getLFootPt(saa->LeTau());
+        vgl_point_2d<double>  end  = saa->getRFootPt(saa->ReTau());
+        dNC = _distPointPoint(start, end); 
+      }
+      else {
+        if (saa->s()==1)
+          thetaE = CCW(saa->u()+saa->LeTau()+vnl_math::pi, saa->u()+vnl_math::pi+saa->ReTau()+vnl_math::pi);
+        else
+          thetaE = CCW(saa->u()+saa->LeTau()+vnl_math::pi, saa->u()+vnl_math::pi+saa->ReTau());
+        dNC = R*thetaE;
+      }
+      break;
+    }
+    case dbsk2d_ishock_elm::LINELINE_THIRDORDER:
+    {
+      dbsk2d_ishock_lineline_thirdorder* sto = (dbsk2d_ishock_lineline_thirdorder*)selm;
+
+      R  = sto->endTime();
+      dOC = 2*(sto->ReTau() - sto->RsTau());
+      thetaE = vnl_math::pi;
+      dNC = R*thetaE;
+
+      break;
+    }
+    case dbsk2d_ishock_elm::ARCARC_THIRDORDER:
+    {
+      dNC = 0;
+      dOC = ISHOCK_DIST_HUGE;
+      break;
+    }
+  }
+
+  //finally compute the pruning cost of shock edges
+  dbsk2d_ishock_edge* sedge = (dbsk2d_ishock_edge*) selm;
+
+  double ps_dNC = shock_saliency_map[sedge->pSNode()->id()].dNC;
+  double ps_dPnCost = shock_saliency_map[sedge->pSNode()->id()].dPnCost;
+
+  //prune cost is the difference of lengths + the parents prune cost
+  dPnCost = vcl_fabs(dOC + ps_dNC - dNC) + ps_dPnCost;
+
+  dbsk2d_assert (dOC>=0 && dNC>=0 && dPnCost>=0);
+
+  return dPnCost;
+}
+
 //: prune the shock graph
 void dbsk2d_prune_ishock::prune(double thresh)
 {
