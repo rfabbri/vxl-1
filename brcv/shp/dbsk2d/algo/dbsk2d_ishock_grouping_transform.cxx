@@ -681,6 +681,14 @@ bool dbsk2d_ishock_grouping_transform::region_within_image(
     {
         dbsk2d_ishock_belm* belm=belms[i];
         vgl_point_2d<double> pt1,pt2;
+       
+        dbsk2d_ishock_bline* bline=(dbsk2d_ishock_bline*)(belm);
+
+        if ( bline->get_contour_id() < 0 )
+        {
+            continue;
+        }
+
         if ( belm->is_a_line() )
         {
             dbsk2d_ishock_bline* bline = (dbsk2d_ishock_bline*)(belm);

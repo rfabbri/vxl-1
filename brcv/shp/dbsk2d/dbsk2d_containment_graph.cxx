@@ -132,7 +132,7 @@ void dbsk2d_containment_graph::construct_graph()
                 all_region_polys_[key]=poly;
 
 
-                if ( closed_region )
+                if ( closed_region && grouper.region_within_image((*it).first))
                 {
                     closed_regions_[key]="temp";
                 }
@@ -401,7 +401,8 @@ void dbsk2d_containment_graph::construct_graph()
    
                     all_region_polys_[key]=poly;
 
-                    if ( closed_region )
+                    if ( closed_region && 
+                         grouper.region_within_image((*it).first))
                     {
                         closed_regions_[key]="temp";
                     }
@@ -505,6 +506,7 @@ void dbsk2d_containment_graph::construct_graph()
             }
         }
 
+        merge_closed_regions();
     }
 }
 
@@ -1174,7 +1176,9 @@ void dbsk2d_containment_graph::merge_closed_regions()
                                          test_region_key.end(),
                                          inserter);
                     
-                    if ( intersection.size())
+                    if ( intersection.size() &&
+                         intersection != closed_region_key &&
+                         intersection != test_region_key )
                     {
                         //Keep a flag for status
                         int value;
