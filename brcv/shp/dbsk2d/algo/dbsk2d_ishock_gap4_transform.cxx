@@ -15,11 +15,12 @@
 dbsk2d_ishock_gap4_transform::dbsk2d_ishock_gap4_transform(
     dbsk2d_ishock_graph_sptr intrinsic_shock_graph,
     vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>& pair,
+    dbsk2d_ishock_bpoint* anchor_pt,
     int euler_spiral_id)
     :dbsk2d_ishock_transform(intrinsic_shock_graph,
                              dbsk2d_ishock_transform::GAP4),
      gap_line_pair_(pair),
-     anchor_pt_(0),
+     anchor_pt_(anchor_pt),
      euler_spiral_id_(euler_spiral_id)
 {
     dbsk2d_ishock_bpoint* bp1 = gap_line_pair_.first;
@@ -30,15 +31,6 @@ dbsk2d_ishock_gap4_transform::dbsk2d_ishock_gap4_transform(
     
     // convert the pts into bnd_vertex and put into a list
     vcl_vector<vgl_point_2d<double> > bv_list;
-
-    if ( d1 < d2 )
-    {
-        anchor_pt_=bl1->s_pt();
-    }
-    else
-    {
-        anchor_pt_=bl1->e_pt();
-    }
 
     
 }

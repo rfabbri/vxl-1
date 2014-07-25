@@ -34,6 +34,7 @@ public:
     dbsk2d_ishock_gap4_transform(
         dbsk2d_ishock_graph_sptr intrinsic_shock_graph,
         vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>& pair,
+        dbsk2d_ishock_bpoint* anchor_pt,
         int euler_spiral_id_=-2);
 
     //: Destructor

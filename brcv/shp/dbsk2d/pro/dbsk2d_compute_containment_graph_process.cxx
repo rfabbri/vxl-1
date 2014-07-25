@@ -684,8 +684,11 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
     for ( unsigned int i=0; i < gap4_pairs.size(); ++i)
     {
         int contour_id=this->get_contour(gap4_pairs[i].first)->get_id();
+        dbsk2d_ishock_bpoint* anchor_pt = dbsk2d_transform_manager::Instance()
+            .get_anchor_pt(gap4_pairs[i]);
         dbsk2d_ishock_transform_sptr trans = new 
-            dbsk2d_ishock_gap4_transform(ishock_graph,gap4_pairs[i],contour_id);
+            dbsk2d_ishock_gap4_transform(ishock_graph,gap4_pairs[i],anchor_pt,
+                                         contour_id);
         transforms[trans->likelihood()]=trans;
         gap4_con_ids[trans->likelihood()]=
             gap4_pairs[i].second->get_contour_id();

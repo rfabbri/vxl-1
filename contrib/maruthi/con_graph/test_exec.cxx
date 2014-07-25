@@ -22,6 +22,7 @@
 #include <dbsk2d/dbsk2d_file_io.h>
 #include <dbsk2d/algo/dbsk2d_ishock_grouping_transform.h>
 #include <dbsk2d/dbsk2d_containment_graph.h>
+#include <dbsk2d/dbsk2d_transform_manager.h>
 
 unsigned int gap_type=1;
 
@@ -166,10 +167,14 @@ bool gap_transform(dbsk2d_boundary_sptr boundary,dbsk2d_shock_storage_sptr
 
             vul_timer timer1;
             timer1.mark();
+
+            dbsk2d_ishock_bpoint* anchor_pt = dbsk2d_transform_manager
+                ::Instance().get_anchor_pt(gap4_pairs[index]);
             
             dbsk2d_ishock_gap4_transform transformer(
                 output_shock->get_ishock_graph(),
-                gap4_pairs[index]);
+                gap4_pairs[index],
+                anchor_pt);
             flag = transformer.execute_transform();
             
             double preprocess_time = (double)(timer1.real())/1000;

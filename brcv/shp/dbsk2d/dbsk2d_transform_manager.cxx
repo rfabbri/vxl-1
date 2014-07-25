@@ -258,6 +258,148 @@ double dbsk2d_transform_manager::region_gpb_value(
     return summation;
 }
 
+// : get closest point
+dbsk2d_ishock_bpoint* dbsk2d_transform_manager::get_anchor_pt(
+    vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*>& pair )
+{
+
+    dbsk2d_ishock_bpoint* anchor_pt(0);
+
+    dbsk2d_ishock_bpoint* bp1 = pair.first;
+    dbsk2d_ishock_bline*  bl1 = pair.second;
+
+    double d1=vgl_distance(bp1->pt(),bl1->s_pt()->pt());
+    double d2=vgl_distance(bp1->pt(),bl1->e_pt()->pt());
+    
+    // convert the pts into bnd_vertex and put into a list
+    vcl_vector<vgl_point_2d<double> > bv_list;
+
+    vcl_set<int> local_map;
+
+    vcl_map<int,dbsk2d_ishock_node*> outer_wavefront;
+
+    // Loop over shock map
+    bnd_ishock_map_iter curS = bp1->shock_map().begin();
+    for (; curS!=bp1->shock_map().end(); ++curS)
+    {
+        dbsk2d_ishock_elm* selm = curS->second;
+        dbsk2d_ishock_edge* cur_edge = (dbsk2d_ishock_edge*)selm; 
+        local_map.insert(cur_edge->rBElement()->id());
+        local_map.insert(cur_edge->lBElement()->id());
+
+        if ( cur_edge->cSNode())
+        {
+            outer_wavefront[cur_edge->cSNode()->id()]=
+                cur_edge->cSNode();
+        }
+        
+        if ( cur_edge->pSNode())
+        {
+            outer_wavefront[cur_edge->pSNode()->id()]=
+                cur_edge->pSNode();
+        }
+    }
+
+
+    vcl_map<int,dbsk2d_ishock_node*>::iterator it;
+    while ( outer_wavefront.size() > 0 )
+    {
+        it = outer_wavefront.begin();
+        ishock_edge_list pshocks = (*it).second->pShocks();
+        dbsk2d_ishock_edge* cshock = (*it).second->cShock();
+        dbsk2d_ishock_edge* cshock2 = (*it).second->cShock2();
+        
+        //remove this edge from the nodes' parent list
+        ishock_edge_list::iterator curS = pshocks.begin();
+        for(; curS!=pshocks.end(); ++curS)
+        {
+            dbsk2d_ishock_edge* shock = (*curS);
+
+
+            if ( local_map.count(shock->lBElement()->id()))
+            {
+                local_map.insert(shock->rBElement()->id());
+            }
+           
+            if ( local_map.count(shock->rBElement()->id()))
+            {
+                local_map.insert(shock->lBElement()->id());
+            }     
+        }
+
+        if ( cshock )
+        {
+            if ( cshock->cSNode())
+            {
+                outer_wavefront[cshock->cSNode()->id()]=cshock->cSNode();
+            }
+            
+            dbsk2d_ishock_edge* cur_edge = cshock;
+            local_map.insert(cur_edge->rBElement()->id());
+            local_map.insert(cur_edge->lBElement()->id());
+            
+        }
+
+
+        if ( cshock2 )
+        {
+            if ( cshock2->cSNode())
+            {
+                outer_wavefront[cshock2->cSNode()->id()]=cshock2->cSNode();
+            }
+            
+            dbsk2d_ishock_edge* cur_edge = cshock2;
+            local_map.insert(cur_edge->rBElement()->id());
+            local_map.insert(cur_edge->lBElement()->id());
+            
+        }
+
+        outer_wavefront.erase(it);
+        
+    }
+
+    dbsk2d_ishock_bpoint* s_pt=bl1->s_pt();
+    dbsk2d_ishock_bpoint* e_pt=bl1->e_pt();
+
+    dbsk2d_ishock_bline* s_pt_line=(
+        s_pt->getElmToTheLeftOf(bl1)->id() == bl1->twinLine()->id())?
+        (dbsk2d_ishock_bline*)s_pt->getElmToTheRightOf(bl1):
+        (dbsk2d_ishock_bline*)s_pt->getElmToTheLeftOf(bl1);
+
+    dbsk2d_ishock_bline* e_pt_line=(
+        e_pt->getElmToTheLeftOf(bl1)->id() == bl1->twinLine()->id())?
+        (dbsk2d_ishock_bline*)e_pt->getElmToTheRightOf(bl1):
+        (dbsk2d_ishock_bline*)e_pt->getElmToTheLeftOf(bl1);
+
+
+    if ( local_map.count(s_pt_line->id()) && 
+         !local_map.count(e_pt_line->id()))
+    {
+        anchor_pt=bl1->s_pt();
+    }
+    else if ( local_map.count(e_pt_line->id()) && 
+              !local_map.count(s_pt_line->id()))
+    {
+        anchor_pt=bl1->e_pt();
+    }
+    else
+    {
+        if ( d1 < d2 )
+        {
+            anchor_pt=bl1->s_pt();
+        }
+        else
+        {
+            anchor_pt=bl1->e_pt();
+        }
+
+    }
+ 
+
+    return anchor_pt;
+
+}
+
 // chi squared distance
 double dbsk2d_transform_manager::chi_squared_color_distance(
     vcl_vector<vgl_point_2d<double> >& foreground,

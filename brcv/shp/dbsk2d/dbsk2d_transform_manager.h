@@ -164,31 +164,8 @@ public:
     unsigned int nextAvailableID() { id_++; return id_; }
 
     // : get closest point
-    dbsk2d_ishock_bpoint* closest_point(vcl_pair<dbsk2d_ishock_bpoint*,
-                                        dbsk2d_ishock_bline*>& pair )
-    {
-        dbsk2d_ishock_bpoint* anchor_pt(0);
-
-        dbsk2d_ishock_bpoint* bp1 = pair.first;
-        dbsk2d_ishock_bline*  bl1 = pair.second;
-
-        double d1=vgl_distance(bp1->pt(),bl1->s_pt()->pt());
-        double d2=vgl_distance(bp1->pt(),bl1->e_pt()->pt());
-    
-        // convert the pts into bnd_vertex and put into a list
-        vcl_vector<vgl_point_2d<double> > bv_list;
-
-        if ( d1 < d2 )
-        {
-            anchor_pt=bl1->s_pt();
-        }
-        else
-        {
-            anchor_pt=bl1->e_pt();
-        }
-
-        return anchor_pt;
-    }
+    dbsk2d_ishock_bpoint* get_anchor_pt(vcl_pair<dbsk2d_ishock_bpoint*,
+                                        dbsk2d_ishock_bline*>& pair );
 private:
 
     //: store image

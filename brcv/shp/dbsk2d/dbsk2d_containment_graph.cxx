@@ -641,7 +641,7 @@ void dbsk2d_containment_graph::expand_node(
             = gap4_pairs[i];
 
         dbsk2d_ishock_bpoint* anchor_pt = dbsk2d_transform_manager::Instance()
-            .closest_point(gap4_pairs[i]);
+            .get_anchor_pt(gap4_pairs[i]);
 
         belms_key.insert(gap4.first->id());
         belms_key.insert(anchor_pt->id());
@@ -656,6 +656,7 @@ void dbsk2d_containment_graph::expand_node(
             dbsk2d_ishock_transform_sptr trans = new 
                 dbsk2d_ishock_gap4_transform(ishock_graph_,
                                              gap4,
+                                             anchor_pt,
                                              gap_id());
          
             double prob=trans->likelihood();
