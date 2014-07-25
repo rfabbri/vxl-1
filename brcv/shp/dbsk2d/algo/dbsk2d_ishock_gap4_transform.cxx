@@ -63,6 +63,7 @@ bool dbsk2d_ishock_gap4_transform::execute_transform()
 {
     
     this->clear();
+    bool orig_visibility=anchor_pt_->is_visible();
 
     dbsk2d_ishock_bpoint* bp1 = gap_line_pair_.first;
     dbsk2d_ishock_bline*  bl2 = gap_line_pair_.second;
@@ -178,9 +179,9 @@ bool dbsk2d_ishock_gap4_transform::execute_transform()
 
                 left_line->set_GUIelm(false);
                 right_line->set_GUIelm(false);
-        
+
                 bp1->set_visibility(true);
-                bp2->set_visibility(true);            
+                bp2->set_visibility(orig_visibility);            
                 bp1->set_max_eta(2.0*vnl_math::pi);
                 bp2->set_max_eta(2.0*vnl_math::pi);
                 bp1->set_vref(-1);
