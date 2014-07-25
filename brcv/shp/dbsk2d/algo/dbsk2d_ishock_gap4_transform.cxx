@@ -243,6 +243,13 @@ bool dbsk2d_ishock_gap4_transform::execute_transform()
         }
     }
 
+    if ( anchor_pt_->shock_map().size()==0)
+    {
+        anchor_pt_->set_max_eta(2*vnl_math::pi);
+        anchor_pt_->set_vref(-1);
+        anchor_pt_->set_visibility(false);
+    }
+
     dbsk2d_ishock_belm::throw_exception=true;
     shock_computation_valid = ishock_graph_->valid_shock_graph();
     return shock_computation_valid;
