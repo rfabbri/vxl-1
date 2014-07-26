@@ -852,6 +852,43 @@ bool dbsk2d_ishock_loop_transform::reinsert_contour()
             dbsk2d_ishock_belm::throw_exception=false;
             ++iteration;
 
+            if ( iteration == 5 )
+            {
+                vcl_cerr<<"Error: recomputing loop reinsert"<<vcl_endl;
+                
+                vcl_vector<dbsk2d_ishock_belm*> contact_shock_set;
+                for ( it = removal_bnd_elements_.begin(); 
+                      it != removal_bnd_elements_.end() ; ++it)
+                {
+                    (*it).second->set_GUIelm(true);
+                    boundary_->set_belms_on((*it).second->id());
+                    
+                    if ( (*it).second->is_a_point())
+                    {
+                        dbsk2d_ishock_bpoint* bpoint = 
+                            (dbsk2d_ishock_bpoint*)((*it).second);
+
+                        bpoint->set_max_eta(2.0*vnl_math::pi);
+                        bpoint->set_vref(-1);
+
+                    }
+
+                }
+                
+                vcl_map<unsigned int, dbsk2d_ishock_belm*>::iterator kit;
+                for ( kit = higher_degree_nodes_.begin() ; 
+                      kit != higher_degree_nodes_.end(); ++kit )
+                {
+                    dbsk2d_ishock_bpoint* bpoint= (dbsk2d_ishock_bpoint*)
+                        ((*kit).second);
+                   
+                    bpoint->set_max_eta(2.0*vnl_math::pi);
+                    bpoint->set_vref(-1);
+
+                }
+
+                return false;
+            }
             vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
             for ( it = deleted_bnd_elements.begin();
                   it != deleted_bnd_elements.end();
