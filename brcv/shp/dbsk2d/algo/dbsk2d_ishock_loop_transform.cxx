@@ -331,6 +331,14 @@ void dbsk2d_ishock_loop_transform::detect_contour()
 bool dbsk2d_ishock_loop_transform::remove_contour()
 {
 
+    vcl_map<unsigned int,bool> local_visibility_map;
+    vcl_map<unsigned int, dbsk2d_ishock_belm*>::iterator kit;
+    for ( kit = higher_degree_nodes_.begin() ; 
+          kit != higher_degree_nodes_.end(); ++kit )
+    {
+        dbsk2d_ishock_bpoint* bpoint= (dbsk2d_ishock_bpoint*)((*kit).second);
+        local_visibility_map[(*kit).first]=bpoint->is_visible();
+    }
 
     vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
     for ( it = removal_bnd_elements_.begin(); 
@@ -514,6 +522,64 @@ bool dbsk2d_ishock_loop_transform::remove_contour()
 
             dbsk2d_ishock_belm::throw_exception=false;
             ++iteration;
+
+            if ( iteration == 5 )
+            {
+                vcl_cerr<<"Error: Reinsert Contour"<<vcl_endl;
+        
+                // 2. Reactivate contour
+
+                vcl_vector<dbsk2d_ishock_belm*> contact_shock_set;
+                for ( it = removal_bnd_elements_.begin(); 
+                      it != removal_bnd_elements_.end() ; ++it)
+                {
+                    (*it).second->set_GUIelm(true);
+                    boundary_->set_belms_on((*it).second->id());
+                    
+                    if ( (*it).second->is_a_point())
+                    {
+                        dbsk2d_ishock_bpoint* bpoint = 
+                            (dbsk2d_ishock_bpoint*)((*it).second);
+
+                        bpoint->set_max_eta(2.0*vnl_math::pi);
+                        bpoint->set_vref(-1);
+
+                    }
+
+                    if ( (*it).second->is_a_line())
+                    {
+                        dbsk2d_ishock_bline* bline = 
+                            (dbsk2d_ishock_bline*)((*it).second);
+                        dbsk2d_ishock_belm* bpoint=0;
+                        if ( higher_degree_nodes_.count(bline->s_pt()->id()))
+                        {
+                            bpoint=higher_degree_nodes_[bline->s_pt()->id()];
+                        }
+                        else if ( higher_degree_nodes_.count(
+                                      bline->e_pt()->id()))
+                        {
+                            bpoint=higher_degree_nodes_[bline->e_pt()->id()];
+                        }
+
+                        if ( bpoint)
+                        {
+                            dbsk2d_ishock_bpoint* degree_three=
+                                (dbsk2d_ishock_bpoint*)bpoint;
+                            degree_three->connectTo((*it).second);
+                            bool flag=local_visibility_map
+                                [degree_three->id()];
+                            degree_three->set_visibility(flag);
+                            degree_three->set_max_eta(2.0*vnl_math::pi);
+                            degree_three->set_vref(-1);
+                            
+
+                        }
+                    }
+
+                }
+                
+                return false;
+            }
 
             vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
             for ( it = deleted_bnd_elements.begin();
