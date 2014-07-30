@@ -132,6 +132,8 @@ protected:
 
   vcl_map<unsigned int,dbsk2d_ishock_belm*> deleted_bnd_elements_;
 
+  vcl_set<int> deleted_ishock_elements_;
+
   bool local_shock_;
 
 public:

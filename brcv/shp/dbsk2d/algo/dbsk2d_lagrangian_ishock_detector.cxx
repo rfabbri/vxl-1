@@ -193,6 +193,9 @@ void dbsk2d_lagrangian_ishock_detector::delete_an_ishock_elm (dbsk2d_ishock_elm*
     if (cur_edge->cell_bnd())
       cur_edge->cell_bnd()->delete_shock_edge(cur_edge);
 
+    // Keep track of deleted elements
+    deleted_ishock_elements_.insert(cur_edge->id());
+
     //remove it from the shock graph
     _ishock_graph->remove_edge(cur_edge);
   }

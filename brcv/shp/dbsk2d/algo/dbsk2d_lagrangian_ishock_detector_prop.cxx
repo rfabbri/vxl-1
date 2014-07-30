@@ -1723,10 +1723,31 @@ get_neighboring_shock(dbsk2d_ishock_edge* current, DIRECTION dir)
   while (!neighbor_found)
   {
     if (dir==LEFT)
-      candidate = current->lShock(); 
+    {
+      int id=current->lShock_id();
+      if ( id < 0 || deleted_ishock_elements_.count(id))
+      {
+          candidate=0;
+      }
+      else
+      {
+          candidate = current->lShock();
+      }
+    } 
     else
-      candidate = current->rShock(); 
- 
+    {
+      int id=current->rShock_id();
+      if ( id < 0 || deleted_ishock_elements_.count(id))
+      {
+          candidate=0;
+      }
+      else
+      {
+          candidate = current->rShock();
+      }
+
+    }
+
     //normally all shocks should have neighboring shocks (i.e. the other shock riding 
     //on the same wavefront), but due to compartmentalization, this is no longer true:
     if (!candidate)

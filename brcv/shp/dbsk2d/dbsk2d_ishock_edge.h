@@ -47,6 +47,9 @@ protected:
   dbsk2d_ishock_edge*  _lShock;    ///< shock that it shares a wavefront with at some time
   dbsk2d_ishock_edge*  _rShock;    ///< shock that it shares a wavefront with at some time
 
+  int _lShock_id;   // Keep track of lshock id
+  int _rShock_id;   // Keep track of rshock id
+
   dbsk2d_ishock_node*  _pSNode;      ///< parent shock node.
   dbsk2d_ishock_node*  _cSNode;      ///< child shock node.
 
@@ -117,6 +120,9 @@ public:
   double bnd_intersect_pos() { return _bnd_intersect_pos; }
   dbsk2d_lagrangian_cell_bnd_sptr cell_bnd() { return _cell_bnd; }
 
+  int lShock_id(){ return _lShock_id; }
+  int rShock_id(){ return _rShock_id; }
+
   //-----------------------------------------------------------------------------
   // Set member variables
   //-----------------------------------------------------------------------------
@@ -127,8 +133,18 @@ public:
   void clear_lNeighbor () { _lNeighbor = NULL; }
   void set_rNeighbor(dbsk2d_ishock_edge* rneighbor) { _rNeighbor = rneighbor; }
   void clear_rNeighbor () { _rNeighbor = NULL; }
-  void set_lShock(dbsk2d_ishock_edge* lshock) { _lShock = lshock; }
-  void set_rShock(dbsk2d_ishock_edge* rshock) { _rShock = rshock; }
+  void set_lShock(dbsk2d_ishock_edge* lshock)
+  {
+      _lShock = lshock;
+      _lShock_id=(_lShock)?_lShock->id():-1;
+  }
+
+  void set_rShock(dbsk2d_ishock_edge* rshock) 
+  { 
+      _rShock = rshock;
+      _rShock_id=(_rShock)?_rShock->id():-1;
+  }
+
   void set_pSNode(dbsk2d_ishock_node* psnode) { _pSNode = psnode; }
   void clear_pSNode () { _pSNode = NULL; }
   void set_cSNode(dbsk2d_ishock_node* csnode) { _cSNode = csnode; }

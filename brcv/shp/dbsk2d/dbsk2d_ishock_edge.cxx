@@ -18,6 +18,8 @@ dbsk2d_ishock_edge::dbsk2d_ishock_edge (int newid, double stime,
   _rNeighbor = NULL;
   _lShock = NULL;
   _rShock = NULL;
+  _lShock_id = -1;
+  _rShock_id = -1;
   _pSNode = pse;
   _cSNode = NULL;
 
