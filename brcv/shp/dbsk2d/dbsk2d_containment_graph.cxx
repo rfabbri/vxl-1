@@ -77,7 +77,7 @@ void dbsk2d_containment_graph::construct_graph()
         double con_ratio= grouper.contour_ratio((*it).first);
         if ( con_ratio >= 0.4 &&
              frag_edges[(*it).first].size() > 1  &&
-             (expand_outside_ || grouper.region_within_image((*it).first)))
+             grouper.region_within_image((*it).first))
         {
             // Create  a new root node
             dbsk2d_containment_node_sptr root_node = new 
@@ -97,6 +97,34 @@ void dbsk2d_containment_graph::construct_graph()
             }
             expand_node(root_node,local_map);
 
+            vcl_vector<dbsk2d_ishock_belm*> root_node_belms=
+                frag_belms[(*it).first];
+            unsigned int outer_shock_nodes_size =
+                fragments[(*it).first].size();
+            
+            vcl_vector<dbsk2d_containment_node_sptr> children=
+                root_node->get_children();
+            for ( unsigned int c=0; c < children.size(); ++c)
+            {
+                children[c]->set_parent_regions(root_node_belms,
+                                                outer_shock_nodes_size);
+            }
+
+
+            // dbsk2d_ishock_transform temp_trans(ishock_graph_,
+            //                                    dbsk2d_ishock_transform::GAP);
+            // vcl_vector<vgl_polygon<double> > foobar; 
+            // foobar.push_back(poly);
+            // vcl_stringstream stream;
+            // stream<<"Node_"<<root_node->get_id()<<".ps";
+            // temp_trans.write_state(stream.str(),foobar);
+
+        }
+
+        if ( con_ratio >= 0.4 &&
+             frag_edges[(*it).first].size() > 1  &&
+             (expand_outside_ || grouper.region_within_image((*it).first)))  
+        {
             vcl_map<int,dbsk2d_ishock_bline*> extra_belms;
             vcl_set<int> key;
             dbsk2d_transform_manager::Instance().get_extra_belms(
@@ -174,27 +202,7 @@ void dbsk2d_containment_graph::construct_graph()
                 
 
             }
-
-            vcl_vector<dbsk2d_ishock_belm*> root_node_belms=
-                frag_belms[(*it).first];
-            unsigned int outer_shock_nodes_size =
-                fragments[(*it).first].size();
-
-            vcl_vector<dbsk2d_containment_node_sptr> children=
-                root_node->get_children();
-            for ( unsigned int c=0; c < children.size(); ++c)
-            {
-                children[c]->set_parent_regions(root_node_belms,
-                                                outer_shock_nodes_size);
-            } 
-
-            // dbsk2d_ishock_transform temp_trans(ishock_graph_,
-            //                                    dbsk2d_ishock_transform::GAP);
-            // vcl_vector<vgl_polygon<double> > foobar; 
-            // foobar.push_back(poly);
-            // vcl_stringstream stream;
-            // stream<<"Node_"<<root_node->get_id()<<".ps";
-            // temp_trans.write_state(stream.str(),foobar);
+ 
         }
     }
 
@@ -334,10 +342,7 @@ void dbsk2d_containment_graph::construct_graph()
             bool closed_region=(region_outer_nodes[(*it).first].size()==0)?
                 true:false;
 
-            bool flag=(expand_outside_)?false:
-                !grouper.region_within_image((*it).first);
-
-            if ( flag || 
+            if ( !grouper.region_within_image((*it).first) || 
                  !frag_edges[(*it).first].size() || 
                  !rag_matched_nodes.count((*it).first) )
             {
