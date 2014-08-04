@@ -35,6 +35,9 @@
 #include <dbsk2d/algo/dbsk2d_sample_ishock.h>
 #include <bbas/bsta/bsta_histogram.h>
 
+#include <vgl/vgl_intersection.h>
+#include <vgl/vgl_line_2d.h>
+
 dbsk2d_transform_manager::dbsk2d_transform_manager()
     :image_(0),
      threshold_(0),
@@ -271,12 +274,23 @@ dbsk2d_ishock_bpoint* dbsk2d_transform_manager::get_anchor_pt(
     double d1=vgl_distance(bp1->pt(),bl1->s_pt()->pt());
     double d2=vgl_distance(bp1->pt(),bl1->e_pt()->pt());
     
+    double angle1=_vPointPoint(bp1->pt(),bl1->s_pt()->pt());
+    double angle2=_vPointPoint(bp1->pt(),bl1->e_pt()->pt());
+
+    vgl_vector_2d<double> vec(vcl_sin(bp1->tangent()),-vcl_cos(bp1->tangent()));
+    vgl_line_2d<double> line(bp1->pt(),vec);
+    vgl_box_2d<double> box(vgl_point_2d<double>(0,0),vgl_point_2d<double>
+                           (image_->ni(),image_->nj()));
+    vgl_point_2d<double> lstart,lend;
+    bool flag=vgl_intersection(box,line,lstart,lend);
+
     // convert the pts into bnd_vertex and put into a list
     vcl_vector<vgl_point_2d<double> > bv_list;
 
     vcl_set<int> local_map;
 
     vcl_map<int,dbsk2d_ishock_node*> outer_wavefront;
+    vcl_map<int,dbsk2d_ishock_node*> source_node;
 
     // Loop over shock map
     bnd_ishock_map_iter curS = bp1->shock_map().begin();
@@ -298,8 +312,25 @@ dbsk2d_ishock_bpoint* dbsk2d_transform_manager::get_anchor_pt(
             outer_wavefront[cur_edge->pSNode()->id()]=
                 cur_edge->pSNode();
         }
+        
+        if ( cur_edge->pSNode())
+        {
+            if ( cur_edge->pSNode()->is_a_source())
+            {
+                source_node[cur_edge->pSNode()->id()]=cur_edge->pSNode();
+            }
+        }
+
+        if ( cur_edge->cSNode())
+        {
+            if ( cur_edge->cSNode()->is_a_source())
+            {
+                source_node[cur_edge->cSNode()->id()]=cur_edge->cSNode();
+            }
+        }
     }
 
+    
 
     vcl_map<int,dbsk2d_ishock_node*>::iterator it;
     while ( outer_wavefront.size() > 0 )
@@ -384,15 +415,35 @@ dbsk2d_ishock_bpoint* dbsk2d_transform_manager::get_anchor_pt(
     }
     else
     {
-        if ( d1 < d2 )
+
+        bool s_pt_above = _isPointAboveLine(
+            bl1->s_pt()->pt(),lstart,lend);
+        bool e_pt_above = _isPointAboveLine(
+            bl1->e_pt()->pt(),lstart,lend);
+        bool source_pt_above = 
+            _isPointAboveLine((*source_node.begin()).second->origin(),
+                              lstart,lend);
+        
+        if ( source_pt_above == s_pt_above )
         {
             anchor_pt=bl1->s_pt();
         }
-        else
+        else if ( source_pt_above == e_pt_above )
         {
             anchor_pt=bl1->e_pt();
         }
-
+        else  // This should never happen
+        {
+            if ( d1 < d2 )
+            {
+                anchor_pt=bl1->s_pt();
+            }
+            else
+            {
+                anchor_pt=bl1->e_pt();
+            }
+        }
+            
     }
  
 

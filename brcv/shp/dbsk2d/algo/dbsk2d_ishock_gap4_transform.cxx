@@ -285,32 +285,16 @@ void dbsk2d_ishock_gap4_transform::add_connecting_line(
     dbsk2d_ishock_bpoint* bp2(0);
 
     // Add in first two points of line segment
-    bv_list.push_back(bp1->bnd_vertex());
-    if ( interacting_bnd_elements_.count(s_pt_line->id()) && 
-         !interacting_bnd_elements_.count(e_pt_line->id()))
+    bv_list.push_back(bp1->bnd_vertex());   
+    if ( bl1->s_pt() == anchor_pt_ )
     {
         bp2=bl1->s_pt();
         bv_list.push_back(bl1->s_pt()->bnd_vertex());
     }
-    else if ( interacting_bnd_elements_.count(e_pt_line->id()) && 
-              !interacting_bnd_elements_.count(s_pt_line->id()))
+    else
     {
         bp2=bl1->e_pt();
         bv_list.push_back(bl1->e_pt()->bnd_vertex());
-    }
-    else
-    {
-        if ( d1 < d2 )
-        {
-            bp2=bl1->s_pt();
-            bv_list.push_back(bl1->s_pt()->bnd_vertex());
-        }
-        else
-        {
-            bp2=bl1->e_pt();
-            bv_list.push_back(bl1->e_pt()->bnd_vertex());
-        }
-
     }
 
     dbsk2d_ishock_bline* bl2(0);
