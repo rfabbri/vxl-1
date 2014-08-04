@@ -332,20 +332,61 @@ bool dbsk2d_compute_containment_graph_process::execute()
 
         // Set params
         status = shock_pro.execute();
-
-        if ( status == false)
-        {
-            return status;
-        }
-
         shock_pro.finish();
 
-        shock_results = shock_pro.get_output();
+        // If ishock status is bad we will keep iterating with noise 
+        // till we get a valid shock computation otherwise call it quits
+        if (!status)
+        {
+            // Add noise to parameter set
+            shock_pro.parameters()->set_value("-b_noise",true);
+            
+            // Clean up before we start running
+            shock_pro.clear_input();
+            shock_pro.clear_output();
+            
+            unsigned int i(0);
+            unsigned int num_iterations = 5;
+            
+            for ( ; i < num_iterations; ++i)
+            {
+                vcl_cout<<vcl_endl;
+                vcl_cout<<"************ Retry Compute Shock,iter: "
+                        <<i+1<<" *************"<<vcl_endl;
+                
+                // Add inputs
+                shock_pro.add_input(frame_image);
+                shock_pro.add_input(input_vsol);
+                
+                // Kick off process again
+                status = shock_pro.execute();
+                shock_pro.finish();
+                
+                if ( status )
+                {
+                    // We have produced valid shocks lets quit
+                    break;
+                    
+                }
+                
+                // Clean up after ourselves
+                shock_pro.clear_input();
+                shock_pro.clear_output();
+                
+            }
+        }
 
-        // Clean up after ourselves
-        shock_pro.clear_input();
-        shock_pro.clear_output();
+        if ( status )
+        {
+            shock_results = shock_pro.get_output();
 
+            // Clean up after ourselves
+            shock_pro.clear_input();
+            shock_pro.clear_output();
+            
+        }
+        
+  
     }
 
     vcl_string filename = output_folder+"/" + output_prefix +"_cgraph.dot";
