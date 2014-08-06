@@ -70,7 +70,10 @@ georegister_gui_menu::setup_menu()
         FILE_MENU_ADD_PROCESS_NAME( "polys & objects","Load Poly txt File", load_menu);
 
     FILE_MENU_ADD_PROCESS_NAME( ".bnd", "Save .bnd File", save_menu);
+	FILE_MENU_ADD_PROCESS_NAME( ".EDG", "Save .EDG File", save_menu);
+	FILE_MENU_ADD_PROCESS_NAME( ".EDG video", "Save .EDG seq Files", save_menu);
     FILE_MENU_ADD_PROCESS_NAME( ".CEM", "Save .CEM File", save_menu);
+    FILE_MENU_ADD_PROCESS_NAME( ".CEM video", "Save .CEM seq Files", save_menu);
     FILE_MENU_ADD_PROCESS_NAME( ".CON", "Save .CON File", save_menu);
     MENU_ADD_PROCESS_NAME2( "Video", "Save Video", save_menu );
 

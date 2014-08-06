@@ -25,6 +25,7 @@
 #include <vil/vil_load.h>
 #include <dborl/algo/dborl_utilities.h>
 #include <vul/vul_timer.h>
+#include <vcl_set.h>
 
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
@@ -45,6 +46,9 @@
 #include <dbdet/pro/dbdet_save_cvlet_map_process.h>
 #include <dbdet/pro/dbdet_load_cem_process.h>
 #include <dbdet/pro/dbdet_save_cem_process.h>
+#include <dbdet/pro/dbdet_prune_fragments_Logistic_Regression.h>
+#include <dbdet/pro/dbdet_sel_storage_sptr.h>
+#include <dbdet/pro/dbdet_sel_storage.h>
 
 int main(int argc, char *argv[]) {
 
@@ -76,6 +80,8 @@ int main(int argc, char *argv[]) {
     //load the input image
     vcl_string input_img = params->input_object_dir_() + "/" 
         + params->input_object_name_() + params->input_extension_();
+
+	vcl_cout << input_img << vcl_endl;
 
     if (!vul_file::exists(input_img)) 
     {
@@ -454,7 +460,49 @@ int main(int argc, char *argv[]) {
 
     }
 
+    //******************** Prune Contours using parameters from logistic regression*********************************
+    // Prune contours based on contrast
+    // Grab contours that remain after pruning
+    //vcl_vector<bpro1_storage_sptr> pc_results;
+        
+    if ( params->prune_contours_logistic_())
+    {
+        vcl_cout<<"************ Prune Contours Logistic Regression  ************"<<vcl_endl;
 
+        dbdet_prune_fragments_Logistic_Regression pc_pro;
+        set_process_parameters_of_bpro1(*params, 
+                                        pc_pro, 
+                                        params->tag_prune_contours_logistic_);  
+    
+        // Before we start the process lets clean input output
+        pc_pro.clear_input();
+        pc_pro.clear_output();
+
+        pc_pro.add_input(el_results[0]);
+
+        pc_pro.add_input(inp);
+        bool pc_status = pc_pro.execute();
+        pc_pro.finish();
+
+        //:get the output from pruning curve fragments
+        // if process does not fail
+        if ( pc_status )
+        {
+            pc_results = pc_pro.get_output();
+        }
+
+        //Clean up after ourselves
+        pc_pro.clear_input();
+        pc_pro.clear_output();
+
+        if (pc_results.size() != 1) 
+        {
+            vcl_cerr << "Process output does not contain a \
+                         set of remaining contours after pruning"<<vcl_endl;
+            return 1;
+        }
+
+    }
     //******************** Saving Section  *******************************
     // From this point forward, saving of edges, curvlets, contours
 
@@ -597,6 +645,77 @@ int main(int argc, char *argv[]) {
         }
     }
 
+
+	//********************** save edge indicators **************************
+	// Save edge indicator in files to tell which edge particapate in curvelets as well as in unambiguous frags + hypothesis tree
+    if ( !params->trace_contours_())
+    {
+        if (params->save_edges_inds_() && params->edge_linking_method_() == "sel") 
+        {
+
+			dbdet_sel_storage_sptr input_sel_0;
+			input_sel_0.vertical_cast(el_results[0]);
+			vcl_set<int> frags_hyp_ind = input_sel_0->CFG().participate_edge_id;
+			dbdet_curvelet_map& cvlet_map = input_sel_0->CM();
+
+            vcl_string output_ind_file;
+            if (params->save_to_object_folder_())
+            { 
+                output_ind_file = params->output_edge_link_folder_() + "/";
+            }
+            else 
+            {
+
+                output_ind_file = params->input_object_dir_() + "/";
+
+            }
+        
+            if (!vul_file::exists(output_ind_file)) 
+            {
+                vul_file::make_directory(output_ind_file);
+
+            }
+            vcl_cout<<"************ Saving cvlet edge ids ************"<<vcl_endl;
+
+            vcl_string output_ind_file_0 = output_ind_file + params->input_object_name_() + "_cvlet_ind.txt";
+
+			vcl_ofstream outfp_0(output_ind_file_0.c_str(), vcl_ios::out);
+
+			if (!outfp_0){
+				vcl_cout << " Error opening file  " << output_ind_file_0.c_str() << vcl_endl;
+				return false;
+			}
+			outfp_0.precision(5);
+
+			for (unsigned i=0; i<cvlet_map.EM_->edgels.size(); i++){
+				//get the list curvelets anchored at this edge
+				if(cvlet_map.curvelets(i).size()>0)
+				{
+					outfp_0 << i << vcl_endl;
+				}
+			}
+
+            vcl_cout<<"************ Saving frags + hypothesis edge ids ************"<<vcl_endl;
+    
+            vcl_string output_ind_file_1 = output_ind_file + params->input_object_name_() + "_frags_hyp_ind.txt";
+
+			vcl_ofstream outfp_1(output_ind_file_1.c_str(), vcl_ios::out);
+
+			if (!outfp_1){
+				vcl_cout << " Error opening file  " << output_ind_file_1.c_str() << vcl_endl;
+				return false;
+			}
+			outfp_1.precision(5);
+
+			vcl_set<int>::iterator it = frags_hyp_ind.begin();
+			for (; it!=frags_hyp_ind.end(); it++)
+				outfp_1<< (*it) << vcl_endl;
+
+
+		}
+
+	}
+
     //******************** Save Contours  *********************************
     // Change to the dbdet version by Yuliang
     vcl_cout<<"************ Saving Contours  ************"<<vcl_endl;
@@ -704,8 +823,12 @@ int main(int argc, char *argv[]) {
    
         if ( params->prune_contours_() )
         {
-            save_cem_pro.add_input(el_results[0]);
+            save_cem_pro.add_input(pc_results[0]);
         }
+		else if (params->prune_contours_logistic_())
+		{
+			save_cem_pro.add_input(pc_results[0]);
+		}
         else
         {
             save_cem_pro.add_input(el_results[0]);

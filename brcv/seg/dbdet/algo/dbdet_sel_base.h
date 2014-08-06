@@ -351,6 +351,8 @@ public:
   //: disambiguate the CFG, basically to produce a disjoint set
   void disambiguate_the_CFTG();
 
+  void merge_extreme_short_curve_frags();
+
   //: correct the CFG topology to produce a disjoint set
   void correct_CFG_topology();
 

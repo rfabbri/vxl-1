@@ -54,6 +54,8 @@ SUBDIRS( vox_detect_xgraph )
 # Brown VOX algorithm to perform edge detection and edge linking
 SUBDIRS( vox_compute_contours )
 
+SUBDIRS( vox_compute_contours_release )
+
 SUBDIRS( vox_compute_contours_yuliang)
 
 # Brown VOX algorithm to perform shock patch extraction
@@ -107,3 +109,12 @@ SUBDIRS(vox_assoc_geom_and_ccm_model)
 
 # Brown VOX algorithm to perform contour evaluation
 SUBDIRS(vox_contour_evaluation)
+
+# Brown VOX algorithm to compute xgraphs from ground truth silhouette
+SUBDIRS(vox_compute_xgraphs_from_silhou)
+
+# Brown VOX algorithm to detect objects represented by shock graphs in images
+SUBDIRS( vox_detect_xgraph3 )
+
+# foreground edge refine from sequential frames
+SUBDIRS(vox_multi_frame_fg_edge_refine )

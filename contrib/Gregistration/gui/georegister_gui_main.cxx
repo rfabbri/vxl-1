@@ -44,9 +44,9 @@
 #include <vidpro1/process/vidpro1_frame_diff_process.h>
 #include <vidpro1/process/vidpro1_background_diff_process.h>
 #include <vidpro1/process/vidpro1_load_con_process.h>
-#include <vidpro1/process/vidpro1_load_edg_process.h>
-#include <vidpro1/process/vidpro1_load_cem_process.h>
-#include <vidpro1/process/vidpro1_save_cem_process.h>
+//#include <vidpro1/process/vidpro1_load_edg_process.h>
+//#include <vidpro1/process/vidpro1_load_cem_process.h>
+//#include <vidpro1/process/vidpro1_save_cem_process.h>
 #include <vidpro1/process/vidpro1_save_con_process.h>
 #include <vidpro1/process/vidpro1_edgeprune_process.h>
 #include <vidpro1/process/vidpro1_smoothcem_process.h>
@@ -125,6 +125,13 @@
 #include <dbdet/pro/dbdet_edgemap_storage.h>
 #include <dbdet/vis/dbdet_sel_displayer.h>
 #include <dbdet/vis/dbdet_edgemap_displayer.h>
+#include <dbdet/pro/dbdet_save_cem_process.h>
+#include <dbdet/pro/dbdet_save_cem_seq_process.h>
+#include <dbdet/pro/dbdet_save_edg_process.h>
+#include <dbdet/pro/dbdet_save_edg_seq_process.h>
+#include <dbdet/pro/dbdet_load_cem_process.h>
+#include <dbdet/pro/dbdet_load_edg_process.h>
+#
 
 #include <dbru/pro/dbru_load_polygons_process.h>
 
@@ -178,9 +185,12 @@ int main(int argc, char** argv)
     REG_PROCESS( vidpro1_motion_process );
     REG_PROCESS( vidpro1_background_diff_process );
     REG_PROCESS( vidpro1_load_con_process );
-    REG_PROCESS( vidpro1_load_edg_process );
-    REG_PROCESS( vidpro1_load_cem_process );
-    REG_PROCESS( vidpro1_save_cem_process );
+    REG_PROCESS( dbdet_load_edg_process );
+    REG_PROCESS( dbdet_load_cem_process );
+    REG_PROCESS( dbdet_save_cem_process );
+    REG_PROCESS( dbdet_save_cem_seq_process );
+	REG_PROCESS( dbdet_save_edg_process );
+	REG_PROCESS( dbdet_save_edg_seq_process );
     REG_PROCESS( vidpro1_save_con_process );
     REG_PROCESS( vidpro1_edgeprune_process );
     REG_PROCESS( vidpro1_smoothcem_process );

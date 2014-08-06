@@ -39,6 +39,7 @@ dbdet_prune_fragments_Logistic_Regression::dbdet_prune_fragments_Logistic_Regres
     vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
   }
   
+  call_in_gui = 1;
 }
 
 
@@ -65,15 +66,23 @@ vcl_vector< vcl_string > dbdet_prune_fragments_Logistic_Regression::get_output_t
   return to_return;
 }
 
-bool dbdet_prune_fragments_Logistic_Regression::execute()
+void
+dbdet_prune_fragments_Logistic_Regression::get_parameters()
 {
-	double prob;
-	float color_threshold, color_gamma, region_width, intensity_gamma;
   	parameters()->get_value("-color_thres", color_threshold);
   	parameters()->get_value("-color_gamma", color_gamma);
   	parameters()->get_value("-intensity_gamma", intensity_gamma);
   	parameters()->get_value("-region_width", region_width);
 	parameters()->get_value("-prob", prob);
+}
+
+bool dbdet_prune_fragments_Logistic_Regression::execute()
+{
+//	double prob;
+//	float color_threshold, color_gamma, region_width, intensity_gamma;
+  //get the parameters
+	if(call_in_gui)
+  		get_parameters();
 
 	vidpro1_image_storage_sptr frame_image;
   	frame_image.vertical_cast(input_data_[0][1]);
@@ -310,7 +319,7 @@ bool dbdet_prune_fragments_Logistic_Regression::execute()
 		if(Logist_prob > prob) {Final_contours1=Final_contours1 + 1;CFG_output1.frags.push_back(c1);}
 	}
 		output_data_[0].push_back(output_sel1);
-                vcl_cout << "Threshold: "<<prob<<vcl_endl;
+		vcl_cout << "Done logistic regression prune" << vcl_endl;
 		vcl_cout << "INITIAL CONTOURS: " << CFG_input.frags.size() << vcl_endl;
 		vcl_cout << "FINAL CONTOURS: " << Final_contours1 << vcl_endl;
 		return true;

@@ -21,6 +21,7 @@
 #include <dbil/algo/dbil_gradient_color.h>
 #include <vnl/vnl_math.h>
 #include <vcl_utility.h>
+#include <vcl_algorithm.h>
 
 // ============================================================================
 // dbsks_xshock_detector
@@ -154,9 +155,8 @@ void dbsks_xshock_detector::
 build_xnode_grid(const vgl_box_2d<int >& window)
 {
   this->map_xnode_grid_.clear();
-
-  // different methods to construct the grid. These evolve over time. We just hard-code for now
-  int generate_xnode_grid_option = 2; 
+  //: Image
+  // different methods to construct the grid. These evolve over time.
 
   // option 1: no other information is available other than the input graph
   if (generate_xnode_grid_option == 1)
@@ -169,6 +169,19 @@ build_xnode_grid(const vgl_box_2d<int >& window)
   {
     this->build_xnode_grid_using_xgraph_geom_model(window);
   }
+
+   // option 3: using input xgraph to construct geom model
+  else if (generate_xnode_grid_option == 3)
+  {
+	this->build_xnode_grid_using_prev_dets_window(window);	
+  }
+
+   // option 3: using input xgraph to construct geom model
+  else if (generate_xnode_grid_option == 4)
+  {
+	this->build_xnode_grid_using_prev_dets_xgraphs(window);	
+  }
+
   else
   {
     vcl_cout << "\nERROR: unknown generate_xnode_grid_option= " << generate_xnode_grid_option << vcl_endl;
@@ -242,7 +255,195 @@ build_xnode_grid_using_only_input_xgraph(const vgl_box_2d<int >& window)
   return;
 }
 
+void dbsks_xshock_detector::
+build_xnode_grid_using_prev_dets_window(const vgl_box_2d<int >& window)
+{
+  // clean up
+  this->map_xnode_grid_.clear();
 
+  for (dbsksp_xshock_graph::vertex_iterator vit = this->xgraph()->vertices_begin();
+    vit != this->xgraph()->vertices_end(); ++vit)
+  {
+    dbsksp_xshock_node_sptr xv = *vit;
+
+	double x, y, psi, phi, radius;
+	//vcl_cout<< "read para" <<vcl_endl;
+	xv->descriptor(xv->edge_list().front())->get(x, y, psi, phi, radius);
+	
+	//vcl_cout << " x " << x << " y "<< y << " psi " << psi << " phi " << phi << " radius "<< radius << " degree "<< xv->degree()<< " id "<<xv->id()<< vcl_endl;
+    // set parameters for the grid
+    dbsks_xnode_grid_params params;
+
+	//////////////////////////////////////////// x
+    params.step_x = 4;
+    //params.num_x = 20;
+    //params.min_x = vnl_math_rnd(x - params.step_x*(params.num_x-1)/2 ); // centering
+	
+	params.num_x = vnl_math_rnd(window.width()/params.step_x); // allow some padding
+
+    // if the image is too big, we only consider the center portion of 512 pixels
+    params.num_x = vnl_math_min(params.num_x, 65);
+    params.min_x = vnl_math_rnd(window.centroid_x() - params.step_x*(params.num_x-1)/2 ); // centering
+
+	//////////////////////////////////////////// y
+    params.step_y = 4;
+    //params.num_y = 20;
+    //params.min_y = vnl_math_rnd(y - params.step_y*(params.num_y-1)/2 ); // centering
+	params.num_y = vnl_math_rnd(window.height()/params.step_y); // allow some padding
+
+    // if the image is too big, only consider the center portion of 512 pixels
+    params.num_y = vnl_math_min(params.num_y, 65);
+    params.min_y = vnl_math_rnd(window.centroid_y() - params.step_y*(params.num_y-1)/2 ); // centering
+
+	// griding of psi and phi should also based on the given xgraph, so that the grid space can be reduced
+
+    // griding of psi within [0, 2pi], have to keep the whole possible range, because at branch node, the change of psi between frames can be huge(tail of mouse), but make it denser to increase detection localization
+    params.step_psi = vnl_math::pi / 12;
+    params.num_psi = 24;
+    params.min_psi = 0;
+
+	// center at pi/2
+    params.step_phi0 = vnl_math::pi / 20;
+    params.num_phi0 = 11;
+    params.min_phi0 = vnl_math::pi_over_2 - params.step_phi0 * (params.num_phi0-1)/2;
+
+
+/*	// sample griding of psi centered at the psi from prev detected graph, this range should still be reletively large because the branch node orientation change can be huge, but samples should be dense enough
+	// change scope to [0 2pi] if necessuary
+    params.step_psi = vnl_math::pi / 18;
+    params.num_psi = 17;
+	if(psi < 0)
+	{
+		psi += (2*vnl_math::pi);
+	}
+	params.min_psi = psi - params.step_psi * (params.num_psi-1)/2; */
+
+/*	// sample griding of phi centered at the phi from prev detected graph
+    params.step_phi0 = vnl_math::pi / 32;
+    params.num_phi0 = 9;
+    params.min_phi0 = phi - params.step_phi0 * (params.num_phi0-1)/2;*/
+
+	// sample centered at current radius, make the step correpond to a ratio of current radius
+    params.step_r = 0.05 * (xv->radius()); 
+    params.num_r = 11;
+    params.min_r = xv->radius() -(params.num_r-1) * params.step_r /2;
+
+    if (xv->degree() == 3)
+    {
+      params.step_phi1 = vnl_math::pi / 9;
+      params.num_phi1 = 5;
+      params.min_phi1 = - params.step_phi1 * (params.num_phi1-1)/2;
+    }
+    else
+    {
+      params.step_phi1 = vnl_math::pi / 9;
+      params.num_phi1 = 1;
+      params.min_phi1 = 0;
+    }
+
+    dbsks_xnode_grid xnode_grid;
+    xnode_grid.compute(params);
+
+    this->map_xnode_grid_.insert(vcl_make_pair(xv->id(), xnode_grid));
+  }
+  return;
+}
+
+void dbsks_xshock_detector::
+build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
+{
+  // clean up
+  this->map_xnode_grid_.clear();
+
+	
+
+  int i = 0;
+  for (dbsksp_xshock_graph::vertex_iterator vit = this->xgraph()->vertices_begin();
+    vit != this->xgraph()->vertices_end(); ++vit, ++i)
+  {
+    dbsksp_xshock_node_sptr xv = *vit;
+    // ignore degree-1 nodes
+    if (xv->degree()==1)
+      continue;
+
+	dbsks_xnode_geom_model_sptr xnode_geom = this->xgraph_geom_->map_node2geom()[xv->id()];
+    double min_psi, max_psi;
+    double min_radius, max_radius;
+    double min_phi, max_phi;
+    double min_phi_diff, max_phi_diff;
+    double graph_size;
+    xnode_geom->get_param_range(min_psi, max_psi, min_radius, max_radius, 
+      min_phi, max_phi, min_phi_diff, max_phi_diff, graph_size);
+
+	//double x, y, psi, phi, radius;
+	//vcl_cout<< "read para" <<vcl_endl;
+	//xv->descriptor(xv->edge_list().front())->get(x, y, psi, phi, radius);
+	//vcl_cout << " x " << x << " y "<< y << " psi " << psi << " phi " << phi << " radius "<< radius << " degree "<< xv->degree()<< " id "<<xv->id()<< vcl_endl;
+    
+    vcl_cout << "vid: " <<xv->id()<< " ";
+// set parameters for the grid
+    dbsks_xnode_grid_params params;
+
+	//////////////////////////////////////////// x
+    params.step_x = 2;
+	params.num_x = vnl_math_rnd((xgraph_vertices_max_x_[i]-xgraph_vertices_min_x_[i]+50)/params.step_x); // allow some padding
+    // if the image is too big, we only consider the center portion of 512 pixels
+    params.num_x = vnl_math_min(params.num_x, 65);
+    params.min_x = vnl_math_rnd((xgraph_vertices_min_x_[i]+xgraph_vertices_max_x_[i])/2 - params.step_x*(params.num_x-1)/2 ); // centering
+
+    vcl_cout << "min_x: "<<params.min_x <<" ";
+
+	//////////////////////////////////////////// y
+    params.step_y = 2;
+	params.num_y = vnl_math_rnd((xgraph_vertices_max_y_[i]-xgraph_vertices_min_y_[i]+50)/params.step_y); // allow some padding
+    // if the image is too big, only consider the center portion of 512 pixels
+    params.num_y = vnl_math_min(params.num_y, 65);
+    params.min_y = vnl_math_rnd((xgraph_vertices_min_y_[i]+xgraph_vertices_max_y_[i])/2 - params.step_y*(params.num_y-1)/2 ); // centering
+
+    vcl_cout << "min_y: "<<params.min_y <<" ";
+    // griding of psi within [0, 2pi], have to keep the whole possible range, because at branch node, the change of psi between frames can be huge(tail of mouse), but make it denser to increase detection localization
+	// no need going from 0-2pi, 0-0.5pi, 1.5pi-pi is good enought for normal animail skeletal articulation
+    //params.step_psi = vnl_math::pi / 8;
+    //params.num_psi = 16;
+    //params.min_psi = 0;
+
+	params.step_psi = vnl_math::pi / 10;
+    double range_psi = vnl_math_min((max_psi-min_psi), 2*vnl_math::pi);
+    params.num_psi = vnl_math_floor(range_psi / params.step_psi) + 1;
+    params.min_psi = (max_psi+min_psi)/2 - params.step_psi*(params.num_psi-1)/2;
+
+	// center at pi/2
+    params.step_phi0 = vnl_math::pi / 16;
+    params.num_phi0 = 9;
+    params.min_phi0 = vnl_math::pi_over_2 - params.step_phi0 * (params.num_phi0-1)/2;
+
+	// sample centered at prototype radius, make the step correpond to a ratio of current radius
+    params.step_r = vnl_math_max(0.06 * (xv->radius()), double(1)); 
+    params.num_r = vnl_math_ceil(xv->radius()*0.6/params.step_r)+1;
+    params.min_r = xv->radius() -(params.num_r-1) * params.step_r /2;
+
+ 
+    vcl_cout << "min_r: "<<params.min_r <<vcl_endl;
+    if (xv->degree() == 3)
+    {
+      params.step_phi1 = vnl_math::pi / 9;
+      params.num_phi1 = 5;
+      params.min_phi1 = - params.step_phi1 * (params.num_phi1-1)/2;
+    }
+    else
+    {
+      params.step_phi1 = vnl_math::pi / 9;
+      params.num_phi1 = 1;
+      params.min_phi1 = 0;
+    }
+
+    dbsks_xnode_grid xnode_grid;
+    xnode_grid.compute(params);
+
+    this->map_xnode_grid_.insert(vcl_make_pair(xv->id(), xnode_grid));
+  }
+  return;
+}
 
 // -----------------------------------------------------------------------------
 //: Build xnode grid using xgraph geometric model (assume available)
@@ -489,6 +690,84 @@ reconstruct_xgraph(const vcl_map<unsigned, int >& map_xgraph_vid_to_state)
   return new_graph;
 }
 
+void dbsks_xshock_detector::compute_vertices_para_range()
+{
+	vcl_vector<double> vertices_min_x (this->xgraph()->number_of_vertices(), -1);
+	vcl_vector<double> vertices_max_x (this->xgraph()->number_of_vertices(), -1);
+	vcl_vector<double> vertices_min_y (this->xgraph()->number_of_vertices(), -1);
+	vcl_vector<double> vertices_max_y (this->xgraph()->number_of_vertices(), -1);
+
+	for(int i =0 ; i< vcl_min(int(prev_dets_.size()), 3); i++)
+	{
+		dbsksp_xshock_graph_sptr cur_xgraph = prev_dets_[i]->xgraph();
+		int j=0;
+		dbsksp_xshock_graph::vertex_iterator vit = cur_xgraph->vertices_begin();
+  		for (;vit != cur_xgraph->vertices_end(); ++j, ++vit)	
+		{
+			dbsksp_xshock_node_sptr xv = *vit;
+
+			double x, y, psi, phi, radius;
+			//vcl_cout<< "read para" <<vcl_endl;
+			xv->descriptor(xv->edge_list().front())->get(x, y, psi, phi, radius);
+
+			if(vertices_min_x[j]==-1)
+				vertices_min_x[j] = x;
+			else if(x < vertices_min_x[j])
+				vertices_min_x[j] = x;
+
+			if(vertices_max_x[j]==-1)
+				vertices_max_x[j] = x;
+			else if(x > vertices_max_x[j])
+				vertices_max_x[j] = x;
+
+			if(vertices_min_y[j]==-1)
+				vertices_min_y[j] = y;
+			else if(y < vertices_min_y[j])
+				vertices_min_y[j] = y;
+
+			if(vertices_max_y[j]==-1)
+				vertices_max_y[j] = y;
+			else if(y > vertices_max_y[j])
+				vertices_max_y[j] = y;
+
+		}
+	}
+
+  xgraph_vertices_min_x_ = vertices_min_x;
+  xgraph_vertices_max_x_ = vertices_max_x;
+  xgraph_vertices_min_y_ = vertices_min_y;
+  xgraph_vertices_max_y_ = vertices_max_y;	
+
+
+  vcl_cout << "min_x: ";	
+  for(int i = 0; i< this->xgraph()->number_of_vertices(); i++)
+  {
+	 vcl_cout << xgraph_vertices_min_x_[i] << " ";
+  }	
+  vcl_cout <<vcl_endl;
+  vcl_cout << "max_x: ";	
+  for(int i = 0; i< this->xgraph()->number_of_vertices(); i++)
+  {
+	 vcl_cout << xgraph_vertices_max_x_[i] << " ";
+  }	
+  vcl_cout <<vcl_endl;
+  vcl_cout << "min_y: ";	
+  for(int i = 0; i< this->xgraph()->number_of_vertices(); i++)
+  {
+	 vcl_cout << xgraph_vertices_min_y_[i] << " ";
+  }	
+  vcl_cout <<vcl_endl;
+  vcl_cout << "max_y: ";	
+  for(int i = 0; i< this->xgraph()->number_of_vertices(); i++)
+  {
+	 vcl_cout << xgraph_vertices_max_y_[i] << " ";
+  }	
+  vcl_cout <<vcl_endl;
+
+  vcl_cout << "Done Compute Vertices Parameters Range." << vcl_endl;
+
+	return;
+}
 
 
 

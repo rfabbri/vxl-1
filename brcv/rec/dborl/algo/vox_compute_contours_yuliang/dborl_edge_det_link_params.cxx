@@ -14,6 +14,7 @@
 #include <dbdet/pro/dbdet_prune_curves_process.h>
 #include <dbdet/pro/dbdet_contour_tracer_process.h>
 #include <dbdet/pro/dbdet_generic_linker_process.h>
+#include <dbdet/pro/dbdet_prune_fragments_Logistic_Regression.h>
 
 //: Constructor
 dborl_edge_det_link_params::
@@ -26,7 +27,8 @@ dborl_edge_det_link_params(vcl_string algo_name) :
     tag_extract_contours_("Extract_Contours"),
     tag_prune_contours_("Prune_Contours"),
     tag_contour_tracing_("Contour_Tracer"),
-    tag_convert_edgemap_to_image_("Convert_Edgemap_To_Image")
+    tag_convert_edgemap_to_image_("Convert_Edgemap_To_Image"),
+	tag_prune_contours_logistic_("Prune_Contours_Logistic")
 { 
 
   //: Save the result intrinsic shock?
@@ -36,6 +38,9 @@ dborl_edge_det_link_params(vcl_string algo_name) :
   //: Save the curvlets, intermediate step of symbolic edge linking
   this->save_curvelets_.set_values(this->param_list_, "io", "save_curvelets", 
     "-io: save curvelets ?", false, false);
+
+  this->save_edges_inds_.set_values(this->param_list_, "io", "save_edges_inds_", 
+    "-io: save edge indicators ?", false, false);
 
   // Save result to the object folder?
   this->save_to_object_folder_.
@@ -134,8 +139,14 @@ dborl_edge_det_link_params(vcl_string algo_name) :
       set_values(this->param_list_, "io", 
                  "convert_edgemap_to_image", 
                  "-io: convert_edgemap_to_image ?"
-                 , true, true);
+                 , false, false);
 
+  // prune using logistic ?
+  this->prune_contours_logistic_.
+      set_values(this->param_list_, "io", 
+                 "prune_contours_logistic", 
+                 "-io: prune contorus using parameters from logistic regression ?"
+                 , false, false);
   //: add the parameters of the dbdet_third_order_edge_detector_process
   dbdet_third_order_edge_detector_process pro1;
   vcl_vector<bpro1_param*> pars = pro1.parameters()->get_param_list();
@@ -223,6 +234,17 @@ dborl_edge_det_link_params(vcl_string algo_name) :
       param_list_.push_back(
           convert_parameter_from_bpro1(tag_convert_edgemap_to_image_, 
                                        "[" + tag_convert_edgemap_to_image_+ "] ",
+                                       pars[i]));
+  }
+
+  //: add the parameter for pruning logistic
+  dbdet_prune_fragments_Logistic_Regression pro9;
+  pars = pro9.parameters()->get_param_list();
+  for (unsigned i = 0; i < pars.size(); i++) 
+  {
+      param_list_.push_back(
+          convert_parameter_from_bpro1(tag_prune_contours_logistic_, 
+                                       "[" + tag_prune_contours_logistic_+ "] ",
                                        pars[i]));
   }
 }

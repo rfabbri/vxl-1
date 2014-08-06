@@ -328,25 +328,69 @@ double dbdet_sel_base::compute_path_metric2(vcl_vector<dbdet_edgel*>& Pchain,
   double dsp = 0, thp = 0, total_ds =0.0, a=0.0,s1=0,s2=0,s=0,size=chain.size();
   for (unsigned i=1; i<chain.size(); i++)
   {
+    // computing difference in strength
     eA = chain[i];
     eP = chain[i-1];
     s1=(eA)->strength;
     s2=(eP)->strength;
     s=vcl_fabs(s1-s2);
-    //compute ds
+    //computing ds
     ds = vgl_distance(eA->pt, eP->pt);
     if(ds>1.0) a=2.0; else a=1.0;
+    total_ds += ds;
+    //computing dtheta
+    double thc = dbdet_vPointPoint(eP->pt, eA->pt);
+    dt = vcl_fabs(thc-thp);
+    dt = (dt>vnl_math::pi)? 2*vnl_math::pi-dt : dt;
+    cost += vcl_pow((s+dt + a*ds)/size, 2.0); 
+    thp = thc;//saving the current vector for the next iteration
+    dsp = ds;
+  }
+  return cost;
+}
+
+/*//: New Quality Metric by Yuliang Guo :: compute a path metric based on the Gap, Orientation normorlized by Size of the chain, weights trained by grid search
+double dbdet_sel_base::compute_path_metric2(vcl_vector<dbdet_edgel*>& Pchain,
+                                           vcl_vector<dbdet_edgel*>& Tchain,
+                                           vcl_vector<dbdet_edgel*>& Cchain)
+{
+  double cost = 0.0;double ds=0;double dt=0;
+
+  //construct an edgel chain out of all three chains
+  vcl_vector<dbdet_edgel*> chain;
+  if (Pchain.size())
+    for (unsigned i=0; i<Pchain.size(); i++) chain.push_back(Pchain[i]);
+  if (Tchain.size())
+    for (unsigned i=0; i<Tchain.size(); i++) chain.push_back(Tchain[i]);
+  if (Cchain.size())
+    for (unsigned i=0; i<Cchain.size(); i++) chain.push_back(Cchain[i]);
+
+  //now compute the metric
+  dbdet_edgel *eA=0, *eP=0;
+  double dsp = 0, thp = 0, total_ds =0.0, w=0.2,s1=0,s2=0,s=0,size=chain.size();
+  for (unsigned i=1; i<chain.size(); i++)
+  {
+    eA = chain[i];
+    eP = chain[i-1];
+    //s1=(eA)->strength;
+    //s2=(eP)->strength;
+    //s=vcl_fabs(s1-s2);
+    //compute ds
+    ds = vgl_distance(eA->pt, eP->pt);
+    //if(ds>1.0) a=2.0; else a=1.0;
     total_ds += ds;
     //compute dtheta
     double thc = dbdet_vPointPoint(eP->pt, eA->pt);
     dt = vcl_fabs(thc-thp);
     dt = (dt>vnl_math::pi)? 2*vnl_math::pi-dt : dt;
-    cost += vcl_pow((s+dt + a*ds)/size, 2.0); 
+    //cost += vcl_pow((s+dt + a*ds)/size, 2.0); 
+    cost += (w*dt + (1-w)*ds)/size; 
     thp = thc;//save the current vector for the next iteration
     dsp = ds;
   }
   return cost;
-}
+}*/
+
 
 
 bool link_cost_less(dbdet_CFTG_link* link1, dbdet_CFTG_link* link2)
@@ -567,6 +611,88 @@ static double get_continuity (const dbdet_edgel_chain *c1, const dbdet_edgel_cha
 //: correct the CFG topology to produce a disjoint set
 
 
+void dbdet_sel_base::merge_extreme_short_curve_frags()
+{
+
+for (unsigned i=0; i<edgemap_->edgels.size(); i++)
+  {
+    dbdet_edgel_chain *c1=0, *c2=0;
+    dbdet_edgel* eA = edgemap_->edgels[i];
+
+    int deg = curve_frag_graph_.pFrags[i].size()+ curve_frag_graph_.cFrags[i].size();	
+    if (deg<2)
+      continue; //nodes
+
+    if (deg==2){ //degree 2 segments will trigger a splice
+   
+      //standard operation: extract them from the graph, reorder them, either merge or put them back
+
+      //segments need to meet continuity criteria (simple one for now)
+      if (curve_frag_graph_.pFrags[i].size()>1){
+        dbdet_edgel_chain_list_iter fit = curve_frag_graph_.pFrags[i].begin();
+        c1 =  (*fit); fit++;
+        c2 =  (*fit);
+
+        curve_frag_graph_.extract_fragment(c1);
+        curve_frag_graph_.extract_fragment(c2);
+
+        //reverse the sequence of edgels
+        vcl_reverse(c2->edgels.begin(), c2->edgels.end());
+        curve_frag_graph_.insert_fragment(c1);
+        curve_frag_graph_.insert_fragment(c2);
+      }
+      else if (curve_frag_graph_.pFrags[i].size()==1){
+        c1 =  curve_frag_graph_.pFrags[i].front();
+        c2 =  curve_frag_graph_.cFrags[i].front();
+    //for the closed contour case
+      if(c1==c2)
+        continue;
+      }
+      else {
+        dbdet_edgel_chain_list_iter fit = curve_frag_graph_.cFrags[i].begin();
+        c1 =  (*fit); fit++;
+        c2 =  (*fit);
+
+        //add the second one to the first one and delete it from the graph
+        curve_frag_graph_.extract_fragment(c1);
+        curve_frag_graph_.extract_fragment(c2);
+
+        //reverse the sequence of edgels
+        vcl_reverse(c1->edgels.begin(), c1->edgels.end());
+        curve_frag_graph_.insert_fragment(c1);
+        curve_frag_graph_.insert_fragment(c2);
+      }
+
+      if ((c1->edgels.size()<=5 || c2->edgels.size()<=5) && is_continue(c1,c2)){ //if two contours are all very short < 5 edges and are continuous, merge them anyway
+        //merge the two contours
+    	curve_frag_graph_.extract_fragment(c1);
+        curve_frag_graph_.extract_fragment(c2);
+        c1->append(c2->edgels);
+        curve_frag_graph_.insert_fragment(c1);
+    //when it makes a closed contour, just count as the child frag rather than parent frag
+        if(c1->edgels.front()==c1->edgels.back())
+        curve_frag_graph_.pFrags[c1->edgels.front()->id].remove(c1);
+        delete c2;
+      }
+	  else if (c1->edgels.size()<=2 || c2->edgels.size()<=2)
+	  {
+		//merge the two contours
+    	curve_frag_graph_.extract_fragment(c1);
+        curve_frag_graph_.extract_fragment(c2);
+        c1->append(c2->edgels);
+        curve_frag_graph_.insert_fragment(c1);
+    	//when it makes a closed contour, just count as the child frag rather than parent frag
+        if(c1->edgels.front()==c1->edgels.back())
+        curve_frag_graph_.pFrags[c1->edgels.front()->id].remove(c1);
+        delete c2;		
+	  }
+     }
+  }
+
+    // use the filter to prun out local problems again
+    regular_contour_filter();
+}
+
 void dbdet_sel_base::correct_CFG_topology()
 {
   //D) Final T-junction type disambiguation can be done on the CFG
@@ -716,12 +842,12 @@ void dbdet_sel_base::correct_CFG_topology()
     vcl_cout<<"Finish correcting the CFG topology"<<vcl_endl;
 }
 
-//20th June, 2012:: New Merging of Contours Decision Making by Naman Kumar,function to test whether two contours are continuous 
+//June, 2012:: Make decision whether to merge two contours or not (by Naman Kumar) 
 static bool is_continue (const dbdet_edgel_chain *c1, const dbdet_edgel_chain *c2)
 {
  	dbdet_edgel* e1;dbdet_edgel* e4;
-	dbdet_edgel* e2 = c1->edgels.back();
-	dbdet_edgel* e3 = c2->edgels.front();
+	dbdet_edgel* e2 = c1->edgels.back(); // Last edge of c1
+	dbdet_edgel* e3 = c2->edgels.front(); // Front edge of c2
 	double dx1=0,dy1=0,dy2=0,dx2=0,s1=0,s2=0,s=0,SM_1=0;
 	int j=0;
 	for(int i=c1->edgels.size()-2;i>=0;i--)
@@ -734,12 +860,16 @@ static bool is_continue (const dbdet_edgel_chain *c1, const dbdet_edgel_chain *c
         	dy1 = e2->pt.y()-e1->pt.y();
         	dx2 = e4->pt.x()-e3->pt.x();
         	dy2 = e4->pt.y()-e3->pt.y();
-        	s1+=(e1)->strength;
-        	s2+=(e4)->strength;
-        	s=vcl_fabs((s1-s2)/j);
+        	s1+=(e1)->strength; //strength1
+        	s2+=(e4)->strength; //strength2
+        	s=vcl_fabs((s1-s2)/j); // difference in strength
         	SM_1 = (dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2);
-        	if(SM_1>=Theta_1 || s<=Strength_Diff1) return true;
-        	else if(SM_1<Theta_2 || s>Strength_Diff2) return false;
+//        	if(SM_1>=Theta_1 || s<=Strength_Diff1) return true;
+//        	else if(SM_1<Theta_2 || s>Strength_Diff2) return false;
+
+        	if(SM_1>=Theta_1) return true;
+        	else if(SM_1<Theta_2) return false;
+
 		else continue;
 	}
     	return false;   
@@ -792,15 +922,15 @@ void dbdet_sel_base::regular_contour_filter(){
     for(;fit!=curve_frag_graph_.frags.end();fit++)
     {
         dbdet_edgel_chain *c1=*fit;
-    // (a) for size 4 frags, git rid of the small closed triangle
-    if(c1->edgels.size()==4 && (c1->edgels.front()==c1->edgels.back()))
-    {
-        c1->edgels.pop_back();
-        curve_frag_graph_.pFrags[c1->edgels.back()->id].push_back(c1);
-    }
-    // push size 3 frags's pointer into a seperate list to same computation for next step
-    if(c1->edgels.size()==3)
-        Size_3_chain_list.push_back(c1);
+		// (a) for size 4 frags, git rid of the small closed triangle
+		if(c1->edgels.size()==4 && (c1->edgels.front()==c1->edgels.back()))
+		{
+			c1->edgels.pop_back();
+			curve_frag_graph_.pFrags[c1->edgels.back()->id].push_back(c1);
+		}
+		// push size 3 frags's pointer into a seperate list to same computation for next step
+		if(c1->edgels.size()==3)
+			Size_3_chain_list.push_back(c1);
     }
 
 
@@ -851,7 +981,10 @@ void dbdet_sel_base::regular_contour_filter(){
 //New construction of Hypothesis Tree by Naman Kumar
 void dbdet_sel_base::Construct_Hypothesis_Tree()
 {
-	regular_contour_filter();
+
+
+
+	regular_contour_filter(); // Filtering step
 	int n1=0;
 	double d=0,dis=0,distance=0;
 	vcl_vector<dbdet_edgel*> new_chain0,new_chain2,new_chain3,new_chain6,new_chain33;
@@ -860,7 +993,7 @@ void dbdet_sel_base::Construct_Hypothesis_Tree()
 	dbdet_edgel_chain* new_chain44=new dbdet_edgel_chain();
 	double gap_thres=gap_;
 	vcl_cout << "Construction of Hypothesis Tree is in Progress!! " << vcl_endl;
-	//Calculating number of edges which are having degree as 1   	
+	//Calculating number of edges which are having degree 1   	
 	for (int i=0; i<edgemap_->edgels.size(); i++)
 	{
         	dbdet_edgel* eA1 = edgemap_->edgels[i];
@@ -908,14 +1041,14 @@ void dbdet_sel_base::Construct_Hypothesis_Tree()
                 	dbdet_edgel_list_iter eit1=new_chain4->edgels.begin(); dbdet_edgel_list_iter eit2=new_chain4->edgels.begin();
                  	if(m4==0)
                  	{
-                    		if(curve_frag_graph_.cFrags[ed->id].size()==1)
+                    		if(curve_frag_graph_.cFrags[ed->id].size()==1) // if number of child fragments is 1
                     		{	dbdet_edgel_chain_list_iter ccit = curve_frag_graph_.cFrags[ed->id].begin();
                         	 	ce = (*ccit)->edgels[1];c11=*ccit;pe=ce;m7=1;			
 					for (int j=1;j<c11->edgels.size();j++) 
 					{dis=vgl_distance(c11->edgels[j]->pt,c11->edgels[j-1]->pt);if(dis>distance) distance=dis;}
 			     		distance=distance + 0.25;if(distance <=1) gap_=1; else if(distance <gap_thres) gap_=distance; else gap_=gap_thres; 
                     		}
-                    		else if(curve_frag_graph_.pFrags[ed->id].size()==1)
+                    		else if(curve_frag_graph_.pFrags[ed->id].size()==1) // if number of parent fragments is 1
                    		{	dbdet_edgel_chain_list_iter pcit = curve_frag_graph_.pFrags[ed->id].begin();
                         		ce = (*pcit)->edgels[(*pcit)->edgels.size()-2];c11=*pcit;pe=ce;m7=2;		
 					for (int j=1;j<c11->edgels.size();j++) 
@@ -1002,14 +1135,17 @@ void dbdet_sel_base::Construct_Hypothesis_Tree()
 	}
 	dbdet_edgel* edge1=0;dbdet_edgel* edge2=0;dbdet_edgel_chain *chain1=new dbdet_edgel_chain();vcl_list<dbdet_CFTG_link*> GD_list;
 	double p1=1.0;int p2=0,p3=0,p16=0;
-	dbdet_CFTG_link_list_iter l_it = curve_frag_graph_.CFTG.Links.begin();                                                                              		for (; l_it != curve_frag_graph_.CFTG.Links.end(); l_it++) GD_list.push_back(*l_it);
+	dbdet_CFTG_link_list_iter l_it = curve_frag_graph_.CFTG.Links.begin();      
+    for (; l_it != curve_frag_graph_.CFTG.Links.end(); l_it++) GD_list.push_back(*l_it);
+    //while size is greater than 0
   	while (GD_list.size()>0)
   	{
-    		double distance1=0,distance2=0;
+    double distance1=0,distance2=0;
 		dbdet_CFTG_link* cur_Link = GD_list.front();GD_list.pop_front();
-    		dbdet_edgel_chain_list_iter f_it = cur_Link->cCFs.begin();dbdet_edgel_chain* new_chain5=(*f_it);dbdet_edgel* edge3=new_chain5->edgels.front();
+    dbdet_edgel_chain_list_iter f_it = cur_Link->cCFs.begin();dbdet_edgel_chain* new_chain5=(*f_it);dbdet_edgel* edge3=new_chain5->edgels.front();
 		gap_=1;
-		for(int i=0;i<new_chain5->edgels.size();i++)
+		// iterating through all the edgels of chain5
+    for(int i=0;i<new_chain5->edgels.size();i++)
 		{
 			dbdet_edgel_chain *new_chain6a=new dbdet_edgel_chain();
 			p1=gap_;
@@ -1017,24 +1153,24 @@ void dbdet_sel_base::Construct_Hypothesis_Tree()
 			for(int j=0;j<new_chain4->edgels.size();j++)
 			{
 				double p4=vgl_distance(new_chain5->edgels[i]->pt,new_chain4->edgels[j]->pt);				
-				if(p4<p1){edge1=new_chain4->edgels[j];p1=p4;p2=1;eit6=eit5;++eit5;}
+				if(p4<p1){edge1=new_chain4->edgels[j];p1=p4;p2=1;eit6=eit5;++eit5;} // if distance between edgels is less than gap
 				else {++eit5;continue;}	
 			}
 			if(p2==1)
 			{
-				new_chain4->edgels.erase(eit6);
+				new_chain4->edgels.erase(eit6); //remove edgel
 				dbdet_edgel* edge4=0;p2=0;double p5=gap_;
 				for(int b=0;b<new_chain5->edgels.size();b++)
 				{
 					double p6=vgl_distance(edge1->pt,new_chain5->edgels[b]->pt);
-					if(p6<p5){edge2=new_chain5->edgels[b];p5=p6;}
+					if(p6<p5){edge2=new_chain5->edgels[b];p5=p6;} 
 					else continue;
 				}
 				new_chain6a=new dbdet_edgel_chain();new_chain6a->edgels.push_back(edge2);new_chain6a->edgels.push_back(edge1);
 				int p7=0,p8=0,p9=0;
-                		if(curve_frag_graph_.cFrags[edge3->id].size()>=1)
+                		if(curve_frag_graph_.cFrags[edge3->id].size()>=1) // if size of child fragment is greater than 1
                                 {dbdet_edgel_chain_list_iter ccit = curve_frag_graph_.cFrags[edge3->id].begin();chain1=(*ccit);p7=1;}
-                            	else if(curve_frag_graph_.pFrags[edge3->id].size()>=1)
+                            	else if(curve_frag_graph_.pFrags[edge3->id].size()>=1) // if size of parent fragment is greater than 1
                              	{dbdet_edgel_chain_list_iter pcit = curve_frag_graph_.pFrags[edge3->id].begin();chain1=(*pcit);p7=2;}
                 		if(p7==2){p8=chain1->edgels.size()-5;if(p8<0) p8=0;p9=chain1->edgels.size();}
                         	else if(p7==1) {p8=0;p9=5; if(p9>chain1->edgels.size())p9=chain1->edgels.size();}
@@ -1042,17 +1178,18 @@ void dbdet_sel_base::Construct_Hypothesis_Tree()
 				{
 					double p10=gap_,p11=0.0;
 					dbdet_edgel_list_iter eit3=new_chain4->edgels.begin();dbdet_edgel_list_iter eit4=new_chain4->edgels.begin();	
-                                        for(int a=0;a<new_chain4->edgels.size();a++)
+          // iterating through all the edgels of the chain
+          for(int a=0;a<new_chain4->edgels.size();a++)
 					{
 						p11= vgl_distance(edge1->pt,new_chain4->edgels[a]->pt);
 						if(p11<p10)
 						{
 							double d8=vgl_distance(new_chain4->edgels[a]->pt,edge2->pt);
-                                      			double d9=vgl_distance(new_chain4->edgels[a]->pt,edge1->pt);
-                                        		double dx1 = edge1->pt.x() - edge2->pt.x(), dy1 = edge1->pt.y() - edge2->pt.y();
-                                       	 		double dx2=new_chain4->edgels[a]->pt.x()-edge1->pt.x();
+              double d9=vgl_distance(new_chain4->edgels[a]->pt,edge1->pt);
+              double dx1 = edge1->pt.x() - edge2->pt.x(), dy1 = edge1->pt.y() - edge2->pt.y();
+              double dx2=new_chain4->edgels[a]->pt.x()-edge1->pt.x();
 							double dy2=new_chain4->edgels[a]->pt.y()-edge1->pt.y();
-                                              		if(d8<d9 || ((dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2))<0.4) 
+              if(d8<d9 || ((dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2))<0.4) 
 							{++eit3;continue;}
 							p10=p11;edge4=new_chain4->edgels[a];eit4=eit3;p2=1;
 						}
@@ -1063,16 +1200,17 @@ void dbdet_sel_base::Construct_Hypothesis_Tree()
                   			{
 						if(new_chain3[t]==edge1) continue;                    			       		
 						p13= vgl_distance(edge1->pt,new_chain3[t]->pt);
-                        		       	if(p13<=p12)
-                        		       	{
-                                           		for(int c=p8;c<p9;c++) {if(new_chain3[t]==chain1->edgels[c])goto jump;else continue;} 						      		for(int a=0;a<new_chain5->edgels.size();a++)
+            if(p13<=p12)
+              {
+              for(int c=p8;c<p9;c++) {if(new_chain3[t]==chain1->edgels[c])goto jump;else continue;} 						      		
+              for(int a=0;a<new_chain5->edgels.size();a++)
 							{if(new_chain3[t]==new_chain5->edgels[a])goto jump; else continue;}
-					      		for(int b=0;b<new_chain6a->edgels.size();b++)
+					     for(int b=0;b<new_chain6a->edgels.size();b++)
 							{if(new_chain3[t]==new_chain6a->edgels[b])goto jump;else continue;}
-                                               		edge5=new_chain3[t];p12=p13;p14=vgl_distance(edge5->pt,edge2->pt);
+              edge5=new_chain3[t];p12=p13;p14=vgl_distance(edge5->pt,edge2->pt);
 							p15=vgl_distance(edge5->pt,edge1->pt);
-					       		p16=1;
-                        		      	}     
+					    p16=1;
+              }     
                    			       	jump: ;
                   			}
 					if(p14>p15 && p16==1) {edge4=edge5;p2=1;}					
@@ -1084,20 +1222,50 @@ void dbdet_sel_base::Construct_Hypothesis_Tree()
 					else break;		
 				}
 			        double p17=0,p18=0,p21=0;
-				if(p3==1 && new_chain6a->edgels.size()>5)
+				if(p3==1 && new_chain6a->edgels.size()>5) // minimum size should be 5
 				{
 					dbdet_edgel* edge6=new_chain6a->edgels[new_chain6a->edgels.size()/2];				
 					for(int i=0;i<new_chain33.size();i++)
 					{
-						p18=vgl_distance(edge6->pt,new_chain33[i]->pt);if(p18<1) p21=10;
+						p18=vgl_distance(edge6->pt,new_chain33[i]->pt);if(p18<1) p21=10; // if distance is less than 1
 						if(p21==10){p17=1;break;}
 					}	
-					if(p17==0){new_chain6a->temp = true;curve_frag_graph_.CFTG.insert_fragment(new_chain6a);}
+					if(p17==0){new_chain6a->temp = true;curve_frag_graph_.CFTG.insert_fragment(new_chain6a);} // insert the fragment
 					p3=0;p2=0;p16=0,p3=0;
 				}
 			}
 		}
 	}
+
+// Add by Yuliang, a indicator shows edges participating in unambiguous frags and hypothesis trees
+	vcl_cout << "counting in participate edges" << vcl_endl;
+
+	// count in hypothesis tree edges
+	dbdet_CFTG_link_list_iter it_8 = curve_frag_graph_.CFTG.Links.begin();
+
+	for (; it_8 != curve_frag_graph_.CFTG.Links.end(); it_8++)
+	{
+		dbdet_edgel_chain_list cur_cCFs = (*it_8)->cCFs;
+		
+		dbdet_edgel_chain_list_iter it_88 = cur_cCFs.begin();
+		for(; it_88 != cur_cCFs.end(); it_88++)
+		{
+			dbdet_edgel_list_iter it_888 = (*it_88)->edgels.begin();
+			for(; it_888 != (*it_88)->edgels.end(); it_888++)
+				curve_frag_graph_.participate_edge_id.insert((*it_888)->id);
+		}
+	}
+
+
+
+/*	std::set<int>::iterator it = curve_frag_graph_.participate_edge_id.begin();
+	for (; it!=curve_frag_graph_.participate_edge_id.end(); it++)
+		vcl_cout << (*it) << " ";
+	vcl_cout << vcl_endl;
+*/
+
+	vcl_cout <<"participate edge count: " <<curve_frag_graph_.participate_edge_id.size() << vcl_endl;
+	
 	vcl_cout << "Hypothesis Tree Constructed!!" << vcl_endl;	
 }
 
@@ -1111,15 +1279,15 @@ void dbdet_sel_base::Disambiguation()
         	double cost=0.0;
         	int deg_S = curve_frag_graph_.CFTG.cLinks[(*l_it)->eS->id].size() + curve_frag_graph_.CFTG.pLinks[(*l_it)->eS->id].size();
         	dbdet_CFTG_link* cur_Link = (*l_it);
-		//Calculating Cost        	
+		//Calculating the Cost        	
 		vcl_vector<dbdet_edgel*> dummy_chain;
         	dbdet_edgel_chain* edgel_chain = cur_Link->cCFs.front();
         	vcl_vector<dbdet_edgel*> chain(edgel_chain->edgels.begin(),edgel_chain->edgels.end());
 	 	cost = compute_path_metric2(dummy_chain, chain, dummy_chain);
-        	//Degree=1
+        	//Degree = 1
         	if(deg_S==1) {curve_frag_graph_.insert_fragment((*l_it)->cCFs.front()); continue;}
-        	//Degree>1
-        	// To fill small gaps in closed contours
+        	//Degree > 1
+        	// To fill in the small gaps in closed contours
 		if((curve_frag_graph_.pFrags[edgel_chain->edgels.front()->id].size()+curve_frag_graph_.cFrags[edgel_chain->edgels.front()->id].size())==1    			&&(curve_frag_graph_.pFrags[edgel_chain->edgels.back()->id].size()+curve_frag_graph_.cFrags[edgel_chain->edgels.back()->id].size())==1 			&& edgel_chain->edgels.size()==2) curve_frag_graph_.insert_fragment(edgel_chain);
         	if(cost<1.0 && edgel_chain->edgels.size()>2) curve_frag_graph_.insert_fragment(edgel_chain); 
 	}
@@ -1133,39 +1301,41 @@ void dbdet_sel_base::Post_Process()
 {
 
 	dbdet_edgel_chain* new_chain= new dbdet_edgel_chain();
+  // iterating through all the contours and deleting those that have length less than a certain threshold
 	for (int i=0; i<edgemap_->edgels.size(); i++)
     	{
         	dbdet_edgel* eA1 = edgemap_->edgels[i];
             	if ((curve_frag_graph_.pFrags[eA1->id].size() + curve_frag_graph_.cFrags[eA1->id].size()) ==1) new_chain->edgels.push_back(eA1);
     	}   
-    	for(int j=0;j<new_chain->edgels.size();j++)
+  for(int j=0;j<new_chain->edgels.size();j++)
     	{
         	dbdet_edgel* edge=new_chain->edgels[j]; dbdet_edgel* edge2=0;dbdet_edgel_chain* chain= new dbdet_edgel_chain();dbdet_edgel* edge3=0;
         	int n=0,number=0,num=0,diff=0;dbdet_edgel* edge4=0;
-        	if(curve_frag_graph_.cFrags[edge->id].size()==1)
+        	if(curve_frag_graph_.cFrags[edge->id].size()==1) // if size of child fragment is 1
             	{
             		n=1;dbdet_edgel_chain_list_iter ccit = curve_frag_graph_.cFrags[edge->id].begin();chain=*ccit;
             		edge2 = chain->edgels[1];if(chain->edgels.size()>2){number=1;edge3=chain->edgels[2];}diff=1;
-		}
-            	else if(curve_frag_graph_.pFrags[edge->id].size()==1)
+		          }
+            	else if(curve_frag_graph_.pFrags[edge->id].size()==1) // if size of parent fragment is 1
             	{
             		n=1;dbdet_edgel_chain_list_iter pcit = curve_frag_graph_.pFrags[edge->id].begin();chain=*pcit;
             		edge2 = chain->edgels[chain->edgels.size()-2];
             		if(chain->edgels.size()>2){number=1;edge3=chain->edgels[chain->edgels.size()-3];}diff=2;
-		} 
+		          } 
 
         	dbdet_edgel_chain_list_iter fit = curve_frag_graph_.frags.begin();
+          // going through all the curve fragments of the graph
         	for(;fit!=curve_frag_graph_.frags.end();fit++)
             	{dbdet_edgel_chain *test1=*fit;if(test1==chain)continue;for(int d=0;d<test1->edgels.size();d++){if(edge==test1->edgels[d]) goto end;}}
         	if(n==1 && chain->edgels.size()>1 && ((curve_frag_graph_.pFrags[edge2->id].size() + curve_frag_graph_.cFrags[edge2->id].size()) >=1))
         	{
-            		curve_frag_graph_.extract_fragment(chain);
+            		curve_frag_graph_.extract_fragment(chain); // extract the fragment
             		if(diff==1) chain->edgels.pop_front();else if(diff==2) chain->edgels.pop_back();curve_frag_graph_.insert_fragment(chain);
 
         	}
         	else if(number==1 && chain->edgels.size()>1 && ((curve_frag_graph_.pFrags[edge3->id].size()+curve_frag_graph_.cFrags[edge3->id].size()) >=1))
         	{           
-            		curve_frag_graph_.extract_fragment(chain);
+            		curve_frag_graph_.extract_fragment(chain); // extract the fragment
                 	if(diff==1) {chain->edgels.pop_front();chain->edgels.pop_front();}
             		else if(diff==2){chain->edgels.pop_back();chain->edgels.pop_back();}curve_frag_graph_.insert_fragment(chain);
         	}

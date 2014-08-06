@@ -39,6 +39,9 @@ public:
   //: Save the edges as .edg file
   dborl_parameter<bool> save_edges_;
 
+  //: Save the edges indicator files
+  dborl_parameter<bool> save_edges_inds_;
+
   //: Save the curvlets as .cvlet file
   dborl_parameter<bool> save_curvelets_;
 
@@ -87,6 +90,9 @@ public:
 
   //: Convert to binary map
   dborl_parameter<bool> convert_edgemap_to_image_; 
+
+  //: Prune contours after edge linking using parameters trained from logistic regression
+  dborl_parameter<bool> prune_contours_logistic_; 
  
   //: Tag for edge_detection
   vcl_string tag_gray_edge_detection_;
@@ -112,6 +118,8 @@ public:
   //: Tag for generic edge_linking
   vcl_string tag_gen_linking_;
 
+  //: Tag for prune with logistic regression parameters
+  vcl_string tag_prune_contours_logistic_;
 };
 
 #endif  //_dborl_edge_det_link_params_h

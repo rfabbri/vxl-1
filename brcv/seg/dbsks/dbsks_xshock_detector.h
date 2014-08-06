@@ -22,6 +22,8 @@
 #include <dbsks/dbsks_xgraph_geom_model_sptr.h>
 #include <dbsks/dbsks_xgraph_ccm_model_sptr.h>
 #include <dbsksp/dbsksp_xshock_graph_sptr.h>
+#include <dbsks/dbsks_det_desc_xgraph.h>
+#include <dbsks/dbsks_det_desc_xgraph_sptr.h>
 
 
 #include <vgl/vgl_box_2d.h>
@@ -46,7 +48,7 @@ class dbsks_xshock_detector : public vbl_ref_count
 public:
   // Constructor / destructor -------------------------------------------------
   //: constructor
-  dbsks_xshock_detector(): root_vid_(0), major_child_eid_(0){};
+  dbsks_xshock_detector(): root_vid_(0), major_child_eid_(0), generate_xnode_grid_option(2){};
 
   //: destructor
   virtual ~dbsks_xshock_detector(){};
@@ -70,6 +72,10 @@ public:
   //: Build the xnode grid
   void build_xnode_grid(const vgl_box_2d<int >& window);
 
+  //: compute the range of nodes params from prev frame dets
+
+  void compute_vertices_para_range();
+
 protected:
   //: Build xnode grid using input xgraph as the only available info
   // All parameters are heuristic, hard-coded.
@@ -77,6 +83,12 @@ protected:
 
   //: Build xnode grid using xgraph geometric model (assume available)
   void build_xnode_grid_using_xgraph_geom_model(const vgl_box_2d<int >& window);
+
+  //: Build xnode grid based on the windows of detections of previous frame
+  void build_xnode_grid_using_prev_dets_window(const vgl_box_2d<int >& window);
+
+  //: Build xnode grid using xgraph detected in previous frame, apply particle filter
+  void build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window);
 
 public:
 
@@ -94,7 +106,8 @@ public:
   vcl_map<unsigned int, dbsks_xnode_grid > map_xnode_grid_;
 
   //: Image
-
+  // different methods to construct the grid. These evolve over time. We just hard-code for now
+  int generate_xnode_grid_option;
 
   ////< depreciated functions/////////////////////////////////////////////////////
   ////: Chamfer matching cost
@@ -133,6 +146,15 @@ public:
   // Graph-tree info
   unsigned root_vid_;
   unsigned major_child_eid_;
+
+  // detections from the previous frame
+  vcl_vector<dbsks_det_desc_xgraph_sptr > prev_dets_;
+  // statistic from the previous frame dets
+  vcl_vector<double> xgraph_vertices_min_x_;
+  vcl_vector<double> xgraph_vertices_max_x_;
+  vcl_vector<double> xgraph_vertices_min_y_;
+  vcl_vector<double> xgraph_vertices_max_y_;
+
 
 protected:
   // Working graph

@@ -5,7 +5,7 @@
  INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
  INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
 
-#SUBDIRS ( dbsksp_gui )
+SUBDIRS ( dbsksp_gui )
 #SUBDIRS ( dborl_bin )
 #SUBDIRS ( dbul_octave )
 #SUBDIRS ( dbul_matlab )
@@ -22,9 +22,9 @@
 #SUBDIRS (dbcvr_2d_shape_descriptors)
 #SUBDIRS (3d_level_set)
 #SUBDIRS (zero_levelset_tracer)
-SUBDIRS (third_order_edge_detector)
+#SUBDIRS (third_order_edge_detector)
 #SUBDIRS (dbdet_contour_tracer)
 #SUBDIRS (polygon_distance_transform)
 #SUBDIRS (elbow_project)
-SUBDIRS (mex)
+#SUBDIRS (mex)
 

@@ -239,7 +239,7 @@ bool dbdet_evaluation_process::execute()
     min=M_row.min_value(); 
     gt_length += contour_length(*f_it_0);
     dbdet_edgel_chain* one_contour = new dbdet_edgel_chain(**f_it_0);
-    if (min!=1000)
+    if (min<1000)
        CFG_2.frags.push_back(one_contour); // the relative contours from GT
     else
        gt_prune_frags.push_back(one_contour);
@@ -256,7 +256,7 @@ bool dbdet_evaluation_process::execute()
     min=M_col.min_value();
     cp_length += contour_length(*f_it_1);
     dbdet_edgel_chain* one_contour = new dbdet_edgel_chain(**f_it_1);
-    if (min!=1000)
+    if (min<1000)
        CFG_3.frags.push_back(one_contour);// the relative contours from Computed Contours
     else
        cp_prune_frags.push_back(one_contour);
@@ -698,7 +698,7 @@ dbdet_evaluation_process::compute_contours_cost(dbdet_edgel_chain* const &c1, db
   cost = sum/double(length_1);
 
   //if(cost > cost_thresh)
-  if(double(sum_overlap)/double(length_1) > 0.7 || sum_overlap >10) // if less than half of the c1 overlap c2, take the cost as 1000
+  if(double(sum_overlap)/double(length_1) >= 0.7 || sum_overlap >=20) // if less than half of the c1 overlap c2, take the cost as 1000
 	return cost;
   return 1000;
 }
@@ -740,7 +740,7 @@ dbdet_evaluation_process::edit_distance_process(dbdet_edgel_chain_list &gt_frags
 	vcl_list<frags_combination*> cp_all_combinations;
 	vcl_list<frags_combination*> cp_1;
 	f_it_0 = cp_frags.begin(); i = 0;
-	//always build up a full cp combo
+	//always build up a full cp combo 
 	frags_combination* full_cp_combo = new frags_combination();
         // build up "1" contour list
 	for(;f_it_0!=cp_frags.end();f_it_0++, i++)
@@ -762,6 +762,7 @@ dbdet_evaluation_process::edit_distance_process(dbdet_edgel_chain_list &gt_frags
 	}
 
 	//Only if is is one gt vs mutiple cp, or mutiple gt vs one gt, we insert the full combos
+	// ******************  this is importance to recuce the risk that overlook a lot of necessuary penalty *****************************8
 	if(cp_1.size() ==1)
 		gt_all_combinations.push_back(full_gt_combo);
 	if(gt_1.size() ==1)

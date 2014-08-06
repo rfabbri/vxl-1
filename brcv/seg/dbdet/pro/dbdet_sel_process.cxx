@@ -109,7 +109,11 @@ dbdet_sel_process::dbdet_sel_process()
       !parameters()->add( "  - Number of Linking iterations" , "-num_link_iters", (unsigned) 7 ) ||
       
       //Get Final contours in one step
-      !parameters()->add( "Get Final Contours", "-bGetfinalcontours", true ))
+      !parameters()->add( "Proceed with Hypothesis Graph", "-bGetfinalcontours", true ) ||
+
+	  //merge frag candidates after hypothesis
+      !parameters()->add( "Merge curve fragments candidates", "-bmergefrags", false )
+	)
   {
     vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
   }
@@ -310,8 +314,15 @@ bool dbdet_sel_process::execute()
   if(bGetfinalcontours){  
       edge_linker->Construct_Hypothesis_Tree();
       edge_linker->Disambiguation();
-      edge_linker->correct_CFG_topology(); 
-      edge_linker->Post_Process();
+      if(bmergefrags){
+		  edge_linker->correct_CFG_topology(); 
+		  edge_linker->Post_Process();
+	  }
+	  else
+	  {
+		 edge_linker->merge_extreme_short_curve_frags();
+		 //edge_linker->Post_Process();
+	  }
       //edge_linker->correct_CFG_topology();
   }
   double link_time = t.real() / 1000.0;
@@ -405,6 +416,7 @@ dbdet_sel_process::get_parameters()
   parameters()->get_value( "-linking_algo" , linking_algo);
   parameters()->get_value( "-num_link_iters" , num_link_iters);
   parameters()->get_value( "-bGetfinalcontours" , bGetfinalcontours );
+  parameters()->get_value( "-bmergefrags" , bmergefrags );
   
 }
 

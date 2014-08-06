@@ -176,6 +176,7 @@ dbrl_edge_point_tangent_bg_model_process::execute()
 	//numbers are relative to the frame for which foreground will be extracted
 	//omitting the first one, which is -10
 	int seq[7] = {10, -20, 20, -5, 5, -17, 17};
+	//int seq[7] = {1, -2, 2, -5, 5, -7, 7};
 
 	//get the initialization image from image -10
 	vidpro1_repository_sptr repo = bvis1_manager::instance()->repository();

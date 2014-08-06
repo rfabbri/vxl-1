@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/lemsvxl/!svn/ver/17309/trunk/brcv/rec/dborl/algo/vox_compute_xgraphs_from_silhou
+END
+dborl_compute_xgraphs_from_silhou_params_sptr.h
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/lemsvxl/!svn/ver/17309/trunk/brcv/rec/dborl/algo/vox_compute_xgraphs_from_silhou/dborl_compute_xgraphs_from_silhou_params_sptr.h
+END
+dborl_compute_xgraphs_from_silhou_params.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/lemsvxl/!svn/ver/17309/trunk/brcv/rec/dborl/algo/vox_compute_xgraphs_from_silhou/dborl_compute_xgraphs_from_silhou_params.cxx
+END
+dborl_compute_xgraphs_from_silhou_main.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/lemsvxl/!svn/ver/17309/trunk/brcv/rec/dborl/algo/vox_compute_xgraphs_from_silhou/dborl_compute_xgraphs_from_silhou_main.cxx
+END
+dborl_compute_xgraphs_from_silhou_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/lemsvxl/!svn/ver/17309/trunk/brcv/rec/dborl/algo/vox_compute_xgraphs_from_silhou/dborl_compute_xgraphs_from_silhou_params.h
+END
+vbl_smart_ptr+dborl_compute_xgraphs_from_silhou_params-.cxx
+K 25
+svn:wc:ra_dav:version-url
+V 145
+/svn/lemsvxl/!svn/ver/17309/trunk/brcv/rec/dborl/algo/vox_compute_xgraphs_from_silhou/vbl_smart_ptr+dborl_compute_xgraphs_from_silhou_params-.cxx
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/lemsvxl/!svn/ver/17309/trunk/brcv/rec/dborl/algo/vox_compute_xgraphs_from_silhou/CMakeLists.txt
+END

@@ -1343,6 +1343,19 @@ void dbdet_sel_base::extract_regular_contours_from_the_link_graph()
 
   //exract one chains from the main link graph
   extract_one_chains_from_the_link_graph(edge_link_graph_);
+
+	// added by Yuliang, count in unambiguous edges
+	vcl_cout << "Num unambiguous frags: " << curve_frag_graph_.frags.size()<<vcl_endl;
+	dbdet_edgel_chain_list_iter it_9 = curve_frag_graph_.frags.begin();
+	for (; it_9!= curve_frag_graph_.frags.end(); it_9++)
+	{
+		dbdet_edgel_list_iter it_99 = (*it_9)->edgels.begin();
+		for(; it_99!=(*it_9)->edgels.end(); it_99++)
+			curve_frag_graph_.participate_edge_id.insert((*it_99)->id);
+	}
+	vcl_cout << "Num used inds: " << curve_frag_graph_.participate_edge_id.size()<< vcl_endl; 
+
+
 }
 
 //: extract the one chains from a given link graph (from the primary link grpah of ELG)

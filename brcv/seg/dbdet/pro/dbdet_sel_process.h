@@ -67,6 +67,8 @@ protected:
 
   bool bGetfinalcontours;
 
+  bool bmergefrags;
+
 };
 
 #endif

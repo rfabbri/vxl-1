@@ -1,0 +1,162 @@
+// This is dborl/algo/edgeLinking/dborl_compute_xgraphs_from_silhou_params.h
+
+//:
+// \file
+// \brief parameter set for combination of edge_detection & linking algorithm
+//
+// \author Maruthi Narayanan (mn@lems.brown.edu)
+// \date June 05, 2009
+//      
+// \verbatim
+//   Modifications
+//  
+// \endverbatim
+
+//
+//
+
+#ifndef dborl_compute_xgraphs_from_silhou_params_h_
+#define dborl_compute_xgraphs_from_silhou_params_h_
+
+#include <dborl/algo/dborl_algo_params.h>
+
+//: put all the additional params into this class, and add them 
+//  to the parameter list in the constructor so that 
+//  all the files related to the parameter set of the algorithm 
+//  are generated automatically via the methods of the base class
+//  no need to overwrite any of the methods in the base class thanks 
+//  to the parameter list
+class dborl_compute_xgraphs_from_silhou_params : public dborl_algo_params
+{
+public:
+
+  //: Constructor
+  dborl_compute_xgraphs_from_silhou_params(vcl_string algo_name);
+
+  // MEMBER VARIABLES
+
+  //: Save the edges as .edg file
+  dborl_parameter<bool> save_edges_;
+
+  //: Save the curvlets as .cvlet file
+  dborl_parameter<bool> save_curvelets_;
+
+  //: Save the output to the object folder
+  dborl_parameter<bool> save_to_object_folder_;  
+
+  //: Name of input object
+  dborl_parameter<vcl_string> input_object_name_;
+  
+  //: passes the folder of the input object
+  dborl_parameter<vcl_string> input_object_dir_;    
+
+  //: extension of the input image
+  dborl_parameter<vcl_string> input_extension_;       
+
+  //: extension of edge file if saving
+  dborl_parameter<vcl_string> edge_extension_;
+
+  //: extension of output file
+//  dborl_parameter<vcl_string> output_extension_;
+
+  // if written to this folder as opposed to object folder then the shock graph 
+  // gets associated to the input object.
+  // if nothing is written here, nothing gets associated
+
+/*
+  dborl_parameter<vcl_string> output_edge_link_folder_; 
+
+  //: Use existing edge file
+  // An existing edge file might exist go ahead and use it
+  dborl_parameter<bool> use_existing_edges_;
+
+  //: Prune contours after edge linking
+  dborl_parameter<bool> prune_contours_;  
+
+  //: Prune contours after edge linking
+  dborl_parameter<bool> prune_contours_logistic_;  
+
+
+ 
+  //: Tag for edge_detection
+  vcl_string tag_gray_edge_detection_;
+
+  //: Tag for edge_detection
+  vcl_string tag_color_edge_detection_;
+
+  //: Tag for edge_linking
+  vcl_string tag_edge_linking_;
+
+  //: Tag for extract_contours
+  vcl_string tag_extract_contours_;
+
+  //: Tag for prune_contours
+  vcl_string tag_prune_contours_;
+
+ //: Tag for prune_contours logistic
+  vcl_string tag_prune_contours_logistic_;
+*/
+
+  //: Trace contours , edge detection and linking ignored
+  dborl_parameter<bool> trace_contours_;  
+
+//: passes the input association dir
+//  dborl_parameter<vcl_string> input_assoc_dir_;
+
+  //: extension of the input contour file ( .cem,.cemv,.con) 
+//  dborl_parameter<vcl_string> input_contour_extension_;     
+
+  //: extension of the image ( .cem,.cemv,.con) 
+//  dborl_parameter<vcl_string> input_image_extension_;     
+
+  //: extension of output file
+  dborl_parameter<vcl_string> output_extension_;
+
+  // if written to this folder as opposed to object folder then the shock graph 
+  // gets associated to the input object.
+  // if nothing is written here, nothing gets associated
+  dborl_parameter<vcl_string> output_shock_folder_;  
+
+  //: Number of iterations for valid shock computation
+  dborl_parameter<int> num_iter_;  
+
+  //: Perform gap transform on intrinsinc shock graph
+//  dborl_parameter<bool> gap_transform_;  
+
+  //: Perform prune ishock
+  dborl_parameter<bool> prune_ishock_;  
+
+  //: save esf file
+  dborl_parameter<bool> save_esf_; 
+	
+  //: Add a bounding box to vsol for shock computation
+  dborl_parameter<bool> add_bbox_;  
+
+  //: Extension of xgraph file
+  dborl_parameter<vcl_string > xgraph_extension_;
+
+  // Process parameters
+  // Parameters for process to convert from sk2d shock graph to xgraph
+  dborl_parameter<float > convert_sk2d_to_sksp_tol_;
+
+  //: Tag for contour tracing
+  vcl_string tag_contour_tracing_;
+
+  //: tag for intrinsinc shock computation
+  vcl_string tag_compute_ishock_;
+
+  //: tag for gap transform
+//  vcl_string tag_gap_transform_;
+
+  //: tag for prune shock
+  vcl_string tag_prune_ishock_;  
+ 
+  //: tag for sample shock
+  vcl_string tag_sample_shock_;
+
+  //: tag for convert esf to xgraph
+  vcl_string tag_esf_2_xgraph_;
+
+};
+
+#endif  //_dborl_compute_xgraphs_from_silhou_params_h
