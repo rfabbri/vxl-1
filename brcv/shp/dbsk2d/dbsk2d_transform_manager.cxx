@@ -554,7 +554,42 @@ double dbsk2d_transform_manager::mean_LAB_distance(
     return distance_LAB(foreground_mean,background_mean,14.0);
 }
 
+bool dbsk2d_transform_manager::gap_endpoint(dbsk2d_ishock_bpoint* bp)
+{
+ 
+    if (bp->nLinkedElms() <= 2.0)
+    {
+        return false;
+    }
 
+    bool negative=false;
+    bool positive=false;
+    bool flag=false;
+    belm_list::iterator curB = bp->LinkedBElmList.begin();
+    for(; curB!=bp->LinkedBElmList.end(); ++curB) 
+    {
+        dbsk2d_ishock_bline* bline=(dbsk2d_ishock_bline*)(*curB);
+        
+        if ( bline->get_contour_id() < 0 )
+        {
+            negative = true;
+        }
+        else
+        {
+            positive = true;
+        }
+
+    }
+    
+    if ( positive && negative )
+    {
+        flag=true;
+    }
+  
+    return flag;
+
+
+}
 
 // chi squared distance
 void dbsk2d_transform_manager::ellipse_fitting(
@@ -1213,8 +1248,25 @@ void dbsk2d_transform_manager::get_extra_belms(
     for (lit = region_belms.begin() ; lit != region_belms.end() ; ++lit)
     {
         dbsk2d_ishock_bline* bline = (dbsk2d_ishock_bline*)(*lit);
+        dbsk2d_ishock_bpoint* s_pt = bline->s_pt();
+        dbsk2d_ishock_bpoint* e_pt = bline->e_pt();
         output_lines[bline->id()]=bline;
-        key.insert(bline->id());
+
+        if ( bline->get_contour_id() >= 0 )
+        {
+            key.insert(bline->id());
+        }
+
+        if ( gap_endpoint(s_pt) )
+        {
+            key.insert(s_pt->id());
+        }
+
+        if ( gap_endpoint(e_pt) )
+        {
+            key.insert(e_pt->id());
+        }
+
     }     
 
     for (lit = region_belms.begin() ; lit != region_belms.end() ; ++lit)

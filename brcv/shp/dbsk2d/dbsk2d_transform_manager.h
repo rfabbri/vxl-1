@@ -243,6 +243,8 @@ private:
         vcl_vector<vgl_point_2d<double> >& foreground,
         vcl_vector<vgl_point_2d<double> >& background);
 
+    bool gap_endpoint(dbsk2d_ishock_bpoint* bp);
+
     void ellipse_fitting(  
         vcl_vector<vgl_point_2d<double> >& foreground,
         vcl_vector<double>& stats);
