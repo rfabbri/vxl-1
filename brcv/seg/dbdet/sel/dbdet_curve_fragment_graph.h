@@ -19,7 +19,7 @@
 
 #include <vcl_vector.h>
 #include <vcl_list.h>
-
+#include <vcl_set.h>
 #include "dbdet_edgel.h"
 #include <dbdet/edge/dbdet_edgemap.h>
 #include "dbdet_CFTG.h"
@@ -36,6 +36,8 @@ public:
   
   //this is a hack (need to move this out of here into the storage class)
   dbdet_CFTG CFTG; ///< The Curve Fragment Topology Graph (CFTG) 
+
+  vcl_set<int> participate_edge_id;  // include edges in unambiguous fragments and edges participate in hypothesis tree;
 
   //: constructor
   dbdet_curve_fragment_graph(int size=0): cFrags(size), pFrags(size){}

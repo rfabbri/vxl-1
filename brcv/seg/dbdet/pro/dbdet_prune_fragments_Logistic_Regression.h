@@ -39,8 +39,18 @@ public:
     return true;
   }
 
+  void get_parameters();
+
+  bool call_in_gui;
+  double prob;
+
 protected:
-  vil_image_view<float> L_, A_, B_;
+    vil_image_view<float> L_, A_, B_;
+
+	float color_threshold;
+	float color_gamma;
+    float region_width;
+	float intensity_gamma;
 
 };
 

@@ -100,6 +100,8 @@ SET(dbdet_pro_sources
    dbdet_evaluation_process.h      dbdet_evaluation_process.cxx
    dbdet_prune_fragments_Logistic_Regression.h	dbdet_prune_fragments_Logistic_Regression.cxx
    
+   dbdet_save_edg_seq_process.h dbdet_save_edg_seq_process.cxx
+   dbdet_save_cem_seq_process.h dbdet_save_cem_seq_process.cxx
 )
 
 IF(OCTAVE_FOUND)

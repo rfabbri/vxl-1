@@ -1,0 +1,11 @@
+SET( dborl_compute_xgraphs_from_silhou_sources
+  dborl_compute_xgraphs_from_silhou_params.h 
+  dborl_compute_xgraphs_from_silhou_params_sptr.h
+  dborl_compute_xgraphs_from_silhou_params.cxx
+  vbl_smart_ptr+dborl_compute_xgraphs_from_silhou_params-.cxx
+  dborl_compute_xgraphs_from_silhou_main.cxx 
+)
+
+
+ADD_EXECUTABLE (dborl_compute_xgraphs_from_silhou ${dborl_compute_xgraphs_from_silhou_sources} )
+TARGET_LINK_LIBRARIES (dborl_compute_xgraphs_from_silhou dborl_algo dbsk2d_pro dbdet_pro vidpro1)

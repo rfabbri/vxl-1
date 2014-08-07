@@ -150,17 +150,21 @@ int main(int argc, char *argv[]) {
 	vcl_string name_2 = cem_file_2.substr(cem_file_2.size()-6,2);
 
 	vcl_string output_file;
-        output_file=file_append+"_PR_stats.txt";
-        // if(cem_file_2.find("GEN")!=vcl_string::npos)
-        // 	output_file = cem_file_1.substr(0,found+1)+ name_1 + "_"+file_append+"_GEN_PR_result.txt";
-        // else if(cem_file_2.find("SEL")!=vcl_string::npos)
-	// 	output_file = cem_file_1.substr(0,found+1)+ name_1 + "_"+file_append+"_SEL_PR_result.txt";
-        // else if(cem_file_2.find("Kovesi")!=vcl_string::npos)
-	// 	output_file = cem_file_1.substr(0,found+1)+ name_1 + "_"+file_append+"_Kovesi_PR_result.txt";
-        // else if(cem_file_2.find("VD")!=vcl_string::npos)
-	// 	output_file = cem_file_1.substr(0,found+1)+ name_1 + "_"+file_append+"_VD_PR_result.txt";
-	// else
-	// 	output_file = cem_file_1.substr(0,found+1)+ name_1 + "_" + name_2 + "_"+file_append+"_PR_result.txt";
+        //output_file=file_append+"_PR_stats.txt";
+     if(cem_file_2.find("GEN")!=vcl_string::npos)
+         	output_file = cem_file_1.substr(0,found+1)+ name_1 + "_GEN_PR_result.txt";
+     else if(cem_file_2.find("SEL_prune")!=vcl_string::npos)
+	 	output_file = cem_file_1.substr(0,found+1)+ name_1 + "_SEL_prune_PR_result.txt";
+     else if(cem_file_2.find("SEL")!=vcl_string::npos)
+	 	output_file = cem_file_1.substr(0,found+1)+ name_1 + "_SEL_PR_result.txt";
+     else if(cem_file_2.find("Kovesi")!=vcl_string::npos)
+	 	output_file = cem_file_1.substr(0,found+1)+ name_1 + "_Kovesi_PR_result.txt";
+     else if(cem_file_2.find("VD")!=vcl_string::npos)
+	 	output_file = cem_file_1.substr(0,found+1)+ name_1 + "_VD_PR_result.txt";
+     else if(cem_file_2.find("shi")!=vcl_string::npos)
+	 	output_file = cem_file_1.substr(0,found+1)+ name_1 + "_shi_PR_result.txt";
+	 else
+	 	output_file = cem_file_1.substr(0,found+1)+ name_1 + "_" + name_2 +"_PR_result.txt";
 
 	vcl_cout<<output_file<<vcl_endl;
 	filestr.open (output_file.c_str(), vcl_ofstream::app);
