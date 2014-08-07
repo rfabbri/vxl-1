@@ -74,7 +74,7 @@ private:
     vcl_map<vcl_set<int>, vgl_polygon<double> > all_region_polys_;
 
     // Keep track of polygons
-    vcl_map<vcl_set<int>, vcl_string > closed_regions_;
+    vcl_map<vcl_set<int>, vcl_vector<dbsk2d_ishock_belm*> > closed_regions_;
 
     // Keep track of stats on regions
     vcl_map<vcl_set<int>, vcl_vector<double> > region_stats_;

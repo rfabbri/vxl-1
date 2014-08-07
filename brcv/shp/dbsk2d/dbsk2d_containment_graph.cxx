@@ -127,8 +127,9 @@ void dbsk2d_containment_graph::construct_graph()
         {
             vcl_map<int,dbsk2d_ishock_bline*> extra_belms;
             vcl_set<int> key;
+            vcl_set<int> closed_region_key;
             dbsk2d_transform_manager::Instance().get_extra_belms(
-                frag_belms[(*it).first],key,extra_belms);
+                frag_belms[(*it).first],key,closed_region_key,extra_belms);
             
             if ( !all_region_belms_.count(key))
             {
@@ -162,7 +163,12 @@ void dbsk2d_containment_graph::construct_graph()
 
                 if ( closed_region && grouper.region_within_image((*it).first))
                 {
-                    closed_regions_[key]="temp";
+                    vcl_vector<dbsk2d_ishock_belm*> belms=
+                        frag_belms[(*it).first];
+                    for ( unsigned int b=0; b < belms.size() ; ++b)
+                    {
+                        closed_regions_[closed_region_key].push_back(belms[b]);
+                    }
                 }
 
                 if ( train_ )
@@ -373,8 +379,10 @@ void dbsk2d_containment_graph::construct_graph()
                 //     poly,filename.str());
                 vcl_map<int,dbsk2d_ishock_bline*> extra_belms;
                 vcl_set<int> key;
+                vcl_set<int> closed_region_key;
                 dbsk2d_transform_manager::Instance().get_extra_belms(
-                    frag_extra_belms[(*it).first],key,extra_belms);
+                    frag_extra_belms[(*it).first],key,closed_region_key,
+                    extra_belms);
             
                 if ( !all_region_belms_.count(key))
                 {
@@ -406,10 +414,17 @@ void dbsk2d_containment_graph::construct_graph()
    
                     all_region_polys_[key]=poly;
 
-                    if ( closed_region && 
-                         grouper.region_within_image((*it).first))
+                    if ( closed_region && grouper.region_within_image
+                         ((*it).first))
                     {
-                        closed_regions_[key]="temp";
+
+                        vcl_vector<dbsk2d_ishock_belm*> belms=
+                            frag_belms[(*it).first];
+                        for ( unsigned int b=0; b < belms.size() ; ++b)
+                        {
+                            closed_regions_[closed_region_key].push_back(
+                                belms[b]);
+                        }
                     }
 
                     if ( train_ )
@@ -1124,111 +1139,215 @@ void dbsk2d_containment_graph::cluster_fragments()
 
 void dbsk2d_containment_graph::merge_closed_regions()
 {
+    vcl_map<vcl_set<int>,vcl_vector<dbsk2d_ishock_belm*> > final_merged_belms;
+    vcl_map<vcl_set<int>,vgl_polygon<double> > final_merged_polys;
 
     vcl_map<vcl_set<int>,vcl_vector<dbsk2d_ishock_belm*> >::iterator mit;
-    for ( mit = all_region_belms_.begin() ; mit != all_region_belms_.end();
+    for ( mit = closed_regions_.begin() ; mit != closed_regions_.end();
           ++mit)
     {
         vcl_set<int> closed_region_key;
         vcl_set<int> closed_region_key_orig;
         vgl_polygon<double> poly;
 
-        if ( closed_regions_.count((*mit).first))
-        {   
-
-            vcl_vector<dbsk2d_ishock_belm*> belms=(*mit).second;
-            closed_region_key_orig=(*mit).first;
-            for ( unsigned int i=0; i < belms.size() ; ++i)
-            {
-                dbsk2d_ishock_bline* bline=(dbsk2d_ishock_bline*)belms[i];
-                closed_region_key.insert(bline->twinLine()->id());
-            }
-            poly=all_region_polys_[(*mit).first];
-        }
-        else
+        vcl_vector<dbsk2d_ishock_belm*> belms=(*mit).second;
+        closed_region_key_orig=(*mit).first;
+        for ( unsigned int i=0; i < belms.size() ; ++i)
         {
-            continue;
+            dbsk2d_ishock_bline* bline=(dbsk2d_ishock_bline*)belms[i];
+            closed_region_key.insert(bline->twinLine()->id());
         }
+        poly=all_region_polys_[(*mit).first];
         
-
+        
+        vcl_map<int,dbsk2d_ishock_bline*> lines;
+        vcl_set<int> final_key;
         bool write_out=false;
         vcl_map<vcl_set<int>,vcl_vector<dbsk2d_ishock_belm*> >::iterator nit;
-        for ( nit = all_region_belms_.begin() ; nit != all_region_belms_.end();
+        for ( nit = closed_regions_.begin() ; nit != closed_regions_.end();
               ++nit)
         {
 
-            if ( closed_regions_.count((*nit).first))
-            {   
-                vcl_set<int> test_region_key=(*nit).first;
-                vcl_map<int,int> mapping_twinline;
-
-                vcl_vector<dbsk2d_ishock_belm*> belms=(*nit).second;
-                for ( unsigned int i=0; i < belms.size() ; ++i)
+            vcl_set<int> test_region_key=(*nit).first;
+            vcl_map<int,int> mapping_twinline;
+            
+            vcl_vector<dbsk2d_ishock_belm*> belms=(*nit).second;
+            for ( unsigned int i=0; i < belms.size() ; ++i)
+            {
+                dbsk2d_ishock_bline* bline=(dbsk2d_ishock_bline*)belms[i];
+                mapping_twinline[bline->id()]=bline->twinLine()->id();
+            }
+            
+            vgl_polygon<double> poly_test=all_region_polys_[(*nit).first];
+            if ( test_region_key != closed_region_key_orig)
+            {
+                vcl_set<int> intersection;
+                vcl_insert_iterator<vcl_set<int> > 
+                    inserter(intersection,intersection.begin());
+                
+                vcl_set_intersection(closed_region_key.begin(),
+                                     closed_region_key.end(),
+                                     test_region_key.begin(),
+                                     test_region_key.end(),
+                                     inserter);
+                
+                if ( intersection.size() &&
+                     intersection != closed_region_key &&
+                     intersection != test_region_key )
                 {
-                    dbsk2d_ishock_bline* bline=(dbsk2d_ishock_bline*)belms[i];
-                    mapping_twinline[bline->id()]=bline->twinLine()->id();
-                }
-
-                vgl_polygon<double> poly_test=all_region_polys_[(*nit).first];
-                if ( test_region_key != closed_region_key_orig)
-                {
-                    vcl_set<int> intersection;
+                    //Keep a flag for status
+                    int value;
+                        
+                    //Take union of two polygons
+                    poly = vgl_clip(poly,                // p1
+                                    poly_test,           // p2
+                                    vgl_clip_type_union, // p1 U p2
+                                    &value);             // test if success
+                    
+                    write_out=true;
+                    
+                    
+                    vcl_set<int> difference;
                     vcl_insert_iterator<vcl_set<int> > 
-                        inserter(intersection,intersection.begin());
+                        insert_diff(difference,difference.begin());
                     
-                    vcl_set_intersection(closed_region_key.begin(),
-                                         closed_region_key.end(),
-                                         test_region_key.begin(),
-                                         test_region_key.end(),
-                                         inserter);
+                    vcl_set_difference(test_region_key.begin(),
+                                       test_region_key.end(),
+                                       closed_region_key.begin(),
+                                       closed_region_key.end(),
+                                       insert_diff);
                     
-                    if ( intersection.size() &&
-                         intersection != closed_region_key &&
-                         intersection != test_region_key )
+                    vcl_set<int>::iterator sit;
+                    for ( sit=difference.begin() ; sit != difference.end()
+                              ;++sit)
                     {
-                        //Keep a flag for status
-                        int value;
-                        
-                        //Take union of two polygons
-                        poly = vgl_clip(poly,                // p1
-                                        poly_test,           // p2
-                                        vgl_clip_type_union, // p1 U p2
-                                        &value);             // test if success
-                        
-                        write_out=true;
-
-                        
-                        vcl_set<int> difference;
-                        vcl_insert_iterator<vcl_set<int> > 
-                            insert_diff(difference,difference.begin());
+                        closed_region_key.insert(mapping_twinline[*sit]);
+                    }
                     
-                        vcl_set_difference(test_region_key.begin(),
-                                           test_region_key.end(),
-                                           closed_region_key.begin(),
-                                           closed_region_key.end(),
-                                           insert_diff);
+                    if ( lines.size() == 0 )
+                    {
                         
-                        vcl_set<int>::iterator sit;
-                        for ( sit=difference.begin() ; sit != difference.end()
-                                  ;++sit)
+                        vcl_vector<dbsk2d_ishock_belm*> closed_region_belms
+                            = (*mit).second;
+                        
+                        for ( unsigned int c=0; 
+                              c < closed_region_belms.size() ; 
+                              ++c)
                         {
-                            closed_region_key.insert(mapping_twinline[*sit]);
+                            dbsk2d_ishock_bline* bline= 
+                                (dbsk2d_ishock_bline*)
+                                    (closed_region_belms[c]);
+                            if ( !intersection.count(bline->twinLine()->id()))
+                            {
+                                lines[bline->twinLine()->id()]=bline;
+                                final_key.insert(bline->s_pt()->id());
+                                final_key.insert(bline->e_pt()->id());
+                            }
+                            else
+                            {
+                                if ( lines.count(bline->twinLine()->id()))
+                                {
+                                    lines.erase(bline->twinLine()->id());
+                                    final_key.erase(bline->s_pt()->id());
+                                    final_key.erase(bline->e_pt()->id());
+                                }
+                            }
+                            
                         }
                         
                         
                     }
+                    else
+                    {
+                        vcl_vector<dbsk2d_ishock_belm*> closed_region_belms
+                            = (*mit).second;
+
+                        for ( unsigned int c=0; 
+                              c < closed_region_belms.size() ; 
+                              ++c)
+                        {
+                            dbsk2d_ishock_bline* bline= 
+                                (dbsk2d_ishock_bline*)
+                                (closed_region_belms[c]);
+
+                            if ( intersection.count(bline->twinLine()->id()))
+                            {
+                                if ( lines.count(bline->twinLine()->id()))
+                                {
+                                    lines.erase(bline->twinLine()->id());
+                                    final_key.erase(bline->s_pt()->id());
+                                    final_key.erase(bline->e_pt()->id());
+                                }
+                            }
+                            
+                        }
+                     
+                    }
+                    
+                    {
+                        
+                        vcl_vector<dbsk2d_ishock_belm*> test_region_belms
+                            = (*nit).second;
+                        
+                        for ( unsigned int b=0; 
+                              b < test_region_belms.size() ; 
+                              ++b)
+                        {
+                            dbsk2d_ishock_bline* bline= 
+                                (dbsk2d_ishock_bline*)
+                                (test_region_belms[b]);
+                            if ( !intersection.count(bline->id()))
+                            {
+                                lines[bline->id()]=bline;
+                                final_key.insert(bline->s_pt()->id());
+                                final_key.insert(bline->e_pt()->id());
+                                
+                            }
+                            else
+                            {
+                                if ( lines.count(bline->twinLine()->id()))
+                                {
+                                    lines.erase(bline->twinLine()->id());
+                                    final_key.erase(bline->s_pt()->id());
+                                    final_key.erase(bline->e_pt()->id());
+
+                                }
+                            }
+                        }
+                        
+                    }
+                    
+                        
+                }
                     
 
-                }
             }
-
         }
+
         
+
         if ( write_out )
         {
-            dbsk2d_transform_manager::Instance().write_output_polygon(poly);
+            final_merged_polys[final_key]=poly;
+            vcl_map<int,dbsk2d_ishock_bline*>::iterator kit;
+            for ( kit=lines.begin() ; kit != lines.end() ; ++kit)
+            {
+                final_merged_belms[final_key].push_back((*kit).second);
+            }
         }
+    }
 
+    vcl_cout<<"Final merged size: "<<final_merged_polys.size()<<vcl_endl;
+    vcl_map<vcl_set<int>,vgl_polygon<double> >::iterator bit;
+    for ( bit = final_merged_polys.begin() ; bit != final_merged_polys.end();
+          ++bit)
+    {
+        dbsk2d_transform_manager::Instance().write_output_polygon(
+            (*bit).second);
+        dbsk2d_transform_manager::Instance().write_output_region(
+            final_merged_belms[(*bit).first]);
+
+        
     }
     
 
