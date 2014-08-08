@@ -101,7 +101,9 @@ public:
     // Get extra belms
     void get_extra_belms(vcl_vector<dbsk2d_ishock_belm*>& region,
                          vcl_set<int>& key,
+                         vcl_set<int>& closed_region_key,
                          vcl_map<int,dbsk2d_ishock_bline*>& final_belms);
+
     // Get output folder
     vcl_string get_output_frag_folder(){return out_folder_;}
 
@@ -162,6 +164,9 @@ public:
 
     //: increment the id counter and return new id
     unsigned int nextAvailableID() { id_++; return id_; }
+
+    //: compute stats closed polygon
+    void write_stats_closed(vgl_polygon<double>& closed);
 
     // : get closest point
     dbsk2d_ishock_bpoint* get_anchor_pt(vcl_pair<dbsk2d_ishock_bpoint*,

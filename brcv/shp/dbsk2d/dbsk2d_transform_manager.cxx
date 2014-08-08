@@ -33,10 +33,19 @@
 #include <dbsk2d/dbsk2d_shock_graph_sptr.h>
 #include <dbsk2d/dbsk2d_xshock_edge.h>
 #include <dbsk2d/algo/dbsk2d_sample_ishock.h>
+#include <dbsk2d/algo/dbsk2d_ishock_grouping_transform.h>
 #include <bbas/bsta/bsta_histogram.h>
 
 #include <vgl/vgl_intersection.h>
 #include <vgl/vgl_line_2d.h>
+
+#include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
+#include <vidpro1/storage/vidpro1_vsol2D_storage.h>
+
+
+#include <dbsk2d/pro/dbsk2d_compute_ishock_process.h>
+#include <dbsk2d/pro/dbsk2d_shock_storage.h>
+#include <vgl/vgl_area.h>
 
 dbsk2d_transform_manager::dbsk2d_transform_manager()
     :image_(0),
@@ -259,6 +268,188 @@ double dbsk2d_transform_manager::region_gpb_value(
     }
 
     return summation;
+}
+
+void dbsk2d_transform_manager::write_stats_closed(
+    vgl_polygon<double>& polygon)
+{
+
+
+    // Find one sheeted polygon
+    unsigned int f_index=0;
+    vgl_polygon<double> start_poly(polygon[f_index]);
+    double area=vgl_area(start_poly);
+
+    for (unsigned int s = 1; s < polygon.num_sheets(); ++s)
+    { 
+        
+        vgl_polygon<double> tempy(polygon[s]);
+        double area_temp = vgl_area(tempy);
+        if ( area_temp > area )
+        {
+             area = area_temp;
+             f_index=s;
+
+        }
+        
+    }
+
+    vgl_polygon<double> model_poly(polygon[f_index]);
+
+    vidpro1_vsol2D_storage_sptr input_vsol = 
+        vidpro1_vsol2D_storage_new();
+    vsol_polygon_2d_sptr region_poly = bsol_algs::poly_from_vgl(model_poly);
+    vsol_box_2d_sptr bbox=new vsol_box_2d();
+
+    // Enlarge bounding box from size
+    // Calculate xcenter, ycenter
+    double xcenter = image_->ni()/2.0;
+    double ycenter = image_->nj()/2.0;
+    
+    // Translate to center and scale
+    double xmin_scaled = ((0-xcenter)*2)+xcenter;
+    double ymin_scaled = ((0-ycenter)*2)+ycenter;
+    double xmax_scaled = ((image_->ni()-xcenter)*2)+xcenter;
+    double ymax_scaled = ((image_->nj()-ycenter)*2)+ycenter;
+    
+    bbox->add_point(xmin_scaled,ymin_scaled);
+    bbox->add_point(xmax_scaled,ymax_scaled);
+        
+    vsol_polygon_2d_sptr box_poly = bsol_algs::poly_from_box(bbox);
+
+    input_vsol->add_object(box_poly->cast_to_spatial_object());
+    input_vsol->add_object(region_poly->cast_to_spatial_object());
+
+    /*********************** Shock Compute **********************************/
+    // Grab output from shock computation
+    vcl_vector<bpro1_storage_sptr> shock_results;
+    bool status=false;
+    {
+        // 3) Create shock pro process and assign inputs 
+        dbsk2d_compute_ishock_process shock_pro;
+
+        shock_pro.clear_input();
+        shock_pro.clear_output();
+        
+        shock_pro.add_input(0);
+        shock_pro.add_input(input_vsol);
+
+        // Set params
+        status = shock_pro.execute();
+        shock_pro.finish();
+
+        // If ishock status is bad we will keep iterating with noise 
+        // till we get a valid shock computation otherwise call it quits
+        if (!status)
+        {
+            // Add noise to parameter set
+            shock_pro.parameters()->set_value("-b_noise",true);
+            
+            // Clean up before we start running
+            shock_pro.clear_input();
+            shock_pro.clear_output();
+            
+            unsigned int i(0);
+            unsigned int num_iterations = 5;
+            
+            for ( ; i < num_iterations; ++i)
+            {
+                vcl_cout<<vcl_endl;
+                vcl_cout<<"************ Retry Compute Shock,iter: "
+                        <<i+1<<" *************"<<vcl_endl;
+                
+                // Add inputs
+                shock_pro.add_input(0);
+                shock_pro.add_input(input_vsol);
+                
+                // Kick off process again
+                status = shock_pro.execute();
+                shock_pro.finish();
+                
+                if ( status )
+                {
+                    // We have produced valid shocks lets quit
+                    break;
+                    
+                }
+                
+                // Clean up after ourselves
+                shock_pro.clear_input();
+                shock_pro.clear_output();
+                
+            }
+        }
+
+        if ( status )
+        {
+            shock_results = shock_pro.get_output();
+
+            // Clean up after ourselves
+            shock_pro.clear_input();
+            shock_pro.clear_output();
+            
+        }
+        
+  
+    }
+
+    dbsk2d_shock_storage_sptr shock_storage;
+    shock_storage.vertical_cast(shock_results[0]);
+  
+    dbsk2d_ishock_grouping_transform grouper(shock_storage
+                                             ->get_ishock_graph());
+    grouper.grow_regions();
+
+
+    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_node*> >
+        fragments = grouper.get_outer_shock_nodes();
+    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >
+        frag_edges = grouper.get_region_nodes();
+    vcl_map<unsigned int, vcl_vector<dbsk2d_ishock_belm*> > 
+        frag_belms = grouper.get_region_belms();
+
+    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >::iterator it;
+    for ( it = frag_edges.begin() ; it != frag_edges.end() ; ++it)
+    {
+
+        bool closed_region=(fragments[(*it).first].size()==0)?
+            true:false;
+
+        if ( closed_region && grouper.region_within_image((*it).first))
+        {
+            break;
+        }
+    }
+
+    vcl_vector<double> region_stats;
+    vcl_vector<double> app_stats;
+
+    // get polygon stats
+    grouper.get_region_stats((*it).first,
+                             model_poly,region_stats);
+
+    this->get_appearance_stats(frag_edges[(*it).first],
+                               frag_belms[(*it).first],
+                               vgl_area(model_poly),
+                               app_stats);
+
+    vcl_vector<double> total_stats;
+    total_stats.push_back(0.0); //depth , look at this again
+    total_stats.push_back(1.0); //path prob
+    total_stats.push_back(1.0); //region gap cost
+    
+    for ( unsigned int p=0; p < region_stats.size() ; ++p)
+    {
+        total_stats.push_back(region_stats[p]);
+    }
+    
+    for ( unsigned int a=0; a < app_stats.size() ; ++a)
+    {
+        total_stats.push_back(app_stats[a]);
+    }
+
+    this->write_output_region_stats(total_stats);
+
 }
 
 // : get closest point
@@ -1242,6 +1433,7 @@ void dbsk2d_transform_manager::get_appearance_stats(
 void dbsk2d_transform_manager::get_extra_belms(
     vcl_vector<dbsk2d_ishock_belm*>& region_belms,
     vcl_set<int>& key,
+    vcl_set<int>& closed_region_key,
     vcl_map<int,dbsk2d_ishock_bline*>& output_lines)
 {
     vcl_vector<dbsk2d_ishock_belm*>::iterator lit;  
@@ -1251,6 +1443,7 @@ void dbsk2d_transform_manager::get_extra_belms(
         dbsk2d_ishock_bpoint* s_pt = bline->s_pt();
         dbsk2d_ishock_bpoint* e_pt = bline->e_pt();
         output_lines[bline->id()]=bline;
+        closed_region_key.insert(bline->id());
 
         if ( bline->get_contour_id() >= 0 )
         {
