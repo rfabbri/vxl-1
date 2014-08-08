@@ -1342,7 +1342,12 @@ void dbsk2d_containment_graph::merge_closed_regions()
         dbsk2d_transform_manager::Instance().write_output_region(
             final_merged_belms[(*bit).first]);
 
-        
+        if ( train_ )
+        {
+            dbsk2d_transform_manager::Instance().write_stats_closed(
+                final_merged_belms[(*bit).first]);
+
+        }
     }
     
 

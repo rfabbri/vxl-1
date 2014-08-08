@@ -168,6 +168,9 @@ public:
     //: compute stats closed polygon
     void write_stats_closed(vgl_polygon<double>& closed);
 
+    //: compute stats closed polygon
+    void write_stats_closed(vcl_vector<dbsk2d_ishock_belm*>& belms);
+
     // : get closest point
     dbsk2d_ishock_bpoint* get_anchor_pt(vcl_pair<dbsk2d_ishock_bpoint*,
                                         dbsk2d_ishock_bline*>& pair );

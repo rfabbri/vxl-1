@@ -404,7 +404,8 @@ bool dbsk2d_compute_containment_graph_process::execute()
     pre_process_contours(shock_storage->get_ishock_graph(),
                          preprocess_threshold,
                          gap_distance,
-                         remove_closed);
+                         remove_closed,
+                         train);
 
     dbsk2d_containment_graph cgraph(shock_storage->get_ishock_graph(),
                                     path_threshold,
@@ -417,19 +418,21 @@ bool dbsk2d_compute_containment_graph_process::execute()
     // cgraph.write_graph(filename);
 
 
-    for ( unsigned int c=0; c < closed_polys.size() ; ++c)
+    if ( remove_closed )
     {
-        dbsk2d_transform_manager::Instance().write_output_region
+        for ( unsigned int c=0; c < closed_polys.size() ; ++c)
+        {
+            dbsk2d_transform_manager::Instance().write_output_region
             (closed_polys[c]);
-        dbsk2d_transform_manager::Instance().write_output_polygon
-            (closed_polys[c]);
+            dbsk2d_transform_manager::Instance().write_output_polygon
+                (closed_polys[c]);
 
-        vcl_vector<double> stats;
-        this->region_stats(closed_polys[c],stats,
-                           shock_storage->get_ishock_graph());
-        dbsk2d_transform_manager::Instance().
-            write_output_region_stats(stats);
-        
+            if ( train )
+            {
+                dbsk2d_transform_manager::Instance().write_stats_closed
+                    (closed_polys[c]);
+            } 
+        }
     }
 
     double vox_time = t.real()/1000.0;
@@ -449,7 +452,8 @@ void dbsk2d_compute_containment_graph_process::
 pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
                      double preprocess_threshold,
                      double gap_distance,
-                     bool remove_closed)
+                     bool remove_closed,
+                     bool train)
 {
     
     vcl_vector<dbsk2d_ishock_belm*> belm_list = ishock_graph->
@@ -585,32 +589,41 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
                 if ( gap_trans.count(con1->get_id()))
                 {
                  
-                    
-                    dbsk2d_transform_manager::Instance().write_output_region
-                        (gap_trans[con1->get_id()],gap_filler);
-                    dbsk2d_transform_manager::Instance().write_output_polygon
-                        (poly);
-
-                    vcl_vector<double> stats;
-                    this->region_stats(poly,stats,ishock_graph);
-                    dbsk2d_transform_manager::Instance().
-                        write_output_region_stats(stats);
+                    if ( remove_closed )
+                    {
+                        dbsk2d_transform_manager::Instance().write_output_region
+                            (gap_trans[con1->get_id()],gap_filler);
+                        dbsk2d_transform_manager::Instance().
+                            write_output_polygon
+                            (poly);
+                        if ( train )
+                        { 
+                            dbsk2d_transform_manager::Instance()
+                                .write_stats_closed
+                            (poly);
+                        }
+                    }
 
                 }
                 else
                 {
                  
-                    vcl_vector<dbsk2d_bnd_contour_sptr> cons;
-                    cons.push_back(con1);
-                    dbsk2d_transform_manager::Instance().write_output_region
-                        (cons,gap_filler);
-                    dbsk2d_transform_manager::Instance().write_output_polygon
-                        (poly);
-
-                    vcl_vector<double> stats;
-                    this->region_stats(poly,stats,ishock_graph);
-                    dbsk2d_transform_manager::Instance().
-                        write_output_region_stats(stats);
+                    if ( remove_closed )
+                    {
+                        vcl_vector<dbsk2d_bnd_contour_sptr> cons;
+                        cons.push_back(con1);
+                        dbsk2d_transform_manager::Instance().write_output_region
+                            (cons,gap_filler);
+                        dbsk2d_transform_manager::Instance()
+                            .write_output_polygon
+                            (poly);
+                        if ( train )
+                        {
+                            dbsk2d_transform_manager::Instance()
+                                .write_stats_closed
+                            (poly);
+                        }
+                    }
 
 
                 }
@@ -809,26 +822,4 @@ get_contour(dbsk2d_ishock_bpoint* bp)
 
     return (dbsk2d_bnd_contour*)(*tit);
 
-}
-
-void dbsk2d_compute_containment_graph_process::
-region_stats(vgl_polygon<double>& poly,vcl_vector<double>& stats,
-             dbsk2d_ishock_graph_sptr ishock_graph)
-{
-    
-    double area=vgl_area(poly);
-    
-    // stats
-    stats.push_back(0.0);       //depth
-    stats.push_back(1.0);       //path prob
-    stats.push_back(1.0);       //region gap cost
-    stats.push_back(1.0);       //contour_ratio
-    stats.push_back(area);      //area
-    
-    dbsk2d_ishock_grouping_transform grouper(ishock_graph);
-    
-    double convex_area=grouper.convex_area(poly);
-    stats.push_back(convex_area);
-    stats.push_back(area/convex_area);
-    
 }
