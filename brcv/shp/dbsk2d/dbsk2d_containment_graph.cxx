@@ -1240,16 +1240,12 @@ void dbsk2d_containment_graph::merge_closed_regions()
                             if ( !intersection.count(bline->twinLine()->id()))
                             {
                                 lines[bline->twinLine()->id()]=bline;
-                                final_key.insert(bline->s_pt()->id());
-                                final_key.insert(bline->e_pt()->id());
                             }
                             else
                             {
                                 if ( lines.count(bline->twinLine()->id()))
                                 {
                                     lines.erase(bline->twinLine()->id());
-                                    final_key.erase(bline->s_pt()->id());
-                                    final_key.erase(bline->e_pt()->id());
                                 }
                             }
                             
@@ -1275,8 +1271,6 @@ void dbsk2d_containment_graph::merge_closed_regions()
                                 if ( lines.count(bline->twinLine()->id()))
                                 {
                                     lines.erase(bline->twinLine()->id());
-                                    final_key.erase(bline->s_pt()->id());
-                                    final_key.erase(bline->e_pt()->id());
                                 }
                             }
                             
@@ -1299,18 +1293,12 @@ void dbsk2d_containment_graph::merge_closed_regions()
                             if ( !intersection.count(bline->id()))
                             {
                                 lines[bline->id()]=bline;
-                                final_key.insert(bline->s_pt()->id());
-                                final_key.insert(bline->e_pt()->id());
-                                
                             }
                             else
                             {
                                 if ( lines.count(bline->twinLine()->id()))
                                 {
                                     lines.erase(bline->twinLine()->id());
-                                    final_key.erase(bline->s_pt()->id());
-                                    final_key.erase(bline->e_pt()->id());
-
                                 }
                             }
                         }
@@ -1324,10 +1312,17 @@ void dbsk2d_containment_graph::merge_closed_regions()
             }
         }
 
-        
 
         if ( write_out )
         {
+           
+            vcl_map<int,dbsk2d_ishock_bline*>::iterator lit;
+            for ( lit=lines.begin() ; lit != lines.end() ; ++lit)
+            {
+                final_key.insert((*lit).second->s_pt()->id());
+                final_key.insert((*lit).second->e_pt()->id());
+            }
+            
             final_merged_polys[final_key]=poly;
             vcl_map<int,dbsk2d_ishock_bline*>::iterator kit;
             for ( kit=lines.begin() ; kit != lines.end() ; ++kit)
