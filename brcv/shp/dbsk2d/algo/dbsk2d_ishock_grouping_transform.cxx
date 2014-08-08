@@ -71,7 +71,36 @@ void dbsk2d_ishock_grouping_transform::grow_regions()
     vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >::iterator it;
     for ( it = region_nodes_.begin() ; it != region_nodes_.end() ; ++it)
     {
+        dbsk2d_ishock_edge* first_elm=*(*it).second.begin();
+        if ( first_elm->lBElement()->is_a_line())
+        {
+            dbsk2d_ishock_bline* bline=(dbsk2d_ishock_bline*)
+                first_elm->lBElement();
 
+            if( !(region_belms_ids_[(*it).first].count(bline->id()) ||
+                  region_belms_ids_[(*it).first].count(bline->twinLine()->id()))
+                )
+            {
+                region_belms_ids_[(*it).first].insert(bline->id());
+                region_belms_[(*it).first].push_back(bline);
+            }
+        } 
+    
+        if ( first_elm->rBElement()->is_a_line())
+        {
+
+            dbsk2d_ishock_bline* bline=(dbsk2d_ishock_bline*)
+                first_elm->rBElement();
+
+            if( !(region_belms_ids_[(*it).first].count(bline->id()) ||
+                  region_belms_ids_[(*it).first].count(bline->twinLine()->id()))
+                )
+            {
+                region_belms_ids_[(*it).first].insert(bline->id());
+                region_belms_[(*it).first].push_back(bline);
+            }
+        }
+ 
         vcl_sort((*it).second.begin(),(*it).second.end(),
                  dbsk2d_ishock_grouping_transform::sort_edges);
     }
