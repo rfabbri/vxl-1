@@ -397,7 +397,8 @@ private:
         VlSiftFilt*  model_sift_filter=0,
         vl_sift_pix* query_grad_data=0,
         VlSiftFilt*  query_sift_filter=0,
-        double scale_ratio=1.0);
+        double model_scale_ratio=1.0,
+        double query_scale_ratio=1.0);
 
     vcl_pair<double,double> compute_rgb_sift_cost(
         vcl_vector<dbskr_scurve_sptr>& curve_list1,
@@ -414,7 +415,8 @@ private:
         vl_sift_pix* query_blue_grad_data=0,
         VlSiftFilt* model_sift_filter=0,
         VlSiftFilt* query_sift_filter=0,
-        double scale_ratio=1.0);
+        double model_scale_ratio=1.0,
+        double query_scale_ratio=1.0);
     
     vnl_vector<double> compute_second_order_pooling(
         vcl_map<int,vcl_vector<dbskfg_sift_data> >& fragments,
