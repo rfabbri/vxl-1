@@ -481,9 +481,14 @@ vcl_vector<dbsk2d_ishock_edge*>& shocks)
         //     shocks.push_back(sedge);
         // }
 
+        if ( ob_edges_.count(sedge->id()))
+        {
+            continue;
+        }
+
         //make sure that the edges terminate at an intersection
         //either at the cell boundary or another edge
-        if (!(sedge->cSNode() || sedge->cell_bnd()))
+        if (!(sedge->cSNode()))
         {
             shocks.push_back(sedge);
         }
@@ -605,4 +610,27 @@ void dbsk2d_ishock_graph::print_summary(vcl_ostream &os)
     os << (*curN)->id() << " ";
 
   os << vcl_endl;*/
+}
+
+
+void dbsk2d_ishock_graph::ob_shocks()
+{
+
+    // clear first
+    ob_edges_.clear();
+
+    //first step in validation is to see that the wavefront information
+    //exists and is correct
+    for ( edge_iterator curE = this->all_edges().begin();
+          curE != this->all_edges().end(); curE++ ) 
+    {
+        dbsk2d_ishock_edge* sedge = (*curE);
+
+        if ( sedge->cell_bnd() )
+        {
+            ob_edges_[sedge->id()]=sedge;
+        }
+    }
+
+
 }

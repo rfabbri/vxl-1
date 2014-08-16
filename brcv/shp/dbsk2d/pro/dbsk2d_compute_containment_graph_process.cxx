@@ -401,6 +401,8 @@ bool dbsk2d_compute_containment_graph_process::execute()
     dbsk2d_shock_storage_sptr shock_storage;
     shock_storage.vertical_cast(shock_results[0]);
 
+    shock_storage->get_ishock_graph()->ob_shocks();
+
     pre_process_contours(shock_storage->get_ishock_graph(),
                          preprocess_threshold,
                          gap_distance,

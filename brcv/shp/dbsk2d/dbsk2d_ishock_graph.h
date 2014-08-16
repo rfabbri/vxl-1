@@ -42,6 +42,9 @@ protected:
   //: The vector of edges
   vcl_list<dbsk2d_ishock_edge* > edges_;
 
+  //: ob edges
+  vcl_map<int,dbsk2d_ishock_edge*> ob_edges_;
+
 public:
 
   //: Constructor
@@ -149,6 +152,9 @@ public:
 
   //: Print an ascii summary to the stream
   void print_summary(vcl_ostream &os);
+
+  //: Determine out of bound shocks
+  void ob_shocks();
 
 };
 

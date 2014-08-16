@@ -303,6 +303,7 @@ void dbsk2d_ishock_transform::recompute_full_shock_graph()
 
     }while( valid_shock_computation == false);
 
+    ishock_graph_->ob_shocks();
 }
 
 //: Delete shock vertices
