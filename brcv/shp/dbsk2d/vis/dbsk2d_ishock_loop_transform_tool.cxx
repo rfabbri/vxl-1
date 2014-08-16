@@ -30,6 +30,7 @@ dbsk2d_ishock_loop_transform_tool::handle( const vgui_event & e,
 
 
         dbsk2d_ishock_graph_sptr isg = tableau()->get_ishock_graph();    
+        isg->ob_shocks();
         dbsk2d_ishock_belm* elm=reinterpret_cast<dbsk2d_ishock_belm*>
              (&(*current_));
         dbsk2d_ishock_bpoint* bpoint = (dbsk2d_ishock_bpoint*)elm;

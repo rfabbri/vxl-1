@@ -32,6 +32,7 @@ dbsk2d_ishock_gap_transform_tool::handle( const vgui_event & e,
 
 
         dbsk2d_ishock_graph_sptr isg = tableau()->get_ishock_graph();
+        isg->ob_shocks();
         dbsk2d_ishock_gap_detector detector(isg);
 
             
