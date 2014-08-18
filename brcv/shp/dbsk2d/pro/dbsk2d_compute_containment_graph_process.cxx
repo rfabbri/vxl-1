@@ -35,6 +35,7 @@
 #include <vgl/algo/vgl_fit_lines_2d.h>
 #include <vul/vul_timer.h>
 
+#include <dbsol/dbsol_file_io.h>
 //: Constructor
 dbsk2d_compute_containment_graph_process::
 dbsk2d_compute_containment_graph_process()
@@ -205,6 +206,7 @@ bool dbsk2d_compute_containment_graph_process::execute()
 
     // 3) Keep track of objects to remove
     vcl_vector< vsol_spatial_object_2d_sptr > objects_to_erase;
+    vcl_map< double, vsol_spatial_object_2d_sptr > low_prob_curves;
 
     vsol_box_2d_sptr bbox=0;
 
@@ -258,7 +260,11 @@ bool dbsk2d_compute_containment_graph_process::execute()
             {
                 vsol_polyline_2d_sptr curve = 
                     vsol_list[i]->cast_to_curve()->cast_to_polyline();
-                
+
+                double prob = dbsk2d_transform_manager::Instance().
+                    transform_probability(curve);
+                low_prob_curves[prob]=vsol_list[i];
+
                 if ( curve->p0()->get_p() == curve->p1()->get_p())
                 {
                     // This represents a closed curve
@@ -306,6 +312,15 @@ bool dbsk2d_compute_containment_graph_process::execute()
         
     }
 
+    vcl_map< double, vsol_spatial_object_2d_sptr >::iterator it;
+    for ( it = low_prob_curves.begin() ; it != low_prob_curves.end() ; ++it)
+    {
+        if ( (*it).first < .13 )
+        {
+            input_vsol->remove_object((*it).second);
+        }
+    }
+    
     if ( remove_closed )
     {
         // Now erase closed contours removed
