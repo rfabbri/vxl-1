@@ -278,41 +278,52 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
 
     if ( app_sift_)
     {
-        compute_grad_maps(model_image_,
-                          &model_grad_data_,
-                          &model_sift_filter_);
+        if ( model_image_ )
+        {
+            compute_grad_maps(model_image_,
+                              &model_grad_data_,
+                              &model_sift_filter_);
+            
+            compute_grad_color_maps(model_image_,
+                                    &model_grad_red_data_,
+                                    0);
+            
+            compute_grad_color_maps(model_image_,
+                                    &model_grad_green_data_,
+                                    1);
+            
+            compute_grad_color_maps(model_image_,
+                                    &model_grad_blue_data_,
+                                    2);
 
-        compute_grad_color_maps(model_image_,
-                                &model_grad_red_data_,
-                                0);
+            vl_sift_set_magnif(model_sift_filter_,1.0);
 
-        compute_grad_color_maps(model_image_,
-                                &model_grad_green_data_,
-                                1);
+        }
 
-        compute_grad_color_maps(model_image_,
-                                &model_grad_blue_data_,
-                                2);
+        if ( query_image_ )
+        {
+            vcl_cout<<"Computing query image grad data"<<vcl_endl;
 
-        compute_grad_maps(query_image_,
-                          &query_grad_data_,
-                          &query_sift_filter_);
-
-        compute_grad_color_maps(query_image_,
-                                &query_grad_red_data_,
-                                0);
-
-        compute_grad_color_maps(query_image_,
-                                &query_grad_green_data_,
-                                1);
+            compute_grad_maps(query_image_,
+                              &query_grad_data_,
+                              &query_sift_filter_);
+            
+            compute_grad_color_maps(query_image_,
+                                    &query_grad_red_data_,
+                                    0);
+            
+            compute_grad_color_maps(query_image_,
+                                    &query_grad_green_data_,
+                                    1);
         
-        compute_grad_color_maps(query_image_,
-                                &query_grad_blue_data_,
-                                2);
+            compute_grad_color_maps(query_image_,
+                                    &query_grad_blue_data_,
+                                    2);
 
- 
-        vl_sift_set_magnif(model_sift_filter_,1.0);
-        vl_sift_set_magnif(query_sift_filter_,1.0);
+            vl_sift_set_magnif(query_sift_filter_,1.0);
+
+        }
+
     }
 }
 
@@ -1183,16 +1194,18 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
         
         if ( scale_area_ )
         {
-            vcl_cout<<" by area"<<vcl_endl;
+            vcl_cout<<" by area";
         }
         else if ( scale_root_ )
         {
-            vcl_cout<<" by radii"<<vcl_endl;
+            vcl_cout<<" by radii";
         }
         else
         {
-            vcl_cout<<" by length"<<vcl_endl;
+            vcl_cout<<" by length";
         }
+
+        vcl_cout<<" with shape alg: "<<shape_alg_<<vcl_endl;
 
     }
  
@@ -1290,7 +1303,6 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             }
             else if ( shape_alg_ == SCALE_TO_MEAN )
             {
-                
                 if ( scale_area_ )
                 {
                     
@@ -1379,6 +1391,17 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                 model_images_grad_data_green_.count(key)?
                 model_images_grad_data_green_[key]:
                 0;
+
+            if ( query_image_ )
+            {
+
+                query_images_grad_data = query_grad_data_;
+                query_images_sift_filter = query_sift_filter_;
+                query_images_grad_data_red = query_grad_red_data_;
+                query_images_grad_data_green = query_grad_green_data_;
+                query_images_grad_data_blue = query_grad_blue_data_;
+            
+            }
 
             //: prepare the trees also
             dbskfg_cgraph_directed_tree_sptr model_tree = new 
@@ -5335,8 +5358,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
         //         }
         //     }
         //     query_file.close();
- 
-        //}   
+        // }
     }
     //double norm_val=sift_diff/(overall_index);
     double norm_val=sift_diff/(arclength_shock_curve1+

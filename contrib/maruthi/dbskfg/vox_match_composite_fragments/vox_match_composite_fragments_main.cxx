@@ -61,25 +61,12 @@ int main(int argc, char *argv[])
     vcl_string model_img=params->model_image_();
     vcl_string query_img=params->query_image_();
  
-
-    if (!vul_file::exists(model_img) || !vul_file::exists(query_img)) 
-    {
-        vcl_cerr << "Cannot find image! "<<vcl_endl;
-        return 1;
-    }
-
     // Grab image
     vil_image_resource_sptr model_img_sptr = 
         vil_load_image_resource(model_img.c_str());
 
     vil_image_resource_sptr query_img_sptr = 
         vil_load_image_resource(query_img.c_str());
-
-    if (!model_img_sptr || !query_img_sptr) 
-    {
-        vcl_cerr << "Cannot load image! " << vcl_endl;
-        return 1;
-    }
 
     // Create vid pro storage
     vidpro1_image_storage_sptr model_img_storage = new vidpro1_image_storage();
