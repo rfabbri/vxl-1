@@ -4732,7 +4732,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
 
             if ( !flag )
             {
-                ps1.set(vcl_fabs(width-(ps1.x()/model_scale_ratio)),
+                ps1.set(ps1.x()/model_scale_ratio,
                         ps1.y()/model_scale_ratio);
                 ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
                         ps2.y()/query_scale_ratio);
@@ -4767,7 +4767,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
             {
                 ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
                         ps1.y()/query_scale_ratio);
-                ps2.set(vcl_fabs(width-(ps2.x()/model_scale_ratio)),
+                ps2.set(ps2.x()/model_scale_ratio,
                         ps2.y()/model_scale_ratio);
 
                 shock_curve1.push_back(ps1);
@@ -5013,12 +5013,12 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
             if ( !flag )
             {
 
-                ps1_red.set(vcl_fabs(width-(ps1_red.x()/model_scale_ratio)),
+                ps1_red.set(ps1_red.x()/model_scale_ratio,
                             ps1_red.y()/model_scale_ratio);
-                ps1_green.set(vcl_fabs(width-(ps1_green.x()/model_scale_ratio)),
-                            ps1_green.y()/model_scale_ratio);
-                ps1_blue.set(vcl_fabs(width-(ps1_blue.x()/model_scale_ratio)),
-                            ps1_blue.y()/model_scale_ratio);
+                ps1_green.set(ps1_green.x()/model_scale_ratio,
+                              ps1_green.y()/model_scale_ratio);
+                ps1_blue.set(ps1_blue.x()/model_scale_ratio,
+                             ps1_blue.y()/model_scale_ratio);
 
                 ps2_red.set(vcl_fabs(width-(ps2_red.x()/query_scale_ratio)),
                             ps2_red.y()/query_scale_ratio);
@@ -5116,12 +5116,12 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                 ps1_blue.set(vcl_fabs(width-(ps1_blue.x()/query_scale_ratio)),
                         ps1_blue.y()/query_scale_ratio);
 
-                ps2_red.set(vcl_fabs(width-(ps2_red.x()/model_scale_ratio)),
-                        ps2_red.y()/model_scale_ratio);
-                ps2_green.set(vcl_fabs(width-(ps2_green.x()/model_scale_ratio)),
-                        ps2_green.y()/model_scale_ratio);
-                ps2_blue.set(vcl_fabs(width-(ps2_blue.x()/model_scale_ratio)),
-                        ps2_blue.y()/model_scale_ratio);
+                ps2_red.set(ps2_red.x()/model_scale_ratio,
+                            ps2_red.y()/model_scale_ratio);
+                ps2_green.set(ps2_green.x()/model_scale_ratio,
+                              ps2_green.y()/model_scale_ratio);
+                ps2_blue.set(ps2_blue.x()/model_scale_ratio,
+                             ps2_blue.y()/model_scale_ratio);
 
                 shock_curve1.push_back(ps1_red);
                 shock_curve2.push_back(ps2_red);
