@@ -46,7 +46,7 @@ public:
     //: Enum
     enum ShapeAlgorithmArea
     {
-        SCALE_TO_REF,
+        SCALE_TO_REF=0,
         SCALE_TO_MEAN,
         SCALE_TO_MAX,
         SCALE_TO_MIN
