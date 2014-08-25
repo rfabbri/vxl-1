@@ -29,7 +29,6 @@
 
 #include <vil/vil_rgb.h>
 #include <vil/vil_load.h>
-#include <vil/vil_image_view.h>
 #include <vil/vil_convert.h>
 #include <vil/vil_plane.h>
 #include <vil/vil_transpose.h>
@@ -4653,6 +4652,49 @@ void dbskfg_match_bag_of_fragments::compute_grad_color_maps(
 
 }
 
+void dbskfg_match_bag_of_fragments::compute_grad_color_maps(
+    vil_image_view<double>& image,
+    vl_sift_pix** grad_data)
+{
+
+    unsigned int width  = image.ni();
+    unsigned int height = image.nj();
+
+    double* gradient_magnitude = (double*) 
+        vl_malloc(width*height*sizeof(double));
+    double* gradient_angle     = (double*) 
+        vl_malloc(width*height*sizeof(double));
+
+    double* image_data=image.top_left_ptr();
+
+    vl_imgradient_polar_d(
+        gradient_magnitude, // gradient magnitude 
+        gradient_angle,     // gradient angle
+        1,                  // output width
+        width,              // output height
+        image_data,         // input image
+        width,              // input image width
+        height,             // input image height
+        width);             // input image stride
+
+    *grad_data=(vl_sift_pix*) vl_malloc(sizeof(vl_sift_pix)*width*height*2);
+    
+    unsigned int index=0;
+    for ( unsigned int i=0; i < width*height; ++i)
+    {
+        double mag  = gradient_magnitude[i];
+        double angle= gradient_angle[i];
+        (*grad_data)[index]=mag;
+        ++index;
+        (*grad_data)[index]=angle;
+        ++index;
+    }
+
+    vl_free(gradient_magnitude);
+    vl_free(gradient_angle);
+
+}
+
 vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
     vcl_vector<dbskr_scurve_sptr>& curve_list1,
     vcl_vector<dbskr_scurve_sptr>& curve_list2,
@@ -6045,4 +6087,33 @@ dbskfg_match_bag_of_fragments::compute_curve_matching_cost(
     }
     
     return minCost;
+}
+
+
+void dbskfg_match_bag_of_fragments::convert_to_opponent_space(
+    vil_image_resource_sptr& input_image,
+    vil_image_view<double>& o1,
+    vil_image_view<double>& o2,
+    vil_image_view<double>& o3)
+{
+    vil_image_view<vxl_byte> image = input_image->get_view();
+    unsigned int w = image.ni(); 
+    unsigned int h = image.nj();
+    o1.set_size(w,h);
+    o2.set_size(w,h);
+    o3.set_size(w,h);
+    for (unsigned r = 0; r < h; r++)
+    {
+        for (unsigned c = 0; c < w; c++)
+        {
+            double red=image(c,r,0);
+            double green=image(c,r,1);
+            double blue=image(c,r,2);
+            o1(c,r) = (red-green)/vcl_sqrt(2);
+            o2(c,r) = (red+green-2*blue)/vcl_sqrt(6);
+            o2(c,r) = (red+green+blue)/vcl_sqrt(3);
+        }
+    }
+
+
 }

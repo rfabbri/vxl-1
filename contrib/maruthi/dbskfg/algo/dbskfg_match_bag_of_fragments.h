@@ -36,6 +36,7 @@
 
 #include <vsol/vsol_box_2d.h>
 #include <vgl/algo/vgl_h_matrix_2d_compute_linear.h>
+#include <vil/vil_image_view.h>
 
 //: Form Composite Graph algorithm
 class dbskfg_match_bag_of_fragments
@@ -381,6 +382,9 @@ private:
     void compute_grad_color_maps(vil_image_resource_sptr& input_image,
                                  vl_sift_pix** grad_data,
                                  unsigned int channel);
+
+    void compute_grad_color_maps(vil_image_view<double>& image,
+                                 vl_sift_pix** grad_data);
     
     double compute_curve_matching_cost(
         dbskfg_cgraph_directed_tree_sptr& model_tree,
@@ -423,6 +427,12 @@ private:
         vl_sift_pix* grad_data,
         VlSiftFilt* filter,
         vsol_box_2d_sptr& bbox);
+
+    void convert_to_opponent_space(
+        vil_image_resource_sptr& input_image,
+        vil_image_view<double>& o1,
+        vil_image_view<double>& o2,
+        vil_image_view<double>& o3);
 
     // Make copy ctor private
     dbskfg_match_bag_of_fragments(const dbskfg_match_bag_of_fragments&);
