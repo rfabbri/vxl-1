@@ -53,6 +53,14 @@ public:
         SCALE_TO_MIN
     };
 
+    //: Enum
+    enum ColorSpace
+    {
+        RGB=0,
+        OPP,
+        NOPP
+    };
+
     //: Constructor
     dbskfg_match_bag_of_fragments
         ( vcl_string model_file,
@@ -76,6 +84,7 @@ public:
           double area_weight          = 0.0f,
           double ref_area             = 10000.0f,
           ShapeAlgorithmArea shape_alg= SCALE_TO_MEAN,
+          ColorSpace         color_space = OPP,
           vil_image_resource_sptr model_image=0,
           vil_image_resource_sptr query_image=0,
           vcl_string model_image_path="");
@@ -291,6 +300,9 @@ private:
     // Algorithm for shape coice
     ShapeAlgorithmArea shape_alg_;
 
+    // Color Space to use
+    ColorSpace color_space_;
+
     void load_model(vcl_string model_dir);
     void load_query(vcl_string query_dir);
 
@@ -428,11 +440,12 @@ private:
         VlSiftFilt* filter,
         vsol_box_2d_sptr& bbox);
 
-    void convert_to_opponent_space(
+    void convert_to_color_space(
         vil_image_resource_sptr& input_image,
         vil_image_view<double>& o1,
         vil_image_view<double>& o2,
-        vil_image_view<double>& o3);
+        vil_image_view<double>& o3,
+        ColorSpace color_space);
 
     // Make copy ctor private
     dbskfg_match_bag_of_fragments(const dbskfg_match_bag_of_fragments&);

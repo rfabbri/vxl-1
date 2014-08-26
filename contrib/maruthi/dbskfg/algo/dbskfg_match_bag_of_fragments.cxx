@@ -97,6 +97,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
     double area_weight,
     double ref_area,
     ShapeAlgorithmArea shape_alg,
+    ColorSpace color_space,
     vil_image_resource_sptr model_image,
     vil_image_resource_sptr query_image,
     vcl_string model_image_path
@@ -122,6 +123,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
       area_weight_(area_weight),
       ref_area_(ref_area),
       shape_alg_(shape_alg),
+      color_space_(color_space),
       model_image_(model_image),
       query_image_(query_image),
       model_grad_data_(0),
@@ -206,18 +208,18 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                 compute_grad_maps(model_img_sptr,
                                   &grad_data,
                                   &sift_filter);
+
+                vil_image_view<double> o1,o2,o3;
+                convert_to_color_space(model_img_sptr,o1,o2,o3,color_space_);
+
+                compute_grad_color_maps(o1,
+                                        &red_data);
                 
-                compute_grad_color_maps(model_img_sptr,
-                                        &red_data,
-                                        0);
+                compute_grad_color_maps(o2,
+                                        &green_data);
                 
-                compute_grad_color_maps(model_img_sptr,
-                                        &green_data,
-                                        1);
-                
-                compute_grad_color_maps(model_img_sptr,
-                                        &blue_data,
-                                        2);
+                compute_grad_color_maps(o3,
+                                        &blue_data);
 
                 vl_sift_set_magnif(sift_filter,1.0);
 
@@ -283,17 +285,17 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                               &model_grad_data_,
                               &model_sift_filter_);
             
-            compute_grad_color_maps(model_image_,
-                                    &model_grad_red_data_,
-                                    0);
+            vil_image_view<double> o1,o2,o3;
+            convert_to_color_space(model_image_,o1,o2,o3,color_space_);
             
-            compute_grad_color_maps(model_image_,
-                                    &model_grad_green_data_,
-                                    1);
+            compute_grad_color_maps(o1,
+                                    &model_grad_red_data_);
             
-            compute_grad_color_maps(model_image_,
-                                    &model_grad_blue_data_,
-                                    2);
+            compute_grad_color_maps(o2,
+                                    &model_grad_green_data_);
+            
+            compute_grad_color_maps(o3,
+                                    &model_grad_blue_data_);
 
             vl_sift_set_magnif(model_sift_filter_,1.0);
 
@@ -306,19 +308,19 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
             compute_grad_maps(query_image_,
                               &query_grad_data_,
                               &query_sift_filter_);
-            
-            compute_grad_color_maps(query_image_,
-                                    &query_grad_red_data_,
-                                    0);
-            
-            compute_grad_color_maps(query_image_,
-                                    &query_grad_green_data_,
-                                    1);
-        
-            compute_grad_color_maps(query_image_,
-                                    &query_grad_blue_data_,
-                                    2);
 
+            vil_image_view<double> o1,o2,o3;
+            convert_to_color_space(query_image_,o1,o2,o3,color_space_);
+            
+            compute_grad_color_maps(o1,
+                                    &query_grad_red_data_);
+            
+            compute_grad_color_maps(o2,
+                                    &query_grad_green_data_);
+            
+            compute_grad_color_maps(o3,
+                                    &query_grad_blue_data_);
+            
             vl_sift_set_magnif(query_sift_filter_,1.0);
 
         }
@@ -6090,11 +6092,12 @@ dbskfg_match_bag_of_fragments::compute_curve_matching_cost(
 }
 
 
-void dbskfg_match_bag_of_fragments::convert_to_opponent_space(
+void dbskfg_match_bag_of_fragments::convert_to_color_space(
     vil_image_resource_sptr& input_image,
     vil_image_view<double>& o1,
     vil_image_view<double>& o2,
-    vil_image_view<double>& o3)
+    vil_image_view<double>& o3,
+    ColorSpace color_space)
 {
     vil_image_view<vxl_byte> image = input_image->get_view();
     unsigned int w = image.ni(); 
@@ -6102,16 +6105,38 @@ void dbskfg_match_bag_of_fragments::convert_to_opponent_space(
     o1.set_size(w,h);
     o2.set_size(w,h);
     o3.set_size(w,h);
-    for (unsigned r = 0; r < h; r++)
+
+    if ( color_space == RGB )
     {
-        for (unsigned c = 0; c < w; c++)
+
+        vil_image_view<vxl_byte> red   = vil_plane(image,0);
+        vil_image_view<vxl_byte> green = vil_plane(image,1);
+        vil_image_view<vxl_byte> blue  = vil_plane(image,2);
+        
+        vil_convert_cast(red,o1);
+        vil_convert_cast(green,o2);
+        vil_convert_cast(blue,o3);
+
+    }
+    else
+    {
+        for (unsigned r = 0; r < h; r++)
         {
-            double red=image(c,r,0);
-            double green=image(c,r,1);
-            double blue=image(c,r,2);
-            o1(c,r) = (red-green)/vcl_sqrt(2);
-            o2(c,r) = (red+green-2*blue)/vcl_sqrt(6);
-            o2(c,r) = (red+green+blue)/vcl_sqrt(3);
+            for (unsigned c = 0; c < w; c++)
+            {
+                double red=image(c,r,0);
+                double green=image(c,r,1);
+                double blue=image(c,r,2);
+                o1(c,r) = (red-green)/vcl_sqrt(2);
+                o2(c,r) = (red+green-2*blue)/vcl_sqrt(6);
+                o3(c,r) = (red+green+blue)/vcl_sqrt(3);
+                
+                if ( color_space == NOPP )
+                {
+                    o1(c,r)=o1(c,r)/o3(c,r);
+                    o2(c,r)=o2(c,r)/o3(c,r);
+                }
+            }
         }
     }
 

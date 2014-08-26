@@ -25,6 +25,11 @@ dbskfg_match_bag_of_fragments_process::dbskfg_match_bag_of_fragments_process()
     choices.push_back("Scale to Larger Shape");
     choices.push_back("Scale to Smaller Shape");
 
+    vcl_vector<vcl_string> color_choices;
+    color_choices.push_back("RGB");
+    color_choices.push_back("Opponent");
+    color_choices.push_back("Normalized Opponent");
+
     if (!parameters()->add( "Model folder:" , 
                             "-model_folder" , bpro1_filepath("", "")) ||
         !parameters()->add( "Query folder:" , 
@@ -70,7 +75,9 @@ dbskfg_match_bag_of_fragments_process::dbskfg_match_bag_of_fragments_process()
                            "-area_weight", (double) 0.0f) ||
         !parameters()->add("reference area",
                            "-ref_area", (double) 10000.0f)||
-        !parameters()->add("shape algorithm", "-shape_alg",choices,4)
+        !parameters()->add("shape algorithm", "-shape_alg",choices,1) ||
+        !parameters()->add("color space", "-color_space",color_choices,1)
+        
 
         )
 
@@ -177,7 +184,9 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     bool outside_shock          = false;
     double area_weight          = 0.0f;
     double ref_area             = 10000.0f;
-    unsigned int shape_alg      = 2;
+    unsigned int shape_alg      = 1;
+    unsigned int color_alg      = 1;
+
 
     parameters()->get_value("-elastic_splice_cost"  , elastic_splice_cost); 
     parameters()->get_value("-scurve_sample_ds"     , scurve_sample_ds);
@@ -197,6 +206,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     parameters()->get_value("-area_weight"          , area_weight);
     parameters()->get_value("-ref_area"             , ref_area);
     parameters()->get_value("-shape_alg"            , shape_alg );
+    parameters()->get_value("-color_space"          , color_alg );
 
     dbskfg_match_bag_of_fragments::ShapeAlgorithmArea shape_alg_area=
         dbskfg_match_bag_of_fragments::SCALE_TO_MEAN;
@@ -221,6 +231,22 @@ bool dbskfg_match_bag_of_fragments_process::execute()
         
     }
 
+    dbskfg_match_bag_of_fragments::ColorSpace color_space =
+        dbskfg_match_bag_of_fragments::OPP;
+   
+    if ( color_alg == 0 )
+    {
+        color_space = dbskfg_match_bag_of_fragments::RGB;
+    }
+    else if ( color_alg == 1 )
+    {
+        color_space = dbskfg_match_bag_of_fragments::OPP;
+    }
+    else
+    {
+        color_space = dbskfg_match_bag_of_fragments::NOPP;
+    }
+
     dbskfg_match_bag_of_fragments match_frags(model_dir,
                                               query_dir,
                                               output_file,
@@ -242,6 +268,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
                                               area_weight,
                                               ref_area,
                                               shape_alg_area,
+                                              color_space,
                                               model_image,
                                               query_image,
                                               model_image_path);
