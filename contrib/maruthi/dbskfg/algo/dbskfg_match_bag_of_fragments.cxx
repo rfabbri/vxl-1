@@ -4740,19 +4740,34 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_sift_cost(
         double local_arclength_shock_curve1=0.0;
         double local_arclength_shock_curve2=0.0;
         
-        splice_cost_shock_curve1=sc1->splice_cost(
+        double sc1_splice = sc1->splice_cost(
             scurve_matching_R_,
             elastic_splice_cost_,
             false,
             combined_edit_,
-            sc1->is_leaf_edge())+splice_cost_shock_curve1;
+            sc1->is_leaf_edge());
 
-        splice_cost_shock_curve2=sc2->splice_cost(
+        double sc2_splice = sc2->splice_cost(
             scurve_matching_R_,
             elastic_splice_cost_,
             false,
             combined_edit_,
-            sc2->is_leaf_edge())+splice_cost_shock_curve2;
+            sc2->is_leaf_edge());
+
+        if ( !flag )
+        {
+            sc1_splice=sc1_splice/model_scale_ratio;
+            sc2_splice=sc2_splice/query_scale_ratio;
+        }
+        else
+        {
+            sc1_splice=sc1_splice/query_scale_ratio;
+            sc2_splice=sc2_splice/model_scale_ratio;
+
+        }
+
+        splice_cost_shock_curve1+=sc1_splice;
+        splice_cost_shock_curve2+=sc2_splice;
 
         for (unsigned j = 0; j < map_list[i].size(); ++j) 
         {
@@ -5014,19 +5029,34 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
         double local_arclength_shock_curve1=0.0;
         double local_arclength_shock_curve2=0.0;
 
-        splice_cost_shock_curve1=sc1->splice_cost(
+        double sc1_splice = sc1->splice_cost(
             scurve_matching_R_,
             elastic_splice_cost_,
             false,
             combined_edit_,
-            sc1->is_leaf_edge())+splice_cost_shock_curve1;
+            sc1->is_leaf_edge());
 
-        splice_cost_shock_curve2=sc2->splice_cost(
+        double sc2_splice = sc2->splice_cost(
             scurve_matching_R_,
             elastic_splice_cost_,
             false,
             combined_edit_,
-            sc2->is_leaf_edge())+splice_cost_shock_curve2;
+            sc2->is_leaf_edge());
+
+        if ( !flag )
+        {
+            sc1_splice=sc1_splice/model_scale_ratio;
+            sc2_splice=sc2_splice/query_scale_ratio;
+        }
+        else
+        {
+            sc1_splice=sc1_splice/query_scale_ratio;
+            sc2_splice=sc2_splice/model_scale_ratio;
+
+        }
+
+        splice_cost_shock_curve1+=sc1_splice;
+        splice_cost_shock_curve2+=sc2_splice;
 
         for (unsigned j = 0; j < map_list[i].size(); ++j) 
         {
