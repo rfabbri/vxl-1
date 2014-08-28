@@ -731,15 +731,122 @@ get_curve(int start_dart, int end_dart, bool construct_circular_ends)
 //------------------------------------------------------------------------------
 //: find and cache the shock curve for this pair of darts, if not already cached
 // \todo write this
-vcl_vector<vnl_vector_fixed<vl_sift_pix,128> >& dbskfg_cgraph_directed_tree::
+vcl_vector<vnl_vector_fixed<vl_sift_pix,384> >& dbskfg_cgraph_directed_tree::
 get_sift_along_curve(int start_dart, int end_dart)
 {
 
   vcl_pair<int, int> p;
   p.first = start_dart;
   p.second = end_dart;
-  return dart_path_sift_map_[p];
-    
+ 
+  if ( ! dart_path_sift_map_.count(p) )
+  {
+
+       dbskr_sc_pair_sptr sc_pair = dart_path_scurve_map_[p];
+       dbskr_scurve_sptr sc1 = sc_pair->coarse;
+
+       unsigned int num_points = sc1->num_points();
+       vcl_vector<vnl_vector_fixed<vl_sift_pix,384> > sift_descrs;
+       sift_descrs.reserve(num_points);
+       for ( unsigned int i=0; i < num_points; ++i)
+       {
+
+           // Shock Point 1 from Model
+           vgl_point_2d<double> ps1_red = sc1->sh_pt(i);
+           double radius_ps1_red        = sc1->time(i);
+           double theta_ps1_red         = sc1->theta(i);
+           vl_sift_pix descr_ps1_red[128];
+           memset(descr_ps1_red, 0, sizeof(vl_sift_pix)*128);
+      
+           vgl_point_2d<double> ps1_green = sc1->sh_pt(i);
+           double radius_ps1_green        = sc1->time(i);
+           double theta_ps1_green         = sc1->theta(i);
+           vl_sift_pix descr_ps1_green[128];
+           memset(descr_ps1_green, 0, sizeof(vl_sift_pix)*128);
+
+           vgl_point_2d<double> ps1_blue = sc1->sh_pt(i);
+           double radius_ps1_blue        = sc1->time(i);
+           double theta_ps1_blue         = sc1->theta(i);
+           vl_sift_pix descr_ps1_blue[128];
+           memset(descr_ps1_blue, 0, sizeof(vl_sift_pix)*128);
+
+           if ( !mirror_ )
+           {
+               ps1_red.set(ps1_red.x()/scale_ratio_,
+                           ps1_red.y()/scale_ratio_);
+               ps1_green.set(ps1_green.x()/scale_ratio_,
+                             ps1_green.y()/scale_ratio_);
+               ps1_blue.set(ps1_blue.x()/scale_ratio_,
+                            ps1_blue.y()/scale_ratio_);
+           }
+           else
+           {
+               double width = bbox_->width();
+               ps1_red.set(vcl_fabs(width-(ps1_red.x()/scale_ratio_)),
+                           ps1_red.y()/scale_ratio_);
+               ps1_green.set(vcl_fabs(width-(ps1_green.x()/scale_ratio_)),
+                             ps1_green.y()/scale_ratio_);
+               ps1_blue.set(vcl_fabs(width-(ps1_blue.x()/scale_ratio_)),
+                            ps1_blue.y()/scale_ratio_);
+
+           }
+
+           vl_sift_calc_raw_descriptor(sift_filter_,
+                                       red_grad_data_,
+                                       descr_ps1_red,
+                                       sift_filter_->width,
+                                       sift_filter_->height,
+                                       ps1_red.x(),
+                                       ps1_red.y(),
+                                       (radius_ps1_red/scale_ratio_)
+                                       /2,
+                                       theta_ps1_red);
+
+           vl_sift_calc_raw_descriptor(sift_filter_,
+                                       green_grad_data_,
+                                       descr_ps1_green,
+                                       sift_filter_->width,
+                                       sift_filter_->height,
+                                       ps1_green.x(),
+                                       ps1_green.y(),
+                                       (radius_ps1_green/scale_ratio_)
+                                       /2,
+                                       theta_ps1_green);
+
+           vl_sift_calc_raw_descriptor(sift_filter_,
+                                       blue_grad_data_,
+                                       descr_ps1_blue,
+                                       sift_filter_->width,
+                                       sift_filter_->height,
+                                       ps1_blue.x(),
+                                       ps1_blue.y(),
+                                       (radius_ps1_blue/scale_ratio_)
+                                       /2,
+                                       theta_ps1_blue);
+
+           vnl_vector_fixed<vl_sift_pix,384> sift;
+           for ( unsigned int s=0; s < 128 ; ++s)
+           {
+               sift.put(s,descr_ps1_red[s]);
+               sift.put(s+128,descr_ps1_green[s]);
+               sift.put(s+256,descr_ps1_blue[s]);
+           }
+           
+           sift.normalize();
+           
+           
+           sift_descrs.push_back(sift);
+
+       }
+
+       dart_path_sift_map_[p]=sift_descrs;
+
+       return dart_path_sift_map_[p];
+  }
+  else
+  {
+      return dart_path_sift_map_[p];
+  }
 }
 
 

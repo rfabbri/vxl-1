@@ -99,7 +99,7 @@ public:
   
   //: find and cache the sift along shock curve for this pair of darts, 
   // if not already cached
-  vcl_vector<vnl_vector_fixed<vl_sift_pix,128> >& 
+  vcl_vector<vnl_vector_fixed<vl_sift_pix,384> >& 
       get_sift_along_curve(int start_dart, int end_dart);
 
   //: returns both the coarse and dense version of shock curve
@@ -235,7 +235,7 @@ protected:
 
   //: cache the sift points computed
   vcl_map<vcl_pair<int,int>, vcl_vector<
-      vnl_vector_fixed<vl_sift_pix,128> > > dart_path_sift_map_;
+      vnl_vector_fixed<vl_sift_pix,384> > > dart_path_sift_map_;
 
   // Cost-related parameters /////////////////////////////////////////////
   // For now only, may change later
