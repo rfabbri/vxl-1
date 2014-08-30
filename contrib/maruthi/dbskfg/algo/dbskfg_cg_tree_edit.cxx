@@ -299,8 +299,8 @@ get_cost(int td1, int d1, int td2, int d2)
                     vcl_vector<vnl_vector_fixed<vl_sift_pix,128 > > tree1_sift;
                     vcl_vector<vnl_vector_fixed<vl_sift_pix,128 > > tree2_sift;
                     
-                    tree1_sift = cg_tree1->get_sift_along_curve(td1, d1);
-                    tree2_sift = cg_tree2->get_sift_along_curve(td2, d2);
+                    // tree1_sift = cg_tree1->get_sift_along_curve(td1, d1);
+                    // tree2_sift = cg_tree2->get_sift_along_curve(td2, d2);
                     
                     // {
                     //     vcl_stringstream model_stream;
