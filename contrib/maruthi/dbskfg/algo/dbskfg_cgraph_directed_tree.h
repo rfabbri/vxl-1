@@ -51,7 +51,8 @@ public:
                               VlSiftFilt* sift_filter=0,
                               vl_sift_pix* red_grad_data=0,
                               vl_sift_pix* green_grad_data=0,
-                              vl_sift_pix* blue_grad_data=0);
+                              vl_sift_pix* blue_grad_data=0,
+                              unsigned int id=0);
 
   //: Destructor;
   /* virtual */ ~dbskfg_cgraph_directed_tree();
@@ -66,6 +67,9 @@ public:
                bool elastic_splice_cost, bool construct_circular_ends, 
                bool dpmatch_combined,float cost);
   
+  //: get tag
+  unsigned int get_id(){return id_;}
+
   // Graph-related--------------------------------------------------------------
 
   // used in get_scurve(...)
@@ -273,6 +277,7 @@ protected:
   
   vcl_vector<double> average_ds_;
 
+  unsigned int id_;
 };
 
 #endif // dbskfg_cgraph_directed_tree_h_

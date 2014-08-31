@@ -240,6 +240,17 @@ private:
     // Holds normalization constant
     vnl_matrix<double> binary_app_rgb_sim_matrix_;
 
+    // Holds dart matrix
+    vcl_map<unsigned int,vcl_vector< vcl_pair<vcl_pair<int,int>,double> > > 
+        model_dart_distances_;
+    
+    vcl_map<unsigned int,
+        vcl_vector< vcl_pair<vcl_pair<int,int>,dbskr_scurve_sptr > > >
+        model_dart_curves_;
+        
+    vcl_map<vcl_pair<int,int>,vcl_vector<vgl_point_2d<double> > > 
+        query_dart_curves_;
+
     // Keep output file
     vcl_string output_match_file_;
     vcl_string output_html_file_;
@@ -421,6 +432,7 @@ private:
         vcl_vector<dbskr_scurve_sptr>& curve_list2,
         vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
         vcl_vector< pathtable_key >& path_map,
+        vcl_vector<double>& dart_distances,
         bool flag=false,
         double width=0.0,
         vl_sift_pix* model_red_grad_data=0,
@@ -447,6 +459,8 @@ private:
         vil_image_view<double>& o3,
         ColorSpace color_space);
 
+    void write_out_dart_data();
+    
     // Make copy ctor private
     dbskfg_match_bag_of_fragments(const dbskfg_match_bag_of_fragments&);
 

@@ -1415,7 +1415,8 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                                             model_images_sift_filter,
                                             model_images_grad_data_red,
                                             model_images_grad_data_green,
-                                            model_images_grad_data_blue);
+                                            model_images_grad_data_blue,
+                                            (*m_iterator).first);
 
             model_tree->acquire_tree_topology((*m_iterator).second.second);
 
@@ -1535,6 +1536,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
     }
 
     // write out data
+    write_out_dart_data();
 
     vcl_ofstream binary_sim_file;
     binary_sim_file.open(output_binary_file_.c_str(),
@@ -3509,11 +3511,15 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
                                                            map_list,
                                                            path_map,
                                                            flag);
-        vcl_pair<double,double> sift_rgb_cost=compute_rgb_sift_cost(curve_list1,
-                                                                    curve_list2,
-                                                                    map_list,
-                                                                    path_map,
-                                                                    flag);
+        vcl_vector<double> dart_distances;
+        vcl_pair<double,double> sift_rgb_cost=compute_rgb_sift_cost(
+            curve_list1,
+            curve_list2,
+            map_list,
+            path_map,
+            dart_distances,
+            flag);
+
         
         double app_time = app_timer.real()/1000.0;
         app_timer.mark();
@@ -3721,7 +3727,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         
     }
     
-  
+    if ( !edit.get_switched() )
     {
         
         edit.clear();
@@ -3839,6 +3845,10 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         query_tree->reset_up_flags();
         
     }
+    else
+    {
+        flag=true;
+    }
 
     double shape_time = shape_timer.real()/1000.0;
     shape_timer.mark();
@@ -3886,11 +3896,13 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                                                            query_tree
                                                            ->get_scale_ratio());
 
+        vcl_vector<double> dart_distances;
         vcl_pair<double,double> sift_rgb_cost=compute_rgb_sift_cost(
             curve_list1,
             curve_list2,
             map_list,
             path_map,
+            dart_distances,
             flag,
             width,
             model_red_grad_data,
@@ -3904,6 +3916,63 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
             model_tree->get_scale_ratio(),
             query_tree->get_scale_ratio());
         
+        unsigned int model_tag=model_tree->get_id();
+
+        if ( !model_dart_distances_.count(model_tag) )
+        {
+            if ( !flag )
+            {
+                // Get matching pairs
+                for (unsigned m = 0; m < map_list.size(); m++) 
+                {
+                    dbskr_scurve_sptr mc = curve_list1[m];
+                    vcl_pair<int,int> query_key(
+                        path_map[m].second.first,
+                        path_map[m].second.second);
+                    double cost=dart_distances[m];
+                    
+                    vcl_pair<vcl_pair<int,int>,double> key1;
+                    vcl_pair<vcl_pair<int,int>,dbskr_scurve_sptr> key2;
+                    
+                    key1.first=query_key;
+                    key1.second=cost;
+                    
+                    key2.first=query_key;
+                    key2.second=mc;
+                    
+                    model_dart_distances_[model_tag].push_back(key1);
+                    model_dart_curves_[model_tag].push_back(key2);
+                }
+                
+                
+            }
+            else
+            {
+                // Get matching pairs
+                for (unsigned m = 0; m < map_list.size(); m++) 
+                {
+                    dbskr_scurve_sptr mc = curve_list2[m];
+                    vcl_pair<int,int> query_key(
+                        path_map[m].first.first,
+                        path_map[m].first.second);
+                    double cost=dart_distances[m];
+                    
+                    vcl_pair<vcl_pair<int,int>,double> key1;
+                    vcl_pair<vcl_pair<int,int>,dbskr_scurve_sptr> key2;
+                    
+                    key1.first=query_key;
+                    key1.second=cost;
+                    
+                    key2.first=query_key;
+                    key2.second=mc;
+                    
+                    model_dart_distances_[model_tag].push_back(key1);
+                    model_dart_curves_[model_tag].push_back(key2);
+
+                }
+            }
+        }
+            
         double app_time = app_timer.real()/1000.0;
         app_timer.mark();
         
@@ -4350,11 +4419,14 @@ void dbskfg_match_bag_of_fragments::match_two_debug_graphs(
                                                            map_list,
                                                            path_map,
                                                            flag);
-        vcl_pair<double,double> sift_rgb_cost=compute_rgb_sift_cost(curve_list1,
-                                                                    curve_list2,
-                                                                    map_list,
-                                                                    path_map,
-                                                                    flag);
+        vcl_vector<double> dart_distances;
+        vcl_pair<double,double> sift_rgb_cost=compute_rgb_sift_cost(
+            curve_list1,
+            curve_list2,
+            map_list,
+            path_map,
+            dart_distances,
+            flag);
         
         double app_time = app_timer.real()/1000.0;
         app_timer.mark();
@@ -4986,6 +5058,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
     vcl_vector<dbskr_scurve_sptr>& curve_list2,
     vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
     vcl_vector< pathtable_key >& path_map,
+    vcl_vector<double>& dart_distances,
     bool flag,
     double width,
     vl_sift_pix* model_red_grad_data,
@@ -5042,6 +5115,22 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
             false,
             combined_edit_,
             sc2->is_leaf_edge());
+
+        
+        vcl_pair<int,int> query_key(0,0);
+        
+        if ( !flag )
+        {
+            query_key.first=path_map[i].second.first;
+            query_key.second=path_map[i].second.second;
+        }
+        else
+        {
+            query_key.first=path_map[i].first.first;
+            query_key.second=path_map[i].first.second;
+        }
+
+        query_dart_curves_.erase(query_key);
 
         if ( !flag )
         {
@@ -5196,6 +5285,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                 radius_ps2_green=(radius_ps2_green/query_scale_ratio);
                 radius_ps2_blue=(radius_ps2_blue/query_scale_ratio);
 
+                query_dart_curves_[query_key].push_back(ps2_red);
 
             }
             else
@@ -5293,7 +5383,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                 radius_ps2_green=(radius_ps2_green/model_scale_ratio);
                 radius_ps2_blue=(radius_ps2_blue/model_scale_ratio);
      
-
+                query_dart_curves_[query_key].push_back(ps1_red);
             }
 
             vcl_vector<vl_sift_pix> descr_vec1_red;
@@ -5393,6 +5483,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
 
         arclength_shock_curve2=
             local_arclength_shock_curve2+arclength_shock_curve2;
+
+        dart_distances.push_back(local_distance);
 
         // vcl_cout<<"Tree 1 dart ("
         //         <<path_map[i].first.first
@@ -6169,6 +6261,81 @@ void dbskfg_match_bag_of_fragments::convert_to_color_space(
             }
         }
     }
+
+
+}
+
+void dbskfg_match_bag_of_fragments::write_out_dart_data()
+{
+    
+    vcl_string dart_file="dart_data.txt";
+
+    vcl_ofstream model_file(dart_file.c_str());
+    model_file<<query_dart_curves_.size()<<vcl_endl;
+
+    {
+        vcl_map<vcl_pair<int,int>,vcl_vector<vgl_point_2d<double> > >
+            ::iterator it;
+        
+        
+        for ( it = query_dart_curves_.begin() ; it != query_dart_curves_.end();
+              ++it)
+        {
+            vcl_pair<int,int> pair=(*it).first;
+            vcl_vector<vgl_point_2d<double> > curve=(*it).second;
+            model_file<<pair.first<<","<<pair.second<<vcl_endl;
+            model_file<<curve.size()<<vcl_endl;
+            for ( unsigned int c=0; c < curve.size() ; ++c)
+            {
+                model_file<<curve[c].x()<<","<<curve[c].y()<<vcl_endl;
+            }
+        }
+    }
+
+    // Write out model
+    {
+
+        model_file<<model_dart_distances_.size()<<vcl_endl;
+        vcl_map<unsigned int,
+            vcl_vector< vcl_pair<vcl_pair<int,int>,double> > >::
+            iterator it;
+        for ( it = model_dart_distances_.begin() ; it != model_dart_distances_
+                  .end(); ++it)
+        {
+            vcl_vector< vcl_pair<vcl_pair<int,int>,double> > vec=
+                (*it).second;
+            vcl_vector< vcl_pair<vcl_pair<int,int>, dbskr_scurve_sptr > > p2 =
+                model_dart_curves_[(*it).first];
+
+            model_file<<vec.size()<<vcl_endl;
+            for ( unsigned int v=0; v < vec.size() ; ++v)
+            {
+                vcl_pair<vcl_pair<int,int>,double> pair=vec[v];
+                model_file<<pair.first.first<<","<<pair.first.second<<vcl_endl;
+                model_file<<pair.second<<vcl_endl;
+
+                dbskr_scurve_sptr curve=p2[v].second;
+                model_file<<curve->num_points()<<vcl_endl;
+                
+                for ( unsigned int c=0; c < curve->num_points(); ++c)
+                {
+                    vgl_point_2d<double> pt=curve->sh_pt(c);
+                    model_file<<pt.x()<<","<<pt.y()<<vcl_endl;
+                }
+                
+            }
+            
+        }
+        
+        
+    }
+    model_file.close();
+
+
+
+
+
+
 
 
 }
