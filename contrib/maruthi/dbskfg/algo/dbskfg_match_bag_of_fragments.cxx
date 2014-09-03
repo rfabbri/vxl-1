@@ -3933,15 +3933,15 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
             query_tree->get_scale_ratio());
         
         unsigned int model_tag=model_tree->get_id();
+        
+        if ( model_dart_distances_.count(model_tag))
+        {
+            model_dart_distances_.erase(model_tag);
+            model_dart_curves_.erase(model_tag);
+        }
 
         if ( !flag )
         {
-            if ( model_dart_distances_.count(model_tag))
-            {
-                model_dart_distances_.erase(model_tag);
-                model_dart_curves_.erase(model_tag);
-            }
-
             // Get matching pairs
             for (unsigned m = 0; m < map_list.size(); m++) 
             {
@@ -6378,10 +6378,13 @@ void dbskfg_match_bag_of_fragments::write_out_dart_data()
                 dbskr_scurve_sptr curve=p2[v].second;
                 model_file<<curve->num_points()<<vcl_endl;
                 
+                double ratio=curve->get_scale_ratio();
                 for ( unsigned int c=0; c < curve->num_points(); ++c)
                 {
                     vgl_point_2d<double> pt=curve->sh_pt(c);
-                    model_file<<pt.x()<<","<<pt.y()<<vcl_endl;
+                    double scale_x=pt.x()/ratio;
+                    double scale_y=pt.y()/ratio;
+                    model_file<<scale_x<<","<<scale_y<<vcl_endl;
                 }
                 
             }
