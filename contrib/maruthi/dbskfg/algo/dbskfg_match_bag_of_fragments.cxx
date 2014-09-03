@@ -3926,9 +3926,17 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                 for (unsigned m = 0; m < map_list.size(); m++) 
                 {
                     dbskr_scurve_sptr mc = curve_list1[m];
-                    vcl_pair<int,int> query_key(
-                        path_map[m].second.first,
-                        path_map[m].second.second);
+                    vcl_pair<unsigned int,unsigned int> query_key(
+                        curve_list2[m]->get_curve_id().first,
+                        curve_list2[m]->get_curve_id().second);
+                    if ( !query_dart_curves_.count(query_key))
+                    {
+                        vcl_pair<unsigned int,unsigned int> temp
+                            = query_key;
+                        query_key.first=temp.second;
+                        query_key.second=temp.first;                        
+                    }
+
                     double cost=dart_distances[m];
                     
                     vcl_pair<vcl_pair<int,int>,double> key1;
@@ -3952,9 +3960,17 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                 for (unsigned m = 0; m < map_list.size(); m++) 
                 {
                     dbskr_scurve_sptr mc = curve_list2[m];
-                    vcl_pair<int,int> query_key(
-                        path_map[m].first.first,
-                        path_map[m].first.second);
+                    vcl_pair<unsigned int,unsigned int> query_key(
+                        curve_list1[m]->get_curve_id().first,
+                        curve_list1[m]->get_curve_id().second);
+                    if ( !query_dart_curves_.count(query_key))
+                    {
+                        vcl_pair<unsigned int,unsigned int> temp
+                            = query_key;
+                        query_key.first=temp.second;
+                        query_key.second=temp.first;
+                        
+                    }
                     double cost=dart_distances[m];
                     
                     vcl_pair<vcl_pair<int,int>,double> key1;
@@ -5117,20 +5133,34 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
             sc2->is_leaf_edge());
 
         
-        vcl_pair<int,int> query_key(0,0);
+        vcl_pair<unsigned int,unsigned int> query_key1(0,0);
+        vcl_pair<unsigned int,unsigned int> query_key2(0,0);
         
         if ( !flag )
         {
-            query_key.first=path_map[i].second.first;
-            query_key.second=path_map[i].second.second;
+            query_key1=sc2->get_curve_id();
+            
+            query_key2.first = query_key1.second;
+            query_key2.second= query_key1.first;
         }
         else
         {
-            query_key.first=path_map[i].first.first;
-            query_key.second=path_map[i].first.second;
+            query_key1=sc1->get_curve_id();
+           
+            query_key2.first = query_key1.second;
+            query_key2.second= query_key1.first;
+
         }
 
-        query_dart_curves_.erase(query_key);
+        bool add_curve=true;
+
+        if ( query_dart_curves_.count(query_key1) ||
+             query_dart_curves_.count(query_key2) )
+        {
+            add_curve=false;
+        }
+        
+        
 
         if ( !flag )
         {
@@ -5285,7 +5315,10 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                 radius_ps2_green=(radius_ps2_green/query_scale_ratio);
                 radius_ps2_blue=(radius_ps2_blue/query_scale_ratio);
 
-                query_dart_curves_[query_key].push_back(ps2_red);
+                if ( add_curve )
+                {
+                    query_dart_curves_[query_key1].push_back(ps2_red);
+                }
 
             }
             else
@@ -5383,7 +5416,10 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
                 radius_ps2_green=(radius_ps2_green/model_scale_ratio);
                 radius_ps2_blue=(radius_ps2_blue/model_scale_ratio);
      
-                query_dart_curves_[query_key].push_back(ps1_red);
+                if ( add_curve )
+                {
+                    query_dart_curves_[query_key1].push_back(ps1_red);
+                }
             }
 
             vcl_vector<vl_sift_pix> descr_vec1_red;
@@ -6274,7 +6310,8 @@ void dbskfg_match_bag_of_fragments::write_out_dart_data()
     model_file<<query_dart_curves_.size()<<vcl_endl;
 
     {
-        vcl_map<vcl_pair<int,int>,vcl_vector<vgl_point_2d<double> > >
+        vcl_map<vcl_pair<unsigned int,unsigned int>,
+            vcl_vector<vgl_point_2d<double> > >
             ::iterator it;
         
         
@@ -6297,20 +6334,24 @@ void dbskfg_match_bag_of_fragments::write_out_dart_data()
 
         model_file<<model_dart_distances_.size()<<vcl_endl;
         vcl_map<unsigned int,
-            vcl_vector< vcl_pair<vcl_pair<int,int>,double> > >::
+            vcl_vector< vcl_pair<vcl_pair<unsigned int,unsigned int>,
+            double> > >::
             iterator it;
         for ( it = model_dart_distances_.begin() ; it != model_dart_distances_
                   .end(); ++it)
         {
-            vcl_vector< vcl_pair<vcl_pair<int,int>,double> > vec=
+            vcl_vector< vcl_pair<vcl_pair<unsigned int,unsigned 
+                int>,double> > vec=
                 (*it).second;
-            vcl_vector< vcl_pair<vcl_pair<int,int>, dbskr_scurve_sptr > > p2 =
+            vcl_vector< vcl_pair<vcl_pair<unsigned int,
+                unsigned int>, dbskr_scurve_sptr > > p2 =
                 model_dart_curves_[(*it).first];
 
             model_file<<vec.size()<<vcl_endl;
             for ( unsigned int v=0; v < vec.size() ; ++v)
             {
-                vcl_pair<vcl_pair<int,int>,double> pair=vec[v];
+                vcl_pair<vcl_pair<unsigned int,unsigned int>,
+                    double> pair=vec[v];
                 model_file<<pair.first.first<<","<<pair.first.second<<vcl_endl;
                 model_file<<pair.second<<vcl_endl;
 

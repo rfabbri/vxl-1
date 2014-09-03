@@ -241,14 +241,17 @@ private:
     vnl_matrix<double> binary_app_rgb_sim_matrix_;
 
     // Holds dart matrix
-    vcl_map<unsigned int,vcl_vector< vcl_pair<vcl_pair<int,int>,double> > > 
+    vcl_map<unsigned int,vcl_vector< vcl_pair<vcl_pair<unsigned int,
+        unsigned int>,double> > > 
         model_dart_distances_;
     
     vcl_map<unsigned int,
-        vcl_vector< vcl_pair<vcl_pair<int,int>,dbskr_scurve_sptr > > >
+        vcl_vector< vcl_pair<vcl_pair<unsigned int,unsigned int>,
+        dbskr_scurve_sptr > > >
         model_dart_curves_;
         
-    vcl_map<vcl_pair<int,int>,vcl_vector<vgl_point_2d<double> > > 
+    vcl_map<vcl_pair<unsigned ,unsigned int>,
+        vcl_vector<vgl_point_2d<double> > > 
         query_dart_curves_;
 
     // Keep output file
