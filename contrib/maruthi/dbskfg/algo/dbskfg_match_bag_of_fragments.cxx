@@ -1503,7 +1503,8 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                                                 norm_app_mirror_cost,
                                                 rgb_avg_mirror_cost,
                                                 "",
-                                                true);
+                                                true,
+                                                norm_shape_cost);
 
                 norm_shape_cost = ( norm_shape_cost < norm_shape_mirror_cost)
                     ? norm_shape_cost : norm_shape_mirror_cost;
@@ -3564,7 +3565,8 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     double& norm_app_cost,
     double& rgb_avg_cost,
     vcl_string match_file_prefix,
-    bool mirror)
+    bool mirror,
+    double orig_edit_distance)
 {
 
     vul_timer shape_timer;
@@ -3854,13 +3856,27 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     shape_timer.mark();
 
     //vcl_cerr<<"************ Shape Time taken: "<<shape_time<<" sec"<<vcl_endl;
-    
-    if ( app_sift_ )
+ 
+    bool flag_mirror=true;
+    if ( mirror )
+    {
+        if ( shape_cost_splice > orig_edit_distance)
+        {
+            app_diff        = 1.0e6;
+            norm_app_cost   = 1.0e6;
+            rgb_avg_cost    = 1.0e6;
+
+            flag_mirror=false;
+        }
+    }
+
+    if ( app_sift_ && flag_mirror )
     {
 
         double width=0.0;
         if ( mirror )
         {
+            vcl_cout<<"Performing mirror app matching"<<vcl_endl;
             width=query_tree->bbox()->width();
         }
 
