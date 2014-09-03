@@ -3934,76 +3934,75 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         
         unsigned int model_tag=model_tree->get_id();
 
-        if ( !model_dart_distances_.count(model_tag) )
+        if ( !flag )
         {
-            if ( !flag )
+            
+            // Get matching pairs
+            for (unsigned m = 0; m < map_list.size(); m++) 
             {
-                // Get matching pairs
-                for (unsigned m = 0; m < map_list.size(); m++) 
+                dbskr_scurve_sptr mc = curve_list1[m];
+                vcl_pair<unsigned int,unsigned int> query_key(
+                    curve_list2[m]->get_curve_id().first,
+                    curve_list2[m]->get_curve_id().second);
+                if ( !query_dart_curves_.count(query_key))
                 {
-                    dbskr_scurve_sptr mc = curve_list1[m];
-                    vcl_pair<unsigned int,unsigned int> query_key(
-                        curve_list2[m]->get_curve_id().first,
-                        curve_list2[m]->get_curve_id().second);
-                    if ( !query_dart_curves_.count(query_key))
-                    {
-                        vcl_pair<unsigned int,unsigned int> temp
-                            = query_key;
-                        query_key.first=temp.second;
-                        query_key.second=temp.first;                        
-                    }
-
-                    double cost=dart_distances[m];
-                    
-                    vcl_pair<vcl_pair<int,int>,double> key1;
-                    vcl_pair<vcl_pair<int,int>,dbskr_scurve_sptr> key2;
-                    
-                    key1.first=query_key;
-                    key1.second=cost;
-                    
-                    key2.first=query_key;
-                    key2.second=mc;
-                    
-                    model_dart_distances_[model_tag].push_back(key1);
-                    model_dart_curves_[model_tag].push_back(key2);
+                    vcl_pair<unsigned int,unsigned int> temp
+                        = query_key;
+                    query_key.first=temp.second;
+                    query_key.second=temp.first;                        
                 }
                 
+                double cost=dart_distances[m];
                 
+                vcl_pair<vcl_pair<int,int>,double> key1;
+                vcl_pair<vcl_pair<int,int>,dbskr_scurve_sptr> key2;
+                    
+                key1.first=query_key;
+                key1.second=cost;
+                
+                key2.first=query_key;
+                key2.second=mc;
+                
+                model_dart_distances_[model_tag].push_back(key1);
+                model_dart_curves_[model_tag].push_back(key2);
             }
-            else
+                
+            
+        }
+        else
+        {
+            // Get matching pairs
+            for (unsigned m = 0; m < map_list.size(); m++) 
             {
-                // Get matching pairs
-                for (unsigned m = 0; m < map_list.size(); m++) 
+                dbskr_scurve_sptr mc = curve_list2[m];
+                vcl_pair<unsigned int,unsigned int> query_key(
+                    curve_list1[m]->get_curve_id().first,
+                    curve_list1[m]->get_curve_id().second);
+                if ( !query_dart_curves_.count(query_key))
                 {
-                    dbskr_scurve_sptr mc = curve_list2[m];
-                    vcl_pair<unsigned int,unsigned int> query_key(
-                        curve_list1[m]->get_curve_id().first,
-                        curve_list1[m]->get_curve_id().second);
-                    if ( !query_dart_curves_.count(query_key))
-                    {
-                        vcl_pair<unsigned int,unsigned int> temp
-                            = query_key;
-                        query_key.first=temp.second;
-                        query_key.second=temp.first;
-                        
-                    }
-                    double cost=dart_distances[m];
+                    vcl_pair<unsigned int,unsigned int> temp
+                        = query_key;
+                    query_key.first=temp.second;
+                    query_key.second=temp.first;
                     
-                    vcl_pair<vcl_pair<int,int>,double> key1;
-                    vcl_pair<vcl_pair<int,int>,dbskr_scurve_sptr> key2;
-                    
-                    key1.first=query_key;
-                    key1.second=cost;
-                    
-                    key2.first=query_key;
-                    key2.second=mc;
-                    
-                    model_dart_distances_[model_tag].push_back(key1);
-                    model_dart_curves_[model_tag].push_back(key2);
-
                 }
+                double cost=dart_distances[m];
+                
+                vcl_pair<vcl_pair<int,int>,double> key1;
+                vcl_pair<vcl_pair<int,int>,dbskr_scurve_sptr> key2;
+                
+                key1.first=query_key;
+                key1.second=cost;
+                
+                key2.first=query_key;
+                key2.second=mc;
+                
+                model_dart_distances_[model_tag].push_back(key1);
+                model_dart_curves_[model_tag].push_back(key2);
+                
             }
         }
+    
             
         double app_time = app_timer.real()/1000.0;
         app_timer.mark();
