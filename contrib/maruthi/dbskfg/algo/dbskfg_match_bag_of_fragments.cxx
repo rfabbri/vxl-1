@@ -3936,7 +3936,12 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
 
         if ( !flag )
         {
-            
+            if ( model_dart_distances_.count(model_tag))
+            {
+                model_dart_distances_.erase(model_tag);
+                model_dart_curves_.erase(model_tag);
+            }
+
             // Get matching pairs
             for (unsigned m = 0; m < map_list.size(); m++) 
             {
