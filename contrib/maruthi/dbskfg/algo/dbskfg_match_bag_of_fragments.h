@@ -456,6 +456,22 @@ private:
         VlSiftFilt* filter,
         vsol_box_2d_sptr& bbox);
 
+    double descr_cost(
+        vgl_point_2d<double>& model_pt,
+        double& model_radius,
+        double& model_theta,
+        vgl_point_2d<double>& query_pt,
+        double& query_radius,
+        double& query_theta,
+        vl_sift_pix* model_red_grad_data=0,
+        vl_sift_pix* query_red_grad_data=0,
+        vl_sift_pix* model_green_grad_data=0,
+        vl_sift_pix* query_green_grad_data=0,
+        vl_sift_pix* model_blue_grad_data=0,
+        vl_sift_pix* query_blue_grad_data=0,
+        VlSiftFilt* model_sift_filter=0,
+        VlSiftFilt* query_sift_filter=0);
+
     void convert_to_color_space(
         vil_image_resource_sptr& input_image,
         vil_image_view<double>& o1,
