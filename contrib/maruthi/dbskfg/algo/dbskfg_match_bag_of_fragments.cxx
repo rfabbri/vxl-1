@@ -5616,6 +5616,280 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
     return app_diff;
 }
 
+vcl_pair<double,double> dbskfg_match_bag_of_fragments::
+compute_dense_rgb_sift_cost(
+    vcl_vector<dbskr_scurve_sptr>& curve_list1,
+    vcl_vector<dbskr_scurve_sptr>& curve_list2,
+    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    vcl_vector< pathtable_key >& path_map,
+    vcl_vector<double>& dart_distances,
+    bool flag,
+    double width,
+    vl_sift_pix* model_red_grad_data,
+    vl_sift_pix* query_red_grad_data,
+    vl_sift_pix* model_green_grad_data,
+    vl_sift_pix* query_green_grad_data,
+    vl_sift_pix* model_blue_grad_data,
+    vl_sift_pix* query_blue_grad_data,
+    VlSiftFilt* model_sift_filter,
+    VlSiftFilt* query_sift_filter,
+    double model_scale_ratio,
+    double query_scale_ratio)
+{
+ 
+    
+    double sift_diff= 0.0;
+    
+    double arclength_shock_curve1=0.0;
+    double arclength_shock_curve2=0.0;
+
+    double splice_cost_shock_curve1=0.0;
+    double splice_cost_shock_curve2=0.0;
+
+    unsigned int overall_index=0;
+    // Get matching pairs
+    for (unsigned i = 0; i < map_list.size(); i++) 
+    {
+        dbskr_scurve_sptr sc1 = curve_list1[i];
+        dbskr_scurve_sptr sc2 = curve_list2[i];
+
+        vcl_vector< vcl_vector<vl_sift_pix> > model_sift;
+        vcl_vector< vcl_vector<vl_sift_pix> > query_sift;
+        
+        vcl_vector<vgl_point_2d<double> > shock_curve1;
+        vcl_vector<vgl_point_2d<double> > shock_curve2;
+
+        double local_arclength_shock_curve1=0.0;
+        double local_arclength_shock_curve2=0.0;
+
+        double sc1_splice = sc1->splice_cost(
+            scurve_matching_R_,
+            elastic_splice_cost_,
+            false,
+            combined_edit_,
+            sc1->is_leaf_edge());
+
+        double sc2_splice = sc2->splice_cost(
+            scurve_matching_R_,
+            elastic_splice_cost_,
+            false,
+            combined_edit_,
+            sc2->is_leaf_edge());
+
+        double local_distance=0.0;
+
+        vcl_pair<unsigned int,unsigned int> query_key1(0,0);
+        vcl_pair<unsigned int,unsigned int> query_key2(0,0);
+        
+        if ( !flag )
+        {
+            query_key1=sc2->get_curve_id();
+            
+            query_key2.first = query_key1.second;
+            query_key2.second= query_key1.first;
+        }
+        else
+        {
+            query_key1=sc1->get_curve_id();
+           
+            query_key2.first = query_key1.second;
+            query_key2.second= query_key1.first;
+
+        }
+
+        bool add_curve=true;
+
+        if ( query_dart_curves_.count(query_key1) ||
+             query_dart_curves_.count(query_key2) )
+        {
+            add_curve=false;
+        }
+        
+        
+
+        if ( !flag )
+        {
+            sc1_splice=sc1_splice/model_scale_ratio;
+            sc2_splice=sc2_splice/query_scale_ratio;
+        }
+        else
+        {
+            sc1_splice=sc1_splice/query_scale_ratio;
+            sc2_splice=sc2_splice/model_scale_ratio;
+
+        }
+
+        splice_cost_shock_curve1+=sc1_splice;
+        splice_cost_shock_curve2+=sc2_splice;
+        
+        double step_size=1.0;
+
+        for (unsigned j = 0; j < map_list[i].size(); ++j) 
+        {
+            vcl_pair<int, int> cor = map_list[i][j];
+            
+            // Compute sift for both images
+
+            // Shock Point 1 from Model
+            double radius_ps1        = sc1->time(cor.first);
+            double theta_ps1         = sc1->theta(cor.first);
+
+            // Shock Point 2 from Query
+            double radius_ps2        = sc2->time(cor.second);
+            double theta_ps2         = sc2->theta(cor.second);
+
+            double ratio=1.0;
+            double R1=1.0;
+
+            if ( !flag )
+            {
+                ratio=(radius_ps1/model_scale_ratio)/
+                      (radius_ps2/query_scale_ratio);
+                R1=radius_ps1/model_scale_ratio;
+            }
+            else
+            {
+                ratio=(radius_ps1/query_scale_ratio)/
+                    (radius_ps2/model_scale_ratio);
+                R1=radius_ps1/query_scale_ratio;
+            }
+
+            double r1 = step_size;
+
+            while ( r1 <= R1 )
+            {
+                double r2=r1*ratio;
+                for ( unsigned int p=0; p < 2 ; ++p )
+                {
+                    vgl_point_2d<double> ps1;
+                    vgl_point_2d<double> ps2;
+
+                    if ( p ==  0 )
+                    {
+                        ps1=sc1->fragment_pt(cor.first,r1);
+                        ps2=sc2->fragment_pt(cor.second,r2);
+                    }
+                    else
+                    {
+                        ps1=sc1->fragment_pt(cor.first,-1.0*r1);
+                        ps2=sc2->fragment_pt(cor.second,-1.0*r2);
+
+                    }
+                    
+                    if ( !flag )
+                    {
+
+                        ps1.set(ps1.x()/model_scale_ratio,
+                                ps1.y()/model_scale_ratio);
+                        ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
+                                ps2.y()/query_scale_ratio);
+                    
+                        double model_radius=(r1)/2.0;
+                        double query_radius=(r2)/2.0;
+                    
+                        local_distance += descr_cost(
+                            ps1,
+                            model_radius,
+                            theta_ps1,
+                            ps2,
+                            query_radius,
+                            theta_ps2,
+                            model_red_grad_data,
+                            query_red_grad_data,
+                            model_green_grad_data,
+                            query_green_grad_data,
+                            model_blue_grad_data,
+                            query_blue_grad_data,
+                            model_sift_filter,
+                            query_sift_filter);
+                    
+                    }
+                    else
+                    {
+                        ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
+                                ps1.y()/query_scale_ratio);
+                        ps2.set(ps2.x()/model_scale_ratio,
+                                ps2.y()/model_scale_ratio);
+                    
+                        double query_radius=(r1)/2.0;
+                        double model_radius=(r2)/2.0;
+                    
+                        local_distance += descr_cost(
+                            ps2,
+                            model_radius,
+                            theta_ps2,
+                            ps1,
+                            query_radius,
+                            theta_ps1,
+                            model_red_grad_data,
+                            query_red_grad_data,
+                            model_green_grad_data,
+                            query_green_grad_data,
+                            model_blue_grad_data,
+                            query_blue_grad_data,
+                            model_sift_filter,
+                            query_sift_filter);
+                    
+                    }
+
+                    vcl_vector<vl_sift_pix> msift;
+                    msift.push_back(ps1.x());
+                    msift.push_back(ps1.y());
+                    msift.push_back(r1);
+                    msift.push_back(theta_ps1);
+
+                    vcl_vector<vl_sift_pix> qsift;
+                    qsift.push_back(ps2.x());
+                    qsift.push_back(ps2.y());
+                    qsift.push_back(r2);
+                    qsift.push_back(theta_ps2);
+
+                    model_sift.push_back(msift);
+                    query_sift.push_back(qsift);
+                }
+                r1+=step_size;
+            }
+        }
+        sift_diff+=local_distance;
+
+
+
+        {
+            vcl_stringstream model_stream;
+            model_stream<<"Dart_model_"<<i<<"_app_correspondence.txt";
+            vcl_stringstream query_stream;
+            query_stream<<"Dart_query_"<<i<<"_app_correspondence.txt";
+
+            vcl_ofstream model_file(model_stream.str().c_str());
+            model_file<<model_sift.size()<<vcl_endl;
+            for ( unsigned int b=0; b < model_sift.size() ; ++b)
+            {
+                vcl_vector<vl_sift_pix> vec=model_sift[b];
+                for  ( unsigned int c=0; c < vec.size() ; ++c)
+                {
+                    model_file<<vec[c]<<vcl_endl;
+                }
+            }
+            model_file.close();
+
+            vcl_ofstream query_file(query_stream.str().c_str());
+            query_file<<query_sift.size()<<vcl_endl;
+            for ( unsigned int b=0; b < query_sift.size() ; ++b)
+            {
+                vcl_vector<vl_sift_pix> vec=query_sift[b];
+                for  ( unsigned int c=0; c < vec.size() ; ++c)
+                {
+                    query_file<<vec[c]<<vcl_endl;
+                }
+            }
+            query_file.close();
+        }
+    }
+
+    vcl_pair<double,double> app_diff(0.0,0.0);
+    return app_diff;
+}
+
 double dbskfg_match_bag_of_fragments::descr_cost(
     vgl_point_2d<double>& model_pt,
     double& model_radius,
