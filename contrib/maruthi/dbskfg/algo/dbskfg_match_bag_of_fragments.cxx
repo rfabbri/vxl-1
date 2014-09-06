@@ -5739,20 +5739,11 @@ compute_dense_rgb_sift_cost(
             double theta_ps2         = sc2->theta(cor.second);
 
             double ratio=1.0;
-            double R1=1.0;
+            double R1=radius_ps1;
+            double R2=radius_ps2;
 
-            if ( !flag )
-            {
-                ratio=(radius_ps1/model_scale_ratio)/
-                      (radius_ps2/query_scale_ratio);
-                R1=radius_ps1/model_scale_ratio;
-            }
-            else
-            {
-                ratio=(radius_ps1/query_scale_ratio)/
-                    (radius_ps2/model_scale_ratio);
-                R1=radius_ps1/query_scale_ratio;
-            }
+            ratio=(R2/R1);
+                
 
             double r1 = step_size;
 
@@ -5784,8 +5775,8 @@ compute_dense_rgb_sift_cost(
                         ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
                                 ps2.y()/query_scale_ratio);
                     
-                        double model_radius=(r1)/2.0;
-                        double query_radius=(r2)/2.0;
+                        double model_radius=((R1-r1)/model_scale_ratio)/2.0;
+                        double query_radius=((R2-r2)/query_scale_ratio)/2.0;
                     
                         local_distance += descr_cost(
                             ps1,
@@ -5802,6 +5793,22 @@ compute_dense_rgb_sift_cost(
                             query_blue_grad_data,
                             model_sift_filter,
                             query_sift_filter);
+
+                        vcl_vector<vl_sift_pix> msift;
+                        msift.push_back(ps1.x());
+                        msift.push_back(ps1.y());
+                        msift.push_back((R1-r1)/model_scale_ratio);
+                        msift.push_back(theta_ps1);
+
+                        vcl_vector<vl_sift_pix> qsift;
+                        qsift.push_back(ps2.x());
+                        qsift.push_back(ps2.y());
+                        qsift.push_back((R2-r2)/query_scale_ratio);
+                        qsift.push_back(theta_ps2);
+
+                        model_sift.push_back(msift);
+                        query_sift.push_back(qsift);
+                    
                     
                     }
                     else
@@ -5811,8 +5818,8 @@ compute_dense_rgb_sift_cost(
                         ps2.set(ps2.x()/model_scale_ratio,
                                 ps2.y()/model_scale_ratio);
                     
-                        double query_radius=(r1)/2.0;
-                        double model_radius=(r2)/2.0;
+                        double query_radius=((R1-r1)/query_scale_ratio)/2.0;
+                        double model_radius=((R2-r2)/model_scale_ratio)/2.0;
                     
                         local_distance += descr_cost(
                             ps2,
@@ -5830,22 +5837,23 @@ compute_dense_rgb_sift_cost(
                             model_sift_filter,
                             query_sift_filter);
                     
+                        vcl_vector<vl_sift_pix> msift;
+                        msift.push_back(ps1.x());
+                        msift.push_back(ps1.y());
+                        msift.push_back((R1-r1)/query_scale_ratio);
+                        msift.push_back(theta_ps1);
+
+                        vcl_vector<vl_sift_pix> qsift;
+                        qsift.push_back(ps2.x());
+                        qsift.push_back(ps2.y());
+                        qsift.push_back((R2-r2)/model_scale_ratio);
+                        qsift.push_back(theta_ps2);
+
+                        model_sift.push_back(msift);
+                        query_sift.push_back(qsift);
+
                     }
 
-                    vcl_vector<vl_sift_pix> msift;
-                    msift.push_back(ps1.x());
-                    msift.push_back(ps1.y());
-                    msift.push_back(r1);
-                    msift.push_back(theta_ps1);
-
-                    vcl_vector<vl_sift_pix> qsift;
-                    qsift.push_back(ps2.x());
-                    qsift.push_back(ps2.y());
-                    qsift.push_back(r2);
-                    qsift.push_back(theta_ps2);
-
-                    model_sift.push_back(msift);
-                    query_sift.push_back(qsift);
                 }
                 r1+=step_size;
             }
