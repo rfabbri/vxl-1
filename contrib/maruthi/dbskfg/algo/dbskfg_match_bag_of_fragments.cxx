@@ -5857,6 +5857,103 @@ compute_dense_rgb_sift_cost(
                 }
                 r1+=step_size;
             }
+
+            // Test original medial axis point
+            {
+                vgl_point_2d<double> ps1=sc1->sh_pt(cor.first);
+                vgl_point_2d<double> ps2=sc2->sh_pt(cor.second);
+                
+                r1=0.0;
+                double r2=0.0;
+                
+                if ( !flag )
+                {
+                    
+                    ps1.set(ps1.x()/model_scale_ratio,
+                            ps1.y()/model_scale_ratio);
+                    ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
+                            ps2.y()/query_scale_ratio);
+                    
+                    double model_radius=((R1-r1)/model_scale_ratio)/2.0;
+                    double query_radius=((R2-r2)/query_scale_ratio)/2.0;
+                    
+                    local_distance += descr_cost(
+                        ps1,
+                        model_radius,
+                        theta_ps1,
+                        ps2,
+                        query_radius,
+                        theta_ps2,
+                        model_red_grad_data,
+                        query_red_grad_data,
+                        model_green_grad_data,
+                        query_green_grad_data,
+                        model_blue_grad_data,
+                        query_blue_grad_data,
+                        model_sift_filter,
+                        query_sift_filter);
+                    
+                    vcl_vector<vl_sift_pix> msift;
+                    msift.push_back(ps1.x());
+                    msift.push_back(ps1.y());
+                    msift.push_back((R1-r1)/model_scale_ratio);
+                    msift.push_back(theta_ps1);
+                    
+                    vcl_vector<vl_sift_pix> qsift;
+                    qsift.push_back(ps2.x());
+                    qsift.push_back(ps2.y());
+                    qsift.push_back((R2-r2)/query_scale_ratio);
+                    qsift.push_back(theta_ps2);
+
+                    model_sift.push_back(msift);
+                    query_sift.push_back(qsift);
+                
+                    
+                }
+                else
+                {
+                    ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
+                            ps1.y()/query_scale_ratio);
+                    ps2.set(ps2.x()/model_scale_ratio,
+                            ps2.y()/model_scale_ratio);
+                    
+                    double query_radius=((R1-r1)/query_scale_ratio)/2.0;
+                    double model_radius=((R2-r2)/model_scale_ratio)/2.0;
+                    
+                    local_distance += descr_cost(
+                        ps2,
+                        model_radius,
+                        theta_ps2,
+                        ps1,
+                        query_radius,
+                        theta_ps1,
+                        model_red_grad_data,
+                        query_red_grad_data,
+                        model_green_grad_data,
+                        query_green_grad_data,
+                        model_blue_grad_data,
+                        query_blue_grad_data,
+                        model_sift_filter,
+                        query_sift_filter);
+                    
+                    vcl_vector<vl_sift_pix> msift;
+                    msift.push_back(ps1.x());
+                    msift.push_back(ps1.y());
+                    msift.push_back((R1-r1)/query_scale_ratio);
+                    msift.push_back(theta_ps1);
+
+                    vcl_vector<vl_sift_pix> qsift;
+                    qsift.push_back(ps2.x());
+                    qsift.push_back(ps2.y());
+                    qsift.push_back((R2-r2)/model_scale_ratio);
+                    qsift.push_back(theta_ps2);
+
+                    model_sift.push_back(msift);
+                    query_sift.push_back(qsift);
+
+                }
+            }
+
         }
         sift_diff+=local_distance;
 
