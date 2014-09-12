@@ -5957,39 +5957,52 @@ compute_dense_rgb_sift_cost(
         }
         sift_diff+=local_distance;
 
+        // vcl_cout<<"Tree 1 dart ("
+        //         <<path_map[i].first.first
+        //         <<","
+        //         <<path_map[i].first.second
+        //         <<") Tree 2 dart ("
+        //         <<path_map[i].second.first
+        //         <<","
+        //         <<path_map[i].second.second
+        //         <<") L2 distance: "
+        //         <<local_distance<<vcl_endl;
+       
 
 
-        {
-            vcl_stringstream model_stream;
-            model_stream<<"Dart_model_"<<i<<"_app_correspondence.txt";
-            vcl_stringstream query_stream;
-            query_stream<<"Dart_query_"<<i<<"_app_correspondence.txt";
+        // {
+        //     vcl_stringstream model_stream;
+        //     model_stream<<"Dart_model_"<<i<<"_app_correspondence.txt";
+        //     vcl_stringstream query_stream;
+        //     query_stream<<"Dart_query_"<<i<<"_app_correspondence.txt";
 
-            vcl_ofstream model_file(model_stream.str().c_str());
-            model_file<<model_sift.size()<<vcl_endl;
-            for ( unsigned int b=0; b < model_sift.size() ; ++b)
-            {
-                vcl_vector<vl_sift_pix> vec=model_sift[b];
-                for  ( unsigned int c=0; c < vec.size() ; ++c)
-                {
-                    model_file<<vec[c]<<vcl_endl;
-                }
-            }
-            model_file.close();
+        //     vcl_ofstream model_file(model_stream.str().c_str());
+        //     model_file<<model_sift.size()<<vcl_endl;
+        //     for ( unsigned int b=0; b < model_sift.size() ; ++b)
+        //     {
+        //         vcl_vector<vl_sift_pix> vec=model_sift[b];
+        //         for  ( unsigned int c=0; c < vec.size() ; ++c)
+        //         {
+        //             model_file<<vec[c]<<vcl_endl;
+        //         }
+        //     }
+        //     model_file.close();
 
-            vcl_ofstream query_file(query_stream.str().c_str());
-            query_file<<query_sift.size()<<vcl_endl;
-            for ( unsigned int b=0; b < query_sift.size() ; ++b)
-            {
-                vcl_vector<vl_sift_pix> vec=query_sift[b];
-                for  ( unsigned int c=0; c < vec.size() ; ++c)
-                {
-                    query_file<<vec[c]<<vcl_endl;
-                }
-            }
-            query_file.close();
-        }
+        //     vcl_ofstream query_file(query_stream.str().c_str());
+        //     query_file<<query_sift.size()<<vcl_endl;
+        //     for ( unsigned int b=0; b < query_sift.size() ; ++b)
+        //     {
+        //         vcl_vector<vl_sift_pix> vec=query_sift[b];
+        //         for  ( unsigned int c=0; c < vec.size() ; ++c)
+        //         {
+        //             query_file<<vec[c]<<vcl_endl;
+        //         }
+        //     }
+        //     query_file.close();
+        // }
     }
+
+    // vcl_cout << "final cost: " << sift_diff <<vcl_endl;
 
     vcl_pair<double,double> app_diff(0.0,0.0);
     return app_diff;
