@@ -5766,7 +5766,8 @@ compute_dense_rgb_sift_cost(
                         ps2=sc2->fragment_pt(cor.second,-1.0*r2);
 
                     }
-                    
+                    overall_index++;
+
                     if ( !flag )
                     {
 
@@ -5808,8 +5809,7 @@ compute_dense_rgb_sift_cost(
 
                         model_sift.push_back(msift);
                         query_sift.push_back(qsift);
-                    
-                    
+
                     }
                     else
                     {
@@ -5852,6 +5852,7 @@ compute_dense_rgb_sift_cost(
                         model_sift.push_back(msift);
                         query_sift.push_back(qsift);
 
+                
                     }
 
                 }
@@ -5860,6 +5861,8 @@ compute_dense_rgb_sift_cost(
 
             // Test original medial axis point
             {
+                overall_index++;
+
                 vgl_point_2d<double> ps1=sc1->sh_pt(cor.first);
                 vgl_point_2d<double> ps2=sc2->sh_pt(cor.second);
                 
@@ -6050,12 +6053,20 @@ compute_dense_rgb_sift_cost(
         // }
     }
 
+    double avg_norm  = sift_diff/(overall_index);
+
     double length_norm=sift_diff/(arclength_shock_curve1+
                                   arclength_shock_curve2);
     double splice_norm=sift_diff/(splice_cost_shock_curve1+
                                   splice_cost_shock_curve2);
 
     vcl_pair<double,double> app_diff(length_norm,splice_norm);
+
+    // vcl_cout<<"Unormalized diff: "<<sift_diff<<vcl_endl;
+    // vcl_cout<<"Average diff: "<<avg_norm<<vcl_endl;
+    // vcl_cout<<"Splice norm:  "<<splice_norm<<vcl_endl;
+    // vcl_cout<<"Length norm:  "<<length_norm<<vcl_endl;
+
     return app_diff;
 }
 
