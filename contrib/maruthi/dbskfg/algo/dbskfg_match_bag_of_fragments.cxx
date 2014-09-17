@@ -1606,7 +1606,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
         vl_free(query_grad_data_);
         query_grad_data_=0;
     }
-   
+
     double vox_time = t.real()/1000.0;
     t.mark();
     vcl_cout<<vcl_endl;
@@ -5908,6 +5908,11 @@ compute_dense_rgb_sift_cost(
                     model_sift.push_back(msift);
                     query_sift.push_back(qsift);
                 
+                    if ( add_curve )
+                    {
+                        query_dart_curves_[query_key1].push_back(ps2);
+                    }
+
                     
                 }
                 else
@@ -5951,12 +5956,18 @@ compute_dense_rgb_sift_cost(
                     model_sift.push_back(msift);
                     query_sift.push_back(qsift);
 
+                    if ( add_curve )
+                    {
+                        query_dart_curves_[query_key1].push_back(ps1);
+                    }
+
                 }
             }
 
         }
         sift_diff+=local_distance;
 
+        dart_distances.push_back(local_distance);
         // vcl_cout<<"Tree 1 dart ("
         //         <<path_map[i].first.first
         //         <<","
@@ -6113,32 +6124,61 @@ double dbskfg_match_bag_of_fragments::descr_cost(
     vl_sift_pix result_red[1];
     vl_sift_pix result_green[1];
     vl_sift_pix result_blue[1];
-    
-    vl_eval_vector_comparison_on_all_pairs_f(result_red,
-                                             128,
-                                             descr_ps1_red,
+    vl_sift_pix result_final[1];
+
+    vnl_vector<vl_sift_pix> descr1(384,0.0);
+    vnl_vector<vl_sift_pix> descr2(384,0.0);
+
+    for ( unsigned int d=0; d < 128 ; ++d)
+    {
+        descr1.put(d,descr_ps1_red[d]);
+        descr1.put(d+128,descr_ps1_green[d]);
+        descr1.put(d+256,descr_ps1_blue[d]);
+
+        descr2.put(d,descr_ps2_red[d]);
+        descr2.put(d+128,descr_ps2_green[d]);
+        descr2.put(d+256,descr_ps2_blue[d]);
+
+        
+    }
+
+    descr1.normalize();
+    descr2.normalize();
+
+    vl_eval_vector_comparison_on_all_pairs_f(result_final,
+                                             384,
+                                             descr1.data_block(),
                                              1,
-                                             descr_ps2_red,
+                                             descr2.data_block(),
                                              1,
                                              Chi2_distance);
+
+    // vl_eval_vector_comparison_on_all_pairs_f(result_red,
+    //                                          128,
+    //                                          descr_ps1_red,
+    //                                          1,
+    //                                          descr_ps2_red,
+    //                                          1,
+    //                                          Chi2_distance);
     
-    vl_eval_vector_comparison_on_all_pairs_f(result_green,
-                                             128,
-                                             descr_ps1_green,
-                                             1,
-                                             descr_ps2_green,
-                                             1,
-                                             Chi2_distance);
+    // vl_eval_vector_comparison_on_all_pairs_f(result_green,
+    //                                          128,
+    //                                          descr_ps1_green,
+    //                                          1,
+    //                                          descr_ps2_green,
+    //                                          1,
+    //                                          Chi2_distance);
     
-    vl_eval_vector_comparison_on_all_pairs_f(result_blue,
-                                             128,
-                                             descr_ps1_blue,
-                                             1,
-                                             descr_ps2_blue,
-                                             1,
-                                             Chi2_distance);
-    
-    return result_red[0]+result_green[0]+result_blue[0];
+    // vl_eval_vector_comparison_on_all_pairs_f(result_blue,
+    //                                          128,
+    //                                          descr_ps1_blue,
+    //                                          1,
+    //                                          descr_ps2_blue,
+    //                                          1,
+    //                                          Chi2_distance);
+
+    // return result_red[0]+result_green[0]+result_blue[0];
+    return (0.5)*result_final[0];
     
 }
 vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
