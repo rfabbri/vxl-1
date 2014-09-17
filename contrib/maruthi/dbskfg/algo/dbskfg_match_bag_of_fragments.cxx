@@ -5874,6 +5874,9 @@ compute_dense_rgb_sift_cost(
                     ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
                             ps2.y()/query_scale_ratio);
                     
+                    shock_curve1.push_back(ps1);
+                    shock_curve2.push_back(ps2);
+
                     double model_radius=((R1-r1)/model_scale_ratio)/2.0;
                     double query_radius=((R2-r2)/query_scale_ratio)/2.0;
                     
@@ -5921,7 +5924,10 @@ compute_dense_rgb_sift_cost(
                             ps1.y()/query_scale_ratio);
                     ps2.set(ps2.x()/model_scale_ratio,
                             ps2.y()/model_scale_ratio);
-                    
+
+                    shock_curve1.push_back(ps1);
+                    shock_curve2.push_back(ps2);
+
                     double query_radius=((R1-r1)/query_scale_ratio)/2.0;
                     double model_radius=((R2-r2)/model_scale_ratio)/2.0;
                     
@@ -5963,9 +5969,28 @@ compute_dense_rgb_sift_cost(
 
                 }
             }
+            
+            if ( j > 0 )
+            {
+                local_arclength_shock_curve1=
+                    vgl_distance(shock_curve1[j],shock_curve1[j-1])+
+                    local_arclength_shock_curve1;
+
+                local_arclength_shock_curve2=
+                    vgl_distance(shock_curve2[j],shock_curve2[j-1])+
+                    local_arclength_shock_curve2;
+
+            }
+
 
         }
         sift_diff+=local_distance;
+
+        arclength_shock_curve1=
+            local_arclength_shock_curve1+arclength_shock_curve1;
+
+        arclength_shock_curve2=
+            local_arclength_shock_curve2+arclength_shock_curve2;
 
         dart_distances.push_back(local_distance);
         // vcl_cout<<"Tree 1 dart ("
@@ -5979,7 +6004,19 @@ compute_dense_rgb_sift_cost(
         //         <<") L2 distance: "
         //         <<local_distance<<vcl_endl;
        
-
+        // vcl_cout<<"Tree 1 dart ("
+        //         <<path_map[i].first.first
+        //         <<","
+        //         <<path_map[i].first.second
+        //         <<") length: "
+        //         <<local_arclength_shock_curve1
+        //         <<" Tree 2 dart ("
+        //         <<path_map[i].second.first
+        //         <<","
+        //         <<path_map[i].second.second
+        //         <<") length: "
+        //         <<local_arclength_shock_curve2
+        //         <<vcl_endl;
 
         // {
         //     vcl_stringstream model_stream;
@@ -6013,9 +6050,12 @@ compute_dense_rgb_sift_cost(
         // }
     }
 
-    // vcl_cout << "final cost: " << sift_diff <<vcl_endl;
+    double length_norm=sift_diff/(arclength_shock_curve1+
+                                  arclength_shock_curve2);
+    double splice_norm=sift_diff/(splice_cost_shock_curve1+
+                                  splice_cost_shock_curve2);
 
-    vcl_pair<double,double> app_diff(0.0,0.0);
+    vcl_pair<double,double> app_diff(length_norm,splice_norm);
     return app_diff;
 }
 
