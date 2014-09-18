@@ -6060,7 +6060,7 @@ compute_dense_rgb_sift_cost(
     double splice_norm=sift_diff/(splice_cost_shock_curve1+
                                   splice_cost_shock_curve2);
 
-    vcl_pair<double,double> app_diff(length_norm,splice_norm);
+    vcl_pair<double,double> app_diff(splice_norm,avg_norm);
 
     // vcl_cout<<"Unormalized diff: "<<sift_diff<<vcl_endl;
     // vcl_cout<<"Average diff: "<<avg_norm<<vcl_endl;
