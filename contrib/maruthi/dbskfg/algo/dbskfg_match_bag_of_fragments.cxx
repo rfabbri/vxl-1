@@ -735,6 +735,7 @@ bool dbskfg_match_bag_of_fragments::binary_match()
             double norm_app_cost(0.0);
             double rgb_avg_cost(0.0);
             double norm_shape_cost_length(0.0);
+            double overlap(0.0);
 
             // Match model to query
             match_two_graphs_root_node_orig(model_tree,
@@ -743,7 +744,8 @@ bool dbskfg_match_bag_of_fragments::binary_match()
                                             norm_shape_cost_length,
                                             app_diff,
                                             norm_app_cost,
-                                            rgb_avg_cost);
+                                            rgb_avg_cost,
+                                            overlap);
             
             if ( mirror_)
             {
@@ -775,6 +777,7 @@ bool dbskfg_match_bag_of_fragments::binary_match()
                                                 app_mirror_diff,
                                                 norm_app_mirror_cost,
                                                 rgb_avg_mirror_cost,
+                                                overlap,
                                                 "",
                                                 true);
 
@@ -972,6 +975,7 @@ bool dbskfg_match_bag_of_fragments::binary_debug_match()
             double norm_app_cost(0.0);
             double rgb_avg_cost(0.0);
             double norm_shape_cost_length(0.0);
+            double overlap(0.0);
 
             vcl_string match_prefix =(*m_iterator).second.first + "_vs_" +
                 (*q_iterator).second.first;
@@ -984,6 +988,7 @@ bool dbskfg_match_bag_of_fragments::binary_debug_match()
                                             app_diff,
                                             norm_app_cost,
                                             rgb_avg_cost,
+                                            overlap,
                                             match_prefix);
 
             if ( mirror_)
@@ -1024,6 +1029,7 @@ bool dbskfg_match_bag_of_fragments::binary_debug_match()
                                                 app_mirror_diff,
                                                 norm_app_mirror_cost,
                                                 rgb_avg_mirror_cost,
+                                                overlap,
                                                 match_mirror_prefix,
                                                 true);
 
@@ -1455,6 +1461,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             double norm_app_cost(0.0);
             double rgb_avg_cost(0.0);
             double norm_shape_cost_length(0.0);
+            double overlap(0.0);
 
             // Match model to query
             match_two_graphs_root_node_orig(model_tree,
@@ -1463,7 +1470,8 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                                             norm_shape_cost_length,
                                             app_diff,
                                             norm_app_cost,
-                                            rgb_avg_cost);
+                                            rgb_avg_cost,
+                                            overlap);
 
 
 
@@ -1502,6 +1510,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                                                 app_mirror_diff,
                                                 norm_app_mirror_cost,
                                                 rgb_avg_mirror_cost,
+                                                overlap,
                                                 "",
                                                 true,
                                                 norm_shape_cost);
@@ -1721,6 +1730,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_mean_shape()
             double norm_app_cost(0.0);
             double rgb_avg_cost(0.0);
             double norm_shape_cost_length(0.0);
+            double overlap(0.0);
 
             // Match model to query
             match_two_graphs_root_node_orig(model_tree,
@@ -1729,7 +1739,8 @@ bool dbskfg_match_bag_of_fragments::binary_scale_mean_shape()
                                             norm_shape_cost_length,
                                             app_diff,
                                             norm_app_cost,
-                                            rgb_avg_cost);
+                                            rgb_avg_cost,
+                                            overlap);
 
             if ( mirror_)
             {
@@ -1760,7 +1771,8 @@ bool dbskfg_match_bag_of_fragments::binary_scale_mean_shape()
                                                 norm_shape_mirror_cost_length,
                                                 app_mirror_diff,
                                                 norm_app_mirror_cost,
-                                                rgb_avg_mirror_cost);
+                                                rgb_avg_mirror_cost,
+                                                overlap);
 
                 norm_shape_cost = ( norm_shape_cost < norm_shape_mirror_cost)
                     ? norm_shape_cost : norm_shape_mirror_cost;
@@ -2109,6 +2121,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
             double norm_app_cost(0.0);
             double rgb_avg_cost(0.0);
             double norm_shape_cost_length(0.0);
+            double overlap(0.0);
 
             model_tree->compute_average_ds();
             query_tree->compute_average_ds();
@@ -2130,6 +2143,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
                                             app_diff,
                                             norm_app_cost,
                                             rgb_avg_cost,
+                                            overlap,
                                             match_prefix);
 
             if ( mirror_)
@@ -2172,6 +2186,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
                                                 app_mirror_diff,
                                                 norm_app_mirror_cost,
                                                 rgb_avg_mirror_cost,
+                                                overlap,
                                                 match_mirror_prefix,
                                                 true);
 
@@ -3564,6 +3579,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     double& app_diff,
     double& norm_app_cost,
     double& rgb_avg_cost,
+    double& overlap,
     vcl_string match_file_prefix,
     bool mirror,
     double orig_edit_distance)
@@ -3856,11 +3872,29 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     shape_timer.mark();
 
     //vcl_cerr<<"************ Shape Time taken: "<<shape_time<<" sec"<<vcl_endl;
- 
+    
+    vcl_pair<double,double> p1(-1.0,-1.0);
+
+    if ( curve_list1.size() && curve_list2.size())
+    {
+        unsigned int ds=scurve_sample_ds_;
+        vgl_h_matrix_2d<double> H;
+        compute_similarity(H,
+                           curve_list1,
+                           curve_list2,
+                           map_list,
+                           path_map,
+                           ds,
+                           flag);
+        
+    
+        p1 = compute_transformed_polygon(H,model_tree,query_tree);
+    }
+
     bool flag_mirror=true;
     if ( mirror )
     {
-        if ( shape_cost_splice > orig_edit_distance)
+        if ( p1.first < overlap)
         {
             app_diff        = 1.0e6;
             norm_app_cost   = 1.0e6;
@@ -3869,6 +3903,8 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
             flag_mirror=false;
         }
     }
+    
+    overlap=p1.first;
 
     if ( app_sift_ && flag_mirror )
     {
@@ -5484,38 +5520,66 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
             descr_vec2_blue.push_back(radius_ps2_blue);
             descr_vec2_blue.push_back(theta_ps2_blue);
         
-            vl_sift_pix result_red[1];
-            vl_sift_pix result_green[1];
-            vl_sift_pix result_blue[1];
+            // vl_sift_pix result_red[1];
+            // vl_sift_pix result_green[1];
+            // vl_sift_pix result_blue[1];
+            vl_sift_pix result_final[1];
 
-            vl_eval_vector_comparison_on_all_pairs_f(result_red,
-                                                     128,
-                                                     descr_ps1_red,
+            vnl_vector<vl_sift_pix> descr1(384,0.0);
+            vnl_vector<vl_sift_pix> descr2(384,0.0);
+
+            for ( unsigned int d=0; d < 128 ; ++d)
+            {
+                descr1.put(d,descr_ps1_red[d]);
+                descr1.put(d+128,descr_ps1_green[d]);
+                descr1.put(d+256,descr_ps1_blue[d]);
+
+                descr2.put(d,descr_ps2_red[d]);
+                descr2.put(d+128,descr_ps2_green[d]);
+                descr2.put(d+256,descr_ps2_blue[d]);
+
+        
+            }
+
+            descr1.normalize();
+            descr2.normalize();
+
+            vl_eval_vector_comparison_on_all_pairs_f(result_final,
+                                                     384,
+                                                     descr1.data_block(),
                                                      1,
-                                                     descr_ps2_red,
+                                                     descr2.data_block(),
                                                      1,
                                                      Chi2_distance);
 
-            vl_eval_vector_comparison_on_all_pairs_f(result_green,
-                                                     128,
-                                                     descr_ps1_green,
-                                                     1,
-                                                     descr_ps2_green,
-                                                     1,
-                                                     Chi2_distance);
+            // vl_eval_vector_comparison_on_all_pairs_f(result_red,
+            //                                          128,
+            //                                          descr_ps1_red,
+            //                                          1,
+            //                                          descr_ps2_red,
+            //                                          1,
+            //                                          Chi2_distance);
 
-            vl_eval_vector_comparison_on_all_pairs_f(result_blue,
-                                                     128,
-                                                     descr_ps1_blue,
-                                                     1,
-                                                     descr_ps2_blue,
-                                                     1,
-                                                     Chi2_distance);
+            // vl_eval_vector_comparison_on_all_pairs_f(result_green,
+            //                                          128,
+            //                                          descr_ps1_green,
+            //                                          1,
+            //                                          descr_ps2_green,
+            //                                          1,
+            //                                          Chi2_distance);
+
+            // vl_eval_vector_comparison_on_all_pairs_f(result_blue,
+            //                                          128,
+            //                                          descr_ps1_blue,
+            //                                          1,
+            //                                          descr_ps2_blue,
+            //                                          1,
+            //                                          Chi2_distance);
 
 
-            sift_diff=sift_diff+result_red[0]+result_green[0]+result_blue[0];
+            sift_diff=sift_diff+0.5*result_final[0];
             local_distance=local_distance+
-                result_red[0]+result_green[0]+result_blue[0];
+                0.5*result_final[0];
 
             model_sift.push_back(descr_vec1_red);
             query_sift.push_back(descr_vec2_red);
@@ -5612,7 +5676,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
     //          << ", tree2 total length: " << arclength_shock_curve2
     //          << ")" << vcl_endl;
 
-    vcl_pair<double,double> app_diff(length_norm,splice_norm);
+    vcl_pair<double,double> app_diff(length_norm,sift_diff/overall_index);
     return app_diff;
 }
 
@@ -5723,6 +5787,7 @@ compute_dense_rgb_sift_cost(
         splice_cost_shock_curve2+=sc2_splice;
         
         double step_size=1.0;
+        unsigned int num_steps=0.0;
 
         for (unsigned j = 0; j < map_list[i].size(); ++j) 
         {
@@ -5767,6 +5832,7 @@ compute_dense_rgb_sift_cost(
 
                     }
                     overall_index++;
+                    num_steps++;
 
                     if ( !flag )
                     {
@@ -5862,6 +5928,7 @@ compute_dense_rgb_sift_cost(
             // Test original medial axis point
             {
                 overall_index++;
+                num_steps++;
 
                 vgl_point_2d<double> ps1=sc1->sh_pt(cor.first);
                 vgl_point_2d<double> ps2=sc2->sh_pt(cor.second);
@@ -5995,7 +6062,7 @@ compute_dense_rgb_sift_cost(
         arclength_shock_curve2=
             local_arclength_shock_curve2+arclength_shock_curve2;
 
-        dart_distances.push_back(local_distance);
+        dart_distances.push_back(local_distance/num_steps);
         // vcl_cout<<"Tree 1 dart ("
         //         <<path_map[i].first.first
         //         <<","
@@ -6451,7 +6518,7 @@ void dbskfg_match_bag_of_fragments::compute_similarity(
     unsigned int sampling_interval,
     bool flag)
 {
-
+    
     vcl_vector< rgrl_feature_sptr > pts1;
     vcl_vector< rgrl_feature_sptr > pts2;
     for (unsigned i = 0; i < map_list.size(); i++)
@@ -6798,7 +6865,8 @@ double dbskfg_match_bag_of_fragments::compute_outer_shock_edit_distance(
     double norm_app_cost(0.0);
     double rgb_avg_cost(0.0);
     double norm_shape_cost_length(0.0);
-    
+    double overlap(0.0);
+
     // Match model to query
     match_two_graphs_root_node_orig(model_os_tree,
                                     query_os_tree,
@@ -6806,7 +6874,8 @@ double dbskfg_match_bag_of_fragments::compute_outer_shock_edit_distance(
                                     norm_shape_cost_length,
                                     app_diff,
                                     norm_app_cost,
-                                    rgb_avg_cost);
+                                    rgb_avg_cost,
+                                    overlap);
 
     // dbskfg_composite_graph_fileio fileio;
     // fileio.write_contour_composite_graph(model_cg,"model_cg_outer");
