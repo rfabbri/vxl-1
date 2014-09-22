@@ -6137,6 +6137,419 @@ compute_dense_rgb_sift_cost(
     return app_diff;
 }
 
+
+vcl_pair<double,double> dbskfg_match_bag_of_fragments::
+compute_o2p_dense(
+    vcl_vector<dbskr_scurve_sptr>& curve_list1,
+    vcl_vector<dbskr_scurve_sptr>& curve_list2,
+    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    vcl_vector< pathtable_key >& path_map,
+    vcl_vector<double>& dart_distances,
+    bool flag,
+    double width,
+    vl_sift_pix* model_red_grad_data,
+    vl_sift_pix* query_red_grad_data,
+    vl_sift_pix* model_green_grad_data,
+    vl_sift_pix* query_green_grad_data,
+    vl_sift_pix* model_blue_grad_data,
+    vl_sift_pix* query_blue_grad_data,
+    VlSiftFilt* model_sift_filter,
+    VlSiftFilt* query_sift_filter,
+    double model_scale_ratio,
+    double query_scale_ratio)
+{
+ 
+     VlFloatVectorComparisonFunction Chi2_distance =    
+      vl_get_vector_comparison_function_f (VlDistanceChi2);
+
+    double sift_diff= 0.0;
+    
+    // Get matching pairs
+    for (unsigned i = 0; i < map_list.size(); i++) 
+    {
+        dbskr_scurve_sptr sc1 = curve_list1[i];
+        dbskr_scurve_sptr sc2 = curve_list2[i];
+
+        vcl_map< vcl_pair<double,double>, vcl_vector<vl_sift_pix> > model_sift;
+        vcl_map< vcl_pair<double,double>, vcl_vector<vl_sift_pix> > query_sift;
+
+        vcl_pair<unsigned int,unsigned int> query_key1(0,0);
+        vcl_pair<unsigned int,unsigned int> query_key2(0,0);
+        
+        if ( !flag )
+        {
+            query_key1=sc2->get_curve_id();
+            
+            query_key2.first = query_key1.second;
+            query_key2.second= query_key1.first;
+        }
+        else
+        {
+            query_key1=sc1->get_curve_id();
+           
+            query_key2.first = query_key1.second;
+            query_key2.second= query_key1.first;
+
+        }
+
+        bool add_curve=true;
+
+        if ( query_dart_curves_.count(query_key1) ||
+             query_dart_curves_.count(query_key2) )
+        {
+            add_curve=false;
+        }
+        
+        double step_size=1.0;
+        unsigned int num_steps=0.0;
+
+        for (unsigned j = 0; j < map_list[i].size(); ++j) 
+        {
+            vcl_pair<int, int> cor = map_list[i][j];
+            
+            // Compute sift for both images
+
+            // Shock Point 1 from Model
+            double radius_ps1        = sc1->time(cor.first);
+            double theta_ps1         = sc1->theta(cor.first);
+
+            // Shock Point 2 from Query
+            double radius_ps2        = sc2->time(cor.second);
+            double theta_ps2         = sc2->theta(cor.second);
+
+            double ratio=1.0;
+            double R1=radius_ps1;
+            double R2=radius_ps2;
+
+            ratio=(R2/R1);
+                
+
+            double r1 = step_size;
+
+            while ( r1 <= R1 )
+            {
+                double r2=r1*ratio;
+                for ( unsigned int p=0; p < 2 ; ++p )
+                {
+                    vgl_point_2d<double> ps1;
+                    vgl_point_2d<double> ps2;
+
+                    if ( p ==  0 )
+                    {
+                        ps1=sc1->fragment_pt(cor.first,r1);
+                        ps2=sc2->fragment_pt(cor.second,r2);
+                    }
+                    else
+                    {
+                        ps1=sc1->fragment_pt(cor.first,-1.0*r1);
+                        ps2=sc2->fragment_pt(cor.second,-1.0*r2);
+
+                    }
+
+                    if ( !flag )
+                    {
+                        
+                        ps1.set(ps1.x()/model_scale_ratio,
+                                ps1.y()/model_scale_ratio);
+                        ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
+                                ps2.y()/query_scale_ratio);
+
+                        vcl_pair<double,double> ps1_key(ps1.x(),ps1.y());
+                        vcl_pair<double,double> ps2_key(ps2.x(),ps2.y());
+
+                        if ( !model_sift.count(ps1_key) )
+                        {
+                            vcl_pair<double,double> key(ps1.x(),ps1.y());
+
+                            model_sift[key].push_back(ps1.x());
+                            model_sift[key].push_back(ps1.y());
+                            model_sift[key].push_back(
+                                (R1-r1)/model_scale_ratio);
+                            model_sift[key].push_back(theta_ps1);
+                        }
+
+
+                        if ( !query_sift.count(ps2_key) )
+                        {
+                            vcl_pair<double,double> key(ps2.x(),ps2.y());
+
+                            query_sift[key].push_back(ps2.x());
+                            query_sift[key].push_back(ps2.y());
+                            query_sift[key].push_back(
+                                (R2-r2)/query_scale_ratio);
+                            query_sift[key].push_back(theta_ps2);
+
+                        }
+
+                    }
+                    else
+                    {
+                        ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
+                                ps1.y()/query_scale_ratio);
+                        ps2.set(ps2.x()/model_scale_ratio,
+                                ps2.y()/model_scale_ratio);
+
+                        vcl_pair<double,double> ps1_key(ps1.x(),ps1.y());
+                        vcl_pair<double,double> ps2_key(ps2.x(),ps2.y());
+                    
+                        if ( !model_sift.count(ps1_key))
+                        {
+                            vcl_pair<double,double> key(ps1.x(),ps1.y());
+
+                            model_sift[key].push_back(ps1.x());
+                            model_sift[key].push_back(ps1.y());
+                            model_sift[key].push_back(
+                                (R1-r1)/query_scale_ratio);
+                            model_sift[key].push_back(theta_ps1);
+                        }
+                       
+                        if ( !query_sift.count(ps2_key))
+                        {
+                            vcl_pair<double,double> key(ps2.x(),ps2.y());
+
+                            query_sift[key].push_back(ps2.x());
+                            query_sift[key].push_back(ps2.y());
+                            query_sift[key].push_back(
+                                (R2-r2)/model_scale_ratio);
+                            query_sift[key].push_back(theta_ps2);
+                        }
+
+                
+                    }
+
+                }
+                r1+=step_size;
+            }
+
+            // Test original medial axis point
+            {
+                vgl_point_2d<double> ps1=sc1->sh_pt(cor.first);
+                vgl_point_2d<double> ps2=sc2->sh_pt(cor.second);
+                
+                r1=0.0;
+                double r2=0.0;
+                
+                if ( !flag )
+                {
+                    
+                    ps1.set(ps1.x()/model_scale_ratio,
+                            ps1.y()/model_scale_ratio);
+                    ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
+                            ps2.y()/query_scale_ratio);
+
+                    vcl_pair<double,double> ps1_key(ps1.x(),ps1.y());
+                    vcl_pair<double,double> ps2_key(ps2.x(),ps2.y());
+                        
+                    if ( !model_sift.count(ps1_key) )
+                    {
+                        vcl_pair<double,double> key(ps1.x(),ps1.y());
+
+                        model_sift[key].push_back(ps1.x());
+                        model_sift[key].push_back(ps1.y());
+                        model_sift[key].push_back((R1-r1)/model_scale_ratio);
+                        model_sift[key].push_back(theta_ps1);
+                    }
+
+                    if ( !query_sift.count(ps2_key) )
+                    {   
+                        vcl_pair<double,double> key(ps2.x(),ps2.y());
+                     
+                        query_sift[key].push_back(ps2.x());
+                        query_sift[key].push_back(ps2.y());
+                        query_sift[key].push_back((R2-r2)/query_scale_ratio);
+                        query_sift[key].push_back(theta_ps2);
+                    }
+
+                    if ( add_curve )
+                    {
+                        query_dart_curves_[query_key1].push_back(ps2);
+                    }
+
+                    
+                }
+                else
+                {
+                    ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
+                            ps1.y()/query_scale_ratio);
+                    ps2.set(ps2.x()/model_scale_ratio,
+                            ps2.y()/model_scale_ratio);
+                    
+                    vcl_pair<double,double> ps1_key(ps1.x(),ps1.y());
+                    vcl_pair<double,double> ps2_key(ps2.x(),ps2.y());
+
+                    if ( !model_sift.count(ps1_key) )
+                    {
+                        vcl_pair<double,double> key(ps1.x(),ps1.y());
+          
+                        model_sift[key].push_back(ps1.x());
+                        model_sift[key].push_back(ps1.y());
+                        model_sift[key].push_back((R1-r1)/query_scale_ratio);
+                        model_sift[key].push_back(theta_ps1);
+                    }
+                  
+                    if (!query_sift.count(ps2_key) )
+                    {
+                        vcl_pair<double,double> key(ps2.x(),ps2.y());
+
+                        query_sift[key].push_back(ps2.x());
+                        query_sift[key].push_back(ps2.y());
+                        query_sift[key].push_back((R2-r2)/model_scale_ratio);
+                        query_sift[key].push_back(theta_ps2);
+                    }
+
+                    if ( add_curve )
+                    {
+                        query_dart_curves_[query_key1].push_back(ps1);
+                    }
+
+                }
+            }
+            
+        }
+
+        vnl_vector<vl_sift_pix> model_triu(73920,0.0);
+        vnl_vector<vl_sift_pix> query_triu(73920,0.0);
+
+        // Process model first
+        {
+            vnl_matrix<vl_sift_pix> model_matrix(384,model_sift.size(),0.0);
+            unsigned int index(0);
+            
+            vcl_map< vcl_pair<double,double>, vcl_vector<vl_sift_pix> >
+                ::iterator it;
+            for ( it = model_sift.begin() ; it != model_sift.end() ; ++it)
+            {
+                vcl_vector<vl_sift_pix> model_vec=(*it).second;
+                
+                vgl_point_2d<double> model_pt(model_vec[0],model_vec[1]);
+                double model_radius=model_vec[2]/2.0;
+                double model_theta=model_vec[3];
+                
+                vnl_vector<vl_sift_pix> model_descriptor(384,0.0);
+                
+                compute_descr(model_pt,
+                              model_radius,
+                              model_theta,
+                              model_red_grad_data,
+                              model_green_grad_data,
+                              model_blue_grad_data,
+                              model_sift_filter,
+                              model_descriptor);
+
+                model_matrix.set_column(index,model_descriptor.data_block());
+                
+                index++;
+            }
+            
+            vnl_matrix<vl_sift_pix> model_matrix_transpose=
+                model_matrix.transpose();
+            vnl_matrix<vl_sift_pix> o2p_model = 
+                (model_matrix*model_matrix_transpose)/(model_sift.size());
+
+            unsigned int position=0;
+
+            // Get upper triangle portion
+            for ( unsigned int c=0; c < o2p_model.cols() ; ++c)
+            {
+                for ( unsigned int r=0; r < c+1 ; ++r)
+                {
+                    double scaled_value=o2p_model[r][c];
+                    model_triu.put(position,scaled_value);
+                    position++;
+                }
+            }
+
+            //Finally normalize descriptor
+            model_triu.normalize();
+        }
+
+
+        // Process query first
+        {
+            vnl_matrix<vl_sift_pix> query_matrix(384,query_sift.size(),0.0);
+            unsigned int index(0);
+            
+            vcl_map< vcl_pair<double,double>, vcl_vector<vl_sift_pix> >
+                ::iterator it;
+            for ( it = query_sift.begin() ; it != query_sift.end() ; ++it)
+            {
+                vcl_vector<vl_sift_pix> query_vec=(*it).second;
+                
+                vgl_point_2d<double> query_pt(query_vec[0],query_vec[1]);
+                double query_radius=query_vec[2]/2.0;
+                double query_theta=query_vec[3];
+                
+                vnl_vector<vl_sift_pix> query_descriptor(384,0.0);
+                
+                compute_descr(query_pt,
+                              query_radius,
+                              query_theta,
+                              query_red_grad_data,
+                              query_green_grad_data,
+                              query_blue_grad_data,
+                              query_sift_filter,
+                              query_descriptor);
+
+                query_matrix.set_column(index,query_descriptor.data_block());
+                
+                index++;
+            }
+            
+            vnl_matrix<vl_sift_pix> query_matrix_transpose=
+                query_matrix.transpose();
+            vnl_matrix<vl_sift_pix> o2p_query = 
+                (query_matrix*query_matrix_transpose)/(query_sift.size());
+
+            unsigned int position=0;
+
+            // Get upper triangle portion
+            for ( unsigned int c=0; c < o2p_query.cols() ; ++c)
+            {
+                for ( unsigned int r=0; r < c+1 ; ++r)
+                {
+                    double scaled_value=o2p_query[r][c];
+                    query_triu.put(position,scaled_value);
+                    position++;
+                }
+            }
+
+            //Finally normalize descriptor
+            query_triu.normalize();
+        }
+
+        vl_sift_pix local_distance[1];
+        vl_eval_vector_comparison_on_all_pairs_f(local_distance,
+                                                 model_triu.size(),
+                                                 model_triu.data_block(),
+                                                 1,
+                                                 query_triu.data_block(),
+                                                 1,
+                                                 Chi2_distance);
+
+
+        sift_diff+=local_distance[0];
+        dart_distances.push_back(local_distance[0]);
+        // vcl_cout<<"Tree 1 dart ("
+        //         <<path_map[i].first.first
+        //         <<","
+        //         <<path_map[i].first.second
+        //         <<") Tree 2 dart ("
+        //         <<path_map[i].second.first
+        //         <<","
+        //         <<path_map[i].second.second
+        //         <<") L2 distance: "
+        //         <<local_distance[0]<<vcl_endl;
+       
+    }
+
+
+    vcl_pair<double,double> app_diff(sift_diff,sift_diff/map_list.size());
+
+    vcl_cout<<"Unormalized diff: "<<app_diff.first<<vcl_endl;
+    vcl_cout<<"Average diff:     "<<app_diff.second<<vcl_endl;
+    return app_diff;
+}
+
 double dbskfg_match_bag_of_fragments::descr_cost(
     vgl_point_2d<double>& model_pt,
     double& model_radius,
@@ -6299,6 +6712,76 @@ double dbskfg_match_bag_of_fragments::descr_cost(
     return (0.5)*result_final[0];
     
 }
+
+void dbskfg_match_bag_of_fragments::compute_descr(
+    vgl_point_2d<double>& pt,
+    double& radius,
+    double& theta,
+    vl_sift_pix* red_grad_data,
+    vl_sift_pix* green_grad_data,
+    vl_sift_pix* blue_grad_data,
+    VlSiftFilt* sift_filter,
+    vnl_vector<vl_sift_pix>& descriptor)
+{
+
+
+    vl_sift_pix descr_ps1_red[128];
+    memset(descr_ps1_red, 0, sizeof(vl_sift_pix)*128);
+    
+    vl_sift_pix descr_ps1_green[128];
+    memset(descr_ps1_green, 0, sizeof(vl_sift_pix)*128);
+    
+    vl_sift_pix descr_ps1_blue[128];
+    memset(descr_ps1_blue, 0, sizeof(vl_sift_pix)*128);
+        
+
+    vl_sift_calc_raw_descriptor(sift_filter,
+                                red_grad_data,
+                                descr_ps1_red,
+                                sift_filter->width,
+                                sift_filter->height,
+                                pt.x(),
+                                pt.y(),
+                                radius,
+                                theta);
+
+    vl_sift_calc_raw_descriptor(sift_filter,
+                                green_grad_data,
+                                descr_ps1_green,
+                                sift_filter->width,
+                                sift_filter->height,
+                                pt.x(),
+                                pt.y(),
+                                radius,
+                                theta);
+
+    vl_sift_calc_raw_descriptor(sift_filter,
+                                blue_grad_data,
+                                descr_ps1_blue,
+                                sift_filter->width,
+                                sift_filter->height,
+                                pt.x(),
+                                pt.y(),
+                                radius,
+                                theta);
+
+
+
+    vl_sift_pix result_red[1];
+    vl_sift_pix result_green[1];
+    vl_sift_pix result_blue[1];
+    vl_sift_pix result_final[1];
+
+    for ( unsigned int d=0; d < 128 ; ++d)
+    {
+        descriptor.put(d,descr_ps1_red[d]);
+        descriptor.put(d+128,descr_ps1_green[d]);
+        descriptor.put(d+256,descr_ps1_blue[d]);
+        
+    }
+
+}
+
 vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
     vcl_map<int,vcl_vector<dbskfg_sift_data> >& fragments,
     vl_sift_pix* grad_data,

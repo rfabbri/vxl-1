@@ -469,6 +469,25 @@ private:
         VlSiftFilt* query_sift_filter=0,
         double model_scale_ratio=1.0,
         double query_scale_ratio=1.0);
+
+    vcl_pair<double,double> compute_o2p_dense(
+        vcl_vector<dbskr_scurve_sptr>& curve_list1,
+        vcl_vector<dbskr_scurve_sptr>& curve_list2,
+        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        vcl_vector< pathtable_key >& path_map,
+        vcl_vector<double>& dart_distances,
+        bool flag=false,
+        double width=0.0,
+        vl_sift_pix* model_red_grad_data=0,
+        vl_sift_pix* query_red_grad_data=0,
+        vl_sift_pix* model_green_grad_data=0,
+        vl_sift_pix* query_green_grad_data=0,
+        vl_sift_pix* model_blue_grad_data=0,
+        vl_sift_pix* query_blue_grad_data=0,
+        VlSiftFilt* model_sift_filter=0,
+        VlSiftFilt* query_sift_filter=0,
+        double model_scale_ratio=1.0,
+        double query_scale_ratio=1.0);
     
     vnl_vector<double> compute_second_order_pooling(
         vcl_map<int,vcl_vector<dbskfg_sift_data> >& fragments,
@@ -491,6 +510,17 @@ private:
         vl_sift_pix* query_blue_grad_data=0,
         VlSiftFilt* model_sift_filter=0,
         VlSiftFilt* query_sift_filter=0);
+
+    void compute_descr(
+        vgl_point_2d<double>& pt,
+        double& radius,
+        double& theta,
+        vl_sift_pix* red_grad_data,
+        vl_sift_pix* green_grad_data,
+        vl_sift_pix* blue_grad_data,
+        VlSiftFilt* model_filter,
+        vnl_vector<vl_sift_pix>& descriptor);
+
 
     void convert_to_color_space(
         vil_image_resource_sptr& input_image,
