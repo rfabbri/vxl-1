@@ -3949,7 +3949,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                                                            ->get_scale_ratio());
 
         vcl_vector<double> dart_distances;
-        vcl_pair<double,double> sift_rgb_cost=compute_rgb_sift_cost(
+        vcl_pair<double,double> sift_rgb_cost=compute_o2p_dense(
             curve_list1,
             curve_list2,
             map_list,
@@ -7492,7 +7492,8 @@ void dbskfg_match_bag_of_fragments::convert_to_color_space(
 void dbskfg_match_bag_of_fragments::write_out_dart_data()
 {
     
-    vcl_string dart_file="dart_data.txt";
+    vcl_string dart_file=vul_file::strip_extension(output_binary_file_);
+    dart_file=dart_file+"_dart.txt";
 
     vcl_ofstream model_file(dart_file.c_str());
     model_file<<query_dart_curves_.size()<<vcl_endl;
