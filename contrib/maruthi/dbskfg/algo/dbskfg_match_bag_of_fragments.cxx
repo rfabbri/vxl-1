@@ -6527,8 +6527,8 @@ compute_o2p_dense(
                                                  Chi2_distance);
 
 
-        sift_diff+=local_distance[0];
-        dart_distances.push_back(local_distance[0]);
+        sift_diff+=0.5*local_distance[0];
+        dart_distances.push_back(0.5*local_distance[0]);
         // vcl_cout<<"Tree 1 dart ("
         //         <<path_map[i].first.first
         //         <<","
@@ -6545,8 +6545,8 @@ compute_o2p_dense(
 
     vcl_pair<double,double> app_diff(sift_diff,sift_diff/map_list.size());
 
-    vcl_cout<<"Unormalized diff: "<<app_diff.first<<vcl_endl;
-    vcl_cout<<"Average diff:     "<<app_diff.second<<vcl_endl;
+    // vcl_cout<<"Unormalized diff: "<<app_diff.first<<vcl_endl;
+    // vcl_cout<<"Average diff:     "<<app_diff.second<<vcl_endl;
     return app_diff;
 }
 
