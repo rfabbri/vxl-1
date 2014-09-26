@@ -27,6 +27,9 @@
 #include <vsol/vsol_point_2d.h>
 #include <dbsk2d/dbsk2d_file_io.h>
 
+#include <vil/vil_bilin_interp.h>
+#include <bsta/bsta_spherical_histogram.h>
+
 #include <vil/vil_rgb.h>
 #include <vil/vil_load.h>
 #include <vil/vil_convert.h>
@@ -6529,6 +6532,594 @@ compute_o2p_dense(
 
         sift_diff+=0.5*local_distance[0];
         dart_distances.push_back(0.5*local_distance[0]);
+        // vcl_cout<<"Tree 1 dart ("
+        //         <<path_map[i].first.first
+        //         <<","
+        //         <<path_map[i].first.second
+        //         <<") Tree 2 dart ("
+        //         <<path_map[i].second.first
+        //         <<","
+        //         <<path_map[i].second.second
+        //         <<") L2 distance: "
+        //         <<local_distance[0]<<vcl_endl;
+       
+    }
+
+
+    vcl_pair<double,double> app_diff(sift_diff,sift_diff/map_list.size());
+
+    // vcl_cout<<"Unormalized diff: "<<app_diff.first<<vcl_endl;
+    // vcl_cout<<"Average diff:     "<<app_diff.second<<vcl_endl;
+    return app_diff;
+}
+
+
+vcl_pair<double,double> dbskfg_match_bag_of_fragments::
+compute_3d_hist_color(
+    vcl_vector<dbskr_scurve_sptr>& curve_list1,
+    vcl_vector<dbskr_scurve_sptr>& curve_list2,
+    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    vcl_vector< pathtable_key >& path_map,
+    vcl_vector<double>& dart_distances,
+    vil_image_view<double>& model_channel_1,
+    vil_image_view<double>& model_channel_2,
+    vil_image_view<double>& model_channel_3,
+    vil_image_view<double>& query_channel_1,
+    vil_image_view<double>& query_channel_2,
+    vil_image_view<double>& query_channel_3,
+    double model_scale_ratio,
+    double query_scale_ratio,
+    bool flag,
+    double width)
+{
+ 
+     VlFloatVectorComparisonFunction Chi2_distance =    
+      vl_get_vector_comparison_function_f (VlDistanceChi2);
+
+    double sift_diff= 0.0;
+    
+    // Get matching pairs
+    for (unsigned i = 0; i < map_list.size(); i++) 
+    {
+        dbskr_scurve_sptr sc1 = curve_list1[i];
+        dbskr_scurve_sptr sc2 = curve_list2[i];
+
+        vcl_map< vcl_pair<double,double>, vcl_vector<vl_sift_pix> > 
+            model_sift_plus;
+        vcl_map< vcl_pair<double,double>, vcl_vector<vl_sift_pix> > 
+            query_sift_plus;
+        vcl_map< vcl_pair<double,double>, vcl_vector<vl_sift_pix> > 
+            model_sift_minus;
+        vcl_map< vcl_pair<double,double>, vcl_vector<vl_sift_pix> > 
+            query_sift_minus;
+        vcl_set< vcl_pair<double,double> > model_sift;
+        vcl_set< vcl_pair<double,double> > query_sift;
+
+        vcl_pair<unsigned int,unsigned int> query_key1(0,0);
+        vcl_pair<unsigned int,unsigned int> query_key2(0,0);
+        
+        if ( !flag )
+        {
+            query_key1=sc2->get_curve_id();
+            
+            query_key2.first = query_key1.second;
+            query_key2.second= query_key1.first;
+        }
+        else
+        {
+            query_key1=sc1->get_curve_id();
+           
+            query_key2.first = query_key1.second;
+            query_key2.second= query_key1.first;
+
+        }
+
+        bool add_curve=true;
+
+        if ( query_dart_curves_.count(query_key1) ||
+             query_dart_curves_.count(query_key2) )
+        {
+            add_curve=false;
+        }
+        
+        double step_size=1.0;
+        unsigned int num_steps=0.0;
+
+        for (unsigned j = 0; j < map_list[i].size(); ++j) 
+        {
+            vcl_pair<int, int> cor = map_list[i][j];
+            
+            // Compute sift for both images
+
+            // Shock Point 1 from Model
+            double radius_ps1        = sc1->time(cor.first);
+            double theta_ps1         = sc1->theta(cor.first);
+
+            // Shock Point 2 from Query
+            double radius_ps2        = sc2->time(cor.second);
+            double theta_ps2         = sc2->theta(cor.second);
+
+            double ratio=1.0;
+            double R1=radius_ps1;
+            double R2=radius_ps2;
+
+            ratio=(R2/R1);
+                
+
+            double r1 =0;
+
+            while ( r1 <= R1 )
+            {
+                double r2=r1*ratio;
+                for ( unsigned int p=0; p < 2 ; ++p )
+                {
+                    vgl_point_2d<double> ps1;
+                    vgl_point_2d<double> ps2;
+
+                    if ( p ==  0 )
+                    {
+                        ps1=sc1->fragment_pt(cor.first,r1);
+                        ps2=sc2->fragment_pt(cor.second,r2);
+                    }
+                    else
+                    {
+                        ps1=sc1->fragment_pt(cor.first,-1.0*r1);
+                        ps2=sc2->fragment_pt(cor.second,-1.0*r2);
+
+                    }
+
+                    if ( !flag )
+                    {
+                        
+                        ps1.set(ps1.x()/model_scale_ratio,
+                                ps1.y()/model_scale_ratio);
+                        ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
+                                ps2.y()/query_scale_ratio);
+
+                        vcl_pair<double,double> ps1_key(ps1.x(),ps1.y());
+                        vcl_pair<double,double> ps2_key(ps2.x(),ps2.y());
+
+                        if ( !model_sift.count(ps1_key) )
+                        {
+                            vcl_pair<double,double> key(ps1.x(),ps1.y());
+                            model_sift.insert(key);
+
+                            if ( r1 > 0  )
+                            {
+                                model_sift_plus[key].push_back(ps1.x());
+                                model_sift_plus[key].push_back(ps1.y());
+                                model_sift_plus[key].push_back(
+                                    (R1-r1)/model_scale_ratio);
+                                model_sift_plus[key].push_back(theta_ps1);
+                            }
+                            else
+                            {
+                                model_sift_minus[key].push_back(ps1.x());
+                                model_sift_minus[key].push_back(ps1.y());
+                                model_sift_minus[key].push_back(
+                                    (R1-r1)/model_scale_ratio);
+                                model_sift_minus[key].push_back(theta_ps1);
+                            }
+                        }
+
+
+                        if ( !query_sift.count(ps2_key) )
+                        {
+                            vcl_pair<double,double> key(ps2.x(),ps2.y());
+                            query_sift.insert(key);
+
+                            if ( r2 > 0 )
+                            {
+                                query_sift_plus[key].push_back(ps2.x());
+                                query_sift_plus[key].push_back(ps2.y());
+                                query_sift_plus[key].push_back(
+                                    (R2-r2)/query_scale_ratio);
+                                query_sift_plus[key].push_back(theta_ps2);
+                            }
+                            else
+                            {
+                                query_sift_minus[key].push_back(ps2.x());
+                                query_sift_minus[key].push_back(ps2.y());
+                                query_sift_minus[key].push_back(
+                                    (R2-r2)/query_scale_ratio);
+                                query_sift_minus[key].push_back(theta_ps2);
+
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
+                                ps1.y()/query_scale_ratio);
+                        ps2.set(ps2.x()/model_scale_ratio,
+                                ps2.y()/model_scale_ratio);
+
+                        vcl_pair<double,double> ps1_key(ps1.x(),ps1.y());
+                        vcl_pair<double,double> ps2_key(ps2.x(),ps2.y());
+                    
+                        if ( !model_sift.count(ps1_key))
+                        {
+                            vcl_pair<double,double> key(ps1.x(),ps1.y());
+                            model_sift.insert(key);
+
+                            if ( r1 > 0 )
+                            {
+                                model_sift_plus[key].push_back(ps1.x());
+                                model_sift_plus[key].push_back(ps1.y());
+                                model_sift_plus[key].push_back(
+                                    (R1-r1)/query_scale_ratio);
+                                model_sift_plus[key].push_back(theta_ps1);
+                            }
+                            else
+                            {
+                                model_sift_minus[key].push_back(ps1.x());
+                                model_sift_minus[key].push_back(ps1.y());
+                                model_sift_minus[key].push_back(
+                                    (R1-r1)/query_scale_ratio);
+                                model_sift_minus[key].push_back(theta_ps1);
+
+                            }
+                        }
+                       
+                        if ( !query_sift.count(ps2_key))
+                        {
+                            vcl_pair<double,double> key(ps2.x(),ps2.y());
+                            query_sift.insert(key);
+
+                            if ( r2 > 0 )
+                            {
+                                query_sift_plus[key].push_back(ps2.x());
+                                query_sift_plus[key].push_back(ps2.y());
+                                query_sift_plus[key].push_back(
+                                    (R2-r2)/model_scale_ratio);
+                                query_sift_plus[key].push_back(theta_ps2);
+                            }
+                            else
+                            {
+                                query_sift_minus[key].push_back(ps2.x());
+                                query_sift_minus[key].push_back(ps2.y());
+                                query_sift_minus[key].push_back(
+                                    (R2-r2)/model_scale_ratio);
+                                query_sift_minus[key].push_back(theta_ps2);
+
+                            }
+
+                
+                        }
+
+                    }
+                    r1+=step_size;
+                }
+
+            }
+            
+            // Test original medial axis point
+            {
+                vgl_point_2d<double> ps1=sc1->sh_pt(cor.first);
+                vgl_point_2d<double> ps2=sc2->sh_pt(cor.second);
+                
+                r1=0.0;
+                double r2=0.0;
+                
+                if ( !flag )
+                {
+                    
+                    ps1.set(ps1.x()/model_scale_ratio,
+                            ps1.y()/model_scale_ratio);
+                    ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
+                            ps2.y()/query_scale_ratio);
+
+                    vcl_pair<double,double> ps1_key(ps1.x(),ps1.y());
+                    vcl_pair<double,double> ps2_key(ps2.x(),ps2.y());
+                        
+                    if ( !model_sift.count(ps1_key) )
+                    {
+                        vcl_pair<double,double> key(ps1.x(),ps1.y());
+                        model_sift.insert(key);
+
+                        model_sift_plus[key].push_back(ps1.x());
+                        model_sift_plus[key].push_back(ps1.y());
+                        model_sift_plus[key].push_back
+                            ((R1-r1)/model_scale_ratio);
+                        model_sift_plus[key].push_back(theta_ps1);
+
+                        model_sift_minus[key].push_back(ps1.x());
+                        model_sift_minus[key].push_back(ps1.y());
+                        model_sift_minus[key].push_back
+                            ((R1-r1)/model_scale_ratio);
+                        model_sift_minus[key].push_back(theta_ps1);
+
+                    }
+
+                    if ( !query_sift.count(ps2_key) )
+                    {   
+                        vcl_pair<double,double> key(ps2.x(),ps2.y());
+                        query_sift.insert(key);
+
+                        query_sift_plus[key].push_back(ps2.x());
+                        query_sift_plus[key].push_back(ps2.y());
+                        query_sift_plus[key].push_back(
+                            (R2-r2)/query_scale_ratio);
+                        query_sift_plus[key].push_back(theta_ps2);
+
+                        query_sift_minus[key].push_back(ps2.x());
+                        query_sift_minus[key].push_back(ps2.y());
+                        query_sift_minus[key].push_back(
+                            (R2-r2)/query_scale_ratio);
+                        query_sift_minus[key].push_back(theta_ps2);
+
+                    }
+
+                    if ( add_curve )
+                    {
+                        query_dart_curves_[query_key1].push_back(ps2);
+                    }
+
+                    
+                }
+                else
+                {
+                    ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
+                            ps1.y()/query_scale_ratio);
+                    ps2.set(ps2.x()/model_scale_ratio,
+                            ps2.y()/model_scale_ratio);
+                    
+                    vcl_pair<double,double> ps1_key(ps1.x(),ps1.y());
+                    vcl_pair<double,double> ps2_key(ps2.x(),ps2.y());
+
+                    if ( !model_sift.count(ps1_key) )
+                    {
+                        vcl_pair<double,double> key(ps1.x(),ps1.y());
+                        model_sift.insert(key);
+
+                        model_sift_plus[key].push_back(ps1.x());
+                        model_sift_plus[key].push_back(ps1.y());
+                        model_sift_plus[key].push_back(
+                            (R1-r1)/query_scale_ratio);
+                        model_sift_plus[key].push_back(theta_ps1);
+
+                        model_sift_minus[key].push_back(ps1.x());
+                        model_sift_minus[key].push_back(ps1.y());
+                        model_sift_minus[key].push_back(
+                            (R1-r1)/query_scale_ratio);
+                        model_sift_minus[key].push_back(theta_ps1);
+
+                    }
+                  
+                    if (!query_sift.count(ps2_key) )
+                    {
+                        vcl_pair<double,double> key(ps2.x(),ps2.y());
+                        query_sift.insert(key);
+
+                        query_sift_plus[key].push_back(ps2.x());
+                        query_sift_plus[key].push_back(ps2.y());
+                        query_sift_plus[key].push_back(
+                            (R2-r2)/model_scale_ratio);
+                        query_sift_plus[key].push_back(theta_ps2);
+
+                        query_sift_minus[key].push_back(ps2.x());
+                        query_sift_minus[key].push_back(ps2.y());
+                        query_sift_minus[key].push_back(
+                            (R2-r2)/model_scale_ratio);
+                        query_sift_minus[key].push_back(theta_ps2);
+
+                    }
+
+                    if ( add_curve )
+                    {
+                        query_dart_curves_[query_key1].push_back(ps1);
+                    }
+
+                }
+            }
+            
+        }
+
+
+        bsta_spherical_histogram<double> model_plus_hist
+            (8, 4, 0.0, 360.0, 0.0, 180.0,
+             bsta_spherical_histogram<double>
+             ::DEG,
+             bsta_spherical_histogram<double>
+             ::B_0_360,
+             bsta_spherical_histogram<double>
+             ::B_0_180);
+
+        bsta_spherical_histogram<double> model_minus_hist
+            (8, 4, 0.0, 360.0, 0.0, 180.0,
+             bsta_spherical_histogram<double>
+             ::DEG,
+             bsta_spherical_histogram<double>
+             ::B_0_360,
+             bsta_spherical_histogram<double>
+             ::B_0_180);
+
+        bsta_spherical_histogram<double> query_plus_hist
+            (8, 4, 0.0, 360.0, 0.0, 180.0,
+             bsta_spherical_histogram<double>
+             ::DEG,
+             bsta_spherical_histogram<double>
+             ::B_0_360,
+             bsta_spherical_histogram<double>
+             ::B_0_180);
+
+        bsta_spherical_histogram<double> query_minus_hist
+            (8, 4, 0.0, 360.0, 0.0, 180.0,
+             bsta_spherical_histogram<double>
+             ::DEG,
+             bsta_spherical_histogram<double>
+             ::B_0_360,
+             bsta_spherical_histogram<double>
+             ::B_0_180);
+
+
+        vnl_vector<vl_sift_pix> descr1(model_plus_hist.n_azimuth()*
+                                       model_plus_hist.n_elevation()*
+                                       2.0,0.0);
+        vnl_vector<vl_sift_pix> descr2(query_plus_hist.n_azimuth()*
+                                       query_plus_hist.n_elevation()*
+                                       2.0,0.0);
+
+        
+        // Compute model sift plus first
+        {
+            vcl_map< vcl_pair<double,double>, vcl_vector<vl_sift_pix> >::
+                iterator it;
+            for ( it = model_sift_plus.begin() ; it != model_sift_plus.end();
+                  ++it)
+            {
+                vcl_vector<vl_sift_pix> model_vec=(*it).second;   
+                vgl_point_2d<double> model_pt(model_vec[0],model_vec[1]);
+
+                double c1 = vil_bilin_interp_safe(model_channel_1,model_pt.x(),
+                                                  model_pt.y());
+                double c2 = vil_bilin_interp_safe(model_channel_2,model_pt.x(),
+                                                  model_pt.y());
+                double c3 = vil_bilin_interp_safe(model_channel_3,model_pt.x(),
+                                                  model_pt.y());
+                
+                double az(0.0),el(0.0);
+                model_plus_hist
+                    .convert_to_spherical(c1/100.0,c2/100.0,c3/100.0,az, el);
+                model_plus_hist.upcount(az,el);
+
+                
+            }
+
+            for ( it = model_sift_minus.begin() ; it != model_sift_minus.end();
+                  ++it)
+            {
+                vcl_vector<vl_sift_pix> model_vec=(*it).second;   
+                vgl_point_2d<double> model_pt(model_vec[0],model_vec[1]);
+
+                double c1 = vil_bilin_interp_safe(model_channel_1,model_pt.x(),
+                                                  model_pt.y());
+                double c2 = vil_bilin_interp_safe(model_channel_2,model_pt.x(),
+                                                  model_pt.y());
+                double c3 = vil_bilin_interp_safe(model_channel_3,model_pt.x(),
+                                                  model_pt.y());
+                
+                double az(0.0),el(0.0);
+                model_minus_hist
+                    .convert_to_spherical(c1/100.0,c2/100.0,c3/100.0,az, el);
+                model_minus_hist.upcount(az,el);
+
+                
+            }
+
+            unsigned int index=0;
+            for (int az = 0; az< model_plus_hist.n_azimuth() ; ++az)
+            {
+                for (int el = 0; el<model_plus_hist.n_elevation(); ++el) 
+                {
+                    double counts = model_plus_hist.counts(az,el);
+                    descr2.put(index,counts);
+                    index++;
+                }
+            }
+            
+            for (int az = 0; az< model_minus_hist.n_azimuth() ; ++az)
+            {
+                for (int el = 0; el<model_minus_hist.n_elevation(); ++el) 
+                {
+                    double counts = model_minus_hist.counts(az,el);
+                    descr2.put(index,counts);
+                    index++;
+                }
+            }
+            
+        }
+
+        // Compute query sift plus first
+        {
+            vcl_map< vcl_pair<double,double>, vcl_vector<vl_sift_pix> >::
+                iterator it;
+            for ( it = query_sift_plus.begin() ; it != query_sift_plus.end();
+                  ++it)
+            {
+                vcl_vector<vl_sift_pix> query_vec=(*it).second;   
+                vgl_point_2d<double> query_pt(query_vec[0],query_vec[1]);
+
+                double c1 = vil_bilin_interp_safe(query_channel_1,query_pt.x(),
+                                                  query_pt.y());
+                double c2 = vil_bilin_interp_safe(query_channel_2,query_pt.x(),
+                                                  query_pt.y());
+                double c3 = vil_bilin_interp_safe(query_channel_3,query_pt.x(),
+                                                  query_pt.y());
+                
+                double az(0.0),el(0.0);
+                query_plus_hist
+                    .convert_to_spherical(c1/100.0,c2/100.0,c3/100.0,az, el);
+                query_plus_hist.upcount(az,el);
+
+                
+            }
+
+            for ( it = query_sift_minus.begin() ; it != query_sift_minus.end();
+                  ++it)
+            {
+                vcl_vector<vl_sift_pix> query_vec=(*it).second;   
+                vgl_point_2d<double> query_pt(query_vec[0],query_vec[1]);
+
+                double c1 = vil_bilin_interp_safe(query_channel_1,query_pt.x(),
+                                                  query_pt.y());
+                double c2 = vil_bilin_interp_safe(query_channel_2,query_pt.x(),
+                                                  query_pt.y());
+                double c3 = vil_bilin_interp_safe(query_channel_3,query_pt.x(),
+                                                  query_pt.y());
+                
+                double az(0.0),el(0.0);
+                query_minus_hist
+                    .convert_to_spherical(c1/100.0,c2/100.0,c3/100.0,az, el);
+                query_minus_hist.upcount(az,el);
+
+                
+            }
+
+
+
+            unsigned int index=0;
+            for (int az = 0; az< query_plus_hist.n_azimuth() ; ++az)
+            {
+                for (int el = 0; el<query_plus_hist.n_elevation(); ++el) 
+                {
+                    double counts = query_plus_hist.counts(az,el);
+                    descr2.put(index,counts);
+                    index++;
+                }
+            }
+            
+            for (int az = 0; az< query_minus_hist.n_azimuth() ; ++az)
+            {
+                for (int el = 0; el<query_minus_hist.n_elevation(); ++el) 
+                {
+                    double counts = query_minus_hist.counts(az,el);
+                    descr2.put(index,counts);
+                    index++;
+                }
+            }
+            
+
+
+        }
+
+
+
+        vl_sift_pix local_distance[1];
+        vl_eval_vector_comparison_on_all_pairs_f(local_distance,
+                                                 descr1.size(),
+                                                 descr1.data_block(),
+                                                 1,
+                                                 descr2.data_block(),
+                                                 1,
+                                                 Chi2_distance);
+
+
+        sift_diff+=0.5*local_distance[0];
+        dart_distances.push_back(0.5*local_distance[0]);
+
+
         // vcl_cout<<"Tree 1 dart ("
         //         <<path_map[i].first.first
         //         <<","
