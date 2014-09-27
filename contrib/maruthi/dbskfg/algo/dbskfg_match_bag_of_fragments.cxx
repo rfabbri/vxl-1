@@ -221,12 +221,12 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                 L_img.set_size(model_img_sptr->ni(),model_img_sptr->nj());
                 a_img.set_size(model_img_sptr->ni(),model_img_sptr->nj());
                 b_img.set_size(model_img_sptr->ni(),model_img_sptr->nj());
-        
+
                 convert_RGB_to_Lab(model_img_sptr->get_view(),
                                    L_img,
                                    a_img,
                                    b_img);
-
+                
                 compute_grad_color_maps(o1,
                                         &red_data);
                 
@@ -4002,11 +4002,11 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         vil_image_view<double>* model_L_channel=model_tree->get_L_channel();
         vil_image_view<double>* query_L_channel=query_tree->get_L_channel();
 
-        vil_image_view<double>* model_a_channel=model_tree->get_L_channel();
-        vil_image_view<double>* query_a_channel=query_tree->get_L_channel();
+        vil_image_view<double>* model_a_channel=model_tree->get_a_channel();
+        vil_image_view<double>* query_a_channel=query_tree->get_a_channel();
 
-        vil_image_view<double>* model_b_channel=model_tree->get_L_channel();
-        vil_image_view<double>* query_b_channel=query_tree->get_L_channel();
+        vil_image_view<double>* model_b_channel=model_tree->get_b_channel();
+        vil_image_view<double>* query_b_channel=query_tree->get_b_channel();
 
         VlSiftFilt* model_sift_filter=model_tree->get_sift_filter();
         VlSiftFilt* query_sift_filter=query_tree->get_sift_filter();
@@ -4048,7 +4048,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
             model_tree->get_scale_ratio(),
             query_tree->get_scale_ratio());
        
-        // vcl_pair<double,double> sift2_rgb_cost=compute_3d_hist_color(
+        // vcl_pair<double,double> sift_rgb_cost=compute_3d_hist_color(
         //     curve_list1,
         //     curve_list2,
         //     map_list,
@@ -6740,7 +6740,7 @@ compute_3d_hist_color(
             ratio=(R2/R1);
                 
 
-            double r1 =0;
+            double r1 =0.0;
 
             while ( r1 <= R1 )
             {
@@ -6778,7 +6778,7 @@ compute_3d_hist_color(
                             vcl_pair<double,double> key(ps1.x(),ps1.y());
                             model_sift.insert(key);
 
-                            if ( r1 > 0  )
+                            if ( p == 0  )
                             {
                                 model_sift_plus[key].push_back(ps1.x());
                                 model_sift_plus[key].push_back(ps1.y());
@@ -6802,7 +6802,7 @@ compute_3d_hist_color(
                             vcl_pair<double,double> key(ps2.x(),ps2.y());
                             query_sift.insert(key);
 
-                            if ( r2 > 0 )
+                            if ( p == 0  )
                             {
                                 query_sift_plus[key].push_back(ps2.x());
                                 query_sift_plus[key].push_back(ps2.y());
@@ -6837,7 +6837,7 @@ compute_3d_hist_color(
                             vcl_pair<double,double> key(ps1.x(),ps1.y());
                             model_sift.insert(key);
 
-                            if ( r1 > 0 )
+                            if ( p == 0  )
                             {
                                 model_sift_plus[key].push_back(ps1.x());
                                 model_sift_plus[key].push_back(ps1.y());
@@ -6861,7 +6861,7 @@ compute_3d_hist_color(
                             vcl_pair<double,double> key(ps2.x(),ps2.y());
                             query_sift.insert(key);
 
-                            if ( r2 > 0 )
+                            if ( p == 0  )
                             {
                                 query_sift_plus[key].push_back(ps2.x());
                                 query_sift_plus[key].push_back(ps2.y());
@@ -6883,9 +6883,9 @@ compute_3d_hist_color(
                         }
 
                     }
-                    r1+=step_size;
+              
                 }
-
+                r1+=step_size;
             }
             
             // Test original medial axis point
@@ -7055,7 +7055,6 @@ compute_3d_hist_color(
                                        query_plus_hist.n_elevation()*
                                        2.0,0.0);
 
-        
         // Compute model sift plus first
         {
             vcl_map< vcl_pair<double,double>, vcl_vector<vl_sift_pix> >::
@@ -7213,7 +7212,6 @@ compute_3d_hist_color(
         sift_diff+=0.5*local_distance[0];
         dart_distances.push_back(0.5*local_distance[0]);
 
-
         // vcl_cout<<"Tree 1 dart ("
         //         <<path_map[i].first.first
         //         <<","
@@ -7224,6 +7222,115 @@ compute_3d_hist_color(
         //         <<path_map[i].second.second
         //         <<") L2 distance: "
         //         <<local_distance[0]<<vcl_endl;
+
+
+
+        // // Write out data
+        // {
+        //     vcl_stringstream model_plus_stream;
+        //     model_plus_stream<<"Dart_"<<i<<"_model_sift_plus.txt";
+        //     vcl_ofstream model_sift_plus_stream(
+        //         model_plus_stream.str().c_str());
+
+        //     vcl_stringstream model_minus_stream;
+        //     model_minus_stream<<"Dart_"<<i<<"_model_sift_minus.txt";
+        //     vcl_ofstream model_sift_minus_stream(
+        //         model_minus_stream.str().c_str());
+           
+        //     vcl_stringstream query_plus_stream;
+        //     query_plus_stream<<"Dart_"<<i<<"_query_sift_plus.txt";
+        //     vcl_ofstream query_sift_plus_stream(
+        //         query_plus_stream.str().c_str());
+
+        //     vcl_stringstream query_minus_stream;
+        //     query_minus_stream<<"Dart_"<<i<<"_query_sift_minus.txt";
+        //     vcl_ofstream query_sift_minus_stream(
+        //         query_minus_stream.str().c_str());
+
+        //     vcl_map< vcl_pair<double,double>, vcl_vector<vl_sift_pix> >::
+        //         iterator it;
+        //     for ( it = model_sift_plus.begin() ; it != model_sift_plus.end();
+        //           ++it)
+        //     {
+        //         vcl_vector<vl_sift_pix> model_vec=(*it).second;   
+        //         vgl_point_2d<double> model_pt(model_vec[0],model_vec[1]);
+
+        //         double c1 = vil_bilin_interp_safe(model_channel_1,model_pt.x(),
+        //                                           model_pt.y());
+        //         double c2 = vil_bilin_interp_safe(model_channel_2,model_pt.x(),
+        //                                           model_pt.y());
+        //         double c3 = vil_bilin_interp_safe(model_channel_3,model_pt.x(),
+        //                                           model_pt.y());
+
+        //         model_sift_plus_stream<<model_pt.x()<<" "
+        //                               <<model_pt.y()<<" "
+        //                               <<c1<<" "<<c2<<" "<<c3<<vcl_endl;
+        //     }
+
+
+        //     for ( it = model_sift_minus.begin() ; it != model_sift_minus.end();
+        //           ++it)
+        //     {
+        //         vcl_vector<vl_sift_pix> model_vec=(*it).second;   
+        //         vgl_point_2d<double> model_pt(model_vec[0],model_vec[1]);
+
+        //         double c1 = vil_bilin_interp_safe(model_channel_1,model_pt.x(),
+        //                                           model_pt.y());
+        //         double c2 = vil_bilin_interp_safe(model_channel_2,model_pt.x(),
+        //                                           model_pt.y());
+        //         double c3 = vil_bilin_interp_safe(model_channel_3,model_pt.x(),
+        //                                           model_pt.y());
+
+        //         model_sift_minus_stream<<model_pt.x()<<" "
+        //                                <<model_pt.y()<<" "
+        //                                <<c1<<" "<<c2<<" "<<c3<<vcl_endl;
+
+        //     }
+
+        //     for ( it = query_sift_plus.begin() ; it != query_sift_plus.end();
+        //           ++it)
+        //     {
+        //         vcl_vector<vl_sift_pix> query_vec=(*it).second;   
+        //         vgl_point_2d<double> query_pt(query_vec[0],query_vec[1]);
+
+        //         double c1 = vil_bilin_interp_safe(query_channel_1,query_pt.x(),
+        //                                           query_pt.y());
+        //         double c2 = vil_bilin_interp_safe(query_channel_2,query_pt.x(),
+        //                                           query_pt.y());
+        //         double c3 = vil_bilin_interp_safe(query_channel_3,query_pt.x(),
+        //                                           query_pt.y());
+
+        //         query_sift_plus_stream<<query_pt.x()<<" "
+        //                               <<query_pt.y()<<" "
+        //                               <<c1<<" "<<c2<<" "<<c3<<vcl_endl;
+
+        //     }
+
+        //     for ( it = query_sift_minus.begin() ; it != query_sift_minus.end();
+        //           ++it)
+        //     {
+        //         vcl_vector<vl_sift_pix> query_vec=(*it).second;   
+        //         vgl_point_2d<double> query_pt(query_vec[0],query_vec[1]);
+
+        //         double c1 = vil_bilin_interp_safe(query_channel_1,query_pt.x(),
+        //                                           query_pt.y());
+        //         double c2 = vil_bilin_interp_safe(query_channel_2,query_pt.x(),
+        //                                           query_pt.y());
+        //         double c3 = vil_bilin_interp_safe(query_channel_3,query_pt.x(),
+        //                                           query_pt.y());
+
+        //         query_sift_minus_stream<<query_pt.x()<<" "
+        //                                <<query_pt.y()<<" "
+        //                                <<c1<<" "<<c2<<" "<<c3<<vcl_endl;
+                
+        //     }
+         
+        //     model_sift_plus_stream.close();
+        //     model_sift_minus_stream.close();
+
+        //     query_sift_plus_stream.close();
+        //     query_sift_minus_stream.close();
+        // }
        
     }
 
