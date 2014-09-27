@@ -187,6 +187,17 @@ private:
     // Keep track of mulitple model grad data
     vcl_map<vcl_string,vl_sift_pix*> model_images_grad_data_green_;
 
+    // Model channel lab data
+    vcl_map<vcl_string,vil_image_view<double> > model_images_L_data_;
+    vcl_map<vcl_string,vil_image_view<double> > model_images_a_data_;
+    vcl_map<vcl_string,vil_image_view<double> > model_images_b_data_;
+
+    // Query channel lab data
+    vcl_map<vcl_string,vil_image_view<double> > query_images_L_data_;
+    vcl_map<vcl_string,vil_image_view<double> > query_images_a_data_;
+    vcl_map<vcl_string,vil_image_view<double> > query_images_b_data_;
+
+
     // Keep track of gradient image data
     vl_sift_pix* model_grad_data_;
 
@@ -199,6 +210,15 @@ private:
     // Keep track of gradient color image data
     vl_sift_pix* model_grad_blue_data_;
     
+    // keep track of model L channel
+    vil_image_view<double> model_L_data_;
+
+    // keep track of model L channel
+    vil_image_view<double> model_a_data_;
+
+    // keep track of model L channel
+    vil_image_view<double> model_b_data_;
+
     // Keep track of query image data
     vl_sift_pix* query_grad_data_;
 
@@ -210,6 +230,15 @@ private:
 
     // Keep track of gradient color image data
     vl_sift_pix* query_grad_blue_data_;
+
+    // keep track of query L channel
+    vil_image_view<double> query_L_data_;
+
+    // keep track of query L channel
+    vil_image_view<double> query_a_data_;
+
+    // keep track of query L channel
+    vil_image_view<double> query_b_data_;
     
     // Keep track of model root filters
     VlSiftFilt* model_sift_filter_;

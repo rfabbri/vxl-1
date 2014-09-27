@@ -30,6 +30,7 @@
 #include <vl/sift.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vcl_algorithm.h>
+#include <vil/vil_image_view.h>
 
 //==============================================================================
 // dbskfg_cgraph_directed_tree
@@ -52,7 +53,10 @@ public:
                               vl_sift_pix* red_grad_data=0,
                               vl_sift_pix* green_grad_data=0,
                               vl_sift_pix* blue_grad_data=0,
-                              unsigned int id=0);
+                              unsigned int id=0,
+                              vil_image_view<double>* L_channel=0,
+                              vil_image_view<double>* a_channel_=0,
+                              vil_image_view<double>* b_channel_=0);
 
   //: Destructor;
   /* virtual */ ~dbskfg_cgraph_directed_tree();
@@ -180,6 +184,15 @@ public:
   // get grad data
   vl_sift_pix* get_blue_grad_data(){return blue_grad_data_;}
 
+  // get grad data
+  vil_image_view<double>* get_L_channel(){return L_channel_;}
+
+  // get grad data
+  vil_image_view<double>* get_a_channel(){return a_channel_;}
+
+  // get grad data
+  vil_image_view<double>* get_b_channel(){return b_channel_;}
+
   // See if dart has a virtual node on it
   bool virtual_node_dart(int dart)
   {
@@ -276,6 +289,12 @@ protected:
   vl_sift_pix* blue_grad_data_;
   
   vcl_vector<double> average_ds_;
+
+  vil_image_view<double>* L_channel_;
+
+  vil_image_view<double>* a_channel_;
+
+  vil_image_view<double>* b_channel_;
 
   unsigned int id_;
 };

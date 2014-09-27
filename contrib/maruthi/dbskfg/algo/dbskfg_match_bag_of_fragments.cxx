@@ -29,6 +29,7 @@
 
 #include <vil/vil_bilin_interp.h>
 #include <bsta/bsta_spherical_histogram.h>
+#include <bbas/bil/algo/bil_color_conversions.h>
 
 #include <vil/vil_rgb.h>
 #include <vil/vil_load.h>
@@ -215,6 +216,17 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                 vil_image_view<double> o1,o2,o3;
                 convert_to_color_space(model_img_sptr,o1,o2,o3,color_space_);
 
+                vil_image_view<double> L_img,a_img,b_img;
+
+                L_img.set_size(model_img_sptr->ni(),model_img_sptr->nj());
+                a_img.set_size(model_img_sptr->ni(),model_img_sptr->nj());
+                b_img.set_size(model_img_sptr->ni(),model_img_sptr->nj());
+        
+                convert_RGB_to_Lab(model_img_sptr->get_view(),
+                                   L_img,
+                                   a_img,
+                                   b_img);
+
                 compute_grad_color_maps(o1,
                                         &red_data);
                 
@@ -231,6 +243,9 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                 model_images_grad_data_red_[title_stream.str()]=red_data;
                 model_images_grad_data_green_[title_stream.str()]=green_data;
                 model_images_grad_data_blue_[title_stream.str()]=blue_data;
+                model_images_L_data_[title_stream.str()]=L_img;
+                model_images_a_data_[title_stream.str()]=a_img;
+                model_images_b_data_[title_stream.str()]=b_img;
 
                 ++index;
             }
@@ -291,6 +306,15 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
             vil_image_view<double> o1,o2,o3;
             convert_to_color_space(model_image_,o1,o2,o3,color_space_);
             
+            model_L_data_.set_size(model_image_->ni(),model_image_->nj());
+            model_a_data_.set_size(model_image_->ni(),model_image_->nj());
+            model_b_data_.set_size(model_image_->ni(),model_image_->nj());
+            
+            convert_RGB_to_Lab(model_image_->get_view(),
+                               model_L_data_,
+                               model_a_data_,
+                               model_b_data_);
+
             compute_grad_color_maps(o1,
                                     &model_grad_red_data_);
             
@@ -315,6 +339,15 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
             vil_image_view<double> o1,o2,o3;
             convert_to_color_space(query_image_,o1,o2,o3,color_space_);
             
+            query_L_data_.set_size(query_image_->ni(),query_image_->nj());
+            query_a_data_.set_size(query_image_->ni(),query_image_->nj());
+            query_b_data_.set_size(query_image_->ni(),query_image_->nj());
+            
+            convert_RGB_to_Lab(query_image_->get_view(),
+                               query_L_data_,
+                               query_a_data_,
+                               query_b_data_);
+
             compute_grad_color_maps(o1,
                                     &query_grad_red_data_);
             
@@ -1255,6 +1288,16 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             model_images_grad_data_blue_[(*m_iterator).second.first]:
             0;
 
+        vil_image_view<double> model_L_channel(model_images_L_data_
+                                               [(*m_iterator).second.first]);
+        
+        vil_image_view<double> model_a_channel(model_images_a_data_
+                                               [(*m_iterator).second.first]);
+
+        vil_image_view<double> model_b_channel(model_images_b_data_
+                                               [(*m_iterator).second.first]);
+
+
         double model_area=model_fragments_area_[(*m_iterator).first]
             .second;
         double model_length=model_fragments_length_[(*m_iterator).first]
@@ -1402,6 +1445,18 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                 model_images_grad_data_green_[key]:
                 0;
 
+            vil_image_view<double> query_L_channel(
+                model_images_L_data_
+                [(*m_iterator).second.first]);
+            
+            vil_image_view<double> query_a_channel(
+                model_images_a_data_
+                [(*m_iterator).second.first]);
+
+            vil_image_view<double> query_b_channel(
+                model_images_b_data_
+                [(*m_iterator).second.first]);
+
             if ( query_image_ )
             {
 
@@ -1410,7 +1465,9 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                 query_images_grad_data_red = query_grad_red_data_;
                 query_images_grad_data_green = query_grad_green_data_;
                 query_images_grad_data_blue = query_grad_blue_data_;
-            
+                query_L_channel = query_L_data_;
+                query_a_channel = query_a_data_;
+                query_b_channel = query_b_data_;
             }
 
             //: prepare the trees also
@@ -1425,7 +1482,10 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                                             model_images_grad_data_red,
                                             model_images_grad_data_green,
                                             model_images_grad_data_blue,
-                                            (*m_iterator).first);
+                                            (*m_iterator).first,
+                                            &model_L_channel,
+                                            &model_a_channel,
+                                            &model_b_channel);
 
             model_tree->acquire_tree_topology((*m_iterator).second.second);
 
@@ -1440,7 +1500,11 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                                             query_images_sift_filter,
                                             query_images_grad_data_red,
                                             query_images_grad_data_green,
-                                            query_images_grad_data_blue);
+                                            query_images_grad_data_blue,
+                                            (*q_iterator).first,
+                                            &query_L_channel,
+                                            &query_a_channel,
+                                            &query_b_channel);
             
             query_tree->acquire_tree_topology((*q_iterator).second.second);
             
@@ -1491,7 +1555,11 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                                                 query_images_sift_filter,
                                                 query_images_grad_data_red,
                                                 query_images_grad_data_green,
-                                                query_images_grad_data_blue);
+                                                query_images_grad_data_blue,
+                                                (*q_iterator).first,
+                                                &query_L_channel,
+                                                &query_a_channel,
+                                                &query_b_channel);
 
                 query_mirror_tree->set_scale_ratio(query_scale_ratio);
 
@@ -3931,6 +3999,15 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         vl_sift_pix* model_blue_grad_data=model_tree->get_blue_grad_data();
         vl_sift_pix* query_blue_grad_data=query_tree->get_blue_grad_data();
 
+        vil_image_view<double>* model_L_channel=model_tree->get_L_channel();
+        vil_image_view<double>* query_L_channel=query_tree->get_L_channel();
+
+        vil_image_view<double>* model_a_channel=model_tree->get_L_channel();
+        vil_image_view<double>* query_a_channel=query_tree->get_L_channel();
+
+        vil_image_view<double>* model_b_channel=model_tree->get_L_channel();
+        vil_image_view<double>* query_b_channel=query_tree->get_L_channel();
+
         VlSiftFilt* model_sift_filter=model_tree->get_sift_filter();
         VlSiftFilt* query_sift_filter=query_tree->get_sift_filter();
 
@@ -3970,7 +4047,24 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
             query_sift_filter,
             model_tree->get_scale_ratio(),
             query_tree->get_scale_ratio());
-        
+       
+        // vcl_pair<double,double> sift2_rgb_cost=compute_3d_hist_color(
+        //     curve_list1,
+        //     curve_list2,
+        //     map_list,
+        //     path_map,
+        //     dart_distances,
+        //     *model_L_channel,
+        //     *model_a_channel,
+        //     *model_b_channel,
+        //     *query_L_channel,
+        //     *query_a_channel,
+        //     *query_b_channel,
+        //     model_tree->get_scale_ratio(),
+        //     query_tree->get_scale_ratio(),
+        //     flag,
+        //     width);
+         
         unsigned int model_tag=model_tree->get_id();
         
         if ( model_dart_distances_.count(model_tag))
