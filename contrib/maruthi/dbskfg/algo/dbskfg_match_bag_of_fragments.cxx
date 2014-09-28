@@ -7012,7 +7012,7 @@ compute_3d_hist_color(
 
 
         bsta_spherical_histogram<double> model_plus_hist
-            (8, 4, 0.0, 360.0, 0.0, 180.0,
+            (10, 5, 0.0, 360.0, 0.0, 180.0,
              bsta_spherical_histogram<double>
              ::DEG,
              bsta_spherical_histogram<double>
@@ -7021,7 +7021,7 @@ compute_3d_hist_color(
              ::B_0_180);
 
         bsta_spherical_histogram<double> model_minus_hist
-            (8, 4, 0.0, 360.0, 0.0, 180.0,
+            (10, 5, 0.0, 360.0, 0.0, 180.0,
              bsta_spherical_histogram<double>
              ::DEG,
              bsta_spherical_histogram<double>
@@ -7030,7 +7030,7 @@ compute_3d_hist_color(
              ::B_0_180);
 
         bsta_spherical_histogram<double> query_plus_hist
-            (8, 4, 0.0, 360.0, 0.0, 180.0,
+            (10, 5, 0.0, 360.0, 0.0, 180.0,
              bsta_spherical_histogram<double>
              ::DEG,
              bsta_spherical_histogram<double>
@@ -7039,7 +7039,7 @@ compute_3d_hist_color(
              ::B_0_180);
 
         bsta_spherical_histogram<double> query_minus_hist
-            (8, 4, 0.0, 360.0, 0.0, 180.0,
+            (10, 5, 0.0, 360.0, 0.0, 180.0,
              bsta_spherical_histogram<double>
              ::DEG,
              bsta_spherical_histogram<double>
@@ -7074,10 +7074,9 @@ compute_3d_hist_color(
                 
                 double az(0.0),el(0.0);
                 model_plus_hist
-                    .convert_to_spherical(c1/100.0,c2/100.0,c3/100.0,az, el);
+                    .convert_to_spherical(c2/100.0,c3/100.0,c1/100.0,az, el);
                 model_plus_hist.upcount(az,el);
 
-                
             }
 
             for ( it = model_sift_minus.begin() ; it != model_sift_minus.end();
@@ -7095,7 +7094,7 @@ compute_3d_hist_color(
                 
                 double az(0.0),el(0.0);
                 model_minus_hist
-                    .convert_to_spherical(c1/100.0,c2/100.0,c3/100.0,az, el);
+                    .convert_to_spherical(c2/100.0,c3/100.0,c1/100.0,az, el);
                 model_minus_hist.upcount(az,el);
 
                 
@@ -7143,7 +7142,7 @@ compute_3d_hist_color(
                 
                 double az(0.0),el(0.0);
                 query_plus_hist
-                    .convert_to_spherical(c1/100.0,c2/100.0,c3/100.0,az, el);
+                    .convert_to_spherical(c2/100.0,c3/100.0,c1/100.0,az, el);
                 query_plus_hist.upcount(az,el);
 
                 
@@ -7164,14 +7163,14 @@ compute_3d_hist_color(
                 
                 double az(0.0),el(0.0);
                 query_minus_hist
-                    .convert_to_spherical(c1/100.0,c2/100.0,c3/100.0,az, el);
+                    .convert_to_spherical(c2/100.0,c3/100.0,c1/100.0,az, el);
                 query_minus_hist.upcount(az,el);
 
                 
             }
 
 
-
+            
             unsigned int index=0;
             for (int az = 0; az< query_plus_hist.n_azimuth() ; ++az)
             {
@@ -7197,7 +7196,8 @@ compute_3d_hist_color(
 
         }
 
-
+        descr1.normalize();
+        descr2.normalize();
 
         vl_sift_pix local_distance[1];
         vl_eval_vector_comparison_on_all_pairs_f(local_distance,
@@ -7212,6 +7212,8 @@ compute_3d_hist_color(
         sift_diff+=0.5*local_distance[0];
         dart_distances.push_back(0.5*local_distance[0]);
 
+    
+    
         // vcl_cout<<"Tree 1 dart ("
         //         <<path_map[i].first.first
         //         <<","
@@ -7224,7 +7226,7 @@ compute_3d_hist_color(
         //         <<local_distance[0]<<vcl_endl;
 
 
-
+    
         // // Write out data
         // {
         //     vcl_stringstream model_plus_stream;
@@ -7254,7 +7256,7 @@ compute_3d_hist_color(
         //     {
         //         vcl_vector<vl_sift_pix> model_vec=(*it).second;   
         //         vgl_point_2d<double> model_pt(model_vec[0],model_vec[1]);
-
+    
         //         double c1 = vil_bilin_interp_safe(model_channel_1,model_pt.x(),
         //                                           model_pt.y());
         //         double c2 = vil_bilin_interp_safe(model_channel_2,model_pt.x(),
@@ -7267,7 +7269,7 @@ compute_3d_hist_color(
         //                               <<c1<<" "<<c2<<" "<<c3<<vcl_endl;
         //     }
 
-
+    
         //     for ( it = model_sift_minus.begin() ; it != model_sift_minus.end();
         //           ++it)
         //     {
@@ -7286,7 +7288,7 @@ compute_3d_hist_color(
         //                                <<c1<<" "<<c2<<" "<<c3<<vcl_endl;
 
         //     }
-
+    
         //     for ( it = query_sift_plus.begin() ; it != query_sift_plus.end();
         //           ++it)
         //     {
@@ -7303,22 +7305,22 @@ compute_3d_hist_color(
         //         query_sift_plus_stream<<query_pt.x()<<" "
         //                               <<query_pt.y()<<" "
         //                               <<c1<<" "<<c2<<" "<<c3<<vcl_endl;
-
+    
         //     }
-
+    
         //     for ( it = query_sift_minus.begin() ; it != query_sift_minus.end();
         //           ++it)
         //     {
         //         vcl_vector<vl_sift_pix> query_vec=(*it).second;   
         //         vgl_point_2d<double> query_pt(query_vec[0],query_vec[1]);
-
+    
         //         double c1 = vil_bilin_interp_safe(query_channel_1,query_pt.x(),
         //                                           query_pt.y());
         //         double c2 = vil_bilin_interp_safe(query_channel_2,query_pt.x(),
         //                                           query_pt.y());
         //         double c3 = vil_bilin_interp_safe(query_channel_3,query_pt.x(),
         //                                           query_pt.y());
-
+    
         //         query_sift_minus_stream<<query_pt.x()<<" "
         //                                <<query_pt.y()<<" "
         //                                <<c1<<" "<<c2<<" "<<c3<<vcl_endl;
@@ -7331,8 +7333,46 @@ compute_3d_hist_color(
         //     query_sift_plus_stream.close();
         //     query_sift_minus_stream.close();
         // }
-       
+    
+        // // Write out hist data
+        // {
+        //     vcl_stringstream model_plus_hist_stream;
+        //     model_plus_hist_stream<<"Hist_"<<i<<"_model_sift_plus.txt";
+        //     vcl_ofstream model_sift_plus_hist_stream(
+        //         model_plus_hist_stream.str().c_str());
+            
+        //     vcl_stringstream model_minus_hist_stream;
+        //     model_minus_hist_stream<<"Hist_"<<i<<"_model_sift_minus.txt";
+        //     vcl_ofstream model_sift_minus_hist_stream(
+        //         model_minus_hist_stream.str().c_str());
+           
+        //     vcl_stringstream query_plus_hist_stream;
+        //     query_plus_hist_stream<<"Hist_"<<i<<"_query_sift_plus.txt";
+        //     vcl_ofstream query_sift_plus_hist_stream(
+        //         query_plus_hist_stream.str().c_str());
+
+        //     vcl_stringstream query_minus_hist_stream;
+        //     query_minus_hist_stream<<"Hist_"<<i<<"_query_sift_minus.txt";
+        //     vcl_ofstream query_sift_minus_hist_stream(
+        //         query_minus_hist_stream.str().c_str());
+
+        //     model_plus_hist.print_to_text(model_sift_plus_hist_stream);
+        //     model_minus_hist.print_to_text(model_sift_minus_hist_stream);
+
+        //     query_plus_hist.print_to_text(query_sift_plus_hist_stream);
+        //     query_minus_hist.print_to_text(query_sift_minus_hist_stream);
+
+        //     model_sift_plus_hist_stream.close();
+        //     model_sift_minus_hist_stream.close();
+
+        //     query_sift_plus_hist_stream.close();
+        //     query_sift_minus_hist_stream.close();
+
+        // }
+    
+    
     }
+    
 
 
     vcl_pair<double,double> app_diff(sift_diff,sift_diff/map_list.size());
