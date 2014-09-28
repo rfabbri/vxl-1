@@ -1595,8 +1595,13 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                     ? app_diff: app_mirror_diff;
                 norm_app_cost = ( norm_app_cost < norm_app_mirror_cost )
                     ? norm_app_cost: norm_app_mirror_cost;
-                rgb_avg_cost = ( rgb_avg_cost < rgb_avg_mirror_cost )
-                    ? rgb_avg_cost: rgb_avg_mirror_cost;
+                if ( rgb_avg_mirror_cost !=  1.0e6 )
+                {
+                    rgb_avg_cost = rgb_avg_mirror_cost;
+                }
+
+                // rgb_avg_cost = ( rgb_avg_cost < rgb_avg_mirror_cost )
+                //     ? rgb_avg_cost: rgb_avg_mirror_cost;
 
             }
 
@@ -3944,7 +3949,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
 
     //vcl_cerr<<"************ Shape Time taken: "<<shape_time<<" sec"<<vcl_endl;
     
-    vcl_pair<double,double> p1(-1.0,-1.0);
+    double norm=0.0;
 
     if ( curve_list1.size() && curve_list2.size())
     {
@@ -3958,14 +3963,18 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                            ds,
                            flag);
         
-    
-        p1 = compute_transformed_polygon(H,model_tree,query_tree);
+        vnl_matrix_fixed< double, 3, 3 > M=H.get_matrix();
+        norm=M.frobenius_norm();
+    }
+    else
+    {
+        norm =1.0e6;
     }
 
     bool flag_mirror=true;
     if ( mirror )
     {
-        if ( p1.first < overlap)
+        if ( norm > overlap)
         {
             app_diff        = 1.0e6;
             norm_app_cost   = 1.0e6;
@@ -3974,8 +3983,8 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
             flag_mirror=false;
         }
     }
-    
-    overlap=p1.first;
+
+    overlap=norm;
 
     if ( app_sift_ && flag_mirror )
     {
@@ -4029,7 +4038,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                                                            ->get_scale_ratio());
 
         vcl_vector<double> dart_distances;
-        vcl_pair<double,double> sift_rgb_cost=compute_o2p_dense(
+        vcl_pair<double,double> sift_rgb_cost=compute_dense_rgb_sift_cost(
             curve_list1,
             curve_list2,
             map_list,
@@ -7106,7 +7115,7 @@ compute_3d_hist_color(
                 for (int el = 0; el<model_plus_hist.n_elevation(); ++el) 
                 {
                     double counts = model_plus_hist.counts(az,el);
-                    descr2.put(index,counts);
+                    descr1.put(index,counts);
                     index++;
                 }
             }
@@ -7116,7 +7125,7 @@ compute_3d_hist_color(
                 for (int el = 0; el<model_minus_hist.n_elevation(); ++el) 
                 {
                     double counts = model_minus_hist.counts(az,el);
-                    descr2.put(index,counts);
+                    descr1.put(index,counts);
                     index++;
                 }
             }
