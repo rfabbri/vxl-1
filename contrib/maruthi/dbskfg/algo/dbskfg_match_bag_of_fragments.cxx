@@ -6740,7 +6740,7 @@ compute_3d_hist_color(
             ratio=(R2/R1);
                 
 
-            double r1 =0.0;
+            double r1 =0.01;
 
             while ( r1 <= R1 )
             {
