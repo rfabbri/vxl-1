@@ -771,7 +771,7 @@ bool dbskfg_match_bag_of_fragments::binary_match()
             double norm_app_cost(0.0);
             double rgb_avg_cost(0.0);
             double norm_shape_cost_length(0.0);
-            double overlap(0.0);
+            double frob_norm(0.0);
 
             // Match model to query
             match_two_graphs_root_node_orig(model_tree,
@@ -781,7 +781,7 @@ bool dbskfg_match_bag_of_fragments::binary_match()
                                             app_diff,
                                             norm_app_cost,
                                             rgb_avg_cost,
-                                            overlap);
+                                            frob_norm);
             
             if ( mirror_)
             {
@@ -813,7 +813,7 @@ bool dbskfg_match_bag_of_fragments::binary_match()
                                                 app_mirror_diff,
                                                 norm_app_mirror_cost,
                                                 rgb_avg_mirror_cost,
-                                                overlap,
+                                                frob_norm,
                                                 "",
                                                 true);
 
@@ -1011,7 +1011,7 @@ bool dbskfg_match_bag_of_fragments::binary_debug_match()
             double norm_app_cost(0.0);
             double rgb_avg_cost(0.0);
             double norm_shape_cost_length(0.0);
-            double overlap(0.0);
+            double frob_norm(0.0);
 
             vcl_string match_prefix =(*m_iterator).second.first + "_vs_" +
                 (*q_iterator).second.first;
@@ -1024,7 +1024,7 @@ bool dbskfg_match_bag_of_fragments::binary_debug_match()
                                             app_diff,
                                             norm_app_cost,
                                             rgb_avg_cost,
-                                            overlap,
+                                            frob_norm,
                                             match_prefix);
 
             if ( mirror_)
@@ -1065,7 +1065,7 @@ bool dbskfg_match_bag_of_fragments::binary_debug_match()
                                                 app_mirror_diff,
                                                 norm_app_mirror_cost,
                                                 rgb_avg_mirror_cost,
-                                                overlap,
+                                                frob_norm,
                                                 match_mirror_prefix,
                                                 true);
 
@@ -1528,7 +1528,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             double norm_app_cost(0.0);
             double rgb_avg_cost(0.0);
             double norm_shape_cost_length(0.0);
-            double overlap(0.0);
+            double frob_norm(0.0);
 
             // Match model to query
             match_two_graphs_root_node_orig(model_tree,
@@ -1538,7 +1538,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                                             app_diff,
                                             norm_app_cost,
                                             rgb_avg_cost,
-                                            overlap);
+                                            frob_norm);
 
 
 
@@ -1581,7 +1581,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                                                 app_mirror_diff,
                                                 norm_app_mirror_cost,
                                                 rgb_avg_mirror_cost,
-                                                overlap,
+                                                frob_norm,
                                                 "",
                                                 true,
                                                 norm_shape_cost);
@@ -1806,7 +1806,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_mean_shape()
             double norm_app_cost(0.0);
             double rgb_avg_cost(0.0);
             double norm_shape_cost_length(0.0);
-            double overlap(0.0);
+            double frob_norm(0.0);
 
             // Match model to query
             match_two_graphs_root_node_orig(model_tree,
@@ -1816,7 +1816,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_mean_shape()
                                             app_diff,
                                             norm_app_cost,
                                             rgb_avg_cost,
-                                            overlap);
+                                            frob_norm);
 
             if ( mirror_)
             {
@@ -1848,7 +1848,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_mean_shape()
                                                 app_mirror_diff,
                                                 norm_app_mirror_cost,
                                                 rgb_avg_mirror_cost,
-                                                overlap);
+                                                frob_norm);
 
                 norm_shape_cost = ( norm_shape_cost < norm_shape_mirror_cost)
                     ? norm_shape_cost : norm_shape_mirror_cost;
@@ -2197,7 +2197,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
             double norm_app_cost(0.0);
             double rgb_avg_cost(0.0);
             double norm_shape_cost_length(0.0);
-            double overlap(0.0);
+            double frob_norm(0.0);
 
             model_tree->compute_average_ds();
             query_tree->compute_average_ds();
@@ -2219,7 +2219,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
                                             app_diff,
                                             norm_app_cost,
                                             rgb_avg_cost,
-                                            overlap,
+                                            frob_norm,
                                             match_prefix);
 
             if ( mirror_)
@@ -2262,7 +2262,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_debug_match()
                                                 app_mirror_diff,
                                                 norm_app_mirror_cost,
                                                 rgb_avg_mirror_cost,
-                                                overlap,
+                                                frob_norm,
                                                 match_mirror_prefix,
                                                 true);
 
@@ -3655,7 +3655,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     double& app_diff,
     double& norm_app_cost,
     double& rgb_avg_cost,
-    double& overlap,
+    double& frob_norm,
     vcl_string match_file_prefix,
     bool mirror,
     double orig_edit_distance)
@@ -3974,17 +3974,28 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     bool flag_mirror=true;
     if ( mirror )
     {
-        if ( norm > overlap)
-        {
-            app_diff        = 1.0e6;
-            norm_app_cost   = 1.0e6;
-            rgb_avg_cost    = 1.0e6;
-
+        if ( shape_cost_splice > orig_edit_distance)
+  	{
+            app_diff = 1.0e6;
+            norm_app_cost = 1.0e6;
+            rgb_avg_cost = 1.0e6;
+ 	 
             flag_mirror=false;
+  	}
+        else
+        {
+            if ( norm > frob_norm)
+            {
+                app_diff        = 1.0e6;
+                norm_app_cost   = 1.0e6;
+                rgb_avg_cost    = 1.0e6;
+                
+                flag_mirror=false;
+            }
         }
     }
 
-    overlap=norm;
+    frob_norm=norm;
 
     if ( app_sift_ && flag_mirror )
     {
@@ -8189,7 +8200,7 @@ double dbskfg_match_bag_of_fragments::compute_outer_shock_edit_distance(
     double norm_app_cost(0.0);
     double rgb_avg_cost(0.0);
     double norm_shape_cost_length(0.0);
-    double overlap(0.0);
+    double frob_norm(0.0);
 
     // Match model to query
     match_two_graphs_root_node_orig(model_os_tree,
@@ -8199,7 +8210,7 @@ double dbskfg_match_bag_of_fragments::compute_outer_shock_edit_distance(
                                     app_diff,
                                     norm_app_cost,
                                     rgb_avg_cost,
-                                    overlap);
+                                    frob_norm);
 
     // dbskfg_composite_graph_fileio fileio;
     // fileio.write_contour_composite_graph(model_cg,"model_cg_outer");
