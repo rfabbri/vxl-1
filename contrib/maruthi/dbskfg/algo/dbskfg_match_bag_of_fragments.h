@@ -187,6 +187,17 @@ private:
     // Keep track of mulitple model grad data
     vcl_map<vcl_string,vl_sift_pix*> model_images_grad_data_green_;
 
+    // Model channel lab data
+    vcl_map<vcl_string,vil_image_view<double> > model_images_L_data_;
+    vcl_map<vcl_string,vil_image_view<double> > model_images_a_data_;
+    vcl_map<vcl_string,vil_image_view<double> > model_images_b_data_;
+
+    // Query channel lab data
+    vcl_map<vcl_string,vil_image_view<double> > query_images_L_data_;
+    vcl_map<vcl_string,vil_image_view<double> > query_images_a_data_;
+    vcl_map<vcl_string,vil_image_view<double> > query_images_b_data_;
+
+
     // Keep track of gradient image data
     vl_sift_pix* model_grad_data_;
 
@@ -199,6 +210,15 @@ private:
     // Keep track of gradient color image data
     vl_sift_pix* model_grad_blue_data_;
     
+    // keep track of model L channel
+    vil_image_view<double> model_L_data_;
+
+    // keep track of model L channel
+    vil_image_view<double> model_a_data_;
+
+    // keep track of model L channel
+    vil_image_view<double> model_b_data_;
+
     // Keep track of query image data
     vl_sift_pix* query_grad_data_;
 
@@ -210,6 +230,15 @@ private:
 
     // Keep track of gradient color image data
     vl_sift_pix* query_grad_blue_data_;
+
+    // keep track of query L channel
+    vil_image_view<double> query_L_data_;
+
+    // keep track of query L channel
+    vil_image_view<double> query_a_data_;
+
+    // keep track of query L channel
+    vil_image_view<double> query_b_data_;
     
     // Keep track of model root filters
     VlSiftFilt* model_sift_filter_;
@@ -239,6 +268,20 @@ private:
 
     // Holds normalization constant
     vnl_matrix<double> binary_app_rgb_sim_matrix_;
+
+    // Holds dart matrix
+    vcl_map<unsigned int,vcl_vector< vcl_pair<vcl_pair<unsigned int,
+        unsigned int>,double> > > 
+        model_dart_distances_;
+    
+    vcl_map<unsigned int,
+        vcl_vector< vcl_pair<vcl_pair<unsigned int,unsigned int>,
+        dbskr_scurve_sptr > > >
+        model_dart_curves_;
+        
+    vcl_map<vcl_pair<unsigned ,unsigned int>,
+        vcl_vector<vgl_point_2d<double> > > 
+        query_dart_curves_;
 
     // Keep output file
     vcl_string output_match_file_;
@@ -365,8 +408,10 @@ private:
         double& app_diff,
         double& norm_app_cost,
         double& rgb_avg_cost,
+        double& frob_norm,
         vcl_string match_file_prefix="",
-        bool mirror=false);
+        bool mirror=false,
+        double orig_edit_distance=1e6);
 
     //Match two graphs
     void match_two_debug_graphs(dbskfg_cgraph_directed_tree_sptr& model_tree,
@@ -421,6 +466,7 @@ private:
         vcl_vector<dbskr_scurve_sptr>& curve_list2,
         vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
         vcl_vector< pathtable_key >& path_map,
+        vcl_vector<double>& dart_distances,
         bool flag=false,
         double width=0.0,
         vl_sift_pix* model_red_grad_data=0,
@@ -433,12 +479,94 @@ private:
         VlSiftFilt* query_sift_filter=0,
         double model_scale_ratio=1.0,
         double query_scale_ratio=1.0);
+
+    vcl_pair<double,double> compute_dense_rgb_sift_cost(
+        vcl_vector<dbskr_scurve_sptr>& curve_list1,
+        vcl_vector<dbskr_scurve_sptr>& curve_list2,
+        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        vcl_vector< pathtable_key >& path_map,
+        vcl_vector<double>& dart_distances,
+        bool flag=false,
+        double width=0.0,
+        vl_sift_pix* model_red_grad_data=0,
+        vl_sift_pix* query_red_grad_data=0,
+        vl_sift_pix* model_green_grad_data=0,
+        vl_sift_pix* query_green_grad_data=0,
+        vl_sift_pix* model_blue_grad_data=0,
+        vl_sift_pix* query_blue_grad_data=0,
+        VlSiftFilt* model_sift_filter=0,
+        VlSiftFilt* query_sift_filter=0,
+        double model_scale_ratio=1.0,
+        double query_scale_ratio=1.0);
+
+    vcl_pair<double,double> compute_o2p_dense(
+        vcl_vector<dbskr_scurve_sptr>& curve_list1,
+        vcl_vector<dbskr_scurve_sptr>& curve_list2,
+        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        vcl_vector< pathtable_key >& path_map,
+        vcl_vector<double>& dart_distances,
+        bool flag=false,
+        double width=0.0,
+        vl_sift_pix* model_red_grad_data=0,
+        vl_sift_pix* query_red_grad_data=0,
+        vl_sift_pix* model_green_grad_data=0,
+        vl_sift_pix* query_green_grad_data=0,
+        vl_sift_pix* model_blue_grad_data=0,
+        vl_sift_pix* query_blue_grad_data=0,
+        VlSiftFilt* model_sift_filter=0,
+        VlSiftFilt* query_sift_filter=0,
+        double model_scale_ratio=1.0,
+        double query_scale_ratio=1.0);
+
+    vcl_pair<double,double> compute_3d_hist_color(
+        vcl_vector<dbskr_scurve_sptr>& curve_list1,
+        vcl_vector<dbskr_scurve_sptr>& curve_list2,
+        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        vcl_vector< pathtable_key >& path_map,
+        vcl_vector<double>& dart_distances,
+        vil_image_view<double>& model_channel_1,
+        vil_image_view<double>& model_channel_2,
+        vil_image_view<double>& model_channel_3,
+        vil_image_view<double>& query_channel_1,
+        vil_image_view<double>& query_channel_2,
+        vil_image_view<double>& query_channel_3,
+        double model_scale_ratio=1.0,
+        double query_scale_ratio=1.0,
+        bool flag=false,
+        double width=0.0);
     
     vnl_vector<double> compute_second_order_pooling(
         vcl_map<int,vcl_vector<dbskfg_sift_data> >& fragments,
         vl_sift_pix* grad_data,
         VlSiftFilt* filter,
         vsol_box_2d_sptr& bbox);
+
+    double descr_cost(
+        vgl_point_2d<double>& model_pt,
+        double& model_radius,
+        double& model_theta,
+        vgl_point_2d<double>& query_pt,
+        double& query_radius,
+        double& query_theta,
+        vl_sift_pix* model_red_grad_data=0,
+        vl_sift_pix* query_red_grad_data=0,
+        vl_sift_pix* model_green_grad_data=0,
+        vl_sift_pix* query_green_grad_data=0,
+        vl_sift_pix* model_blue_grad_data=0,
+        vl_sift_pix* query_blue_grad_data=0,
+        VlSiftFilt* model_sift_filter=0,
+        VlSiftFilt* query_sift_filter=0);
+
+    void compute_descr(
+        vgl_point_2d<double>& pt,
+        double& radius,
+        double& theta,
+        vl_sift_pix* red_grad_data,
+        vl_sift_pix* green_grad_data,
+        vl_sift_pix* blue_grad_data,
+        VlSiftFilt* model_filter,
+        vnl_vector<vl_sift_pix>& descriptor);
+
 
     void convert_to_color_space(
         vil_image_resource_sptr& input_image,
@@ -447,6 +575,8 @@ private:
         vil_image_view<double>& o3,
         ColorSpace color_space);
 
+    void write_out_dart_data();
+    
     // Make copy ctor private
     dbskfg_match_bag_of_fragments(const dbskfg_match_bag_of_fragments&);
 

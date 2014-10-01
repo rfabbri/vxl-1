@@ -112,6 +112,9 @@ public:
   bool get_localize_match()
   { return this->localize_match_; }
 
+  //: Get if switched
+  bool get_switched()
+  {return switched_;}
 
   //: Set parameter R for curve matching
   void set_curvematching_R(double R) 

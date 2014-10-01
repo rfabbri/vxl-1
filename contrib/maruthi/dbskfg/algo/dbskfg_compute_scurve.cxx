@@ -51,6 +51,10 @@ dbskr_scurve_sptr dbskfg_compute_scurve::compute_curve(
     vcl_vector<double> time, theta, phi;
 
     dbskfg_composite_node_sptr cur_start_node = start_node;
+
+    vcl_pair<unsigned int,unsigned int> curve_id;
+    curve_id.first=cur_start_node->id();
+
     //traverse through the path, interpolating where necessary
     vcl_vector<dbskfg_composite_link_sptr>::iterator e_it;
 
@@ -121,6 +125,8 @@ dbskr_scurve_sptr dbskfg_compute_scurve::compute_curve(
    
     }
 
+    curve_id.second=cur_start_node->id();
+
     //close off the end with a circular arc if it is an A3
     unsigned num_points = sh_pt.size();
 
@@ -154,6 +160,7 @@ dbskr_scurve_sptr dbskfg_compute_scurve::compute_curve(
                                                      leaf_edge,
                                                      scale_ratio);
 
+    shock_curve->set_curve_id(curve_id);
     return shock_curve;
 }
 

@@ -30,6 +30,7 @@
 #include <vl/sift.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <vcl_algorithm.h>
+#include <vil/vil_image_view.h>
 
 //==============================================================================
 // dbskfg_cgraph_directed_tree
@@ -51,7 +52,11 @@ public:
                               VlSiftFilt* sift_filter=0,
                               vl_sift_pix* red_grad_data=0,
                               vl_sift_pix* green_grad_data=0,
-                              vl_sift_pix* blue_grad_data=0);
+                              vl_sift_pix* blue_grad_data=0,
+                              unsigned int id=0,
+                              vil_image_view<double>* L_channel=0,
+                              vil_image_view<double>* a_channel_=0,
+                              vil_image_view<double>* b_channel_=0);
 
   //: Destructor;
   /* virtual */ ~dbskfg_cgraph_directed_tree();
@@ -66,6 +71,9 @@ public:
                bool elastic_splice_cost, bool construct_circular_ends, 
                bool dpmatch_combined,float cost);
   
+  //: get tag
+  unsigned int get_id(){return id_;}
+
   // Graph-related--------------------------------------------------------------
 
   // used in get_scurve(...)
@@ -99,7 +107,7 @@ public:
   
   //: find and cache the sift along shock curve for this pair of darts, 
   // if not already cached
-  vcl_vector<vnl_vector_fixed<vl_sift_pix,128> >& 
+  vcl_vector<vnl_vector_fixed<vl_sift_pix,384> >& 
       get_sift_along_curve(int start_dart, int end_dart);
 
   //: returns both the coarse and dense version of shock curve
@@ -176,6 +184,15 @@ public:
   // get grad data
   vl_sift_pix* get_blue_grad_data(){return blue_grad_data_;}
 
+  // get grad data
+  vil_image_view<double>* get_L_channel(){return L_channel_;}
+
+  // get grad data
+  vil_image_view<double>* get_a_channel(){return a_channel_;}
+
+  // get grad data
+  vil_image_view<double>* get_b_channel(){return b_channel_;}
+
   // See if dart has a virtual node on it
   bool virtual_node_dart(int dart)
   {
@@ -235,7 +252,7 @@ protected:
 
   //: cache the sift points computed
   vcl_map<vcl_pair<int,int>, vcl_vector<
-      vnl_vector_fixed<vl_sift_pix,128> > > dart_path_sift_map_;
+      vnl_vector_fixed<vl_sift_pix,384> > > dart_path_sift_map_;
 
   // Cost-related parameters /////////////////////////////////////////////
   // For now only, may change later
@@ -273,6 +290,13 @@ protected:
   
   vcl_vector<double> average_ds_;
 
+  vil_image_view<double>* L_channel_;
+
+  vil_image_view<double>* a_channel_;
+
+  vil_image_view<double>* b_channel_;
+
+  unsigned int id_;
 };
 
 #endif // dbskfg_cgraph_directed_tree_h_

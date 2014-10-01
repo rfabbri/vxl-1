@@ -45,7 +45,7 @@
 #include <vcl_cmath.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
 #include "dbskr_scurve_sptr.h"
-
+#include <vcl_utility.h>
 #define EPS 1E-2
 
 double fixAngleMPiPi_new(double a);
@@ -89,6 +89,12 @@ public:
 
   // get area factor
   double get_area_factor(){return area_factor_;}
+
+  // set curve id
+  void set_curve_id(vcl_pair<unsigned int,unsigned int>& pair)
+  {curve_id_=pair;}
+
+  vcl_pair<int,int> get_curve_id(){return curve_id_;}
 
   // get whether leaf edge
   bool is_leaf_edge(){return leaf_edge_;}
@@ -268,6 +274,8 @@ protected:
   bool leaf_edge_;
 
   double scale_ratio_;
+
+  vcl_pair<unsigned int,unsigned int> curve_id_;
 
 };
 

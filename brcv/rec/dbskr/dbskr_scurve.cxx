@@ -56,7 +56,7 @@ dbskr_scurve::dbskr_scurve(int num_points,
                            double scale_ratio): 
     interpolate_ds_(interpolate_ds), subsample_ds_(subsample_ds),
     virtual_length_(0.0),area_factor_(0.0),leaf_edge_(leaf_edge),
-    scale_ratio_(scale_ratio)
+    scale_ratio_(scale_ratio),curve_id_(0,0)
 {
   if (binterpolate){
     vcl_vector<int> lmap; //dummy map 
