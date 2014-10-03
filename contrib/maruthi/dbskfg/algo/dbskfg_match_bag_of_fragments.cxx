@@ -4069,7 +4069,8 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
             model_sift_filter,
             query_sift_filter,
             model_tree->get_scale_ratio(),
-            query_tree->get_scale_ratio());
+            query_tree->get_scale_ratio(),
+            title.str());
        
         // vcl_pair<double,double> sift_rgb_cost=compute_3d_hist_color(
         //     curve_list1,
@@ -5791,9 +5792,16 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
         //     query_poly_stream<<prefix<<"_dart_query_poly_"
         //                      <<i<<"_app_correspondence.txt";
             
-        //     sc1->write_polygon(model_poly_stream.str());
-        //     sc2->write_polygon(query_poly_stream.str(),width);
-            
+        //     if ( !flag )
+        //     {
+        //         sc1->write_polygon(model_poly_stream.str());
+        //         sc2->write_polygon(query_poly_stream.str(),width);
+        //     }
+        //     else
+        //     {
+        //         sc1->write_polygon(query_poly_stream.str(),width);
+        //         sc2->write_polygon(model_poly_stream.str());
+        //     }
 
         // }
     }
@@ -5831,7 +5839,8 @@ compute_dense_rgb_sift_cost(
     VlSiftFilt* model_sift_filter,
     VlSiftFilt* query_sift_filter,
     double model_scale_ratio,
-    double query_scale_ratio)
+    double query_scale_ratio,
+    vcl_string prefix)
 {
  
     
@@ -6222,11 +6231,12 @@ compute_dense_rgb_sift_cost(
         //         <<vcl_endl;
 
         // {
-        //     vcl_stringstream model_stream;
-        //     model_stream<<"Dart_model_"<<i<<"_app_correspondence.txt";
-        //     vcl_stringstream query_stream;
-        //     query_stream<<"Dart_query_"<<i<<"_app_correspondence.txt";
 
+        //     vcl_stringstream model_stream;
+        //     model_stream<<prefix<<"_dart_model_"<<i<<"_app_correspondence.txt";
+        //     vcl_stringstream query_stream;
+        //     query_stream<<prefix<<"_dart_query_"<<i<<"_app_correspondence.txt";
+        
         //     vcl_ofstream model_file(model_stream.str().c_str());
         //     model_file<<model_sift.size()<<vcl_endl;
         //     for ( unsigned int b=0; b < model_sift.size() ; ++b)
@@ -6250,6 +6260,24 @@ compute_dense_rgb_sift_cost(
         //         }
         //     }
         //     query_file.close();
+
+        //     vcl_stringstream model_poly_stream;
+        //     model_poly_stream<<prefix<<"_dart_model_poly_"
+        //                      <<i<<"_app_correspondence.txt";
+        //     vcl_stringstream query_poly_stream;
+        //     query_poly_stream<<prefix<<"_dart_query_poly_"
+        //                      <<i<<"_app_correspondence.txt";
+            
+        //     if ( !flag )
+        //     {
+        //         sc1->write_polygon(model_poly_stream.str());
+        //         sc2->write_polygon(query_poly_stream.str(),width);
+        //     }
+        //     else
+        //     {
+        //         sc1->write_polygon(query_poly_stream.str(),width);
+        //         sc2->write_polygon(model_poly_stream.str());
+        //     }
         // }
     }
 

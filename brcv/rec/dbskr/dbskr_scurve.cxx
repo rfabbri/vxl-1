@@ -1243,7 +1243,7 @@ void dbskr_scurve::write_polygon(vcl_string title,double width)
     for (int i=0; i<num_points_; i++)
     {
         vgl_point_2d<double> sh_pt_scaled=sh_pt_[i];
-        sh_pt_scaled.set(vcl_fabs(width-(sh_pt_scaled.x()/scale_ratio_)),
+        sh_pt_scaled.set(sh_pt_scaled.x()/scale_ratio_,
                          sh_pt_scaled.y()/scale_ratio_);
 
         double radius=time_[i]/scale_ratio_;
@@ -1277,7 +1277,7 @@ void dbskr_scurve::write_polygon(vcl_string title,double width)
     for ( unsigned int c=0; c < points.size() ; ++c)
     {
 
-        poly_txt<<points[c].x()<<" "<<points[c].y()<<vcl_endl;
+        poly_txt<<vcl_fabs(width-points[c].x())<<" "<<points[c].y()<<vcl_endl;
     }
 
     poly_txt.close();
