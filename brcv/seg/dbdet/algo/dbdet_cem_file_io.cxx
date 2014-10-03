@@ -17,6 +17,7 @@ bool dbdet_save_cem(vcl_string filename, dbdet_edgemap_sptr EM, dbdet_curve_frag
     return false;
   }
 
+/*
   // Compile edge information first
   vcl_vector<int> emap(EM->num_edgels(), -2); //-2 indicates unused
 
@@ -36,6 +37,17 @@ bool dbdet_save_cem(vcl_string filename, dbdet_edgemap_sptr EM, dbdet_curve_frag
       new_emap.push_back(i);     //save the reverse mapping
     }
   }
+*/
+  // change by Yuliang, Oct, 2014, save the full edge map istead of the used edges
+  vcl_vector<int> emap(EM->num_edgels(), 0); //-2 indicates unused
+
+//compile new edge list (only keep the used ones in the new list)
+  vcl_vector<int> new_emap;
+  for (unsigned i=0; i<EM->edgels.size(); i++){
+//    if (emap[i]==-1){
+      emap[i] = new_emap.size(); //save the forward mapping
+      new_emap.push_back(i);     //save the reverse mapping
+    }
 
   // output header information
   outfp << ".CEM v2.0 " << vcl_endl;
@@ -55,7 +67,7 @@ bool dbdet_save_cem(vcl_string filename, dbdet_edgemap_sptr EM, dbdet_curve_frag
   outfp << "[Contours]" << vcl_endl;
   outfp << "count=" << CFG.frags.size() << vcl_endl;
 
-  cit = CFG.frags.begin();
+  dbdet_edgel_chain_list_iter cit = CFG.frags.begin();
   for (; cit!=CFG.frags.end(); cit++){
     dbdet_edgel_chain* chain = (*cit);
 
