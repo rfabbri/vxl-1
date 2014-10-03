@@ -478,7 +478,8 @@ private:
         VlSiftFilt* model_sift_filter=0,
         VlSiftFilt* query_sift_filter=0,
         double model_scale_ratio=1.0,
-        double query_scale_ratio=1.0);
+        double query_scale_ratio=1.0,
+        vcl_string prefix="");
 
     vcl_pair<double,double> compute_dense_rgb_sift_cost(
         vcl_vector<dbskr_scurve_sptr>& curve_list1,

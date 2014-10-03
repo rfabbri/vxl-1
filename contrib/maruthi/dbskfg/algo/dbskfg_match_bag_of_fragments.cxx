@@ -3702,6 +3702,9 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     unsigned int model_final_branches(0);
     unsigned int query_final_branches(0);
 
+    vcl_stringstream title;
+    title<<"Model_"<<model_tree->get_id()<<"_vs_Query_"<<query_tree->get_id();
+    
     {
         edit.clear();
         edit.set_tree1(model_tree.ptr());
@@ -5259,7 +5262,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
     VlSiftFilt* model_sift_filter,
     VlSiftFilt* query_sift_filter,
     double model_scale_ratio,
-    double query_scale_ratio)
+    double query_scale_ratio,
+    vcl_string prefix)
 {
  
 
@@ -5752,9 +5756,9 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
 
         // {
         //     vcl_stringstream model_stream;
-        //     model_stream<<"Dart_model_"<<i<<"_app_correspondence.txt";
+        //     model_stream<<prefix<<"_dart_model_"<<i<<"_app_correspondence.txt";
         //     vcl_stringstream query_stream;
-        //     query_stream<<"Dart_query_"<<i<<"_app_correspondence.txt";
+        //     query_stream<<prefix<<"_dart_query_"<<i<<"_app_correspondence.txt";
 
         //     vcl_ofstream model_file(model_stream.str().c_str());
         //     model_file<<model_sift.size()<<vcl_endl;
@@ -5779,6 +5783,18 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
         //         }
         //     }
         //     query_file.close();
+
+        //     vcl_stringstream model_poly_stream;
+        //     model_poly_stream<<prefix<<"_dart_model_poly_"
+        //                      <<i<<"_app_correspondence.txt";
+        //     vcl_stringstream query_poly_stream;
+        //     query_poly_stream<<prefix<<"_dart_query_poly_"
+        //                      <<i<<"_app_correspondence.txt";
+            
+        //     sc1->write_polygon(model_poly_stream.str());
+        //     sc2->write_polygon(query_poly_stream.str(),width);
+            
+
         // }
     }
 

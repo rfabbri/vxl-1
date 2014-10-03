@@ -126,6 +126,7 @@ public:
       return bdry_minus_outer_shock_radius_;
   }
 
+  void write_polygon(vcl_string title,double width=0.0);
 
 protected:
   //: This function takes a sampled shock curve and interpolates it.
@@ -143,6 +144,7 @@ protected:
   void reconstruct_boundary(double scale_ratio=1.0);
   void compute_arclengths();
   void compute_areas();
+
 
 public:
   // return the data points
