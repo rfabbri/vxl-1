@@ -558,7 +558,7 @@ sample_legal_end_given_start_using_model_minmax_range(const dbsksp_xshock_node_d
   double x_start = start.pt().x();
   double y_start = start.pt().y();
   
-  int num_samples_to_try = 10*num_samples;
+  int num_samples_to_try = 100*num_samples;
   int count_legal_samples = 0;
   
   dbsksp_xshock_fragment test_xfrag(start, start);
@@ -595,6 +595,11 @@ sample_legal_end_given_start_using_model_minmax_range(const dbsksp_xshock_node_d
     
     xdesc_list.push_back(end);
     ++count_legal_samples;
+  }
+  if(xdesc_list.size() ==0)
+  {
+	vcl_cout << "Fail in sampling any legal end" << vcl_endl;
+	return false;
   }
   return true;
 }
@@ -706,6 +711,7 @@ build_from_attr_data()
     MINMAX = 0,
     GAUSSIAN_3STD = 1,
   };
+//  compute_method method = GAUSSIAN_3STD;
   compute_method method = GAUSSIAN_3STD;
 
   vcl_vector<double > vcl_psi_start;

@@ -77,6 +77,8 @@ public:
   vcl_string pos_output_file;
   vcl_string neg_output_file;
 
+  bool use_edgemap_pyramid;
+
   //: Set ccm parameters from a list of key-value pairs
   // both key and value are in string format
   void parse_ccm_params(const vcl_map<vcl_string, vcl_string >& ccm_params);

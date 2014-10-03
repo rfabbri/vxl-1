@@ -101,8 +101,11 @@ collect_data()
   //> use the first exemplar as the prototype
   this->prototype_xgraph = new dbsksp_xshock_graph(*list_xgraphs[0]);
   this->prototype_xgraph->compute_vertex_depths(root_vid);
-  this->prototype_xgraph->scale_up(0, 0, 
-    normalized_size/vcl_sqrt(this->prototype_xgraph->area()));
+
+  if(this->params_.b_normalize)
+  	this->prototype_xgraph->scale_up(0, 0, normalized_size/vcl_sqrt(this->prototype_xgraph->area()));
+  else
+	this->params_.normalized_xgraph_size = vcl_sqrt(this->prototype_xgraph->area());
   
   //> Collect xfragments from the shock graphs
   vcl_cout << "\n> Collect xfrags from the exemplar shock graphs\n";
@@ -134,7 +137,8 @@ collect_data()
 
     // Normalize the exemplar xgraph to the standard size
     double cur_size = vcl_sqrt(xgraph->area());
-    xgraph->scale_up(0, 0, normalized_size / cur_size);
+	if(this->params_.b_normalize)
+    	xgraph->scale_up(0, 0, normalized_size / cur_size);
  
     // Compute depths of every node
     xgraph->compute_vertex_depths(root_vid);

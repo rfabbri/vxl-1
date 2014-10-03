@@ -47,7 +47,8 @@ dbsks_train_xshock_ccm_model_process()
     !parameters()->add("Prototype xgraph file", "-prototype_xgraph_file", bpro1_filepath("V:/projects/kimia/shockshape/symseg/results/ETHZ-dataset/xshock-graph/applelogos-xgraph/applelogos_another.xgraph.0.prototype1.xml")) ||
     !parameters()->add("Root vertex id:", "-root_vid", unsigned(4)) ||
     !parameters()->add("Positive output data file:", "-pos_output_file", bpro1_filepath("D:/vision/projects/symseg/xshock/applelogos_prototype1-pos_ccm_cost-2009jul15-long-range.xml")) ||
-    !parameters()->add("Negative output data file:", "-neg_output_file", bpro1_filepath("D:/vision/projects/symseg/xshock/applelogos_prototype1-neg_ccm_cost-2009jul15-long-range.xml"))
+    !parameters()->add("Negative output data file:", "-neg_output_file", bpro1_filepath("D:/vision/projects/symseg/xshock/applelogos_prototype1-neg_ccm_cost-2009jul15-long-range.xml")) ||
+	!parameters()->add("Using Edgemap Pyramid:", "-use_edgemap_pyramid", bool(true))
   //
     )
   {
@@ -190,7 +191,9 @@ execute()
   this->parameters()->get_value("-neg_output_file", temp_path);
   params.neg_output_file = temp_path.path;
   
-
+  bool use_edgemap_pyramid;
+  this->parameters()->get_value("-use_edgemap_pyramid", use_edgemap_pyramid);
+  params.use_edgemap_pyramid = use_edgemap_pyramid;
   // STORAGE CLASSES ----------------------------------------------------------
   
   
