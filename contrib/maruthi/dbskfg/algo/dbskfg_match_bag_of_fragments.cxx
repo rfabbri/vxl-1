@@ -8471,14 +8471,15 @@ void dbskfg_match_bag_of_fragments::write_out_dart_data()
 
 
 
-void dbskfg_match_bag_of_fragments::compute_sift_descr
+void dbskfg_match_bag_of_fragments::compute_masked_sift_descr
 (VlSiftFilt const *f,
  vl_sift_pix const* grad,
  vl_sift_pix *descr,
  int width, int height,
  double x, double y,
  double sigma,
- double angle0)
+ double angle0,
+ vgl_polygon<double>& poly)
 {
   double const magnif = f-> magnif ;
 
@@ -8554,7 +8555,7 @@ void dbskfg_match_bag_of_fragments::compute_sift_descr
        * has a standard deviation equal to NBP/2. Note that dx and dy
        * are in the normalized frame, so that -NBP/2 <= dx <=
        * NBP/2. */
-      vl_sift_pix win = 1.0;
+      vl_sift_pix win=(poly.contains(xi+dxi,yi+dyi))?1.0:0.0;
 
       /* The sample will be distributed in 8 adjacent bins.
          We start from the ``lower-left'' bin. */

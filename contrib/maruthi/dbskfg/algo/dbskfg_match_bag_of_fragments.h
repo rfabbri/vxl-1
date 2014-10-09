@@ -579,14 +579,15 @@ private:
 
     void write_out_dart_data();
 
-    void compute_sift_descr(
+    void compute_masked_sift_descr(
         VlSiftFilt const *f,
         vl_sift_pix const* grad,
         vl_sift_pix *descr,
         int width, int height,
         double x, double y,
         double sigma,
-        double angle0);
+        double angle0,
+        vgl_polygon<double>& poly);
     
     // Make copy ctor private
     dbskfg_match_bag_of_fragments(const dbskfg_match_bag_of_fragments&);
