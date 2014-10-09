@@ -1262,8 +1262,10 @@ void dbskr_scurve::write_polygon(vcl_string title,double width)
         
     }
 
-    points.push_back(final_pt);
-
+    if ( !leaf_edge_ )
+    {
+        points.push_back(final_pt);
+    }
 
     vcl_vector< vgl_point_2d<double> >::reverse_iterator rit;
     for ( rit = minus_pts.rbegin() ; rit != minus_pts.rend() ; ++rit)
@@ -1281,5 +1283,71 @@ void dbskr_scurve::write_polygon(vcl_string title,double width)
     }
 
     poly_txt.close();
+
+}
+
+
+
+//: for visualization purposes
+void dbskr_scurve::get_polygon(vgl_polygon<double>& poly,double width)
+{
+
+
+    vcl_vector<vgl_point_2d<double> > minus_pts;
+    vcl_vector<vgl_point_2d<double> > points;
+
+    vgl_point_2d<double> start_pt=sh_pt_[0];
+    start_pt.set(start_pt.x()/scale_ratio_,
+                 start_pt.y()/scale_ratio_);
+
+
+    vgl_point_2d<double> final_pt=sh_pt_[num_points_-1];
+    final_pt.set(final_pt.x()/scale_ratio_,
+                 final_pt.y()/scale_ratio_);
+
+    points.push_back(start_pt);
+
+
+    //reconstruct the bnd points from the intrinsic parameters
+    for (int i=0; i<num_points_; i++)
+    {
+        vgl_point_2d<double> sh_pt_scaled=sh_pt_[i];
+        sh_pt_scaled.set(sh_pt_scaled.x()/scale_ratio_,
+                         sh_pt_scaled.y()/scale_ratio_);
+
+        double radius=time_[i]/scale_ratio_;
+        
+        vgl_point_2d<double> pt_p = _translatePoint(sh_pt_scaled, 
+                                                    theta_[i]+phi_[i], 
+                                                    radius);
+    
+        vgl_point_2d<double> pt_m = _translatePoint(sh_pt_scaled, 
+                                                    theta_[i]-phi_[i], 
+                                                    radius);
+
+        minus_pts.push_back(pt_m);
+
+        points.push_back(pt_p);
+        
+    }
+
+    if ( !leaf_edge_ )
+    {
+        points.push_back(final_pt);
+    }
+
+    vcl_vector< vgl_point_2d<double> >::reverse_iterator rit;
+    for ( rit = minus_pts.rbegin() ; rit != minus_pts.rend() ; ++rit)
+    {
+        points.push_back(*rit);
+        
+    }
+    
+    for ( unsigned int c=0; c < points.size() ; ++c)
+    {
+
+        poly.push_back(vcl_fabs(width-points[c].x()),
+                       points[c].y());
+    }
 
 }
