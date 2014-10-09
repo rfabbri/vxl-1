@@ -5961,20 +5961,6 @@ compute_dense_rgb_sift_cost(
 
         }
 
-        vgl_polygon<double> model_polygon(1);
-        vgl_polygon<double> query_polygon(1);
-
-        if ( !flag )
-        {
-            sc1->get_polygon(model_polygon);
-            sc2->get_polygon(query_polygon,width);
-        }
-        else
-        {
-            sc1->get_polygon(query_polygon,width);
-            sc2->get_polygon(model_polygon);
-        }
-
         bool add_curve=true;
 
         if ( query_dart_curves_.count(query_key1) ||
@@ -6068,8 +6054,6 @@ compute_dense_rgb_sift_cost(
                             ps2,
                             query_radius,
                             theta_ps2,
-                            model_polygon,
-                            query_polygon,
                             model_red_grad_data,
                             query_red_grad_data,
                             model_green_grad_data,
@@ -6114,8 +6098,6 @@ compute_dense_rgb_sift_cost(
                             ps1,
                             query_radius,
                             theta_ps1,
-                            model_polygon,
-                            query_polygon,
                             model_red_grad_data,
                             query_red_grad_data,
                             model_green_grad_data,
@@ -7459,8 +7441,6 @@ double dbskfg_match_bag_of_fragments::descr_cost(
     vgl_point_2d<double>& query_pt,
     double& query_radius,
     double& query_theta,
-    vgl_polygon<double>& model_polygon,
-    vgl_polygon<double>& query_polygon,
     vl_sift_pix* model_red_grad_data,
     vl_sift_pix* query_red_grad_data,
     vl_sift_pix* model_green_grad_data,
@@ -7495,71 +7475,65 @@ double dbskfg_match_bag_of_fragments::descr_cost(
     memset(descr_ps2_blue, 0, sizeof(vl_sift_pix)*128);
     
 
-    compute_masked_sift_descr(model_sift_filter,
-                              model_red_grad_data,
-                              descr_ps1_red,
-                              model_sift_filter->width,
-                              model_sift_filter->height,
-                              model_pt.x(),
-                              model_pt.y(),
-                              model_radius,
-                              model_theta,
-                              model_polygon);
+    vl_sift_calc_raw_descriptor(model_sift_filter,
+                                model_red_grad_data,
+                                descr_ps1_red,
+                                model_sift_filter->width,
+                                model_sift_filter->height,
+                                model_pt.x(),
+                                model_pt.y(),
+                                model_radius,
+                                model_theta);
 
-    compute_masked_sift_descr(model_sift_filter,
-                              model_green_grad_data,
-                              descr_ps1_green,
-                              model_sift_filter->width,
-                              model_sift_filter->height,
-                              model_pt.x(),
-                              model_pt.y(),
-                              model_radius,
-                              model_theta,
-                              model_polygon);
+    vl_sift_calc_raw_descriptor(model_sift_filter,
+                                model_green_grad_data,
+                                descr_ps1_green,
+                                model_sift_filter->width,
+                                model_sift_filter->height,
+                                model_pt.x(),
+                                model_pt.y(),
+                                model_radius,
+                                model_theta);
 
-    compute_masked_sift_descr(model_sift_filter,
-                              model_blue_grad_data,
-                              descr_ps1_blue,
-                              model_sift_filter->width,
-                              model_sift_filter->height,
-                              model_pt.x(),
-                              model_pt.y(),
-                              model_radius,
-                              model_theta,
-                              model_polygon);
+    vl_sift_calc_raw_descriptor(model_sift_filter,
+                                model_blue_grad_data,
+                                descr_ps1_blue,
+                                model_sift_filter->width,
+                                model_sift_filter->height,
+                                model_pt.x(),
+                                model_pt.y(),
+                                model_radius,
+                                model_theta);
 
-    compute_masked_sift_descr(query_sift_filter,
-                              query_red_grad_data,
-                              descr_ps2_red,
-                              query_sift_filter->width,
-                              query_sift_filter->height,
-                              query_pt.x(),
-                              query_pt.y(),
-                              query_radius,
-                              query_theta,
-                              query_polygon);
+    vl_sift_calc_raw_descriptor(query_sift_filter,
+                                query_red_grad_data,
+                                descr_ps2_red,
+                                query_sift_filter->width,
+                                query_sift_filter->height,
+                                query_pt.x(),
+                                query_pt.y(),
+                                query_radius,
+                                query_theta);
 
-    compute_masked_sift_descr(query_sift_filter,
-                              query_green_grad_data,
-                              descr_ps2_green,
-                              query_sift_filter->width,
-                              query_sift_filter->height,
-                              query_pt.x(),
-                              query_pt.y(),
-                              query_radius,
-                              query_theta,
-                              query_polygon);
+    vl_sift_calc_raw_descriptor(query_sift_filter,
+                                query_green_grad_data,
+                                descr_ps2_green,
+                                query_sift_filter->width,
+                                query_sift_filter->height,
+                                query_pt.x(),
+                                query_pt.y(),
+                                query_radius,
+                                query_theta);
 
-    compute_masked_sift_descr(query_sift_filter,
-                              query_blue_grad_data,
-                              descr_ps2_blue,
-                              query_sift_filter->width,
-                              query_sift_filter->height,
-                              query_pt.x(),
-                              query_pt.y(),
-                              query_radius,
-                              query_theta,
-                              query_polygon);
+    vl_sift_calc_raw_descriptor(query_sift_filter,
+                                query_blue_grad_data,
+                                descr_ps2_blue,
+                                query_sift_filter->width,
+                                query_sift_filter->height,
+                                query_pt.x(),
+                                query_pt.y(),
+                                query_radius,
+                                query_theta);
 
 
     vl_sift_pix result_red[1];

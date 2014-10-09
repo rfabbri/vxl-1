@@ -562,8 +562,6 @@ private:
         vgl_point_2d<double>& query_pt,
         double& query_radius,
         double& query_theta,
-        vgl_polygon<double>& model_polygon,
-        vgl_polygon<double>& query_polygon,
         vl_sift_pix* model_red_grad_data=0,
         vl_sift_pix* query_red_grad_data=0,
         vl_sift_pix* model_green_grad_data=0,
