@@ -578,6 +578,15 @@ private:
         ColorSpace color_space);
 
     void write_out_dart_data();
+
+    void compute_sift_descr(
+        VlSiftFilt const *f,
+        vl_sift_pix const* grad,
+        vl_sift_pix *descr,
+        int width, int height,
+        double x, double y,
+        double sigma,
+        double angle0);
     
     // Make copy ctor private
     dbskfg_match_bag_of_fragments(const dbskfg_match_bag_of_fragments&);
