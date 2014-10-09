@@ -35,7 +35,9 @@ struct dbsks_train_geom_model_params
   int root_vid;
   int pseudo_parent_eid;
   double normalized_xgraph_size;
+  bool b_normalize;
   vcl_string output_file;
+
 };
 
 

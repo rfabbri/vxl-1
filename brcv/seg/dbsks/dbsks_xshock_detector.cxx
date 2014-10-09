@@ -401,28 +401,38 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
     params.min_y = vnl_math_rnd((xgraph_vertices_min_y_[i]+xgraph_vertices_max_y_[i])/2 - params.step_y*(params.num_y-1)/2 ); // centering
 
     vcl_cout << "min_y: "<<params.min_y <<" ";
-    // griding of psi within [0, 2pi], have to keep the whole possible range, because at branch node, the change of psi between frames can be huge(tail of mouse), but make it denser to increase detection localization
-	// no need going from 0-2pi, 0-0.5pi, 1.5pi-pi is good enought for normal animail skeletal articulation
-    //params.step_psi = vnl_math::pi / 8;
-    //params.num_psi = 16;
-    //params.min_psi = 0;
 
+	// sample psi using geom model
 	params.step_psi = vnl_math::pi / 10;
-    double range_psi = vnl_math_min((max_psi-min_psi), 2*vnl_math::pi);
+    double range_psi = 2*vnl_math::pi;
     params.num_psi = vnl_math_floor(range_psi / params.step_psi) + 1;
     params.min_psi = (max_psi+min_psi)/2 - params.step_psi*(params.num_psi-1)/2;
 
+
 	// center at pi/2
     params.step_phi0 = vnl_math::pi / 16;
-    params.num_phi0 = 9;
+    params.num_phi0 = 11;
     params.min_phi0 = vnl_math::pi_over_2 - params.step_phi0 * (params.num_phi0-1)/2;
+
+/*
+	// sample phi center at pi/2 using geom model
+    params.step_phi0 = vnl_math::pi / 16;
+    double range_phi0 = vnl_math_min((max_phi-min_phi), vnl_math::pi);
+    params.num_phi0 = 2*vnl_math_rnd( range_phi0/2 / params.step_phi0) + 1;
+    params.min_phi0 = vnl_math::pi_over_2 - params.step_phi0 * (params.num_phi0-1)/2;
+*/
 
 	// sample centered at prototype radius, make the step correpond to a ratio of current radius
     params.step_r = vnl_math_max(0.06 * (xv->radius()), double(1)); 
-    params.num_r = vnl_math_ceil(xv->radius()*0.6/params.step_r)+1;
-    params.min_r = xv->radius() -(params.num_r-1) * params.step_r /2;
+    params.num_r = vnl_math_floor(xv->radius()*0.9/params.step_r)+1;
+    params.min_r = xv->radius() - params.step_r * (params.num_r-1) /3;
 
- 
+/*
+	// sample radius using geometric model
+	params.step_r = vnl_math_max((max_radius-min_radius)/20, double(1)); 
+	params.num_r = vnl_math_floor((max_radius-min_radius)/params.step_r)+1;
+    params.min_r =  (min_radius+max_radius)/2 - (params.num_r-1) * params.step_r /2;
+*/
     vcl_cout << "min_r: "<<params.min_r <<vcl_endl;
     if (xv->degree() == 3)
     {

@@ -378,7 +378,8 @@ collect_positive_data()
       vcl_string edgemap_name = list_edgemap_names[min_idx];
       
       //> Adjust the xgraph to cope with the actual scale of the pyramid edgemap
-      xgraph->scale_up(0, 0, actual_edgemap_scale);
+      if(this->params.use_edgemap_pyramid)
+      	xgraph->scale_up(0, 0, actual_edgemap_scale);
 
 
       //> compute ccm cost for an area twice as big as the xgraph
@@ -908,7 +909,8 @@ collect_negative_data()
       vcl_string edgemap_name = list_edgemap_names[min_idx];
       
       //> Adjust the xgraph so that it is roughly twice as small as the ground truth xgraph to generate negative data
-      xgraph->scale_up(0, 0, target_edgemap_scale/2); //> note /2
+      if(this->params.use_edgemap_pyramid)
+      	xgraph->scale_up(0, 0, target_edgemap_scale/2); //> note /2
       vsol_box_2d_sptr xgraph_bbox = xgraph->bounding_box();
 
       //> Compute CCM cost for any "big enough" edgemap in the edgemap pyramid

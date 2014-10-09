@@ -133,8 +133,8 @@ build_from_attr_data()
     MINMAX = 0,
     GAUSSIAN_3STD = 1,
   };
+//  compute_method method = GAUSSIAN_3STD;
   compute_method method = GAUSSIAN_3STD;
-
 
   // raw data
   vcl_vector<double > vcl_psi;

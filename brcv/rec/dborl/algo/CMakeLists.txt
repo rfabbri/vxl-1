@@ -118,3 +118,6 @@ SUBDIRS( vox_detect_xgraph3 )
 
 # foreground edge refine from sequential frames
 SUBDIRS(vox_multi_frame_fg_edge_refine )
+
+# generate shapes based on trained geometric model
+SUBDIRS(vox_generate_shape )

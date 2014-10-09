@@ -802,13 +802,17 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
       if (real_confidence > confidence_lower_threshold)
       {
 		// for detection with enough edge support, add appearance confidence into it.
+		vcl_cout <<"edge_confidence:" << real_confidence << vcl_endl;		
 
 		double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
+		vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
 
 		double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[0]->xgraph());
+		vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
+
 		// only consider the dets which is not too diff in bg as prototype
-			real_confidence += (50 - appearance_cost/100)*0.5;
-			real_confidence += (50 - shape_trans_cost)*0.5; 
+			real_confidence += (50 - appearance_cost/5);
+			real_confidence += (50 - shape_trans_cost*5); 
 			vcl_cout << " real confidence: " << real_confidence << vcl_endl;
 		    dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
 		    det->compute_bbox();
@@ -971,7 +975,7 @@ compute_appearance_cost(dbsksp_xshock_graph_sptr& sol_xgraph, vil_image_view<flo
 			vcl_cout << " bg: " << avg_bg;
 			bg_vec.push_back(avg_bg);
 			bg_sum += avg_bg;
-			cost+= vnl_math_abs(avg_bg - this->appearance_model_node_value[pos])*vnl_math_abs(avg_bg - this->appearance_model_node_value[pos]);
+			cost+= vcl_sqrt((avg_bg - this->appearance_model_node_value[pos])*(avg_bg - this->appearance_model_node_value[pos]));
 		}
 	}
 
@@ -985,7 +989,7 @@ compute_appearance_cost(dbsksp_xshock_graph_sptr& sol_xgraph, vil_image_view<flo
 
 //	double appearance_cost = (var + cost)/bg_vec.size();
 	double appearance_cost = cost/bg_vec.size();
-	vcl_cout << " appearance cost: "<< appearance_cost << vcl_endl;
+	//vcl_cout << " appearance cost: "<< appearance_cost << vcl_endl;
 	return appearance_cost;
 }
 
@@ -1034,6 +1038,7 @@ compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_gra
 {
 
 	vcl_vector<double> proto_r_vec;
+	double proto_root_r;
 	for (dbsksp_xshock_graph::vertex_iterator vit = xgraph_prototype_->vertices_begin();
 		vit != xgraph_prototype_->vertices_end(); ++vit)
 	{
@@ -1041,11 +1046,12 @@ compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_gra
 		double x, y, psi, phi, radius;
 		//vcl_cout<< "read para" <<vcl_endl;
 		xv->descriptor(xv->edge_list().front())->get(x, y, psi, phi, radius);
-
+		if(unsigned(xv->id()) == xgraph_prototype_->root_vertex_id())
+			proto_root_r = radius;
 		proto_r_vec.push_back(radius);
 	}
 
-	vcl_vector<double> prev_x_vec, prev_y_vec, prev_r_vec;
+/*	vcl_vector<double> prev_x_vec, prev_y_vec, prev_r_vec;
 	for (dbsksp_xshock_graph::vertex_iterator vit = prev_xgraph->vertices_begin();
 		vit != prev_xgraph->vertices_end(); ++vit)
 	{
@@ -1058,8 +1064,9 @@ compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_gra
 		prev_y_vec.push_back(y);
 		prev_r_vec.push_back(radius);
 	}
-
+*/
 	vcl_vector<double> cur_x_vec, cur_y_vec, cur_r_vec;
+	double cur_root_r;
 	for (dbsksp_xshock_graph::vertex_iterator vit = cur_xgraph->vertices_begin();
 		vit != cur_xgraph->vertices_end(); ++vit)
 	{
@@ -1067,7 +1074,8 @@ compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_gra
 		double x, y, psi, phi, radius;
 		//vcl_cout<< "read para" <<vcl_endl;
 		xv->descriptor(xv->edge_list().front())->get(x, y, psi, phi, radius);
-
+		if(unsigned(xv->id()) == cur_xgraph->root_vertex_id())
+			cur_root_r = radius;
 		cur_x_vec.push_back(x);
 		cur_y_vec.push_back(y);
 		cur_r_vec.push_back(radius);
@@ -1076,8 +1084,10 @@ compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_gra
 	double diff_dist=0, diff_r_2=0;
 	for (int i = 0; i< cur_x_vec.size(); i++)
 	{
-		diff_dist += (cur_x_vec[i]-prev_x_vec[i])*(cur_x_vec[i]-prev_x_vec[i]) + (cur_y_vec[i]-prev_y_vec[i])*(cur_y_vec[i]-prev_y_vec[i]);
+//		diff_dist += (cur_x_vec[i]-prev_x_vec[i])*(cur_x_vec[i]-prev_x_vec[i]) + (cur_y_vec[i]-prev_y_vec[i])*(cur_y_vec[i]-prev_y_vec[i]);
 		diff_r_2 += (cur_r_vec[i]-proto_r_vec[i])*(cur_r_vec[i]-proto_r_vec[i]);
+//      r_diff use the ratio to the root;
+//		diff_r_2 += (1-(cur_r_vec[i]/cur_root_r/proto_r_vec[i]*proto_root_r))*(1-(cur_r_vec[i]/cur_root_r/proto_r_vec[i]*proto_root_r));
 	}
 
 //	double cost = vcl_sqrt(diff_dist)/3 + vcl_sqrt(diff_r_2); // only consider dist to prev det 1 is problematic
