@@ -499,6 +499,8 @@ private:
         VlSiftFilt* query_sift_filter=0,
         double model_scale_ratio=1.0,
         double query_scale_ratio=1.0,
+        double model_sift_scale=1.0,
+        double query_sift_scale=1.0,
         vcl_string prefix="");
 
     vcl_pair<double,double> compute_o2p_dense(
@@ -581,7 +583,7 @@ private:
 
     void write_out_dart_data();
 
-    void compute_masked_sift_descr(
+    inline void compute_masked_sift_descr(
         VlSiftFilt const *f,
         vl_sift_pix const* grad,
         vl_sift_pix *descr,
