@@ -60,6 +60,9 @@ public:
   vcl_map<unsigned int,double > get_cgraph_length()
   {return arc_length_cgraphs_;}
 
+  vcl_map<unsigned int,vgl_polygon<double> > get_polygons()
+  {return polygons_;}
+
   vcl_vector<unsigned int> get_frags_removed(){return frags_removed_;}
 
   bool compute_graph(vcl_vector<vsol_spatial_object_2d_sptr>& contours,
@@ -102,6 +105,7 @@ private:
   vcl_vector<unsigned int> frags_removed_;
   vcl_map<int,vcl_string> key_map_;
   vcl_map<vcl_pair<double,double>,double> kd_points_;
+  vcl_map<unsigned int,vgl_polygon<double> > polygons_;
 
 };
 

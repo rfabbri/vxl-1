@@ -209,9 +209,12 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                 vl_sift_pix* green_data(0);
                 VlSiftFilt* sift_filter(0);
 
+                vgl_polygon<double> mask=model_fragments_polys_[index].second;
+
                 compute_grad_maps(model_img_sptr,
                                   &grad_data,
-                                  &sift_filter);
+                                  &sift_filter,
+                                  mask);
 
                 vil_image_view<double> o1,o2,o3;
                 convert_to_color_space(model_img_sptr,o1,o2,o3,color_space_);
@@ -228,13 +231,16 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                                    b_img);
                 
                 compute_grad_color_maps(o1,
-                                        &red_data);
+                                        &red_data,
+                                        mask);
                 
                 compute_grad_color_maps(o2,
-                                        &green_data);
+                                        &green_data,
+                                        mask);
                 
                 compute_grad_color_maps(o3,
-                                        &blue_data);
+                                        &blue_data,
+                                        mask);
 
                 vl_sift_set_magnif(sift_filter,1.0);
 
@@ -299,9 +305,13 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
     {
         if ( model_image_ )
         {
+
+            vgl_polygon<double> mask=model_fragments_polys_[0].second;
+
             compute_grad_maps(model_image_,
                               &model_grad_data_,
-                              &model_sift_filter_);
+                              &model_sift_filter_,
+                              mask);
             
             vil_image_view<double> o1,o2,o3;
             convert_to_color_space(model_image_,o1,o2,o3,color_space_);
@@ -316,13 +326,16 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                                model_b_data_);
 
             compute_grad_color_maps(o1,
-                                    &model_grad_red_data_);
+                                    &model_grad_red_data_,
+                                    mask);
             
             compute_grad_color_maps(o2,
-                                    &model_grad_green_data_);
+                                    &model_grad_green_data_,
+                                    mask);
             
             compute_grad_color_maps(o3,
-                                    &model_grad_blue_data_);
+                                    &model_grad_blue_data_,
+                                    mask);
 
             vl_sift_set_magnif(model_sift_filter_,1.0);
 
@@ -332,9 +345,12 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
         {
             vcl_cout<<"Computing query image grad data"<<vcl_endl;
 
+            vgl_polygon<double> mask=query_fragments_polys_[0].second;
+
             compute_grad_maps(query_image_,
                               &query_grad_data_,
-                              &query_sift_filter_);
+                              &query_sift_filter_,
+                              mask);
 
             vil_image_view<double> o1,o2,o3;
             convert_to_color_space(query_image_,o1,o2,o3,color_space_);
@@ -349,13 +365,16 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                                query_b_data_);
 
             compute_grad_color_maps(o1,
-                                    &query_grad_red_data_);
+                                    &query_grad_red_data_,
+                                    mask);
             
             compute_grad_color_maps(o2,
-                                    &query_grad_green_data_);
+                                    &query_grad_green_data_,
+                                    mask);
             
             compute_grad_color_maps(o3,
-                                    &query_grad_blue_data_);
+                                    &query_grad_blue_data_,
+                                    mask);
             
             vl_sift_set_magnif(query_sift_filter_,1.0);
 
@@ -455,7 +474,8 @@ void dbskfg_match_bag_of_fragments::load_binary_model(vcl_string model_dir)
         load_pro.get_cgraphs();
     vcl_map<unsigned int,double> cgraph_area = load_pro.get_cgraph_area();
     vcl_map<unsigned int,double> cgraph_length = load_pro.get_cgraph_length();
-
+    vcl_map<unsigned int,vgl_polygon<double> > cgraph_polys=
+        load_pro.get_polygons();
     vcl_map<unsigned int,dbskfg_composite_graph_sptr>::iterator it;
     for ( it = cgraphs.begin() ; it != cgraphs.end() ; ++it)
     {
@@ -468,6 +488,10 @@ void dbskfg_match_bag_of_fragments::load_binary_model(vcl_string model_dir)
         model_fragments_length_[(*it).first]=vcl_make_pair(
             stream.str(),
             cgraph_length[(*it).first]);
+        model_fragments_polys_[(*it).first]=vcl_make_pair(
+            stream.str(),
+            cgraph_polys[(*it).first]);
+
 
     }
 
@@ -552,6 +576,8 @@ void dbskfg_match_bag_of_fragments::load_binary_query(vcl_string query_dir)
         load_pro.get_cgraphs();
     vcl_map<unsigned int,double> cgraph_area = load_pro.get_cgraph_area();
     vcl_map<unsigned int,double> cgraph_length = load_pro.get_cgraph_length();
+    vcl_map<unsigned int,vgl_polygon<double> > cgraph_polys=
+        load_pro.get_polygons();
 
     vcl_map<unsigned int,dbskfg_composite_graph_sptr>::iterator it;
     for ( it = cgraphs.begin() ; it != cgraphs.end() ; ++it)
@@ -565,7 +591,9 @@ void dbskfg_match_bag_of_fragments::load_binary_query(vcl_string query_dir)
         query_fragments_length_[(*it).first]=vcl_make_pair(
             stream.str(),
             cgraph_length[(*it).first]);
-
+        query_fragments_polys_[(*it).first]=vcl_make_pair(
+            stream.str(),
+            cgraph_polys[(*it).first]);
     }
 
     vcl_vector<unsigned int> regions_removed=load_pro.get_frags_removed();
@@ -4714,7 +4742,8 @@ void dbskfg_match_bag_of_fragments::match_two_debug_graphs(
 void dbskfg_match_bag_of_fragments::compute_grad_maps(
     vil_image_resource_sptr& input_image,
     vl_sift_pix** grad_data,
-    VlSiftFilt** filter)
+    VlSiftFilt** filter,
+    vgl_polygon<double>& poly)
 {
     vil_image_view<vxl_byte> temp = 
         vil_convert_to_grey_using_rgb_weighting(
@@ -4748,12 +4777,24 @@ void dbskfg_match_bag_of_fragments::compute_grad_maps(
 
     *filter = vl_sift_new(width,height,3,3,0);
     *grad_data=(vl_sift_pix*) vl_malloc(sizeof(vl_sift_pix)*width*height*2);
-    
+
     unsigned int index=0;
     for ( unsigned int i=0; i < width*height; ++i)
     {
         double mag  = gradient_magnitude[i];
         double angle= gradient_angle[i];
+
+        div_t divresult = div(i,width);
+        
+        int xcoord=divresult.rem;
+        int ycoord=divresult.quot;
+        
+        if ( !poly.contains(xcoord,ycoord))
+        {
+            mag=0;
+            angle=0;
+        }
+
         (*grad_data)[index]=mag;
         ++index;
         (*grad_data)[index]=angle;
@@ -4923,7 +4964,8 @@ void dbskfg_match_bag_of_fragments::compute_grad_color_maps(
 
 void dbskfg_match_bag_of_fragments::compute_grad_color_maps(
     vil_image_view<double>& image,
-    vl_sift_pix** grad_data)
+    vl_sift_pix** grad_data,
+    vgl_polygon<double>& poly)
 {
 
     unsigned int width  = image.ni();
@@ -4953,6 +4995,18 @@ void dbskfg_match_bag_of_fragments::compute_grad_color_maps(
     {
         double mag  = gradient_magnitude[i];
         double angle= gradient_angle[i];
+
+        div_t divresult = div(i,width);
+        
+        int xcoord=divresult.rem;
+        int ycoord=divresult.quot;
+        
+        if ( !poly.contains(xcoord,ycoord))
+        {
+            mag=0;
+            angle=0;
+        }
+
         (*grad_data)[index]=mag;
         ++index;
         (*grad_data)[index]=angle;

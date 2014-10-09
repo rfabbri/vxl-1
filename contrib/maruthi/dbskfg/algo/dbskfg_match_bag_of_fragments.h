@@ -144,6 +144,10 @@ private:
     vcl_map<unsigned int,vcl_pair<vcl_string,double> > 
         model_fragments_length_;
 
+    // Keep a map of all model patches
+    vcl_map<unsigned int,vcl_pair<vcl_string,vgl_polygon<double> > > 
+        model_fragments_polys_;
+
     // Keep a map of all query patches
     vcl_map<unsigned int,vcl_pair<vcl_string,double> > 
         query_fragments_area_;
@@ -151,6 +155,10 @@ private:
     // Keep a map of all query patches
     vcl_map<unsigned int,vcl_pair<vcl_string,double> > 
         query_fragments_length_;
+
+    // Keep a map of all query patches
+    vcl_map<unsigned int,vcl_pair<vcl_string,vgl_polygon<double> > > 
+        query_fragments_polys_;
 
     // Keep a map of all model contours
     vcl_map<unsigned int,vcl_vector< vsol_spatial_object_2d_sptr > >
@@ -430,7 +438,8 @@ private:
 
     void compute_grad_maps(vil_image_resource_sptr& input_image,
                            vl_sift_pix** grad_data,
-                           VlSiftFilt** filter);
+                           VlSiftFilt** filter,
+                           vgl_polygon<double>& poly);
 
     void compute_edge_maps(vil_image_resource_sptr& input_image,
                            vl_sift_pix** grad_data,
@@ -441,7 +450,8 @@ private:
                                  unsigned int channel);
 
     void compute_grad_color_maps(vil_image_view<double>& image,
-                                 vl_sift_pix** grad_data);
+                                 vl_sift_pix** grad_data,
+                                 vgl_polygon<double>& poly);
     
     double compute_curve_matching_cost(
         dbskfg_cgraph_directed_tree_sptr& model_tree,
