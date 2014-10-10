@@ -747,7 +747,31 @@ bool dbskfg_match_bag_of_fragments::binary_match()
             model_images_sift_filter_.count((*m_iterator).second.first)?
             model_images_sift_filter_[(*m_iterator).second.first]:
             0;
-            
+
+        vl_sift_pix* model_images_grad_data_red=
+            model_images_grad_data_red_.count((*m_iterator).second.first)?
+            model_images_grad_data_red_[(*m_iterator).second.first]:
+            0;
+
+        vl_sift_pix* model_images_grad_data_green=
+            model_images_grad_data_green_.count((*m_iterator).second.first)?
+            model_images_grad_data_green_[(*m_iterator).second.first]:
+            0;
+
+        vl_sift_pix* model_images_grad_data_blue=
+            model_images_grad_data_blue_.count((*m_iterator).second.first)?
+            model_images_grad_data_blue_[(*m_iterator).second.first]:
+            0;
+
+        vil_image_view<double> model_L_channel(model_images_L_data_
+                                               [(*m_iterator).second.first]);
+        
+        vil_image_view<double> model_a_channel(model_images_a_data_
+                                               [(*m_iterator).second.first]);
+
+        vil_image_view<double> model_b_channel(model_images_b_data_
+                                               [(*m_iterator).second.first]);
+    
         //: prepare the trees also
         dbskfg_cgraph_directed_tree_sptr model_tree = new 
             dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
@@ -756,8 +780,15 @@ bool dbskfg_match_bag_of_fragments::binary_match()
                                         false,
                                         area_weight_,
                                         model_images_grad_data,
-                                        model_images_sift_filter);
-
+                                        model_images_sift_filter,
+                                        model_images_grad_data_red,
+                                        model_images_grad_data_green,
+                                        model_images_grad_data_blue,
+                                        (*m_iterator).first,
+                                        &model_L_channel,
+                                        &model_a_channel,
+                                        &model_b_channel);
+    
 
         bool f1=model_tree->acquire
             ((*m_iterator).second.second, elastic_splice_cost_, 
@@ -770,15 +801,59 @@ bool dbskfg_match_bag_of_fragments::binary_match()
               q_iterator != query_fragments_.end() ; ++q_iterator)
         {
 
-            vl_sift_pix* model_images_grad_data=
-                model_images_grad_data_.count((*m_iterator).second.first)?
-                model_images_grad_data_[(*m_iterator).second.first]:
+            vcl_string key = model_fragments_
+                [(*q_iterator).first].first;
+
+            vl_sift_pix* query_images_grad_data=
+                model_images_grad_data_.count(key)?
+                model_images_grad_data_[key]:
                 0;
             
-            VlSiftFilt*model_images_sift_filter=
-                model_images_sift_filter_.count((*m_iterator).second.first)?
-                model_images_sift_filter_[(*m_iterator).second.first]:
+            VlSiftFilt* query_images_sift_filter=
+                model_images_sift_filter_.count(key)?
+                model_images_sift_filter_[key]:
                 0;
+
+            vl_sift_pix* query_images_grad_data_red=
+                model_images_grad_data_red_.count(key)?
+                model_images_grad_data_red_[key]:
+                0;
+
+
+            vl_sift_pix* query_images_grad_data_blue=
+                model_images_grad_data_blue_.count(key)?
+                model_images_grad_data_blue_[key]:
+                0;
+
+            vl_sift_pix* query_images_grad_data_green=
+                model_images_grad_data_green_.count(key)?
+                model_images_grad_data_green_[key]:
+                0;
+
+            vil_image_view<double> query_L_channel(
+                model_images_L_data_
+                [(*m_iterator).second.first]);
+            
+            vil_image_view<double> query_a_channel(
+                model_images_a_data_
+                [(*m_iterator).second.first]);
+
+            vil_image_view<double> query_b_channel(
+                model_images_b_data_
+                [(*m_iterator).second.first]);
+
+            if ( query_image_ )
+            {
+
+                query_images_grad_data = query_grad_data_;
+                query_images_sift_filter = query_sift_filter_;
+                query_images_grad_data_red = query_grad_red_data_;
+                query_images_grad_data_green = query_grad_green_data_;
+                query_images_grad_data_blue = query_grad_blue_data_;
+                query_L_channel = query_L_data_;
+                query_a_channel = query_a_data_;
+                query_b_channel = query_b_data_;
+            }
 
             //: prepare the trees also
             dbskfg_cgraph_directed_tree_sptr query_tree = new
@@ -787,8 +862,15 @@ bool dbskfg_match_bag_of_fragments::binary_match()
                                             scurve_matching_R_,
                                             false,
                                             area_weight_,
-                                            model_images_grad_data,
-                                            model_images_sift_filter);
+                                            query_images_grad_data,
+                                            query_images_sift_filter,
+                                            query_images_grad_data_red,
+                                            query_images_grad_data_green,
+                                            query_images_grad_data_blue,
+                                            (*q_iterator).first,
+                                            &query_L_channel,
+                                            &query_a_channel,
+                                            &query_b_channel);
             
             bool f1=query_tree->acquire
                 ((*q_iterator).second.second, elastic_splice_cost_, 
@@ -820,8 +902,16 @@ bool dbskfg_match_bag_of_fragments::binary_match()
                                                 scurve_matching_R_,
                                                 mirror_,
                                                 area_weight_,
-                                                model_images_grad_data,
-                                                model_images_sift_filter);
+                                                query_images_grad_data,
+                                                query_images_sift_filter,
+                                                query_images_grad_data_red,
+                                                query_images_grad_data_green,
+                                                query_images_grad_data_blue,
+                                                (*q_iterator).first,
+                                                &query_L_channel,
+                                                &query_a_channel,
+                                                &query_b_channel);
+
                 
                 f1=query_mirror_tree->acquire
                     ((*q_iterator).second.second, elastic_splice_cost_, 
@@ -843,17 +933,25 @@ bool dbskfg_match_bag_of_fragments::binary_match()
                                                 rgb_avg_mirror_cost,
                                                 frob_norm,
                                                 "",
-                                                true);
+                                                true,
+                                                norm_shape_cost);
 
                 norm_shape_cost = ( norm_shape_cost < norm_shape_mirror_cost)
                     ? norm_shape_cost : norm_shape_mirror_cost;
                 norm_shape_cost_length = ( norm_shape_cost_length 
                                            < norm_shape_mirror_cost_length)
                     ? norm_shape_cost_length : norm_shape_mirror_cost_length;
-                app_diff = ( app_diff < app_mirror_diff )
-                    ? app_diff: app_mirror_diff;
-                norm_app_cost = ( norm_app_cost < norm_app_mirror_cost )
-                    ? norm_app_cost: norm_app_mirror_cost;
+                // app_diff = ( app_diff < app_mirror_diff )
+                //     ? app_diff: app_mirror_diff;
+                // norm_app_cost = ( norm_app_cost < norm_app_mirror_cost )
+                //     ? norm_app_cost: norm_app_mirror_cost;
+                if ( rgb_avg_mirror_cost !=  1.0e6 )
+                {
+                    app_diff = app_mirror_diff;
+                    norm_app_cost = norm_app_mirror_cost;
+                    rgb_avg_cost = rgb_avg_mirror_cost;
+                }
+
             }
 
             unsigned int model_id= (*m_iterator).first;
