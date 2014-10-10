@@ -9,6 +9,7 @@
 #include <dbskfg/pro/dbskfg_load_composite_graph_process.h>
 #include <dbskfg/pro/dbskfg_load_binary_composite_graph_process.h>
 #include <dbskfg/algo/dbskfg_cg_tree_edit.h>
+#include <dbskfg/algo/dbskfg_app_curve_match.h>
 #include <dbskfg/dbskfg_utilities.h>
 #include <vul/vul_file_iterator.h>
 #include <vul/vul_file.h>
@@ -5975,6 +5976,95 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_rgb_sift_cost(
     return app_diff;
 }
 
+vcl_pair<double,double> 
+dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
+    vcl_vector<dbskr_scurve_sptr>& curve_list1,
+    vcl_vector<dbskr_scurve_sptr>& curve_list2,
+    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    vcl_vector< pathtable_key >& path_map,
+    vcl_vector<double>& dart_distances,
+    bool flag,
+    double width,
+    vl_sift_pix* model_red_grad_data,
+    vl_sift_pix* query_red_grad_data,
+    vl_sift_pix* model_green_grad_data,
+    vl_sift_pix* query_green_grad_data,
+    vl_sift_pix* model_blue_grad_data,
+    vl_sift_pix* query_blue_grad_data,
+    VlSiftFilt* model_sift_filter,
+    VlSiftFilt* query_sift_filter,
+    double model_scale_ratio,
+    double query_scale_ratio,
+    vcl_string prefix)
+{
+    
+    
+    double total_alignment = 0.0;
+
+    // Get matching pairs
+    for (unsigned i = 0; i < map_list.size(); i++) 
+    {
+        dbskr_scurve_sptr sc1 = curve_list1[i];
+        dbskr_scurve_sptr sc2 = curve_list2[i];
+
+        vnl_matrix<vl_sift_pix> model_matrix(384,sc1->num_points(),0.0);
+        vnl_matrix<vl_sift_pix> query_matrix(384,sc2->num_points(),0.0);
+
+        if ( !flag )
+        {
+            compute_sift_along_curve(sc1,
+                                     model_matrix,
+                                     model_red_grad_data,
+                                     model_green_grad_data,
+                                     model_blue_grad_data,
+                                     model_sift_filter,
+                                     model_scale_ratio);
+
+            compute_sift_along_curve(sc2,
+                                     query_matrix,
+                                     query_red_grad_data,
+                                     query_green_grad_data,
+                                     query_blue_grad_data,
+                                     query_sift_filter,
+                                     query_scale_ratio,
+                                     width);
+
+        }
+        else
+        {
+            compute_sift_along_curve(sc2,
+                                     model_matrix,
+                                     model_red_grad_data,
+                                     model_green_grad_data,
+                                     model_blue_grad_data,
+                                     model_sift_filter,
+                                     model_scale_ratio);
+
+            compute_sift_along_curve(sc1,
+                                     query_matrix,
+                                     query_red_grad_data,
+                                     query_green_grad_data,
+                                     query_blue_grad_data,
+                                     query_sift_filter,
+                                     query_scale_ratio,
+                                     width);
+
+        }
+
+
+        dbskfg_app_curve_match dpMatch(model_matrix,query_matrix);
+        dpMatch.Match();
+        double dart_cost=dpMatch.finalCost();
+
+        total_alignment+=dart_cost;
+    }
+
+    vcl_pair<double,double> final_cost(total_alignment,
+                                       total_alignment/map_list.size());
+    
+    return final_cost;
+}
+
 vcl_pair<double,double> dbskfg_match_bag_of_fragments::
 compute_dense_rgb_sift_cost(
     vcl_vector<dbskr_scurve_sptr>& curve_list1,
@@ -8652,4 +8742,47 @@ inline void dbskfg_match_bag_of_fragments::compute_masked_sift_descr
       }
     }
   }
+}
+
+void dbskfg_match_bag_of_fragments::compute_sift_along_curve(
+    dbskr_scurve_sptr scurve,
+    vnl_matrix<vl_sift_pix>& descriptors,
+    vl_sift_pix* red_grad_data,
+    vl_sift_pix* green_grad_data,
+    vl_sift_pix* blue_grad_data,
+    VlSiftFilt* sift_filter,
+    double scale_ratio,
+    double width)
+{
+    for ( unsigned int i = 0 ; i < scurve->num_points() ; ++i)
+    {
+        vgl_point_2d<double> ps1 = scurve->sh_pt(i);
+        double radius_ps1        = scurve->time(i);
+        double theta_ps1         = scurve->theta(i);
+
+        ps1.set(vcl_fabs(width-(ps1.x()/scale_ratio)),
+                ps1.y()/scale_ratio);
+        radius_ps1 = (radius_ps1/scale_ratio)/2.0;
+
+
+        vnl_vector<vl_sift_pix> descriptor(384,0.0);
+        
+        compute_descr(ps1,
+                      radius_ps1,
+                      theta_ps1,
+                      red_grad_data,
+                      green_grad_data,
+                      blue_grad_data,
+                      sift_filter,
+                      descriptor);
+        
+        descriptors.set_column(i,descriptor);
+    }
+
+
+
+
+
+
+
 }
