@@ -6007,6 +6007,33 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
         dbskr_scurve_sptr sc1 = curve_list1[i];
         dbskr_scurve_sptr sc2 = curve_list2[i];
 
+        vcl_pair<unsigned int,unsigned int> query_key1(0,0);
+        vcl_pair<unsigned int,unsigned int> query_key2(0,0);
+        
+        if ( !flag )
+        {
+            query_key1=sc2->get_curve_id();
+            
+            query_key2.first = query_key1.second;
+            query_key2.second= query_key1.first;
+        }
+        else
+        {
+            query_key1=sc1->get_curve_id();
+           
+            query_key2.first = query_key1.second;
+            query_key2.second= query_key1.first;
+
+        }
+
+        bool add_curve=true;
+
+        if ( query_dart_curves_.count(query_key1) ||
+             query_dart_curves_.count(query_key2) )
+        {
+            add_curve=false;
+        }
+
         vnl_matrix<vl_sift_pix> model_matrix;
         vnl_matrix<vl_sift_pix> query_matrix;
 
@@ -6035,6 +6062,19 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
                                      query_scale_ratio,
                                      width);
 
+
+            if ( add_curve )
+            {
+                for ( unsigned int k=0; k < sc2->num_points() ; ++k)
+                {
+                    vgl_point_2d<double> ps1=sc2->sh_pt(k);
+                    ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
+                            ps1.y()/query_scale_ratio);
+                    query_dart_curves_[query_key1].push_back(ps1);
+
+                }
+             
+            }
         }
         else
         {
@@ -6062,6 +6102,21 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
                                      query_scale_ratio,
                                      width);
 
+
+            if ( add_curve )
+            {
+                for ( unsigned int k=0; k < sc1->num_points() ; ++k)
+                {
+                    vgl_point_2d<double> ps1=sc1->sh_pt(k);
+                    ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
+                            ps1.y()/query_scale_ratio);
+                    query_dart_curves_[query_key1].push_back(ps1);
+
+                }
+             
+            }
+
+
         }
 
         model_matrix.normalize_columns();
@@ -6070,8 +6125,9 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
         dbskfg_app_curve_match dpMatch(model_matrix,query_matrix);
         dpMatch.Match();
         double dart_cost=dpMatch.finalCost();
-
         total_alignment+=dart_cost;
+        
+        dart_distances.push_back(dart_cost);
     }
 
     vcl_pair<double,double> final_cost(total_alignment,
