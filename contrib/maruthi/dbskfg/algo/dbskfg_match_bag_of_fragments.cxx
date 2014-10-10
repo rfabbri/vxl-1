@@ -6007,11 +6007,17 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
         dbskr_scurve_sptr sc1 = curve_list1[i];
         dbskr_scurve_sptr sc2 = curve_list2[i];
 
-        vnl_matrix<vl_sift_pix> model_matrix(384,sc1->num_points(),0.0);
-        vnl_matrix<vl_sift_pix> query_matrix(384,sc2->num_points(),0.0);
+        vnl_matrix<vl_sift_pix> model_matrix;
+        vnl_matrix<vl_sift_pix> query_matrix;
 
         if ( !flag )
         {
+            model_matrix.set_size(384,sc1->num_points());
+            model_matrix.fill(0.0);
+
+            query_matrix.set_size(384,sc2->num_points());
+            query_matrix.fill(0.0);
+
             compute_sift_along_curve(sc1,
                                      model_matrix,
                                      model_red_grad_data,
@@ -6032,6 +6038,13 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
         }
         else
         {
+
+            model_matrix.set_size(384,sc2->num_points());
+            model_matrix.fill(0.0);
+
+            query_matrix.set_size(384,sc1->num_points());
+            query_matrix.fill(0.0);
+
             compute_sift_along_curve(sc2,
                                      model_matrix,
                                      model_red_grad_data,
@@ -6051,6 +6064,8 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
 
         }
 
+        model_matrix.normalize_columns();
+        query_matrix.normalize_columns();
 
         dbskfg_app_curve_match dpMatch(model_matrix,query_matrix);
         dpMatch.Match();
