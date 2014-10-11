@@ -8732,17 +8732,24 @@ void dbskfg_match_bag_of_fragments::write_out_dart_data()
                 model_file<<pair.first.first<<","<<pair.first.second<<vcl_endl;
                 model_file<<pair.second<<vcl_endl;
 
-                dbskr_scurve_sptr curve=p2[v].second;
-                model_file<<curve->num_points()<<vcl_endl;
                 
-                double ratio=curve->get_scale_ratio();
-                for ( unsigned int c=0; c < curve->num_points(); ++c)
+                dbskr_scurve_sptr curve=p2[v].second;
+                vgl_polygon<double> model_polygon(1);
+                curve->get_polygon(model_polygon);
+                
+                model_file<<model_polygon[0].size()+1<<vcl_endl;
+
+                for (unsigned int s = 0; s < model_polygon.num_sheets(); ++s)
                 {
-                    vgl_point_2d<double> pt=curve->sh_pt(c);
-                    double scale_x=pt.x()/ratio;
-                    double scale_y=pt.y()/ratio;
-                    model_file<<scale_x<<","<<scale_y<<vcl_endl;
+                    for (unsigned int p = 0; p < model_polygon[s].size(); ++p)
+                    {
+                        model_file<<model_polygon[s][p].x()<<","
+                                  <<model_polygon[s][p].y()<<vcl_endl;
+                    }
                 }
+
+                model_file<<model_polygon[0][0].x()<<","
+                          <<model_polygon[0][0].y()<<vcl_endl;
                 
             }
             
