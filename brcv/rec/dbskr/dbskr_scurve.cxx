@@ -56,7 +56,7 @@ dbskr_scurve::dbskr_scurve(int num_points,
                            double scale_ratio): 
     interpolate_ds_(interpolate_ds), subsample_ds_(subsample_ds),
     virtual_length_(0.0),area_factor_(0.0),leaf_edge_(leaf_edge),
-    scale_ratio_(scale_ratio),curve_id_(0,0)
+    scale_ratio_(scale_ratio),curve_id_(0,0),branch_points_(0)
 {
   if (binterpolate){
     vcl_vector<int> lmap; //dummy map 
@@ -381,6 +381,7 @@ void dbskr_scurve::reconstruct_boundary(double scale_ratio)
   this->bdry_plus_angle_.reserve(num_points_);
   this->bdry_minus_angle_.reserve(num_points_);
   
+  branch_points_=0;
 
   //reconstruct the bnd points from the intrinsic parameters
   for (int i=0; i<num_points_; i++)
@@ -396,6 +397,17 @@ void dbskr_scurve::reconstruct_boundary(double scale_ratio)
         
     }
 
+    if ( i != 0 )
+    {
+        if ( branch_points_ == 0 )
+        {
+            if ( sh_pt_[i]==sh_pt_[i-1] )
+            { 
+                branch_points_=i;
+            }
+        }
+    }
+
     vgl_point_2d<double> pt_p = _translatePoint(sh_pt_[i], 
                                   theta_[i]+phi_[i], 
                                   time_[i]);
@@ -409,7 +421,11 @@ void dbskr_scurve::reconstruct_boundary(double scale_ratio)
     bdry_plus_angle_.push_back(fixAngleMPiPi_new(theta_[i]+phi_[i]-vnl_math::pi/2));
     bdry_minus_angle_.push_back(fixAngleMPiPi_new(theta_[i]-phi_[i]+vnl_math::pi/2));
   }
-
+  
+  if ( branch_points_ == 0 )
+  {
+      branch_points_=num_points_;
+  }
 #if 0 //Recreating the stupid mistakes made by Thomas in computing the boundary tangents
 
   vgl_point_2d<double> curr, prev;

@@ -90,6 +90,8 @@ public:
   // get area factor
   double get_area_factor(){return area_factor_;}
 
+  unsigned int get_branch_points(){return branch_points_;}
+
   // set curve id
   void set_curve_id(vcl_pair<unsigned int,unsigned int>& pair)
   {curve_id_=pair;}
@@ -279,6 +281,8 @@ protected:
   double scale_ratio_;
 
   vcl_pair<unsigned int,unsigned int> curve_id_;
+
+  unsigned int branch_points_;
 
 };
 

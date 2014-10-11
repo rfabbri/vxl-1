@@ -6052,12 +6052,18 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
         vnl_matrix<vl_sift_pix> model_matrix;
         vnl_matrix<vl_sift_pix> query_matrix;
 
+        unsigned int sc1_points=(!sc1->is_leaf_edge())?
+            sc1->num_points():sc1->get_branch_points();
+
+        unsigned int sc2_points=(!sc2->is_leaf_edge())?
+            sc2->num_points():sc2->get_branch_points();
+
         if ( !flag )
         {
-            model_matrix.set_size(384,sc1->num_points());
+            model_matrix.set_size(384,sc1_points);
             model_matrix.fill(0.0);
 
-            query_matrix.set_size(384,sc2->num_points());
+            query_matrix.set_size(384,sc2_points);
             query_matrix.fill(0.0);
 
             compute_sift_along_curve(sc1,
@@ -6097,10 +6103,10 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
         else
         {
 
-            model_matrix.set_size(384,sc2->num_points());
+            model_matrix.set_size(384,sc2_points);
             model_matrix.fill(0.0);
 
-            query_matrix.set_size(384,sc1->num_points());
+            query_matrix.set_size(384,sc1_points);
             query_matrix.fill(0.0);
 
             compute_sift_along_curve(sc2,
@@ -8902,7 +8908,7 @@ void dbskfg_match_bag_of_fragments::compute_sift_along_curve(
     double scale_ratio,
     double width)
 {
-    for ( unsigned int i = 0 ; i < scurve->num_points() ; ++i)
+    for ( unsigned int i = 0 ; i < descriptors.cols() ; ++i)
     {
         vgl_point_2d<double> ps1 = scurve->sh_pt(i);
         double radius_ps1        = scurve->time(i);
