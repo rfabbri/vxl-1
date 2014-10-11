@@ -61,7 +61,7 @@ protected:
                                                  1,
                                                  Chi2_distance);
         
-        return result_final[0];
+        return 0.5*result_final[0];
     }
 };
 

@@ -7,6 +7,7 @@
 #include <vcl_fstream.h>
 #include <dbskfg/pro/dbskfg_load_binary_composite_graph_process.h>
 
+#include <bsta/bsta_spherical_histogram.h>
 
 #include <vil/vil_rgb.h>
 #include <vil/vil_load.h>
@@ -32,6 +33,7 @@
 #include <vsol/vsol_polygon_2d_sptr.h>
 
 #include <vgl/algo/vgl_fit_lines_2d.h>
+#include <vgl/vgl_polygon.h>
 
 void write_distance_matrix(
     double size,
@@ -86,10 +88,79 @@ void write_distance_matrix(
 int main( int argc, char *argv[] )
 {
 
-    vcl_stringstream stream(argv[1]);
-    vcl_string input_img;
-    stream>>input_img;
+    // vcl_stringstream stream(argv[1]);
+    // vcl_string input_img;
+    // stream>>input_img;
 
+    //test default constructor
+    bsta_spherical_histogram<double> dsh;
+    //test default units and coordinates
+    bsta_spherical_histogram<double> sh(8, 4, 0.0, 360.0, 0.0, 180.0,
+                                        bsta_spherical_histogram<double>
+                                        ::DEG,
+                                        bsta_spherical_histogram<double>
+                                        ::B_0_360,
+                                        bsta_spherical_histogram<double>
+                                        ::B_0_180);
+
+
+    double az(0.0),el(0.0);
+    sh.convert_to_spherical(0,0,1,az, el);
+    sh.upcount(az,el);
+    vcl_cout<<az<<","<<el<<vcl_endl;
+
+    sh.convert_to_spherical(0,0,0,az, el);
+    sh.upcount(az,el);
+    vcl_cout<<az<<","<<el<<vcl_endl;
+
+    sh.convert_to_spherical(0,0,-1,az, el);
+    sh.upcount(az,el);
+    vcl_cout<<az<<","<<el<<vcl_endl;
+
+
+    sh.convert_to_spherical(1,0,0,az, el);
+    sh.upcount(az,el);
+    vcl_cout<<az<<","<<el<<vcl_endl;
+
+    sh.convert_to_spherical(-1,0,0,az, el);
+    sh.upcount(az,el);
+    vcl_cout<<az<<","<<el<<vcl_endl;
+
+    sh.convert_to_spherical(0,1,0,az, el);
+    sh.upcount(az,el);
+    vcl_cout<<az<<","<<el<<vcl_endl;
+
+    sh.convert_to_spherical(0,-1,0,az, el);
+    sh.upcount(az,el);
+    vcl_cout<<az<<","<<el<<vcl_endl;
+
+    // sh.convert_to_spherical(0,0,0,az, el);
+    // sh.upcount(az,el);
+    // vcl_cout<<az<<","<<el<<vcl_endl;
+
+    // sh.convert_to_spherical(0,1,1,az, el);
+    // sh.upcount(az,el);
+    // vcl_cout<<az<<","<<el<<vcl_endl;
+
+    // sh.convert_to_spherical(1,0,0,az, el);
+    // sh.upcount(az,el);
+    // vcl_cout<<az<<","<<el<<vcl_endl;
+
+    // sh.convert_to_spherical(1,0,1,az, el);
+    // sh.upcount(az,el);
+    // vcl_cout<<az<<","<<el<<vcl_endl;
+
+    // sh.convert_to_spherical(1,1,0,az, el);
+    // sh.upcount(az,el);
+    // vcl_cout<<az<<","<<el<<vcl_endl;
+
+    // sh.convert_to_spherical(1,1,1,az, el);
+    // sh.upcount(az,el);
+    // vcl_cout<<az<<","<<el<<vcl_endl;
+
+    vcl_ofstream file("sphere.vrml");
+    sh.print_to_vrml(file,0.5);
+    file.close();
     // vil_image_view<vxl_byte> src_image = vil_load("black_white.png");
 
     // vil_image_view<vxl_byte> temp2=
@@ -184,133 +255,133 @@ int main( int argc, char *argv[] )
 
 
     // Grab image
-    vil_image_resource_sptr img_sptr = 
-        vil_load_image_resource(input_img.c_str());
-    if (!img_sptr) 
-    {
-        vcl_cerr << "Cannot load image: " << input_img << vcl_endl;
-        return 1;
-    }
+    // vil_image_resource_sptr img_sptr = 
+    //     vil_load_image_resource(input_img.c_str());
+    // if (!img_sptr) 
+    // {
+    //     vcl_cerr << "Cannot load image: " << input_img << vcl_endl;
+    //     return 1;
+    // }
 
-    // Create vid pro storage
-    vidpro1_image_storage_sptr inp = new vidpro1_image_storage();
-    inp->set_image(img_sptr);
+    // // Create vid pro storage
+    // vidpro1_image_storage_sptr inp = new vidpro1_image_storage();
+    // inp->set_image(img_sptr);
 
-    // Create storage
-    vcl_vector<bpro1_storage_sptr> ct_results;
-    {
-        vcl_cout<<"************ Contour Tracing  ************"<<vcl_endl;
+    // // Create storage
+    // vcl_vector<bpro1_storage_sptr> ct_results;
+    // {
+    //     vcl_cout<<"************ Contour Tracing  ************"<<vcl_endl;
 
-        dbdet_contour_tracer_process ct_pro;
-        // set_process_parameters_of_bpro1(*params, 
-        //                                 ct_pro, 
-        //                                 params->tag_contour_tracing_);
+    //     dbdet_contour_tracer_process ct_pro;
+    //     // set_process_parameters_of_bpro1(*params, 
+    //     //                                 ct_pro, 
+    //     //                                 params->tag_contour_tracing_);
         
-        // Before we start the process lets clean input output
-        ct_pro.clear_input();
-        ct_pro.clear_output();
+    //     // Before we start the process lets clean input output
+    //     ct_pro.clear_input();
+    //     ct_pro.clear_output();
 
-        // Start the process sequence
-        ct_pro.add_input(inp);
-        bool ct_status = ct_pro.execute();
-        ct_pro.finish();
+    //     // Start the process sequence
+    //     ct_pro.add_input(inp);
+    //     bool ct_status = ct_pro.execute();
+    //     ct_pro.finish();
 
-        // Grab output from gray scale third order edge detection
-        // if process did not fail
-        if ( ct_status )
-        {
-            ct_results = ct_pro.get_output();
-        }
+    //     // Grab output from gray scale third order edge detection
+    //     // if process did not fail
+    //     if ( ct_status )
+    //     {
+    //         ct_results = ct_pro.get_output();
+    //     }
 
-        //Clean up after ourselves
-        ct_pro.clear_input();
-        ct_pro.clear_output();
+    //     //Clean up after ourselves
+    //     ct_pro.clear_input();
+    //     ct_pro.clear_output();
 
-        if (ct_results.size() != 1 )
-        {
-            vcl_cerr<< "Contour tracing failed"<<vcl_endl;
-            return 1;
-        }
+    //     if (ct_results.size() != 1 )
+    //     {
+    //         vcl_cerr<< "Contour tracing failed"<<vcl_endl;
+    //         return 1;
+    //     }
 
-    }
+    // }
     
-    vidpro1_vsol2D_storage_sptr input_vsol;
-    input_vsol.vertical_cast(ct_results[0]);
+    // vidpro1_vsol2D_storage_sptr input_vsol;
+    // input_vsol.vertical_cast(ct_results[0]);
 
-    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = 
-        input_vsol->all_data();
+    // vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = 
+    //     input_vsol->all_data();
 
-    vsol_polygon_2d_sptr new_poly;
+    // vsol_polygon_2d_sptr new_poly;
 
-    for (unsigned int b = 0 ; b < vsol_list.size() ; b++ ) 
-    {
-        if( vsol_list[b]->cast_to_region()->cast_to_polygon())
-        {
-            vsol_polygon_2d_sptr poly = 
-                vsol_list[b]->cast_to_region()->cast_to_polygon();
+    // for (unsigned int b = 0 ; b < vsol_list.size() ; b++ ) 
+    // {
+    //     if( vsol_list[b]->cast_to_region()->cast_to_polygon())
+    //     {
+    //         vsol_polygon_2d_sptr poly = 
+    //             vsol_list[b]->cast_to_region()->cast_to_polygon();
    
-            vgl_fit_lines_2d<double> fitter;
-            fitter.set_min_fit_length(2);
-            fitter.set_rms_error_tol(0.05f);
-            for (unsigned int i = 0; i<poly->size(); i++) {
-                vgl_point_2d<double> p = poly->vertex(i)->get_p();
-                fitter.add_point(p);
-            }
-            fitter.fit();
+    //         vgl_fit_lines_2d<double> fitter;
+    //         fitter.set_min_fit_length(2);
+    //         fitter.set_rms_error_tol(0.05f);
+    //         for (unsigned int i = 0; i<poly->size(); i++) {
+    //             vgl_point_2d<double> p = poly->vertex(i)->get_p();
+    //             fitter.add_point(p);
+    //         }
+    //         fitter.fit();
  
-            vcl_vector<vgl_line_segment_2d<double> >& segs = 
-                fitter.get_line_segs();
+    //         vcl_vector<vgl_line_segment_2d<double> >& segs = 
+    //             fitter.get_line_segs();
 
-            vcl_vector<vsol_point_2d_sptr > new_pts;
-            new_pts.push_back(
-                new 
-                vsol_point_2d(segs[0]
-                              .point1().x(),segs[0].point1().y()));
-            new_pts.push_back(
-                new 
-                vsol_point_2d(segs[0]
-                              .point2().x(),segs[0].point2().y()));
-            for (unsigned int i = 1; i<segs.size(); i++) 
-            {
-                new_pts.push_back(
-                    new 
-                    vsol_point_2d(segs[i].point2().x(),segs[i].point2().y()));
-            }
-            vcl_cout << "fitted polygon size: " << new_pts.size() << vcl_endl;
-            new_poly = new vsol_polygon_2d(new_pts);
+    //         vcl_vector<vsol_point_2d_sptr > new_pts;
+    //         new_pts.push_back(
+    //             new 
+    //             vsol_point_2d(segs[0]
+    //                           .point1().x(),segs[0].point1().y()));
+    //         new_pts.push_back(
+    //             new 
+    //             vsol_point_2d(segs[0]
+    //                           .point2().x(),segs[0].point2().y()));
+    //         for (unsigned int i = 1; i<segs.size(); i++) 
+    //         {
+    //             new_pts.push_back(
+    //                 new 
+    //                 vsol_point_2d(segs[i].point2().x(),segs[i].point2().y()));
+    //         }
+    //         vcl_cout << "fitted polygon size: " << new_pts.size() << vcl_endl;
+    //         new_poly = new vsol_polygon_2d(new_pts);
 
-        }
-    }
+    //     }
+    // }
 
-    vcl_vector< vsol_spatial_object_2d_sptr > contours;
-    contours.push_back(new_poly->cast_to_spatial_object());
+    // vcl_vector< vsol_spatial_object_2d_sptr > contours;
+    // contours.push_back(new_poly->cast_to_spatial_object());
     
-    vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
-    output_vsol->add_objects(contours,"trace");
+    // vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
+    // output_vsol->add_objects(contours,"trace");
 
-    {
-        vcl_string output_file=vul_file::strip_extension(input_img);
-        output_file=output_file+".cem";
-        bpro1_filepath output(output_file,".cem");
+    // {
+    //     vcl_string output_file=vul_file::strip_extension(input_img);
+    //     output_file=output_file+".cem";
+    //     bpro1_filepath output(output_file,".cem");
         
-        // In this everything else, is .cem, .cemv , .cfg, etc
-        vidpro1_save_cem_process save_cem_pro;
-        save_cem_pro.parameters()->set_value("-cemoutput",output);
+    //     // In this everything else, is .cem, .cemv , .cfg, etc
+    //     vidpro1_save_cem_process save_cem_pro;
+    //     save_cem_pro.parameters()->set_value("-cemoutput",output);
         
-        // Before we start the process lets clean input output
-        save_cem_pro.clear_input();
-        save_cem_pro.clear_output();
+    //     // Before we start the process lets clean input output
+    //     save_cem_pro.clear_input();
+    //     save_cem_pro.clear_output();
         
-        // Kick of process
-        save_cem_pro.add_input(output_vsol);
-        bool write_status = save_cem_pro.execute();
-        save_cem_pro.finish();
+    //     // Kick of process
+    //     save_cem_pro.add_input(output_vsol);
+    //     bool write_status = save_cem_pro.execute();
+    //     save_cem_pro.finish();
         
-        //Clean up after ourselves
-        save_cem_pro.clear_input();
-        save_cem_pro.clear_output();
+    //     //Clean up after ourselves
+    //     save_cem_pro.clear_input();
+    //     save_cem_pro.clear_output();
         
-    }
+    // }
     
     //vcl_stringstream input_file;
 

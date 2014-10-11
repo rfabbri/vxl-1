@@ -972,6 +972,7 @@ bool dbskfg_match_bag_of_fragments::binary_match()
     }
 
     // write out data
+    write_out_dart_data();
 
     vcl_ofstream binary_sim_file;
     binary_sim_file.open(output_binary_file_.c_str(),
@@ -6026,6 +6027,20 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
 
         }
 
+        vgl_polygon<double> model_polygon(1);
+        vgl_polygon<double> query_polygon(1);
+
+        if ( !flag )
+        {
+            sc1->get_polygon(model_polygon);
+            sc2->get_polygon(query_polygon,width);
+        }
+        else
+        {
+            sc1->get_polygon(query_polygon,width);
+            sc2->get_polygon(model_polygon);
+        }
+
         bool add_curve=true;
 
         if ( query_dart_curves_.count(query_key1) ||
@@ -6065,14 +6080,17 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
 
             if ( add_curve )
             {
-                for ( unsigned int k=0; k < sc2->num_points() ; ++k)
+                for (unsigned int s = 0; s < query_polygon.num_sheets(); ++s)
                 {
-                    vgl_point_2d<double> ps1=sc2->sh_pt(k);
-                    ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
-                            ps1.y()/query_scale_ratio);
-                    query_dart_curves_[query_key1].push_back(ps1);
-
+                    for (unsigned int p = 0; p < query_polygon[s].size(); ++p)
+                    {
+                        query_dart_curves_[query_key1].push_back(
+                            query_polygon[s][p]);
+                    }
                 }
+                
+                query_dart_curves_[query_key1].push_back(
+                    query_polygon[0][0]);
              
             }
         }
@@ -6105,14 +6123,18 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
 
             if ( add_curve )
             {
-                for ( unsigned int k=0; k < sc1->num_points() ; ++k)
-                {
-                    vgl_point_2d<double> ps1=sc1->sh_pt(k);
-                    ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
-                            ps1.y()/query_scale_ratio);
-                    query_dart_curves_[query_key1].push_back(ps1);
 
+                for (unsigned int s = 0; s < query_polygon.num_sheets(); ++s)
+                {
+                    for (unsigned int p = 0; p < query_polygon[s].size(); ++p)
+                    {
+                        query_dart_curves_[query_key1].push_back(
+                            query_polygon[s][p]);
+                    }
                 }
+                
+                query_dart_curves_[query_key1].push_back(
+                    query_polygon[0][0]);
              
             }
 
@@ -6128,6 +6150,54 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
         total_alignment+=dart_cost;
         
         dart_distances.push_back(dart_cost);
+
+
+
+        // vcl_cout<<"Dart: "<<i<<" cost: "<<dart_cost<<vcl_endl;
+        // vcl_vector<vcl_pair<int,int> > fmap=*(dpMatch.finalMap());
+        
+        // vcl_stringstream text_stream;
+        // text_stream<<"Dart_"<<i<<"_app_correspondence.txt";
+
+        // vcl_ofstream file_stream(text_stream.str().c_str());
+        
+        // vcl_vector<vcl_pair<int,int> >::iterator it;
+        // for ( it = fmap.begin() ; it != fmap.end() ; ++it)
+        // {
+        //     vgl_point_2d<double> p1,p2;
+
+        //     if ( !flag )
+        //     {
+        //         p1=sc1->sh_pt((*it).first);
+        //         p2=sc2->sh_pt((*it).second);
+                
+
+        //         p1.set(p1.x()/model_scale_ratio,
+        //                p1.y()/model_scale_ratio);
+                
+        //         p2.set(vcl_fabs(width-(p2.x()/query_scale_ratio)),
+        //                p2.y()/query_scale_ratio);
+
+        //     }
+        //     else
+        //     {
+        //         p1=sc2->sh_pt((*it).first);
+        //         p2=sc1->sh_pt((*it).second);
+
+        //         p1.set(p1.x()/model_scale_ratio,
+        //                p1.y()/model_scale_ratio);
+                
+        //         p2.set(vcl_fabs(width-(p2.x()/query_scale_ratio)),
+        //                p2.y()/query_scale_ratio);
+
+
+        //     }
+            
+        //     file_stream<<p1.x()<<" "<<p1.y()<<" "
+        //                <<p2.x()<<" "<<p2.y()<<vcl_endl;
+        // }
+
+        // file_stream.close();
     }
 
     vcl_pair<double,double> final_cost(total_alignment,
