@@ -6278,6 +6278,12 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
     vcl_pair<double,double> final_cost(total_alignment,
                                        total_alignment/map_list.size());
     
+    if ( map_list.size() == 0 )
+    {
+        final_cost.first=1.0e6;
+        final_cost.second=1.0e6;
+    }
+
     return final_cost;
 }
 
