@@ -1719,12 +1719,14 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                 norm_shape_cost_length = ( norm_shape_cost_length 
                                            < norm_shape_mirror_cost_length)
                     ? norm_shape_cost_length : norm_shape_mirror_cost_length;
-                app_diff = ( app_diff < app_mirror_diff )
-                    ? app_diff: app_mirror_diff;
-                norm_app_cost = ( norm_app_cost < norm_app_mirror_cost )
-                    ? norm_app_cost: norm_app_mirror_cost;
+                // app_diff = ( app_diff < app_mirror_diff )
+                //     ? app_diff: app_mirror_diff;
+                // norm_app_cost = ( norm_app_cost < norm_app_mirror_cost )
+                //     ? norm_app_cost: norm_app_mirror_cost;
                 if ( rgb_avg_mirror_cost !=  1.0e6 )
                 {
+                    rgb_avg_cost = rgb_avg_mirror_cost;
+                    norm_app_cost = norm_app_mirror_cost;
                     rgb_avg_cost = rgb_avg_mirror_cost;
                 }
 
@@ -4180,7 +4182,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                                                            ->get_scale_ratio());
 
         vcl_vector<double> dart_distances;
-        vcl_pair<double,double> sift_rgb_cost=compute_dense_rgb_sift_cost(
+        vcl_pair<double,double> sift_rgb_cost=compute_app_alignment_cost(
             curve_list1,
             curve_list2,
             map_list,
@@ -5996,6 +5998,8 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
     VlSiftFilt* query_sift_filter,
     double model_scale_ratio,
     double query_scale_ratio,
+    double model_sift_scale,
+    double query_sift_scale,
     vcl_string prefix)
 {
     
@@ -6052,11 +6056,9 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
         vnl_matrix<vl_sift_pix> model_matrix;
         vnl_matrix<vl_sift_pix> query_matrix;
 
-        unsigned int sc1_points=(!sc1->is_leaf_edge())?
-            sc1->num_points():sc1->get_branch_points();
+        unsigned int sc1_points=sc1->num_points();
 
-        unsigned int sc2_points=(!sc2->is_leaf_edge())?
-            sc2->num_points():sc2->get_branch_points();
+        unsigned int sc2_points=sc2->num_points();
 
         if ( !flag )
         {
@@ -6072,6 +6074,7 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
                                      model_green_grad_data,
                                      model_blue_grad_data,
                                      model_sift_filter,
+                                     model_sift_scale,
                                      model_scale_ratio);
 
             compute_sift_along_curve(sc2,
@@ -6080,6 +6083,7 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
                                      query_green_grad_data,
                                      query_blue_grad_data,
                                      query_sift_filter,
+                                     query_sift_scale,
                                      query_scale_ratio,
                                      width);
 
@@ -6115,6 +6119,7 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
                                      model_green_grad_data,
                                      model_blue_grad_data,
                                      model_sift_filter,
+                                     model_sift_scale,
                                      model_scale_ratio);
 
             compute_sift_along_curve(sc1,
@@ -6123,6 +6128,7 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
                                      query_green_grad_data,
                                      query_blue_grad_data,
                                      query_sift_filter,
+                                     query_sift_scale,
                                      query_scale_ratio,
                                      width);
 
@@ -6147,8 +6153,8 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
 
         }
 
-        model_matrix.normalize_columns();
-        query_matrix.normalize_columns();
+        //model_matrix.normalize_columns();
+        //query_matrix.normalize_columns();
 
         dbskfg_app_curve_match dpMatch(model_matrix,query_matrix);
         dpMatch.Match();
@@ -6158,19 +6164,33 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
         dart_distances.push_back(dart_cost);
 
 
-
+        //************ Debug Section ****************************//
         // vcl_cout<<"Dart: "<<i<<" cost: "<<dart_cost<<vcl_endl;
-        // vcl_vector<vcl_pair<int,int> > fmap=*(dpMatch.finalMap());
         
         // vcl_stringstream text_stream;
         // text_stream<<"Dart_"<<i<<"_app_correspondence.txt";
+        // vcl_stringstream text2_stream;
+        // text2_stream<<"Sift_sc1_"<<i<<"_app_correspondence.txt";
+        // vcl_stringstream text3_stream;
+        // text3_stream<<"Sift_sc2_"<<i<<"_app_correspondence.txt";
 
+        // vcl_ofstream sift_sc1(text2_stream.str().c_str());
+        // vcl_ofstream sift_sc2(text3_stream.str().c_str());        
         // vcl_ofstream file_stream(text_stream.str().c_str());
-        
+
+        // vcl_vector<vcl_pair<int,int> > fmap=*(dpMatch.finalMap());        
         // vcl_vector<vcl_pair<int,int> >::iterator it;
         // for ( it = fmap.begin() ; it != fmap.end() ; ++it)
         // {
         //     vgl_point_2d<double> p1,p2;
+
+        //     double theta1(0.0),theta2(0.0);
+        //     double scale1(0.0),scale2(0.0);
+
+        //     vnl_vector<vl_sift_pix> model_sift=model_matrix.get_column(
+        //         (*it).first);
+        //     vnl_vector<vl_sift_pix> query_sift=query_matrix.get_column(
+        //         (*it).second);
 
         //     if ( !flag )
         //     {
@@ -6183,6 +6203,12 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
                 
         //         p2.set(vcl_fabs(width-(p2.x()/query_scale_ratio)),
         //                p2.y()/query_scale_ratio);
+
+        //         theta1=sc1->theta((*it).first);
+        //         theta2=sc2->theta((*it).second);
+
+        //         scale1=model_sift_scale;
+        //         scale2=query_sift_scale;
 
         //     }
         //     else
@@ -6197,13 +6223,56 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
         //                p2.y()/query_scale_ratio);
 
 
+        //         theta1=sc2->theta((*it).first);
+        //         theta2=sc1->theta((*it).second);
+
+        //         scale1=model_sift_scale;
+        //         scale2=query_sift_scale;
+
         //     }
             
-        //     file_stream<<p1.x()<<" "<<p1.y()<<" "
-        //                <<p2.x()<<" "<<p2.y()<<vcl_endl;
+        //     file_stream<<p1.x()<<" "
+        //                <<p1.y()<<" "
+        //                <<scale1<<" "
+        //                <<theta1<<" "
+        //                <<p2.x()<<" "
+        //                <<p2.y()<<" "
+        //                <<scale2<<" "
+        //                <<theta2<<vcl_endl;
+
+        //     for ( unsigned int n=0; n < model_sift.size() ; ++n)
+        //     {
+
+        //         if ( n == (model_sift.size() - 1) )
+        //         {
+        //             sift_sc1<<model_sift[n]<<vcl_endl;
+        //         }
+        //         else
+        //         {
+        //             sift_sc1<<model_sift[n]<<" ";
+        //         }
+        //     }
+
+
+        //     for ( unsigned int n=0; n < query_sift.size() ; ++n)
+        //     {
+
+        //         if ( n == (query_sift.size() - 1) )
+        //         {
+        //             sift_sc2<<query_sift[n]<<vcl_endl;
+        //         }
+        //         else
+        //         {
+        //             sift_sc2<<query_sift[n]<<" ";
+        //         }
+        //     }
+
         // }
 
         // file_stream.close();
+        // sift_sc1.close();
+        // sift_sc2.close();
+
     }
 
     vcl_pair<double,double> final_cost(total_alignment,
@@ -8905,13 +8974,14 @@ void dbskfg_match_bag_of_fragments::compute_sift_along_curve(
     vl_sift_pix* green_grad_data,
     vl_sift_pix* blue_grad_data,
     VlSiftFilt* sift_filter,
+    double sift_scale,
     double scale_ratio,
     double width)
 {
     for ( unsigned int i = 0 ; i < descriptors.cols() ; ++i)
     {
         vgl_point_2d<double> ps1 = scurve->sh_pt(i);
-        double radius_ps1        = scurve->time(i);
+        double radius_ps1        = sift_scale;
         double theta_ps1         = scurve->theta(i);
 
         ps1.set(vcl_fabs(width-(ps1.x()/scale_ratio)),

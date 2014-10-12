@@ -10,7 +10,8 @@ dbskfg_app_curve_match::dbskfg_app_curve_match(
 {
     _n1=sift_c1_.cols();
     _n2=sift_c2_.cols();
-    _template_size=5;
+    setTemplateSize(5);
+
 }
 
 

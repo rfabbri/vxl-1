@@ -509,6 +509,8 @@ private:
         VlSiftFilt* query_sift_filter=0,
         double model_scale_ratio=1.0,
         double query_scale_ratio=1.0,
+        double model_sift_scale=1.0,
+        double query_sift_scale=1.0,
         vcl_string prefix="");
 
     vcl_pair<double,double> compute_dense_rgb_sift_cost(
@@ -627,6 +629,7 @@ private:
                                   vl_sift_pix* green_grad_data,
                                   vl_sift_pix* blue_grad_data,
                                   VlSiftFilt* sift_filter,
+                                  double sift_scale,
                                   double scale_ratio=1.0,
                                   double width=0.0);
 
