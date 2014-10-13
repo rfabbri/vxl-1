@@ -4182,7 +4182,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                                                            ->get_scale_ratio());
 
         vcl_vector<double> dart_distances;
-        vcl_pair<double,double> sift_rgb_cost=compute_app_alignment_cost(
+        vcl_pair<double,double> sift_rgb_cost=compute_dense_rgb_sift_cost(
             curve_list1,
             curve_list2,
             map_list,
@@ -6679,7 +6679,7 @@ compute_dense_rgb_sift_cost(
         // }
     }
 
-    double avg_norm  = sift_diff/map_list.size();
+    double avg_norm  = sift_diff/overall_index;
 
     double length_norm=sift_diff/(arclength_shock_curve1+
                                   arclength_shock_curve2);
