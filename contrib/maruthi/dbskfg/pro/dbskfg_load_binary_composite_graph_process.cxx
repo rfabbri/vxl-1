@@ -368,6 +368,7 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
         unsigned int index=0;
         double area=0.0;
         double arc_length=0.0;
+        vgl_polygon<double> poly_gt(1);
         vcl_map<unsigned int, vcl_set<int> >::iterator it;
         for ( it = region_belms_contour_ids.begin() ; it != 
                   region_belms_contour_ids.end() ; ++it)
@@ -403,6 +404,10 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
                 area=vgl_area(poly);
                 arc_length=grouper.real_contour_length((*it).first);
                 int_size=temp;
+
+                poly_gt.clear();
+                poly_gt.push_back(poly[0]);
+
             }
             
         }
@@ -461,6 +466,7 @@ compute_composite_graph(vidpro1_vsol2D_storage_sptr input_vsol,
         unsigned int id=area_cgraphs_.size();
         area_cgraphs_[id]=area;
         arc_length_cgraphs_[id]=arc_length;
+        polygons_[id]=poly_gt;
     }
 
 

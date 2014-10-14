@@ -144,6 +144,10 @@ private:
     vcl_map<unsigned int,vcl_pair<vcl_string,double> > 
         model_fragments_length_;
 
+    // Keep a map of all model patches
+    vcl_map<unsigned int,vcl_pair<vcl_string,vgl_polygon<double> > > 
+        model_fragments_polys_;
+
     // Keep a map of all query patches
     vcl_map<unsigned int,vcl_pair<vcl_string,double> > 
         query_fragments_area_;
@@ -151,6 +155,10 @@ private:
     // Keep a map of all query patches
     vcl_map<unsigned int,vcl_pair<vcl_string,double> > 
         query_fragments_length_;
+
+    // Keep a map of all query patches
+    vcl_map<unsigned int,vcl_pair<vcl_string,vgl_polygon<double> > > 
+        query_fragments_polys_;
 
     // Keep a map of all model contours
     vcl_map<unsigned int,vcl_vector< vsol_spatial_object_2d_sptr > >
@@ -430,7 +438,8 @@ private:
 
     void compute_grad_maps(vil_image_resource_sptr& input_image,
                            vl_sift_pix** grad_data,
-                           VlSiftFilt** filter);
+                           VlSiftFilt** filter,
+                           vgl_polygon<double>& poly);
 
     void compute_edge_maps(vil_image_resource_sptr& input_image,
                            vl_sift_pix** grad_data,
@@ -441,7 +450,8 @@ private:
                                  unsigned int channel);
 
     void compute_grad_color_maps(vil_image_view<double>& image,
-                                 vl_sift_pix** grad_data);
+                                 vl_sift_pix** grad_data,
+                                 vgl_polygon<double>& poly);
     
     double compute_curve_matching_cost(
         dbskfg_cgraph_directed_tree_sptr& model_tree,
@@ -481,6 +491,28 @@ private:
         double query_scale_ratio=1.0,
         vcl_string prefix="");
 
+    vcl_pair<double,double> compute_app_alignment_cost(
+        vcl_vector<dbskr_scurve_sptr>& curve_list1,
+        vcl_vector<dbskr_scurve_sptr>& curve_list2,
+        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        vcl_vector< pathtable_key >& path_map,
+        vcl_vector<double>& dart_distances,
+        bool flag=false,
+        double width=0.0,
+        vl_sift_pix* model_red_grad_data=0,
+        vl_sift_pix* query_red_grad_data=0,
+        vl_sift_pix* model_green_grad_data=0,
+        vl_sift_pix* query_green_grad_data=0,
+        vl_sift_pix* model_blue_grad_data=0,
+        vl_sift_pix* query_blue_grad_data=0,
+        VlSiftFilt* model_sift_filter=0,
+        VlSiftFilt* query_sift_filter=0,
+        double model_scale_ratio=1.0,
+        double query_scale_ratio=1.0,
+        double model_sift_scale=1.0,
+        double query_sift_scale=1.0,
+        vcl_string prefix="");
+
     vcl_pair<double,double> compute_dense_rgb_sift_cost(
         vcl_vector<dbskr_scurve_sptr>& curve_list1,
         vcl_vector<dbskr_scurve_sptr>& curve_list2,
@@ -499,6 +531,8 @@ private:
         VlSiftFilt* query_sift_filter=0,
         double model_scale_ratio=1.0,
         double query_scale_ratio=1.0,
+        double model_sift_scale=1.0,
+        double query_sift_scale=1.0,
         vcl_string prefix="");
 
     vcl_pair<double,double> compute_o2p_dense(
@@ -578,7 +612,27 @@ private:
         ColorSpace color_space);
 
     void write_out_dart_data();
+
+    inline void compute_masked_sift_descr(
+        VlSiftFilt const *f,
+        vl_sift_pix const* grad,
+        vl_sift_pix *descr,
+        int width, int height,
+        double x, double y,
+        double sigma,
+        double angle0,
+        vgl_polygon<double>& poly);
     
+    void compute_sift_along_curve(dbskr_scurve_sptr scurve,
+                                  vnl_matrix<vl_sift_pix>& descriptors,
+                                  vl_sift_pix* red_grad_data,
+                                  vl_sift_pix* green_grad_data,
+                                  vl_sift_pix* blue_grad_data,
+                                  VlSiftFilt* sift_filter,
+                                  double sift_scale,
+                                  double scale_ratio=1.0,
+                                  double width=0.0);
+
     // Make copy ctor private
     dbskfg_match_bag_of_fragments(const dbskfg_match_bag_of_fragments&);
 
