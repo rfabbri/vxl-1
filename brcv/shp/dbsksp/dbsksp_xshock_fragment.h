@@ -104,6 +104,13 @@ public:
   //: Return true if this fragment is legal, i.e. so self-intersection
   bool is_legal() const;
 
+  bool is_legal_new() const;
+
+  bool is_legal_singular_arc_frag(vgl_point_2d< double > start_shock_pt,
+								  vgl_point_2d< double > start_pt_L, double start_angle_L, double L_L, vgl_point_2d< double > center_L, double r_L,
+								  vgl_point_2d< double > start_pt_R, double start_angle_R, double L_R, vgl_point_2d< double > center_R, double r_R,
+								  vgl_point_2d< double > &end_pt_L, double &end_angle_L, double &actual_L_L,
+								  vgl_point_2d< double > &end_pt_R, double &end_angle_R, double &actual_L_R, vgl_point_2d< double > &end_shock_pt) const;
   //: Return true if this fragment has swallowtail on a boundary side
   bool bnd_has_swallowtail(bnd_side side) const
   {

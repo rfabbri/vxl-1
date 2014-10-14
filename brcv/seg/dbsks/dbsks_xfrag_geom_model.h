@@ -163,6 +163,10 @@ public:
                                                 double graph_size, int num_samples, 
                                                 vcl_vector<dbsksp_xshock_node_descriptor >& xdesc_list);
 
+  bool sample_new_legal_end_given_start_using_model_minmax_range(const dbsksp_xshock_node_descriptor& start, 
+                                                double graph_size, int num_samples, 
+                                                vcl_vector<dbsksp_xshock_node_descriptor >& xdesc_list);
+
   //: Uniform sampling of the starting location of the fragment given the allowed
   // deviation from the initial location
   bool sample_start_position(int num_samples, double delta_x, double delta_y,
