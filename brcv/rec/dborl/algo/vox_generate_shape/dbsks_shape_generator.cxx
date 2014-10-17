@@ -278,7 +278,7 @@ sample_child_frags_and_nodes (dbsksp_xshock_node_descriptor xd_p, dbsksp_xshock_
 	vcl_cout << "Sample legal end at eid: "<< xe_c->id() << vcl_endl;
 	vcl_vector<dbsksp_xshock_node_descriptor > xdesc_list;
 
-	if (!geom_model->sample_legal_end_given_start_using_model_minmax_range(xd_p, vcl_sqrt(xgraph->area()), 1, xdesc_list))
+	if (!geom_model->sample_new_legal_end_given_start_using_model_minmax_range(xd_p, vcl_sqrt(xgraph->area()), 1, xdesc_list))
 	{
 		vcl_cout << "fail in sampling legal end given start using model minmax range, at eid: "<< xe_c->id() << vcl_endl;
 		return false;

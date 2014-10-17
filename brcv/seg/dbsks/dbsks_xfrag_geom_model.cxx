@@ -605,6 +605,68 @@ sample_legal_end_given_start_using_model_minmax_range(const dbsksp_xshock_node_d
 }
 
 
+// -----------------------------------------------------------------------------
+//: Generate samples for the ending node descriptor, using minmax-range from model
+bool dbsks_xfrag_geom_model::
+sample_new_legal_end_given_start_using_model_minmax_range(const dbsksp_xshock_node_descriptor& start, 
+                                                double graph_size, int num_samples, 
+                                                vcl_vector<dbsksp_xshock_node_descriptor >& xdesc_list)
+{
+  xdesc_list.clear();
+
+  // ratio between current graph size and the model graph size
+  double scale_coeff = graph_size / this->graph_size_;
+
+  // we will generate up to 10*num_samples and take the first num_samples that form legal xshock fragments
+  
+  double x_start = start.pt().x();
+  double y_start = start.pt().y();
+  
+  int num_samples_to_try = 100*num_samples;
+  int count_legal_samples = 0;
+  
+  dbsksp_xshock_fragment test_xfrag(start, start);
+  for (int k =0; k < num_samples_to_try && count_legal_samples < num_samples; ++k)
+  {
+    // x and y
+    double chord = scale_coeff * this->chord_sampler_->sample();
+    double alpha_start = this->alpha_start_sampler_->sample();
+
+    double x_end = x_start + vcl_cos(start.psi_ - alpha_start) * chord;
+    double y_end = y_start + vcl_sin(start.psi_ - alpha_start) * chord;
+
+    // phi
+    double phi_end = this->phi_end_sampler_->sample();
+
+    // psi
+    double dpsi = this->dpsi_sampler_->sample();
+    double psi_end = start.psi() + dpsi;
+
+    // radius
+    double r_end = scale_coeff * this->r_end_sampler_->sample();
+
+    // only take this configuration if it forms a legal fragment
+    dbsksp_xshock_node_descriptor end(x_end, y_end, psi_end, phi_end, r_end);
+    test_xfrag.set_end(end);
+
+    // check constraint
+    if (!this->check_constraints(test_xfrag))
+      continue;
+
+    // check legality
+    if (!test_xfrag.is_legal_new())
+      continue;
+    
+    xdesc_list.push_back(end);
+    ++count_legal_samples;
+  }
+  if(xdesc_list.size() ==0)
+  {
+	vcl_cout << "Fail in sampling any legal end" << vcl_endl;
+	return false;
+  }
+  return true;
+}
 
 
 
