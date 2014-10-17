@@ -19,14 +19,15 @@
 //: compute the salency of this shock element (edge/node)
 dbsk2d_ishock_loop_transform::dbsk2d_ishock_loop_transform(
     dbsk2d_ishock_graph_sptr intrinsic_shock_graph,
-    dbsk2d_ishock_bpoint* contour_point)
+    dbsk2d_ishock_bpoint* contour_point,
+    dbsk2d_ishock_belm* first_link)
     :dbsk2d_ishock_transform(intrinsic_shock_graph,
                              dbsk2d_ishock_transform::LOOP),
      contour_point_(contour_point),
      contour_pair_(contour_point,0),
      valid_transform_(true)
 {
-    detect_contour();
+    detect_contour(first_link);
 }
 
 //: Add in execute transform
@@ -91,7 +92,8 @@ double dbsk2d_ishock_loop_transform::likelihood()
 }
 
 //: remove boundary element
-void dbsk2d_ishock_loop_transform::detect_contour()
+void dbsk2d_ishock_loop_transform::detect_contour(
+    dbsk2d_ishock_belm* first_link)
 {
     ordered_contour_.clear();
 
@@ -108,7 +110,8 @@ void dbsk2d_ishock_loop_transform::detect_contour()
     ordered_contour_.push_back(contour_point_);
 
     // Since this a degree three put something back on right away
-    dbsk2d_ishock_belm* first_belm = *(contour_point_->LinkedBElmList.begin());
+    dbsk2d_ishock_belm* first_belm = (first_link)?first_link:
+        *(contour_point_->LinkedBElmList.begin());
     removal_bnd_elements_[first_belm->id()]=first_belm;
     dbsk2d_ishock_bline* bline = dynamic_cast<dbsk2d_ishock_bline*>(first_belm);
     removal_bnd_elements_[bline->twinLine()->id()]=bline->twinLine();

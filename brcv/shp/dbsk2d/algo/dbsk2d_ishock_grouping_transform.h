@@ -117,6 +117,15 @@ public:
     // get region belms
     vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >&
         get_region_belms(){return region_belms_;}
+
+
+    // get region belm contour ids
+    vcl_map<unsigned int,vcl_set<int> >&
+        get_degree_three_node_ids(){return degree_three_node_ids_;}
+
+    // get region belms
+    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >&
+        get_degree_three_nodes(){return degree_three_nodes_;}
    
     // See if region has matching with rag graph
     void inline rag_nodes(vcl_vector<dbsk2d_ishock_belm*> region_elements,
@@ -311,6 +320,12 @@ private:
     // Store belms of all regions
     vcl_map<unsigned int, vcl_vector<dbsk2d_ishock_belm*> > 
         region_belms_;
+
+    // Store alll degree three nodes
+    vcl_map<unsigned int, vcl_vector<dbsk2d_ishock_belm*> >
+        degree_three_nodes_;
+
+    vcl_map<unsigned int,vcl_set<int> > degree_three_node_ids_;
 
     // Make copy ctor private
     dbsk2d_ishock_grouping_transform(const dbsk2d_ishock_grouping_transform&);

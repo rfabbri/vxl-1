@@ -83,6 +83,27 @@ void dbsk2d_ishock_grouping_transform::grow_regions()
             {
                 region_belms_ids_[(*it).first].insert(bline->id());
                 region_belms_[(*it).first].push_back(bline);
+
+                if ( !degree_three_node_ids_[(*it).first].count(
+                         bline->s_pt()->id()) &&
+                     bline->s_pt()->nLinkedElms() >= 6 )
+                {
+                    degree_three_nodes_[(*it).first].push_back(
+                        bline->s_pt());
+                    degree_three_node_ids_[(*it).first].insert(
+                        bline->s_pt()->id());
+                }
+
+                if ( !degree_three_node_ids_[(*it).first].count(
+                         bline->e_pt()->id()) &&
+                     bline->e_pt()->nLinkedElms() >= 6 )
+                {
+                    degree_three_nodes_[(*it).first].push_back(
+                        bline->e_pt());
+                    degree_three_node_ids_[(*it).first].insert(
+                        bline->e_pt()->id());
+                }
+
             }
         } 
     
@@ -98,6 +119,28 @@ void dbsk2d_ishock_grouping_transform::grow_regions()
             {
                 region_belms_ids_[(*it).first].insert(bline->id());
                 region_belms_[(*it).first].push_back(bline);
+
+
+                if ( !degree_three_node_ids_[(*it).first].count(
+                         bline->s_pt()->id()) &&
+                     bline->s_pt()->nLinkedElms() >= 6 )
+                {
+                    degree_three_nodes_[(*it).first].push_back(
+                        bline->s_pt());
+                    degree_three_node_ids_[(*it).first].insert(
+                        bline->s_pt()->id());
+                }
+
+                if ( !degree_three_node_ids_[(*it).first].count(
+                         bline->e_pt()->id()) &&
+                     bline->e_pt()->nLinkedElms() >= 6 )
+                {
+                    degree_three_nodes_[(*it).first].push_back(
+                        bline->e_pt());
+                    degree_three_node_ids_[(*it).first].insert(
+                        bline->e_pt()->id());
+                }
+
             }
         }
  
@@ -921,6 +964,29 @@ expand_wavefront(dbsk2d_ishock_node* node,unsigned int map_key)
                          .count(edge->lBElement()->id()) )
                     {
                         region_belms_[map_key].push_back(edge->lBElement());
+                        
+                        dbsk2d_ishock_bline* bline=(dbsk2d_ishock_bline*)
+                            (edge->lBElement());
+
+                        if ( !degree_three_node_ids_[map_key].count(
+                                 bline->s_pt()->id()) &&
+                             bline->s_pt()->nLinkedElms() >= 6 )
+                        {
+                            degree_three_nodes_[map_key].push_back(
+                                bline->s_pt());
+                            degree_three_node_ids_[map_key].insert(
+                                bline->s_pt()->id());
+                        }
+
+                        if ( !degree_three_node_ids_[map_key].count(
+                                 bline->e_pt()->id()) &&
+                             bline->e_pt()->nLinkedElms() >= 6 )
+                        {
+                            degree_three_nodes_[map_key].push_back(
+                                bline->e_pt());
+                            degree_three_node_ids_[map_key].insert(
+                                bline->e_pt()->id());
+                        }
 
                     }
 
@@ -936,6 +1002,29 @@ expand_wavefront(dbsk2d_ishock_node* node,unsigned int map_key)
                          .count(edge->rBElement()->id()) )
                     {
                         region_belms_[map_key].push_back(edge->rBElement());
+
+                        dbsk2d_ishock_bline* bline=(dbsk2d_ishock_bline*)
+                            (edge->rBElement());
+
+                        if ( !degree_three_node_ids_[map_key].count(
+                                 bline->s_pt()->id()) &&
+                             bline->s_pt()->nLinkedElms() >= 6 )
+                        {
+                            degree_three_nodes_[map_key].push_back(
+                                bline->s_pt());
+                            degree_three_node_ids_[map_key].insert(
+                                bline->s_pt()->id());
+                        }
+
+                        if ( !degree_three_node_ids_[map_key].count(
+                                 bline->e_pt()->id()) &&
+                             bline->e_pt()->nLinkedElms() >= 6 )
+                        {
+                            degree_three_nodes_[map_key].push_back(
+                                bline->e_pt());
+                            degree_three_node_ids_[map_key].insert(
+                                bline->e_pt()->id());
+                        }
 
                     }
 

@@ -37,7 +37,8 @@ public:
     //: Constructor
     dbsk2d_ishock_loop_transform(
         dbsk2d_ishock_graph_sptr intrinsic_shock_graph,
-        dbsk2d_ishock_bpoint* bpoint);
+        dbsk2d_ishock_bpoint* bpoint,
+        dbsk2d_ishock_belm* first_link=0);
 
     //: Destructor
     /* virtual */ ~dbsk2d_ishock_loop_transform(){
@@ -76,7 +77,7 @@ public:
 private: 
     
     // Detect contour 
-    void detect_contour();
+    void detect_contour(dbsk2d_ishock_belm* first_link=0);
 
     // Remove contour if already done
     bool remove_contour();
