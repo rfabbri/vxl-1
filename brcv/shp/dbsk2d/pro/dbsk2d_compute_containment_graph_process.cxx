@@ -815,6 +815,124 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
     
     transforms.clear();
     gap_pairs.clear();
+
+    // dbsk2d_ishock_grouping_transform grouper(ishock_graph);
+    // grouper.grow_regions();
+
+    // vcl_map<unsigned int, vcl_vector<dbsk2d_ishock_belm*> > 
+    //     region_belms = grouper.get_region_belms();
+    // vcl_map<unsigned int,vcl_set<int> >
+    //     region_belms_ids=grouper.get_region_belms_ids();
+    // vcl_map<unsigned int, vcl_vector<dbsk2d_ishock_belm*> > 
+    //     degree_three_nodes = grouper.get_degree_three_nodes();
+    // vcl_map<unsigned int,vcl_set<int> >
+    //     degree_three_node_ids=grouper.get_degree_three_node_ids();
+
+    // vcl_map<vcl_pair<int,int> , vcl_pair<dbsk2d_ishock_bpoint*,
+    //     dbsk2d_ishock_bline* > > degree_three_loops;
+
+    // vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >::iterator git;
+    // for ( git = degree_three_nodes.begin() ; git != degree_three_nodes.end() ; 
+    //       ++git)
+    // {
+
+    //     if ( !grouper.region_within_image((*git).first))
+    //     {
+    //         continue;
+    //     }
+
+    //     dbsk2d_ishock_bpoint* bpoint(0);
+    //     dbsk2d_ishock_bline* bline(0);
+
+    //     if ( (*git).second.size() >= 4 )
+    //     {
+    //         vcl_set<int> base_set=degree_three_node_ids[(*git).first];
+    //         vcl_set<int> bline_base_set=region_belms_ids[(*git).first];
+
+    //         vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >::iterator
+    //             nit;
+    //         nit=git;
+    //         ++nit;
+    //         for ( ; nit != degree_three_nodes.end() ; ++nit)
+    //         {
+    //             vcl_set<int> test_set=degree_three_node_ids[(*nit).first];
+    //             vcl_set<int> bline_test_set=region_belms_ids[(*nit).first];
+
+    //             vcl_set<int> intersection;
+    //             vcl_insert_iterator<vcl_set<int> > 
+    //                 inserter(intersection,intersection.begin());
+                
+    //             vcl_set_intersection(base_set.begin(),
+    //                                  base_set.end(),
+    //                                  test_set.begin(),
+    //                                  test_set.end(),
+    //                                  inserter);
+
+
+    //             if ( intersection.size() >= 2 )
+    //             {
+    //                 vcl_set<int>::iterator sit;
+    //                 for ( sit = intersection.begin() ; 
+    //                       sit != intersection.end(); ++sit)
+    //                 {
+    //                     vcl_vector<dbsk2d_ishock_belm*> belms=(*git).second;
+    //                     for ( unsigned int b=0; b < belms.size() ; ++b)
+    //                     {
+    //                         if ( belms[b]->id() == (*sit) )
+    //                         {
+    //                             bpoint = (dbsk2d_ishock_bpoint*)(belms[b]);
+    //                         }
+                            
+    //                     }
+    //                 }
+                          
+                    
+    //                 belm_list::iterator bit = bpoint->LinkedBElmList.begin();
+                    
+    //                 for ( ; bit != bpoint->LinkedBElmList.end() ; ++bit)
+    //                 {
+    //                     bline=(dbsk2d_ishock_bline*)(*bit);
+                        
+    //                     if ( bline_test_set.count(bline->twinLine()->id()) &&
+    //                          bline_base_set.count(bline->id()))
+    //                     {
+    //                         break;
+    //                     }
+    //                 }
+
+
+    //             }
+    //         }
+    //     }
+
+    //     if ( bline && bpoint )
+    //     {
+    //         vcl_pair<int,int> key(bpoint->id(),bline->id());
+    //         degree_three_loops[key]=vcl_make_pair(bpoint,bline);
+    //     }
+    // }
+
+    // vcl_map<vcl_pair<int,int>,
+    //     vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> >::iterator lit;
+    // for ( lit = degree_three_loops.begin() ; lit != degree_three_loops.end() ; 
+    //       ++lit)
+    // {
+        
+    //     dbsk2d_ishock_loop_transform transformer(ishock_graph,
+    //                                              (*lit).second.first,
+    //                                              (*lit).second.second);
+
+    //     transformer.execute_transform();
+    //     break;
+    // }
+
+    // {
+    //     dbsk2d_ishock_transform temp_trans(ishock_graph,
+    //                                        dbsk2d_ishock_transform::LOOP);
+    //     temp_trans.write_boundary("pre_processed_contours_deg3_loop.bnd");
+    // }
+
+    
 }
 
 dbsk2d_bnd_contour_sptr dbsk2d_compute_containment_graph_process::
