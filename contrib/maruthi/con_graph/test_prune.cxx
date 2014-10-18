@@ -9,6 +9,11 @@
 
 #include <bsta/bsta_spherical_histogram.h>
 
+#include <dbdet/algo/dbdet_load_edg.h>
+
+#include <dbdet/pro/dbdet_edgemap_storage.h>
+#include <dbdet/pro/dbdet_edgemap_storage_sptr.h>
+
 #include <vil/vil_rgb.h>
 #include <vil/vil_load.h>
 #include <vil/vil_image_view.h>
@@ -139,56 +144,92 @@ int main( int argc, char *argv[] )
 
     vcl_string output_file="";
     {
-        // vcl_string final_name=vul_file::strip_extension(
-        //     vul_file::strip_directory(input_img));
-        // vcl_string orig_directory=vul_file::dirname(input_img);
+        vcl_string final_name=vul_file::strip_extension(
+            vul_file::strip_directory(input_img));
+        vcl_string orig_directory=vul_file::dirname(input_img);
         
-        // vcl_string final_directory=orig_directory;
-        // vcl_string replacer="Cropped";
-        // final_directory.replace(33,42-33,replacer);
+        vcl_string final_directory=orig_directory;
+        vcl_string replacer="Cropped";
+        final_directory.replace(33,42-33,replacer);
+        output_file=final_directory + "/" + final_name + "_to.edg";
         
-        output_file=vul_file::strip_extension(input_img) +"_to.edg";
+        //output_file=vul_file::strip_extension(input_img) +"_to.edg";
     }
 
- 
+    vcl_cout<<output_file<<vcl_endl;
+
     bpro1_filepath output(output_file,"_to.edg");
     vcl_string bbox_file=vul_file::strip_extension(input_img)+"_bbox.txt";
 
-    // vcl_ifstream istream(bbox_file.c_str());
+    vcl_ifstream istream(bbox_file.c_str());
     
-    // double x(0.0),y(0.0),width(0.0),height(0.0);
+    double x(0.0),y(0.0),width(0.0),height(0.0);
 
-    // istream>>x;
-    // istream>>y;
-    // istream>>width;
-    // istream>>height;
+    istream>>x;
+    istream>>y;
+    istream>>width;
+    istream>>height;
 
-    // istream.close();
+    istream.close();
     
-    // x--;
-    // y--;
+    x--;
+    y--;
 
-    // double xmin=x; double xmax=x+width;
-    // double ymin=y; double ymax=y+height;
+    double xmin=x; double xmax=x+width;
+    double ymin=y; double ymax=y+height;
 
-    // vgl_box_2d<double> bbox(xmin,xmax,ymin,ymax);
-    // vcl_cout<<" x: "<<x<<" y: "<<y<<" width: "<<width<<" height: "
-    //         <<height<<vcl_endl;
+    vgl_box_2d<double> bbox(xmin,xmax,ymin,ymax);
+    vcl_cout<<" x: "<<x<<" y: "<<y<<" width: "<<width<<" height: "
+            <<height<<vcl_endl;
 
+
+
+
+    dbdet_edgemap_storage_sptr input_edgemap;
+    input_edgemap.vertical_cast(edge_det_results[0]);
+    dbdet_edgemap_sptr EM = input_edgemap->get_edgemap();
+
+    //create a new edgemap from the tokens collected from NMS
+    dbdet_edgemap_sptr bbox_edge_map = new dbdet_edgemap(width+1, 
+                                                         height+1);
     
-    save_edg_pro.parameters()->set_value("-edgoutput",output);
 
-    // Before we start the process lets clean input output
-    save_edg_pro.clear_input();
-    save_edg_pro.clear_output();
+    vcl_vector<dbdet_edgel*> orig_edges=EM->edgels;
+    for  ( unsigned int e=0; e < orig_edges.size() ; ++e)
+    {
+        vgl_point_2d<double> location=orig_edges[e]->pt;
 
-    save_edg_pro.add_input(edge_det_results[0]);
-    status = save_edg_pro.execute();
-    save_edg_pro.finish();
+        if ( bbox.contains(location))
+        {
+            vgl_point_2d<double> new_location(
+                location.x()-xmin,location.y()-ymin);
+            
+            bbox_edge_map->
+                insert(new dbdet_edgel(new_location,
+                                       orig_edges[e]->tangent,
+                                       orig_edges[e]->strength,
+                                       orig_edges[e]->deriv));
 
-    //Clean up after ourselves
-    save_edg_pro.clear_input();
-    save_edg_pro.clear_output();
+            
+        }
+
+    }
+    
+    bool retval = dbdet_save_edg(output_file, bbox_edge_map);
+
+    // save_edg_pro.parameters()->set_value("-edgoutput",output);
+
+    // // Before we start the process lets clean input output
+    // save_edg_pro.clear_input();
+    // save_edg_pro.clear_output();
+
+    // save_edg_pro.add_input(edge_det_results[0]);
+    // status = save_edg_pro.execute();
+    // save_edg_pro.finish();
+
+    // //Clean up after ourselves
+    // save_edg_pro.clear_input();
+    // save_edg_pro.clear_output();
 
 
     // vcl_stringstream stream(argv[1]);
