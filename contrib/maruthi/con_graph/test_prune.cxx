@@ -20,12 +20,15 @@
 #include <vl/mathop.h>
 #include <vl/sift.h>
 #include <string.h>
+#include <vgl/vgl_box_2d.h>
 
+#include <dbdet/pro/dbdet_third_order_color_edge_detector_process.h>
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <vidpro1/process/vidpro1_save_cem_process.h>
 #include <vidpro1/process/vidpro1_save_con_process.h>
 #include <dbdet/pro/dbdet_contour_tracer_process.h>
+#include <dbdet/pro/dbdet_save_edg_process.h>
 
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_line_2d.h>
@@ -88,51 +91,151 @@ void write_distance_matrix(
 int main( int argc, char *argv[] )
 {
 
+    vcl_stringstream stream(argv[1]);
+    vcl_string input_img;
+    stream>>input_img;
+
+    bool status=true;
+
+    // Grab image
+    vil_image_resource_sptr img_sptr = 
+        vil_load_image_resource(input_img.c_str());
+
+    // Create vid pro storage
+    vidpro1_image_storage_sptr inp = new vidpro1_image_storage();
+    inp->set_image(img_sptr);
+
+
+    // Create output storage for edge detection
+    vcl_vector<bpro1_storage_sptr> edge_det_results;
+
+
+    dbdet_third_order_color_edge_detector_process pro_color_edg;
+
+    // Before we start the process lets clean input output
+    pro_color_edg.clear_input();
+    pro_color_edg.clear_output();
+
+    pro_color_edg.add_input(inp);
+    bool to_c_status = pro_color_edg.execute();
+    pro_color_edg.finish();
+
+    // Grab output from color third order edge detection
+    // if process did not fail
+    if ( to_c_status )
+    {
+        edge_det_results = pro_color_edg.get_output();
+    }
+
+    //Clean up after ourselves
+    pro_color_edg.clear_input();
+    pro_color_edg.clear_output();
+
+
+
+
+    
+    dbdet_save_edg_process save_edg_pro;
+
+    vcl_string output_file="";
+    {
+        // vcl_string final_name=vul_file::strip_extension(
+        //     vul_file::strip_directory(input_img));
+        // vcl_string orig_directory=vul_file::dirname(input_img);
+        
+        // vcl_string final_directory=orig_directory;
+        // vcl_string replacer="Cropped";
+        // final_directory.replace(33,42-33,replacer);
+        
+        output_file=vul_file::strip_extension(input_img) +"_to.edg";
+    }
+
+ 
+    bpro1_filepath output(output_file,"_to.edg");
+    vcl_string bbox_file=vul_file::strip_extension(input_img)+"_bbox.txt";
+
+    // vcl_ifstream istream(bbox_file.c_str());
+    
+    // double x(0.0),y(0.0),width(0.0),height(0.0);
+
+    // istream>>x;
+    // istream>>y;
+    // istream>>width;
+    // istream>>height;
+
+    // istream.close();
+    
+    // x--;
+    // y--;
+
+    // double xmin=x; double xmax=x+width;
+    // double ymin=y; double ymax=y+height;
+
+    // vgl_box_2d<double> bbox(xmin,xmax,ymin,ymax);
+    // vcl_cout<<" x: "<<x<<" y: "<<y<<" width: "<<width<<" height: "
+    //         <<height<<vcl_endl;
+
+    
+    save_edg_pro.parameters()->set_value("-edgoutput",output);
+
+    // Before we start the process lets clean input output
+    save_edg_pro.clear_input();
+    save_edg_pro.clear_output();
+
+    save_edg_pro.add_input(edge_det_results[0]);
+    status = save_edg_pro.execute();
+    save_edg_pro.finish();
+
+    //Clean up after ourselves
+    save_edg_pro.clear_input();
+    save_edg_pro.clear_output();
+
+
     // vcl_stringstream stream(argv[1]);
     // vcl_string input_img;
     // stream>>input_img;
 
     //test default constructor
-    bsta_spherical_histogram<double> dsh;
-    //test default units and coordinates
-    bsta_spherical_histogram<double> sh(8, 4, 0.0, 360.0, 0.0, 180.0,
-                                        bsta_spherical_histogram<double>
-                                        ::DEG,
-                                        bsta_spherical_histogram<double>
-                                        ::B_0_360,
-                                        bsta_spherical_histogram<double>
-                                        ::B_0_180);
+    // bsta_spherical_histogram<double> dsh;
+    // //test default units and coordinates
+    // bsta_spherical_histogram<double> sh(8, 4, 0.0, 360.0, 0.0, 180.0,
+    //                                     bsta_spherical_histogram<double>
+    //                                     ::DEG,
+    //                                     bsta_spherical_histogram<double>
+    //                                     ::B_0_360,
+    //                                     bsta_spherical_histogram<double>
+    //                                     ::B_0_180);
 
 
-    double az(0.0),el(0.0);
-    sh.convert_to_spherical(0,0,1,az, el);
-    sh.upcount(az,el);
-    vcl_cout<<az<<","<<el<<vcl_endl;
+    // double az(0.0),el(0.0);
+    // sh.convert_to_spherical(0,0,1,az, el);
+    // sh.upcount(az,el);
+    // vcl_cout<<az<<","<<el<<vcl_endl;
 
-    sh.convert_to_spherical(0,0,0,az, el);
-    sh.upcount(az,el);
-    vcl_cout<<az<<","<<el<<vcl_endl;
+    // sh.convert_to_spherical(0,0,0,az, el);
+    // sh.upcount(az,el);
+    // vcl_cout<<az<<","<<el<<vcl_endl;
 
-    sh.convert_to_spherical(0,0,-1,az, el);
-    sh.upcount(az,el);
-    vcl_cout<<az<<","<<el<<vcl_endl;
+    // sh.convert_to_spherical(0,0,-1,az, el);
+    // sh.upcount(az,el);
+    // vcl_cout<<az<<","<<el<<vcl_endl;
 
 
-    sh.convert_to_spherical(1,0,0,az, el);
-    sh.upcount(az,el);
-    vcl_cout<<az<<","<<el<<vcl_endl;
+    // sh.convert_to_spherical(1,0,0,az, el);
+    // sh.upcount(az,el);
+    // vcl_cout<<az<<","<<el<<vcl_endl;
 
-    sh.convert_to_spherical(-1,0,0,az, el);
-    sh.upcount(az,el);
-    vcl_cout<<az<<","<<el<<vcl_endl;
+    // sh.convert_to_spherical(-1,0,0,az, el);
+    // sh.upcount(az,el);
+    // vcl_cout<<az<<","<<el<<vcl_endl;
 
-    sh.convert_to_spherical(0,1,0,az, el);
-    sh.upcount(az,el);
-    vcl_cout<<az<<","<<el<<vcl_endl;
+    // sh.convert_to_spherical(0,1,0,az, el);
+    // sh.upcount(az,el);
+    // vcl_cout<<az<<","<<el<<vcl_endl;
 
-    sh.convert_to_spherical(0,-1,0,az, el);
-    sh.upcount(az,el);
-    vcl_cout<<az<<","<<el<<vcl_endl;
+    // sh.convert_to_spherical(0,-1,0,az, el);
+    // sh.upcount(az,el);
+    // vcl_cout<<az<<","<<el<<vcl_endl;
 
     // sh.convert_to_spherical(0,0,0,az, el);
     // sh.upcount(az,el);
@@ -158,9 +261,9 @@ int main( int argc, char *argv[] )
     // sh.upcount(az,el);
     // vcl_cout<<az<<","<<el<<vcl_endl;
 
-    vcl_ofstream file("sphere.vrml");
-    sh.print_to_vrml(file,0.5);
-    file.close();
+    // vcl_ofstream file("sphere.vrml");
+    // sh.print_to_vrml(file,0.5);
+    // file.close();
     // vil_image_view<vxl_byte> src_image = vil_load("black_white.png");
 
     // vil_image_view<vxl_byte> temp2=
