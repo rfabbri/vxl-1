@@ -171,9 +171,6 @@ int main( int argc, char *argv[] )
     istream>>height;
 
     istream.close();
-    
-    x--;
-    y--;
 
     double xmin=x; double xmax=x+width;
     double ymin=y; double ymax=y+height;
