@@ -6156,12 +6156,23 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
         //model_matrix.normalize_columns();
         //query_matrix.normalize_columns();
 
-        dbskfg_app_curve_match dpMatch(model_matrix,query_matrix);
-        dpMatch.Match();
-        double dart_cost=dpMatch.finalCost();
-        total_alignment+=dart_cost;
+        double dart_cost1(0.0),dart_cost2(0.0);
+        {
+            dbskfg_app_curve_match dpMatch(model_matrix,query_matrix);
+            dpMatch.Match();
+            dart_cost1=dpMatch.finalCost();
+        }
+
+        {
+            dbskfg_app_curve_match dpMatch(query_matrix,model_matrix);
+            dpMatch.Match();
+            dart_cost2=dpMatch.finalCost();
+        }
+
+
+        total_alignment+=vcl_min(dart_cost1,dart_cost2);
         
-        dart_distances.push_back(dart_cost);
+        dart_distances.push_back(vcl_min(dart_cost1,dart_cost2));
 
 
         //************ Debug Section ****************************//
