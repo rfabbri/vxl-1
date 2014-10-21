@@ -7916,52 +7916,53 @@ compute_body_centric_sift(
         query_sift_filter->width,
         query_sift_filter->height);
         
-    unsigned int index=0;
+    unsigned int coord=0;
     for ( unsigned int nj =0 ; nj < red_model_grad_map.nj() ; ++nj)
     {
         for ( unsigned int ni=0; ni < red_model_grad_map.ni() ; ++ni)
         {
-            red_model_grad_map(ni,nj)=model_red_grad_data[index];
-            red_model_angle_map(ni,nj)=model_red_grad_data[index+1];
+            red_model_grad_map(ni,nj)=model_red_grad_data[coord];
+            red_model_angle_map(ni,nj)=model_red_grad_data[coord+1];
 
-            green_model_grad_map(ni,nj)=model_green_grad_data[index];
-            green_model_angle_map(ni,nj)=model_green_grad_data[index+1];
+            green_model_grad_map(ni,nj)=model_green_grad_data[coord];
+            green_model_angle_map(ni,nj)=model_green_grad_data[coord+1];
 
-            blue_model_grad_map(ni,nj)=model_blue_grad_data[index];
-            blue_model_angle_map(ni,nj)=model_blue_grad_data[index+1];
+            blue_model_grad_map(ni,nj)=model_blue_grad_data[coord];
+            blue_model_angle_map(ni,nj)=model_blue_grad_data[coord+1];
 
-            index++;
+            coord++;
         }
     }
 
-    index=0;
+    coord=0;
     for ( unsigned int nj =0 ; nj < red_query_grad_map.nj() ; ++nj)
     {
         for ( unsigned int ni=0; ni < red_query_grad_map.ni() ; ++ni)
         {
-            red_query_grad_map(ni,nj)=query_red_grad_data[index];
-            red_query_angle_map(ni,nj)=query_red_grad_data[index+1];
+            red_query_grad_map(ni,nj)=query_red_grad_data[coord];
+            red_query_angle_map(ni,nj)=query_red_grad_data[coord+1];
 
-            green_query_grad_map(ni,nj)=query_green_grad_data[index];
-            green_query_angle_map(ni,nj)=query_green_grad_data[index+1];
+            green_query_grad_map(ni,nj)=query_green_grad_data[coord];
+            green_query_angle_map(ni,nj)=query_green_grad_data[coord+1];
 
-            blue_query_grad_map(ni,nj)=query_blue_grad_data[index];
-            blue_query_angle_map(ni,nj)=query_blue_grad_data[index+1];
+            blue_query_grad_map(ni,nj)=query_blue_grad_data[coord];
+            blue_query_angle_map(ni,nj)=query_blue_grad_data[coord+1];
 
-            index++;
+            coord++;
         }
     }
  
-     VlFloatVectorComparisonFunction Chi2_distance =    
-      vl_get_vector_comparison_function_f (VlDistanceChi2);
+    VlFloatVectorComparisonFunction Chi2_distance =    
+        vl_get_vector_comparison_function_f(VlDistanceChi2);
 
     double sift_diff= 0.0;
+    double step_size=1.0;
     
     // Get matching pairs
-    for (unsigned i = 0; i < map_list.size(); i++) 
+    for (unsigned index = 0; index < map_list.size(); index++) 
     {
-        dbskr_scurve_sptr sc1 = curve_list1[i];
-        dbskr_scurve_sptr sc2 = curve_list2[i];
+        dbskr_scurve_sptr sc1 = curve_list1[index];
+        dbskr_scurve_sptr sc2 = curve_list2[index];
 
         vcl_set< vcl_pair<double,double> > model_sift_plus;
         vcl_set< vcl_pair<double,double> > query_sift_plus;
@@ -7995,13 +7996,10 @@ compute_body_centric_sift(
             add_curve=false;
         }
         
-        double step_size=1.0;
-        unsigned int num_steps=0.0;
-
-        for (unsigned j = 0; j < map_list[i].size(); ++j) 
+        for (unsigned j = 0; j < map_list[index].size(); ++j) 
         {
-            vcl_pair<int, int> cor = map_list[i][j];
-            
+            vcl_pair<int, int> cor = map_list[index][j];
+
             // Compute sift for both images
 
             // Shock Point 1 from Model
@@ -8031,14 +8029,29 @@ compute_body_centric_sift(
 
                     if ( p ==  0 )
                     {
-                        ps1=sc1->fragment_pt(cor.first,r1);
-                        ps2=sc2->fragment_pt(cor.second,r2);
+                        if ( r1== 0 )
+                        {
+                            ps1=sc1->sh_pt(cor.first);
+                            ps2=sc2->sh_pt(cor.second);
+                        }
+                        else
+                        {
+                            ps1=sc1->fragment_pt(cor.first,r1);
+                            ps2=sc2->fragment_pt(cor.second,r2);
+                        }
                     }
                     else
                     {
-                        ps1=sc1->fragment_pt(cor.first,-1.0*r1);
-                        ps2=sc2->fragment_pt(cor.second,-1.0*r2);
-
+                        if ( r1== 0 )
+                        {
+                            ps1=sc1->sh_pt(cor.first);
+                            ps2=sc2->sh_pt(cor.second);
+                        }
+                        else
+                        {
+                            ps1=sc1->fragment_pt(cor.first,-1.0*r1);
+                            ps2=sc2->fragment_pt(cor.second,-1.0*r2);
+                        }
                     }
 
                     if ( !flag )
@@ -8055,19 +8068,11 @@ compute_body_centric_sift(
                         if ( p == 0  )
                         {
                             model_sift_plus.insert(ps1_key);
-                        }
-                        else
-                        {
-                            model_sift_minus.insert(ps1_key);
-                        }
-
-
-                        if ( p == 0  )
-                        {
                             query_sift_plus.insert(ps2_key);
                         }
                         else
                         {
+                            model_sift_minus.insert(ps1_key);
                             query_sift_minus.insert(ps2_key);
                         }
 
@@ -8081,28 +8086,18 @@ compute_body_centric_sift(
 
                         vcl_pair<double,double> ps1_key(ps1.x(),ps1.y());
                         vcl_pair<double,double> ps2_key(ps2.x(),ps2.y());
-                    
+
                         if ( p == 0  )
                         {
                             model_sift_plus.insert(ps1_key);
-                        }
-                        else
-                        {
-                            model_sift_minus.insert(ps2_key);
-                            
-                        }
-                        
-                       
-                        if ( p == 0  )
-                        {
                             query_sift_plus.insert(ps2_key);
                         }
                         else
                         {
+                            model_sift_minus.insert(ps1_key);
                             query_sift_minus.insert(ps2_key);
-                            
                         }
-                
+                                               
                     }
               
                 }
@@ -8111,18 +8106,18 @@ compute_body_centric_sift(
                         
         }
 
-        vnl_vector<vl_sift_pix> descr1(8*2.0*2.0,0.0);
-        vnl_vector<vl_sift_pix> descr2(8*2.0*2.0,0.0);
+        vnl_vector<vl_sift_pix> descr1(8*3*2,0.0);
+        vnl_vector<vl_sift_pix> descr2(8*3*2,0.0);
 
         // Lets do model first
         {
-            bsta_histogram<double> red_hist_plus(vnl_math::pi,8);
-            bsta_histogram<double> green_hist_plus(vnl_math::pi,8);
-            bsta_histogram<double> blue_hist_plus(vnl_math::pi,8);
+            bsta_histogram<double> red_hist_plus(2.0*vnl_math::pi,8);
+            bsta_histogram<double> green_hist_plus(2.0*vnl_math::pi,8);
+            bsta_histogram<double> blue_hist_plus(2.0*vnl_math::pi,8);
 
-            bsta_histogram<double> red_hist_minus(vnl_math::pi,8);
-            bsta_histogram<double> green_hist_minus(vnl_math::pi,8);
-            bsta_histogram<double> blue_hist_minus(vnl_math::pi,8);
+            bsta_histogram<double> red_hist_minus(2.0*vnl_math::pi,8);
+            bsta_histogram<double> green_hist_minus(2.0*vnl_math::pi,8);
+            bsta_histogram<double> blue_hist_minus(2.0*vnl_math::pi,8);
            
             vcl_set<vcl_pair<double,double> >::iterator pit;
             for ( pit = model_sift_plus.begin() ; pit != 
@@ -8207,18 +8202,33 @@ compute_body_centric_sift(
                 descr1[i+red_counts_plus.size()*5]=blue_counts_minus[i];
 
             }
+
+
+            
+            // vcl_stringstream model_plus_stream;
+            // model_plus_stream<<"Dart_"<<index<<"_model_hist_red.txt";
+            // vcl_ofstream model_sift_plus_stream(
+            //     model_plus_stream.str().c_str());
+
+            // for ( unsigned int i=0; i < red_counts_plus.size() ; ++i)
+            // {
+            //     model_sift_plus_stream<<red_counts_plus[i]<<vcl_endl;
+            // }
+            // model_sift_plus_stream.close();
+
+
         }
 
         // Lets do query second
         {
-            bsta_histogram<double> red_hist_plus(vnl_math::pi,8);
-            bsta_histogram<double> green_hist_plus(vnl_math::pi,8);
-            bsta_histogram<double> blue_hist_plus(vnl_math::pi,8);
+            bsta_histogram<double> red_hist_plus(2.0*vnl_math::pi,8);
+            bsta_histogram<double> green_hist_plus(2.0*vnl_math::pi,8);
+            bsta_histogram<double> blue_hist_plus(2.0*vnl_math::pi,8);
 
-            bsta_histogram<double> red_hist_minus(vnl_math::pi,8);
-            bsta_histogram<double> green_hist_minus(vnl_math::pi,8);
-            bsta_histogram<double> blue_hist_minus(vnl_math::pi,8);
-           
+            bsta_histogram<double> red_hist_minus(2.0*vnl_math::pi,8);
+            bsta_histogram<double> green_hist_minus(2.0*vnl_math::pi,8);
+            bsta_histogram<double> blue_hist_minus(2.0*vnl_math::pi,8);
+
             vcl_set<vcl_pair<double,double> >::iterator pit;
             for ( pit = query_sift_plus.begin() ; pit != 
                       query_sift_plus.end() ; ++pit)
@@ -8248,6 +8258,8 @@ compute_body_centric_sift(
                 red_hist_plus.upcount(red_angle,red_mag);
                 green_hist_plus.upcount(green_angle,green_mag);
                 blue_hist_plus.upcount(blue_angle,blue_mag);
+
+         
             }
 
             vcl_set<vcl_pair<double,double> >::iterator mit;
@@ -8279,6 +8291,7 @@ compute_body_centric_sift(
                 red_hist_minus.upcount(red_angle,red_mag);
                 green_hist_minus.upcount(green_angle,green_mag);
                 blue_hist_minus.upcount(blue_angle,blue_mag);
+
             }
 
 
@@ -8293,15 +8306,28 @@ compute_body_centric_sift(
 
             for ( unsigned int i=0; i < red_counts_plus.size() ; ++i)
             {
-                descr1[i+red_counts_plus.size()*0]=red_counts_plus[i];
-                descr1[i+red_counts_plus.size()*1]=green_counts_plus[i];
-                descr1[i+red_counts_plus.size()*2]=blue_counts_plus[i];
+                descr2[i+red_counts_plus.size()*0]=red_counts_plus[i];
+                descr2[i+red_counts_plus.size()*1]=green_counts_plus[i];
+                descr2[i+red_counts_plus.size()*2]=blue_counts_plus[i];
 
-                descr1[i+red_counts_plus.size()*3]=red_counts_minus[i];
-                descr1[i+red_counts_plus.size()*4]=green_counts_minus[i];
-                descr1[i+red_counts_plus.size()*5]=blue_counts_minus[i];
+                descr2[i+red_counts_plus.size()*3]=red_counts_minus[i];
+                descr2[i+red_counts_plus.size()*4]=green_counts_minus[i];
+                descr2[i+red_counts_plus.size()*5]=blue_counts_minus[i];
+
 
             }
+
+
+            // vcl_stringstream query_plus_stream;
+            // query_plus_stream<<"Dart_"<<index<<"_query_hist_blue.txt";
+            // vcl_ofstream query_sift_plus_stream(
+            //     query_plus_stream.str().c_str());
+            // for ( unsigned int i=0; i < blue_counts_plus.size() ; ++i)
+            // {
+            //     query_sift_plus_stream<<blue_counts_plus[i]<<vcl_endl;
+            // }
+            // query_sift_plus_stream.close();
+
         }
 
         descr1.normalize();
@@ -8322,37 +8348,37 @@ compute_body_centric_sift(
 
        
         // vcl_cout<<"Tree 1 dart ("
-        //         <<path_map[i].first.first
+        //         <<path_map[index].first.first
         //         <<","
-        //         <<path_map[i].first.second
+        //         <<path_map[index].first.second
         //         <<") Tree 2 dart ("
-        //         <<path_map[i].second.first
+        //         <<path_map[index].second.first
         //         <<","
-        //         <<path_map[i].second.second
+        //         <<path_map[index].second.second
         //         <<") L2 distance: "
         //         <<local_distance[0]<<vcl_endl;
 
 
     
-        // // Write out data
+        // Write out data
         // {
         //     vcl_stringstream model_plus_stream;
-        //     model_plus_stream<<"Dart_"<<i<<"_model_sift_plus.txt";
+        //     model_plus_stream<<"Dart_"<<index<<"_model_sift_plus.txt";
         //     vcl_ofstream model_sift_plus_stream(
         //         model_plus_stream.str().c_str());
 
         //     vcl_stringstream model_minus_stream;
-        //     model_minus_stream<<"Dart_"<<i<<"_model_sift_minus.txt";
+        //     model_minus_stream<<"Dart_"<<index<<"_model_sift_minus.txt";
         //     vcl_ofstream model_sift_minus_stream(
         //         model_minus_stream.str().c_str());
            
         //     vcl_stringstream query_plus_stream;
-        //     query_plus_stream<<"Dart_"<<i<<"_query_sift_plus.txt";
+        //     query_plus_stream<<"Dart_"<<index<<"_query_sift_plus.txt";
         //     vcl_ofstream query_sift_plus_stream(
         //         query_plus_stream.str().c_str());
 
         //     vcl_stringstream query_minus_stream;
-        //     query_minus_stream<<"Dart_"<<i<<"_query_sift_minus.txt";
+        //     query_minus_stream<<"Dart_"<<index<<"_query_sift_minus.txt";
         //     vcl_ofstream query_sift_minus_stream(
         //         query_minus_stream.str().c_str());
 
