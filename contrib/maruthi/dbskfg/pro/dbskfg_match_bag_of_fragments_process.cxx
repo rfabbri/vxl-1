@@ -75,6 +75,7 @@ dbskfg_match_bag_of_fragments_process::dbskfg_match_bag_of_fragments_process()
                            "-area_weight", (double) 0.0f) ||
         !parameters()->add("reference area",
                            "-ref_area", (double) 10000.0f)||
+        !parameters()->add("mask gradient", "-mask",(bool)false) ||
         !parameters()->add("shape algorithm", "-shape_alg",choices,1) ||
         !parameters()->add("color space", "-color_space",color_choices,1)
         
@@ -186,7 +187,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     double ref_area             = 10000.0f;
     unsigned int shape_alg      = 1;
     unsigned int color_alg      = 1;
-
+    bool mask_grad              = false;
 
     parameters()->get_value("-elastic_splice_cost"  , elastic_splice_cost); 
     parameters()->get_value("-scurve_sample_ds"     , scurve_sample_ds);
@@ -207,6 +208,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     parameters()->get_value("-ref_area"             , ref_area);
     parameters()->get_value("-shape_alg"            , shape_alg );
     parameters()->get_value("-color_space"          , color_alg );
+    parameters()->get_value("-mask"                 , mask_grad );
 
     dbskfg_match_bag_of_fragments::ShapeAlgorithmArea shape_alg_area=
         dbskfg_match_bag_of_fragments::SCALE_TO_MEAN;
@@ -265,6 +267,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
                                               app_sift,
                                               mirror,
                                               outside_shock,
+                                              mask_grad,
                                               area_weight,
                                               ref_area,
                                               shape_alg_area,

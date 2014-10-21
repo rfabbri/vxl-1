@@ -81,6 +81,7 @@ public:
           bool app_sift               = false,
           bool mirror                 = false,
           bool outside_shock          = false,
+          bool mask_grad              = false,
           double area_weight          = 0.0f,
           double ref_area             = 10000.0f,
           ShapeAlgorithmArea shape_alg= SCALE_TO_MEAN,
@@ -439,7 +440,8 @@ private:
     void compute_grad_maps(vil_image_resource_sptr& input_image,
                            vl_sift_pix** grad_data,
                            VlSiftFilt** filter,
-                           vgl_polygon<double>& poly);
+                           vgl_polygon<double>& poly,
+                           bool mask_poly=false);
 
     void compute_edge_maps(vil_image_resource_sptr& input_image,
                            vl_sift_pix** grad_data,
@@ -451,7 +453,8 @@ private:
 
     void compute_grad_color_maps(vil_image_view<double>& image,
                                  vl_sift_pix** grad_data,
-                                 vgl_polygon<double>& poly);
+                                 vgl_polygon<double>& poly,
+                                 bool mask_poly=false);
     
     double compute_curve_matching_cost(
         dbskfg_cgraph_directed_tree_sptr& model_tree,
