@@ -7930,7 +7930,7 @@ compute_body_centric_sift(
             blue_model_grad_map(ni,nj)=model_blue_grad_data[coord];
             blue_model_angle_map(ni,nj)=model_blue_grad_data[coord+1];
 
-            coord++;
+            coord=coord+2;
         }
     }
 
@@ -7948,7 +7948,7 @@ compute_body_centric_sift(
             blue_query_grad_map(ni,nj)=query_blue_grad_data[coord];
             blue_query_angle_map(ni,nj)=query_blue_grad_data[coord+1];
 
-            coord++;
+            coord=coord+2;
         }
     }
  
@@ -7988,6 +7988,21 @@ compute_body_centric_sift(
 
         }
 
+        vgl_polygon<double> model_polygon(1);
+        vgl_polygon<double> query_polygon(1);
+
+        if ( !flag )
+        {
+            sc1->get_polygon(model_polygon);
+            sc2->get_polygon(query_polygon,width);
+        }
+        else
+        {
+            sc1->get_polygon(query_polygon,width);
+            sc2->get_polygon(model_polygon);
+        }
+
+
         bool add_curve=true;
 
         if ( query_dart_curves_.count(query_key1) ||
@@ -7995,6 +8010,22 @@ compute_body_centric_sift(
         {
             add_curve=false;
         }
+
+        if ( add_curve )
+        {
+            for (unsigned int s = 0; s < query_polygon.num_sheets(); ++s)
+            {
+                for (unsigned int p = 0; p < query_polygon[s].size(); ++p)
+                {
+                    query_dart_curves_[query_key1].push_back(
+                        query_polygon[s][p]);
+                }
+            }
+                
+            query_dart_curves_[query_key1].push_back(query_polygon[0][0]);
+             
+        }
+
         
         for (unsigned j = 0; j < map_list[index].size(); ++j) 
         {
@@ -8089,13 +8120,13 @@ compute_body_centric_sift(
 
                         if ( p == 0  )
                         {
-                            model_sift_plus.insert(ps1_key);
-                            query_sift_plus.insert(ps2_key);
+                            model_sift_plus.insert(ps2_key);
+                            query_sift_plus.insert(ps1_key);
                         }
                         else
                         {
-                            model_sift_minus.insert(ps1_key);
-                            query_sift_minus.insert(ps2_key);
+                            model_sift_minus.insert(ps2_key);
+                            query_sift_minus.insert(ps1_key);
                         }
                                                
                     }
