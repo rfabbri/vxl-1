@@ -4204,6 +4204,25 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
             model_tree->get_root_node_radius(),
             query_tree->get_root_node_radius(),
             title.str());
+
+        // vcl_pair<double,double> sift_rgb_cost=compute_body_centric_sift(
+        //     curve_list1,
+        //     curve_list2,
+        //     map_list,
+        //     path_map,
+        //     dart_distances,
+        //     model_red_grad_data,
+        //     query_red_grad_data,
+        //     model_green_grad_data,
+        //     query_green_grad_data,
+        //     model_blue_grad_data,
+        //     query_blue_grad_data,
+        //     model_sift_filter,
+        //     query_sift_filter,
+        //     model_tree->get_scale_ratio(),
+        //     query_tree->get_scale_ratio(),
+        //     flag,
+        //     width);
        
         // vcl_pair<double,double> sift_rgb_cost=compute_3d_hist_color(
         //     curve_list1,
