@@ -6363,7 +6363,8 @@ compute_dense_rgb_sift_cost(
     vcl_string prefix)
 {
  
-    
+    bool variable=true;
+
     double sift_diff= 0.0;
     
     double arclength_shock_curve1=0.0;
@@ -6484,14 +6485,29 @@ compute_dense_rgb_sift_cost(
 
                     if ( p ==  0 )
                     {
-                        ps1=sc1->fragment_pt(cor.first,r1);
-                        ps2=sc2->fragment_pt(cor.second,r2);
+                        if ( r1 == 0 )
+                        {
+                            ps1=sc1->sh_pt(cor.first);
+                            ps2=sc2->sh_pt(cor.second);
+                        }
+                        else
+                        {
+                            ps1=sc1->fragment_pt(cor.first,r1);
+                            ps2=sc2->fragment_pt(cor.second,r2);
+                        }
                     }
                     else
                     {
-                        ps1=sc1->fragment_pt(cor.first,-1.0*r1);
-                        ps2=sc2->fragment_pt(cor.second,-1.0*r2);
-
+                        if ( r1==0 )
+                        {
+                            ps1=sc1->sh_pt(cor.first);
+                            ps2=sc2->sh_pt(cor.second);
+                        }
+                        else
+                        {
+                            ps1=sc1->fragment_pt(cor.first,-1.0*r1);
+                            ps2=sc2->fragment_pt(cor.second,-1.0*r2);
+                        }
                     }
                     overall_index++;
                     num_steps++;
@@ -6504,11 +6520,18 @@ compute_dense_rgb_sift_cost(
                         ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
                                 ps2.y()/query_scale_ratio);
                     
-                        double model_radius=(model_sift_scale
-                                             /model_scale_ratio)/2.0;
-                        double query_radius=(query_sift_scale
-                                             /query_scale_ratio)/2.0;
+                        double model_radius=((R1-r1)/model_scale_ratio)/2.0;
+                        double query_radius=((R2-r2)/query_scale_ratio)/2.0;
+
+                        if ( !variable )
+                        {
+                            model_radius=(model_sift_scale
+                                          /model_scale_ratio)/2.0;
+                            query_radius=(query_sift_scale
+                                          /query_scale_ratio)/2.0;
                     
+                        }
+
                         local_distance += descr_cost(
                             ps1,
                             model_radius,
@@ -6528,13 +6551,13 @@ compute_dense_rgb_sift_cost(
                         vcl_vector<vl_sift_pix> msift;
                         msift.push_back(ps1.x());
                         msift.push_back(ps1.y());
-                        msift.push_back(model_sift_scale/model_scale_ratio);
+                        msift.push_back(model_radius*2.0);
                         msift.push_back(theta_ps1);
 
                         vcl_vector<vl_sift_pix> qsift;
                         qsift.push_back(ps2.x());
                         qsift.push_back(ps2.y());
-                        qsift.push_back(query_sift_scale/query_scale_ratio);
+                        qsift.push_back(query_radius*2.0);
                         qsift.push_back(theta_ps2);
 
                         model_sift.push_back(msift);
@@ -6548,11 +6571,17 @@ compute_dense_rgb_sift_cost(
                         ps2.set(ps2.x()/model_scale_ratio,
                                 ps2.y()/model_scale_ratio);
                     
-                        double query_radius=(query_sift_scale
-                                             /query_scale_ratio)/2.0;
-                        double model_radius=(model_sift_scale
-                                             /model_scale_ratio)/2.0;
-                    
+                        double query_radius=((R1-r1)/query_scale_ratio)/2.0;
+                        double model_radius=((R2-r2)/model_scale_ratio)/2.0;
+
+                        if (!variable )
+                        {
+                            query_radius=(query_sift_scale
+                                          /query_scale_ratio)/2.0;
+                            model_radius=(model_sift_scale
+                                          /model_scale_ratio)/2.0;
+                        }
+
                         local_distance += descr_cost(
                             ps2,
                             model_radius,
@@ -6572,13 +6601,13 @@ compute_dense_rgb_sift_cost(
                         vcl_vector<vl_sift_pix> msift;
                         msift.push_back(ps1.x());
                         msift.push_back(ps1.y());
-                        msift.push_back(query_sift_scale/query_scale_ratio);
+                        msift.push_back(query_radius*2.0);
                         msift.push_back(theta_ps1);
 
                         vcl_vector<vl_sift_pix> qsift;
                         qsift.push_back(ps2.x());
                         qsift.push_back(ps2.y());
-                        qsift.push_back(model_sift_scale/model_scale_ratio);
+                        qsift.push_back(model_radius*2.0);
                         qsift.push_back(theta_ps2);
 
                         model_sift.push_back(msift);
