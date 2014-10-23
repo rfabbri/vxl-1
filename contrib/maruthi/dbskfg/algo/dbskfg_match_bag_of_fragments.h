@@ -655,7 +655,8 @@ private:
         vil_image_view<double>& o2_angle_map,
         vil_image_view<double>& o3_grad_map,
         vil_image_view<double>& o3_angle_map,
-        vnl_vector<double>& hist);
+        vnl_vector<double>& hist,
+        vcl_string tile="");
                                   
     void compute_sift_along_curve(dbskr_scurve_sptr scurve,
                                   vnl_matrix<vl_sift_pix>& descriptors,
