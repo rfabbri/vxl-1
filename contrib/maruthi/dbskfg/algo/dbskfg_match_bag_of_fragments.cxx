@@ -8458,8 +8458,9 @@ compute_body_centric_sift(
             level_2_distance+=chi_squared_distance(model_sift_left_minus_descr,
                                                    query_sift_left_minus_descr);
 
-            level_2_distance+=chi_squared_distance(model_sift_right_minus_descr,
-                                                   query_sift_right_minus_descr);
+            level_2_distance+=chi_squared_distance(
+                model_sift_right_minus_descr,
+                query_sift_right_minus_descr);
         }
 
 
@@ -9776,13 +9777,13 @@ void dbskfg_match_bag_of_fragments::compute_grad_region_hist(
     vil_image_view<double>& o2_angle_map,
     vil_image_view<double>& o3_grad_map,
     vil_image_view<double>& o3_angle_map,
-    vnl_vector<double>& descr)
+    vnl_vector<double>& descr,
+    vcl_string title)
 {
 
     bsta_histogram<double> o1_hist(2.0*vnl_math::pi,8);
     bsta_histogram<double> o2_hist(2.0*vnl_math::pi,8);
     bsta_histogram<double> o3_hist(2.0*vnl_math::pi,8);
-
     
     vcl_set<vcl_pair<double,double> >::iterator pit;
     for ( pit = samples.begin() ; pit != samples.end() ; ++pit)
@@ -9831,9 +9832,23 @@ void dbskfg_match_bag_of_fragments::compute_grad_region_hist(
 
 
 
+    if ( title.size() )
+    {
+        vcl_ofstream output(title.c_str());
+        for ( pit = samples.begin() ; pit != samples.end() ; ++pit)
+        {
+            output<<(*pit).first<<" "<<(*pit).second<<vcl_endl;
+
+
+        }
+        output.close();
+        
+    }
+
 
 
 
 
 
 }
+
