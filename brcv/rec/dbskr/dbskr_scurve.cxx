@@ -56,7 +56,8 @@ dbskr_scurve::dbskr_scurve(int num_points,
                            double scale_ratio): 
     interpolate_ds_(interpolate_ds), subsample_ds_(subsample_ds),
     virtual_length_(0.0),area_factor_(0.0),leaf_edge_(leaf_edge),
-    scale_ratio_(scale_ratio),curve_id_(0,0),branch_points_(0)
+    scale_ratio_(scale_ratio),curve_id_(0,0),branch_points_(0),
+    midpoint_index_(0)
 {
   if (binterpolate){
     vcl_vector<int> lmap; //dummy map 
@@ -565,6 +566,23 @@ void dbskr_scurve::compute_arclengths()
     arclength_.push_back(length);
     px=cx;
     py=cy;
+  }
+
+  midpoint_index_=0;
+
+  double half_arclength=arclength_.back()/2.0;
+  double half_compare=1.0e6;
+
+  for ( unsigned int s=0; s < num_points_; ++s)
+  {
+      
+      double distance=vcl_fabs(arclength_[s]-half_arclength);
+      if ( distance < half_compare)
+      {
+          half_compare=distance;
+          midpoint_index_=s;
+      }
+      
   }
 }
 

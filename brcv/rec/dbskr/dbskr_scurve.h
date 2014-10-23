@@ -236,6 +236,9 @@ public:
   //: for visualization purposes
   void get_polys(vcl_vector<vsol_polygon_2d_sptr>& polys);
 
+  //: return index of midpoint
+  unsigned int midpoint_index(){return midpoint_index_;}
+
 protected:
 
   double interpolate_ds_; ///< parameter for interpolating
@@ -283,6 +286,8 @@ protected:
   vcl_pair<unsigned int,unsigned int> curve_id_;
 
   unsigned int branch_points_;
+
+  unsigned int midpoint_index_;
 
 };
 

@@ -27,6 +27,7 @@
 
 #include <vil/vil_image_resource_sptr.h>
 #include <vl/sift.h>
+#include <vl/mathop.h>
 
 #include <dbskr/dbskr_scurve.h>
 #include <vcl_utility.h>
@@ -37,6 +38,7 @@
 #include <vsol/vsol_box_2d.h>
 #include <vgl/algo/vgl_h_matrix_2d_compute_linear.h>
 #include <vil/vil_image_view.h>
+
 
 //: Form Composite Graph algorithm
 class dbskfg_match_bag_of_fragments
@@ -645,6 +647,16 @@ private:
         double angle0,
         vgl_polygon<double>& poly);
     
+    void compute_grad_region_hist(
+        vcl_set<vcl_pair<double,double> >& samples,
+        vil_image_view<double>& o1_grad_map,
+        vil_image_view<double>& o1_angle_map,
+        vil_image_view<double>& o2_grad_map,
+        vil_image_view<double>& o2_angle_map,
+        vil_image_view<double>& o3_grad_map,
+        vil_image_view<double>& o3_angle_map,
+        vnl_vector<double>& hist);
+                                  
     void compute_sift_along_curve(dbskr_scurve_sptr scurve,
                                   vnl_matrix<vl_sift_pix>& descriptors,
                                   vl_sift_pix* red_grad_data,
@@ -654,6 +666,28 @@ private:
                                   double sift_scale,
                                   double scale_ratio=1.0,
                                   double width=0.0);
+
+    double chi_squared_distance(vnl_vector<double>& descr1,
+                                vnl_vector<double>& descr2)
+    {
+     
+
+        VlDoubleVectorComparisonFunction Chi2_distance =    
+            vl_get_vector_comparison_function_d (VlDistanceChi2) ;
+
+        
+        double local_distance[1];
+        vl_eval_vector_comparison_on_all_pairs_d(local_distance,
+                                                 descr1.size(),
+                                                 descr1.data_block(),
+                                                 1,
+                                                 descr2.data_block(),
+                                                 1,
+                                                 Chi2_distance);
+
+
+        return 0.5*local_distance[0];
+    }
 
     // Make copy ctor private
     dbskfg_match_bag_of_fragments(const dbskfg_match_bag_of_fragments&);

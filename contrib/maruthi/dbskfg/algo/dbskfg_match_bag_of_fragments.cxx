@@ -29,8 +29,8 @@
 #include <dbsk2d/dbsk2d_file_io.h>
 
 #include <vil/vil_bilin_interp.h>
-#include <bsta/bsta_spherical_histogram.h>
 #include <bsta/bsta_histogram.h>
+#include <bsta/bsta_spherical_histogram.h>
 #include <bbas/bil/algo/bil_color_conversions.h>
 
 #include <vil/vil_rgb.h>
@@ -41,7 +41,6 @@
 extern "C" {
 #include <vl/imopv.h>
 #include <vl/generic.h>
-#include <vl/mathop.h>
 }
 
 #include <vgl/vgl_homg_point_2d.h>
@@ -8033,10 +8032,31 @@ compute_body_centric_sift(
         dbskr_scurve_sptr sc1 = curve_list1[index];
         dbskr_scurve_sptr sc2 = curve_list2[index];
 
-        vcl_set< vcl_pair<double,double> > model_sift_plus;
-        vcl_set< vcl_pair<double,double> > query_sift_plus;
-        vcl_set< vcl_pair<double,double> > model_sift_minus;
-        vcl_set< vcl_pair<double,double> > query_sift_minus;
+        unsigned int midpoint_index=sc1->midpoint_index();
+
+        // Compute three level pyramid histogram
+
+        // Level 0
+        vcl_set< vcl_pair<double,double> > model_sift;
+        vcl_set< vcl_pair<double,double> > query_sift;
+
+        // Level 1
+        vcl_set< vcl_pair<double,double> > model_sift_left;
+        vcl_set< vcl_pair<double,double> > model_sift_right;
+        vcl_set< vcl_pair<double,double> > query_sift_left;
+        vcl_set< vcl_pair<double,double> > query_sift_right;
+
+        // Level 2
+        vcl_set< vcl_pair<double,double> > model_sift_left_plus;
+        vcl_set< vcl_pair<double,double> > model_sift_left_minus;
+        vcl_set< vcl_pair<double,double> > model_sift_right_plus;
+        vcl_set< vcl_pair<double,double> > model_sift_right_minus;
+
+        vcl_set< vcl_pair<double,double> > query_sift_left_plus;
+        vcl_set< vcl_pair<double,double> > query_sift_left_minus;
+        vcl_set< vcl_pair<double,double> > query_sift_right_plus;
+        vcl_set< vcl_pair<double,double> > query_sift_right_minus;
+
 
         vcl_pair<unsigned int,unsigned int> query_key1(0,0);
         vcl_pair<unsigned int,unsigned int> query_key2(0,0);
@@ -8165,17 +8185,42 @@ compute_body_centric_sift(
                         vcl_pair<double,double> ps1_key(ps1.x(),ps1.y());
                         vcl_pair<double,double> ps2_key(ps2.x(),ps2.y());
 
-                        if ( p == 0  )
+                        model_sift.insert(ps1_key);
+                        query_sift.insert(ps2_key);
+
+                        if ( cor.first <= midpoint_index )
                         {
-                            model_sift_plus.insert(ps1_key);
-                            query_sift_plus.insert(ps2_key);
+                            model_sift_left.insert(ps1_key);
+                            query_sift_left.insert(ps2_key);
+
+                            if ( p == 0  )
+                            {
+                                model_sift_left_plus.insert(ps1_key);
+                                query_sift_left_plus.insert(ps2_key);
+                            }
+                            else
+                            {
+                                model_sift_left_minus.insert(ps1_key);
+                                query_sift_left_minus.insert(ps2_key);
+                            }
                         }
                         else
                         {
-                            model_sift_minus.insert(ps1_key);
-                            query_sift_minus.insert(ps2_key);
-                        }
+                            model_sift_right.insert(ps1_key);
+                            query_sift_right.insert(ps2_key);
 
+                            if ( p == 0  )
+                            {
+                                model_sift_right_plus.insert(ps1_key);
+                                query_sift_right_plus.insert(ps2_key);
+                            }
+                            else
+                            {
+                                model_sift_right_minus.insert(ps1_key);
+                                query_sift_right_minus.insert(ps2_key);
+                            }
+
+                        }
                     }
                     else
                     {
@@ -8187,15 +8232,42 @@ compute_body_centric_sift(
                         vcl_pair<double,double> ps1_key(ps1.x(),ps1.y());
                         vcl_pair<double,double> ps2_key(ps2.x(),ps2.y());
 
-                        if ( p == 0  )
+                        model_sift.insert(ps2_key);
+                        query_sift.insert(ps1_key);
+
+                        if ( cor.first <= midpoint_index )
                         {
-                            model_sift_plus.insert(ps2_key);
-                            query_sift_plus.insert(ps1_key);
+                            model_sift_left.insert(ps2_key);
+                            query_sift_left.insert(ps1_key);
+
+                            if ( p == 0  )
+                            {
+                                model_sift_left_plus.insert(ps2_key);
+                                query_sift_left_plus.insert(ps1_key);
+                            }
+                            else
+                            {
+                                model_sift_left_minus.insert(ps2_key);
+                                query_sift_left_minus.insert(ps1_key);
+                            }
                         }
                         else
                         {
-                            model_sift_minus.insert(ps2_key);
-                            query_sift_minus.insert(ps1_key);
+                            model_sift_right.insert(ps2_key);
+                            query_sift_right.insert(ps1_key);
+
+                            if ( p == 0  )
+                            {
+                                model_sift_right_plus.insert(ps2_key);
+                                query_sift_right_plus.insert(ps1_key);
+                            }
+                            else
+                            {
+                                model_sift_right_minus.insert(ps2_key);
+                                query_sift_right_minus.insert(ps1_key);
+                            }
+
+
                         }
                                                
                     }
@@ -8206,245 +8278,197 @@ compute_body_centric_sift(
                         
         }
 
-        vnl_vector<vl_sift_pix> descr1(8*3*2,0.0);
-        vnl_vector<vl_sift_pix> descr2(8*3*2,0.0);
+        double level_0_distance(0.0);
+        double level_1_distance(0.0);
+        double level_2_distance(0.0);
 
-        // Lets do model first
+        // Compute Level 0 distance and descriptors
         {
-            bsta_histogram<double> red_hist_plus(2.0*vnl_math::pi,8);
-            bsta_histogram<double> green_hist_plus(2.0*vnl_math::pi,8);
-            bsta_histogram<double> blue_hist_plus(2.0*vnl_math::pi,8);
+            vnl_vector<double> model_sift_descr(8*3,0.0);
+            vnl_vector<double> query_sift_descr(8*3,0.0);
+        
+            compute_grad_region_hist(model_sift,
+                                     red_model_grad_map,
+                                     red_model_angle_map,
+                                     green_model_grad_map,
+                                     green_model_angle_map,
+                                     blue_model_grad_map,
+                                     blue_model_angle_map,
+                                     model_sift_descr);
+        
+            compute_grad_region_hist(query_sift,
+                                     red_query_grad_map,
+                                     red_query_angle_map,
+                                     green_query_grad_map,
+                                     green_query_angle_map,
+                                     blue_query_grad_map,
+                                     blue_query_angle_map,
+                                     query_sift_descr);
 
-            bsta_histogram<double> red_hist_minus(2.0*vnl_math::pi,8);
-            bsta_histogram<double> green_hist_minus(2.0*vnl_math::pi,8);
-            bsta_histogram<double> blue_hist_minus(2.0*vnl_math::pi,8);
-           
-            vcl_set<vcl_pair<double,double> >::iterator pit;
-            for ( pit = model_sift_plus.begin() ; pit != 
-                      model_sift_plus.end() ; ++pit)
-            {
-                double red_mag = vil_bilin_interp_safe(red_model_grad_map,
-                                                       (*pit).first,
-                                                       (*pit).second);
-                double red_angle = vil_bilin_interp_safe(red_model_angle_map,
-                                                       (*pit).first,
-                                                       (*pit).second);
-                
-                double green_mag = vil_bilin_interp_safe(green_model_grad_map,
-                                                         (*pit).first,
-                                                         (*pit).second);
-                double green_angle = vil_bilin_interp_safe(
-                    green_model_angle_map,
-                    (*pit).first,
-                    (*pit).second);
-                
-                double blue_mag = vil_bilin_interp_safe(blue_model_grad_map,
-                                                       (*pit).first,
-                                                       (*pit).second);
-                double blue_angle = vil_bilin_interp_safe(blue_model_angle_map,
-                                                       (*pit).first,
-                                                       (*pit).second);
-              
-                red_hist_plus.upcount(red_angle,red_mag);
-                green_hist_plus.upcount(green_angle,green_mag);
-                blue_hist_plus.upcount(blue_angle,blue_mag);
-            }
+            level_0_distance+=chi_squared_distance(model_sift_descr,
+                                                   model_sift_descr);
 
-            vcl_set<vcl_pair<double,double> >::iterator mit;
-            for ( mit = model_sift_minus.begin() ; mit != 
-                      model_sift_minus.end() ; ++mit)
-            {
-                double red_mag = vil_bilin_interp_safe(red_model_grad_map,
-                                                       (*mit).first,
-                                                       (*mit).second);
-                double red_angle = vil_bilin_interp_safe(red_model_angle_map,
-                                                       (*mit).first,
-                                                       (*mit).second);
-                
-                double green_mag = vil_bilin_interp_safe(green_model_grad_map,
-                                                         (*mit).first,
-                                                         (*mit).second);
-                double green_angle = vil_bilin_interp_safe(
-                    green_model_angle_map,
-                    (*mit).first,
-                    (*mit).second);
-                
-                double blue_mag = vil_bilin_interp_safe(blue_model_grad_map,
-                                                       (*mit).first,
-                                                       (*mit).second);
-                double blue_angle = vil_bilin_interp_safe(blue_model_angle_map,
-                                                       (*mit).first,
-                                                       (*mit).second);
-              
-                red_hist_minus.upcount(red_angle,red_mag);
-                green_hist_minus.upcount(green_angle,green_mag);
-                blue_hist_minus.upcount(blue_angle,blue_mag);
-            }
+        }
 
+        // Compute Level 1 distance and descriptors
+        {
+            vnl_vector<double> model_sift_left_descr(8*3,0.0);
+            vnl_vector<double> model_sift_right_descr(8*3,0.0);
+            vnl_vector<double> query_sift_left_descr(8*3,0.0);
+            vnl_vector<double> query_sift_right_descr(8*3,0.0);
 
-            vcl_vector<double> red_counts_plus=red_hist_plus.count_array();
-            vcl_vector<double> green_counts_plus=green_hist_plus.count_array();
-            vcl_vector<double> blue_counts_plus=blue_hist_plus.count_array();
+            compute_grad_region_hist(model_sift_left,
+                                     red_model_grad_map,
+                                     red_model_angle_map,
+                                     green_model_grad_map,
+                                     green_model_angle_map,
+                                     blue_model_grad_map,
+                                     blue_model_angle_map,
+                                     model_sift_left_descr);
 
-            vcl_vector<double> red_counts_minus=red_hist_minus.count_array();
-            vcl_vector<double> green_counts_minus=green_hist_minus.
-                count_array();
-            vcl_vector<double> blue_counts_minus=blue_hist_minus.count_array();
+            compute_grad_region_hist(model_sift_right,
+                                     red_query_grad_map,
+                                     red_query_angle_map,
+                                     green_query_grad_map,
+                                     green_query_angle_map,
+                                     blue_query_grad_map,
+                                     blue_query_angle_map,
+                                     model_sift_right_descr);
 
-            for ( unsigned int i=0; i < red_counts_plus.size() ; ++i)
-            {
-                descr1[i+red_counts_plus.size()*0]=red_counts_plus[i];
-                descr1[i+red_counts_plus.size()*1]=green_counts_plus[i];
-                descr1[i+red_counts_plus.size()*2]=blue_counts_plus[i];
+            compute_grad_region_hist(query_sift_left,
+                                     red_query_grad_map,
+                                     red_query_angle_map,
+                                     green_query_grad_map,
+                                     green_query_angle_map,
+                                     blue_query_grad_map,
+                                     blue_query_angle_map,
+                                     query_sift_left_descr);
 
-                descr1[i+red_counts_plus.size()*3]=red_counts_minus[i];
-                descr1[i+red_counts_plus.size()*4]=green_counts_minus[i];
-                descr1[i+red_counts_plus.size()*5]=blue_counts_minus[i];
+            compute_grad_region_hist(query_sift_right,
+                                     red_query_grad_map,
+                                     red_query_angle_map,
+                                     green_query_grad_map,
+                                     green_query_angle_map,
+                                     blue_query_grad_map,
+                                     blue_query_angle_map,
+                                     query_sift_right_descr);
 
-            }
+            level_1_distance+=chi_squared_distance(model_sift_left_descr,
+                                                   query_sift_left_descr);
 
+            level_1_distance+=chi_squared_distance(model_sift_right_descr,
+                                                   query_sift_right_descr);
 
             
-            // vcl_stringstream model_plus_stream;
-            // model_plus_stream<<"Dart_"<<index<<"_model_hist_red.txt";
-            // vcl_ofstream model_sift_plus_stream(
-            //     model_plus_stream.str().c_str());
-
-            // for ( unsigned int i=0; i < red_counts_plus.size() ; ++i)
-            // {
-            //     model_sift_plus_stream<<red_counts_plus[i]<<vcl_endl;
-            // }
-            // model_sift_plus_stream.close();
-
 
         }
 
-        // Lets do query second
+
+        // Compute Level 2 distances and descriptors
         {
-            bsta_histogram<double> red_hist_plus(2.0*vnl_math::pi,8);
-            bsta_histogram<double> green_hist_plus(2.0*vnl_math::pi,8);
-            bsta_histogram<double> blue_hist_plus(2.0*vnl_math::pi,8);
+            vnl_vector<double> model_sift_left_plus_descr(8*3,0.0);
+            vnl_vector<double> model_sift_right_plus_descr(8*3,0.0);
+            vnl_vector<double> model_sift_left_minus_descr(8*3,0.0);
+            vnl_vector<double> model_sift_right_minus_descr(8*3,0.0);
 
-            bsta_histogram<double> red_hist_minus(2.0*vnl_math::pi,8);
-            bsta_histogram<double> green_hist_minus(2.0*vnl_math::pi,8);
-            bsta_histogram<double> blue_hist_minus(2.0*vnl_math::pi,8);
+            compute_grad_region_hist(model_sift_left_plus,
+                                     red_model_grad_map,
+                                     red_model_angle_map,
+                                     green_model_grad_map,
+                                     green_model_angle_map,
+                                     blue_model_grad_map,
+                                     blue_model_angle_map,
+                                     model_sift_left_plus_descr);
 
-            vcl_set<vcl_pair<double,double> >::iterator pit;
-            for ( pit = query_sift_plus.begin() ; pit != 
-                      query_sift_plus.end() ; ++pit)
-            {
-                double red_mag = vil_bilin_interp_safe(red_query_grad_map,
-                                                       (*pit).first,
-                                                       (*pit).second);
-                double red_angle = vil_bilin_interp_safe(red_query_angle_map,
-                                                       (*pit).first,
-                                                       (*pit).second);
-                
-                double green_mag = vil_bilin_interp_safe(green_query_grad_map,
-                                                         (*pit).first,
-                                                         (*pit).second);
-                double green_angle = vil_bilin_interp_safe(
-                    green_query_angle_map,
-                    (*pit).first,
-                    (*pit).second);
-                
-                double blue_mag = vil_bilin_interp_safe(blue_query_grad_map,
-                                                       (*pit).first,
-                                                       (*pit).second);
-                double blue_angle = vil_bilin_interp_safe(blue_query_angle_map,
-                                                       (*pit).first,
-                                                       (*pit).second);
-              
-                red_hist_plus.upcount(red_angle,red_mag);
-                green_hist_plus.upcount(green_angle,green_mag);
-                blue_hist_plus.upcount(blue_angle,blue_mag);
+            compute_grad_region_hist(model_sift_right_plus,
+                                     red_query_grad_map,
+                                     red_query_angle_map,
+                                     green_query_grad_map,
+                                     green_query_angle_map,
+                                     blue_query_grad_map,
+                                     blue_query_angle_map,
+                                     model_sift_right_plus_descr);
 
-         
-            }
+            compute_grad_region_hist(model_sift_left_minus,
+                                     red_model_grad_map,
+                                     red_model_angle_map,
+                                     green_model_grad_map,
+                                     green_model_angle_map,
+                                     blue_model_grad_map,
+                                     blue_model_angle_map,
+                                     model_sift_left_minus_descr);
 
-            vcl_set<vcl_pair<double,double> >::iterator mit;
-            for ( mit = query_sift_minus.begin() ; mit != 
-                      query_sift_minus.end() ; ++mit)
-            {
-                double red_mag = vil_bilin_interp_safe(red_query_grad_map,
-                                                       (*mit).first,
-                                                       (*mit).second);
-                double red_angle = vil_bilin_interp_safe(red_query_angle_map,
-                                                       (*mit).first,
-                                                       (*mit).second);
-                
-                double green_mag = vil_bilin_interp_safe(green_query_grad_map,
-                                                         (*mit).first,
-                                                         (*mit).second);
-                double green_angle = vil_bilin_interp_safe(
-                    green_query_angle_map,
-                    (*mit).first,
-                    (*mit).second);
-                
-                double blue_mag = vil_bilin_interp_safe(blue_query_grad_map,
-                                                       (*mit).first,
-                                                       (*mit).second);
-                double blue_angle = vil_bilin_interp_safe(blue_query_angle_map,
-                                                       (*mit).first,
-                                                       (*mit).second);
-              
-                red_hist_minus.upcount(red_angle,red_mag);
-                green_hist_minus.upcount(green_angle,green_mag);
-                blue_hist_minus.upcount(blue_angle,blue_mag);
+            compute_grad_region_hist(model_sift_right_minus,
+                                     red_query_grad_map,
+                                     red_query_angle_map,
+                                     green_query_grad_map,
+                                     green_query_angle_map,
+                                     blue_query_grad_map,
+                                     blue_query_angle_map,
+                                     model_sift_right_minus_descr);
 
-            }
+            vnl_vector<double> query_sift_left_plus_descr(8*3,0.0);
+            vnl_vector<double> query_sift_right_plus_descr(8*3,0.0);
+            vnl_vector<double> query_sift_left_minus_descr(8*3,0.0);
+            vnl_vector<double> query_sift_right_minus_descr(8*3,0.0);
 
+            compute_grad_region_hist(query_sift_left_plus,
+                                     red_query_grad_map,
+                                     red_query_angle_map,
+                                     green_query_grad_map,
+                                     green_query_angle_map,
+                                     blue_query_grad_map,
+                                     blue_query_angle_map,
+                                     query_sift_left_plus_descr);
 
-            vcl_vector<double> red_counts_plus=red_hist_plus.count_array();
-            vcl_vector<double> green_counts_plus=green_hist_plus.count_array();
-            vcl_vector<double> blue_counts_plus=blue_hist_plus.count_array();
+            compute_grad_region_hist(query_sift_right_plus,
+                                     red_query_grad_map,
+                                     red_query_angle_map,
+                                     green_query_grad_map,
+                                     green_query_angle_map,
+                                     blue_query_grad_map,
+                                     blue_query_angle_map,
+                                     query_sift_right_plus_descr);
 
-            vcl_vector<double> red_counts_minus=red_hist_minus.count_array();
-            vcl_vector<double> green_counts_minus=green_hist_minus.
-                count_array();
-            vcl_vector<double> blue_counts_minus=blue_hist_minus.count_array();
+            compute_grad_region_hist(query_sift_left_minus,
+                                     red_query_grad_map,
+                                     red_query_angle_map,
+                                     green_query_grad_map,
+                                     green_query_angle_map,
+                                     blue_query_grad_map,
+                                     blue_query_angle_map,
+                                     query_sift_left_minus_descr);
 
-            for ( unsigned int i=0; i < red_counts_plus.size() ; ++i)
-            {
-                descr2[i+red_counts_plus.size()*0]=red_counts_plus[i];
-                descr2[i+red_counts_plus.size()*1]=green_counts_plus[i];
-                descr2[i+red_counts_plus.size()*2]=blue_counts_plus[i];
-
-                descr2[i+red_counts_plus.size()*3]=red_counts_minus[i];
-                descr2[i+red_counts_plus.size()*4]=green_counts_minus[i];
-                descr2[i+red_counts_plus.size()*5]=blue_counts_minus[i];
+            compute_grad_region_hist(query_sift_right_minus,
+                                     red_query_grad_map,
+                                     red_query_angle_map,
+                                     green_query_grad_map,
+                                     green_query_angle_map,
+                                     blue_query_grad_map,
+                                     blue_query_angle_map,
+                                     query_sift_right_minus_descr);
 
 
-            }
+            level_2_distance+=chi_squared_distance(model_sift_left_plus_descr,
+                                                   query_sift_left_plus_descr);
 
+            level_2_distance+=chi_squared_distance(model_sift_right_plus_descr,
+                                                   query_sift_right_plus_descr);
 
-            // vcl_stringstream query_plus_stream;
-            // query_plus_stream<<"Dart_"<<index<<"_query_hist_blue.txt";
-            // vcl_ofstream query_sift_plus_stream(
-            //     query_plus_stream.str().c_str());
-            // for ( unsigned int i=0; i < blue_counts_plus.size() ; ++i)
-            // {
-            //     query_sift_plus_stream<<blue_counts_plus[i]<<vcl_endl;
-            // }
-            // query_sift_plus_stream.close();
+            level_2_distance+=chi_squared_distance(model_sift_left_minus_descr,
+                                                   query_sift_left_minus_descr);
 
+            level_2_distance+=chi_squared_distance(model_sift_right_minus_descr,
+                                                   query_sift_right_minus_descr);
         }
 
-        descr1.normalize();
-        descr2.normalize();
 
-        vl_sift_pix local_distance[1];
-        vl_eval_vector_comparison_on_all_pairs_f(local_distance,
-                                                 descr1.size(),
-                                                 descr1.data_block(),
-                                                 1,
-                                                 descr2.data_block(),
-                                                 1,
-                                                 Chi2_distance);
+        // Fine distance between darts
+        double dart_distance=level_0_distance+level_1_distance+
+            level_2_distance;
 
-
-        sift_diff+=0.5*local_distance[0];
-        dart_distances.push_back(0.5*local_distance[0]);
+        sift_diff+=dart_distance;
+        dart_distances.push_back(dart_distance);
 
        
         // vcl_cout<<"Tree 1 dart ("
@@ -8456,7 +8480,7 @@ compute_body_centric_sift(
         //         <<","
         //         <<path_map[index].second.second
         //         <<") L2 distance: "
-        //         <<local_distance[0]<<vcl_endl;
+        //         <<dart_distance<<vcl_endl;
 
 
     
@@ -9735,6 +9759,76 @@ void dbskfg_match_bag_of_fragments::compute_sift_along_curve(
         
         descriptors.set_column(i,descriptor);
     }
+
+
+
+
+
+
+
+}
+
+void dbskfg_match_bag_of_fragments::compute_grad_region_hist(
+    vcl_set<vcl_pair<double,double> >& samples,
+    vil_image_view<double>& o1_grad_map,
+    vil_image_view<double>& o1_angle_map,
+    vil_image_view<double>& o2_grad_map,
+    vil_image_view<double>& o2_angle_map,
+    vil_image_view<double>& o3_grad_map,
+    vil_image_view<double>& o3_angle_map,
+    vnl_vector<double>& descr)
+{
+
+    bsta_histogram<double> o1_hist(2.0*vnl_math::pi,8);
+    bsta_histogram<double> o2_hist(2.0*vnl_math::pi,8);
+    bsta_histogram<double> o3_hist(2.0*vnl_math::pi,8);
+
+    
+    vcl_set<vcl_pair<double,double> >::iterator pit;
+    for ( pit = samples.begin() ; pit != samples.end() ; ++pit)
+    {
+        double o1_mag = vil_bilin_interp_safe(o1_grad_map,
+                                               (*pit).first,
+                                               (*pit).second);
+        double o1_angle = vil_bilin_interp_safe(o1_angle_map,
+                                                (*pit).first,
+                                                (*pit).second);
+        
+        double o2_mag = vil_bilin_interp_safe(o2_grad_map,
+                                              (*pit).first,
+                                              (*pit).second);
+        double o2_angle = vil_bilin_interp_safe(o2_angle_map,
+                                                (*pit).first,
+                                                (*pit).second);
+                
+        double o3_mag = vil_bilin_interp_safe(o3_grad_map,
+                                              (*pit).first,
+                                              (*pit).second);
+        double o3_angle = vil_bilin_interp_safe(o3_angle_map,
+                                                (*pit).first,
+                                                (*pit).second);
+              
+        o1_hist.upcount(o1_angle,o1_mag);
+        o2_hist.upcount(o2_angle,o2_mag);
+        o3_hist.upcount(o3_angle,o3_mag);
+    }
+
+    vcl_vector<double> o1_counts=o1_hist.count_array();
+    vcl_vector<double> o2_counts=o2_hist.count_array();
+    vcl_vector<double> o3_counts=o3_hist.count_array();
+
+    for ( unsigned int i=0; i < o1_counts.size() ; ++i)
+    {
+        descr[i+o1_counts.size()*0]=o1_counts[i];
+        descr[i+o1_counts.size()*1]=o2_counts[i];
+        descr[i+o1_counts.size()*2]=o3_counts[i];
+
+        
+
+    }
+    
+    descr.normalize();
+
 
 
 
