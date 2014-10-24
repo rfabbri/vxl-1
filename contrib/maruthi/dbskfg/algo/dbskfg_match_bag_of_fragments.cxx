@@ -8325,7 +8325,7 @@ compute_body_centric_sift(
                                      query_sift_title);
 
             level_0_distance+=chi_squared_distance(model_sift_descr,
-                                                   model_sift_descr);
+                                                   query_sift_descr);
 
         }
 
