@@ -7944,6 +7944,8 @@ compute_body_centric_sift(
     bool flag,
     double width)
 {
+    
+    bool debug=false;
 
     // Create gradient maps
     vil_image_view<double> red_model_grad_map(
@@ -8286,7 +8288,22 @@ compute_body_centric_sift(
         {
             vnl_vector<double> model_sift_descr(8*3,0.0);
             vnl_vector<double> query_sift_descr(8*3,0.0);
-        
+
+            vcl_string model_sift_title("");
+            vcl_string query_sift_title("");
+
+            if ( debug )
+            {
+                vcl_stringstream model_sift_stream;
+                model_sift_stream<<"Model_sift_"<<index;
+
+                vcl_stringstream query_sift_stream;
+                query_sift_stream<<"Query_sift_"<<index;
+                
+                model_sift_title=model_sift_stream.str();
+                query_sift_title=query_sift_stream.str();
+            }
+
             compute_grad_region_hist(model_sift,
                                      red_model_grad_map,
                                      red_model_angle_map,
@@ -8294,7 +8311,8 @@ compute_body_centric_sift(
                                      green_model_angle_map,
                                      blue_model_grad_map,
                                      blue_model_angle_map,
-                                     model_sift_descr);
+                                     model_sift_descr,
+                                     model_sift_title);
         
             compute_grad_region_hist(query_sift,
                                      red_query_grad_map,
@@ -8303,7 +8321,8 @@ compute_body_centric_sift(
                                      green_query_angle_map,
                                      blue_query_grad_map,
                                      blue_query_angle_map,
-                                     query_sift_descr);
+                                     query_sift_descr,
+                                     query_sift_title);
 
             level_0_distance+=chi_squared_distance(model_sift_descr,
                                                    model_sift_descr);
@@ -8317,6 +8336,34 @@ compute_body_centric_sift(
             vnl_vector<double> query_sift_left_descr(8*3,0.0);
             vnl_vector<double> query_sift_right_descr(8*3,0.0);
 
+            vcl_string model_sift_left_title("");
+            vcl_string query_sift_left_title("");
+
+            vcl_string model_sift_right_title("");
+            vcl_string query_sift_right_title("");
+
+            if ( debug )
+            {
+                vcl_stringstream model_sift_left_stream;
+                model_sift_left_stream<<"Model_sift_left_"<<index;
+
+                vcl_stringstream query_sift_left_stream;
+                query_sift_left_stream<<"Query_sift_left_"<<index;
+                
+                model_sift_left_title=model_sift_left_stream.str();
+                query_sift_left_title=query_sift_left_stream.str();
+
+                vcl_stringstream model_sift_right_stream;
+                model_sift_right_stream<<"Model_sift_right_"<<index;
+
+                vcl_stringstream query_sift_right_stream;
+                query_sift_right_stream<<"Query_sift_right_"<<index;
+                
+                model_sift_right_title=model_sift_right_stream.str();
+                query_sift_right_title=query_sift_right_stream.str();
+
+            }
+
             compute_grad_region_hist(model_sift_left,
                                      red_model_grad_map,
                                      red_model_angle_map,
@@ -8324,7 +8371,8 @@ compute_body_centric_sift(
                                      green_model_angle_map,
                                      blue_model_grad_map,
                                      blue_model_angle_map,
-                                     model_sift_left_descr);
+                                     model_sift_left_descr,
+                                     model_sift_left_title);
 
             compute_grad_region_hist(model_sift_right,
                                      red_query_grad_map,
@@ -8333,7 +8381,8 @@ compute_body_centric_sift(
                                      green_query_angle_map,
                                      blue_query_grad_map,
                                      blue_query_angle_map,
-                                     model_sift_right_descr);
+                                     model_sift_right_descr,
+                                     model_sift_right_title);
 
             compute_grad_region_hist(query_sift_left,
                                      red_query_grad_map,
@@ -8342,7 +8391,8 @@ compute_body_centric_sift(
                                      green_query_angle_map,
                                      blue_query_grad_map,
                                      blue_query_angle_map,
-                                     query_sift_left_descr);
+                                     query_sift_left_descr,
+                                     query_sift_left_title);
 
             compute_grad_region_hist(query_sift_right,
                                      red_query_grad_map,
@@ -8351,7 +8401,8 @@ compute_body_centric_sift(
                                      green_query_angle_map,
                                      blue_query_grad_map,
                                      blue_query_angle_map,
-                                     query_sift_right_descr);
+                                     query_sift_right_descr,
+                                     query_sift_right_title);
 
             level_1_distance+=chi_squared_distance(model_sift_left_descr,
                                                    query_sift_left_descr);
@@ -8371,6 +8422,35 @@ compute_body_centric_sift(
             vnl_vector<double> model_sift_left_minus_descr(8*3,0.0);
             vnl_vector<double> model_sift_right_minus_descr(8*3,0.0);
 
+            vcl_string model_sift_left_plus_title("");
+            vcl_string model_sift_left_minus_title("");
+
+            vcl_string model_sift_right_plus_title("");
+            vcl_string model_sift_right_minus_title("");
+
+            if ( debug )
+            {
+                vcl_stringstream model_sift_left_plus_stream;
+                model_sift_left_plus_stream<<"Model_sift_left_plus_"<<index;
+
+                vcl_stringstream model_sift_left_minus_stream;
+                model_sift_left_minus_stream<<"Model_sift_left_minus_"<<index;
+                
+                model_sift_left_plus_title=model_sift_left_plus_stream.str();
+                model_sift_left_minus_title=model_sift_left_minus_stream.str();
+
+                vcl_stringstream model_sift_right_plus_stream;
+                model_sift_right_plus_stream<<"Model_sift_right_plus_"<<index;
+
+                vcl_stringstream model_sift_right_minus_stream;
+                model_sift_right_minus_stream<<"Model_sift_right_minus_"<<index;
+                
+                model_sift_right_plus_title=model_sift_right_plus_stream.str();
+                model_sift_right_minus_title=
+                    model_sift_right_minus_stream.str();
+
+            }
+
             compute_grad_region_hist(model_sift_left_plus,
                                      red_model_grad_map,
                                      red_model_angle_map,
@@ -8378,7 +8458,8 @@ compute_body_centric_sift(
                                      green_model_angle_map,
                                      blue_model_grad_map,
                                      blue_model_angle_map,
-                                     model_sift_left_plus_descr);
+                                     model_sift_left_plus_descr,
+                                     model_sift_left_plus_title);
 
             compute_grad_region_hist(model_sift_right_plus,
                                      red_query_grad_map,
@@ -8387,7 +8468,8 @@ compute_body_centric_sift(
                                      green_query_angle_map,
                                      blue_query_grad_map,
                                      blue_query_angle_map,
-                                     model_sift_right_plus_descr);
+                                     model_sift_right_plus_descr,
+                                     model_sift_right_plus_title);
 
             compute_grad_region_hist(model_sift_left_minus,
                                      red_model_grad_map,
@@ -8396,7 +8478,8 @@ compute_body_centric_sift(
                                      green_model_angle_map,
                                      blue_model_grad_map,
                                      blue_model_angle_map,
-                                     model_sift_left_minus_descr);
+                                     model_sift_left_minus_descr,
+                                     model_sift_left_minus_title);
 
             compute_grad_region_hist(model_sift_right_minus,
                                      red_query_grad_map,
@@ -8405,12 +8488,42 @@ compute_body_centric_sift(
                                      green_query_angle_map,
                                      blue_query_grad_map,
                                      blue_query_angle_map,
-                                     model_sift_right_minus_descr);
+                                     model_sift_right_minus_descr,
+                                     model_sift_right_minus_title);
 
             vnl_vector<double> query_sift_left_plus_descr(8*3,0.0);
             vnl_vector<double> query_sift_right_plus_descr(8*3,0.0);
             vnl_vector<double> query_sift_left_minus_descr(8*3,0.0);
             vnl_vector<double> query_sift_right_minus_descr(8*3,0.0);
+
+            vcl_string query_sift_left_plus_title("");
+            vcl_string query_sift_left_minus_title("");
+
+            vcl_string query_sift_right_plus_title("");
+            vcl_string query_sift_right_minus_title("");
+
+            if ( debug )
+            {
+                vcl_stringstream query_sift_left_plus_stream;
+                query_sift_left_plus_stream<<"Query_sift_left_plus_"<<index;
+
+                vcl_stringstream query_sift_left_minus_stream;
+                query_sift_left_minus_stream<<"Query_sift_left_minus_"<<index;
+                
+                query_sift_left_plus_title=query_sift_left_plus_stream.str();
+                query_sift_left_minus_title=query_sift_left_minus_stream.str();
+
+                vcl_stringstream query_sift_right_plus_stream;
+                query_sift_right_plus_stream<<"Query_sift_right_plus_"<<index;
+
+                vcl_stringstream query_sift_right_minus_stream;
+                query_sift_right_minus_stream<<"Query_sift_right_minus_"<<index;
+                
+                query_sift_right_plus_title=query_sift_right_plus_stream.str();
+                query_sift_right_minus_title=
+                    query_sift_right_minus_stream.str();
+
+            }
 
             compute_grad_region_hist(query_sift_left_plus,
                                      red_query_grad_map,
@@ -8419,7 +8532,8 @@ compute_body_centric_sift(
                                      green_query_angle_map,
                                      blue_query_grad_map,
                                      blue_query_angle_map,
-                                     query_sift_left_plus_descr);
+                                     query_sift_left_plus_descr,
+                                     query_sift_left_plus_title);
 
             compute_grad_region_hist(query_sift_right_plus,
                                      red_query_grad_map,
@@ -8428,7 +8542,8 @@ compute_body_centric_sift(
                                      green_query_angle_map,
                                      blue_query_grad_map,
                                      blue_query_angle_map,
-                                     query_sift_right_plus_descr);
+                                     query_sift_right_plus_descr,
+                                     query_sift_right_plus_title);
 
             compute_grad_region_hist(query_sift_left_minus,
                                      red_query_grad_map,
@@ -8437,7 +8552,8 @@ compute_body_centric_sift(
                                      green_query_angle_map,
                                      blue_query_grad_map,
                                      blue_query_angle_map,
-                                     query_sift_left_minus_descr);
+                                     query_sift_left_minus_descr,
+                                     query_sift_left_minus_title);
 
             compute_grad_region_hist(query_sift_right_minus,
                                      red_query_grad_map,
@@ -8446,7 +8562,8 @@ compute_body_centric_sift(
                                      green_query_angle_map,
                                      blue_query_grad_map,
                                      blue_query_angle_map,
-                                     query_sift_right_minus_descr);
+                                     query_sift_right_minus_descr,
+                                     query_sift_right_minus_title);
 
 
             level_2_distance+=chi_squared_distance(model_sift_left_plus_descr,
@@ -9834,7 +9951,8 @@ void dbskfg_match_bag_of_fragments::compute_grad_region_hist(
 
     if ( title.size() )
     {
-        vcl_ofstream output(title.c_str());
+        vcl_string samp_title=title+"_samples.txt";
+        vcl_ofstream output(samp_title.c_str());
         for ( pit = samples.begin() ; pit != samples.end() ; ++pit)
         {
             output<<(*pit).first<<" "<<(*pit).second<<vcl_endl;
