@@ -4180,50 +4180,30 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
 
         vul_timer app_timer;
         app_timer.mark();
-        vcl_pair<double,double> app_cost=compute_sift_cost(curve_list1,
-                                                           curve_list2,
-                                                           map_list,
-                                                           path_map,
-                                                           flag,
-                                                           width,
-                                                           model_grad_data,
-                                                           model_sift_filter,
-                                                           query_grad_data,
-                                                           query_sift_filter,
-                                                           model_tree
-                                                           ->get_scale_ratio(),
-                                                           query_tree
-                                                           ->get_scale_ratio());
+        // vcl_pair<double,double> app_cost=compute_sift_cost(curve_list1,
+        //                                                    curve_list2,
+        //                                                    map_list,
+        //                                                    path_map,
+        //                                                    flag,
+        //                                                    width,
+        //                                                    model_grad_data,
+        //                                                    model_sift_filter,
+        //                                                    query_grad_data,
+        //                                                    query_sift_filter,
+        //                                                    model_tree
+        //                                                    ->get_scale_ratio(),
+        //                                                    query_tree
+        //                                                    ->get_scale_ratio());
 
         vcl_vector<double> dart_distances;
-        vcl_pair<double,double> sift_rgb_cost=compute_dense_rgb_sift_cost(
-            curve_list1,
-            curve_list2,
-            map_list,
-            path_map,
-            dart_distances,
-            flag,
-            width,
-            model_red_grad_data,
-            query_red_grad_data,
-            model_green_grad_data,
-            query_green_grad_data,
-            model_blue_grad_data,
-            query_blue_grad_data,
-            model_sift_filter,
-            query_sift_filter,
-            model_tree->get_scale_ratio(),
-            query_tree->get_scale_ratio(),
-            model_tree->get_root_node_radius(),
-            query_tree->get_root_node_radius(),
-            title.str());
-
-        // vcl_pair<double,double> sift_rgb_cost=compute_body_centric_sift(
+        // vcl_pair<double,double> sift_rgb_cost=compute_dense_rgb_sift_cost(
         //     curve_list1,
         //     curve_list2,
         //     map_list,
         //     path_map,
         //     dart_distances,
+        //     flag,
+        //     width,
         //     model_red_grad_data,
         //     query_red_grad_data,
         //     model_green_grad_data,
@@ -4234,25 +4214,45 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //     query_sift_filter,
         //     model_tree->get_scale_ratio(),
         //     query_tree->get_scale_ratio(),
-        //     flag,
-        //     width);
+        //     model_tree->get_root_node_radius(),
+        //     query_tree->get_root_node_radius(),
+        //     title.str());
+
+        vcl_pair<double,double> app_cost=compute_body_centric_sift(
+            curve_list1,
+            curve_list2,
+            map_list,
+            path_map,
+            dart_distances,
+            model_red_grad_data,
+            query_red_grad_data,
+            model_green_grad_data,
+            query_green_grad_data,
+            model_blue_grad_data,
+            query_blue_grad_data,
+            model_sift_filter,
+            query_sift_filter,
+            model_tree->get_scale_ratio(),
+            query_tree->get_scale_ratio(),
+            flag,
+            width);
        
-        // vcl_pair<double,double> sift_rgb_cost=compute_3d_hist_color(
-        //     curve_list1,
-        //     curve_list2,
-        //     map_list,
-        //     path_map,
-        //     dart_distances,
-        //     *model_L_channel,
-        //     *model_a_channel,
-        //     *model_b_channel,
-        //     *query_L_channel,
-        //     *query_a_channel,
-        //     *query_b_channel,
-        //     model_tree->get_scale_ratio(),
-        //     query_tree->get_scale_ratio(),
-        //     flag,
-        //     width);
+        vcl_pair<double,double> sift_rgb_cost=compute_3d_hist_color(
+            curve_list1,
+            curve_list2,
+            map_list,
+            path_map,
+            dart_distances,
+            *model_L_channel,
+            *model_a_channel,
+            *model_b_channel,
+            *query_L_channel,
+            *query_a_channel,
+            *query_b_channel,
+            model_tree->get_scale_ratio(),
+            query_tree->get_scale_ratio(),
+            flag,
+            width);
          
         unsigned int model_tag=model_tree->get_id();
         
@@ -4336,7 +4336,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         
         //vcl_cerr<<"************ App   Time taken: "<<app_time<<" sec"<<vcl_endl;
         app_diff        = app_cost.first;
-        norm_app_cost   = sift_rgb_cost.first;
+        norm_app_cost   = app_cost.second;
         rgb_avg_cost    = sift_rgb_cost.second;
 
     }
@@ -8241,9 +8241,9 @@ compute_body_centric_sift(
                 vcl_stringstream bstream;
                 bstream<<index;
 
-                vcl_string model_string="Model_level_2_hist_dart_"+
+                vcl_string model_string="Model_level_0_hist_dart_"+
                     bstream.str()+".txt";
-                vcl_string query_string="Query_level_2_hist_dart_"+
+                vcl_string query_string="Query_level_0_hist_dart_"+
                     bstream.str()+".txt";
 
                 vcl_ofstream model_hist(model_string.c_str());
@@ -8342,9 +8342,9 @@ compute_body_centric_sift(
                 vcl_stringstream bstream;
                 bstream<<index;
 
-                vcl_string model_string="Model_level_2_hist_dart_"+
+                vcl_string model_string="Model_level_1_hist_dart_"+
                     bstream.str()+".txt";
-                vcl_string query_string="Query_level_2_hist_dart_"+
+                vcl_string query_string="Query_level_1_hist_dart_"+
                     bstream.str()+".txt";
 
                 vcl_ofstream model_hist(model_string.c_str());
