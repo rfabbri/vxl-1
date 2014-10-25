@@ -7486,6 +7486,8 @@ compute_3d_hist_color(
                 query_sift_title=query_sift_stream.str();
             }
 
+            unsigned int start=phoc_model.size();
+            
             compute_color_region_hist(model_sift,
                                       model_channel_1,
                                       model_channel_2,
@@ -7501,6 +7503,34 @@ compute_3d_hist_color(
                                       phoc_query,
                                       dbskfg_match_bag_of_fragments::DEFAULT,
                                       query_sift_title);
+
+            unsigned int stop=phoc_model.size();
+
+            if ( debug )
+            {
+
+                vcl_stringstream bstream;
+                bstream<<index;
+
+                vcl_string model_string="Model_level_0_hist_dart_"+
+                    bstream.str()+".txt";
+                vcl_string query_string="Query_level_0_hist_dart_"+
+                    bstream.str()+".txt";
+
+                vcl_ofstream model_hist(model_string.c_str());
+                vcl_ofstream query_hist(query_string.c_str());
+
+                for ( unsigned int ph=start; ph < stop ; ++ph)
+                {
+                    model_hist<<phoc_model[ph]<<vcl_endl;
+                    query_hist<<phoc_query[ph]<<vcl_endl;
+                    
+                }
+
+                model_hist.close();
+                query_hist.close();
+
+            }
 
         }
 
@@ -7534,6 +7564,8 @@ compute_3d_hist_color(
 
             }
 
+            unsigned int start=phoc_model.size();
+
             compute_color_region_hist(model_sift_left,
                                       model_channel_1,
                                       model_channel_2,
@@ -7565,6 +7597,33 @@ compute_3d_hist_color(
                                       phoc_query,
                                       dbskfg_match_bag_of_fragments::DEFAULT,
                                       query_sift_right_title);
+
+            unsigned int stop=phoc_model.size();
+
+            if ( debug )
+            {
+                vcl_stringstream bstream;
+                bstream<<index;
+
+                vcl_string model_string="Model_level_1_hist_dart_"+
+                    bstream.str()+".txt";
+                vcl_string query_string="Query_level_1_hist_dart_"+
+                    bstream.str()+".txt";
+
+                vcl_ofstream model_hist(model_string.c_str());
+                vcl_ofstream query_hist(query_string.c_str());
+
+                for ( unsigned int ph=start; ph < stop ; ++ph)
+                {
+                    model_hist<<phoc_model[ph]<<vcl_endl;
+                    query_hist<<phoc_query[ph]<<vcl_endl;
+                    
+                }
+
+                model_hist.close();
+                query_hist.close();
+
+            }
 
         }
 
@@ -7604,6 +7663,8 @@ compute_3d_hist_color(
                     model_sift_right_minus_stream.str();
 
             }
+
+            unsigned int start=phoc_model.size();
 
             compute_color_region_hist(model_sift_left_plus,
                                       model_channel_1,
@@ -7698,6 +7759,34 @@ compute_3d_hist_color(
                                       dbskfg_match_bag_of_fragments::DEFAULT,
                                       query_sift_right_minus_title);
 
+            unsigned int stop=phoc_model.size();
+
+            if ( debug )
+            {
+
+                vcl_stringstream bstream;
+                bstream<<index;
+
+                vcl_string model_string="Model_level_2_hist_dart_"+
+                    bstream.str()+".txt";
+                vcl_string query_string="Query_level_2_hist_dart_"+
+                    bstream.str()+".txt";
+
+                vcl_ofstream model_hist(model_string.c_str());
+                vcl_ofstream query_hist(query_string.c_str());
+
+                for ( unsigned int ph=start; ph < stop ; ++ph)
+                {
+                    model_hist<<phoc_model[ph]<<vcl_endl;
+                    query_hist<<phoc_query[ph]<<vcl_endl;
+                    
+                }
+
+                model_hist.close();
+                query_hist.close();
+
+            }
+
         }
 
         vnl_vector<double> descr1(phoc_model.size(),0.0);
@@ -7721,6 +7810,21 @@ compute_3d_hist_color(
         sift_diff+=dart_distance;
 
         dart_distances.push_back(dart_distance);
+
+        if ( debug )
+        {
+            vcl_cout<<"Tree 1 dart ("
+                    <<path_map[index].first.first
+                    <<","
+                    <<path_map[index].first.second
+                    <<") Tree 2 dart ("
+                    <<path_map[index].second.first
+                    <<","
+                    <<path_map[index].second.second
+                    <<") L2 distance: "
+                    <<dart_distance<<vcl_endl;
+        }
+
     }
 
 
