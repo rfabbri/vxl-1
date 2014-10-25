@@ -662,7 +662,7 @@ private:
         vil_image_view<double>& o2_angle_map,
         vil_image_view<double>& o3_grad_map,
         vil_image_view<double>& o3_angle_map,
-        vnl_vector<double>& hist,
+        vcl_vector<double>& descr,
         vcl_string tile="");
                            
     void compute_color_region_hist(
