@@ -30,6 +30,7 @@
 
 #include <vil/vil_bilin_interp.h>
 #include <bsta/bsta_histogram.h>
+#include <bsta/bsta_joint_histogram_3d.h>
 #include <bsta/bsta_spherical_histogram.h>
 #include <bbas/bil/algo/bil_color_conversions.h>
 
@@ -7209,27 +7210,41 @@ compute_3d_hist_color(
     double width)
 {
  
-     VlFloatVectorComparisonFunction Chi2_distance =    
-      vl_get_vector_comparison_function_f (VlDistanceChi2);
-
     double sift_diff= 0.0;
-    
-    // Get matching pairs
-    for (unsigned i = 0; i < map_list.size(); i++) 
-    {
-        dbskr_scurve_sptr sc1 = curve_list1[i];
-        dbskr_scurve_sptr sc2 = curve_list2[i];
+    double step_size=1.0;
+    bool debug=false;
 
-        vcl_map< vcl_pair<double,double>, vcl_vector<vl_sift_pix> > 
-            model_sift_plus;
-        vcl_map< vcl_pair<double,double>, vcl_vector<vl_sift_pix> > 
-            query_sift_plus;
-        vcl_map< vcl_pair<double,double>, vcl_vector<vl_sift_pix> > 
-            model_sift_minus;
-        vcl_map< vcl_pair<double,double>, vcl_vector<vl_sift_pix> > 
-            query_sift_minus;
+    // Get matching pairs
+    for (unsigned index = 0; index < map_list.size(); index++) 
+    {
+        dbskr_scurve_sptr sc1 = curve_list1[index];
+        dbskr_scurve_sptr sc2 = curve_list2[index];
+
+        unsigned int midpoint_index=sc1->midpoint_index();
+
+        // Compute three level pyramid histogram
+
+        // Level 0
         vcl_set< vcl_pair<double,double> > model_sift;
         vcl_set< vcl_pair<double,double> > query_sift;
+
+        // Level 1
+        vcl_set< vcl_pair<double,double> > model_sift_left;
+        vcl_set< vcl_pair<double,double> > model_sift_right;
+        vcl_set< vcl_pair<double,double> > query_sift_left;
+        vcl_set< vcl_pair<double,double> > query_sift_right;
+
+        // Level 2
+        vcl_set< vcl_pair<double,double> > model_sift_left_plus;
+        vcl_set< vcl_pair<double,double> > model_sift_left_minus;
+        vcl_set< vcl_pair<double,double> > model_sift_right_plus;
+        vcl_set< vcl_pair<double,double> > model_sift_right_minus;
+
+        vcl_set< vcl_pair<double,double> > query_sift_left_plus;
+        vcl_set< vcl_pair<double,double> > query_sift_left_minus;
+        vcl_set< vcl_pair<double,double> > query_sift_right_plus;
+        vcl_set< vcl_pair<double,double> > query_sift_right_minus;
+
 
         vcl_pair<unsigned int,unsigned int> query_key1(0,0);
         vcl_pair<unsigned int,unsigned int> query_key2(0,0);
@@ -7250,6 +7265,21 @@ compute_3d_hist_color(
 
         }
 
+        vgl_polygon<double> model_polygon(1);
+        vgl_polygon<double> query_polygon(1);
+
+        if ( !flag )
+        {
+            sc1->get_polygon(model_polygon);
+            sc2->get_polygon(query_polygon,width);
+        }
+        else
+        {
+            sc1->get_polygon(query_polygon,width);
+            sc2->get_polygon(model_polygon);
+        }
+
+
         bool add_curve=true;
 
         if ( query_dart_curves_.count(query_key1) ||
@@ -7257,14 +7287,27 @@ compute_3d_hist_color(
         {
             add_curve=false;
         }
-        
-        double step_size=1.0;
-        unsigned int num_steps=0.0;
 
-        for (unsigned j = 0; j < map_list[i].size(); ++j) 
+        if ( add_curve )
         {
-            vcl_pair<int, int> cor = map_list[i][j];
-            
+            for (unsigned int s = 0; s < query_polygon.num_sheets(); ++s)
+            {
+                for (unsigned int p = 0; p < query_polygon[s].size(); ++p)
+                {
+                    query_dart_curves_[query_key1].push_back(
+                        query_polygon[s][p]);
+                }
+            }
+                
+            query_dart_curves_[query_key1].push_back(query_polygon[0][0]);
+             
+        }
+
+        
+        for (unsigned j = 0; j < map_list[index].size(); ++j) 
+        {
+            vcl_pair<int, int> cor = map_list[index][j];
+
             // Compute sift for both images
 
             // Shock Point 1 from Model
@@ -7282,7 +7325,7 @@ compute_3d_hist_color(
             ratio=(R2/R1);
                 
 
-            double r1 =0.01;
+            double r1 =0.0;
 
             while ( r1 <= R1 )
             {
@@ -7294,14 +7337,29 @@ compute_3d_hist_color(
 
                     if ( p ==  0 )
                     {
-                        ps1=sc1->fragment_pt(cor.first,r1);
-                        ps2=sc2->fragment_pt(cor.second,r2);
+                        if ( r1== 0 )
+                        {
+                            ps1=sc1->sh_pt(cor.first);
+                            ps2=sc2->sh_pt(cor.second);
+                        }
+                        else
+                        {
+                            ps1=sc1->fragment_pt(cor.first,r1);
+                            ps2=sc2->fragment_pt(cor.second,r2);
+                        }
                     }
                     else
                     {
-                        ps1=sc1->fragment_pt(cor.first,-1.0*r1);
-                        ps2=sc2->fragment_pt(cor.second,-1.0*r2);
-
+                        if ( r1== 0 )
+                        {
+                            ps1=sc1->sh_pt(cor.first);
+                            ps2=sc2->sh_pt(cor.second);
+                        }
+                        else
+                        {
+                            ps1=sc1->fragment_pt(cor.first,-1.0*r1);
+                            ps2=sc2->fragment_pt(cor.second,-1.0*r2);
+                        }
                     }
 
                     if ( !flag )
@@ -7315,54 +7373,42 @@ compute_3d_hist_color(
                         vcl_pair<double,double> ps1_key(ps1.x(),ps1.y());
                         vcl_pair<double,double> ps2_key(ps2.x(),ps2.y());
 
-                        if ( !model_sift.count(ps1_key) )
+                        model_sift.insert(ps1_key);
+                        query_sift.insert(ps2_key);
+
+                        if ( cor.first <= midpoint_index )
                         {
-                            vcl_pair<double,double> key(ps1.x(),ps1.y());
-                            model_sift.insert(key);
+                            model_sift_left.insert(ps1_key);
+                            query_sift_left.insert(ps2_key);
 
                             if ( p == 0  )
                             {
-                                model_sift_plus[key].push_back(ps1.x());
-                                model_sift_plus[key].push_back(ps1.y());
-                                model_sift_plus[key].push_back(
-                                    (R1-r1)/model_scale_ratio);
-                                model_sift_plus[key].push_back(theta_ps1);
+                                model_sift_left_plus.insert(ps1_key);
+                                query_sift_left_plus.insert(ps2_key);
                             }
                             else
                             {
-                                model_sift_minus[key].push_back(ps1.x());
-                                model_sift_minus[key].push_back(ps1.y());
-                                model_sift_minus[key].push_back(
-                                    (R1-r1)/model_scale_ratio);
-                                model_sift_minus[key].push_back(theta_ps1);
+                                model_sift_left_minus.insert(ps1_key);
+                                query_sift_left_minus.insert(ps2_key);
                             }
                         }
-
-
-                        if ( !query_sift.count(ps2_key) )
+                        else
                         {
-                            vcl_pair<double,double> key(ps2.x(),ps2.y());
-                            query_sift.insert(key);
+                            model_sift_right.insert(ps1_key);
+                            query_sift_right.insert(ps2_key);
 
                             if ( p == 0  )
                             {
-                                query_sift_plus[key].push_back(ps2.x());
-                                query_sift_plus[key].push_back(ps2.y());
-                                query_sift_plus[key].push_back(
-                                    (R2-r2)/query_scale_ratio);
-                                query_sift_plus[key].push_back(theta_ps2);
+                                model_sift_right_plus.insert(ps1_key);
+                                query_sift_right_plus.insert(ps2_key);
                             }
                             else
                             {
-                                query_sift_minus[key].push_back(ps2.x());
-                                query_sift_minus[key].push_back(ps2.y());
-                                query_sift_minus[key].push_back(
-                                    (R2-r2)/query_scale_ratio);
-                                query_sift_minus[key].push_back(theta_ps2);
-
+                                model_sift_right_minus.insert(ps1_key);
+                                query_sift_right_minus.insert(ps2_key);
                             }
-                        }
 
+                        }
                     }
                     else
                     {
@@ -7373,548 +7419,309 @@ compute_3d_hist_color(
 
                         vcl_pair<double,double> ps1_key(ps1.x(),ps1.y());
                         vcl_pair<double,double> ps2_key(ps2.x(),ps2.y());
-                    
-                        if ( !model_sift.count(ps1_key))
+
+                        model_sift.insert(ps2_key);
+                        query_sift.insert(ps1_key);
+
+                        if ( cor.first <= midpoint_index )
                         {
-                            vcl_pair<double,double> key(ps1.x(),ps1.y());
-                            model_sift.insert(key);
+                            model_sift_left.insert(ps2_key);
+                            query_sift_left.insert(ps1_key);
 
                             if ( p == 0  )
                             {
-                                model_sift_plus[key].push_back(ps1.x());
-                                model_sift_plus[key].push_back(ps1.y());
-                                model_sift_plus[key].push_back(
-                                    (R1-r1)/query_scale_ratio);
-                                model_sift_plus[key].push_back(theta_ps1);
+                                model_sift_left_plus.insert(ps2_key);
+                                query_sift_left_plus.insert(ps1_key);
                             }
                             else
                             {
-                                model_sift_minus[key].push_back(ps1.x());
-                                model_sift_minus[key].push_back(ps1.y());
-                                model_sift_minus[key].push_back(
-                                    (R1-r1)/query_scale_ratio);
-                                model_sift_minus[key].push_back(theta_ps1);
-
+                                model_sift_left_minus.insert(ps2_key);
+                                query_sift_left_minus.insert(ps1_key);
                             }
                         }
-                       
-                        if ( !query_sift.count(ps2_key))
+                        else
                         {
-                            vcl_pair<double,double> key(ps2.x(),ps2.y());
-                            query_sift.insert(key);
+                            model_sift_right.insert(ps2_key);
+                            query_sift_right.insert(ps1_key);
 
                             if ( p == 0  )
                             {
-                                query_sift_plus[key].push_back(ps2.x());
-                                query_sift_plus[key].push_back(ps2.y());
-                                query_sift_plus[key].push_back(
-                                    (R2-r2)/model_scale_ratio);
-                                query_sift_plus[key].push_back(theta_ps2);
+                                model_sift_right_plus.insert(ps2_key);
+                                query_sift_right_plus.insert(ps1_key);
                             }
                             else
                             {
-                                query_sift_minus[key].push_back(ps2.x());
-                                query_sift_minus[key].push_back(ps2.y());
-                                query_sift_minus[key].push_back(
-                                    (R2-r2)/model_scale_ratio);
-                                query_sift_minus[key].push_back(theta_ps2);
-
+                                model_sift_right_minus.insert(ps2_key);
+                                query_sift_right_minus.insert(ps1_key);
                             }
 
-                
-                        }
 
+                        }
+                                               
                     }
               
                 }
                 r1+=step_size;
             }
-            
-            // Test original medial axis point
-            {
-                vgl_point_2d<double> ps1=sc1->sh_pt(cor.first);
-                vgl_point_2d<double> ps2=sc2->sh_pt(cor.second);
-                
-                r1=0.0;
-                double r2=0.0;
-                
-                if ( !flag )
-                {
-                    
-                    ps1.set(ps1.x()/model_scale_ratio,
-                            ps1.y()/model_scale_ratio);
-                    ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
-                            ps2.y()/query_scale_ratio);
-
-                    vcl_pair<double,double> ps1_key(ps1.x(),ps1.y());
-                    vcl_pair<double,double> ps2_key(ps2.x(),ps2.y());
-                        
-                    if ( !model_sift.count(ps1_key) )
-                    {
-                        vcl_pair<double,double> key(ps1.x(),ps1.y());
-                        model_sift.insert(key);
-
-                        model_sift_plus[key].push_back(ps1.x());
-                        model_sift_plus[key].push_back(ps1.y());
-                        model_sift_plus[key].push_back
-                            ((R1-r1)/model_scale_ratio);
-                        model_sift_plus[key].push_back(theta_ps1);
-
-                        model_sift_minus[key].push_back(ps1.x());
-                        model_sift_minus[key].push_back(ps1.y());
-                        model_sift_minus[key].push_back
-                            ((R1-r1)/model_scale_ratio);
-                        model_sift_minus[key].push_back(theta_ps1);
-
-                    }
-
-                    if ( !query_sift.count(ps2_key) )
-                    {   
-                        vcl_pair<double,double> key(ps2.x(),ps2.y());
-                        query_sift.insert(key);
-
-                        query_sift_plus[key].push_back(ps2.x());
-                        query_sift_plus[key].push_back(ps2.y());
-                        query_sift_plus[key].push_back(
-                            (R2-r2)/query_scale_ratio);
-                        query_sift_plus[key].push_back(theta_ps2);
-
-                        query_sift_minus[key].push_back(ps2.x());
-                        query_sift_minus[key].push_back(ps2.y());
-                        query_sift_minus[key].push_back(
-                            (R2-r2)/query_scale_ratio);
-                        query_sift_minus[key].push_back(theta_ps2);
-
-                    }
-
-                    if ( add_curve )
-                    {
-                        query_dart_curves_[query_key1].push_back(ps2);
-                    }
-
-                    
-                }
-                else
-                {
-                    ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
-                            ps1.y()/query_scale_ratio);
-                    ps2.set(ps2.x()/model_scale_ratio,
-                            ps2.y()/model_scale_ratio);
-                    
-                    vcl_pair<double,double> ps1_key(ps1.x(),ps1.y());
-                    vcl_pair<double,double> ps2_key(ps2.x(),ps2.y());
-
-                    if ( !model_sift.count(ps1_key) )
-                    {
-                        vcl_pair<double,double> key(ps1.x(),ps1.y());
-                        model_sift.insert(key);
-
-                        model_sift_plus[key].push_back(ps1.x());
-                        model_sift_plus[key].push_back(ps1.y());
-                        model_sift_plus[key].push_back(
-                            (R1-r1)/query_scale_ratio);
-                        model_sift_plus[key].push_back(theta_ps1);
-
-                        model_sift_minus[key].push_back(ps1.x());
-                        model_sift_minus[key].push_back(ps1.y());
-                        model_sift_minus[key].push_back(
-                            (R1-r1)/query_scale_ratio);
-                        model_sift_minus[key].push_back(theta_ps1);
-
-                    }
-                  
-                    if (!query_sift.count(ps2_key) )
-                    {
-                        vcl_pair<double,double> key(ps2.x(),ps2.y());
-                        query_sift.insert(key);
-
-                        query_sift_plus[key].push_back(ps2.x());
-                        query_sift_plus[key].push_back(ps2.y());
-                        query_sift_plus[key].push_back(
-                            (R2-r2)/model_scale_ratio);
-                        query_sift_plus[key].push_back(theta_ps2);
-
-                        query_sift_minus[key].push_back(ps2.x());
-                        query_sift_minus[key].push_back(ps2.y());
-                        query_sift_minus[key].push_back(
-                            (R2-r2)/model_scale_ratio);
-                        query_sift_minus[key].push_back(theta_ps2);
-
-                    }
-
-                    if ( add_curve )
-                    {
-                        query_dart_curves_[query_key1].push_back(ps1);
-                    }
-
-                }
-            }
-            
-        }
-
-
-        bsta_spherical_histogram<double> model_plus_hist
-            (10, 5, 0.0, 360.0, 0.0, 180.0,
-             bsta_spherical_histogram<double>
-             ::DEG,
-             bsta_spherical_histogram<double>
-             ::B_0_360,
-             bsta_spherical_histogram<double>
-             ::B_0_180);
-
-        bsta_spherical_histogram<double> model_minus_hist
-            (10, 5, 0.0, 360.0, 0.0, 180.0,
-             bsta_spherical_histogram<double>
-             ::DEG,
-             bsta_spherical_histogram<double>
-             ::B_0_360,
-             bsta_spherical_histogram<double>
-             ::B_0_180);
-
-        bsta_spherical_histogram<double> query_plus_hist
-            (10, 5, 0.0, 360.0, 0.0, 180.0,
-             bsta_spherical_histogram<double>
-             ::DEG,
-             bsta_spherical_histogram<double>
-             ::B_0_360,
-             bsta_spherical_histogram<double>
-             ::B_0_180);
-
-        bsta_spherical_histogram<double> query_minus_hist
-            (10, 5, 0.0, 360.0, 0.0, 180.0,
-             bsta_spherical_histogram<double>
-             ::DEG,
-             bsta_spherical_histogram<double>
-             ::B_0_360,
-             bsta_spherical_histogram<double>
-             ::B_0_180);
-
-
-        vnl_vector<vl_sift_pix> descr1(model_plus_hist.n_azimuth()*
-                                       model_plus_hist.n_elevation()*
-                                       2.0,0.0);
-        vnl_vector<vl_sift_pix> descr2(query_plus_hist.n_azimuth()*
-                                       query_plus_hist.n_elevation()*
-                                       2.0,0.0);
-
-        // Compute model sift plus first
-        {
-            vcl_map< vcl_pair<double,double>, vcl_vector<vl_sift_pix> >::
-                iterator it;
-            for ( it = model_sift_plus.begin() ; it != model_sift_plus.end();
-                  ++it)
-            {
-                vcl_vector<vl_sift_pix> model_vec=(*it).second;   
-                vgl_point_2d<double> model_pt(model_vec[0],model_vec[1]);
-
-                double c1 = vil_bilin_interp_safe(model_channel_1,model_pt.x(),
-                                                  model_pt.y());
-                double c2 = vil_bilin_interp_safe(model_channel_2,model_pt.x(),
-                                                  model_pt.y());
-                double c3 = vil_bilin_interp_safe(model_channel_3,model_pt.x(),
-                                                  model_pt.y());
-                
-                double az(0.0),el(0.0);
-                model_plus_hist
-                    .convert_to_spherical(c2/100.0,c3/100.0,c1/100.0,az, el);
-                model_plus_hist.upcount(az,el);
-
-            }
-
-            for ( it = model_sift_minus.begin() ; it != model_sift_minus.end();
-                  ++it)
-            {
-                vcl_vector<vl_sift_pix> model_vec=(*it).second;   
-                vgl_point_2d<double> model_pt(model_vec[0],model_vec[1]);
-
-                double c1 = vil_bilin_interp_safe(model_channel_1,model_pt.x(),
-                                                  model_pt.y());
-                double c2 = vil_bilin_interp_safe(model_channel_2,model_pt.x(),
-                                                  model_pt.y());
-                double c3 = vil_bilin_interp_safe(model_channel_3,model_pt.x(),
-                                                  model_pt.y());
-                
-                double az(0.0),el(0.0);
-                model_minus_hist
-                    .convert_to_spherical(c2/100.0,c3/100.0,c1/100.0,az, el);
-                model_minus_hist.upcount(az,el);
-
-                
-            }
-
-            unsigned int index=0;
-            for (int az = 0; az< model_plus_hist.n_azimuth() ; ++az)
-            {
-                for (int el = 0; el<model_plus_hist.n_elevation(); ++el) 
-                {
-                    double counts = model_plus_hist.counts(az,el);
-                    descr1.put(index,counts);
-                    index++;
-                }
-            }
-            
-            for (int az = 0; az< model_minus_hist.n_azimuth() ; ++az)
-            {
-                for (int el = 0; el<model_minus_hist.n_elevation(); ++el) 
-                {
-                    double counts = model_minus_hist.counts(az,el);
-                    descr1.put(index,counts);
-                    index++;
-                }
-            }
-            
-        }
-
-        // Compute query sift plus first
-        {
-            vcl_map< vcl_pair<double,double>, vcl_vector<vl_sift_pix> >::
-                iterator it;
-            for ( it = query_sift_plus.begin() ; it != query_sift_plus.end();
-                  ++it)
-            {
-                vcl_vector<vl_sift_pix> query_vec=(*it).second;   
-                vgl_point_2d<double> query_pt(query_vec[0],query_vec[1]);
-
-                double c1 = vil_bilin_interp_safe(query_channel_1,query_pt.x(),
-                                                  query_pt.y());
-                double c2 = vil_bilin_interp_safe(query_channel_2,query_pt.x(),
-                                                  query_pt.y());
-                double c3 = vil_bilin_interp_safe(query_channel_3,query_pt.x(),
-                                                  query_pt.y());
-                
-                double az(0.0),el(0.0);
-                query_plus_hist
-                    .convert_to_spherical(c2/100.0,c3/100.0,c1/100.0,az, el);
-                query_plus_hist.upcount(az,el);
-
-                
-            }
-
-            for ( it = query_sift_minus.begin() ; it != query_sift_minus.end();
-                  ++it)
-            {
-                vcl_vector<vl_sift_pix> query_vec=(*it).second;   
-                vgl_point_2d<double> query_pt(query_vec[0],query_vec[1]);
-
-                double c1 = vil_bilin_interp_safe(query_channel_1,query_pt.x(),
-                                                  query_pt.y());
-                double c2 = vil_bilin_interp_safe(query_channel_2,query_pt.x(),
-                                                  query_pt.y());
-                double c3 = vil_bilin_interp_safe(query_channel_3,query_pt.x(),
-                                                  query_pt.y());
-                
-                double az(0.0),el(0.0);
-                query_minus_hist
-                    .convert_to_spherical(c2/100.0,c3/100.0,c1/100.0,az, el);
-                query_minus_hist.upcount(az,el);
-
-                
-            }
-
-
-            
-            unsigned int index=0;
-            for (int az = 0; az< query_plus_hist.n_azimuth() ; ++az)
-            {
-                for (int el = 0; el<query_plus_hist.n_elevation(); ++el) 
-                {
-                    double counts = query_plus_hist.counts(az,el);
-                    descr2.put(index,counts);
-                    index++;
-                }
-            }
-            
-            for (int az = 0; az< query_minus_hist.n_azimuth() ; ++az)
-            {
-                for (int el = 0; el<query_minus_hist.n_elevation(); ++el) 
-                {
-                    double counts = query_minus_hist.counts(az,el);
-                    descr2.put(index,counts);
-                    index++;
-                }
-            }
-            
-
-
-        }
-
-        descr1.normalize();
-        descr2.normalize();
-
-        vl_sift_pix local_distance[1];
-        vl_eval_vector_comparison_on_all_pairs_f(local_distance,
-                                                 descr1.size(),
-                                                 descr1.data_block(),
-                                                 1,
-                                                 descr2.data_block(),
-                                                 1,
-                                                 Chi2_distance);
-
-
-        sift_diff+=0.5*local_distance[0];
-        dart_distances.push_back(0.5*local_distance[0]);
-
-    
-    
-        // vcl_cout<<"Tree 1 dart ("
-        //         <<path_map[i].first.first
-        //         <<","
-        //         <<path_map[i].first.second
-        //         <<") Tree 2 dart ("
-        //         <<path_map[i].second.first
-        //         <<","
-        //         <<path_map[i].second.second
-        //         <<") L2 distance: "
-        //         <<local_distance[0]<<vcl_endl;
-
-
-    
-        // // Write out data
-        // {
-        //     vcl_stringstream model_plus_stream;
-        //     model_plus_stream<<"Dart_"<<i<<"_model_sift_plus.txt";
-        //     vcl_ofstream model_sift_plus_stream(
-        //         model_plus_stream.str().c_str());
-
-        //     vcl_stringstream model_minus_stream;
-        //     model_minus_stream<<"Dart_"<<i<<"_model_sift_minus.txt";
-        //     vcl_ofstream model_sift_minus_stream(
-        //         model_minus_stream.str().c_str());
            
-        //     vcl_stringstream query_plus_stream;
-        //     query_plus_stream<<"Dart_"<<i<<"_query_sift_plus.txt";
-        //     vcl_ofstream query_sift_plus_stream(
-        //         query_plus_stream.str().c_str());
+        }
 
-        //     vcl_stringstream query_minus_stream;
-        //     query_minus_stream<<"Dart_"<<i<<"_query_sift_minus.txt";
-        //     vcl_ofstream query_sift_minus_stream(
-        //         query_minus_stream.str().c_str());
+        vcl_vector<double> phoc_model;
+        vcl_vector<double> phoc_query;
 
-        //     vcl_map< vcl_pair<double,double>, vcl_vector<vl_sift_pix> >::
-        //         iterator it;
-        //     for ( it = model_sift_plus.begin() ; it != model_sift_plus.end();
-        //           ++it)
-        //     {
-        //         vcl_vector<vl_sift_pix> model_vec=(*it).second;   
-        //         vgl_point_2d<double> model_pt(model_vec[0],model_vec[1]);
-    
-        //         double c1 = vil_bilin_interp_safe(model_channel_1,model_pt.x(),
-        //                                           model_pt.y());
-        //         double c2 = vil_bilin_interp_safe(model_channel_2,model_pt.x(),
-        //                                           model_pt.y());
-        //         double c3 = vil_bilin_interp_safe(model_channel_3,model_pt.x(),
-        //                                           model_pt.y());
+        // Compute Level 0 color distance 
+        {
+            vcl_string model_sift_title("");
+            vcl_string query_sift_title("");
 
-        //         model_sift_plus_stream<<model_pt.x()<<" "
-        //                               <<model_pt.y()<<" "
-        //                               <<c1<<" "<<c2<<" "<<c3<<vcl_endl;
-        //     }
+            if ( debug )
+            {
+                vcl_stringstream model_sift_stream;
+                model_sift_stream<<"Model_sift_"<<index;
 
-    
-        //     for ( it = model_sift_minus.begin() ; it != model_sift_minus.end();
-        //           ++it)
-        //     {
-        //         vcl_vector<vl_sift_pix> model_vec=(*it).second;   
-        //         vgl_point_2d<double> model_pt(model_vec[0],model_vec[1]);
-
-        //         double c1 = vil_bilin_interp_safe(model_channel_1,model_pt.x(),
-        //                                           model_pt.y());
-        //         double c2 = vil_bilin_interp_safe(model_channel_2,model_pt.x(),
-        //                                           model_pt.y());
-        //         double c3 = vil_bilin_interp_safe(model_channel_3,model_pt.x(),
-        //                                           model_pt.y());
-
-        //         model_sift_minus_stream<<model_pt.x()<<" "
-        //                                <<model_pt.y()<<" "
-        //                                <<c1<<" "<<c2<<" "<<c3<<vcl_endl;
-
-        //     }
-    
-        //     for ( it = query_sift_plus.begin() ; it != query_sift_plus.end();
-        //           ++it)
-        //     {
-        //         vcl_vector<vl_sift_pix> query_vec=(*it).second;   
-        //         vgl_point_2d<double> query_pt(query_vec[0],query_vec[1]);
-
-        //         double c1 = vil_bilin_interp_safe(query_channel_1,query_pt.x(),
-        //                                           query_pt.y());
-        //         double c2 = vil_bilin_interp_safe(query_channel_2,query_pt.x(),
-        //                                           query_pt.y());
-        //         double c3 = vil_bilin_interp_safe(query_channel_3,query_pt.x(),
-        //                                           query_pt.y());
-
-        //         query_sift_plus_stream<<query_pt.x()<<" "
-        //                               <<query_pt.y()<<" "
-        //                               <<c1<<" "<<c2<<" "<<c3<<vcl_endl;
-    
-        //     }
-    
-        //     for ( it = query_sift_minus.begin() ; it != query_sift_minus.end();
-        //           ++it)
-        //     {
-        //         vcl_vector<vl_sift_pix> query_vec=(*it).second;   
-        //         vgl_point_2d<double> query_pt(query_vec[0],query_vec[1]);
-    
-        //         double c1 = vil_bilin_interp_safe(query_channel_1,query_pt.x(),
-        //                                           query_pt.y());
-        //         double c2 = vil_bilin_interp_safe(query_channel_2,query_pt.x(),
-        //                                           query_pt.y());
-        //         double c3 = vil_bilin_interp_safe(query_channel_3,query_pt.x(),
-        //                                           query_pt.y());
-    
-        //         query_sift_minus_stream<<query_pt.x()<<" "
-        //                                <<query_pt.y()<<" "
-        //                                <<c1<<" "<<c2<<" "<<c3<<vcl_endl;
+                vcl_stringstream query_sift_stream;
+                query_sift_stream<<"Query_sift_"<<index;
                 
-        //     }
-         
-        //     model_sift_plus_stream.close();
-        //     model_sift_minus_stream.close();
+                model_sift_title=model_sift_stream.str();
+                query_sift_title=query_sift_stream.str();
+            }
 
-        //     query_sift_plus_stream.close();
-        //     query_sift_minus_stream.close();
-        // }
-    
-        // // Write out hist data
-        // {
-        //     vcl_stringstream model_plus_hist_stream;
-        //     model_plus_hist_stream<<"Hist_"<<i<<"_model_sift_plus.txt";
-        //     vcl_ofstream model_sift_plus_hist_stream(
-        //         model_plus_hist_stream.str().c_str());
-            
-        //     vcl_stringstream model_minus_hist_stream;
-        //     model_minus_hist_stream<<"Hist_"<<i<<"_model_sift_minus.txt";
-        //     vcl_ofstream model_sift_minus_hist_stream(
-        //         model_minus_hist_stream.str().c_str());
-           
-        //     vcl_stringstream query_plus_hist_stream;
-        //     query_plus_hist_stream<<"Hist_"<<i<<"_query_sift_plus.txt";
-        //     vcl_ofstream query_sift_plus_hist_stream(
-        //         query_plus_hist_stream.str().c_str());
+            compute_color_region_hist(model_sift,
+                                      model_channel_1,
+                                      model_channel_2,
+                                      model_channel_3,
+                                      phoc_model,
+                                      dbskfg_match_bag_of_fragments::DEFAULT,
+                                      model_sift_title);
 
-        //     vcl_stringstream query_minus_hist_stream;
-        //     query_minus_hist_stream<<"Hist_"<<i<<"_query_sift_minus.txt";
-        //     vcl_ofstream query_sift_minus_hist_stream(
-        //         query_minus_hist_stream.str().c_str());
+            compute_color_region_hist(query_sift,
+                                      query_channel_1,
+                                      query_channel_2,
+                                      query_channel_3,
+                                      phoc_query,
+                                      dbskfg_match_bag_of_fragments::DEFAULT,
+                                      query_sift_title);
 
-        //     model_plus_hist.print_to_text(model_sift_plus_hist_stream);
-        //     model_minus_hist.print_to_text(model_sift_minus_hist_stream);
+        }
 
-        //     query_plus_hist.print_to_text(query_sift_plus_hist_stream);
-        //     query_minus_hist.print_to_text(query_sift_minus_hist_stream);
+        // Compute Level 1 distance and descriptors
+        {
+            vcl_string model_sift_left_title("");
+            vcl_string query_sift_left_title("");
 
-        //     model_sift_plus_hist_stream.close();
-        //     model_sift_minus_hist_stream.close();
+            vcl_string model_sift_right_title("");
+            vcl_string query_sift_right_title("");
 
-        //     query_sift_plus_hist_stream.close();
-        //     query_sift_minus_hist_stream.close();
+            if ( debug )
+            {
+                vcl_stringstream model_sift_left_stream;
+                model_sift_left_stream<<"Model_sift_left_"<<index;
 
-        // }
-    
-    
+                vcl_stringstream query_sift_left_stream;
+                query_sift_left_stream<<"Query_sift_left_"<<index;
+                
+                model_sift_left_title=model_sift_left_stream.str();
+                query_sift_left_title=query_sift_left_stream.str();
+
+                vcl_stringstream model_sift_right_stream;
+                model_sift_right_stream<<"Model_sift_right_"<<index;
+
+                vcl_stringstream query_sift_right_stream;
+                query_sift_right_stream<<"Query_sift_right_"<<index;
+                
+                model_sift_right_title=model_sift_right_stream.str();
+                query_sift_right_title=query_sift_right_stream.str();
+
+            }
+
+            compute_color_region_hist(model_sift_left,
+                                      model_channel_1,
+                                      model_channel_2,
+                                      model_channel_3,
+                                      phoc_model,
+                                      dbskfg_match_bag_of_fragments::DEFAULT,
+                                      model_sift_left_title);
+
+            compute_color_region_hist(model_sift_right,
+                                      model_channel_1,
+                                      model_channel_2,
+                                      model_channel_3,
+                                      phoc_model,
+                                      dbskfg_match_bag_of_fragments::DEFAULT,
+                                      model_sift_right_title);
+
+            compute_color_region_hist(query_sift_left,
+                                      query_channel_1,
+                                      query_channel_2,
+                                      query_channel_3,
+                                      phoc_query,
+                                      dbskfg_match_bag_of_fragments::DEFAULT,
+                                      query_sift_left_title);
+
+            compute_color_region_hist(query_sift_right,
+                                      query_channel_1,
+                                      query_channel_2,
+                                      query_channel_3,
+                                      phoc_query,
+                                      dbskfg_match_bag_of_fragments::DEFAULT,
+                                      query_sift_right_title);
+
+        }
+
+
+        // Compute Level 2 distances and descriptors
+        {
+            vnl_vector<double> model_sift_left_plus_descr;
+            vnl_vector<double> model_sift_right_plus_descr;
+            vnl_vector<double> model_sift_left_minus_descr;
+            vnl_vector<double> model_sift_right_minus_descr;
+
+            vcl_string model_sift_left_plus_title("");
+            vcl_string model_sift_left_minus_title("");
+
+            vcl_string model_sift_right_plus_title("");
+            vcl_string model_sift_right_minus_title("");
+
+            if ( debug )
+            {
+                vcl_stringstream model_sift_left_plus_stream;
+                model_sift_left_plus_stream<<"Model_sift_left_plus_"<<index;
+
+                vcl_stringstream model_sift_left_minus_stream;
+                model_sift_left_minus_stream<<"Model_sift_left_minus_"<<index;
+                
+                model_sift_left_plus_title=model_sift_left_plus_stream.str();
+                model_sift_left_minus_title=model_sift_left_minus_stream.str();
+
+                vcl_stringstream model_sift_right_plus_stream;
+                model_sift_right_plus_stream<<"Model_sift_right_plus_"<<index;
+
+                vcl_stringstream model_sift_right_minus_stream;
+                model_sift_right_minus_stream<<"Model_sift_right_minus_"<<index;
+                
+                model_sift_right_plus_title=model_sift_right_plus_stream.str();
+                model_sift_right_minus_title=
+                    model_sift_right_minus_stream.str();
+
+            }
+
+            compute_color_region_hist(model_sift_left_plus,
+                                      model_channel_1,
+                                      model_channel_2,
+                                      model_channel_3,
+                                      phoc_model,
+                                      dbskfg_match_bag_of_fragments::DEFAULT,
+                                      model_sift_left_plus_title);
+
+            compute_color_region_hist(model_sift_right_plus,
+                                      model_channel_1,
+                                      model_channel_2,
+                                      model_channel_3,
+                                      phoc_model,
+                                      dbskfg_match_bag_of_fragments::DEFAULT,
+                                      model_sift_right_plus_title);
+
+            compute_color_region_hist(model_sift_left_minus,
+                                      model_channel_1,
+                                      model_channel_2,
+                                      model_channel_3,
+                                      phoc_model,
+                                      dbskfg_match_bag_of_fragments::DEFAULT,
+                                      model_sift_left_minus_title);
+
+            compute_color_region_hist(model_sift_right_minus,
+                                      model_channel_1,
+                                      model_channel_2,
+                                      model_channel_3,
+                                      phoc_model,
+                                      dbskfg_match_bag_of_fragments::DEFAULT,
+                                      model_sift_right_minus_title);
+
+            vcl_string query_sift_left_plus_title("");
+            vcl_string query_sift_left_minus_title("");
+
+            vcl_string query_sift_right_plus_title("");
+            vcl_string query_sift_right_minus_title("");
+
+            if ( debug )
+            {
+                vcl_stringstream query_sift_left_plus_stream;
+                query_sift_left_plus_stream<<"Query_sift_left_plus_"<<index;
+
+                vcl_stringstream query_sift_left_minus_stream;
+                query_sift_left_minus_stream<<"Query_sift_left_minus_"<<index;
+                
+                query_sift_left_plus_title=query_sift_left_plus_stream.str();
+                query_sift_left_minus_title=query_sift_left_minus_stream.str();
+
+                vcl_stringstream query_sift_right_plus_stream;
+                query_sift_right_plus_stream<<"Query_sift_right_plus_"<<index;
+
+                vcl_stringstream query_sift_right_minus_stream;
+                query_sift_right_minus_stream<<"Query_sift_right_minus_"<<index;
+                
+                query_sift_right_plus_title=query_sift_right_plus_stream.str();
+                query_sift_right_minus_title=
+                    query_sift_right_minus_stream.str();
+
+            }
+
+            compute_color_region_hist(query_sift_left_plus,
+                                      query_channel_1,
+                                      query_channel_2,
+                                      query_channel_3,
+                                      phoc_query,
+                                      dbskfg_match_bag_of_fragments::DEFAULT,
+                                      query_sift_left_plus_title);
+
+            compute_color_region_hist(query_sift_right_plus,
+                                      query_channel_1,
+                                      query_channel_2,
+                                      query_channel_3,
+                                      phoc_query,
+                                      dbskfg_match_bag_of_fragments::DEFAULT,
+                                      query_sift_right_plus_title);
+
+            compute_color_region_hist(query_sift_left_minus,
+                                      query_channel_1,
+                                      query_channel_2,
+                                      query_channel_3,
+                                      phoc_query,
+                                      dbskfg_match_bag_of_fragments::DEFAULT,
+                                      query_sift_left_minus_title);
+
+            compute_color_region_hist(query_sift_right_minus,
+                                      query_channel_1,
+                                      query_channel_2,
+                                      query_channel_3,
+                                      phoc_query,
+                                      dbskfg_match_bag_of_fragments::DEFAULT,
+                                      query_sift_right_minus_title);
+
+        }
+
+        vnl_vector<double> descr1(phoc_model.size(),0.0);
+        vnl_vector<double> descr2(phoc_query.size(),0.0);
+
+        double model_sum(0.0);
+        double query_sum(0.0);
+        for ( unsigned int p=0; p < phoc_model.size() ; ++p)
+        {
+            descr1.put(p,phoc_model[p]);
+            descr2.put(p,phoc_query[p]);
+
+            model_sum+=phoc_model[p];
+            query_sum+=phoc_query[p];
+        }
+
+        descr1/=model_sum;
+        descr2/=query_sum;
+
+        double dart_distance=chi_squared_distance(descr1,descr2);
+        sift_diff+=dart_distance;
+
+        dart_distances.push_back(dart_distance);
     }
-    
 
 
     vcl_pair<double,double> app_diff(sift_diff,sift_diff/map_list.size());
@@ -9967,6 +9774,82 @@ void dbskfg_match_bag_of_fragments::compute_grad_region_hist(
 
 
 
+
+}
+
+
+
+void dbskfg_match_bag_of_fragments::compute_color_region_hist(
+    vcl_set<vcl_pair<double,double> >& samples,
+    vil_image_view<double>& o1,
+    vil_image_view<double>& o2,
+    vil_image_view<double>& o3,
+    vcl_vector<double>& descr,
+    LabBinType bintype,
+    vcl_string title)
+{
+
+    double min_l(0.0),max_l(0.0);
+    double min_a(0.0),max_a(0.0);
+    double min_b(0.0),max_b(0.0);
+    unsigned int bins_l(0),bins_a(0),bins_b(0);
+
+    if ( bintype == dbskfg_match_bag_of_fragments::DEFAULT )
+    {
+        min_l=0; max_l=100;
+        min_a=-110; max_a=110;
+        min_b=-110; max_b=110;
+        bins_l=10;
+        bins_a=20;
+        bins_b=20;
+    }
+   
+    bsta_joint_histogram_3d<double> color_hist(
+        min_l,max_l,bins_l,
+        min_a,max_a,bins_a,
+        min_b,max_b,bins_b);
+
+    vcl_set<vcl_pair<double,double> >::iterator pit;
+    for ( pit = samples.begin() ; pit != samples.end() ; ++pit)
+    {
+        double L_value = vil_bilin_interp_safe(o1,
+                                              (*pit).first,
+                                               (*pit).second);
+        double a_value = vil_bilin_interp_safe(o2,
+                                               (*pit).first,
+                                               (*pit).second);        
+        double b_value = vil_bilin_interp_safe(o3,
+                                               (*pit).first,
+                                               (*pit).second);
+        
+        color_hist.upcount(L_value,0,a_value,0,b_value,1);
+    }
+
+    for (unsigned int l = 0; l<bins_l; l++)
+    {
+        for (unsigned int a = 0; a<bins_a; a++)
+        {
+            for (unsigned int b = 0; b<bins_b; b++)
+            {
+                double value=color_hist.get_count(l,a,b);
+                descr.push_back(value);
+            }
+        }
+    }
+
+    if ( title.size() )
+    {
+        vcl_string samp_title=title+"_samples.txt";
+        vcl_ofstream output(samp_title.c_str());
+        for ( pit = samples.begin() ; pit != samples.end() ; ++pit)
+        {
+            output<<(*pit).first<<" "<<(*pit).second<<vcl_endl;
+
+
+        }
+        output.close();
+        
+    }
 
 }
 

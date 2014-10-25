@@ -63,6 +63,13 @@ public:
         NOPP
     };
 
+    //: Enum
+    enum LabBinType
+    {
+        DEFAULT=0,
+        SPHERE
+    };
+
     //: Constructor
     dbskfg_match_bag_of_fragments
         ( vcl_string model_file,
@@ -657,7 +664,16 @@ private:
         vil_image_view<double>& o3_angle_map,
         vnl_vector<double>& hist,
         vcl_string tile="");
-                                  
+                           
+    void compute_color_region_hist(
+        vcl_set<vcl_pair<double,double> >& samples,
+        vil_image_view<double>& o1,
+        vil_image_view<double>& o2,
+        vil_image_view<double>& o3,
+        vcl_vector<double>& descr,
+        LabBinType bin_type,
+        vcl_string title="");
+       
     void compute_sift_along_curve(dbskr_scurve_sptr scurve,
                                   vnl_matrix<vl_sift_pix>& descriptors,
                                   vl_sift_pix* red_grad_data,
