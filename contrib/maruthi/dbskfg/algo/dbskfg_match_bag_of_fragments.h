@@ -56,7 +56,7 @@ public:
     };
 
     //: Enum
-    enum ColorSpace
+    enum GradColorSpace
     {
         RGB=0,
         OPP,
@@ -94,7 +94,7 @@ public:
           double area_weight          = 0.0f,
           double ref_area             = 10000.0f,
           ShapeAlgorithmArea shape_alg= SCALE_TO_MEAN,
-          ColorSpace         color_space = OPP,
+          GradColorSpace  grad_color_space = OPP,
           vil_image_resource_sptr model_image=0,
           vil_image_resource_sptr query_image=0,
           vcl_string model_image_path="");
@@ -362,7 +362,7 @@ private:
     ShapeAlgorithmArea shape_alg_;
 
     // Color Space to use
-    ColorSpace color_space_;
+    GradColorSpace grad_color_space_;
 
     void load_model(vcl_string model_dir);
     void load_query(vcl_string query_dir);
@@ -640,7 +640,7 @@ private:
         vil_image_view<double>& o1,
         vil_image_view<double>& o2,
         vil_image_view<double>& o3,
-        ColorSpace color_space);
+        GradColorSpace color_space);
 
     void write_out_dart_data();
 

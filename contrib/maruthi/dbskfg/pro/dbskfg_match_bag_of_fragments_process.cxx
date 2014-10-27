@@ -77,7 +77,7 @@ dbskfg_match_bag_of_fragments_process::dbskfg_match_bag_of_fragments_process()
                            "-ref_area", (double) 10000.0f)||
         !parameters()->add("mask gradient", "-mask",(bool)false) ||
         !parameters()->add("shape algorithm", "-shape_alg",choices,1) ||
-        !parameters()->add("color space", "-color_space",color_choices,1)
+        !parameters()->add("grad color space", "-color_space",color_choices,1)
         
 
         )
@@ -233,7 +233,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
         
     }
 
-    dbskfg_match_bag_of_fragments::ColorSpace color_space =
+    dbskfg_match_bag_of_fragments::GradColorSpace color_space =
         dbskfg_match_bag_of_fragments::OPP;
    
     if ( color_alg == 0 )

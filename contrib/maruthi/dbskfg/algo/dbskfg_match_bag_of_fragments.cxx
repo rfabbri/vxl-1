@@ -104,7 +104,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
     double area_weight,
     double ref_area,
     ShapeAlgorithmArea shape_alg,
-    ColorSpace color_space,
+    GradColorSpace color_space,
     vil_image_resource_sptr model_image,
     vil_image_resource_sptr query_image,
     vcl_string model_image_path
@@ -130,7 +130,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
       area_weight_(area_weight),
       ref_area_(ref_area),
       shape_alg_(shape_alg),
-      color_space_(color_space),
+      grad_color_space_(color_space),
       model_image_(model_image),
       query_image_(query_image),
       model_grad_data_(0),
@@ -221,7 +221,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                                   mask_grad);
 
                 vil_image_view<double> o1,o2,o3;
-                convert_to_color_space(model_img_sptr,o1,o2,o3,color_space_);
+                convert_to_color_space(model_img_sptr,o1,o2,o3,grad_color_space_);
 
                 vil_image_view<double> L_img,a_img,b_img;
 
@@ -322,7 +322,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                               mask_grad);
             
             vil_image_view<double> o1,o2,o3;
-            convert_to_color_space(model_image_,o1,o2,o3,color_space_);
+            convert_to_color_space(model_image_,o1,o2,o3,grad_color_space_);
             
             model_L_data_.set_size(model_image_->ni(),model_image_->nj());
             model_a_data_.set_size(model_image_->ni(),model_image_->nj());
@@ -365,7 +365,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                               mask_grad);
 
             vil_image_view<double> o1,o2,o3;
-            convert_to_color_space(query_image_,o1,o2,o3,color_space_);
+            convert_to_color_space(query_image_,o1,o2,o3,grad_color_space_);
             
             query_L_data_.set_size(query_image_->ni(),query_image_->nj());
             query_a_data_.set_size(query_image_->ni(),query_image_->nj());
@@ -9450,7 +9450,7 @@ void dbskfg_match_bag_of_fragments::convert_to_color_space(
     vil_image_view<double>& o1,
     vil_image_view<double>& o2,
     vil_image_view<double>& o3,
-    ColorSpace color_space)
+    GradColorSpace color_space)
 {
     vil_image_view<vxl_byte> image = input_image->get_view();
     unsigned int w = image.ni(); 
