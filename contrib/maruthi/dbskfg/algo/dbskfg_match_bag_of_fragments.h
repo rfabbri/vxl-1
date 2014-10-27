@@ -64,6 +64,14 @@ public:
     };
 
     //: Enum
+    enum RawColorSpace
+    {
+        LAB=0,
+        HSV,
+        RGB_2
+    };
+
+    //: Enum
     enum LabBinType
     {
         DEFAULT=0,
@@ -95,6 +103,7 @@ public:
           double ref_area             = 10000.0f,
           ShapeAlgorithmArea shape_alg= SCALE_TO_MEAN,
           GradColorSpace  grad_color_space = OPP,
+          RawColorSpace   raw_color_space = LAB,
           vil_image_resource_sptr model_image=0,
           vil_image_resource_sptr query_image=0,
           vcl_string model_image_path="");
@@ -361,8 +370,11 @@ private:
     // Algorithm for shape coice
     ShapeAlgorithmArea shape_alg_;
 
-    // Color Space to use
+    // Color Space to use for computing gradients
     GradColorSpace grad_color_space_;
+
+    // Raw color space to use for computing color histograms
+    RawColorSpace raw_color_space_;
 
     void load_model(vcl_string model_dir);
     void load_query(vcl_string query_dir);

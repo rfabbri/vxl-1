@@ -104,7 +104,8 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
     double area_weight,
     double ref_area,
     ShapeAlgorithmArea shape_alg,
-    GradColorSpace color_space,
+    GradColorSpace grad_color_space,
+    RawColorSpace raw_color_space,
     vil_image_resource_sptr model_image,
     vil_image_resource_sptr query_image,
     vcl_string model_image_path
@@ -130,7 +131,8 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
       area_weight_(area_weight),
       ref_area_(ref_area),
       shape_alg_(shape_alg),
-      grad_color_space_(color_space),
+      grad_color_space_(grad_color_space),
+      raw_color_space_(raw_color_space),
       model_image_(model_image),
       query_image_(query_image),
       model_grad_data_(0),
@@ -145,6 +147,32 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
       query_sift_filter_(0)
       
 {
+
+    if ( raw_color_space_ == dbskfg_match_bag_of_fragments::LAB )
+    {
+        vcl_cout<<"Computing color histograms over LAB space"<<vcl_endl;
+    }
+    else if ( raw_color_space_ == dbskfg_match_bag_of_fragments::HSV )
+    {
+        vcl_cout<<"Computing color histograms over HSV space"<<vcl_endl;
+    }
+    else
+    {
+        vcl_cout<<"Computing color histograms over RGB_2 space"<<vcl_endl;
+    }
+
+    if ( grad_color_space_ == dbskfg_match_bag_of_fragments::RGB )
+    {
+        vcl_cout<<"Computing color gradients over RGB space"<<vcl_endl;
+    }
+    else if ( grad_color_space_ == dbskfg_match_bag_of_fragments::OPP )
+    {
+        vcl_cout<<"Computing color gradients over OPP space"<<vcl_endl;
+    }
+    else
+    {
+        vcl_cout<<"Computing color gradients over NOPP space"<<vcl_endl;
+    }
 
     output_match_file_ = output_match_file_ + "_similarity_matrix.xml";
     output_html_file_  = output_html_file_ +  "_similarity_matrix.html";
@@ -221,7 +249,8 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                                   mask_grad);
 
                 vil_image_view<double> o1,o2,o3;
-                convert_to_color_space(model_img_sptr,o1,o2,o3,grad_color_space_);
+                convert_to_color_space(model_img_sptr,o1,o2,o3,
+                                       grad_color_space_);
 
                 vil_image_view<double> L_img,a_img,b_img;
 

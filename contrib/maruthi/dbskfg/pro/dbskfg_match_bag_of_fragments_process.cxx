@@ -25,10 +25,15 @@ dbskfg_match_bag_of_fragments_process::dbskfg_match_bag_of_fragments_process()
     choices.push_back("Scale to Larger Shape");
     choices.push_back("Scale to Smaller Shape");
 
-    vcl_vector<vcl_string> color_choices;
-    color_choices.push_back("RGB");
-    color_choices.push_back("Opponent");
-    color_choices.push_back("Normalized Opponent");
+    vcl_vector<vcl_string> grad_color_choices;
+    grad_color_choices.push_back("RGB");
+    grad_color_choices.push_back("Opponent");
+    grad_color_choices.push_back("Normalized Opponent");
+
+    vcl_vector<vcl_string> raw_color_choices;
+    raw_color_choices.push_back("LAB");
+    raw_color_choices.push_back("HSV");
+    raw_color_choices.push_back("RGB");
 
     if (!parameters()->add( "Model folder:" , 
                             "-model_folder" , bpro1_filepath("", "")) ||
@@ -77,8 +82,10 @@ dbskfg_match_bag_of_fragments_process::dbskfg_match_bag_of_fragments_process()
                            "-ref_area", (double) 10000.0f)||
         !parameters()->add("mask gradient", "-mask",(bool)false) ||
         !parameters()->add("shape algorithm", "-shape_alg",choices,1) ||
-        !parameters()->add("grad color space", "-color_space",color_choices,1)
-        
+        !parameters()->add("grad color space", "-grad_color_space",
+                           grad_color_choices,1) ||
+        !parameters()->add("raw color space", "-raw_color_space",
+                           raw_color_choices,0)        
 
         )
 
@@ -187,6 +194,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     double ref_area             = 10000.0f;
     unsigned int shape_alg      = 1;
     unsigned int color_alg      = 1;
+    unsigned int raw_color      = 1;
     bool mask_grad              = false;
 
     parameters()->get_value("-elastic_splice_cost"  , elastic_splice_cost); 
@@ -207,8 +215,9 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     parameters()->get_value("-area_weight"          , area_weight);
     parameters()->get_value("-ref_area"             , ref_area);
     parameters()->get_value("-shape_alg"            , shape_alg );
-    parameters()->get_value("-color_space"          , color_alg );
+    parameters()->get_value("-grad_color_space"     , color_alg );
     parameters()->get_value("-mask"                 , mask_grad );
+    parameters()->get_value("-raw_color_space"      , raw_color );
 
     dbskfg_match_bag_of_fragments::ShapeAlgorithmArea shape_alg_area=
         dbskfg_match_bag_of_fragments::SCALE_TO_MEAN;
@@ -233,20 +242,36 @@ bool dbskfg_match_bag_of_fragments_process::execute()
         
     }
 
-    dbskfg_match_bag_of_fragments::GradColorSpace color_space =
+    dbskfg_match_bag_of_fragments::GradColorSpace grad_color_space =
         dbskfg_match_bag_of_fragments::OPP;
    
     if ( color_alg == 0 )
     {
-        color_space = dbskfg_match_bag_of_fragments::RGB;
+        grad_color_space = dbskfg_match_bag_of_fragments::RGB;
     }
     else if ( color_alg == 1 )
     {
-        color_space = dbskfg_match_bag_of_fragments::OPP;
+        grad_color_space = dbskfg_match_bag_of_fragments::OPP;
     }
     else
     {
-        color_space = dbskfg_match_bag_of_fragments::NOPP;
+        grad_color_space = dbskfg_match_bag_of_fragments::NOPP;
+    }
+
+    dbskfg_match_bag_of_fragments::RawColorSpace raw_color_space =
+        dbskfg_match_bag_of_fragments::LAB;
+   
+    if ( raw_color == 0 )
+    {
+        raw_color_space = dbskfg_match_bag_of_fragments::LAB;
+    }
+    else if ( raw_color == 1 )
+    {
+        raw_color_space = dbskfg_match_bag_of_fragments::HSV;
+    }
+    else
+    {
+        raw_color_space = dbskfg_match_bag_of_fragments::RGB_2;
     }
 
     dbskfg_match_bag_of_fragments match_frags(model_dir,
@@ -271,7 +296,8 @@ bool dbskfg_match_bag_of_fragments_process::execute()
                                               area_weight,
                                               ref_area,
                                               shape_alg_area,
-                                              color_space,
+                                              grad_color_space,
+                                              raw_color_space,
                                               model_image,
                                               query_image,
                                               model_image_path);
