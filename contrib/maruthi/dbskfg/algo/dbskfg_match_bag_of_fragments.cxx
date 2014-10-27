@@ -272,11 +272,15 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                 }
                 else 
                 {
-                    vil_image_view<double> temp=model_img_sptr->get_view();
-                    // Just rgb
-                    chan_1=vil_plane(temp,0);
-                    chan_2=vil_plane(temp,1);
-                    chan_3=vil_plane(temp,2);
+                    vil_image_view<vxl_byte> temp=model_img_sptr->get_view();
+
+                    vil_image_view<vxl_byte> red   = vil_plane(temp,0);
+                    vil_image_view<vxl_byte> green = vil_plane(temp,1);
+                    vil_image_view<vxl_byte> blue  = vil_plane(temp,2);
+        
+                    vil_convert_cast(red,chan_1);
+                    vil_convert_cast(green,chan_2);
+                    vil_convert_cast(blue,chan_3);
 
                 }
 
@@ -389,11 +393,16 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
             }
             else 
             {
-                // Just rgb
-                vil_image_view<double> temp=model_image_->get_view();
-                model_chan1_data_=vil_plane(temp,0);
-                model_chan2_data_=vil_plane(temp,1);
-                model_chan3_data_=vil_plane(temp,2);
+
+                vil_image_view<vxl_byte> temp=model_image_->get_view();
+
+                vil_image_view<vxl_byte> red   = vil_plane(temp,0);
+                vil_image_view<vxl_byte> green = vil_plane(temp,1);
+                vil_image_view<vxl_byte> blue  = vil_plane(temp,2);
+        
+                vil_convert_cast(red,model_chan1_data_);
+                vil_convert_cast(green,model_chan2_data_);
+                vil_convert_cast(blue,model_chan3_data_);
 
             }
             
@@ -449,12 +458,15 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
             }
             else 
             {
-                // Just rgb
-                vil_image_view<double> temp=query_image_->get_view();
-                query_chan1_data_=vil_plane(temp,0);
-                query_chan2_data_=vil_plane(temp,1);
-                query_chan3_data_=vil_plane(temp,2);
+                vil_image_view<vxl_byte> temp=query_image_->get_view();
 
+                vil_image_view<vxl_byte> red   = vil_plane(temp,0);
+                vil_image_view<vxl_byte> green = vil_plane(temp,1);
+                vil_image_view<vxl_byte> blue  = vil_plane(temp,2);
+        
+                vil_convert_cast(red,query_chan1_data_);
+                vil_convert_cast(green,query_chan2_data_);
+                vil_convert_cast(blue,query_chan3_data_);
             }
           
             compute_grad_color_maps(o1,
@@ -4298,7 +4310,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //     model_tree->get_root_node_radius(),
         //     query_tree->get_root_node_radius(),
         //     title.str());
-
+        
         vcl_pair<double,double> app_cost=compute_body_centric_sift(
             curve_list1,
             curve_list2,
@@ -4317,7 +4329,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
             query_tree->get_scale_ratio(),
             flag,
             width);
-       
+
         vcl_pair<double,double> sift_rgb_cost=compute_3d_hist_color(
             curve_list1,
             curve_list2,
