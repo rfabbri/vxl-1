@@ -185,13 +185,13 @@ public:
   vl_sift_pix* get_blue_grad_data(){return blue_grad_data_;}
 
   // get grad data
-  vil_image_view<double>* get_L_channel(){return L_channel_;}
+  vil_image_view<double>* get_channel1(){return channel1_;}
 
   // get grad data
-  vil_image_view<double>* get_a_channel(){return a_channel_;}
+  vil_image_view<double>* get_channel2(){return channel2_;}
 
   // get grad data
-  vil_image_view<double>* get_b_channel(){return b_channel_;}
+  vil_image_view<double>* get_channel3(){return channel3_;}
 
   // See if dart has a virtual node on it
   bool virtual_node_dart(int dart)
@@ -290,11 +290,11 @@ protected:
   
   vcl_vector<double> average_ds_;
 
-  vil_image_view<double>* L_channel_;
+  vil_image_view<double>* channel1_;
 
-  vil_image_view<double>* a_channel_;
+  vil_image_view<double>* channel2_;
 
-  vil_image_view<double>* b_channel_;
+  vil_image_view<double>* channel3_;
 
   unsigned int id_;
 };
