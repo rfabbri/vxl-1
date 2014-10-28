@@ -9720,16 +9720,13 @@ void dbskfg_match_bag_of_fragments::write_out_dart_data()
 }
 
 
-
-inline void dbskfg_match_bag_of_fragments::compute_masked_sift_descr
+inline void dbskfg_match_bag_of_fragments::compute_color_over_sift
 (VlSiftFilt const *f,
- vl_sift_pix const* grad,
- vl_sift_pix *descr,
  int width, int height,
  double x, double y,
  double sigma,
  double angle0,
- vgl_polygon<double>& poly)
+ vcl_set<vcl_pair<double,double> >& samples)
 {
   double const magnif = f-> magnif ;
 
@@ -9747,100 +9744,84 @@ inline void dbskfg_match_bag_of_fragments::compute_masked_sift_descr
   double const ct0    = cos (angle0) ;
   double const SBP    = magnif * sigma + VL_EPSILON_D ;
   int    const W      = floor
-    (sqrt(2.0) * SBP * (NBP + 1) / 2.0 + 0.5) ;
+      (sqrt(2.0) * SBP * (NBP + 1) / 2.0 + 0.5) ;
 
   int const binto = 1 ;          /* bin theta-stride */
   int const binyo = NBO * NBP ;  /* bin y-stride */
   int const binxo = NBO ;        /* bin x-stride */
 
-  int bin, dxi, dyi ;
-  vl_sift_pix const *pt ;
-  vl_sift_pix       *dpt ;
+  int dxi, dyi ;
 
   /* check bounds */
   if(xi    <  0               ||
      xi    >= w               ||
      yi    <  0               ||
      yi    >= h -    1        )
-    return ;
-
-  /* clear descriptor */
-  memset (descr, 0, sizeof(vl_sift_pix) * NBO*NBP*NBP) ;
-
-  /* Center the scale space and the descriptor on the current keypoint.
-   * Note that dpt is pointing to the bin of center (SBP/2,SBP/2,0).
-   */
-  pt  = grad + xi*xo + yi*yo ;
-  dpt = descr + (NBP/2) * binyo + (NBP/2) * binxo ;
-
-#undef atd
-#define atd(dbinx,dbiny,dbint) *(dpt + (dbint)*binto + (dbiny)*binyo + (dbinx)*binxo)
-
+      return ;
   /*
    * Process pixels in the intersection of the image rectangle
    * (1,1)-(M-1,N-1) and the keypoint bounding box.
    */
   for(dyi =  VL_MAX(- W,   - yi   ) ;
-      dyi <= VL_MIN(+ W, h - yi -1) ; ++ dyi) {
+      dyi <= VL_MIN(+ W, h - yi -1) ; ++ dyi) 
+  {
 
-    for(dxi =  VL_MAX(- W,   - xi   ) ;
-        dxi <= VL_MIN(+ W, w - xi -1) ; ++ dxi) {
+      for(dxi =  VL_MAX(- W,   - xi   ) ;
+          dxi <= VL_MIN(+ W, w - xi -1) ; ++ dxi) 
+      {
 
-      /* retrieve */
-      vl_sift_pix mod   = *( pt + dxi*xo + dyi*yo + 0 ) ;
-      vl_sift_pix angle = *( pt + dxi*xo + dyi*yo + 1 ) ;
-      vl_sift_pix theta = vl_mod_2pi_f (angle - angle0) ;
+          /* fractional displacement */
+          vl_sift_pix dx = xi + dxi - x;
+          vl_sift_pix dy = yi + dyi - y;
 
-      /* fractional displacement */
-      vl_sift_pix dx = xi + dxi - x;
-      vl_sift_pix dy = yi + dyi - y;
+          /* get the displacement normalized w.r.t. the keypoint
+             orientation and extension */
+          vl_sift_pix nx = ( ct0 * dx + st0 * dy) / SBP ;
+          vl_sift_pix ny = (-st0 * dx + ct0 * dy) / SBP ;
 
-      /* get the displacement normalized w.r.t. the keypoint
-         orientation and extension */
-      vl_sift_pix nx = ( ct0 * dx + st0 * dy) / SBP ;
-      vl_sift_pix ny = (-st0 * dx + ct0 * dy) / SBP ;
-      vl_sift_pix nt = NBO * theta / (2 * VL_PI) ;
+          /* The sample will be distributed in 8 adjacent bins.
+             We start from the ``lower-left'' bin. */
+          int         binx = (int)vl_floor_f (nx - 0.5) ;
+          int         biny = (int)vl_floor_f (ny - 0.5) ;
+          int         dbinx ;
+          int         dbiny ;
+          int         dbint ;
 
-      /* Get the Gaussian weight of the sample. The Gaussian window
-       * has a standard deviation equal to NBP/2. Note that dx and dy
-       * are in the normalized frame, so that -NBP/2 <= dx <=
-       * NBP/2. */
-      vl_sift_pix win=(poly.contains(xi+dxi,yi+dyi))?1.0:0.0;
+          /* Distribute the current sample into the 8 adjacent bins*/
+          for(dbinx = 0 ; dbinx < 2 ; ++dbinx)
+          {
+              for(dbiny = 0 ; dbiny < 2 ; ++dbiny)
+              {
+                  for(dbint = 0 ; dbint < 2 ; ++dbint)
+                  {
 
-      /* The sample will be distributed in 8 adjacent bins.
-         We start from the ``lower-left'' bin. */
-      int         binx = (int)vl_floor_f (nx - 0.5) ;
-      int         biny = (int)vl_floor_f (ny - 0.5) ;
-      int         bint = (int)vl_floor_f (nt) ;
-      vl_sift_pix rbinx = nx - (binx + 0.5) ;
-      vl_sift_pix rbiny = ny - (biny + 0.5) ;
-      vl_sift_pix rbint = nt - bint ;
-      int         dbinx ;
-      int         dbiny ;
-      int         dbint ;
+                      if (binx + dbinx >= - (NBP/2) &&
+                          binx + dbinx <    (NBP/2) &&
+                          biny + dbiny >= - (NBP/2) &&
+                          biny + dbiny <    (NBP/2) ) 
+                      {
 
-      /* Distribute the current sample into the 8 adjacent bins*/
-      for(dbinx = 0 ; dbinx < 2 ; ++dbinx) {
-        for(dbiny = 0 ; dbiny < 2 ; ++dbiny) {
-          for(dbint = 0 ; dbint < 2 ; ++dbint) {
-
-            if (binx + dbinx >= - (NBP/2) &&
-                binx + dbinx <    (NBP/2) &&
-                biny + dbiny >= - (NBP/2) &&
-                biny + dbiny <    (NBP/2) ) {
-              vl_sift_pix weight = win
-                * mod
-                * vl_abs_f (1 - dbinx - rbinx)
-                * vl_abs_f (1 - dbiny - rbiny)
-                * vl_abs_f (1 - dbint - rbint) ;
-
-              atd(binx+dbinx, biny+dbiny, (bint+dbint) % NBO) += weight ;
-            }
+                          vcl_pair<double,double> 
+                              pair(xi+dxi,yi+dyi);
+                          samples.insert(pair);
+                      }
+                  }
+              }
           }
-        }
       }
-    }
   }
+
+
+  // vcl_ofstream stream("sift_samples.txt");
+
+  // vcl_set<vcl_pair<double,double> >::iterator it;
+  // for ( it = samples.begin() ; it != samples.end() ; ++it)
+  // {
+  //     stream<<(*it).first<<" "<<(*it).second<<vcl_endl;
+
+  // }
+  // stream.close();
+
 }
 
 void dbskfg_match_bag_of_fragments::compute_sift_along_curve(

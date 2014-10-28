@@ -662,16 +662,14 @@ private:
 
     void write_out_dart_data();
 
-    inline void compute_masked_sift_descr(
+    inline void compute_color_over_sift(
         VlSiftFilt const *f,
-        vl_sift_pix const* grad,
-        vl_sift_pix *descr,
         int width, int height,
         double x, double y,
         double sigma,
         double angle0,
-        vgl_polygon<double>& poly);
-    
+        vcl_set<vcl_pair<double,double> >& samples);
+
     void compute_grad_region_hist(
         vcl_set<vcl_pair<double,double> >& samples,
         vil_image_view<double>& o1_grad_map,
