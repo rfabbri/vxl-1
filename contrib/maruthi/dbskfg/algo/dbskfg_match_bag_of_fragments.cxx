@@ -6474,12 +6474,15 @@ compute_dense_rgb_sift_cost(
 
     double sift_diff= 0.0;
     double color_diff=0.0;
+    double color_hist_diff=0.0;
 
     double arclength_shock_curve1=0.0;
     double arclength_shock_curve2=0.0;
 
     double splice_cost_shock_curve1=0.0;
     double splice_cost_shock_curve2=0.0;
+
+    double context=0.0;
 
     unsigned int overall_index=0;
     // Get matching pairs
@@ -6641,6 +6644,9 @@ compute_dense_rgb_sift_cost(
                     
                         }
 
+                        model_radius+=context;
+                        query_radius+=context;
+
                         local_distance += descr_cost(
                             ps1,
                             model_radius,
@@ -6666,6 +6672,63 @@ compute_dense_rgb_sift_cost(
                             query_channel_1,
                             query_channel_2,
                             query_channel_3);
+
+                  
+                        // vcl_set<vcl_pair<double,double> > model_sift_samples;
+                        // vcl_set<vcl_pair<double,double> > query_sift_samples;
+                        
+                        // compute_color_over_sift(
+                        //     model_sift_filter,
+                        //     model_sift_filter->width,
+                        //     model_sift_filter->height,
+                        //     ps1.x(),
+                        //     ps1.y(),
+                        //     model_radius,
+                        //     theta_ps1,
+                        //     model_sift_samples);
+
+                        // compute_color_over_sift(
+                        //     query_sift_filter,
+                        //     query_sift_filter->width,
+                        //     query_sift_filter->height,
+                        //     ps2.x(),
+                        //     ps2.y(),
+                        //     query_radius,
+                        //     theta_ps2,
+                        //     query_sift_samples);
+
+                        // vcl_vector<double> model_descr;
+                        // vcl_vector<double> query_descr;
+                        
+                        // compute_color_region_hist(
+                        //     model_sift_samples,
+                        //     model_channel_1,
+                        //     model_channel_2,
+                        //     model_channel_3,
+                        //     model_descr,
+                        //     dbskfg_match_bag_of_fragments::DEFAULT);
+
+                        // compute_color_region_hist(
+                        //     query_sift_samples,
+                        //     query_channel_1,
+                        //     query_channel_2,
+                        //     query_channel_3,
+                        //     query_descr,
+                        //     dbskfg_match_bag_of_fragments::DEFAULT);
+                        
+                        // vnl_vector<double> vec_model(model_descr.size(),0);
+                        // vnl_vector<double> vec_query(query_descr.size(),0);
+
+                        // for ( unsigned int m=0; m < model_descr.size(); ++m)
+                        // {
+                        //     vec_model.put(m,model_descr[m]);
+                        //     vec_query.put(m,query_descr[m]);
+                        // }
+
+                        // vec_model.normalize(); vec_query.normalize();
+
+                        // color_hist_diff +=
+                        //     chi_squared_distance(vec_model,vec_query);
 
                         vcl_vector<vl_sift_pix> msift;
                         msift.push_back(ps1.x());
@@ -6701,6 +6764,9 @@ compute_dense_rgb_sift_cost(
                                           /model_scale_ratio)/2.0;
                         }
 
+                        model_radius+=context;
+                        query_radius+=context;
+
                         local_distance += descr_cost(
                             ps2,
                             model_radius,
@@ -6726,7 +6792,63 @@ compute_dense_rgb_sift_cost(
                             query_channel_1,
                             query_channel_2,
                             query_channel_3);
-                    
+                  
+                        // vcl_set<vcl_pair<double,double> > model_sift_samples;
+                        // vcl_set<vcl_pair<double,double> > query_sift_samples;
+                        
+                        // compute_color_over_sift(
+                        //     model_sift_filter,
+                        //     model_sift_filter->width,
+                        //     model_sift_filter->height,
+                        //     ps2.x(),
+                        //     ps2.y(),
+                        //     model_radius,
+                        //     theta_ps2,
+                        //     model_sift_samples);
+
+                        // compute_color_over_sift(
+                        //     query_sift_filter,
+                        //     query_sift_filter->width,
+                        //     query_sift_filter->height,
+                        //     ps1.x(),
+                        //     ps1.y(),
+                        //     query_radius,
+                        //     theta_ps1,
+                        //     query_sift_samples);
+
+                        // vcl_vector<double> model_descr;
+                        // vcl_vector<double> query_descr;
+                        
+                        // compute_color_region_hist(
+                        //     model_sift_samples,
+                        //     model_channel_1,
+                        //     model_channel_2,
+                        //     model_channel_3,
+                        //     model_descr,
+                        //     dbskfg_match_bag_of_fragments::DEFAULT);
+
+                        // compute_color_region_hist(
+                        //     query_sift_samples,
+                        //     query_channel_1,
+                        //     query_channel_2,
+                        //     query_channel_3,
+                        //     query_descr,
+                        //     dbskfg_match_bag_of_fragments::DEFAULT);
+                        
+                        // vnl_vector<double> vec_model(model_descr.size(),0);
+                        // vnl_vector<double> vec_query(query_descr.size(),0);
+
+                        // for ( unsigned int m=0; m < model_descr.size(); ++m)
+                        // {
+                        //     vec_model.put(m,model_descr[m]);
+                        //     vec_query.put(m,query_descr[m]);
+                        // }
+
+                        // vec_model.normalize(); vec_query.normalize();
+
+                        // color_hist_diff +=
+                        //     chi_squared_distance(vec_model,vec_query);
+
                         vcl_vector<vl_sift_pix> msift;
                         msift.push_back(ps1.x());
                         msift.push_back(ps1.y());
@@ -6893,6 +7015,8 @@ compute_dense_rgb_sift_cost(
     double avg_norm  = sift_diff/overall_index;
 
     double color_norm = color_diff/overall_index;
+
+    double color_hist_norm = color_hist_diff/overall_index;
 
     double length_norm=sift_diff/(arclength_shock_curve1+
                                   arclength_shock_curve2);
