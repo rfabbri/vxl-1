@@ -543,6 +543,12 @@ private:
         vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
         vcl_vector< pathtable_key >& path_map,
         vcl_vector<double>& dart_distances,
+        vil_image_view<double>& model_channel_1,
+        vil_image_view<double>& model_channel_2,
+        vil_image_view<double>& model_channel_3,
+        vil_image_view<double>& query_channel_1,
+        vil_image_view<double>& query_channel_2,
+        vil_image_view<double>& query_channel_3,
         bool flag=false,
         double width=0.0,
         vl_sift_pix* model_red_grad_data=0,
@@ -717,6 +723,15 @@ private:
 
         return 0.5*local_distance[0];
     }
+
+    double LAB_distance(vgl_point_2d<double> model_pt,
+                        vgl_point_2d<double> query_pt,
+                        vil_image_view<double>& model_channel_1,
+                        vil_image_view<double>& model_channel_2,
+                        vil_image_view<double>& model_channel_3,
+                        vil_image_view<double>& query_channel_1,
+                        vil_image_view<double>& query_channel_2,
+                        vil_image_view<double>& query_channel_3);
 
     // Make copy ctor private
     dbskfg_match_bag_of_fragments(const dbskfg_match_bag_of_fragments&);

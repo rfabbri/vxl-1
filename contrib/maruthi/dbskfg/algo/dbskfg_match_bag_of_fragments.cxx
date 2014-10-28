@@ -446,6 +446,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
            
             if ( raw_color_space_ == dbskfg_match_bag_of_fragments::LAB )
             {
+
                 convert_RGB_to_Lab(query_image_->get_view(),
                                    query_chan1_data_,
                                    query_chan2_data_,
@@ -4289,48 +4290,8 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //                                                    ->get_scale_ratio());
 
         vcl_vector<double> dart_distances;
-        // vcl_pair<double,double> sift_rgb_cost=compute_dense_rgb_sift_cost(
-        //     curve_list1,
-        //     curve_list2,
-        //     map_list,
-        //     path_map,
-        //     dart_distances,
-        //     flag,
-        //     width,
-        //     model_red_grad_data,
-        //     query_red_grad_data,
-        //     model_green_grad_data,
-        //     query_green_grad_data,
-        //     model_blue_grad_data,
-        //     query_blue_grad_data,
-        //     model_sift_filter,
-        //     query_sift_filter,
-        //     model_tree->get_scale_ratio(),
-        //     query_tree->get_scale_ratio(),
-        //     model_tree->get_root_node_radius(),
-        //     query_tree->get_root_node_radius(),
-        //     title.str());
-        
-        vcl_pair<double,double> app_cost=compute_body_centric_sift(
-            curve_list1,
-            curve_list2,
-            map_list,
-            path_map,
-            dart_distances,
-            model_red_grad_data,
-            query_red_grad_data,
-            model_green_grad_data,
-            query_green_grad_data,
-            model_blue_grad_data,
-            query_blue_grad_data,
-            model_sift_filter,
-            query_sift_filter,
-            model_tree->get_scale_ratio(),
-            query_tree->get_scale_ratio(),
-            flag,
-            width);
-
-        vcl_pair<double,double> sift_rgb_cost=compute_3d_hist_color(
+        vcl_pair<double,double> app_cost(0.0,0.0);
+        vcl_pair<double,double> sift_rgb_cost=compute_dense_rgb_sift_cost(
             curve_list1,
             curve_list2,
             map_list,
@@ -4342,10 +4303,57 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
             *query_channel1,
             *query_channel2,
             *query_channel3,
+            flag,
+            width,
+            model_red_grad_data,
+            query_red_grad_data,
+            model_green_grad_data,
+            query_green_grad_data,
+            model_blue_grad_data,
+            query_blue_grad_data,
+            model_sift_filter,
+            query_sift_filter,
             model_tree->get_scale_ratio(),
             query_tree->get_scale_ratio(),
-            flag,
-            width);
+            model_tree->get_root_node_radius(),
+            query_tree->get_root_node_radius(),
+            title.str());
+        
+        // vcl_pair<double,double> app_cost=compute_body_centric_sift(
+        //     curve_list1,
+        //     curve_list2,
+        //     map_list,
+        //     path_map,
+        //     dart_distances,
+        //     model_red_grad_data,
+        //     query_red_grad_data,
+        //     model_green_grad_data,
+        //     query_green_grad_data,
+        //     model_blue_grad_data,
+        //     query_blue_grad_data,
+        //     model_sift_filter,
+        //     query_sift_filter,
+        //     model_tree->get_scale_ratio(),
+        //     query_tree->get_scale_ratio(),
+        //     flag,
+        //     width);
+
+        // vcl_pair<double,double> sift_rgb_cost=compute_3d_hist_color(
+        //     curve_list1,
+        //     curve_list2,
+        //     map_list,
+        //     path_map,
+        //     dart_distances,
+        //     *model_channel1,
+        //     *model_channel2,
+        //     *model_channel3,
+        //     *query_channel1,
+        //     *query_channel2,
+        //     *query_channel3,
+        //     model_tree->get_scale_ratio(),
+        //     query_tree->get_scale_ratio(),
+        //     flag,
+        //     width);
          
         unsigned int model_tag=model_tree->get_id();
         
@@ -4429,7 +4437,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         
         //vcl_cerr<<"************ App   Time taken: "<<app_time<<" sec"<<vcl_endl;
         app_diff        = app_cost.first;
-        norm_app_cost   = app_cost.second;
+        norm_app_cost   = sift_rgb_cost.first;
         rgb_avg_cost    = sift_rgb_cost.second;
 
     }
@@ -6439,6 +6447,12 @@ compute_dense_rgb_sift_cost(
     vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
     vcl_vector< pathtable_key >& path_map,
     vcl_vector<double>& dart_distances,
+    vil_image_view<double>& model_channel_1,
+    vil_image_view<double>& model_channel_2,
+    vil_image_view<double>& model_channel_3,
+    vil_image_view<double>& query_channel_1,
+    vil_image_view<double>& query_channel_2,
+    vil_image_view<double>& query_channel_3,
     bool flag,
     double width,
     vl_sift_pix* model_red_grad_data,
@@ -6459,7 +6473,8 @@ compute_dense_rgb_sift_cost(
     bool variable=true;
 
     double sift_diff= 0.0;
-    
+    double color_diff=0.0;
+
     double arclength_shock_curve1=0.0;
     double arclength_shock_curve2=0.0;
 
@@ -6497,6 +6512,7 @@ compute_dense_rgb_sift_cost(
             sc2->is_leaf_edge());
 
         double local_distance=0.0;
+        double local_color_distance=0.0;
 
         vcl_pair<unsigned int,unsigned int> query_key1(0,0);
         vcl_pair<unsigned int,unsigned int> query_key2(0,0);
@@ -6641,6 +6657,16 @@ compute_dense_rgb_sift_cost(
                             model_sift_filter,
                             query_sift_filter);
 
+                        local_color_distance += LAB_distance(
+                            ps1,
+                            ps2,
+                            model_channel_1,
+                            model_channel_2,
+                            model_channel_3,
+                            query_channel_1,
+                            query_channel_2,
+                            query_channel_3);
+
                         vcl_vector<vl_sift_pix> msift;
                         msift.push_back(ps1.x());
                         msift.push_back(ps1.y());
@@ -6690,6 +6716,16 @@ compute_dense_rgb_sift_cost(
                             query_blue_grad_data,
                             model_sift_filter,
                             query_sift_filter);
+
+                        local_color_distance += LAB_distance(
+                            ps2,
+                            ps1,
+                            model_channel_1,
+                            model_channel_2,
+                            model_channel_3,
+                            query_channel_1,
+                            query_channel_2,
+                            query_channel_3);
                     
                         vcl_vector<vl_sift_pix> msift;
                         msift.push_back(ps1.x());
@@ -6769,6 +6805,7 @@ compute_dense_rgb_sift_cost(
 
         }
         sift_diff+=local_distance;
+        color_diff+=local_color_distance;
 
         arclength_shock_curve1=
             local_arclength_shock_curve1+arclength_shock_curve1;
@@ -6855,12 +6892,14 @@ compute_dense_rgb_sift_cost(
 
     double avg_norm  = sift_diff/overall_index;
 
+    double color_norm = color_diff/overall_index;
+
     double length_norm=sift_diff/(arclength_shock_curve1+
                                   arclength_shock_curve2);
     double splice_norm=sift_diff/(splice_cost_shock_curve1+
                                   splice_cost_shock_curve2);
 
-    vcl_pair<double,double> app_diff(sift_diff,avg_norm);
+    vcl_pair<double,double> app_diff(color_norm,avg_norm);
 
     // vcl_cout<<"Unormalized diff: "<<sift_diff<<vcl_endl;
     // vcl_cout<<"Average diff: "<<avg_norm<<vcl_endl;
@@ -10021,6 +10060,52 @@ void dbskfg_match_bag_of_fragments::compute_color_region_hist(
         output.close();
         
     }
+
+}
+
+
+double dbskfg_match_bag_of_fragments::LAB_distance(
+    vgl_point_2d<double> model_pt,
+    vgl_point_2d<double> query_pt,
+    vil_image_view<double>& model_channel_1,
+    vil_image_view<double>& model_channel_2,
+    vil_image_view<double>& model_channel_3,
+    vil_image_view<double>& query_channel_1,
+    vil_image_view<double>& query_channel_2,
+    vil_image_view<double>& query_channel_3
+    )
+{
+
+    vnl_vector_fixed<double,3> model_values;
+    vnl_vector_fixed<double,3> query_values;
+
+
+
+    model_values[0] = vil_bilin_interp_safe(model_channel_1,
+                                            model_pt.x(),
+                                            model_pt.y());
+
+    model_values[1] = vil_bilin_interp_safe(model_channel_2,
+                                            model_pt.x(),
+                                            model_pt.y());
+
+    model_values[2] = vil_bilin_interp_safe(model_channel_3,
+                                            model_pt.x(),
+                                            model_pt.y());
+
+    query_values[0] = vil_bilin_interp_safe(query_channel_1,
+                                            query_pt.x(),
+                                            query_pt.y());
+
+    query_values[1] = vil_bilin_interp_safe(query_channel_2,
+                                            query_pt.x(),
+                                            query_pt.y());
+
+    query_values[2] = vil_bilin_interp_safe(query_channel_3,
+                                            query_pt.x(),
+                                            query_pt.y());
+
+    return 1.0-distance_LAB(model_values,query_values,14);
 
 }
 
