@@ -60,7 +60,8 @@ public:
     {
         RGB=0,
         OPP,
-        NOPP
+        NOPP,
+        LAB_2
     };
 
     //: Enum
@@ -68,7 +69,8 @@ public:
     {
         LAB=0,
         HSV,
-        RGB_2
+        RGB_2,
+        OPP_2
     };
 
     //: Enum

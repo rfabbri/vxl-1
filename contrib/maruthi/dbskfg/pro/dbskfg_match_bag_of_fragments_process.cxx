@@ -29,11 +29,13 @@ dbskfg_match_bag_of_fragments_process::dbskfg_match_bag_of_fragments_process()
     grad_color_choices.push_back("RGB");
     grad_color_choices.push_back("Opponent");
     grad_color_choices.push_back("Normalized Opponent");
-
+    grad_color_choices.push_back("LAB");
+    
     vcl_vector<vcl_string> raw_color_choices;
     raw_color_choices.push_back("LAB");
     raw_color_choices.push_back("HSV");
     raw_color_choices.push_back("RGB");
+    raw_color_choices.push_back("OPP");
 
     if (!parameters()->add( "Model folder:" , 
                             "-model_folder" , bpro1_filepath("", "")) ||
@@ -253,9 +255,14 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     {
         grad_color_space = dbskfg_match_bag_of_fragments::OPP;
     }
-    else
+    else if ( color_alg == 2 )
     {
         grad_color_space = dbskfg_match_bag_of_fragments::NOPP;
+    }
+    else
+    {
+
+        grad_color_space = dbskfg_match_bag_of_fragments::LAB_2;
     }
 
     dbskfg_match_bag_of_fragments::RawColorSpace raw_color_space =
@@ -269,9 +276,13 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     {
         raw_color_space = dbskfg_match_bag_of_fragments::HSV;
     }
-    else
+    else if ( raw_color == 2 )
     {
         raw_color_space = dbskfg_match_bag_of_fragments::RGB_2;
+    }
+    else
+    {
+        raw_color_space = dbskfg_match_bag_of_fragments::OPP_2;
     }
 
     dbskfg_match_bag_of_fragments match_frags(model_dir,

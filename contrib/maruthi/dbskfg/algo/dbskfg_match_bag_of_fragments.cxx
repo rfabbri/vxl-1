@@ -156,9 +156,13 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
     {
         vcl_cout<<"Computing color histograms over HSV space"<<vcl_endl;
     }
-    else
+    else if ( raw_color_space_ == dbskfg_match_bag_of_fragments::RGB_2 )
     {
         vcl_cout<<"Computing color histograms over RGB_2 space"<<vcl_endl;
+    }
+    else
+    {
+        vcl_cout<<"Computing color histograms over OPP_2 space"<<vcl_endl;
     }
 
     if ( grad_color_space_ == dbskfg_match_bag_of_fragments::RGB )
@@ -169,9 +173,13 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
     {
         vcl_cout<<"Computing color gradients over OPP space"<<vcl_endl;
     }
-    else
+    else if ( grad_color_space_ == dbskfg_match_bag_of_fragments::NOPP )
     {
         vcl_cout<<"Computing color gradients over NOPP space"<<vcl_endl;
+    }
+    else
+    {
+        vcl_cout<<"Computing color gradients over LAB space"<<vcl_endl;
     }
 
     output_match_file_ = output_match_file_ + "_similarity_matrix.xml";
@@ -270,7 +278,8 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                 {
                     // Todo later
                 }
-                else 
+                else if ( raw_color_space == dbskfg_match_bag_of_fragments::
+                          dbskfg_match_bag_of_fragments::RGB_2 )
                 {
                     vil_image_view<vxl_byte> temp=model_img_sptr->get_view();
 
@@ -282,6 +291,12 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                     vil_convert_cast(green,chan_2);
                     vil_convert_cast(blue,chan_3);
 
+                }
+                else
+                {
+                    convert_to_color_space(model_img_sptr,chan_1,chan_2,
+                                           chan_3,
+                                           dbskfg_match_bag_of_fragments::OPP);
                 }
 
                 
@@ -391,7 +406,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
             {
                 // Todo later
             }
-            else 
+            else if ( raw_color_space_ == dbskfg_match_bag_of_fragments::RGB_2 )
             {
 
                 vil_image_view<vxl_byte> temp=model_image_->get_view();
@@ -404,6 +419,14 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                 vil_convert_cast(green,model_chan2_data_);
                 vil_convert_cast(blue,model_chan3_data_);
 
+            }
+            else
+            {
+                convert_to_color_space(model_image_,
+                                       model_chan1_data_,
+                                       model_chan2_data_,
+                                       model_chan3_data_,
+                                       dbskfg_match_bag_of_fragments::OPP);
             }
             
             compute_grad_color_maps(o1,
@@ -457,7 +480,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
             {
                 // Todo later
             }
-            else 
+            else if ( raw_color_space == dbskfg_match_bag_of_fragments::RGB_2 )
             {
                 vil_image_view<vxl_byte> temp=query_image_->get_view();
 
@@ -469,7 +492,15 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                 vil_convert_cast(green,query_chan2_data_);
                 vil_convert_cast(blue,query_chan3_data_);
             }
-          
+            else
+            {
+                convert_to_color_space(query_image_,
+                                       query_chan1_data_,
+                                       query_chan2_data_,
+                                       query_chan3_data_,
+                                       dbskfg_match_bag_of_fragments::OPP);
+            }
+            
             compute_grad_color_maps(o1,
                                     &query_grad_red_data_,
                                     mask,
@@ -9715,7 +9746,14 @@ void dbskfg_match_bag_of_fragments::convert_to_color_space(
     o2.set_size(w,h);
     o3.set_size(w,h);
 
-    if ( color_space == RGB )
+    if ( color_space == LAB_2 )
+    {
+        convert_RGB_to_Lab(image,
+                           o1,
+                           o2,
+                           o3);
+    }
+    else if ( color_space == RGB )
     {
 
         vil_image_view<vxl_byte> red   = vil_plane(image,0);
@@ -9739,7 +9777,6 @@ void dbskfg_match_bag_of_fragments::convert_to_color_space(
                 o1(c,r) = (red-green)/vcl_sqrt(2);
                 o2(c,r) = (red+green-2*blue)/vcl_sqrt(6);
                 o3(c,r) = (red+green+blue)/vcl_sqrt(3);
-                
                 if ( color_space == NOPP )
                 {
                     o1(c,r)=o1(c,r)/o3(c,r);
@@ -10114,6 +10151,18 @@ void dbskfg_match_bag_of_fragments::compute_color_region_hist(
             bins_l=8;
             bins_a=8;
             bins_b=8;
+
+
+        }
+        else if ( raw_color_space_ == dbskfg_match_bag_of_fragments::OPP_2 )
+        {
+            min_l=-180; max_l=362;
+            min_a=-208; max_a=208;
+            min_b=0; max_b=441;
+
+            bins_l=10;
+            bins_a=10;
+            bins_b=10;
 
 
         }
