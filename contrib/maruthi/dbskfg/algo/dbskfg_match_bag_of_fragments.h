@@ -644,6 +644,28 @@ private:
         VlSiftFilt* model_sift_filter=0,
         VlSiftFilt* query_sift_filter=0);
 
+    double descr_cost_enriched_sift(
+        vgl_point_2d<double>& model_pt,
+        double& model_radius,
+        double& model_theta,
+        vgl_point_2d<double>& query_pt,
+        double& query_radius,
+        double& query_theta,
+        vil_image_view<double>& model_channel1,
+        vil_image_view<double>& model_channel2,
+        vil_image_view<double>& model_channel3,
+        vil_image_view<double>& query_channel1,
+        vil_image_view<double>& query_channel2,
+        vil_image_view<double>& query_channel3,
+        vl_sift_pix* model_red_grad_data=0,
+        vl_sift_pix* query_red_grad_data=0,
+        vl_sift_pix* model_green_grad_data=0,
+        vl_sift_pix* query_green_grad_data=0,
+        vl_sift_pix* model_blue_grad_data=0,
+        vl_sift_pix* query_blue_grad_data=0,
+        VlSiftFilt* model_sift_filter=0,
+        VlSiftFilt* query_sift_filter=0);
+
     void compute_descr(
         vgl_point_2d<double>& pt,
         double& radius,
