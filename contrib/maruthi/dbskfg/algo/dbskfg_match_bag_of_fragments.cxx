@@ -6694,6 +6694,28 @@ compute_dense_rgb_sift_cost(
                             model_sift_filter,
                             query_sift_filter);
 
+                        local_distance += descr_cost_enriched_sift(
+                            ps1,
+                            model_radius,
+                            theta_ps1,
+                            ps2,
+                            query_radius,
+                            theta_ps2,
+                            model_channel_1,
+                            model_channel_2,
+                            model_channel_3,
+                            query_channel_1,
+                            query_channel_2,
+                            query_channel_3,
+                            model_red_grad_data,
+                            query_red_grad_data,
+                            model_green_grad_data,
+                            query_green_grad_data,
+                            model_blue_grad_data,
+                            query_blue_grad_data,
+                            model_sift_filter,
+                            query_sift_filter);
+
                         local_color_distance += LAB_distance(
                             ps1,
                             ps2,
@@ -6814,6 +6836,28 @@ compute_dense_rgb_sift_cost(
                             model_sift_filter,
                             query_sift_filter);
 
+                        local_distance += descr_cost_enriched_sift(
+                            ps2,
+                            model_radius,
+                            theta_ps2,
+                            ps1,
+                            query_radius,
+                            theta_ps1,
+                            model_channel_1,
+                            model_channel_2,
+                            model_channel_3,
+                            query_channel_1,
+                            query_channel_2,
+                            query_channel_3,
+                            model_red_grad_data,
+                            query_red_grad_data,
+                            model_green_grad_data,
+                            query_green_grad_data,
+                            model_blue_grad_data,
+                            query_blue_grad_data,
+                            model_sift_filter,
+                            query_sift_filter);
+ 
                         local_color_distance += LAB_distance(
                             ps2,
                             ps1,
