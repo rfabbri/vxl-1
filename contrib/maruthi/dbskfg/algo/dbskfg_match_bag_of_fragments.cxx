@@ -1917,20 +1917,21 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             {
                 //: prepare the trees also
                 dbskfg_cgraph_directed_tree_sptr query_mirror_tree = new
-                    dbskfg_cgraph_directed_tree(query_sample_ds, 
-                                                scurve_interpolate_ds_, 
-                                                scurve_matching_R_,
-                                                mirror_,
-                                                area_weight_,
-                                                query_images_grad_data,
-                                                query_images_sift_filter,
-                                                query_images_grad_data_red,
-                                                query_images_grad_data_green,
-                                                query_images_grad_data_blue,
-                                                (*q_iterator).first,
-                                                &query_channel1,
-                                                &query_channel2,
-                                                &query_channel3);
+                    dbskfg_cgraph_directed_tree(
+                        query_sample_ds, 
+                        scurve_interpolate_ds_, 
+                        scurve_matching_R_,
+                        mirror_,
+                        area_weight_,
+                        query_grad_fliplr_data_,
+                        query_images_sift_filter,
+                        query_grad_fliplr_red_data_,
+                        query_grad_fliplr_green_data_,
+                        query_grad_fliplr_blue_data_,
+                        (*q_iterator).first,
+                        &query_channel1,
+                        &query_channel2,
+                        &query_channel3);
 
                 query_mirror_tree->set_scale_ratio(query_scale_ratio);
 
@@ -4360,13 +4361,16 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
   	}
         else
         {
-            if ( norm > frob_norm)
+            if ( !(vcl_fabs(orig_edit_distance-shape_cost_splice) >= 0.1))
             {
-                app_diff        = 1.0e6;
-                norm_app_cost   = 1.0e6;
-                rgb_avg_cost    = 1.0e6;
-                
-                flag_mirror=false;
+                if ( norm > frob_norm)
+                {
+                    app_diff        = 1.0e6;
+                    norm_app_cost   = 1.0e6;
+                    rgb_avg_cost    = 1.0e6;
+
+                    flag_mirror=false;
+                }
             }
         }
     }
@@ -6800,6 +6804,12 @@ compute_dense_rgb_sift_cost(
                         ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
                                 ps2.y()/query_scale_ratio);
                     
+                        if ( width > 0 )
+                        {
+                            ps2.set(query_channel_1.ni()-1-ps2.x(),
+                                    ps2.y());
+                        }
+
                         double model_radius=((R1-r1)/model_scale_ratio)/2.0;
                         double query_radius=((R2-r2)/query_scale_ratio)/2.0;
 
@@ -6942,6 +6952,12 @@ compute_dense_rgb_sift_cost(
                                 ps1.y()/query_scale_ratio);
                         ps2.set(ps2.x()/model_scale_ratio,
                                 ps2.y()/model_scale_ratio);
+
+                        if ( width > 0 )
+                        {
+                            ps1.set(query_channel_1.ni()-1-ps1.x(),
+                                    ps1.y());
+                        }
                     
                         double query_radius=((R1-r1)/query_scale_ratio)/2.0;
                         double model_radius=((R2-r2)/model_scale_ratio)/2.0;
