@@ -6642,6 +6642,35 @@ compute_dense_rgb_sift_cost(
     vcl_string prefix)
 {
  
+    // if ( width > 0 )
+    // {
+    //     vcl_ofstream red_stream("query_red_data.txt");
+    //     vcl_ofstream green_stream("query_green_data.txt");
+    //     vcl_ofstream blue_stream("query_blue_data.txt");
+
+
+    //     for ( unsigned int i=0; i < query_channel_1.ni()*
+    //               query_channel_1.nj(); ++i)
+    //     {
+    //         red_stream<<*query_red_grad_data<<" "<<
+    //             *(query_red_grad_data+1)<<vcl_endl;
+    //         query_red_grad_data+=2;
+
+    //         green_stream<<*query_green_grad_data<<" "<<
+    //             *(query_green_grad_data+1)<<vcl_endl;
+    //         query_green_grad_data+=2;
+
+    //         blue_stream<<*query_blue_grad_data<<" "<<
+    //             *(query_blue_grad_data+1)<<vcl_endl;
+    //         query_blue_grad_data+=2;
+
+    //     }
+
+    //     red_stream.close();
+    //     green_stream.close();
+    //     blue_stream.close();
+        
+    // }
     bool variable=true;
 
     double sift_diff= 0.0;
