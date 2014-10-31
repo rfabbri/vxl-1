@@ -29,6 +29,7 @@
 #include <dbsk2d/dbsk2d_file_io.h>
 
 #include <vil/vil_bilin_interp.h>
+#include <vil/vil_flip.h>
 #include <bsta/bsta_histogram.h>
 #include <bsta/bsta_joint_histogram_3d.h>
 #include <bsta/bsta_spherical_histogram.h>
@@ -143,6 +144,14 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
       query_grad_red_data_(0),
       query_grad_green_data_(0),
       query_grad_blue_data_(0),
+      model_grad_fliplr_data_(0),
+      model_grad_fliplr_red_data_(0),
+      model_grad_fliplr_green_data_(0),
+      model_grad_fliplr_blue_data_(0),
+      query_grad_fliplr_data_(0),
+      query_grad_fliplr_red_data_(0),
+      query_grad_fliplr_green_data_(0),
+      query_grad_fliplr_blue_data_(0),
       model_sift_filter_(0),
       query_sift_filter_(0)
       
@@ -246,6 +255,12 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                 vl_sift_pix* red_data(0);
                 vl_sift_pix* blue_data(0);
                 vl_sift_pix* green_data(0);
+
+                vl_sift_pix* grad_fliplr_data(0);
+                vl_sift_pix* red_fliplr_data(0);
+                vl_sift_pix* blue_fliplr_data(0);
+                vl_sift_pix* green_fliplr_data(0);
+
                 VlSiftFilt* sift_filter(0);
 
                 vgl_polygon<double> mask=model_fragments_polys_[index].second;
@@ -255,6 +270,13 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                                   &sift_filter,
                                   mask,
                                   mask_grad);
+
+                compute_grad_maps(model_img_sptr,
+                                  &grad_fliplr_data,
+                                  &sift_filter,
+                                  mask,
+                                  mask_grad,
+                                  true);
 
                 vil_image_view<double> o1,o2,o3;
                 convert_to_color_space(model_img_sptr,o1,o2,o3,
@@ -315,6 +337,25 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                                         mask,
                                         mask_grad);
 
+                compute_grad_color_maps(o1,
+                                        &red_fliplr_data,
+                                        mask,
+                                        mask_grad,
+                                        true);
+                
+                compute_grad_color_maps(o2,
+                                        &green_fliplr_data,
+                                        mask,
+                                        mask_grad,
+                                        true);
+                
+                compute_grad_color_maps(o3,
+                                        &blue_fliplr_data,
+                                        mask,
+                                        mask_grad,
+                                        true);
+
+
                 vl_sift_set_magnif(sift_filter,1.0);
 
                 model_images_grad_data_[title_stream.str()]=grad_data;
@@ -322,6 +363,19 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                 model_images_grad_data_red_[title_stream.str()]=red_data;
                 model_images_grad_data_green_[title_stream.str()]=green_data;
                 model_images_grad_data_blue_[title_stream.str()]=blue_data;
+
+                model_fliplr_images_grad_data_
+                    [title_stream.str()]=grad_fliplr_data;
+                
+                model_fliplr_images_grad_data_red_
+                    [title_stream.str()]=red_fliplr_data;
+                
+                model_fliplr_images_grad_data_green_
+                    [title_stream.str()]=green_fliplr_data;
+               
+                model_fliplr_images_grad_data_blue_
+                    [title_stream.str()]=blue_fliplr_data;
+
                 model_images_chan1_data_[title_stream.str()]=chan_1;
                 model_images_chan2_data_[title_stream.str()]=chan_2;
                 model_images_chan3_data_[title_stream.str()]=chan_3;
@@ -386,6 +440,13 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                               &model_sift_filter_,
                               mask,
                               mask_grad);
+
+            compute_grad_maps(model_image_,
+                              &model_grad_fliplr_data_,
+                              &model_sift_filter_,
+                              mask,
+                              mask_grad,
+                              true);
             
             vil_image_view<double> o1,o2,o3;
             convert_to_color_space(model_image_,o1,o2,o3,grad_color_space_);
@@ -444,6 +505,24 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                                     mask,
                                     mask_grad);
 
+            compute_grad_color_maps(o1,
+                                    &model_grad_fliplr_red_data_,
+                                    mask,
+                                    mask_grad,
+                                    true);
+            
+            compute_grad_color_maps(o2,
+                                    &model_grad_fliplr_green_data_,
+                                    mask,
+                                    mask_grad,
+                                    true);
+            
+            compute_grad_color_maps(o3,
+                                    &model_grad_fliplr_blue_data_,
+                                    mask,
+                                    mask_grad,
+                                    true);
+ 
             vl_sift_set_magnif(model_sift_filter_,1.0);
 
         }
@@ -459,6 +538,13 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                               &query_sift_filter_,
                               mask,
                               mask_grad);
+
+            compute_grad_maps(query_image_,
+                              &query_grad_fliplr_data_,
+                              &query_sift_filter_,
+                              mask,
+                              mask_grad,
+                              true);
 
             vil_image_view<double> o1,o2,o3;
             convert_to_color_space(query_image_,o1,o2,o3,grad_color_space_);
@@ -515,6 +601,24 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                                     &query_grad_blue_data_,
                                     mask,
                                     mask_grad);
+
+            compute_grad_color_maps(o1,
+                                    &query_grad_fliplr_red_data_,
+                                    mask,
+                                    mask_grad,
+                                    true);
+            
+            compute_grad_color_maps(o2,
+                                    &query_grad_fliplr_green_data_,
+                                    mask,
+                                    mask_grad,
+                                    true);
+            
+            compute_grad_color_maps(o3,
+                                    &query_grad_fliplr_blue_data_,
+                                    mask,
+                                    mask_grad,
+                                    true);
             
             vl_sift_set_magnif(query_sift_filter_,1.0);
 
@@ -5011,7 +5115,8 @@ void dbskfg_match_bag_of_fragments::compute_grad_maps(
     vl_sift_pix** grad_data,
     VlSiftFilt** filter,
     vgl_polygon<double>& poly,
-    bool mask_grad)
+    bool mask_grad,
+    bool fliplr)
 {
     vil_image_view<vxl_byte> temp = 
         vil_convert_to_grey_using_rgb_weighting(
@@ -5020,25 +5125,31 @@ void dbskfg_match_bag_of_fragments::compute_grad_maps(
             0.1140,
             input_image->get_view());
     
-    vil_image_view<double> image;
-    vil_convert_cast(temp,image);
+    vil_image_view<double> orig_image;
+    vil_convert_cast(temp,orig_image);
 
-    unsigned int width  = image.ni();
-    unsigned int height = image.nj();
+    vil_image_view<double> flipped_image=orig_image;
+    if ( fliplr )
+    {
+        flipped_image=vil_flip_lr(flipped_image);
+    }
+
+    unsigned int width  = flipped_image.ni();
+    unsigned int height = flipped_image.nj();
 
     double* gradient_magnitude = (double*) 
         vl_malloc(width*height*sizeof(double));
     double* gradient_angle     = (double*) 
         vl_malloc(width*height*sizeof(double));
 
-    double* image_data=image.top_left_ptr();
+    double* flipped_image_data=flipped_image.top_left_ptr();
 
     vl_imgradient_polar_d(
         gradient_magnitude, // gradient magnitude 
         gradient_angle,     // gradient angle
         1,                  // output width
         width,              // output height
-        image_data,         // input image
+        flipped_image_data, // input image
         width,              // input image width
         height,             // input image height
         width);             // input image stride
@@ -5234,28 +5345,35 @@ void dbskfg_match_bag_of_fragments::compute_grad_color_maps(
 }
 
 void dbskfg_match_bag_of_fragments::compute_grad_color_maps(
-    vil_image_view<double>& image,
+    vil_image_view<double>& orig_image,
     vl_sift_pix** grad_data,
     vgl_polygon<double>& poly,
-    bool mask_grad)
+    bool mask_grad,
+    bool fliplr)
 {
 
-    unsigned int width  = image.ni();
-    unsigned int height = image.nj();
+    vil_image_view<double> flipped_image=orig_image;
+    if ( fliplr )
+    {
+        flipped_image=vil_flip_lr(flipped_image);
+    }
+
+    unsigned int width  = flipped_image.ni();
+    unsigned int height = flipped_image.nj();
 
     double* gradient_magnitude = (double*) 
         vl_malloc(width*height*sizeof(double));
     double* gradient_angle     = (double*) 
         vl_malloc(width*height*sizeof(double));
 
-    double* image_data=image.top_left_ptr();
+    double* flipped_image_data=flipped_image.top_left_ptr();
 
     vl_imgradient_polar_d(
         gradient_magnitude, // gradient magnitude 
         gradient_angle,     // gradient angle
         1,                  // output width
         width,              // output height
-        image_data,         // input image
+        flipped_image_data, // input image
         width,              // input image width
         height,             // input image height
         width);             // input image stride
