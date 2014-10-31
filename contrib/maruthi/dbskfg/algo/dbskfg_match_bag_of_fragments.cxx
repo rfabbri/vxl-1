@@ -5129,8 +5129,8 @@ void dbskfg_match_bag_of_fragments::compute_grad_maps(
     vil_convert_cast(temp,orig_image);
 
     vil_image_view<double> flipped_image(orig_image.ni(),
-                                         orig_image.nj(),
-                                         0.0);
+                                         orig_image.nj());
+
     if ( fliplr )
     {
         for ( unsigned int cols=0; cols < flipped_image.nj() ; ++cols)
@@ -5363,8 +5363,7 @@ void dbskfg_match_bag_of_fragments::compute_grad_color_maps(
 {
 
     vil_image_view<double> flipped_image(orig_image.ni(),
-                                         orig_image.nj(),
-                                         0.0);
+                                         orig_image.nj());
     if ( fliplr )
     {
         for ( unsigned int cols=0; cols < flipped_image.nj() ; ++cols)
