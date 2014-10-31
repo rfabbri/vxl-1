@@ -5128,10 +5128,20 @@ void dbskfg_match_bag_of_fragments::compute_grad_maps(
     vil_image_view<double> orig_image;
     vil_convert_cast(temp,orig_image);
 
-    vil_image_view<double> flipped_image=orig_image;
+    vil_image_view<double> flipped_image(orig_image.ni(),
+                                         orig_image.nj(),
+                                         0.0);
     if ( fliplr )
     {
-        flipped_image=vil_flip_lr(flipped_image);
+        for ( unsigned int cols=0; cols < flipped_image.nj() ; ++cols)
+        {
+            for ( unsigned int rows=0; rows < flipped_image.ni() ; ++rows)
+            {
+                flipped_image(rows,cols)=orig_image(flipped_image.ni()-1-rows,
+                                                    cols);
+
+            }
+        }
     }
 
     unsigned int width  = flipped_image.ni();
@@ -5352,10 +5362,20 @@ void dbskfg_match_bag_of_fragments::compute_grad_color_maps(
     bool fliplr)
 {
 
-    vil_image_view<double> flipped_image=orig_image;
+    vil_image_view<double> flipped_image(orig_image.ni(),
+                                         orig_image.nj(),
+                                         0.0);
     if ( fliplr )
     {
-        flipped_image=vil_flip_lr(flipped_image);
+        for ( unsigned int cols=0; cols < flipped_image.nj() ; ++cols)
+        {
+            for ( unsigned int rows=0; rows < flipped_image.ni() ; ++rows)
+            {
+                flipped_image(rows,cols)=orig_image(flipped_image.ni()-1-rows,
+                                                    cols);
+
+            }
+        }
     }
 
     unsigned int width  = flipped_image.ni();
