@@ -5147,6 +5147,10 @@ void dbskfg_match_bag_of_fragments::compute_grad_maps(
             }
         }
     }
+    else
+    {
+        flipped_image=orig_image;
+    }
 
     unsigned int width  = flipped_image.ni();
     unsigned int height = flipped_image.nj();
@@ -5379,6 +5383,10 @@ void dbskfg_match_bag_of_fragments::compute_grad_color_maps(
 
             }
         }
+    }
+    else
+    {
+        flipped_image=orig_image;
     }
 
     unsigned int width  = flipped_image.ni();
