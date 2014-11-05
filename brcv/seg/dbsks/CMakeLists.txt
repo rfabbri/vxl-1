@@ -43,6 +43,7 @@ dbdet_arc_patch.h       dbdet_arc_patch.cxx
 # XSHOCK-based detection -------------------------------------------------------
 dbsks_xfrag_bhog_model.cxx         dbsks_xfrag_bhog_model.h
 dbsks_xshock_dp.cxx                dbsks_xshock_dp.h
+dbsks_xshock_dp_new.cxx            dbsks_xshock_dp_new.h
 dbsks_xshock_dp_helper.cxx         dbsks_xshock_dp_helper.h
 dbsks_xnode_grid.cxx               dbsks_xnode_grid.h
 dbsks_xshock_utils.cxx             dbsks_xshock_utils.h

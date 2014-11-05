@@ -10,6 +10,7 @@
 #include <dbsks/dbsks_xnode_geom_model.h>
 #include <dbsks/dbsks_biarc_sampler.h>
 #include <dbsks/dbsks_xshock_dp.h>
+#include <dbsks/dbsks_xshock_dp_new.h>
 #include <dbsks/dbsks_xshock_utils.h>
 #include <dbsks/dbsks_xshock_likelihood.h>
 
@@ -91,7 +92,8 @@ detect(const vgl_box_2d<int >& window, float min_acceptable_confidence)
 
 
   // 3. Run DP on to find the best configuration
-  dbsks_xshock_dp xshock_dp;
+  //dbsks_xshock_dp xshock_dp;
+  dbsks_xshock_dp_new xshock_dp;
   xshock_dp.set_graph(this->xgraph());
 
   
@@ -403,15 +405,15 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
     vcl_cout << "min_y: "<<params.min_y <<" ";
 
 	// sample psi using geom model
-	params.step_psi = vnl_math::pi / 10;
+	params.step_psi = vnl_math::pi / 15;
     double range_psi = 2*vnl_math::pi;
     params.num_psi = vnl_math_floor(range_psi / params.step_psi) + 1;
     params.min_psi = (max_psi+min_psi)/2 - params.step_psi*(params.num_psi-1)/2;
 
 
 	// center at pi/2
-    params.step_phi0 = vnl_math::pi / 16;
-    params.num_phi0 = 11;
+    params.step_phi0 = vnl_math::pi / 24;
+    params.num_phi0 = 18;
     params.min_phi0 = vnl_math::pi_over_2 - params.step_phi0 * (params.num_phi0-1)/2;
 
 /*
@@ -423,9 +425,9 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
 */
 
 	// sample centered at prototype radius, make the step correpond to a ratio of current radius
-    params.step_r = vnl_math_max(0.06 * (xv->radius()), double(1)); 
-    params.num_r = vnl_math_floor(xv->radius()*0.9/params.step_r)+1;
-    params.min_r = xv->radius() - params.step_r * (params.num_r-1) /3;
+    params.step_r = vnl_math_max(0.05 * (xv->radius()), double(1)); 
+    params.num_r = vnl_math_floor(xv->radius()*1.2/params.step_r)+1;
+    params.min_r = xv->radius() - params.step_r * (params.num_r-1) /2;
 
 /*
 	// sample radius using geometric model

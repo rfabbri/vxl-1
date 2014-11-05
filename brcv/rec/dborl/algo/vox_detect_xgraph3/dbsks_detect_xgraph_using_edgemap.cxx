@@ -799,8 +799,8 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
       double real_confidence = -engine.list_solution_real_costs_[i];
 
       // only consider detetion with at least minimal confidence level
-      if (real_confidence > confidence_lower_threshold)
-      {
+      //if (real_confidence > confidence_lower_threshold)
+      //{
 		// for detection with enough edge support, add appearance confidence into it.
 		vcl_cout <<"edge_confidence:" << real_confidence << vcl_endl;		
 
@@ -817,7 +817,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 		    dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
 		    det->compute_bbox();
 		    dets_window.push_back(det);
-      }
+      //}
     } // solution
 
     //> Save solutions of the selected window to a folder

@@ -167,6 +167,9 @@ public:
                                                 double graph_size, int num_samples, 
                                                 vcl_vector<dbsksp_xshock_node_descriptor >& xdesc_list);
 
+  bool sample_start_given_end_using_model_minmax_range(const dbsksp_xshock_node_descriptor& end, 
+    double graph_size, int num_samples, vcl_vector<dbsksp_xshock_node_descriptor >& xdesc_list);
+
   //: Uniform sampling of the starting location of the fragment given the allowed
   // deviation from the initial location
   bool sample_start_position(int num_samples, double delta_x, double delta_y,
@@ -250,6 +253,8 @@ protected:
   pdf1d_flat phi_end_model_;
 
   // Generator
+  pdf1d_sampler* r_start_sampler_;
+  pdf1d_sampler* phi_start_sampler_;
   pdf1d_sampler* alpha_start_sampler_;
   pdf1d_sampler* chord_sampler_;
   pdf1d_sampler* dpsi_sampler_;

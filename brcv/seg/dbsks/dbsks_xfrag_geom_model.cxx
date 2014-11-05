@@ -129,9 +129,11 @@ set_param_range(double min_psi_start, double max_psi_start,
   //
   dbsks_regularize_min_max_values(min_r_start, max_r_start);
   this->r_start_model_.set(min_r_start, max_r_start);
+  this->r_start_sampler_ = this->r_start_model_.new_sampler();
   //
   dbsks_regularize_min_max_values(min_phi_start, max_phi_start);
   this->phi_start_model_.set(min_phi_start, max_phi_start);
+  this->phi_start_sampler_ = this->phi_start_model_.new_sampler();
   //
   dbsks_regularize_min_max_values(min_alpha_start, max_alpha_start);
   this->alpha_start_model_.set(min_alpha_start, max_alpha_start);
@@ -450,7 +452,71 @@ sample_end_given_start_using_model_minmax_range(const dbsksp_xshock_node_descrip
   return true;
 }
 
+//: Generate samples for the starting node descriptor, using minmax-range from model
+bool dbsks_xfrag_geom_model::
+sample_start_given_end_using_model_minmax_range(const dbsksp_xshock_node_descriptor& end, 
+                                                double graph_size, int num_samples, 
+                                                vcl_vector<dbsksp_xshock_node_descriptor >& xdesc_list)
+{
+  xdesc_list.resize(num_samples);
 
+  // ratio between current graph size and the model graph size
+  double scale_coeff = graph_size / this->graph_size_;
+
+  double x_end = end.pt().x();
+  double y_end = end.pt().y();
+  
+  // chord
+  vnl_vector<double > vec_chord(num_samples);
+  this->chord_sampler_->get_samples(vec_chord);
+  vec_chord *= scale_coeff;
+  
+  // alpha_start
+  vnl_vector<double > vec_alpha_start(num_samples);
+  this->alpha_start_sampler_->get_samples(vec_alpha_start);
+
+  // phi_start
+  vnl_vector<double > vec_phi_start(num_samples);
+  this->phi_start_sampler_->get_samples(vec_phi_start);
+
+  // dpsi
+  vnl_vector<double > vec_dpsi(num_samples);
+  this->dpsi_sampler_->get_samples(vec_dpsi);
+
+  // r_start
+  vnl_vector<double > vec_r_start(num_samples);
+  this->r_start_sampler_->get_samples(vec_r_start);
+  vec_r_start *= scale_coeff;
+
+
+  for (int k =0; k < num_samples; ++k)
+  {
+    // x and y
+    double chord = vec_chord[k]; //scale_coeff * this->chord_sampler_->sample();
+    double alpha_start = vec_alpha_start[k]; // this->alpha_start_sampler_->sample();
+
+//    double x_end = x_start + vcl_cos(start.psi_ - alpha_start) * chord;
+//    double y_end = y_start + vcl_sin(start.psi_ - alpha_start) * chord;
+
+
+
+    // phi
+    double phi_start = vec_phi_start[k]; // this->phi_end_sampler_->sample();
+
+    // psi
+    double dpsi = vec_dpsi[k]; //this->dpsi_sampler_->sample();
+    double psi_start = end.psi() - dpsi;
+
+	double x_start = x_end - vcl_cos(psi_start - alpha_start) * chord;
+	double y_start = y_end - vcl_sin(psi_start - alpha_start) * chord;
+
+    // radius
+    double r_start = vec_r_start[k]; //scale_coeff * this->r_end_sampler_->sample();
+
+    xdesc_list[k].set(x_start, y_start, psi_start, phi_start, r_start);
+  }
+  return true;
+}
 
 
 
