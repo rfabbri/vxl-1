@@ -68,7 +68,7 @@ optimize()
   // DYNAMIC PROGRAMMING TO MINIMIZE ENERGY ------------------------------------
 
   // Set sampling parameters
-  this->num_samples_c_ = 40; // degree-2 node: number of samples for child
+  this->num_samples_c_ = 60; // degree-2 node: number of samples for child
 
   // timer to count time spent for each stage
   vul_timer timer;
@@ -532,9 +532,9 @@ optimize_child_node_given_parent_node2(const dbsksp_xshock_edge_sptr& xe,
 
   // Allocate memory for the opt_cost_p and opt_child grids
   {
-    int num_x = grid_c.x_.size();
-    int num_y = grid_c.y_.size();
-    int num_states_per_cell = grid_c.num_states_per_cell();
+    int num_x = grid_p.x_.size();
+    int num_y = grid_p.y_.size();
+    int num_states_per_cell = grid_p.num_states_per_cell();
 
     this->allocate_grid2d(opt_cost_p, num_x, num_y, num_states_per_cell, vnl_numeric_traits<float >::maxval);
     this->allocate_grid2d(opt_child, num_x, num_y, num_states_per_cell, -1);
@@ -600,14 +600,14 @@ optimize_child_node_given_parent_node2(const dbsksp_xshock_edge_sptr& xe,
   int count_skipped = 0;
   //int count_test = 0;
 
-  vcl_vector<dbsksp_xshock_node_descriptor > edesc_list;
+  //vcl_vector<dbsksp_xshock_node_descriptor > edesc_list;
   for (unsigned k1 =0; k1 < size_x_vec; ++k1)
   {
     int ic_x = index_x_vec[k1];
     for (unsigned k2 =0; k2 < size_y_vec; ++k2)
     {
       int ic_y = index_y_vec[k2];
-      vnl_vector<float >& opt_cost = opt_cost_p(ic_x, ic_y);
+      //vnl_vector<float >& opt_cost = opt_cost_p(ic_x, ic_y);
 
       for (unsigned k3 =0; k3 < size_psi_vec; ++k3)
       {
@@ -691,7 +691,7 @@ optimize_degree_2_node(const dbsksp_xshock_node_sptr& xv_p,
   	//> Main function-------------------------------------------------------------
   	this->optimize_child_node_given_parent_node(xe, grid_p, max_acceptable_subtree_cost, opt_cost_p, opt_child); // use the orignal version to optimize the branch end node
   else
-  	this->optimize_child_node_given_parent_node(xe, grid_p, max_acceptable_subtree_cost, opt_cost_p, opt_child);		
+  	this->optimize_child_node_given_parent_node2(xe, grid_p, max_acceptable_subtree_cost, opt_cost_p, opt_child);		
   //------------------------------------------------------------------------------
 
   // Release memory to store optimal child costs since they will no longer be used
@@ -1096,7 +1096,7 @@ optimize_root_node(unsigned root_vid, unsigned major_child_eid)
 
   if (xv_root->degree() == 2)
   {
-    return this->optimize_degree2_root_node_use_both_branches(root_vid, major_child_eid);
+    return this->optimize_degree2_root_node_use_both_branches2(root_vid, major_child_eid);
 
     //return this->optimize_degree2_root_node_ignore_minor_branch(root_vid, major_child_eid);
   }

@@ -772,7 +772,8 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
     engine.set_xgraph(xgraph);
 	if(!prev_dets.empty())
 	{
-		engine.prev_dets_ = prev_dets;
+		//engine.prev_dets_ = prev_dets;
+		engine.prev_dets_.push_back(prev_dets[0]);
         engine.compute_vertices_para_range();
 	}
 

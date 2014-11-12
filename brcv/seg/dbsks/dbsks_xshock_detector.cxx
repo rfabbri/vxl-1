@@ -358,6 +358,7 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
   this->map_xnode_grid_.clear();
 
 	
+  
 
   int i = 0;
   for (dbsksp_xshock_graph::vertex_iterator vit = this->xgraph()->vertices_begin();
@@ -403,19 +404,28 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
     params.min_y = vnl_math_rnd((xgraph_vertices_min_y_[i]+xgraph_vertices_max_y_[i])/2 - params.step_y*(params.num_y-1)/2 ); // centering
 
     vcl_cout << "min_y: "<<params.min_y <<" ";
-
+/*
 	// sample psi using geom model
 	params.step_psi = vnl_math::pi / 15;
     double range_psi = 2*vnl_math::pi;
     params.num_psi = vnl_math_floor(range_psi / params.step_psi) + 1;
     params.min_psi = (max_psi+min_psi)/2 - params.step_psi*(params.num_psi-1)/2;
-
-
+*/
+    // sample psi from previous dets
+	params.step_psi = vnl_math::pi / 15;
+    double range_psi = (xgraph_vertices_max_psi_[i] - xgraph_vertices_min_psi_[i] + 0.8*vnl_math::pi);
+    params.num_psi = vnl_math_floor(range_psi / params.step_psi)+1;
+    params.min_psi = (xgraph_vertices_max_psi_[i]+xgraph_vertices_min_psi_[i])/2 - params.step_psi*(params.num_psi-1)/2;
+/*
 	// center at pi/2
     params.step_phi0 = vnl_math::pi / 24;
     params.num_phi0 = 18;
     params.min_phi0 = vnl_math::pi_over_2 - params.step_phi0 * (params.num_phi0-1)/2;
-
+*/
+	// sample phi from prev dets 
+    params.step_phi0 = vnl_math::pi / 24;
+    params.num_phi0 = 13;
+    params.min_phi0 = (xgraph_vertices_max_phi_[i]+xgraph_vertices_min_phi_[i])/2 - params.step_phi0 * (params.num_phi0-1)/2;
 /*
 	// sample phi center at pi/2 using geom model
     params.step_phi0 = vnl_math::pi / 16;
@@ -424,11 +434,17 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
     params.min_phi0 = vnl_math::pi_over_2 - params.step_phi0 * (params.num_phi0-1)/2;
 */
 
+/*
 	// sample centered at prototype radius, make the step correpond to a ratio of current radius
     params.step_r = vnl_math_max(0.05 * (xv->radius()), double(1)); 
     params.num_r = vnl_math_floor(xv->radius()*1.2/params.step_r)+1;
     params.min_r = xv->radius() - params.step_r * (params.num_r-1) /2;
+*/
 
+	// sample radius from prev dets
+    params.step_r = vnl_math_max(0.08 * (xv->radius()), double(1)); 
+    params.num_r = vnl_math_max(vnl_math_floor((xgraph_vertices_max_r_[i]-xgraph_vertices_min_r_[i]+xv->radius()*0.8)/params.step_r)+1,3);
+    params.min_r = (xgraph_vertices_max_r_[i]+xgraph_vertices_min_r_[i])/2 - params.step_r * (params.num_r-1) /2;
 /*
 	// sample radius using geometric model
 	params.step_r = vnl_math_max((max_radius-min_radius)/20, double(1)); 
@@ -708,6 +724,12 @@ void dbsks_xshock_detector::compute_vertices_para_range()
 	vcl_vector<double> vertices_max_x (this->xgraph()->number_of_vertices(), -1);
 	vcl_vector<double> vertices_min_y (this->xgraph()->number_of_vertices(), -1);
 	vcl_vector<double> vertices_max_y (this->xgraph()->number_of_vertices(), -1);
+	vcl_vector<double> vertices_min_psi (this->xgraph()->number_of_vertices(), -1);
+	vcl_vector<double> vertices_max_psi (this->xgraph()->number_of_vertices(), -1);
+	vcl_vector<double> vertices_min_phi (this->xgraph()->number_of_vertices(), -1);
+	vcl_vector<double> vertices_max_phi (this->xgraph()->number_of_vertices(), -1);
+	vcl_vector<double> vertices_min_r (this->xgraph()->number_of_vertices(), -1);
+	vcl_vector<double> vertices_max_r (this->xgraph()->number_of_vertices(), -1);
 
 	for(int i =0 ; i< vcl_min(int(prev_dets_.size()), 3); i++)
 	{
@@ -718,10 +740,12 @@ void dbsks_xshock_detector::compute_vertices_para_range()
 		{
 			dbsksp_xshock_node_sptr xv = *vit;
 
-			double x, y, psi, phi, radius;
+			double x, y, psi, phi, r;
 			//vcl_cout<< "read para" <<vcl_endl;
-			xv->descriptor(xv->edge_list().front())->get(x, y, psi, phi, radius);
+			xv->descriptor(xv->edge_list().front())->get(x, y, psi, phi, r);
 
+			if( xv->id()==14 || xv->id()==11)
+				xv->descriptor(xv->edge_list().back())->get(x, y, psi, phi, r);
 			if(vertices_min_x[j]==-1)
 				vertices_min_x[j] = x;
 			else if(x < vertices_min_x[j])
@@ -742,6 +766,35 @@ void dbsks_xshock_detector::compute_vertices_para_range()
 			else if(y > vertices_max_y[j])
 				vertices_max_y[j] = y;
 
+			if(vertices_min_psi[j]==-1)
+				vertices_min_psi[j] = psi;
+			else if(psi < vertices_min_psi[j])
+				vertices_min_psi[j] = psi;
+
+			if(vertices_max_psi[j]==-1)
+				vertices_max_psi[j] = psi;
+			else if(psi > vertices_max_psi[j])
+				vertices_max_psi[j] = psi;
+
+			if(vertices_min_phi[j]==-1)
+				vertices_min_phi[j] = phi;
+			else if(phi < vertices_min_phi[j])
+				vertices_min_phi[j] = phi;
+
+			if(vertices_max_phi[j]==-1)
+				vertices_max_phi[j] = phi;
+			else if(phi > vertices_max_phi[j])
+				vertices_max_phi[j] = phi;
+
+			if(vertices_min_r[j]==-1)
+				vertices_min_r[j] = r;
+			else if(r < vertices_min_r[j])
+				vertices_min_r[j] = r;
+
+			if(vertices_max_r[j]==-1)
+				vertices_max_r[j] = r;
+			else if(r > vertices_max_r[j])
+				vertices_max_r[j] = r;
 		}
 	}
 
@@ -749,6 +802,12 @@ void dbsks_xshock_detector::compute_vertices_para_range()
   xgraph_vertices_max_x_ = vertices_max_x;
   xgraph_vertices_min_y_ = vertices_min_y;
   xgraph_vertices_max_y_ = vertices_max_y;	
+  xgraph_vertices_min_psi_ = vertices_min_psi;
+  xgraph_vertices_max_psi_ = vertices_max_psi;	
+  xgraph_vertices_min_phi_ = vertices_min_phi;
+  xgraph_vertices_max_phi_ = vertices_max_phi;
+  xgraph_vertices_min_r_ = vertices_min_r;
+  xgraph_vertices_max_r_ = vertices_max_r;		
 
 
   vcl_cout << "min_x: ";	
@@ -773,6 +832,42 @@ void dbsks_xshock_detector::compute_vertices_para_range()
   for(int i = 0; i< this->xgraph()->number_of_vertices(); i++)
   {
 	 vcl_cout << xgraph_vertices_max_y_[i] << " ";
+  }	
+  vcl_cout <<vcl_endl;
+  vcl_cout << "min_psi: ";	
+  for(int i = 0; i< this->xgraph()->number_of_vertices(); i++)
+  {
+	 vcl_cout << xgraph_vertices_min_psi_[i] << " ";
+  }	
+  vcl_cout <<vcl_endl;
+  vcl_cout << "max_psi: ";	
+  for(int i = 0; i< this->xgraph()->number_of_vertices(); i++)
+  {
+	 vcl_cout << xgraph_vertices_max_psi_[i] << " ";
+  }	
+  vcl_cout <<vcl_endl;
+  vcl_cout << "min_phi: ";	
+  for(int i = 0; i< this->xgraph()->number_of_vertices(); i++)
+  {
+	 vcl_cout << xgraph_vertices_min_phi_[i] << " ";
+  }	
+  vcl_cout <<vcl_endl;
+  vcl_cout << "max_phi: ";	
+  for(int i = 0; i< this->xgraph()->number_of_vertices(); i++)
+  {
+	 vcl_cout << xgraph_vertices_max_phi_[i] << " ";
+  }	
+  vcl_cout <<vcl_endl;
+  vcl_cout << "min_r: ";	
+  for(int i = 0; i< this->xgraph()->number_of_vertices(); i++)
+  {
+	 vcl_cout << xgraph_vertices_min_r_[i] << " ";
+  }	
+  vcl_cout <<vcl_endl;
+  vcl_cout << "max_r: ";	
+  for(int i = 0; i< this->xgraph()->number_of_vertices(); i++)
+  {
+	 vcl_cout << xgraph_vertices_max_r_[i] << " ";
   }	
   vcl_cout <<vcl_endl;
 
