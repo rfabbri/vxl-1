@@ -223,7 +223,7 @@ void dbru_matching_tool::activate() {
         for (int k = 0; k<vertex_cnt; k++) 
           fs >> y_corners[k];
 
-        vgui_soview2D_polygon *poly = new vgui_soview2D_polygon(vertex_cnt, &x_corners[0], &y_corners[0]);
+        vgui_soview2D_polygon *poly = new vgui_soview2D_polygon(vertex_cnt, &x_corners[0], &y_corners[0],true);
         polygons_[i].push_back(poly);
 
         

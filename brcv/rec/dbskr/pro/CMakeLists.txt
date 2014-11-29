@@ -37,6 +37,6 @@ ADD_LIBRARY(dbskr_pro ${dbskr_pro_sources})
 
 #TARGET_LINK_LIBRARIES(dbskr_pro dbskr dbru strk vidpro1 vul dbsdef)
 
-TARGET_LINK_LIBRARIES(dbskr_pro dbskr_algo strk bpro1 vul)
+TARGET_LINK_LIBRARIES(dbskr_pro dbskr_algo bpro1 vul)
 
 

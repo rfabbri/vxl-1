@@ -2402,14 +2402,14 @@ compute_root_state_of_local_min_all_root_params(vcl_vector<int >& list_root_stat
   // x-
   for (int i_x =0; i_x < num_x; ++i_x)
   {
-    int kernel_min_x = vnl_math_max(i_x - kernel_radius, 0);
-    int kernel_max_x = vnl_math_min(i_x + kernel_radius, num_x-1);
+    int kernel_min_x = vnl_math::max(i_x - kernel_radius, 0);
+    int kernel_max_x = vnl_math::min(i_x + kernel_radius, num_x-1);
     
     // y-
     for (int i_y =0; i_y < num_y; ++i_y)
     {
-      int kernel_min_y = vnl_math_max(i_y - kernel_radius, 0);
-      int kernel_max_y = vnl_math_min(i_y + kernel_radius, num_y-1);
+      int kernel_min_y = vnl_math::max(i_y - kernel_radius, 0);
+      int kernel_max_y = vnl_math::min(i_y + kernel_radius, num_y-1);
 
       vnl_vector<float >& fz_vec = opt_cost_root(i_x, i_y);
       if (fz_vec.empty())
@@ -2419,18 +2419,18 @@ compute_root_state_of_local_min_all_root_params(vcl_vector<int >& list_root_stat
 
       for (int i_psi =0; i_psi < num_psi; ++i_psi)
       {
-        int kernel_min_psi = vnl_math_max(i_psi - kernel_radius, 0);
-        int kernel_max_psi = vnl_math_min(i_psi + kernel_radius, num_psi-1);
+        int kernel_min_psi = vnl_math::max(i_psi - kernel_radius, 0);
+        int kernel_max_psi = vnl_math::min(i_psi + kernel_radius, num_psi-1);
 
         for (int i_phi0 =0; i_phi0 < (int) grid_root.phi0_.size(); ++i_phi0)
         {
-          int kernel_min_phi0 = vnl_math_max(i_phi0 - kernel_radius, 0);
-          int kernel_max_phi0 = vnl_math_min(i_phi0 + kernel_radius, num_phi0 -1);
+          int kernel_min_phi0 = vnl_math::max(i_phi0 - kernel_radius, 0);
+          int kernel_max_phi0 = vnl_math::min(i_phi0 + kernel_radius, num_phi0 -1);
 
           for (int i_r =0; i_r < (int) grid_root.r_.size(); ++i_r)
           {
-            int kernel_min_r = vnl_math_max(i_r - kernel_radius, 0);
-            int kernel_max_r = vnl_math_min(i_r + kernel_radius, num_r -1);
+            int kernel_min_r = vnl_math::max(i_r - kernel_radius, 0);
+            int kernel_max_r = vnl_math::min(i_r + kernel_radius, num_r -1);
 
             // retrieve value of the objective function
             float fz = fz_vec[grid_root.cell_grid_to_linear(i_psi, i_phi0, i_r)];
@@ -2679,7 +2679,7 @@ compute_kernel_min(const grid2d_float& F,
           for (int i_r = min_i_r; i_r <= max_i_r; ++i_r)
           {
             int cell_state = grid.cell_grid_to_linear(i_psi, i_phi0, i_r);
-            fmin = vnl_math_min(fmin, fz_vec[cell_state]);
+            fmin = vnl_math::min(fmin, fz_vec[cell_state]);
           }
         }
       }
@@ -2708,7 +2708,7 @@ compute_min_value(const grid2d_float& F) const
   {
     if (iter->empty())
       continue;
-    min_val = vnl_math_min(min_val, iter->min_value());
+    min_val = vnl_math::min(min_val, iter->min_value());
   }
   return min_val;
 }
@@ -2895,11 +2895,11 @@ find_xgraph_state_local_optimum(unsigned root_vid,
 //  //  double step_x = grid_p.step_x_;
 //  //  double step_y = grid_p.step_y_;
 //
-//  //  int max_x_idx = vnl_math_ceil( (x0_c+max_chord - x0_p) / step_x);
-//  //  int min_x_idx = vnl_math_floor( (x0_c-max_chord - x0_p) / step_x);
+//  //  int max_x_idx = vnl_math::ceil( (x0_c+max_chord - x0_p) / step_x);
+//  //  int min_x_idx = vnl_math::floor( (x0_c-max_chord - x0_p) / step_x);
 //
-//  //  int max_y_idx = vnl_math_ceil( (y0_c+max_chord - y0_p) / step_y);
-//  //  int min_y_idx = vnl_math_floor( (y0_c-max_chord - y0_p) / step_y);
+//  //  int max_y_idx = vnl_math::ceil( (y0_c+max_chord - y0_p) / step_y);
+//  //  int min_y_idx = vnl_math::floor( (y0_c-max_chord - y0_p) / step_y);
 //
 //  //  // Determine which points of parent grid affected by child point at index (0, 0)
 //  //  // i_x and i_y are running indices for the points in the parent's grid
@@ -2970,7 +2970,7 @@ find_xgraph_state_local_optimum(unsigned root_vid,
 //  //          continue;
 //
 //  //        // update cost matrix of parent with the best it can have
-//  //        min_cost_xy_p(i_x, i_y) = vnl_math_min(min_cost_xy_p(i_x, i_y), val);        
+//  //        min_cost_xy_p(i_x, i_y) = vnl_math::min(min_cost_xy_p(i_x, i_y), val);        
 //  //      }
 //  //    }
 //  //  }

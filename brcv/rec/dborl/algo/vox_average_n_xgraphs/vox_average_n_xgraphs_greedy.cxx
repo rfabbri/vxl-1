@@ -90,9 +90,9 @@ initialize()
   dborl_index_node_sptr index_node = dataset_index->root_->cast_to_index_node();
 
   unsigned start_index = this->params_->dataset_start_index_();
-  unsigned end_index = vnl_math_min(this->params_->dataset_end_index_()+1, unsigned(index_node->paths().size()));
+  unsigned end_index = vnl_math::min(this->params_->dataset_end_index_()+1, unsigned(index_node->paths().size()));
     
-    //unsigned num_shapes = vnl_math_min(unsigned(index_node->paths().size()), unsigned(this->params_->num_xgraphs_to_average_()));
+    //unsigned num_shapes = vnl_math::min(unsigned(index_node->paths().size()), unsigned(this->params_->num_xgraphs_to_average_()));
 
   this->list_esf_file_.clear();
   this->list_object_name_.clear();
@@ -575,8 +575,8 @@ save_screenshot(const dbsksp_xshock_graph_sptr& xgraph, const vcl_string& out_pn
 
   // construct a canvas to draw the xgraph
   int border = 20;
-  int frame_width = vnl_math_rnd(bbox->width() + 2*border);
-  int frame_height = vnl_math_rnd(bbox->height() + 2*border);
+  int frame_width = vnl_math::rnd(bbox->width() + 2*border);
+  int frame_height = vnl_math::rnd(bbox->height() + 2*border);
   vil_image_view<vxl_byte > frame(frame_width, frame_height);
   frame.fill(0);
 

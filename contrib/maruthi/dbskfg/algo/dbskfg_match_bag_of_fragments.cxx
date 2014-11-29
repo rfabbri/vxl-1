@@ -9596,7 +9596,7 @@ vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
     {
         for ( unsigned int r=0; r < c+1 ; ++r)
         {
-            double scaled_value=vnl_math_sgn(log_mapping[r][c])*
+            double scaled_value=vnl_math::sgn(log_mapping[r][c])*
                 vcl_pow(vcl_abs(log_mapping[r][c]),0.75);
             upper_triangle.put(position,scaled_value);
             position++;

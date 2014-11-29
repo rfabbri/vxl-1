@@ -32,8 +32,8 @@ draw() const
 
   // decide the number of segments to draw based on the chord length of the arc
   // use at least 5 line segments
-  int num_segments = (int) vnl_math_max(arc.length(), 5.0);
-  num_segments = vnl_math_min(num_segments, 100);
+  int num_segments = (int) vnl_math::max(arc.length(), 5.0);
+  num_segments = vnl_math::min(num_segments, 100);
 
   // list of points of the polyline to draw
   vcl_vector<vgl_point_2d<double > > pts;

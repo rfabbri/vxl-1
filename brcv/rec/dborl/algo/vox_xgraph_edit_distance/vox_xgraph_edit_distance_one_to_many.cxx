@@ -206,7 +206,7 @@ perform_distance_computation()
     if (query_mirrored)
     {
       double distance2 = this->compute_edit_distance(query_mirrored, model_xgraph, work);
-      distance = vnl_math_min(distance, distance2);
+      distance = vnl_math::min(distance, distance2);
     }
     
 

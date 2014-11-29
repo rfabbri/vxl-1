@@ -259,7 +259,7 @@ collect_positive_data()
             vnl_vector<double > scale_diff(list_edgemap_scales.size(), vnl_numeric_traits<double >::maxval);
             for (unsigned i =0; i < scale_diff.size(); ++i)
             {
-                scale_diff[i] = vnl_math_abs(vcl_log(list_edgemap_scales[i] / target_edgemap_scale));
+                scale_diff[i] = vnl_math::abs(vcl_log(list_edgemap_scales[i] / target_edgemap_scale));
             }
             unsigned min_idx = scale_diff.arg_min();
             double actual_edgemap_scale = list_edgemap_scales[min_idx];
@@ -272,13 +272,13 @@ collect_positive_data()
 
             //> compute ccm cost for an area twice as big as the xgraph
             vsol_box_2d_sptr bbox = xgraph->bounding_box();
-            int cx = vnl_math_rnd( (bbox->get_min_x() + bbox->get_max_x()) / 2);
-            int cy = vnl_math_rnd( (bbox->get_min_y() + bbox->get_max_y()) / 2);
+            int cx = vnl_math::rnd( (bbox->get_min_x() + bbox->get_max_x()) / 2);
+            int cy = vnl_math::rnd( (bbox->get_min_y() + bbox->get_max_y()) / 2);
             vgl_point_2d<int > centroid(cx, cy);
 
             vgl_box_2d<int > roi(vgl_point_2d<int >(cx, cy),
-                    2*vnl_math_ceil(bbox->width()), // double the width
-                    2*vnl_math_ceil(bbox->height()), // double the height
+                    2*vnl_math::ceil(bbox->width()), // double the width
+                    2*vnl_math::ceil(bbox->height()), // double the height
                     vgl_box_2d<int >::centre);
             roi = vgl_intersection<int >(roi, edgemap_bbox);
 
@@ -822,7 +822,7 @@ collect_negative_data()
             vnl_vector<double > scale_diff(list_edgemap_scales.size(), vnl_numeric_traits<double >::maxval);
             for (unsigned i =0; i < scale_diff.size(); ++i)
             {
-                scale_diff[i] = vnl_math_abs(vcl_log(list_edgemap_scales[i] / target_edgemap_scale));
+                scale_diff[i] = vnl_math::abs(vcl_log(list_edgemap_scales[i] / target_edgemap_scale));
             }
             unsigned min_idx = scale_diff.arg_min();
             double actual_edgemap_scale = list_edgemap_scales[min_idx];
@@ -838,8 +838,8 @@ collect_negative_data()
             //>> Define "big-enough": expansion + some padding
             double padding = 8;
             double expansion_ratio = 2;
-            int required_width = vnl_math_ceil(xgraph_bbox->width()*expansion_ratio + padding*2);
-            int required_height = vnl_math_ceil(xgraph_bbox->height()*expansion_ratio + padding*2);
+            int required_width = vnl_math::ceil(xgraph_bbox->width()*expansion_ratio + padding*2);
+            int required_height = vnl_math::ceil(xgraph_bbox->height()*expansion_ratio + padding*2);
 
             //> ignore small edgemaps
             if (edgemap_bbox.width() < required_width || edgemap_bbox.height() < required_height)

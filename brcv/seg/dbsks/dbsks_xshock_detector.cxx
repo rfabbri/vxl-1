@@ -414,7 +414,7 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
     // sample psi from previous dets
 	params.step_psi = vnl_math::pi / 15;
     double range_psi = (xgraph_vertices_max_psi_[i] - xgraph_vertices_min_psi_[i] + 0.8*vnl_math::pi);
-    params.num_psi = vnl_math_floor(range_psi / params.step_psi)+1;
+    params.num_psi = vnl_math::floor(range_psi / params.step_psi)+1;
     params.min_psi = (xgraph_vertices_max_psi_[i]+xgraph_vertices_min_psi_[i])/2 - params.step_psi*(params.num_psi-1)/2;
 /*
 	// center at pi/2
@@ -442,8 +442,8 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
 */
 
 	// sample radius from prev dets
-    params.step_r = vnl_math_max(0.08 * (xv->radius()), double(1)); 
-    params.num_r = vnl_math_max(vnl_math_floor((xgraph_vertices_max_r_[i]-xgraph_vertices_min_r_[i]+xv->radius()*0.8)/params.step_r)+1,3);
+    params.step_r = vnl_math::max(0.08 * (xv->radius()), double(1)); 
+    params.num_r = vnl_math::max(vnl_math::floor((xgraph_vertices_max_r_[i]-xgraph_vertices_min_r_[i]+xv->radius()*0.8)/params.step_r)+1,3);
     params.min_r = (xgraph_vertices_max_r_[i]+xgraph_vertices_min_r_[i])/2 - params.step_r * (params.num_r-1) /2;
 /*
 	// sample radius using geometric model

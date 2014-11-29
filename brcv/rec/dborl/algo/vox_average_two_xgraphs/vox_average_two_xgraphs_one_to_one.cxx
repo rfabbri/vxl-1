@@ -284,8 +284,8 @@ save_screenshot(const dbsksp_xshock_graph_sptr& xgraph, const vcl_string& out_pn
 
   // construct a canvas to draw the xgraph
   int border = 20;
-  int frame_width = vnl_math_rnd(bbox->width() + 2*border);
-  int frame_height = vnl_math_rnd(bbox->height() + 2*border);
+  int frame_width = vnl_math::rnd(bbox->width() + 2*border);
+  int frame_height = vnl_math::rnd(bbox->height() + 2*border);
   vil_image_view<vxl_byte > frame(frame_width, frame_height);
   frame.fill(0);
 

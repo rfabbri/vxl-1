@@ -264,7 +264,7 @@ void dbru_labeling_tool::activate() {
         for (int k = 0; k<vertex_cnt; k++) 
           fs >> y_corners[k];
 
-        vgui_soview2D_polygon *poly = new vgui_soview2D_polygon(vertex_cnt, &x_corners[0], &y_corners[0]);
+        vgui_soview2D_polygon *poly = new vgui_soview2D_polygon(vertex_cnt, &x_corners[0], &y_corners[0],true);
 #if 0
         vcl_cout << "frame: " << i << " polygon:\nX:";
         for (int k = 0; k<vertex_cnt; k++) 

@@ -416,8 +416,8 @@ handle_pick_connect_polyline1(float ix, float iy)
     
 
     // determine whether to pick the start or end point based on distance
-    double d0 = vnl_math_hypot(ix-poly->p0()->x(), iy - poly->p0()->y());
-    double d1 = vnl_math_hypot(ix-poly->p1()->x(), iy - poly->p1()->y());
+    double d0 = vnl_math::hypot(ix-poly->p0()->x(), iy - poly->p0()->y());
+    double d1 = vnl_math::hypot(ix-poly->p1()->x(), iy - poly->p1()->y());
 
     this->connect_polyline1_ = poly;
     this->connect_polyline1_at_start_ = d0 < d1;
@@ -469,8 +469,8 @@ handle_pick_connect_polyline2(float ix, float iy)
     
 
     // determine whether to pick the start or end point based on distance
-    double d0 = vnl_math_hypot(ix-poly->p0()->x(), iy - poly->p0()->y());
-    double d1 = vnl_math_hypot(ix-poly->p1()->x(), iy - poly->p1()->y());
+    double d0 = vnl_math::hypot(ix-poly->p0()->x(), iy - poly->p0()->y());
+    double d1 = vnl_math::hypot(ix-poly->p1()->x(), iy - poly->p1()->y());
 
     this->connect_polyline2_ = poly;
     this->connect_polyline2_at_start_ = d0 < d1;

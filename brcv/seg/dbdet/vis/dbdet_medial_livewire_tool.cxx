@@ -664,7 +664,7 @@ handle_draw_overlay()
           points_y[2*p+q] = (float)this->seed_y[i] + dy;
         }
       }
-      vgui_soview2D_polygon box(4, points_x, points_y);
+      vgui_soview2D_polygon box(4, points_x, points_y,false);
       
       // draw the box
       box.draw();
