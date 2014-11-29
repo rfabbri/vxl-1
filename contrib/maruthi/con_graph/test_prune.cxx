@@ -111,108 +111,108 @@ int main( int argc, char *argv[] )
     inp->set_image(img_sptr);
 
 
-    // Create output storage for edge detection
-    vcl_vector<bpro1_storage_sptr> edge_det_results;
+    // // Create output storage for edge detection
+    // vcl_vector<bpro1_storage_sptr> edge_det_results;
 
 
-    dbdet_third_order_color_edge_detector_process pro_color_edg;
+    // dbdet_third_order_color_edge_detector_process pro_color_edg;
 
-    // Before we start the process lets clean input output
-    pro_color_edg.clear_input();
-    pro_color_edg.clear_output();
+    // // Before we start the process lets clean input output
+    // pro_color_edg.clear_input();
+    // pro_color_edg.clear_output();
 
-    pro_color_edg.add_input(inp);
-    bool to_c_status = pro_color_edg.execute();
-    pro_color_edg.finish();
+    // pro_color_edg.add_input(inp);
+    // bool to_c_status = pro_color_edg.execute();
+    // pro_color_edg.finish();
 
-    // Grab output from color third order edge detection
-    // if process did not fail
-    if ( to_c_status )
-    {
-        edge_det_results = pro_color_edg.get_output();
-    }
+    // // Grab output from color third order edge detection
+    // // if process did not fail
+    // if ( to_c_status )
+    // {
+    //     edge_det_results = pro_color_edg.get_output();
+    // }
 
-    //Clean up after ourselves
-    pro_color_edg.clear_input();
-    pro_color_edg.clear_output();
+    // //Clean up after ourselves
+    // pro_color_edg.clear_input();
+    // pro_color_edg.clear_output();
 
 
 
 
     
-    dbdet_save_edg_process save_edg_pro;
+    // dbdet_save_edg_process save_edg_pro;
 
-    vcl_string output_file="";
-    {
-        vcl_string final_name=vul_file::strip_extension(
-            vul_file::strip_directory(input_img));
-        vcl_string orig_directory=vul_file::dirname(input_img);
+    // vcl_string output_file="";
+    // {
+    //     vcl_string final_name=vul_file::strip_extension(
+    //         vul_file::strip_directory(input_img));
+    //     vcl_string orig_directory=vul_file::dirname(input_img);
         
-        vcl_string final_directory=orig_directory;
-        vcl_string replacer="Cropped";
-        final_directory.replace(33,42-33,replacer);
-        output_file=final_directory + "/" + final_name + "_to.edg";
+    //     vcl_string final_directory=orig_directory;
+    //     vcl_string replacer="Cropped";
+    //     final_directory.replace(33,42-33,replacer);
+    //     output_file=final_directory + "/" + final_name + "_to.edg";
         
-        //output_file=vul_file::strip_extension(input_img) +"_to.edg";
-    }
+    //     //output_file=vul_file::strip_extension(input_img) +"_to.edg";
+    // }
 
-    vcl_cout<<output_file<<vcl_endl;
+    // vcl_cout<<output_file<<vcl_endl;
 
-    bpro1_filepath output(output_file,"_to.edg");
-    vcl_string bbox_file=vul_file::strip_extension(input_img)+"_bbox.txt";
+    // bpro1_filepath output(output_file,"_to.edg");
+    // vcl_string bbox_file=vul_file::strip_extension(input_img)+"_bbox.txt";
 
-    vcl_ifstream istream(bbox_file.c_str());
+    // vcl_ifstream istream(bbox_file.c_str());
     
-    double x(0.0),y(0.0),width(0.0),height(0.0);
+    // double x(0.0),y(0.0),width(0.0),height(0.0);
 
-    istream>>x;
-    istream>>y;
-    istream>>width;
-    istream>>height;
+    // istream>>x;
+    // istream>>y;
+    // istream>>width;
+    // istream>>height;
 
-    istream.close();
+    // istream.close();
 
-    double xmin=x; double xmax=x+width;
-    double ymin=y; double ymax=y+height;
+    // double xmin=x; double xmax=x+width;
+    // double ymin=y; double ymax=y+height;
 
-    vgl_box_2d<double> bbox(xmin,xmax,ymin,ymax);
-    vcl_cout<<" x: "<<x<<" y: "<<y<<" width: "<<width<<" height: "
-            <<height<<vcl_endl;
-
-
+    // vgl_box_2d<double> bbox(xmin,xmax,ymin,ymax);
+    // vcl_cout<<" x: "<<x<<" y: "<<y<<" width: "<<width<<" height: "
+    //         <<height<<vcl_endl;
 
 
-    dbdet_edgemap_storage_sptr input_edgemap;
-    input_edgemap.vertical_cast(edge_det_results[0]);
-    dbdet_edgemap_sptr EM = input_edgemap->get_edgemap();
 
-    //create a new edgemap from the tokens collected from NMS
-    dbdet_edgemap_sptr bbox_edge_map = new dbdet_edgemap(width+1, 
-                                                         height+1);
+
+    // dbdet_edgemap_storage_sptr input_edgemap;
+    // input_edgemap.vertical_cast(edge_det_results[0]);
+    // dbdet_edgemap_sptr EM = input_edgemap->get_edgemap();
+
+    // //create a new edgemap from the tokens collected from NMS
+    // dbdet_edgemap_sptr bbox_edge_map = new dbdet_edgemap(width+1, 
+    //                                                      height+1);
     
 
-    vcl_vector<dbdet_edgel*> orig_edges=EM->edgels;
-    for  ( unsigned int e=0; e < orig_edges.size() ; ++e)
-    {
-        vgl_point_2d<double> location=orig_edges[e]->pt;
+    // vcl_vector<dbdet_edgel*> orig_edges=EM->edgels;
+    // for  ( unsigned int e=0; e < orig_edges.size() ; ++e)
+    // {
+    //     vgl_point_2d<double> location=orig_edges[e]->pt;
 
-        if ( bbox.contains(location))
-        {
-            vgl_point_2d<double> new_location(
-                location.x()-xmin,location.y()-ymin);
+    //     if ( bbox.contains(location))
+    //     {
+    //         vgl_point_2d<double> new_location(
+    //             location.x()-xmin,location.y()-ymin);
             
-            bbox_edge_map->
-                insert(new dbdet_edgel(new_location,
-                                       orig_edges[e]->tangent,
-                                       orig_edges[e]->strength,
-                                       orig_edges[e]->deriv));
+    //         bbox_edge_map->
+    //             insert(new dbdet_edgel(new_location,
+    //                                    orig_edges[e]->tangent,
+    //                                    orig_edges[e]->strength,
+    //                                    orig_edges[e]->deriv));
 
             
-        }
+    //     }
 
-    }
+    // }
     
-    bool retval = dbdet_save_edg(output_file, bbox_edge_map);
+    // bool retval = dbdet_save_edg(output_file, bbox_edge_map);
 
     // save_edg_pro.parameters()->set_value("-edgoutput",output);
 
@@ -408,121 +408,121 @@ int main( int argc, char *argv[] )
     // vidpro1_image_storage_sptr inp = new vidpro1_image_storage();
     // inp->set_image(img_sptr);
 
-    // // Create storage
-    // vcl_vector<bpro1_storage_sptr> ct_results;
-    // {
-    //     vcl_cout<<"************ Contour Tracing  ************"<<vcl_endl;
+    // Create storage
+    vcl_vector<bpro1_storage_sptr> ct_results;
+    {
+        vcl_cout<<"************ Contour Tracing  ************"<<vcl_endl;
 
-    //     dbdet_contour_tracer_process ct_pro;
-    //     // set_process_parameters_of_bpro1(*params, 
-    //     //                                 ct_pro, 
-    //     //                                 params->tag_contour_tracing_);
+        dbdet_contour_tracer_process ct_pro;
+        // set_process_parameters_of_bpro1(*params, 
+        //                                 ct_pro, 
+        //                                 params->tag_contour_tracing_);
         
-    //     // Before we start the process lets clean input output
-    //     ct_pro.clear_input();
-    //     ct_pro.clear_output();
+        // Before we start the process lets clean input output
+        ct_pro.clear_input();
+        ct_pro.clear_output();
 
-    //     // Start the process sequence
-    //     ct_pro.add_input(inp);
-    //     bool ct_status = ct_pro.execute();
-    //     ct_pro.finish();
+        // Start the process sequence
+        ct_pro.add_input(inp);
+        bool ct_status = ct_pro.execute();
+        ct_pro.finish();
 
-    //     // Grab output from gray scale third order edge detection
-    //     // if process did not fail
-    //     if ( ct_status )
-    //     {
-    //         ct_results = ct_pro.get_output();
-    //     }
+        // Grab output from gray scale third order edge detection
+        // if process did not fail
+        if ( ct_status )
+        {
+            ct_results = ct_pro.get_output();
+        }
 
-    //     //Clean up after ourselves
-    //     ct_pro.clear_input();
-    //     ct_pro.clear_output();
+        //Clean up after ourselves
+        ct_pro.clear_input();
+        ct_pro.clear_output();
 
-    //     if (ct_results.size() != 1 )
-    //     {
-    //         vcl_cerr<< "Contour tracing failed"<<vcl_endl;
-    //         return 1;
-    //     }
+        if (ct_results.size() != 1 )
+        {
+            vcl_cerr<< "Contour tracing failed"<<vcl_endl;
+            return 1;
+        }
 
-    // }
+    }
     
-    // vidpro1_vsol2D_storage_sptr input_vsol;
-    // input_vsol.vertical_cast(ct_results[0]);
+    vidpro1_vsol2D_storage_sptr input_vsol;
+    input_vsol.vertical_cast(ct_results[0]);
 
-    // vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = 
-    //     input_vsol->all_data();
+    vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = 
+        input_vsol->all_data();
 
-    // vsol_polygon_2d_sptr new_poly;
+    vsol_polygon_2d_sptr new_poly;
 
-    // for (unsigned int b = 0 ; b < vsol_list.size() ; b++ ) 
-    // {
-    //     if( vsol_list[b]->cast_to_region()->cast_to_polygon())
-    //     {
-    //         vsol_polygon_2d_sptr poly = 
-    //             vsol_list[b]->cast_to_region()->cast_to_polygon();
+    for (unsigned int b = 0 ; b < vsol_list.size() ; b++ ) 
+    {
+        if( vsol_list[b]->cast_to_region()->cast_to_polygon())
+        {
+            vsol_polygon_2d_sptr poly = 
+                vsol_list[b]->cast_to_region()->cast_to_polygon();
    
-    //         vgl_fit_lines_2d<double> fitter;
-    //         fitter.set_min_fit_length(2);
-    //         fitter.set_rms_error_tol(0.05f);
-    //         for (unsigned int i = 0; i<poly->size(); i++) {
-    //             vgl_point_2d<double> p = poly->vertex(i)->get_p();
-    //             fitter.add_point(p);
-    //         }
-    //         fitter.fit();
+            vgl_fit_lines_2d<double> fitter;
+            fitter.set_min_fit_length(2);
+            fitter.set_rms_error_tol(0.05f);
+            for (unsigned int i = 0; i<poly->size(); i++) {
+                vgl_point_2d<double> p = poly->vertex(i)->get_p();
+                fitter.add_point(p);
+            }
+            fitter.fit();
  
-    //         vcl_vector<vgl_line_segment_2d<double> >& segs = 
-    //             fitter.get_line_segs();
+            vcl_vector<vgl_line_segment_2d<double> >& segs = 
+                fitter.get_line_segs();
 
-    //         vcl_vector<vsol_point_2d_sptr > new_pts;
-    //         new_pts.push_back(
-    //             new 
-    //             vsol_point_2d(segs[0]
-    //                           .point1().x(),segs[0].point1().y()));
-    //         new_pts.push_back(
-    //             new 
-    //             vsol_point_2d(segs[0]
-    //                           .point2().x(),segs[0].point2().y()));
-    //         for (unsigned int i = 1; i<segs.size(); i++) 
-    //         {
-    //             new_pts.push_back(
-    //                 new 
-    //                 vsol_point_2d(segs[i].point2().x(),segs[i].point2().y()));
-    //         }
-    //         vcl_cout << "fitted polygon size: " << new_pts.size() << vcl_endl;
-    //         new_poly = new vsol_polygon_2d(new_pts);
+            vcl_vector<vsol_point_2d_sptr > new_pts;
+            new_pts.push_back(
+                new 
+                vsol_point_2d(segs[0]
+                              .point1().x(),segs[0].point1().y()));
+            new_pts.push_back(
+                new 
+                vsol_point_2d(segs[0]
+                              .point2().x(),segs[0].point2().y()));
+            for (unsigned int i = 1; i<segs.size(); i++) 
+            {
+                new_pts.push_back(
+                    new 
+                    vsol_point_2d(segs[i].point2().x(),segs[i].point2().y()));
+            }
+            vcl_cout << "fitted polygon size: " << new_pts.size() << vcl_endl;
+            new_poly = new vsol_polygon_2d(new_pts);
 
-    //     }
-    // }
+        }
+    }
 
-    // vcl_vector< vsol_spatial_object_2d_sptr > contours;
-    // contours.push_back(new_poly->cast_to_spatial_object());
+    vcl_vector< vsol_spatial_object_2d_sptr > contours;
+    contours.push_back(new_poly->cast_to_spatial_object());
     
-    // vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
-    // output_vsol->add_objects(contours,"trace");
+    vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
+    output_vsol->add_objects(contours,"trace");
 
-    // {
-    //     vcl_string output_file=vul_file::strip_extension(input_img);
-    //     output_file=output_file+".cem";
-    //     bpro1_filepath output(output_file,".cem");
+    {
+        vcl_string output_file=vul_file::strip_extension(input_img);
+        output_file=output_file+".cem";
+        bpro1_filepath output(output_file,".cem");
         
-    //     // In this everything else, is .cem, .cemv , .cfg, etc
-    //     vidpro1_save_cem_process save_cem_pro;
-    //     save_cem_pro.parameters()->set_value("-cemoutput",output);
+        // In this everything else, is .cem, .cemv , .cfg, etc
+        vidpro1_save_cem_process save_cem_pro;
+        save_cem_pro.parameters()->set_value("-cemoutput",output);
         
-    //     // Before we start the process lets clean input output
-    //     save_cem_pro.clear_input();
-    //     save_cem_pro.clear_output();
+        // Before we start the process lets clean input output
+        save_cem_pro.clear_input();
+        save_cem_pro.clear_output();
         
-    //     // Kick of process
-    //     save_cem_pro.add_input(output_vsol);
-    //     bool write_status = save_cem_pro.execute();
-    //     save_cem_pro.finish();
+        // Kick of process
+        save_cem_pro.add_input(output_vsol);
+        bool write_status = save_cem_pro.execute();
+        save_cem_pro.finish();
         
-    //     //Clean up after ourselves
-    //     save_cem_pro.clear_input();
-    //     save_cem_pro.clear_output();
+        //Clean up after ourselves
+        save_cem_pro.clear_input();
+        save_cem_pro.clear_output();
         
-    // }
+    }
     
     //vcl_stringstream input_file;
 
