@@ -20,7 +20,7 @@
 // dbsksp_xshock_fragment
 // =============================================================================
 static bool Mute = true;
-static double epsilon = 0.001;
+static double epsilon = 0.0001;
 
 // -----------------------------------------------------------------------------
 //: Interpolate the left boundary as a biarc
@@ -302,8 +302,11 @@ is_legal_new() const
 
   if(!Mute)
   	vcl_cout << " actual_L_L " << actual_L_L << " L_L " << L_L << " actual_L_R " << actual_L_R << " L_R " << L_R << vcl_endl;
+  
   if(actual_L_L < L_L-epsilon && vcl_abs(actual_L_R - L_R)<epsilon) // case right bnd end before left bnd
   {
+	  if(actual_L_L < epsilon)
+		return false;
       // update left arc
 	  start_pt_L = end_pt_L;
 	  start_angle_L = end_angle_L;
@@ -321,6 +324,8 @@ is_legal_new() const
   }
   else if (vcl_abs(actual_L_L - L_L)<epsilon && actual_L_R < L_R-epsilon) // case left bnd end before right bnd
   {
+	  if(actual_L_R < epsilon)
+		return false;
       // update left arc
 	  start_pt_L = end_pt_L; // should be equal to L_bnd.mid_pt()
 	  start_angle_L = end_angle_L;
@@ -368,12 +373,13 @@ is_legal_new() const
   //update start_shock_pt
   start_shock_pt = end_shock_pt;
 
-  if(L_L == 0 || L_R == 0) // case that one bnd is sigular arc and ends earlier that the first arc of the other bnd
+  if(L_L < epsilon || L_R < epsilon) // case that one bnd is sigular arc and ends earlier that the first arc of the other bnd
   {
 	//vcl_cout<<" L_L:"<<L_L<<" L_bnd_len1:"<<L_bnd.len1()<<" L_bnd_len2:"<<L_bnd.len2()<<" L_R:"<<L_R<<" R_bnd_len1:"<<R_bnd.len1()<<" R_bnd_len2:"<<R_bnd.len2()<<vcl_endl;
     //vcl_cout<<" r_L1:"<< L_bnd.r1()<<" r_L2:"<< L_bnd.r2()<<" r_R1:"<< R_bnd.r1()<<" r_R2:"<< R_bnd.r2()<<vcl_endl;
-	return true;
+	return false;
   }
+
   // Check the second sigular-arc fragment
   is_legal &= is_legal_singular_arc_frag(start_shock_pt, start_pt_L, start_angle_L, L_L, center_L, r_L,
 										 start_pt_R, start_angle_R, L_R, center_R, r_R,
@@ -421,7 +427,10 @@ is_legal_new() const
   }
   else if (vcl_abs(actual_L_L - L_L)<epsilon && vcl_abs(actual_L_R - L_R)<epsilon)  // case when mid point meet and decomposite end in two singular-arc fragments
   {
-	  return is_legal;	
+	  if(r_L == L_bnd.r2()&&r_R == R_bnd.r2())
+	  	return is_legal;
+	  else // case that one bnd ends at the end of the first arc of the the other bnd 
+		return false;
   }
   else
   {
@@ -436,16 +445,53 @@ is_legal_new() const
   //update start_shock_pt
   start_shock_pt = end_shock_pt;
 
-  if(L_L == 0 || L_R == 0)
-	return true;
+  if(L_L < epsilon || L_R < epsilon)
+	return false;
   // Check the third sigular-arc fragment
   is_legal &= is_legal_singular_arc_frag(start_shock_pt, start_pt_L, start_angle_L, L_L, center_L, r_L,
 										 start_pt_R, start_angle_R, L_R, center_R, r_R,
 										 end_pt_L, end_angle_L, actual_L_L,
 										 end_pt_R, end_angle_R, actual_L_R, end_shock_pt); 
 
+/*
+  if (vcl_abs(actual_L_L - L_L)<epsilon && vcl_abs(actual_L_R - L_R)<epsilon)  // case when mid point meet and decomposite end in two singular-arc fragments
+  {
+	  if(r_L == L_bnd.r2()&&r_R == R_bnd.r2())
+	  	return is_legal;
+	  else // case that one bnd ends at the end of the first arc of the the other bnd 
+		return false;
+  }
+
+  // check the third sigular-arc from the other end to avoid numerical error in previous process
+
+	start_pt_L = L_bnd.end();
+	start_pt_R = R_bnd.end();
+	start_angle_L = L_bnd.end_angle() - vnl_math::pi; // (0, 2pi)
+	if(start_angle_L < 0)
+		start_angle_L += vnl_math::pi*2;
+	start_angle_R = R_bnd.end_angle() - vnl_math::pi; // (0, 2pi)
+	if(start_angle_R < 0)
+		start_angle_R += vnl_math::pi*2;
+	L_L = L_bnd.len2();
+	L_R = R_bnd.len2();
+	center_L = L_bnd.center2();
+	center_R = R_bnd.center2();
+	r_L = L_bnd.r2();
+	r_R = R_bnd.r2();
+	start_shock_pt = this->end_shock_pt();
+
+
+  is_legal &= is_legal_singular_arc_frag(start_shock_pt, start_pt_L, start_angle_L, L_L, center_L, r_L,
+										 start_pt_R, start_angle_R, L_R, center_R, r_R,
+										 end_pt_L, end_angle_L, actual_L_L,
+										 end_pt_R, end_angle_R, actual_L_R, end_shock_pt); 
+
+*/
   if(!is_legal)
   	  return false;
+
+  if(actual_L_L < epsilon || actual_L_R < epsilon)
+	return false;
 
   //vcl_cout << "------------ pass the 3rd arc frag check ---------------\n";
   if(!Mute)
@@ -471,6 +517,8 @@ is_legal_singular_arc_frag(vgl_point_2d< double > start_shock_pt,
 	double d1 = vgl_distance(center_L, start_shock_pt);
 	double d2 = vgl_distance(center_R, start_shock_pt);
 
+	//if(d1< 1 || d2 < 1)
+		//return false;
 
 	// double extreme case, when both arcs are straight lines
 	if (r_R == inf && r_L == inf)
@@ -1043,6 +1091,12 @@ is_legal_singular_arc_frag(vgl_point_2d< double > start_shock_pt,
 	double x_o = (center_R.x()+center_L.x())/2;
 	double y_o = (center_R.y()+center_L.y())/2;
 
+	// compute the direction of arc 
+	double sign_L = (start_pt_L.x() - center_L.x())*vcl_sin(start_angle_L) - (start_pt_L.y() - center_L.y())* cos(start_angle_L);
+	sign_L /= vcl_abs(sign_L);
+	double sign_R = (start_pt_R.x() - center_R.x())*vcl_sin(start_angle_R) - (start_pt_R.y() - center_R.y())* cos(start_angle_R);
+	sign_R /= vcl_abs(sign_R);
+
 	// first translation, than rotation
 	//  |x'|       | cos(delta_theta)  -sin(delta_theta) |   |x - x_o|
 	//  |  |  =	   |	                                 |   |          |
@@ -1054,9 +1108,6 @@ is_legal_singular_arc_frag(vgl_point_2d< double > start_shock_pt,
 	// start left point in cannonical coordinates
 	double x_L0 = vcl_cos(delta_theta)*(start_pt_L.x()- x_o) - vcl_sin(delta_theta)*(start_pt_L.y()- y_o);
 	double y_L0 = vcl_sin(delta_theta)*(start_pt_L.x()- x_o) + vcl_cos(delta_theta)*(start_pt_L.y()- y_o);
-	double tau_L0 = start_angle_L + delta_theta; // can >= 2pi
-	if(tau_L0 >= vnl_math::pi*2)
-		tau_L0 -= vnl_math::pi*2; // (0, 2pi)
 	double theta_L0 = atan2(y_L0, x_L0 + L/2); // (-pi, pi)
 	if(theta_L0<0)
 		theta_L0 += vnl_math::pi*2; // (0, 2pi)
@@ -1064,20 +1115,9 @@ is_legal_singular_arc_frag(vgl_point_2d< double > start_shock_pt,
 	// start right point in cannonical coordinates
 	double x_R0 = vcl_cos(delta_theta)*(start_pt_R.x()-x_o) - vcl_sin(delta_theta)*(start_pt_R.y()-y_o);
 	double y_R0 = vcl_sin(delta_theta)*(start_pt_R.x()-x_o) + vcl_cos(delta_theta)*(start_pt_R.y()-y_o);
-	double tau_R0 = start_angle_R + delta_theta; // can >= 2pi
-	if(tau_R0 >= vnl_math::pi*2)
-		tau_R0 -= vnl_math::pi*2; // (0, 2pi)
 	double theta_R0 = atan2(y_R0, x_R0 - L/2); // (-pi, pi)
 	if(theta_R0<0)
 		theta_R0 += vnl_math::pi*2; // (0, 2pi)
-
-	// compute the direction of arc 
-	double sign_L = vcl_cos(theta_L0)*vcl_sin(tau_L0) - sin(theta_L0)* cos(tau_L0); // should be +1, -1
-	double sign_R = vcl_cos(theta_R0)*vcl_sin(tau_R0) - sin(theta_R0)* cos(tau_R0); // should be +1, -1
-
-	//sign_L = sign_L/vcl_abs(sign_L);
-	//sign_R = sign_R/vcl_abs(sign_R);
-
 
 	
 	//vcl_cout << "\n sign_L " << sign_L << " sign_R " << sign_R << " theta_L0 " << theta_L0 << " tau_L0 " << tau_L0 << " theta_R0 " << theta_R0 << " tau_R0 " << tau_R0 << "\n\n";
@@ -1141,7 +1181,7 @@ is_legal_singular_arc_frag(vgl_point_2d< double > start_shock_pt,
 		if(actual_L_R<0)
 			actual_L_R += 2*vnl_math::pi*r_R;
 
-		if(actual_L_R <= L_R + epsilon) // case that left arc ends early
+		if(actual_L_R <= L_R) // case that left arc ends early
 		{
 			//assign end
 			actual_L_L = L_L;
@@ -1248,7 +1288,7 @@ is_legal_singular_arc_frag(vgl_point_2d< double > start_shock_pt,
 		if(actual_L_R<0)
 			actual_L_R += 2*vnl_math::pi*r_R;
 
-		if(actual_L_R <= L_R+epsilon) // case that left arc ends early
+		if(actual_L_R <= L_R) // case that left arc ends early
 		{
 			//assign end
 			actual_L_L = L_L;
@@ -1314,7 +1354,7 @@ is_legal_singular_arc_frag(vgl_point_2d< double > start_shock_pt,
 		//vcl_cout << " -------pass case 2 check------- \n";
 
 	}
-	else if(L >= vcl_abs(r_L-r_R) && L <= vcl_abs(r_L + r_R) && vcl_abs((d1-d2) - (r_L-r_R)) <epsilon )		
+	else if(L > vcl_abs(r_L-r_R) && L < vcl_abs(r_L + r_R) && vcl_abs((d1-d2) - (r_L-r_R)) <epsilon )		
 	{
 		//// Need to confirm the derivation
   		if(!Mute)		
@@ -1327,6 +1367,14 @@ is_legal_singular_arc_frag(vgl_point_2d< double > start_shock_pt,
 			vcl_cout << " -------fail case 3 check: wrong rotations------- \n";
 			return false;
 		}
+
+//		perform some legality check at first
+
+		double x_e = (r_L*r_L - r_R*r_R)/2/L;
+		double y_e_pos = vcl_sqrt((r_L + x_e + L/2)*(r_L - x_e - L/2));
+		double y_e_neg = -y_e_pos;
+		double theta_e_L = atan2(y_e_pos, x_e+L/2); // ( 0, pi)
+		double theta_e_R = atan2(y_e_pos, x_e-L/2); // ( 0, pi)
 
 		double a = (r_L-r_R)/2;
 		double b = vcl_sqrt((L/2)*(L/2)-a*a);
@@ -1362,18 +1410,28 @@ is_legal_singular_arc_frag(vgl_point_2d< double > start_shock_pt,
 		theta_R_actual = atan2(Y_I, X_I-L/2); // (-pi, pi)
 		if(theta_R_actual < 0)
 			theta_R_actual += 2*vnl_math::pi; // (0, 2pi)
-
+/*
+		if(theta_R0 <vnl_math::pi && theta_R_actual > vnl_math::pi && sign_R <0)
+			theta_R_actual -= 2* vnl_math::pi;
+		if(theta_R0 >vnl_math::pi && theta_R_actual < vnl_math::pi && sign_R >0)
+			theta_R0 -= 2* vnl_math::pi;
+*/
 		actual_L_R = (theta_R_actual - theta_R0) * r_R / sign_R;
-		if(actual_L_R<0)
-			actual_L_R += 2*vnl_math::pi*r_R;
+		if(actual_L_R<=0)
+			return false;
 
-		if(actual_L_R <= L_R+epsilon) // case that left arc ends early
+		if(actual_L_R <= L_R) // case that left arc ends early
 		{
 			//assign end
 			actual_L_L = L_L;
 			x_L1 = -L/2 + r_L*vcl_cos(theta_L);
 			y_L1 = r_L*vcl_sin(theta_L);
 			theta_L_actual = theta_L;
+
+			if(theta_L0 <=theta_e_L && theta_L_actual >= 2*vnl_math::pi - theta_e_L && sign_L <0)
+				theta_L_actual -= 2* vnl_math::pi;
+			if(theta_L0 >= 2*vnl_math::pi-theta_e_L && theta_L_actual <= theta_e_L  && sign_L >0)
+				theta_L0 -= 2* vnl_math::pi;
 
 			x_R1 = L/2 + r_R*vcl_cos(theta_R_actual);
 			y_R1 = r_R*vcl_sin(theta_R_actual);
@@ -1405,9 +1463,15 @@ is_legal_singular_arc_frag(vgl_point_2d< double > start_shock_pt,
 			if(theta_L_actual < 0)
 				theta_L_actual += 2*vnl_math::pi;	// (0, 2pi)
 
+
+			if(theta_L0 <=theta_e_L && theta_L_actual >= 2*vnl_math::pi - theta_e_L && sign_L <0)
+				theta_L_actual -= 2* vnl_math::pi;
+			if(theta_L0 >= 2*vnl_math::pi-theta_e_L && theta_L_actual <= theta_e_L  && sign_L >0)
+				theta_L0 -= 2* vnl_math::pi;
+
 			actual_L_L = (theta_L_actual - theta_L0) * r_L / sign_L;
 			if(actual_L_L<0)
-				actual_L_L += 2*vnl_math::pi*r_L;
+				return false;
 
 			if(actual_L_L > L_L + epsilon)
 			{
@@ -1429,27 +1493,25 @@ is_legal_singular_arc_frag(vgl_point_2d< double > start_shock_pt,
 		}
 		// legality check for case 3,
 		// Start shack point and end shock point belong to the same region
-		double x_e = (r_L*r_L - r_R*r_R)/2/L;
-		double y_e_pos = vcl_sqrt((r_L + x_e + L/2)*(r_L - x_e - L/2));
-		double y_e_neg = -y_e_pos;
 
-		if( (Y_s < y_e_pos && Y_s > y_e_neg && Y_I < y_e_pos && Y_I > y_e_neg) || ( Y_s > y_e_pos && Y_I > y_e_pos ) || ( Y_s < y_e_neg && Y_I < y_e_neg ))
+		if( (Y_s - y_e_pos)*(Y_I - y_e_pos) <=0 || (Y_s - y_e_neg)*(Y_I - y_e_neg) <=0)
 		{
-			//vcl_cout << " -------pass case 3 check------- \n";
+			if(!Mute)
+				vcl_cout << " -------fail case 3 check------- \n";
+			return false;
+		}
+		else if((theta_L_actual - theta_L0)*sign_L <= 0 || (theta_R_actual - theta_R0)*sign_R <=0)
+		{
+			if(!Mute)
+				vcl_cout << " -------fail case 3 check------- \n";
+			return false;
 		}
 		else
 		{
-			if(!Mute)
-			{	
-				//vcl_cout << " x_e " << x_e << " y_e_pos " << y_e_pos << " y_e_neg " << y_e_neg <<"\n";
-				//vcl_cout << " X_s " << X_s << " Y_s " << Y_s << " X_L0 " << x_L0 << " Y_L0 " << y_L0 << " X_R0 " << x_R0 << " Y_R0 " << y_R0 <<"\n";
-				//vcl_cout << " X_I " << X_I << " Y_I " << Y_I << " X_L1 " << x_L1 << " Y_L1 " << y_L1 << " X_R1 " << x_R1 << " Y_R1 " << y_R1 <<"\n";
-				vcl_cout << " -------fail case 3 check------- \n";
-			}
-			return false;
+			//vcl_cout << " -------pass case 3 check------- \n";
 		}
 	}
-	else if(L >= vcl_abs(r_L-r_R) && L <= vcl_abs(r_L + r_R) && vcl_abs((d1+d2) - (r_L+r_R)) <epsilon)
+	else if(L > vcl_abs(r_L-r_R) && L < vcl_abs(r_L + r_R) && vcl_abs((d1+d2) - (r_L+r_R)) <epsilon)
 	{	
   		if(!Mute)
  		vcl_cout << " -------case 4 check------- \n";
@@ -1461,6 +1523,11 @@ is_legal_singular_arc_frag(vgl_point_2d< double > start_shock_pt,
 			vcl_cout << " -------fail case 4 check: wrong rotations------- \n";
 			return false;
 		}
+
+		double x_e = (r_L*r_L - r_R*r_R)/2/L;
+		double y_e = vcl_sqrt((r_L +x_e + L/2)*(r_L - x_e - L/2));
+		double theta_e_L = atan2(y_e, x_e+L/2); // ( 0, pi)
+		double theta_e_R = atan2(y_e, x_e-L/2); // ( 0, pi)
 
 		double a = (r_L+r_R)/2;
 		double b = vcl_sqrt(a*a - (L/2)*(L/2));
@@ -1480,17 +1547,29 @@ is_legal_singular_arc_frag(vgl_point_2d< double > start_shock_pt,
 		if(theta_R_actual < 0)
 			theta_R_actual += 2*vnl_math::pi; // (0, 2pi)
 
+		// some problem here when theta_R0 (0, pi) , theta_R_actual (pi, 2pi), sign_R -1
+		// and same for theta_R0 (pi, 2pi) , theta_R_actual (0, pi), sign_R 1
+		if(theta_R0 <=theta_e_R && theta_R_actual >= 2*vnl_math::pi-theta_e_R && sign_R <0)
+			theta_R_actual -= 2*vnl_math::pi;
+		if(theta_R0 >=2*vnl_math::pi-theta_e_R && theta_R_actual <= theta_e_R && sign_R >0)
+				theta_R0 -= 2* vnl_math::pi;
+
 		actual_L_R = (theta_R_actual - theta_R0) * r_R / sign_R;
 		if(actual_L_R<0)
-			actual_L_R += 2*vnl_math::pi*r_R;
+			return false;
 
-		if(actual_L_R <= L_R+epsilon) // case that left arc ends early
+		if(actual_L_R <= L_R) // case that left arc ends early
 		{
 			//assign end
 			actual_L_L = L_L;
 			x_L1 = -L/2 + r_L*vcl_cos(theta_L);
 			y_L1 = r_L*vcl_sin(theta_L);
 			theta_L_actual = theta_L;
+
+			if(theta_L0 <=theta_e_L && theta_L_actual >= 2*vnl_math::pi-theta_e_L && sign_L <0)
+				theta_L_actual -= 2* vnl_math::pi;
+			if(theta_L0 >=2*vnl_math::pi-theta_e_L && theta_L_actual <= theta_e_L && sign_L >0)
+				theta_L0 -= 2* vnl_math::pi;
 
 			x_R1 = L/2 + r_R*vcl_cos(theta_R_actual);
 			y_R1 = r_R*vcl_sin(theta_R_actual);
@@ -1513,9 +1592,17 @@ is_legal_singular_arc_frag(vgl_point_2d< double > start_shock_pt,
 			if(theta_L_actual < 0)
 				theta_L_actual += 2*vnl_math::pi;	// (0, 2pi)
 
+			// some problem here when theta_l0 (0, pi) , theta_L_actual (pi, 2pi), sign_L -1
+			// and same for theta_l0 (pi, 2pi) , theta_L_actual (0, pi), sign_L 1
+			if(theta_L0 <=theta_e_L && theta_L_actual >= 2*vnl_math::pi-theta_e_L && sign_L <0)
+				theta_L_actual -= 2* vnl_math::pi;
+			if(theta_L0 >=2*vnl_math::pi-theta_e_L && theta_L_actual <= theta_e_L && sign_L >0)
+				theta_L0 -= 2* vnl_math::pi;
+			
 			actual_L_L = (theta_L_actual - theta_L0) * r_L / sign_L;
+
 			if(actual_L_L<0)
-				actual_L_L += 2*vnl_math::pi*r_L;
+				return false;
 
 			if(actual_L_L > L_L + epsilon)
 			{
@@ -1534,42 +1621,53 @@ is_legal_singular_arc_frag(vgl_point_2d< double > start_shock_pt,
 			x_R1 = L/2 + r_R*vcl_cos(theta_R);
 			y_R1 = r_R*vcl_sin(theta_R);
 			theta_R_actual = theta_R;
+
+			if(theta_R0 <=theta_e_R && theta_R_actual >= 2*vnl_math::pi-theta_e_R && sign_R <0)
+				theta_R_actual -= 2*vnl_math::pi;
+			if(theta_R0 >=2*vnl_math::pi-theta_e_R && theta_R_actual <= theta_e_R && sign_R >0)
+					theta_R0 -= 2* vnl_math::pi;
 		}
 		// legality check for case 4, 
 		//start shock pt and end shock pt should belong to the same region
-		double x_e = (r_L*r_L - r_R*r_R)/2/L;
+		// other illegal cases should be pruned out before
 
-		if((x_L0 < x_e && x_R0 < x_e &&  x_L1 < x_e && x_R1 < x_e)||(x_L0 > x_e && x_R0 > x_e &&  x_L1 > x_e && x_R1 > x_e))
-		{		
-			//vcl_cout << " -------pass case 4 check------- \n";
-		}
-		else
+		if((X_I-x_e) * (X_s-x_e) <= 0)
 		{
   			if(!Mute)
 			vcl_cout << " -------fail case 4 check------- \n";
-			return false;			
+			return false;
+		}
+		else if((theta_L_actual-theta_L0)*sign_L <=0 || (theta_R_actual-theta_R0)*sign_R <=0)
+		{		
+  			if(!Mute)
+			vcl_cout << " -------fail case 4 check------- \n";
+			return false;
+		}
+		else
+		{
+			//vcl_cout << " -------pass case 4 check------- \n";
 		}			
 	}
 // a few illegal cases excluded
-	else if (L >= vcl_abs(r_L + r_R) && vcl_abs(vcl_abs(d1-d2) - (r_L+r_R))<epsilon)
+	else if (L >= vcl_abs(r_L + r_R) - epsilon && vcl_abs(vcl_abs(d1-d2) - (r_L+r_R))<epsilon)
 	{
   		if(!Mute)
 		vcl_cout<<" -------illegal case 5------- \n";
 		return false;	
 	}
-	else if (L <= vcl_abs(r_L-r_R)  && vcl_abs(vcl_abs(r_L-r_R) - (d1+d2)) <epsilon )
+	else if (L <= vcl_abs(r_L-r_R) + epsilon  && vcl_abs(vcl_abs(r_L-r_R) - (d1+d2)) <epsilon )
 	{
   		if(!Mute)
 		vcl_cout<<" -------illegal case 6------- \n";
 		return false;	
 	}
-	else if(L >= vcl_abs(r_L-r_R) && L <= vcl_abs(r_L + r_R) && vcl_abs((d1-d2) - (r_R-r_L)) <epsilon )	
+	else if(L >= vcl_abs(r_L-r_R) - epsilon && L <= vcl_abs(r_L + r_R) + epsilon && vcl_abs((d1-d2) - (r_R-r_L)) <epsilon )	
 	{
   		if(!Mute)
 		vcl_cout<<" -------illegal case 7------- \n";
 		return false;	
 	}
-	else if (L >= vcl_abs(r_L + r_R) && vcl_abs((d1+r_L) - (d2+r_R))<epsilon)
+	else if (L >= vcl_abs(r_L + r_R) - epsilon && vcl_abs((d1+r_L) - (d2+r_R))<epsilon)
 	{
   		if(!Mute)
 		vcl_cout<<" -------illegal case 8------- \n";

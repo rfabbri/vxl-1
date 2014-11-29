@@ -154,7 +154,12 @@ public:
   vcl_vector<double> xgraph_vertices_max_x_;
   vcl_vector<double> xgraph_vertices_min_y_;
   vcl_vector<double> xgraph_vertices_max_y_;
-
+  vcl_vector<double> xgraph_vertices_min_phi_;
+  vcl_vector<double> xgraph_vertices_max_phi_;
+  vcl_vector<double> xgraph_vertices_min_psi_;
+  vcl_vector<double> xgraph_vertices_max_psi_;
+  vcl_vector<double> xgraph_vertices_min_r_;
+  vcl_vector<double> xgraph_vertices_max_r_;
 
 protected:
   // Working graph
