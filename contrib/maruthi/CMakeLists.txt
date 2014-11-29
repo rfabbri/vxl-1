@@ -4,11 +4,13 @@
 
 PROJECT( maruthi )
 
-SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
+
+SET( CMAKE_VLFEAT_LIBS             CACHE PATH "Path of vlfeat libs" )
+SET( CMAKE_VLFEAT_INCLUDES             CACHE PATH "Path of vlfeat includes" )
 
 #GO TO SUBDIRS
 #pb Edge Detector code
-SUBDIRS( pbEdgeDet )
+#SUBDIRS( pbEdgeDet )
 
 #GO TO SUBDIRS
 #en250_project final project
@@ -20,10 +22,10 @@ SUBDIRS( pbEdgeDet )
 #GO TO SUBDIRS
 #SUBDIRS( geometric_embedding )
 
-SUBDIRS( proximity_graph )
+#SUBDIRS( proximity_graph )
 
 SUBDIRS( dbskfg )
 
 SUBDIRS( con_graph )
 
-SUBDIRS(lbnn)
+#SUBDIRS(lbnn)

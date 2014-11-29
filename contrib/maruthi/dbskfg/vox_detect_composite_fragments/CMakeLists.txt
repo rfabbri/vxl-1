@@ -1,6 +1,7 @@
 INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/db3p )
 
-LINK_DIRECTORIES(${lems_SOURCE_DIR}/contrib/maruthi/vlfeat-0.9.16/bin/glnxa64 )
+
+LINK_DIRECTORIES(${CMAKE_VLFEAT_LIBS})
 
 SET( vox_detect_composite_fragments_sources
   vox_detect_composite_fragments_params.h 
