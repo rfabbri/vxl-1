@@ -152,6 +152,8 @@ public:
   //while acquiring the tree then the outline will have circular completions
   void compute_reconstructed_boundary_polygon(vgl_polygon<double>& poly);
 
+  void compute_scurve_polygons(vcl_string& prefix);
+
   // compute appeance
   bool compute_appearance()
   {
