@@ -301,14 +301,14 @@ void gdt_welm::compute_tEL_tER_tOV ()
       thetaR = vcl_atan2 (R_nH, R_nL);
       //if R_nStau=0 and R_nL < R_nStau, vO is valid.
       if (R_nStau == 0 && R_nL < R_nStau)
-        tVO_ = vnl_math_hypot (R_nL, R_nH) + mu();  
+        tVO_ = vnl_math::hypot (R_nL, R_nH) + mu();  
     }    
     else { //c.e==r.s
       assert (eC->eV() == eR->sV());
       thetaR = vcl_atan2 (R_nH, eR->len()-R_nL);
       //if R_nEtau < R_nL, vO is valid, assert (R_nEtau=eR.len)
       if (R_nEtau == eR->len() && R_nEtau < R_nL)
-        tVO_ = vnl_math_hypot (R_nEtau - R_nL, R_nH) + mu();
+        tVO_ = vnl_math::hypot (R_nEtau - R_nL, R_nH) + mu();
     }
 
     //Compute tauVO_ from the R_proj.
@@ -321,14 +321,14 @@ void gdt_welm::compute_tEL_tER_tOV ()
       thetaL = vcl_atan2 (L_nH, eL->len()-L_nL);
       //if L_nEtau < L_nL, vO is valid. assert (L_nEtau=eL.len)
       if (L_nEtau == eL->len() && L_nEtau < L_nL)
-        tVO_ = vnl_math_hypot (L_nEtau - L_nL, L_nH) + mu();
+        tVO_ = vnl_math::hypot (L_nEtau - L_nL, L_nH) + mu();
     }    
     else { //c.s==l.e
       assert (eC->sV() == eL->eV());
       thetaL = vcl_atan2 (L_nH, L_nL);
       //if L_nL < L_nStau, vO is valid. assert (L_nStau=0)
       if (L_nStau == 0 && L_nL < L_nStau)
-        tVO_ = vnl_math_hypot (L_nL, L_nH) + mu();
+        tVO_ = vnl_math::hypot (L_nL, L_nH) + mu();
     }
 
     //Compute tauVO_ from the L_proj.
@@ -531,7 +531,7 @@ vgl_point_2d<double> gdt_welm::_compute_FL (const double& alphaCL) const
   const double tanA = vcl_tan (alphaCL);
   const double HtanA = H_ * tanA;
   const double k = L_ - HtanA;
-  const double OK = vnl_math_hypot (HtanA, H_);
+  const double OK = vnl_math::hypot (HtanA, H_);
   const double KF = HtanA * k / OK;
   const double OT = (OK + KF)* vcl_sin (alphaCL);
   const double TF = OT / tanA;
@@ -593,7 +593,7 @@ vgl_point_2d<double> gdt_welm::_compute_FR (const double& alphaCR) const
   const double tanA = vcl_tan (alphaCR);
   const double HtanA = H_ * tanA;
   const double k = HtanA + L_;
-  const double OK = vnl_math_hypot (HtanA, H_);
+  const double OK = vnl_math::hypot (HtanA, H_);
   const double KF = HtanA * (edge()->len() - k) / OK;
   const double OT = (OK + KF)* vcl_sin (alphaCR);
   const double TF = OT / tanA;

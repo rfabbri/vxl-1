@@ -9,7 +9,7 @@
 #include <dbgl/algo/dbgl_intersect.h>
 #include <dbecl/dbecl_epipole_sptr.h>
 #include <dbecl/dbecl_epipole.h>
-
+#include <vcl_iostream.h>
 
 //: clump arg from minus 1 to 1; also assert abs(arg) not much bigger than 1
 static inline double clump_to_acos(double x)

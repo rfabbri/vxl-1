@@ -39,7 +39,7 @@ analyze()
   // The symmetry score is in [0, 2]. We devide this into 100 regions, each 0.02.
   vnl_vector<double > sscore_distribution(100, 0);
   
-  int num_edgels_per_percent = vnl_math_rnd(edgel_list.size() / 100.0);
+  int num_edgels_per_percent = vnl_math::rnd(edgel_list.size() / 100.0);
   vgl_box_2d<double > bbox_edgemap;
   bbox_edgemap.add(vgl_point_2d<double >(0, 0));
   bbox_edgemap.add(vgl_point_2d<double >(edgemap->width(), edgemap->height()));
@@ -49,7 +49,7 @@ analyze()
     vcl_cout << percent_count << "%  ";
     int start_count = percent_count * num_edgels_per_percent;
     int end_count = (percent_count+1) * num_edgels_per_percent; 
-    end_count = vnl_math_min(end_count, int(edgel_list.size()));
+    end_count = vnl_math::min(end_count, int(edgel_list.size()));
     
  
     for (int i=start_count; i < end_count; ++i)
@@ -72,7 +72,7 @@ analyze()
         // force p1 to be the ``left'' and p2 to be the ``right'' boundary points
         t1 = cross_product(v12, t1) > 0 ? -t1 : t1;
         t2 = cross_product(v12, t2) < 0 ? -t2 : t2;
-        double symmetry_score = vnl_math_abs(inner_product(v12, t2-t1));
+        double symmetry_score = vnl_math::abs(inner_product(v12, t2-t1));
 
         // update distribution
         int index = int(vcl_floor(symmetry_score / 0.02));
@@ -159,7 +159,7 @@ compute_medial_point(const vgl_point_2d<double >& pt1, const vgl_vector_2d<doubl
   }
 
   // phi angle
-  double phi = vnl_math::pi_over_2 + vnl_math_abs(angle_t2_t1) / 2;
+  double phi = vnl_math::pi_over_2 + vnl_math::abs(angle_t2_t1) / 2;
 
   // Now compute the medial point
   double d = vgl_distance(pt1, pt2);

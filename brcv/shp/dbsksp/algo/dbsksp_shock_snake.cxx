@@ -180,10 +180,10 @@ optimize_twoshapelet_method_2(const dbsksp_twoshapelet_sptr& init_ss,
     double phi2 = random_generator.drand32(0.3*vnl_math::pi, 0.7*vnl_math::pi);
 
     // m1 and m2 are constraint by phi1 and phi2
-    double max_m0 = vnl_math_min( 
-      vnl_math_abs(1/vcl_sin(phi0)), vnl_math_abs(1/vcl_sin(phi1)));
-    double max_m1 = vnl_math_min( 
-      vnl_math_abs(1/vcl_sin(phi1)), vnl_math_abs(1/vcl_sin(phi2)));
+    double max_m0 = vnl_math::min( 
+      vnl_math::abs(1/vcl_sin(phi0)), vnl_math::abs(1/vcl_sin(phi1)));
+    double max_m1 = vnl_math::min( 
+      vnl_math::abs(1/vcl_sin(phi1)), vnl_math::abs(1/vcl_sin(phi2)));
 
     double m0 = random_generator.drand32(-0.7*max_m0, 0.7*max_m0);
     double m1 = random_generator.drand32(-0.7*max_m1, 0.7*max_m1);
@@ -330,10 +330,10 @@ optimize_terminal_twoshapelet(const dbsksp_shapelet_sptr& init_ss,
   //  double phi2 = random_generator.drand32(0.2*vnl_math::pi, 0.8*vnl_math::pi);
 
   //  // m1 and m2 are constraint by phi1 and phi2
-  //  double max_m0 = vnl_math_min( 
-  //    vnl_math_abs(1/vcl_sin(phi0)), vnl_math_abs(1/vcl_sin(phi1)));
-  //  double max_m1 = vnl_math_min( 
-  //    vnl_math_abs(1/vcl_sin(phi1)), vnl_math_abs(1/vcl_sin(phi2)));
+  //  double max_m0 = vnl_math::min( 
+  //    vnl_math::abs(1/vcl_sin(phi0)), vnl_math::abs(1/vcl_sin(phi1)));
+  //  double max_m1 = vnl_math::min( 
+  //    vnl_math::abs(1/vcl_sin(phi1)), vnl_math::abs(1/vcl_sin(phi2)));
 
   //  double m0 = random_generator.drand32(-max_m0, max_m0);
   //  double m1 = random_generator.drand32(-max_m1, max_m1);

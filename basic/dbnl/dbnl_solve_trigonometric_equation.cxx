@@ -46,7 +46,7 @@ void dbnl_solve_1st_order_trig_equation(double a, double b, double c,
   // no root because c > a^2 + b^2
   double sin_t = -c / vcl_sqrt(a*a+b*b);
   
-  if (vnl_math_abs(sin_t) > 1) 
+  if (vnl_math::abs(sin_t) > 1) 
   {
     return; 
   }
@@ -56,7 +56,7 @@ void dbnl_solve_1st_order_trig_equation(double a, double b, double c,
   double sin_alpha = b/vcl_sqrt(a*a+b*b);
 
   // one root
-  if (vnl_math_abs(sin_t) == 1)
+  if (vnl_math::abs(sin_t) == 1)
   {
     cos_x.push_back(sin_t * sin_alpha);
     sin_x.push_back(sin_t * cos_alpha);

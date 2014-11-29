@@ -34,7 +34,7 @@ set_param_range(double min_psi, double max_psi,
   //> psi pdf
   
   // make sure the range is less than 2*Pi
-  max_psi = vnl_math_min(max_psi, min_psi + 2*vnl_math::pi);
+  max_psi = vnl_math::min(max_psi, min_psi + 2*vnl_math::pi);
   //
   dbsks_regularize_min_max_values(min_psi, max_psi);
   this->psi_model_.set(min_psi, max_psi);
@@ -42,8 +42,8 @@ set_param_range(double min_psi, double max_psi,
   //> radius pdf
   
   // make sure radius is always positive
-  min_radius = vnl_math_max(1.0, min_radius);
-  max_radius = vnl_math_max(1.0, max_radius);
+  min_radius = vnl_math::max(1.0, min_radius);
+  max_radius = vnl_math::max(1.0, max_radius);
   //
   dbsks_regularize_min_max_values(min_radius, max_radius);
   this->radius_model_.set(min_radius, max_radius);
@@ -51,9 +51,9 @@ set_param_range(double min_psi, double max_psi,
   //> phi pdf
 
   // make sure phi is > 0 and less then pi
-  min_phi = vnl_math_max(min_phi, vnl_math::pi / 36);
-  max_phi = vnl_math_min(max_phi, vnl_math::pi - vnl_math::pi/36);
-  min_phi = vnl_math_min(min_phi, max_phi);
+  min_phi = vnl_math::max(min_phi, vnl_math::pi / 36);
+  max_phi = vnl_math::min(max_phi, vnl_math::pi - vnl_math::pi/36);
+  min_phi = vnl_math::min(min_phi, max_phi);
   //
   dbsks_regularize_min_max_values(min_phi, max_phi);
   this->phi_model_.set(min_phi, max_phi);

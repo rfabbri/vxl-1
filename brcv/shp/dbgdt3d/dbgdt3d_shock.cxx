@@ -350,34 +350,34 @@ void gdt_shock::_compute_c ()
   }
   else if (Wa_->_is_RF()) { //SRF-L or SRF-L2
     if (_is_SRF_L_or_L2()) //SRF-L
-      c = vnl_math_hypot (Wb_->L(), Wb_->H());
+      c = vnl_math::hypot (Wb_->L(), Wb_->H());
     else { //SRF-L2
       assert (Wa_->edge() == Wb_->edge());
       //Wa.psrc in the coordinate of Wb is (La, Ha). Wa.psrc is (La, -Ha).
       double La = Wa_->L();
       double Ha = Wa_->H();
-      c = vnl_math_hypot (Wb_->L() - La, -Wb_->H() - Ha);
+      c = vnl_math::hypot (Wb_->L() - La, -Wb_->H() - Ha);
     }
   }
   else if (Wb_->_is_RF()) { //SRF-R or SRF-R2
     if (_is_SRF_R_or_R2()) //SRF-R
-      c = vnl_math_hypot (Wa_->edge()->len() - Wa_->L(), Wa_->H());
+      c = vnl_math::hypot (Wa_->edge()->len() - Wa_->L(), Wa_->H());
     else { //SRF-R2
       assert (Wa_->edge() == Wb_->edge());
       //Wb.psrc in the coordinate of Wa is (Lb, Hb). Wa.psrc is (La, -Ha).
       double Lb = Wb_->L();
       double Hb = Wb_->H();
-      c = vnl_math_hypot (Wa_->L() - Lb, -Wa_->H() - Hb);
+      c = vnl_math::hypot (Wa_->L() - Lb, -Wa_->H() - Hb);
     }
   }
   else if (_is_from_edge())
-    c = vnl_math_hypot (Wa_->L() - Wb_->L(), Wa_->H() - Wb_->H());
+    c = vnl_math::hypot (Wa_->L() - Wb_->L(), Wa_->H() - Wb_->H());
   else { //SO_VERTEX
     const double thetav = _get_SV_thetav ();
     double Lb = Wb_->L();
     double Hb = Wb_->H();
     _SV_LbHb_to_Ia_coord (thetav, Lb, Hb);
-    c = vnl_math_hypot (Wa_->L() - Lb, Wa_->H() - Hb);
+    c = vnl_math::hypot (Wa_->L() - Lb, Wa_->H() - Hb);
   }
   c_ = c * 0.5;
 }

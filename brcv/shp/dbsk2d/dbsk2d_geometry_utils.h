@@ -76,7 +76,7 @@ inline vgl_point_2d<double> _translatePoint (vgl_point_2d<double> pt, vgl_vector
 //: distance between two points
 inline double _distPointPoint (vgl_point_2d<double> p1, vgl_point_2d<double> p2)
 {
-  return vnl_math_hypot((p2.x()-p1.x()), (p2.y()-p1.y())); 
+  return vnl_math::hypot((p2.x()-p1.x()), (p2.y()-p1.y())); 
 }
 
 //: square of the distance between two points
@@ -416,7 +416,7 @@ inline vgl_point_2d<double> centerOfArc(const vgl_point_2d<double> &point1,
   double chordVector = vcl_atan2(point2.y()- point1.y(), point2.x()-point1.x());
   vgl_point_2d<double> midChord((point2.x()+point1.x())/2, (point2.y()+point1.y())/2);
 
-  double chordL = vnl_math_hypot(point2.y()- point1.y(), point2.x()-point1.x());
+  double chordL = vnl_math::hypot(point2.y()- point1.y(), point2.x()-point1.x());
   double d = vcl_sqrt(radius*radius - chordL*chordL/4);
 
   double direction = chordVector;
@@ -483,12 +483,12 @@ inline bool threePointsToArc (const vgl_point_2d<double> &p1, const vgl_point_2d
     return false;
   else {
     t = vcl_sin(psi2 - psihat )/vcl_sin(psi2 - psi1);
-    H = vnl_math_hypot(s1y-s2y, s1x-s2x);
+    H = vnl_math::hypot(s1y-s2y, s1x-s2x);
 
     center.setX(s1x + H*t*vcl_cos(psi1));
     center.setY(s1y + H*t*vcl_sin(psi1));
 
-    radius = vnl_math_hypot(center.x()-point1.x(), 
+    radius = vnl_math::hypot(center.x()-point1.x(), 
               center.y()-point1.y());
   }
 

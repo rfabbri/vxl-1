@@ -72,8 +72,8 @@ compute_stats(const vcl_vector<dbsksp_shapelet_sptr >& shapelet_list)
   {
     for (unsigned j =0; j < num_params; ++j)
     {
-      this->min_[j] = vnl_math_min(this->min_[j], data[i][j]);
-      this->max_[j] = vnl_math_max(this->max_[j], data[i][j]);
+      this->min_[j] = vnl_math::min(this->min_[j], data[i][j]);
+      this->max_[j] = vnl_math::max(this->max_[j], data[i][j]);
     }
   }
   return true;

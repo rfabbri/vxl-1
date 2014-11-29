@@ -51,8 +51,8 @@ point_to_bnd_edge(const vgl_point_2d<double >& query_pt,
   //case 1: internal bcurve is a line segment
   if (bcurve->is_a() == "dbsk2d_ishock_bline")
   {
-    double smin = vnl_math_max((double)0, s_start) / bcurve->len() ;
-    double smax = vnl_math_min(bcurve->len(), s_end) / bcurve->len();
+    double smin = vnl_math::max((double)0, s_start) / bcurve->len() ;
+    double smax = vnl_math::min(bcurve->len(), s_end) / bcurve->len();
     return vgl_distance_to_linesegment<double >(
       (1-smin)*start.x() + smin*end.x(), (1-smin)*start.y()+smin*end.y(), 
       (1-smax)*start.x()+smax*end.x(), (1-smax)*start.y()+smax*end.y(),

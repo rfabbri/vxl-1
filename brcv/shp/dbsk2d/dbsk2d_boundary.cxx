@@ -366,10 +366,10 @@ compute_cell_membership_of_bbox(const vgl_box_2d<double >& bbox, double tol) con
     (box.max_y()-this->ymin()) / this->cell_h()));
 
   // just in case the edge is outside partitioned area
-  min_col = vnl_math_max(0,min_col);
-  max_col = vnl_math_min(max_col, this->num_cols()-1);
-  min_row = vnl_math_max(0, min_row);
-  max_row = vnl_math_min(max_row, this->num_rows()-1);
+  min_col = vnl_math::max(0,min_col);
+  max_col = vnl_math::min(max_col, this->num_cols()-1);
+  min_row = vnl_math::max(0, min_row);
+  max_row = vnl_math::min(max_row, this->num_rows()-1);
 
   for (int i=min_row; i<=max_row; ++i)
   {
@@ -406,14 +406,14 @@ intersect_line_with_cell_grids( const vgl_point_2d<double >& p1,
   for (int m=start_col; m<= end_col; ++m)
   {
     // That we are here means the linesegment is not a vertical line
-    intersections.push_back(vnl_math_abs(
+    intersections.push_back(vnl_math::abs(
       this->xmin()+m*this->cell_w()-p1.x()) / box.width());
   }
 
   for (int m=start_row; m<= end_row; ++m)
   {
     // That we are here means the linesegment is not a horizontal line
-    intersections.push_back(vnl_math_abs(
+    intersections.push_back(vnl_math::abs(
       this->ymin()+m*this->cell_h()-p1.y()) / box.height());
   }
   intersections.sort();
@@ -1315,7 +1315,7 @@ add_connected_arcs( const vcl_vector<vgl_point_2d<double > > &vertices,
   {
     dbgl_circ_arc arc(bv_list[i]->point(), bv_list[i+1]->point(), curvatures[i]);
     
-    //if (vnl_math_abs(curvatures[i]) < MIN_ARC_CURVATURE)
+    //if (vnl_math::abs(curvatures[i]) < MIN_ARC_CURVATURE)
     if (arc.height()<B_EPSILON)
     {
       bnd_edges.push_back(dbsk2d_bnd_utils::new_line_between(bv_list[i], 

@@ -91,19 +91,19 @@ void dbsk2d_ishock_pointarc_thirdorder::compute_tau_ranges()
     double letau = LEtaToLTau(lBPoint()->min_eta(), UNCONSTRAINED);
     if (AisLEq(letau, _LsTau)) //tau corresponding to min_eta is out of range
       letau = 2*vnl_math::pi;
-    _maxLTau = vnl_math_min(vnl_math::pi, letau);
+    _maxLTau = vnl_math::min(vnl_math::pi, letau);
 
     _minRTau = _RsTau;
-    _maxRTau = vnl_math_min(REtaToRTau(rBArc()->max_eta(), UNCONSTRAINED), vnl_math::pi);
+    _maxRTau = vnl_math::min(REtaToRTau(rBArc()->max_eta(), UNCONSTRAINED), vnl_math::pi);
   }
   else {
-    _minLTau = vnl_math_max(vnl_math::pi, LEtaToLTau(lBArc()->min_eta(), UNCONSTRAINED));
+    _minLTau = vnl_math::max(vnl_math::pi, LEtaToLTau(lBArc()->min_eta(), UNCONSTRAINED));
     _maxLTau = _LsTau;
 
     double retau = REtaToRTau(rBPoint()->max_eta(), UNCONSTRAINED);
     if (AisGEq(retau, _RsTau))  //tau corresponding to max_eta is out of range
       retau = vnl_math::pi;
-    _minRTau = vnl_math_max(retau, vnl_math::pi);
+    _minRTau = vnl_math::max(retau, vnl_math::pi);
     _maxRTau = _RsTau;
   }
 }

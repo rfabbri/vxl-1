@@ -188,8 +188,8 @@ compute_twoshapelet_via_vertical_discrepancy(double alpha0)
   dbnl_brent_root xnode_fit_solver(err_fnt, 1e-4);
 
   // shrink the upper and lower bounds a little bit to make sure they're in bound
-  double ax = phi1_bound0 + vnl_math_sgn(phi1_bound1 - phi1_bound0) * 2*phi1_bound_tol;
-  double bx = phi1_bound1 - vnl_math_sgn(phi1_bound1 - phi1_bound0) * 2*phi1_bound_tol;
+  double ax = phi1_bound0 + vnl_math::sgn(phi1_bound1 - phi1_bound0) * 2*phi1_bound_tol;
+  double bx = phi1_bound1 - vnl_math::sgn(phi1_bound1 - phi1_bound0) * 2*phi1_bound_tol;
 
     // solve for the root using brent's method
   double phi1_root;
@@ -268,8 +268,8 @@ compute_twoshapelet_via_radius_discrepancy(double alpha0, double& fit_error)
   dbnl_brent_root xnode_fit_solver(err_fnt, 1e-4);
 
   // shrink the upper and lower bounds a little bit to make sure they're in bound
-  double ax = phi1_bound0 + vnl_math_sgn(phi1_bound1 - phi1_bound0) * 2*phi1_bound_tol;
-  double bx = phi1_bound1 - vnl_math_sgn(phi1_bound1 - phi1_bound0) * 2*phi1_bound_tol;
+  double ax = phi1_bound0 + vnl_math::sgn(phi1_bound1 - phi1_bound0) * 2*phi1_bound_tol;
+  double bx = phi1_bound1 - vnl_math::sgn(phi1_bound1 - phi1_bound0) * 2*phi1_bound_tol;
 
     // solve for the root using brent's method
   double phi1_root;
@@ -290,8 +290,8 @@ compute_twoshapelet_via_radius_discrepancy(double alpha0, double& fit_error)
     // the error should be monotonic. We take the one closer to zero
     double f_ax = xnode_fit_solver.f(ax);
     double f_bx = xnode_fit_solver.f(bx);
-    fit_error = (vnl_math_abs(f_ax) < vnl_math_abs(f_bx)) ?  f_ax : f_bx;
-    phi1_root = (vnl_math_abs(f_ax) < vnl_math_abs(f_bx)) ?  ax : bx;
+    fit_error = (vnl_math::abs(f_ax) < vnl_math::abs(f_bx)) ?  f_ax : f_bx;
+    phi1_root = (vnl_math::abs(f_ax) < vnl_math::abs(f_bx)) ?  ax : bx;
     
     dbsksp_twoshapelet_estimator g;
     ss = g.compute(this->start_xnode(), this->end_xnode(), 
@@ -447,14 +447,14 @@ f(vnl_vector<double> const& x, vnl_vector<double>& fx)
   double c = vgl_distance(right_pt, this->end_xnode_.bnd_pt_right());
 
   // penalty for having "negative shock chord length"
-  double d = vnl_math_abs(ss->len0())-ss->len0() + vnl_math_abs(ss->len1()) - ss->len1();
-  fx[2] = vnl_math_max( vnl_math_max(a,b), vnl_math_max(c,d));
+  double d = vnl_math::abs(ss->len0())-ss->len0() + vnl_math::abs(ss->len1()) - ss->len1();
+  fx[2] = vnl_math::max( vnl_math::max(a,b), vnl_math::max(c,d));
   
 
   // penalty for legality of the twoshapelet
   if (!ss->is_legal())
   {
-    fx[2] += vnl_math_abs(ss->len0()) + vnl_math_abs(ss->len1());
+    fx[2] += vnl_math::abs(ss->len0()) + vnl_math::abs(ss->len1());
   }
 
   return;
@@ -551,7 +551,7 @@ f(vnl_vector<double> const& x)
       double len = (this->end_xnode().pt_ - this->start_xnode().pt_).length();
 
       // fitting cost: do end point radius match?
-      //double fitting_cost = 1 - vcl_exp(- vnl_math_sqr(fit_error/10));
+      //double fitting_cost = 1 - vcl_exp(- vnl_math::sqr(fit_error/10));
       fitting_cost = 1 - dbsksp_interp_two_xnodes_f0(fit_error/10);
 
       // legality: how illegal is the twoshapelet?

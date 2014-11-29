@@ -434,8 +434,8 @@ compute_curve_bundle(vgl_polygon<double>& bundle, dbdet_int_params &params,
     double alpha = vcl_asin(dpos/params.d);
 
     double eps = 1e-5;
-    double dphi_min = vnl_math_max((-params.t2-dtheta-2*alpha)-params.t1 +eps, -dtheta);
-    double dphi_max = vnl_math_min((-params.t2+dtheta+2*alpha)-params.t1 -eps, dtheta);
+    double dphi_min = vnl_math::max((-params.t2-dtheta-2*alpha)-params.t1 +eps, -dtheta);
+    double dphi_max = vnl_math::min((-params.t2+dtheta+2*alpha)-params.t1 -eps, dtheta);
 
     //make sure curve bundle is legal
     if (dphi_max < dphi_min)
@@ -485,8 +485,8 @@ compute_curve_bundle(vgl_polygon<double>& bundle, dbdet_int_params &params,
     double alpha = vcl_asin(dpos/params.d);
 
     double eps = 1e-5;
-    double dphi_min = vnl_math_max((-params.t1-dtheta-2*alpha)-params.t2 +eps, -dtheta);
-    double dphi_max = vnl_math_min((-params.t1+dtheta+2*alpha)-params.t2 -eps,  dtheta);
+    double dphi_min = vnl_math::max((-params.t1-dtheta-2*alpha)-params.t2 +eps, -dtheta);
+    double dphi_max = vnl_math::min((-params.t1+dtheta+2*alpha)-params.t2 -eps,  dtheta);
 
     //make sure curve bundle is legal
     if (dphi_max < dphi_min)

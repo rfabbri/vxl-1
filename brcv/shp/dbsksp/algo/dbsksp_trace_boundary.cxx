@@ -88,7 +88,7 @@ bool dbsksp_trace_xgraph_boundary_as_polygon(const dbsksp_xshock_graph_sptr& xgr
   for (unsigned idx =0; idx < biarc_list.size(); ++idx)
   {
     dbgl_biarc& biarc = biarc_list[idx];
-    int num_segs = vnl_math_rnd(biarc.len() / approx_ds);
+    int num_segs = vnl_math::rnd(biarc.len() / approx_ds);
 
     // force at least 1 segment per biarc
     if (num_segs == 0)

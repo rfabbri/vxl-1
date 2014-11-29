@@ -736,7 +736,7 @@ compute_num_segments_for_darts(const dbskr_tree_sptr& tree,
     int n = (int) vcl_floor(sc->arclength(sc->num_points()-1) / segment_ds);
 
     // make sure each dart has at least one segment
-    n = vnl_math_max(n , 1);
+    n = vnl_math::max(n , 1);
 
     // save the number of segments for this dart
     num_segments[dart] = n;

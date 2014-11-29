@@ -806,7 +806,7 @@ insert_shock_node(const dbsksp_shock_edge_sptr& e, double t)
   double phi_v1 = angle(shock_dir_v1, contact_shock);
 
   // flow_dir = 1: e1 to e2, -1: e2 to e1
-  int flow_dir = vnl_math_sgn(phi_v1-vnl_math::pi_over_2);
+  int flow_dir = vnl_math::sgn(phi_v1-vnl_math::pi_over_2);
 
 
   v1->add_edge(e1);
@@ -1508,8 +1508,8 @@ is_legal()
 
     // m * sin(phi) >= 0
     sin_alpha_check = sin_alpha_check &&
-      (vnl_math_abs(e->param_m()* vcl_sin(e->source()->descriptor(e)->phi)) <= 1) && 
-      (vnl_math_abs(e->param_m()* vcl_sin(e->target()->descriptor(e)->phi)) <= 1);
+      (vnl_math::abs(e->param_m()* vcl_sin(e->source()->descriptor(e)->phi)) <= 1) && 
+      (vnl_math::abs(e->param_m()* vcl_sin(e->target()->descriptor(e)->phi)) <= 1);
 
     // max radius check
     dbsksp_shock_node_descriptor_sptr desc_start = e->source()->descriptor(e);

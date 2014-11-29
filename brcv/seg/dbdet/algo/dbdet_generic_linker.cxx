@@ -421,8 +421,8 @@ bool dbdet_generic_linker::Is_8_Neighbor (int x1, int y1, int x2, int y2)
   //* Two points are 8-connected neighbors
   //* IF delta_x <= 1 AND delta_y <= 1
 
-  int delta_x = vnl_math_abs (x2 - x1);
-  int delta_y = vnl_math_abs (y2 - y1);
+  int delta_x = vnl_math::abs (x2 - x1);
+  int delta_y = vnl_math::abs (y2 - y1);
 
   return ((delta_x <= 1) && (delta_y <= 1));
 }
@@ -432,8 +432,8 @@ bool dbdet_generic_linker::Is_4_Neighbor (int x1, int y1, int x2, int y2)
   //* Two points are 4-connected neighbors
   //* IF delta_x + delta_y = 1
 
-  int delta_x = vnl_math_abs (x2 - x1);
-  int delta_y = vnl_math_abs (y2 - y1);
+  int delta_x = vnl_math::abs (x2 - x1);
+  int delta_y = vnl_math::abs (y2 - y1);
 
   return ((delta_x+delta_y) == 1);
 }

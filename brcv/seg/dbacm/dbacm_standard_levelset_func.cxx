@@ -172,7 +172,7 @@ evolve_one_timestep(float timestep)
         pixel_kmap += istep_kmap)
       {
         float advection_term, inflation_term, curvature_term, speed;
-        float grad_phi_mag = vnl_math_hypot(*pixel_dxc, *pixel_dyc);
+        float grad_phi_mag = vnl_math::hypot(*pixel_dxc, *pixel_dyc);
         
 
         // advection_term (geodesic)

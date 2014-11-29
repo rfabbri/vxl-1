@@ -109,9 +109,9 @@ void dbsk2d_ishock_lineline::compute_tau_ranges()
 {
   //tau conversions for line-line is very sensitive
   _minLTau = _LsTau;
-  _maxLTau = vnl_math_min (_lL, LTau(_lR));
+  _maxLTau = vnl_math::min (_lL, LTau(_lR));
   _minRTau = _RsTau;
-  _maxRTau = vnl_math_min (_lR, RTau(_lL));
+  _maxRTau = vnl_math::min (_lR, RTau(_lL));
 
   dbsk2d_assert(_minLTau<=_maxLTau && _minRTau<=_maxRTau);
 }

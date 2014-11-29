@@ -39,7 +39,7 @@ dbsta_mg_statistical_updater<T>::operator() ( dbsta_distribution<T>& d,
   
   if(sum_probs == T(0.0)){
     this->init_weight_ = alpha;
-    insert(mixture,sample);
+    this->insert(mixture,sample);
     mixture.normalize_weights();
   }
   else{
@@ -99,7 +99,7 @@ dbsta_mg_window_updater<T>::operator() ( dbsta_distribution<T>& d,
   // if no matches add a new component
   if(matched.empty()){
     this->init_weight_ = alpha;
-    insert(mixture,sample);
+    this->insert(mixture,sample);
     mixture.normalize_weights();
   }
   else{
@@ -189,7 +189,7 @@ dbsta_mg_grimson_statistical_updater<T>::operator() ( dbsta_distribution<T>& d,
   }
   if(no_match){
     this->init_weight_ = alpha;
-    insert(mixture,sample);
+    this->insert(mixture,sample);
   }
     
   //reweighter_(mixture);
@@ -231,7 +231,7 @@ dbsta_mg_grimson_window_updater<T>::operator() ( dbsta_distribution<T>& d,
   }
   if(no_match){
     this->init_weight_ = alpha;
-    insert(mixture,sample);
+    this->insert(mixture,sample);
   }
    
   mixture.sort(dbsta_sort_gaussian_fitness<T>);
@@ -271,7 +271,7 @@ dbsta_mg_nn_statistical_updater<T>::operator() ( dbsta_distribution<T>& d,
     }
   }
   if(failure && weight_>threshweight_)
-    insert(mixture,sample);
+    this->insert(mixture,sample);
     
   reweighter_(mixture);
   mixture.sort(dbsta_sort_gaussian_fitness<T>);

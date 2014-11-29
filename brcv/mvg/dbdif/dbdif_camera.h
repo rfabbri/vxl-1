@@ -196,7 +196,7 @@ img_to_world(
   p_img.t[1] = vcl_sin(theta_img);
   p_img.t[2] = 0;
 
-  if (!vnl_math_isfinite(k_img))
+  if (!vnl_math::isfinite(k_img))
     p_img.valid = false;
 
   p_img.k    = k_img;

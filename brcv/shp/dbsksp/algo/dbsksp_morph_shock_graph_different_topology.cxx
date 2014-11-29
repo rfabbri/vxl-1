@@ -1030,15 +1030,15 @@ compute_num_segments_to_interpolate_trees(double sampling_ds)
     }
 
     // compute the number of segments associated with each path, take the max
-    int num_segments_path_1 = int(vnl_math_rnd(total_length_1/ sampling_ds));
-    int num_segments_path_2 = int(vnl_math_rnd(total_length_2/ sampling_ds));
-    //int num_segments_path = vnl_math_max(num_segments_path_1, num_segments_path_2);
+    int num_segments_path_1 = int(vnl_math::rnd(total_length_1/ sampling_ds));
+    int num_segments_path_2 = int(vnl_math::rnd(total_length_2/ sampling_ds));
+    //int num_segments_path = vnl_math::max(num_segments_path_1, num_segments_path_2);
     double mean_length = (total_length_1 + total_length_2) / 2;
-    double max_length = vnl_math_max(total_length_1 , total_length_2);
-    int num_segments_path = int(vnl_math_rnd(mean_length/ sampling_ds)) + 1;
+    double max_length = vnl_math::max(total_length_1 , total_length_2);
+    int num_segments_path = int(vnl_math::rnd(mean_length/ sampling_ds)) + 1;
 
     // Make sure we have at least one segment for each dart path
-    num_segments_path = vnl_math_max(num_segments_path, 1);
+    num_segments_path = vnl_math::max(num_segments_path, 1);
 
     // Now we need to distribute this total to the darts by their length ratio
 
@@ -1049,7 +1049,7 @@ compute_num_segments_to_interpolate_trees(double sampling_ds)
       int dart = dart_list_1[i];
       double len = dart_lengths_1[i];
       int n = (int)vcl_floor(num_segments_path * len / total_length_1);
-      n = vnl_math_max(n, 1);
+      n = vnl_math::max(n, 1);
       num_segments_tree1_[dart] = n;
       num_segments_tree1_[tree1->mate(dart)] = n;
       running_segment_sum_path_1 += n;
@@ -1069,7 +1069,7 @@ compute_num_segments_to_interpolate_trees(double sampling_ds)
       int dart = dart_list_2[i];
       double len = dart_lengths_2[i];
       int n = (int)vcl_floor(num_segments_path * len / total_length_2);
-      n = vnl_math_max(n, 1);
+      n = vnl_math::max(n, 1);
       num_segments_tree2_[dart] = n;
       num_segments_tree2_[tree2->mate(dart)] = n;
       running_segment_sum_path_2 += n;

@@ -434,7 +434,7 @@ compute_es_params_use_simple_gradient_descent( bool use_lookup_table ){
         &k0_max_error, &gamma_max_error, &len_max_error );
 
       // check if value from lookup table is valid
-      if (! vnl_math_isfinite(len_est) ){
+      if (! vnl_math::isfinite(len_est) ){
         this->set_intrinsic_params(0, 0, vnl_huge_val((double)1.0));
         return false;
       }
@@ -443,7 +443,7 @@ compute_es_params_use_simple_gradient_descent( bool use_lookup_table ){
       // the correct turning angle should be close to the estimated turning angle
       turning_angle_est = k0_est*len_est + 0.5*gamma_est*len_est*len_est;
       int num_offset_cycle;
-      num_offset_cycle = vnl_math_rnd((this->end_angle()-this->start_angle() - turning_angle_est)/(  vnl_math::pi*2) );
+      num_offset_cycle = vnl_math::rnd((this->end_angle()-this->start_angle() - turning_angle_est)/(  vnl_math::pi*2) );
       this->turning_angle_ = (this->end_angle()-this->start_angle()) - num_offset_cycle*vnl_math::pi*2;
       k0_init_est = k0_est;
       len_init_est = len_est;
@@ -584,7 +584,7 @@ compute_es_params_use_levenberg_marquardt(bool use_lookup_table ){
         &k0_max_error, &gamma_max_error, &len_max_error );
 
       // check if value from lookup table is valid
-      if (! vnl_math_isfinite(len_est) ){
+      if (! vnl_math::isfinite(len_est) ){
         this->set_intrinsic_params(0, 0, vnl_huge_val((double)1.0));
         return false;
       }
@@ -593,7 +593,7 @@ compute_es_params_use_levenberg_marquardt(bool use_lookup_table ){
       // the correct turning angle should be close to the estimated turning angle
       turning_angle_est = k0_est*len_est + 0.5*gamma_est*len_est*len_est;
       int num_offset_cycle;
-      num_offset_cycle = vnl_math_rnd((this->end_angle()-this->start_angle() - turning_angle_est)/(  vnl_math::pi*2) );
+      num_offset_cycle = vnl_math::rnd((this->end_angle()-this->start_angle() - turning_angle_est)/(  vnl_math::pi*2) );
       this->turning_angle_ = (this->end_angle()-this->start_angle())-num_offset_cycle*vnl_math::pi*2;
       // initialized k0 and len with values from lookup table
       k0_len_estimate.put(0, k0_est);
@@ -802,12 +802,12 @@ look_up(double start_angle, double end_angle, double* k0, double* gamma, double*
   x12 = this->k0_table_.at(start_index_low).at(end_index_high);
   x22 = this->k0_table_.at(start_index_high).at(end_index_high);
   *k0 = (1-a)*(1-b)*x11 + a*(1-b)*x21 + (1-a)*b*x12 + a*b*x22;
-  *k0_max_error = vnl_math_max(
-    vnl_math_max((double)x11, (double)x21), 
-    vnl_math_max((double)x12, (double)x22)
-    ) - vnl_math_min(
-    vnl_math_min((double)x11, (double)x21), 
-    vnl_math_min((double)x12,(double)x22)
+  *k0_max_error = vnl_math::max(
+    vnl_math::max((double)x11, (double)x21), 
+    vnl_math::max((double)x12, (double)x22)
+    ) - vnl_math::min(
+    vnl_math::min((double)x11, (double)x21), 
+    vnl_math::min((double)x12,(double)x22)
     );
 
   x11 = this->gamma_table_.at(start_index_low).at(end_index_low);
@@ -815,12 +815,12 @@ look_up(double start_angle, double end_angle, double* k0, double* gamma, double*
   x12 = this->gamma_table_.at(start_index_low).at(end_index_high);
   x22 = this->gamma_table_.at(start_index_high).at(end_index_high);
   *gamma = (1-a)*(1-b)*x11 + a*(1-b)*x21 + (1-a)*b*x12 + a*b*x22;
-  *gamma_max_error = vnl_math_max(
-    vnl_math_max((double)x11, (double)x21), 
-    vnl_math_max((double)x12, (double)x22)
-    ) - vnl_math_min(
-    vnl_math_min((double)x11, (double)x21), 
-    vnl_math_min((double)x12,(double)x22)
+  *gamma_max_error = vnl_math::max(
+    vnl_math::max((double)x11, (double)x21), 
+    vnl_math::max((double)x12, (double)x22)
+    ) - vnl_math::min(
+    vnl_math::min((double)x11, (double)x21), 
+    vnl_math::min((double)x12,(double)x22)
     );
 
   x11 = this->len_table_.at(start_index_low).at(end_index_low);
@@ -828,12 +828,12 @@ look_up(double start_angle, double end_angle, double* k0, double* gamma, double*
   x12 = this->len_table_.at(start_index_low).at(end_index_high);
   x22 = this->len_table_.at(start_index_high).at(end_index_high);
   *len = (1-a)*(1-b)*x11 + a*(1-b)*x21 + (1-a)*b*x12 + a*b*x22;
-  *len_max_error = vnl_math_max(
-    vnl_math_max((double)x11, (double)x21), 
-    vnl_math_max((double)x12, (double)x22)
-    ) - vnl_math_min(
-    vnl_math_min((double)x11, (double)x21), 
-    vnl_math_min((double)x12,(double)x22)
+  *len_max_error = vnl_math::max(
+    vnl_math::max((double)x11, (double)x21), 
+    vnl_math::max((double)x12, (double)x22)
+    ) - vnl_math::min(
+    vnl_math::min((double)x11, (double)x21), 
+    vnl_math::min((double)x12,(double)x22)
     );
 
   return;

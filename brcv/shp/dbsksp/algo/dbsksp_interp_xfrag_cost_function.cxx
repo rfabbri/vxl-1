@@ -191,7 +191,7 @@ x_to_xsample(const vnl_vector<double >& x) const
   double h = x[3] * this->half_width;
 
   // radius
-  double radius = vnl_math_hypot(h, b);
+  double radius = vnl_math::hypot(h, b);
 
   // phi
   double phi = vcl_acos(-b/radius);

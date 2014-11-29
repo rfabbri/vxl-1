@@ -60,7 +60,7 @@ double dbasnh_gradasgn::C_aibjck (const int a, const int b, const int c,
   //will be on average 1/3 units apart.
   //The corner[][][] should be very sparse.
   double compatibility = 1 - vcl_fabs (angle_abc - angle_ijk) * 3;
-  ///if (vnl_math_isnan (compatibility)) {
+  ///if (vnl_math::isnan (compatibility)) {
     ///vcl_cout<< "Error: C_aibjck NaN! ";
     ///assert (0);
   ///}
@@ -78,7 +78,7 @@ void dbasnh_gradasgn::normalize_costs (const bool abs_max)
   double max;
 
   if (abs_max) {
-    max = vnl_math_max (hypg_G()->corner_cost_max(), hypg_g()->corner_cost_max());
+    max = vnl_math::max (hypg_G()->corner_cost_max(), hypg_g()->corner_cost_max());
     hypg_G()->normalize_corner_cost (max, debug_out_>2);
     hypg_g()->normalize_corner_cost (max, debug_out_>2);
   }
@@ -533,27 +533,27 @@ void dbasnh_gradasgn_aug::normalize_costs (const bool abs_max)
   double max;
 
   if (abs_max) {
-    max = vnl_math_max (hypg_G_aug()->max_of_grad_r_max(), hypg_g_aug()->max_of_grad_r_max());
+    max = vnl_math::max (hypg_G_aug()->max_of_grad_r_max(), hypg_g_aug()->max_of_grad_r_max());
     hypg_G_aug()->normalize_node_grad_r_max (max, debug_out_);
     hypg_g_aug()->normalize_node_grad_r_max (max, debug_out_);
 
-    max = vnl_math_max (hypg_G_aug()->max_of_grad_r_min(), hypg_g_aug()->max_of_grad_r_min());
+    max = vnl_math::max (hypg_G_aug()->max_of_grad_r_min(), hypg_g_aug()->max_of_grad_r_min());
     hypg_G_aug()->normalize_node_grad_r_min (max, debug_out_);
     hypg_g_aug()->normalize_node_grad_r_min (max, debug_out_);
 
-    max = vnl_math_max (hypg_G_aug()->max_of_corner_a_max(), hypg_g_aug()->max_of_corner_a_max());
+    max = vnl_math::max (hypg_G_aug()->max_of_corner_a_max(), hypg_g_aug()->max_of_corner_a_max());
     hypg_G_aug()->normalize_node_corner_a_max (max, debug_out_);
     hypg_g_aug()->normalize_node_corner_a_max (max, debug_out_);
 
-    max = vnl_math_max (hypg_G_aug()->max_of_corner_a_min(), hypg_g_aug()->max_of_corner_a_min());
+    max = vnl_math::max (hypg_G_aug()->max_of_corner_a_min(), hypg_g_aug()->max_of_corner_a_min());
     hypg_G_aug()->normalize_node_corner_a_min (max, debug_out_);
     hypg_g_aug()->normalize_node_corner_a_min (max, debug_out_);
 
-    max = vnl_math_max (hypg_G_aug()->corner_nf_max(), hypg_g_aug()->corner_nf_max());
+    max = vnl_math::max (hypg_G_aug()->corner_nf_max(), hypg_g_aug()->corner_nf_max());
     hypg_G_aug()->normalize_corner_nf_cost (max, debug_out_);
     hypg_g_aug()->normalize_corner_nf_cost (max, debug_out_);
 
-    max = vnl_math_max (hypg_G_aug()->corner_grad_r_max(), hypg_g_aug()->corner_grad_r_max());
+    max = vnl_math::max (hypg_G_aug()->corner_grad_r_max(), hypg_g_aug()->corner_grad_r_max());
     hypg_G_aug()->normalize_corner_grad_r_cost (max, debug_out_);
     hypg_g_aug()->normalize_corner_grad_r_cost (max, debug_out_);
   }
@@ -597,7 +597,7 @@ void dbasnh_gradasgn_aug::get_max_len_between_nodes ()
   //compute the max dist between all pairs of (G[a], G[b]) and (g[i], g[j]).
   double G_max_r = hypg_G_aug()->bound_box_radius_of_nodes ();
   double g_max_r = hypg_g_aug()->bound_box_radius_of_nodes ();
-  max_len_btwn_nodes_ = vnl_math_max (G_max_r, g_max_r);
+  max_len_btwn_nodes_ = vnl_math::max (G_max_r, g_max_r);
   vul_printf (vcl_cout, "  get_max_len_between_nodes: %f.\n", max_len_btwn_nodes_);
 }
 
@@ -968,12 +968,12 @@ double dbash_comp_node_type_diff (const int m1, const int n1, const int f1,
       if (m2 == 0) {
         assert (n2 != 0);
         //A_1^n1 to A_1^n2.
-        return double(vnl_math_abs (n1-n2)) / vnl_math_max (n1, n2);
+        return double(vnl_math::abs (n1-n2)) / vnl_math::max (n1, n2);
       }
       else { //m2 !=0
         assert (n2 == 0);
         //A_1^n1 to A_1^m2A_3.
-        return vnl_math_max (double(vnl_math_abs (n1-m2)), 3.0) / vnl_math_max (n1, m2+3);
+        return vnl_math::max (double(vnl_math::abs (n1-m2)), 3.0) / vnl_math::max (n1, m2+3);
       }
     }
     else { //m1 != 0
@@ -981,12 +981,12 @@ double dbash_comp_node_type_diff (const int m1, const int n1, const int f1,
       if (m2 == 0) {
         assert (n2 != 0);
         //A_1^m1A_3 to A_1^n2.
-        return vnl_math_max (double(vnl_math_abs (n2-m1)), 3.0) / vnl_math_max (n2, m1+3);
+        return vnl_math::max (double(vnl_math::abs (n2-m1)), 3.0) / vnl_math::max (n2, m1+3);
       }
       else { //m2 !=0
         assert (n2 == 0);
         //A_1^m1A_3 to A_1^m2A_3.
-        return double(vnl_math_abs (m1-m2)) / (vnl_math_max (m1, m2) + 3);
+        return double(vnl_math::abs (m1-m2)) / (vnl_math::max (m1, m2) + 3);
       }
     }
   }
@@ -999,7 +999,7 @@ double dbash_comp_node_type_diff (const int m1, const int n1, const int f1,
           if (n2==0) {
             assert (m2 != 0);
             //Corner to A1mA3. 
-            return double(m2) / vnl_math_max (m2+3, 5);
+            return double(m2) / vnl_math::max (m2+3, 5);
           }
           else {
             assert (m2 == 0);
@@ -1031,7 +1031,7 @@ double dbash_comp_node_type_diff (const int m1, const int n1, const int f1,
           if (n2==0) {
             assert (m2 != 0);
             //(A1A3)_2 to A1mA3.
-            return double (3 + vnl_math_abs(m2-2)) / vnl_math_max (m2+3, 8);
+            return double (3 + vnl_math::abs(m2-2)) / vnl_math::max (m2+3, 8);
           }
           else {
             assert (m2 == 0);
@@ -1063,7 +1063,7 @@ double dbash_comp_node_type_diff (const int m1, const int n1, const int f1,
           if (n2==0) {
             assert (m2 != 0);
             //(A1A3)_3 to A1mA3.
-            return double (6 + vnl_math_abs(m2-3)) / vnl_math_max (m2+3, 12);
+            return double (6 + vnl_math::abs(m2-3)) / vnl_math::max (m2+3, 12);
           }
           else {
             assert (m2 == 0);
@@ -1102,7 +1102,7 @@ double dbash_comp_node_type_diff (const int m1, const int n1, const int f1,
         if (n1==0) {
           assert (m1 != 0);
           //A1mA3 to Corner. 
-          return double(m1) / vnl_math_max (m1+3, 5);
+          return double(m1) / vnl_math::max (m1+3, 5);
         }
         else {
           assert (m1 == 0);
@@ -1115,7 +1115,7 @@ double dbash_comp_node_type_diff (const int m1, const int n1, const int f1,
         if (n1==0) {
           assert (m1 != 0);
           //A1mA3 to (A1A3)_2
-          return double (3 + vnl_math_abs(m1-2)) / vnl_math_max (m1+3, 8);
+          return double (3 + vnl_math::abs(m1-2)) / vnl_math::max (m1+3, 8);
         }
         else {
           assert (m1 == 0);
@@ -1128,7 +1128,7 @@ double dbash_comp_node_type_diff (const int m1, const int n1, const int f1,
         if (n1==0) {
           assert (m1 != 0);
           //A1mA3 to (A1A3)_3
-          return double (6 + vnl_math_abs(m1-3)) / vnl_math_max (m1+3, 12);
+          return double (6 + vnl_math::abs(m1-3)) / vnl_math::max (m1+3, 12);
         }
         else {
           assert (m1 == 0);

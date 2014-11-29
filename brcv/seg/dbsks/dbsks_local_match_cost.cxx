@@ -287,7 +287,7 @@ f(const vnl_vector<double>& x)
 {
 
   // be protective of other functions
-  if ( vnl_math_abs(x.min_value()) > 1e4 || vnl_math_abs(x.max_value()) > 1e4 )
+  if ( vnl_math::abs(x.min_value()) > 1e4 || vnl_math::abs(x.max_value()) > 1e4 )
   {
     return 1e10;
   }
@@ -1012,35 +1012,35 @@ f_shock_edit(const dbsksp_xshock_node_descriptor& xnode_parent,
 
   // Components of shock-edit deformation
   // 1. boundary length difference
-  double len_diff_left = vnl_math_abs(arc_left_ref.length() - biarc_left_target.len());
-  double len_diff_right = vnl_math_abs(arc_right_ref.length() - biarc_right_target.len());
+  double len_diff_left = vnl_math::abs(arc_left_ref.length() - biarc_left_target.len());
+  double len_diff_right = vnl_math::abs(arc_right_ref.length() - biarc_right_target.len());
   double len_diff = len_diff_left + len_diff_right;
 
 
 
   // 2. bending angle difference
-  double bending_diff_left = vnl_math_abs(arc_left_ref.length()*arc_left_ref.k() -
+  double bending_diff_left = vnl_math::abs(arc_left_ref.length()*arc_left_ref.k() -
     signed_angle(xnode_parent.bnd_tangent_left(), xnode_child.bnd_tangent_left()));
 
-  double bending_diff_right = vnl_math_abs(arc_right_ref.length()*arc_right_ref.k() -
+  double bending_diff_right = vnl_math::abs(arc_right_ref.length()*arc_right_ref.k() -
     signed_angle(xnode_parent.bnd_tangent_right(), xnode_child.bnd_tangent_right()));
 
   double bending_diff = bending_diff_left + bending_diff_right;
 
   // 3. starting radius difference
-  double start_radius_diff = vnl_math_abs(s_ref->radius_start() - xnode_parent.radius_);
+  double start_radius_diff = vnl_math::abs(s_ref->radius_start() - xnode_parent.radius_);
 
   // 4. radius increment difference
-  double radius_increment_diff = vnl_math_abs(
+  double radius_increment_diff = vnl_math::abs(
     s_ref->radius_increment() - (xnode_child.radius_ - xnode_parent.radius_) );
 
   // 5. phiA difference
-  double start_phi_diff = vnl_math_abs(
+  double start_phi_diff = vnl_math::abs(
     s_ref->phi_start() - xnode_parent.phi_);
 
 
   // 6. phi increment difference
-  double phi_increment_diff = vnl_math_abs(
+  double phi_increment_diff = vnl_math::abs(
     (s_ref->phi_end() - s_ref->phi_start()) - 
     (xnode_child.phi_ - xnode_parent.phi_) 
     );

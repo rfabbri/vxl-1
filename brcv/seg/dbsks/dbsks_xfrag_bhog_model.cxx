@@ -116,7 +116,7 @@ compute_score(const vcl_vector<vnl_vector<double > >& feat_list,
     const vnl_vector<double >& feat = feat_list[k];
     for (int i =0; i < feat_size; ++i)
     {
-      if (vnl_math_abs(feat[i]) < 1e-8) continue;
+      if (vnl_math::abs(feat[i]) < 1e-8) continue;
       svm_node node;
       node.index = i+1;
       node.value = feat[i];

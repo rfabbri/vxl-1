@@ -144,7 +144,7 @@ compute(estimation_type type)
     B(0) = end_xnode.radius_-start_xnode.radius_;
     B(1) = vAC.length();
 
-    if (vnl_math_abs(vnl_det(A)) > dbsksp_twoshapelet_estimator::det_A_epsilon)
+    if (vnl_math::abs(vnl_det(A)) > dbsksp_twoshapelet_estimator::det_A_epsilon)
     {
       len = vnl_inverse(A) * B;
     }
@@ -158,7 +158,7 @@ compute(estimation_type type)
       C(0, 1) = B(0);
       C(1, 1) = B(1);
       // if det(C) > 0, the system has no solution
-      if (vnl_math_abs(vnl_det(C)) > dbsksp_twoshapelet_estimator::det_A_epsilon)
+      if (vnl_math::abs(vnl_det(C)) > dbsksp_twoshapelet_estimator::det_A_epsilon)
       {
         len(0) = 1e100;
         len(1) = -1e100;
@@ -173,7 +173,7 @@ compute(estimation_type type)
         vnl_vector_fixed<double, 2> BB = B;
         BB(0) = 0;
 
-        if (vnl_math_abs(vnl_det(AA)) > dbsksp_twoshapelet_estimator::det_A_epsilon)
+        if (vnl_math::abs(vnl_det(AA)) > dbsksp_twoshapelet_estimator::det_A_epsilon)
         {
           len = vnl_inverse(AA) * BB;
         }
@@ -193,7 +193,7 @@ compute(estimation_type type)
     B(0) = vAC.length();
     B(1) = 0;
 
-    if (vnl_math_abs(vnl_det(A)) > dbsksp_twoshapelet_estimator::det_A_epsilon)
+    if (vnl_math::abs(vnl_det(A)) > dbsksp_twoshapelet_estimator::det_A_epsilon)
     {
       len = vnl_inverse(A) * B;
     }
@@ -207,7 +207,7 @@ compute(estimation_type type)
       C(0, 1) = B(0);
       C(1, 1) = B(1);
       // if det(C) > 0, the system has no solution
-      if (vnl_math_abs(vnl_det(C)) > dbsksp_twoshapelet_estimator::det_A_epsilon)
+      if (vnl_math::abs(vnl_det(C)) > dbsksp_twoshapelet_estimator::det_A_epsilon)
       {
         len(0) = 1e100;
         len(1) = -1e100;
@@ -221,7 +221,7 @@ compute(estimation_type type)
         vnl_vector_fixed<double, 2> BB = B;
         BB(1) = end_xnode.radius_-start_xnode.radius_;
 
-        if (vnl_math_abs(vnl_det(AA)) > dbsksp_twoshapelet_estimator::det_A_epsilon)
+        if (vnl_math::abs(vnl_det(AA)) > dbsksp_twoshapelet_estimator::det_A_epsilon)
         {
           len = vnl_inverse(AA) * BB;
         }
@@ -318,11 +318,11 @@ det_A() const
 //  double m1 = - vcl_sin(alpha2) / vcl_sin(phi2);
 //
 //  // condition check to avoid denominator = 0;
-//  if ( vnl_math_abs(m1) < 1e-12 && vnl_math_abs(m0) < 1e-12 )
+//  if ( vnl_math::abs(m1) < 1e-12 && vnl_math::abs(m0) < 1e-12 )
 //    return 1e-12;
 //
-//  double t_sqr = vnl_math_sqr(vcl_sin(2*a)) / 
-//    ( vnl_math_sqr(m1 * vcl_cos(2*a) + m0) + vnl_math_sqr(m1 * vcl_sin(2*a)) );
+//  double t_sqr = vnl_math::sqr(vcl_sin(2*a)) / 
+//    ( vnl_math::sqr(m1 * vcl_cos(2*a) + m0) + vnl_math::sqr(m1 * vcl_sin(2*a)) );
 //
 //  double phi1_discontinuity = vcl_asin(vcl_sqrt(t_sqr));
 //  return phi1_discontinuity;

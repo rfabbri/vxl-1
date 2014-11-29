@@ -132,7 +132,7 @@ double dbsk2d_ishock_pointarc::computeMinLTau ()
     if (_nu==1)        //Case 3:
       return _LsTau;
     else               //Case 4:
-      return vnl_math_max(vnl_math::pi, LEtaToLTau(lBArc()->min_eta(), UNCONSTRAINED));
+      return vnl_math::max(vnl_math::pi, LEtaToLTau(lBArc()->min_eta(), UNCONSTRAINED));
   }
 }
 
@@ -145,11 +145,11 @@ double dbsk2d_ishock_pointarc::computeMaxLTau ()
       if (AisLEq(letau, _LsTau)) //tau corresponding to min_eta is out of range
         letau = 2*vnl_math::pi;
 
-      return vnl_math_min(letau, _LAsymTau);
+      return vnl_math::min(letau, _LAsymTau);
     }
     else {                //Case 2:
       double letau = LEtaToLTau(lBArc()->min_eta(), UNCONSTRAINED);
-      return vnl_math_min(letau, _LAsymTau);
+      return vnl_math::min(letau, _LAsymTau);
     }
   }
   else {
@@ -172,14 +172,14 @@ double dbsk2d_ishock_pointarc::computeMinRTau ()
   if (_s==1) {
     if (_nu==1) {        //Case 1:
       double retau = REtaToRTau(rBArc()->max_eta(), UNCONSTRAINED);
-      return vnl_math_max(retau, _RAsymTau);
+      return vnl_math::max(retau, _RAsymTau);
     }
     else {              //Case 2:
       double retau = REtaToRTau(rBPoint()->max_eta(), UNCONSTRAINED);
       if (AisGEq(retau, _RsTau))  //tau corresponding to max_eta is out of range
         retau = 0;
 
-      return vnl_math_max(retau, _RAsymTau);
+      return vnl_math::max(retau, _RAsymTau);
     }
   }
   else {
@@ -204,7 +204,7 @@ double dbsk2d_ishock_pointarc::computeMaxRTau ()
   else {
     if (_nu==1) {          //Case 3:
       double retau = REtaToRTau(rBArc()->max_eta(), UNCONSTRAINED);
-      return vnl_math_min(retau, vnl_math::pi);
+      return vnl_math::min(retau, vnl_math::pi);
     }
     else {                //Case 4:
       return _RsTau;

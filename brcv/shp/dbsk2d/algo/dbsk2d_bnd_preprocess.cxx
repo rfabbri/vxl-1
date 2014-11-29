@@ -344,7 +344,7 @@ points_need_preprocessing(const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_pts)
     {
       vgl_point_2d<double > p2 = (*eit2)->point1();
 
-      double d = vnl_math_hypot(p2.x()-p1.x(), p2.y()-p1.y());
+      double d = vnl_math::hypot(p2.x()-p1.x(), p2.y()-p1.y());
       if (d <= dbsk2d_bnd_preprocess ::distance_tol)
         return true;
     }

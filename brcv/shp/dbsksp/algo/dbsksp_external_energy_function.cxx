@@ -153,7 +153,7 @@ f(const dbsksp_shock_graph_sptr& shock_graph)
       for (double s = 0; s<arc.len(); s += this->sampling_length())
       {
         vgl_point_2d<double > pt = arc.point_at_length(s);
-        energy += vnl_math_sqr(this->potential_at(pt.x(), pt.y()));
+        energy += vnl_math::sqr(this->potential_at(pt.x(), pt.y()));
       }
       bnd_length += arc.len();
     }
@@ -177,12 +177,12 @@ f(const dbsksp_shock_graph_sptr& shock_graph)
 //    {
 //      vgl_point_2d<double > pt = arc.point_at_length(s);
 //      
-//      //energy += vnl_math_sqr(this->potential_at(pt.x(), pt.y()));
-//      //double potential = 1/ vnl_math_sqr((1+vnl_math_sqr(this->potential_at(pt.x(), pt.y()))));
-//      double potential = 1/ vnl_math_sqr((1+vnl_math_abs(this->potential_at(pt.x(), pt.y()))));
+//      //energy += vnl_math::sqr(this->potential_at(pt.x(), pt.y()));
+//      //double potential = 1/ vnl_math::sqr((1+vnl_math::sqr(this->potential_at(pt.x(), pt.y()))));
+//      double potential = 1/ vnl_math::sqr((1+vnl_math::abs(this->potential_at(pt.x(), pt.y()))));
 //      vgl_vector_2d<double > t = arc.tangent_at_length(s);
 //      vgl_vector_2d<double > level_dir(-this->grad_y(pt.x(), pt.y()), this->grad_x(pt.x(), pt.y()));
-//      double alignment_factor = vnl_math_abs(cos_angle(t, level_dir));
+//      double alignment_factor = vnl_math::abs(cos_angle(t, level_dir));
 //
 //      energy -= potential * alignment_factor;
 //    }
@@ -210,13 +210,13 @@ f(const dbsksp_shapelet_sptr& shapelet)
     {
       vgl_point_2d<double > pt = arc.point_at_length(s);
       
-      //energy += vnl_math_sqr(this->potential_at(pt.x(), pt.y()));
-      //double potential = 1/ vnl_math_sqr((1+vnl_math_sqr(this->potential_at(pt.x(), pt.y()))));
-      double potential = 1/ vnl_math_sqr((1+vnl_math_abs(this->potential_at(pt.x(), pt.y()))));
+      //energy += vnl_math::sqr(this->potential_at(pt.x(), pt.y()));
+      //double potential = 1/ vnl_math::sqr((1+vnl_math::sqr(this->potential_at(pt.x(), pt.y()))));
+      double potential = 1/ vnl_math::sqr((1+vnl_math::abs(this->potential_at(pt.x(), pt.y()))));
       vgl_vector_2d<double > t = arc.tangent_at_length(s);
       vgl_vector_2d<double > level_dir(-this->grad_y(pt.x(), pt.y()), 
         this->grad_x(pt.x(), pt.y()));
-      double alignment_factor = vnl_math_abs(cos_angle(t, level_dir));
+      double alignment_factor = vnl_math::abs(cos_angle(t, level_dir));
       energy[i] -= potential * alignment_factor;
       bnd_length += arc.length();
     }
@@ -246,13 +246,13 @@ f(const dbsksp_shapelet_sptr &shapelet)
     {
       vgl_point_2d<double > pt = arc.point_at_length(s);
       
-      //energy += vnl_math_sqr(this->potential_at(pt.x(), pt.y()));
-      double potential = 1/ vnl_math_sqr((1+vnl_math_sqr(this->potential_at(pt.x(), pt.y()))));
-      //double potential = 1/ vnl_math_sqr((1+vnl_math_abs(this->potential_at(pt.x(), pt.y()))));
+      //energy += vnl_math::sqr(this->potential_at(pt.x(), pt.y()));
+      double potential = 1/ vnl_math::sqr((1+vnl_math::sqr(this->potential_at(pt.x(), pt.y()))));
+      //double potential = 1/ vnl_math::sqr((1+vnl_math::abs(this->potential_at(pt.x(), pt.y()))));
       //vgl_vector_2d<double > t = arc.tangent_at_length(s);
       //vgl_vector_2d<double > level_dir(-this->grad_y(pt.x(), pt.y()), 
         //this->grad_x(pt.x(), pt.y()));
-      //double alignment_factor = vnl_math_abs(cos_angle(t, level_dir));
+      //double alignment_factor = vnl_math::abs(cos_angle(t, level_dir));
       double alignment_factor = 1;
       energy[i] -= potential * alignment_factor;
       bnd_length += arc.length();
@@ -307,7 +307,7 @@ f(const dbsksp_shock_graph_sptr& shock_graph)
       for (double s = 0; s<arc.len(); s += this->sampling_length())
       {
         vgl_point_2d<double > pt = arc.point_at_length(s);
-        sum += vnl_math_sqr(this->potential_at(pt.x(), pt.y()));
+        sum += vnl_math::sqr(this->potential_at(pt.x(), pt.y()));
       }
     }
   }

@@ -57,12 +57,12 @@ solve(double ax, double bx, double& root)
   // opposite sign
   if (f_ax * f_bx >= 0)
   {
-    if (vnl_math_abs(f_ax) <= this->tol_)
+    if (vnl_math::abs(f_ax) <= this->tol_)
     {
       root = ax;
       return true;
     }
-    if (vnl_math_abs(f_bx) <= this->tol_)
+    if (vnl_math::abs(f_bx) <= this->tol_)
     {
       root = bx;
       return true;
@@ -89,5 +89,5 @@ solve(double ax, double bx, double& root)
   // increment of the 'x' variable.
   root = zeroin(ax, bx, &dbnl_brent_root::zeroin_f, this->tol_, this->max_iter_);
 
-  return (vnl_math_abs(this->f(root)) <= this->tol_);
+  return (vnl_math::abs(this->f(root)) <= this->tol_);
 }

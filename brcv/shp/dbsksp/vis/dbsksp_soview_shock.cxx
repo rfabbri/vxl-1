@@ -152,8 +152,8 @@ draw() const
   dbgl_conic_arc conic = this->edge()->fragment()->shock_geom();
 
   // decide the number of segments to draw based on the chord length of the conic
-  int num_segments = (int) vnl_math_max(this->edge()->chord_length(), 5.0);
-  num_segments = vnl_math_min(num_segments, 100);
+  int num_segments = (int) vnl_math::max(this->edge()->chord_length(), 5.0);
+  num_segments = vnl_math::min(num_segments, 100);
   glBegin( GL_LINE_STRIP );
   for (int i=0; i<=num_segments; ++i)
   {
@@ -177,7 +177,7 @@ distance_squared(float x, float y) const
   dbgl_conic_arc conic = this->edge()->fragment()->shock_geom();
   vgl_point_2d<double > mid_pt = conic.point_at(0.5);
   
-  return (float) vnl_math_hypot(x-mid_pt.x(), y-mid_pt.y());
+  return (float) vnl_math::hypot(x-mid_pt.x(), y-mid_pt.y());
 }
 
 
@@ -311,8 +311,8 @@ draw() const
 
   // decide the number of segments to draw based on the chord length of the arc
   // use at least 5 line segments
-  int num_segments = (int) vnl_math_max(arc.length(), 5.0);
-  num_segments = vnl_math_min(num_segments, 100);
+  int num_segments = (int) vnl_math::max(arc.length(), 5.0);
+  num_segments = vnl_math::min(num_segments, 100);
 
   // list of points of the polyline to draw
   vcl_vector<vgl_point_2d<double > > pts;
@@ -344,7 +344,7 @@ distance_squared(float x, float y) const
 {
   dbgl_circ_arc arc = this->bnd_arc()->arc();
   double ret_ratio = 0;
-  return vnl_math_sqr( dbgl_closest_point::point_to_circular_arc(vgl_point_2d<double >(x, y), 
+  return vnl_math::sqr( dbgl_closest_point::point_to_circular_arc(vgl_point_2d<double >(x, y), 
     arc.point_at(0.1), arc.point_at(0.9), arc.k(), ret_ratio));
 }
 
@@ -422,8 +422,8 @@ draw() const
   this->shock_geom_style_->apply_all();
   dbgl_conic_arc conic = this->shapelet()->shock_geom();
   // decide the number of segments to draw based on the chord length of the conic
-  int num_segments = (int) vnl_math_max(this->shapelet()->chord_length(), 5.0);
-  num_segments = vnl_math_min(num_segments, 100);
+  int num_segments = (int) vnl_math::max(this->shapelet()->chord_length(), 5.0);
+  num_segments = vnl_math::min(num_segments, 100);
   glBegin( GL_LINE_STRIP );
   for (int i=0; i<=num_segments; ++i)
   {
@@ -440,8 +440,8 @@ draw() const
     dbgl_circ_arc arc = this->shapelet()->bnd_arc(k);
     // decide the number of segments to draw based on the chord length of the arc
     // use at least 5 line segments and maximum 100
-    int num_segments = (int) vnl_math_max(arc.length(), 5.0);
-    num_segments = (int) vnl_math_min(num_segments, 100);
+    int num_segments = (int) vnl_math::max(arc.length(), 5.0);
+    num_segments = (int) vnl_math::min(num_segments, 100);
     
     glBegin( GL_LINE_STRIP );
     for (int i=0; i<=num_segments; ++i)
@@ -478,7 +478,7 @@ float dbsksp_soview_shapelet::
 distance_squared(float x, float y) const
 {
   vgl_point_2d<double > pt = this->shapelet()->shock_geom().point_at(0.5);
-  return vnl_math_sqr(x-pt.x()) + vnl_math_sqr(y-pt.y());
+  return vnl_math::sqr(x-pt.x()) + vnl_math::sqr(y-pt.y());
 }
 
 //: Returns the centroid of this soview2D.

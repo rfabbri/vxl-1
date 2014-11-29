@@ -793,7 +793,7 @@ double dbcvr_cimatch::computeCost (int j1, int j2, int i1x, int i1y, int i2x, in
   }
   else {
     double curvelength1 = stretchCost (_inputCurve, j2, j1);
-    double curvelength2 = vnl_math_hypot (i2x-i1x, i2y-i1y);
+    double curvelength2 = vnl_math::hypot (i2x-i1x, i2y-i1y);
     dStretchCost = vcl_fabs(curvelength1-curvelength2);
   }
 
@@ -1004,7 +1004,7 @@ double dbcvr_cimatch::computeImageCostCanny (int posx, int posy, int dir)
   //Edge direction.
   short int deltax, deltay, jstep;
   TanCodeToDeltaXYStep (dir, deltax, deltay, jstep);
-  double norm = vnl_math_hypot (deltax, deltay);
+  double norm = vnl_math::hypot (deltax, deltay);
   double dx = deltax/norm;
   double dy = deltay/norm;
 
@@ -1062,7 +1062,7 @@ double dbcvr_cimatch::computeImageCost1Canny (int posx, int posy, int dir)
   //Edge direction.
   short int deltax, deltay, jstep;
   TanCodeToDeltaXYStep (dir, deltax, deltay, jstep);
-  double norm = vnl_math_hypot (deltax, deltay);
+  double norm = vnl_math::hypot (deltax, deltay);
   double dx = deltax/norm;
   double dy = deltay/norm;
 
@@ -1106,7 +1106,7 @@ void ResampleCurve (RESAMPLE_CURVE_TYPE resample_type, bsol_intrinsic_curve_2d* 
     for (i=1; i<inputCurve->size(); i++) {
       x = inputCurve->x(i);
       y = inputCurve->y(i);
-      double dist = vnl_math_hypot(x-prevx, y-prevy);
+      double dist = vnl_math::hypot(x-prevx, y-prevy);
       if (dist>3) {
         vcl_cout << "hypot dist > 3" <<vcl_endl;
       }

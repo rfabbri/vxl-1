@@ -118,10 +118,10 @@ intersect_bnd_arcs(vcl_list<dbsk2d_bnd_edge_sptr >* tainted_arcs,
       for (unsigned int i=0; i<arc1_ratios.size(); ++i)
       {
         // ignore if this intersection point is an endpoint
-        if (vnl_math_abs(arc1_ratios[i]) < 1e-12 ||
-          vnl_math_abs(arc1_ratios[i]-1) < 1e-12 ||
-          vnl_math_abs(arc2_ratios[i]) < 1e-12 ||
-          vnl_math_abs(arc2_ratios[i]-1) < 1e-12)
+        if (vnl_math::abs(arc1_ratios[i]) < 1e-12 ||
+          vnl_math::abs(arc1_ratios[i]-1) < 1e-12 ||
+          vnl_math::abs(arc2_ratios[i]) < 1e-12 ||
+          vnl_math::abs(arc2_ratios[i]-1) < 1e-12)
         {
           continue;
         }
@@ -228,7 +228,7 @@ remove_duplicate_arcs(vcl_list<dbsk2d_bnd_edge_sptr >& bnd_arcs)
       }
       else
       {
-        max_distance = vnl_math_abs(arc1.height()-arc2.height());
+        max_distance = vnl_math::abs(arc1.height()-arc2.height());
       }
       dbsk2d_assert(max_distance >= 0);
 

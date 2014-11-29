@@ -77,13 +77,13 @@ void dbsk2d_ishock_pointpoint::compute_tau_ranges()
   if (AisLEq(letau, _LsTau))
     _maxLTau = vnl_math::pi_over_2;
   else
-    _maxLTau = vnl_math_min(letau, vnl_math::pi_over_2);
+    _maxLTau = vnl_math::min(letau, vnl_math::pi_over_2);
 
   double retau = REtaToRTau(rBPoint()->max_eta(), UNCONSTRAINED);
   if (AisGEq(retau, _RsTau))
     _minRTau = 3*vnl_math::pi_over_2;
   else
-    _minRTau = vnl_math_max(retau, 3*vnl_math::pi_over_2);
+    _minRTau = vnl_math::max(retau, 3*vnl_math::pi_over_2);
   
   dbsk2d_assert(_minLTau<=_maxLTau && _minRTau<=_maxRTau);
 }

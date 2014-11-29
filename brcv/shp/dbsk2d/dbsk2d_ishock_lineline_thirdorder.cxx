@@ -62,10 +62,10 @@ bool dbsk2d_ishock_lineline_thirdorder::isRSTauValid ()
 
 void dbsk2d_ishock_lineline_thirdorder::compute_tau_ranges()
 {
-  _minLTau = vnl_math_max (0.0, LTau(_lR));
+  _minLTau = vnl_math::max (0.0, LTau(_lR));
   _maxLTau = _LsTau;
   _minRTau = _RsTau;
-  _maxRTau = vnl_math_min (_lR, RTau(0));
+  _maxRTau = vnl_math::min (_lR, RTau(0));
   
   dbsk2d_assert(_minLTau<=_maxLTau && _minRTau<=_maxRTau);
 }

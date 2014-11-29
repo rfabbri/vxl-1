@@ -397,7 +397,7 @@ mod(int number, int base)
   
   if ((number >= 0) && (number < base)) 
    return (number);
-  else if (static_cast<int>(vnl_math_abs(number)) == base)
+  else if (static_cast<int>(vnl_math::abs(number)) == base)
    return(0);
   else if (number > base){
    t1 = (float) number/(float) base;

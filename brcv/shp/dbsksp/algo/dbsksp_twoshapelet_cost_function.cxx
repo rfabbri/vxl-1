@@ -155,10 +155,10 @@ f(vnl_vector<double> const& x)
   double total_length = bnd_length(0,0) + bnd_length(0,1) + 
     bnd_length(1,0) + bnd_length(1,1);
 
-  double shape_prior = vnl_math_sqr(ss->phi2() - ss->phi0()) * 
-    vnl_math_sqr(ss->shapelet_end()->radius_end());
+  double shape_prior = vnl_math::sqr(ss->phi2() - ss->phi0()) * 
+    vnl_math::sqr(ss->shapelet_end()->radius_end());
 
-  //double shape_prior = vnl_math_abs(ss->shapelet_end()->radius_end() - ss->r0());
+  //double shape_prior = vnl_math::abs(ss->shapelet_end()->radius_end() - ss->r0());
 
 
   //double fitness_left =  (cost_left - lambda*length_left) / length_left;
@@ -355,7 +355,7 @@ set_fixed_params(const vnl_vector<double >& params)
 //    expected_length += 2*chord*vcl_sin(phi_mean);
 //  }
 //
-//  double normalized_length = vnl_math_max(bnd_length,expected_length);
+//  double normalized_length = vnl_math::max(bnd_length,expected_length);
 //  return total_cost / normalized_length;
 //}
 
@@ -391,7 +391,7 @@ f(vnl_vector<double> const& x)
   for (int side = 0; side < 2; ++side)
   {
     double energy = bnd_energy(0,side) + bnd_energy(1,side);
-    double length = vnl_math_max( bnd_length(0,side) + bnd_length(1,side),
+    double length = vnl_math::max( bnd_length(0,side) + bnd_length(1,side),
       expected_length(0, side) + expected_length(1, side) );
     total_cost += energy/ length;
   }
@@ -621,7 +621,7 @@ f(vnl_vector<double> const& x)
   double length_right = bnd_length(0,1) + bnd_length(1,1);
   
   return total_cost - 
-    this->lambda_*(total_length - vnl_math_abs(length_left - length_right));
+    this->lambda_*(total_length - vnl_math::abs(length_left - length_right));
 }
 
 

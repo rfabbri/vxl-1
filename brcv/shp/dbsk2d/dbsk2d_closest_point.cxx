@@ -50,8 +50,8 @@ point_to_bnd_edge(const vgl_point_2d<double >& query_pt,
   if (bcurve->is_a() == "dbsk2d_ishock_bline")
   {
     // range of actual linesegment to compute closest point
-    double smin = vnl_math_max((double)0, s_start) / bcurve->len() ;
-    double smax = vnl_math_min(bcurve->len(), s_end) / bcurve->len();
+    double smin = vnl_math::max((double)0, s_start) / bcurve->len() ;
+    double smax = vnl_math::min(bcurve->len(), s_end) / bcurve->len();
     
     double px, py;
     vgl_closest_point_to_linesegment<double >(px, py,
@@ -60,8 +60,8 @@ point_to_bnd_edge(const vgl_point_2d<double >& query_pt,
       query_pt.x(), query_pt.y());
 
     // starting point of edge is `end' when direction == -1
-    return (direction == 1) ? vnl_math_hypot(px-start.x(), py-start.y()) :
-    vnl_math_hypot(px-end.x(), py-end.y());
+    return (direction == 1) ? vnl_math::hypot(px-start.x(), py-start.y()) :
+    vnl_math::hypot(px-end.x(), py-end.y());
   }
 
   // case 2: internal bcurve is an arc
@@ -114,8 +114,8 @@ point_to_bnd_contour(const vgl_point_2d<double>& query_pt,
     for (int i = start_index; i <= end_index; ++i)
     {
       // start and end arclength on edge to compute min distance
-      double smin = vnl_math_max((double)0, s_start-contour->arclength_at(i));
-      double smax = vnl_math_min(s_end, contour->arclength_at(i+1))- 
+      double smin = vnl_math::max((double)0, s_start-contour->arclength_at(i));
+      double smax = vnl_math::min(s_end, contour->arclength_at(i+1))- 
         contour->arclength_at(i);
       
       // compute distance to closest point and compare with previous ones
@@ -131,8 +131,8 @@ point_to_bnd_contour(const vgl_point_2d<double>& query_pt,
 
   // 2. Compute arclength of the closest point on contour
   // start and end arclength on edge to compute closest point
-  double smin = vnl_math_max((double)0, s_start-contour->arclength_at(index));
-  double smax = vnl_math_min(s_end, contour->arclength_at(index+1))- 
+  double smin = vnl_math::max((double)0, s_start-contour->arclength_at(index));
+  double smax = vnl_math::min(s_end, contour->arclength_at(index+1))- 
     contour->arclength_at(index);
 
   // arclength on edge of the closest point

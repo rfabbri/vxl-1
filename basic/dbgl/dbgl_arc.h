@@ -190,7 +190,7 @@ inline double dbgl_arc::length() const
       double dif = vcl_fmod((TWOPI+ccw_*(alpha1_-alpha0_)),TWOPI);
       return dif/curv_;   // delta angle * radius
    } else
-      return 2*vnl_math_hypot(center_.x()-alpha0_, center_.y()-alpha1_);
+      return 2*vnl_math::hypot(center_.x()-alpha0_, center_.y()-alpha1_);
 }
 
 #endif // dbgl_arc_h_

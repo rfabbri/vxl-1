@@ -194,7 +194,7 @@ point_to_circular_arc(const vgl_point_2d<double >& query_pt,
                       double k, double& ret_ratio)
 {
   // degenerate arc: a line segment
-  if (vnl_math_abs(k) < dbgl_closest_point::min_curvature)
+  if (vnl_math::abs(k) < dbgl_closest_point::min_curvature)
   {
     double xm, ym;
     vgl_closest_point_to_linesegment<double >(xm, ym, p1.x(), p1.y(), 
@@ -205,7 +205,7 @@ point_to_circular_arc(const vgl_point_2d<double >& query_pt,
     ret_ratio = ratio<double >(p1, p2, pt);
     
     // return distance between `query_pt' and closest point on line segment 
-    return  vnl_math_hypot(query_pt.x()-xm, query_pt.y()-ym); 
+    return  vnl_math::hypot(query_pt.x()-xm, query_pt.y()-ym); 
   }
 
   // regular arc - an arc with curvature != 0
@@ -233,7 +233,7 @@ point_to_circular_arc(const vgl_point_2d<double >& query_pt,
   for (int i=0; i<2; ++i)
   {
     vgl_point_2d<double > pt = arc.point_at_length(ks[i]/arc.k());
-    dist[i] = vnl_math_hypot(pt.x()-query_pt.x(), pt.y()-query_pt.y());
+    dist[i] = vnl_math::hypot(pt.x()-query_pt.x(), pt.y()-query_pt.y());
   }
   // to-return distance
   double ret_distance = (dist[0] > dist[1]) ? dist[1] : dist [0]; 
@@ -258,8 +258,8 @@ point_to_circular_arc(const vgl_point_2d<double >& query_pt,
   {
     // compare distances to two end points of the arc
     double dist_to_point[2];
-    dist_to_point[0] = vnl_math_hypot(p1.x()-query_pt.x(), p1.y()-query_pt.y());
-    dist_to_point[1] = vnl_math_hypot(p2.x()-query_pt.x(), p2.y()-query_pt.y());
+    dist_to_point[0] = vnl_math::hypot(p1.x()-query_pt.x(), p1.y()-query_pt.y());
+    dist_to_point[1] = vnl_math::hypot(p2.x()-query_pt.x(), p2.y()-query_pt.y());
     if (dist_to_point[0] <= dist_to_point[1])
     {
       ret_ratio = 0;
@@ -292,7 +292,7 @@ point_to_circle(const vgl_point_2d<double >& query_pt,
 {
   
   // degenerate arc: a line segment
-  if (vnl_math_abs(k) < dbgl_closest_point::min_curvature)
+  if (vnl_math::abs(k) < dbgl_closest_point::min_curvature)
   {
     vgl_vector_2d<double > tangent = normalized(t0);
     vgl_line_2d<double > line(p0, p0 + 1.0 * tangent);
@@ -338,7 +338,7 @@ point_to_circle(const vgl_point_2d<double >& query_pt,
   for (int i=0; i<2; ++i)
   {
     vgl_point_2d<double > pt = arc.point_at_length(ks[i]/arc.k());
-    dist[i] = vnl_math_hypot(pt.x()-query_pt.x(), pt.y()-query_pt.y());
+    dist[i] = vnl_math::hypot(pt.x()-query_pt.x(), pt.y()-query_pt.y());
   }
 
   // to-return distance
@@ -376,7 +376,7 @@ lineseg_to_circular_arc(const vgl_point_2d<double >& line_p1,
   arc_ratios.clear();
 
   // Case 1: degenerate arc (k = 0)
-  if (vnl_math_abs(arc_k) < dbgl_closest_point::min_curvature)
+  if (vnl_math::abs(arc_k) < dbgl_closest_point::min_curvature)
   {
     double line_ratio, arc_ratio;
     double dist = dbgl_closest_point::lineseg_lineseg(
@@ -475,7 +475,7 @@ lineseg_to_circular_arc(const vgl_point_2d<double >& line_p1,
       for (int i=0; i<2; ++i)
       {
         vgl_point_2d<double > pt = arc.point_at_length(ks[i]/arc.k());
-        dist[i] = vnl_math_hypot(pt.x()-line_foot.x(), pt.y()-line_foot.y());
+        dist[i] = vnl_math::hypot(pt.x()-line_foot.x(), pt.y()-line_foot.y());
       }
       double min_dist_ks = (dist[0] > dist[1]) ? ks[1] : ks[0];
 
@@ -519,7 +519,7 @@ lineseg_to_circular_arc(const vgl_point_2d<double >& line_p1,
   arc_candidate_ratios[2] = 0;
   vgl_closest_point_to_linesegment(ret_x, ret_y, line_p1.x(), line_p1.y(), 
     line_p2.x(), line_p2.y(), arc_p1.x(), arc_p1.y());
-  distances[2] = vnl_math_hypot(ret_x - arc_p1.x(), ret_y - arc_p1.y());
+  distances[2] = vnl_math::hypot(ret_x - arc_p1.x(), ret_y - arc_p1.y());
   line_candidate_ratios[2] = ratio<double >(line_p1, line_p2, 
     vgl_point_2d<double >(ret_x, ret_y));
 
@@ -527,7 +527,7 @@ lineseg_to_circular_arc(const vgl_point_2d<double >& line_p1,
   arc_candidate_ratios[3] = 1;
   vgl_closest_point_to_linesegment(ret_x, ret_y, line_p1.x(), line_p1.y(), 
     line_p2.x(), line_p2.y(), arc_p2.x(), arc_p2.y());
-  distances[3] = vnl_math_hypot(ret_x - arc_p2.x(), ret_y - arc_p2.y());
+  distances[3] = vnl_math::hypot(ret_x - arc_p2.x(), ret_y - arc_p2.y());
   line_candidate_ratios[3] = ratio<double >(line_p1, line_p2, 
     vgl_point_2d<double >(ret_x, ret_y));
   
@@ -590,11 +590,11 @@ circular_arc_to_circular_arc(const vgl_point_2d<double >& arc1_p1,
   arc2_ratios.clear();
 
   // --------- cases (arc1_k == 0 or arc2_k ==0) ------------------
-  if (vnl_math_abs(arc1_k) < dbgl_closest_point::min_curvature)
+  if (vnl_math::abs(arc1_k) < dbgl_closest_point::min_curvature)
     return dbgl_closest_point::lineseg_to_circular_arc(arc1_p1, arc1_p2,
     arc2_p1, arc2_p2, arc2_k, arc1_ratios, arc2_ratios);
 
-  if (vnl_math_abs(arc2_k) < dbgl_closest_point::min_curvature)
+  if (vnl_math::abs(arc2_k) < dbgl_closest_point::min_curvature)
     return dbgl_closest_point::lineseg_to_circular_arc(arc2_p1, arc2_p2,
     arc1_p1, arc1_p2, arc1_k, arc2_ratios, arc1_ratios);
 
@@ -611,7 +611,7 @@ circular_arc_to_circular_arc(const vgl_point_2d<double >& arc1_p1,
   // swap when |k2| < |k1| so that the term (k1/k2), involed in some computation,
   // is always in the range [-1, 1], 
   // This allows us avoiding large number computation (when k1 >> k2)
-  if (vnl_math_abs(arc1_k) > vnl_math_abs(arc2_k))
+  if (vnl_math::abs(arc1_k) > vnl_math::abs(arc2_k))
   {
     arc1.set(arc2_p1, arc2_p2, arc2_k);
     ret_ratios1 = &arc2_ratios;
@@ -730,7 +730,7 @@ circular_arc_to_circular_arc(const vgl_point_2d<double >& arc1_p1,
     {
       for (int j=0; j<2; ++j)
       {
-        double d = vnl_math_hypot(arc1_pts[i].x()-arc2_pts[j].x(),
+        double d = vnl_math::hypot(arc1_pts[i].x()-arc2_pts[j].x(),
           arc1_pts[i].y()-arc2_pts[j].y());
         // update when a smaller distance is found
         if (d < min_dist)

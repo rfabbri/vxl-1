@@ -78,16 +78,16 @@ void dbsk2d_ishock_arcarc_thirdorder::compute_tau_ranges()
 {
   if (_nu==1){
     _minLTau = _LsTau;
-    _maxLTau = vnl_math_min(vnl_math::pi, LEtaToLTau(lBArc()->min_eta(), UNCONSTRAINED));
+    _maxLTau = vnl_math::min(vnl_math::pi, LEtaToLTau(lBArc()->min_eta(), UNCONSTRAINED));
 
     _minRTau = _RsTau;
-    _maxRTau = vnl_math_min(REtaToRTau(rBArc()->max_eta(), UNCONSTRAINED), vnl_math::pi);
+    _maxRTau = vnl_math::min(REtaToRTau(rBArc()->max_eta(), UNCONSTRAINED), vnl_math::pi);
   }
   else {
-    _minLTau = vnl_math_max(vnl_math::pi, LEtaToLTau(lBArc()->min_eta(), UNCONSTRAINED));
+    _minLTau = vnl_math::max(vnl_math::pi, LEtaToLTau(lBArc()->min_eta(), UNCONSTRAINED));
     _maxLTau = _LsTau;
 
-    _minRTau = vnl_math_max(vnl_math::pi, REtaToRTau(rBArc()->max_eta(), UNCONSTRAINED));
+    _minRTau = vnl_math::max(vnl_math::pi, REtaToRTau(rBArc()->max_eta(), UNCONSTRAINED));
     _maxRTau = _RsTau;
   }
 }

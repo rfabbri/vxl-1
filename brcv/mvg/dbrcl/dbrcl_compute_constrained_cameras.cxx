@@ -5,7 +5,7 @@
 
 #include <vgl/vgl_distance.h>
 #include <vcl_cstdlib.h>
-
+#include <vcl_iostream.h>
 
 //---------------------------------------------
 bool 

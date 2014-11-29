@@ -216,7 +216,7 @@ float dbsksp_soview_xshock_curve::
 distance_squared(float x, float y) const
 {
   // \todo this is not accurate, but fast. Change this if accuracy becomes important.
-  return vnl_math_sqr(x-this->centroid_x_) + vnl_math_sqr(y - this->centroid_y_);
+  return vnl_math::sqr(x-this->centroid_x_) + vnl_math::sqr(y - this->centroid_y_);
 }
 
 
@@ -261,8 +261,8 @@ compute_geometry()
   if (success)
   {
     double len = shock_curve.len();
-    int num_segments = vnl_math_rnd(vnl_math_max(len, 5.0));
-    num_segments = vnl_math_min(num_segments, (int)50);
+    int num_segments = vnl_math::rnd(vnl_math::max(len, 5.0));
+    num_segments = vnl_math::min(num_segments, (int)50);
 
     // compute the extrinsic points and store to a vector
     this->pts_.reserve(num_segments+1);
@@ -453,8 +453,8 @@ compute_geometry()
       left_biarc.is_consistent())
     {
       double len = left_biarc.len();
-      int num_segments = (int) vnl_math_max(len, 5.0);
-      num_segments = (int) vnl_math_min(num_segments, 50);
+      int num_segments = (int) vnl_math::max(len, 5.0);
+      num_segments = (int) vnl_math::min(num_segments, 50);
       
       // compute the extrinsic points and store to a vector
       this->bnd_pts_.reserve(num_segments+1);
@@ -474,8 +474,8 @@ compute_geometry()
       xdesc_target.bnd_pt_right(), xdesc_target.bnd_tangent_right()))
     {
       double len = right_biarc.len();
-      int num_segments = (int) vnl_math_max(len, 5.0);
-      num_segments = (int) vnl_math_min(num_segments, 50);
+      int num_segments = (int) vnl_math::max(len, 5.0);
+      num_segments = (int) vnl_math::min(num_segments, 50);
 
       // compute the extrinsic points
       this->bnd_pts_.clear();
@@ -522,8 +522,8 @@ draw() const
   if (left_biarc.is_consistent())
   {
     double len = left_biarc.len();
-    int num_segments = (int) vnl_math_max(len, 5.0);
-    num_segments = (int) vnl_math_min(num_segments, 50);
+    int num_segments = (int) vnl_math::max(len, 5.0);
+    num_segments = (int) vnl_math::min(num_segments, 50);
 
     glBegin( GL_LINE_STRIP );
     for (int i=0; i<=num_segments; ++i)
@@ -540,8 +540,8 @@ draw() const
   if (right_biarc.is_consistent())
   {
     double len = right_biarc.len();
-    int num_segments = (int) vnl_math_max(len, 5.0);
-    num_segments = (int) vnl_math_min(num_segments, 50);
+    int num_segments = (int) vnl_math::max(len, 5.0);
+    num_segments = (int) vnl_math::min(num_segments, 50);
 
     glBegin( GL_LINE_STRIP );
     for (int i=0; i<=num_segments; ++i)
@@ -662,8 +662,8 @@ draw() const
 float dbsksp_soview_xsample::
 distance_squared(float x, float y) const
 {
-  return (vnl_math_sqr(this->shock_pt_.x()-x) + 
-          vnl_math_sqr(this->shock_pt_.y()-y));
+  return (vnl_math::sqr(this->shock_pt_.x()-x) + 
+          vnl_math::sqr(this->shock_pt_.y()-y));
 }
  
 //------------------------------------------------------------------------------

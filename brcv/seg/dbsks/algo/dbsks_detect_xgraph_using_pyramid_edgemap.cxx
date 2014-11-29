@@ -78,7 +78,7 @@ execute()
       << "\nProcessing xgraph size = " << xgraph_scales[i_scale] << "\n\n";
 
     //> Name of folder to store detect records from this scale
-    vcl_string storage_foldername = "scale_" + vul_sprintf("%d", vnl_math_rnd(xgraph_scales[i_scale]));
+    vcl_string storage_foldername = "scale_" + vul_sprintf("%d", vnl_math::rnd(xgraph_scales[i_scale]));
     vcl_string storage_folder = work_folder + "/" + storage_foldername;
 
     //> create the directory if not yet done
@@ -350,13 +350,13 @@ compute_list_model_graph_size()
   double image_size = vcl_sqrt(image_width * image_height);
 
   // Maximum xgraph scale is bounded above by image size
-  this->prototype_xgraph_max_size = vnl_math_min(image_size, this->prototype_xgraph_max_size);
+  this->prototype_xgraph_max_size = vnl_math::min(image_size, this->prototype_xgraph_max_size);
 
   xgraph_scales.clear();
   for (double s = this->prototype_xgraph_min_size; s <= this->prototype_xgraph_max_size; 
     s *= vcl_pow(2, this->prototype_xgraph_log2_increment_step))
   {
-    xgraph_scales.push_back(vnl_math_rnd(s)); // rounding simply for good-looking numbers
+    xgraph_scales.push_back(vnl_math::rnd(s)); // rounding simply for good-looking numbers
   }
 
   // reverse the order - process large size first
@@ -425,7 +425,7 @@ load_edgemap_in_pyramid_keeping_graph_size_fixed(double target_xgraph_size,
     vnl_vector<double > scale_diff(this->list_edgemap_scale.size(), vnl_numeric_traits<double >::maxval);
     for (unsigned k =0; k < scale_diff.size(); ++k)
     {
-      scale_diff[k] = vnl_math_abs(vcl_log(this->list_edgemap_scale[k] / target_edgemap_scale));
+      scale_diff[k] = vnl_math::abs(vcl_log(this->list_edgemap_scale[k] / target_edgemap_scale));
     }
     actual_edgemap_level = scale_diff.arg_min();
     actual_edgemap_scale = this->list_edgemap_scale[actual_edgemap_level];

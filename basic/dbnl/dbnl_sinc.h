@@ -28,7 +28,7 @@ inline double dbnl_sinc(double x)
   static double const taylor_2_bound = vcl_sqrt(taylor_0_bound);
   static double const taylor_n_bound = vcl_sqrt(taylor_2_bound);
 
-  if (vnl_math_abs(x) >= taylor_n_bound)
+  if (vnl_math::abs(x) >= taylor_n_bound)
   {
     return vcl_sin(x)/x;
   }
@@ -36,12 +36,12 @@ inline double dbnl_sinc(double x)
   {
     // approximate by taylor series in x at 0 up to order 0
     double result = 1;
-    if (vnl_math_abs(x) >= taylor_0_bound)
+    if (vnl_math::abs(x) >= taylor_0_bound)
     {
       // approximate by taylor series in x at 0 up to order 2
       double x2 = x*x;
       result -= x2/6;
-      if (vnl_math_abs(x) > taylor_2_bound)
+      if (vnl_math::abs(x) > taylor_2_bound)
       {
         // approximate by taylor series in x at 0 up to order 4
         result += (x2*x2)/120;

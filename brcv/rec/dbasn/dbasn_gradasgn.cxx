@@ -381,7 +381,7 @@ double dbasn_gradasgn::C_aibj (const int a, const int b, const int i, const int 
   //will be on average 1/3 units apart.
   double compatibility = 1 - vcl_fabs (cost_ab - cost_ij) * 3;
 
-  if (vnl_math_isnan (compatibility)) {
+  if (vnl_math::isnan (compatibility)) {
     vcl_cout<< "Error: C_aibj NaN! ";
     assert (0);
   }

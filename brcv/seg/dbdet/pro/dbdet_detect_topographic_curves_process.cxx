@@ -670,14 +670,14 @@ dbdet_detect_topographic_curves_process::execute()
 
         //compute F=lambda (larger)
         double trace = (ixx[i]+iyy[i])/2;
-        f[i] = trace + vnl_math_sgn(trace)*vcl_sqrt((ixx[i]-trace)*(ixx[i]-trace) + ixy[i]*ixy[i]);
+        f[i] = trace + vnl_math::sgn(trace)*vcl_sqrt((ixx[i]-trace)*(ixx[i]-trace) + ixy[i]*ixy[i]);
 
         ////for computing the larger eigenvector
         //if (disp_vec) { //compute vector field of eigen vectors
         //  //compute Fx and Fy (larger eigenvector components)
         //  double theta;
         //  if (vcl_fabs(ixy[i])>1e-5){
-        //      theta = vcl_atan(((iyy[i]-ixx[i]) + vnl_math_sgn(trace)*vcl_sqrt((ixx[i]-iyy[i])*(ixx[i]-iyy[i]) + 4*ixy[i]*ixy[i]))/ixy[i]/2);
+        //      theta = vcl_atan(((iyy[i]-ixx[i]) + vnl_math::sgn(trace)*vcl_sqrt((ixx[i]-iyy[i])*(ixx[i]-iyy[i]) + 4*ixy[i]*ixy[i]))/ixy[i]/2);
         //  }
         //  else { //to add ixx[i]==iyy[i] degeneracy
         //    if (vcl_abs(ixx[i])>vcl_abs(iyy[i]))
@@ -707,14 +707,14 @@ dbdet_detect_topographic_curves_process::execute()
         //compute F=lambda smaller
         double trace = (ixx[i]+iyy[i])/2;
 
-        f[i] = trace - vnl_math_sgn(trace)*vcl_sqrt((ixx[i]-trace)*(ixx[i]-trace) + ixy[i]*ixy[i]);
+        f[i] = trace - vnl_math::sgn(trace)*vcl_sqrt((ixx[i]-trace)*(ixx[i]-trace) + ixy[i]*ixy[i]);
 
         ////for computing the smaller eigenvector
         //if (disp_vec) { //compute vector field of eigen vectors
         //  //compute Fx and Fy (smaller eigenvector components)
         //  double theta;
         //  if (vcl_fabs(ixy[i])>1e-5){
-        //      theta = vcl_atan(((iyy[i]-ixx[i]) - vnl_math_sgn(trace)*vcl_sqrt((ixx[i]-iyy[i])*(ixx[i]-iyy[i]) + 4*ixy[i]*ixy[i]))/ixy[i]/2);
+        //      theta = vcl_atan(((iyy[i]-ixx[i]) - vnl_math::sgn(trace)*vcl_sqrt((ixx[i]-iyy[i])*(ixx[i]-iyy[i]) + 4*ixy[i]*ixy[i]))/ixy[i]/2);
         //  }
         //  else { //to add ixx[i]==iyy[i] degeneracy
         //    if (vcl_abs(ixx[i])>vcl_abs(iyy[i]))
@@ -1098,7 +1098,7 @@ dbdet_detect_topographic_curves_process::execute()
           mag[i] = vcl_sqrt(Ixs[i]*Ixs[i] + Iys[i]*Iys[i]);
 
           double Sq = Ixxs[i]*Ixxs[i]-2*Ixxs[i]*Iyys[i]+Iyys[i]*Iyys[i]+4*Ixys[i]*Ixys[i];
-          double s = vnl_math_sgn(Ixxs[i]+Iyys[i]);
+          double s = vnl_math::sgn(Ixxs[i]+Iyys[i]);
           if (Sq>0){
               double Fx = Ixxxs[i]*vcl_sqrt(Sq)+Ixyys[i]*vcl_sqrt(Sq)+ s*(Ixxs[i]*Ixxxs[i]-Ixxs[i]*Ixyys[i]-Iyys[i]*Ixxxs[i]+Iyys[i]*Ixyys[i]+4*Ixys[i]*Ixxys[i]);
               double Fy = Ixxys[i]*vcl_sqrt(Sq)+Iyyys[i]*vcl_sqrt(Sq)+ s*(Ixxs[i]*Ixxys[i]-Ixxs[i]*Iyyys[i]-Iyys[i]*Ixxys[i]+Iyys[i]*Iyyys[i]+4*Ixys[i]*Ixyys[i]);
@@ -1117,7 +1117,7 @@ dbdet_detect_topographic_curves_process::execute()
           mag[i] = vcl_sqrt(Ixs[i]*Ixs[i] + Iys[i]*Iys[i]);
 
           double Sq = Ixxs[i]*Ixxs[i]-2*Ixxs[i]*Iyys[i]+Iyys[i]*Iyys[i]+4*Ixys[i]*Ixys[i];
-          double s = vnl_math_sgn(Ixxs[i]+Iyys[i]);
+          double s = vnl_math::sgn(Ixxs[i]+Iyys[i]);
           if (Sq>0){
               double Fx = Ixxxs[i]*vcl_sqrt(Sq)+Ixyys[i]*vcl_sqrt(Sq)+ s*(-Ixxs[i]*Ixxxs[i]+Ixxs[i]*Ixyys[i]+Iyys[i]*Ixxxs[i]-Iyys[i]*Ixyys[i]-4*Ixys[i]*Ixxys[i]);
               double Fy = Ixxys[i]*vcl_sqrt(Sq)+Iyyys[i]*vcl_sqrt(Sq)+ s*(-Ixxs[i]*Ixxys[i]+Ixxs[i]*Iyyys[i]+Iyys[i]*Ixxys[i]-Iyys[i]*Iyyys[i]-4*Ixys[i]*Ixyys[i]);

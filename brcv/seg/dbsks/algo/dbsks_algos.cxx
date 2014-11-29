@@ -48,10 +48,10 @@ compute_detection_windows(int max_window_width, int max_window_height,
     do
     {
       // determine window dimension
-      int xmax = vnl_math_min(cur_xmin + max_width-1, ni-1); // padding on right
-      int ymax = vnl_math_min(cur_ymin + max_height-1, nj-1); // padding at bottom
-      int xmin = cur_xmin; //vnl_math_max(xmax-max_width+1, 0);
-      int ymin = cur_ymin; //vnl_math_max(ymax-max_height+1, 0);
+      int xmax = vnl_math::min(cur_xmin + max_width-1, ni-1); // padding on right
+      int ymax = vnl_math::min(cur_ymin + max_height-1, nj-1); // padding at bottom
+      int xmin = cur_xmin; //vnl_math::max(xmax-max_width+1, 0);
+      int ymin = cur_ymin; //vnl_math::max(ymax-max_height+1, 0);
       windows.push_back(vgl_box_2d<int >(xmin, xmax, ymin, ymax));
 
       // update

@@ -62,7 +62,7 @@ dbsta_image_statistics(const vil_image_view<T>& image,
   vcl_ptrdiff_t istepM=mask.istep(), jstepM=mask.jstep();
   vnl_vector<T> sample(np);
   const T* row = image.top_left_ptr();
-  bool* rowM = mask.top_left_ptr();
+  const bool* rowM = mask.top_left_ptr();
   for (unsigned j=0; j<nj; ++j, row+=jstep, rowM+=jstepM)
   {
     const T* col = row;

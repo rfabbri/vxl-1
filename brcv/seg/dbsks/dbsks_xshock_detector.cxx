@@ -211,18 +211,18 @@ build_xnode_grid_using_only_input_xgraph(const vgl_box_2d<int >& window)
     // set parameters for the grid
     dbsks_xnode_grid_params params;
     params.step_x = 8;
-    params.num_x = vnl_math_rnd(window.width()/params.step_x); // allow some padding
+    params.num_x = vnl_math::rnd(window.width()/params.step_x); // allow some padding
 
     // if the image is too big, we only consider the center portion of 512 pixels
-    params.num_x = vnl_math_min(params.num_x, 65);
-    params.min_x = vnl_math_rnd(window.centroid_x() - params.step_x*(params.num_x-1)/2 ); // centering
+    params.num_x = vnl_math::min(params.num_x, 65);
+    params.min_x = vnl_math::rnd(window.centroid_x() - params.step_x*(params.num_x-1)/2 ); // centering
 
     params.step_y = 8;
-    params.num_y = vnl_math_rnd(window.height()/params.step_y); // allow some padding
+    params.num_y = vnl_math::rnd(window.height()/params.step_y); // allow some padding
 
     // if the image is too big, only consider the center portion of 512 pixels
-    params.num_y = vnl_math_min(params.num_y, 65);
-    params.min_y = vnl_math_rnd(window.centroid_y() - params.step_y*(params.num_y-1)/2 ); // centering
+    params.num_y = vnl_math::min(params.num_y, 65);
+    params.min_y = vnl_math::rnd(window.centroid_y() - params.step_y*(params.num_y-1)/2 ); // centering
 
     params.step_psi = vnl_math::pi / 8;
     params.num_psi = 16;
@@ -279,23 +279,23 @@ build_xnode_grid_using_prev_dets_window(const vgl_box_2d<int >& window)
 	//////////////////////////////////////////// x
     params.step_x = 4;
     //params.num_x = 20;
-    //params.min_x = vnl_math_rnd(x - params.step_x*(params.num_x-1)/2 ); // centering
+    //params.min_x = vnl_math::rnd(x - params.step_x*(params.num_x-1)/2 ); // centering
 	
-	params.num_x = vnl_math_rnd(window.width()/params.step_x); // allow some padding
+	params.num_x = vnl_math::rnd(window.width()/params.step_x); // allow some padding
 
     // if the image is too big, we only consider the center portion of 512 pixels
-    params.num_x = vnl_math_min(params.num_x, 65);
-    params.min_x = vnl_math_rnd(window.centroid_x() - params.step_x*(params.num_x-1)/2 ); // centering
+    params.num_x = vnl_math::min(params.num_x, 65);
+    params.min_x = vnl_math::rnd(window.centroid_x() - params.step_x*(params.num_x-1)/2 ); // centering
 
 	//////////////////////////////////////////// y
     params.step_y = 4;
     //params.num_y = 20;
-    //params.min_y = vnl_math_rnd(y - params.step_y*(params.num_y-1)/2 ); // centering
-	params.num_y = vnl_math_rnd(window.height()/params.step_y); // allow some padding
+    //params.min_y = vnl_math::rnd(y - params.step_y*(params.num_y-1)/2 ); // centering
+	params.num_y = vnl_math::rnd(window.height()/params.step_y); // allow some padding
 
     // if the image is too big, only consider the center portion of 512 pixels
-    params.num_y = vnl_math_min(params.num_y, 65);
-    params.min_y = vnl_math_rnd(window.centroid_y() - params.step_y*(params.num_y-1)/2 ); // centering
+    params.num_y = vnl_math::min(params.num_y, 65);
+    params.min_y = vnl_math::rnd(window.centroid_y() - params.step_y*(params.num_y-1)/2 ); // centering
 
 	// griding of psi and phi should also based on the given xgraph, so that the grid space can be reduced
 
@@ -388,26 +388,26 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
 
 	//////////////////////////////////////////// x
     params.step_x = 2;
-	params.num_x = vnl_math_rnd((xgraph_vertices_max_x_[i]-xgraph_vertices_min_x_[i]+50)/params.step_x); // allow some padding
+	params.num_x = vnl_math::rnd((xgraph_vertices_max_x_[i]-xgraph_vertices_min_x_[i]+50)/params.step_x); // allow some padding
     // if the image is too big, we only consider the center portion of 512 pixels
-    params.num_x = vnl_math_min(params.num_x, 65);
-    params.min_x = vnl_math_rnd((xgraph_vertices_min_x_[i]+xgraph_vertices_max_x_[i])/2 - params.step_x*(params.num_x-1)/2 ); // centering
+    params.num_x = vnl_math::min(params.num_x, 65);
+    params.min_x = vnl_math::rnd((xgraph_vertices_min_x_[i]+xgraph_vertices_max_x_[i])/2 - params.step_x*(params.num_x-1)/2 ); // centering
 
     vcl_cout << "min_x: "<<params.min_x <<" ";
 
 	//////////////////////////////////////////// y
     params.step_y = 2;
-	params.num_y = vnl_math_rnd((xgraph_vertices_max_y_[i]-xgraph_vertices_min_y_[i]+50)/params.step_y); // allow some padding
+	params.num_y = vnl_math::rnd((xgraph_vertices_max_y_[i]-xgraph_vertices_min_y_[i]+50)/params.step_y); // allow some padding
     // if the image is too big, only consider the center portion of 512 pixels
-    params.num_y = vnl_math_min(params.num_y, 65);
-    params.min_y = vnl_math_rnd((xgraph_vertices_min_y_[i]+xgraph_vertices_max_y_[i])/2 - params.step_y*(params.num_y-1)/2 ); // centering
+    params.num_y = vnl_math::min(params.num_y, 65);
+    params.min_y = vnl_math::rnd((xgraph_vertices_min_y_[i]+xgraph_vertices_max_y_[i])/2 - params.step_y*(params.num_y-1)/2 ); // centering
 
     vcl_cout << "min_y: "<<params.min_y <<" ";
 
 	// sample psi using geom model
 	params.step_psi = vnl_math::pi / 15;
     double range_psi = 2*vnl_math::pi;
-    params.num_psi = vnl_math_floor(range_psi / params.step_psi) + 1;
+    params.num_psi = vnl_math::floor(range_psi / params.step_psi) + 1;
     params.min_psi = (max_psi+min_psi)/2 - params.step_psi*(params.num_psi-1)/2;
 
 
@@ -419,20 +419,20 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
 /*
 	// sample phi center at pi/2 using geom model
     params.step_phi0 = vnl_math::pi / 16;
-    double range_phi0 = vnl_math_min((max_phi-min_phi), vnl_math::pi);
-    params.num_phi0 = 2*vnl_math_rnd( range_phi0/2 / params.step_phi0) + 1;
+    double range_phi0 = vnl_math::min((max_phi-min_phi), vnl_math::pi);
+    params.num_phi0 = 2*vnl_math::rnd( range_phi0/2 / params.step_phi0) + 1;
     params.min_phi0 = vnl_math::pi_over_2 - params.step_phi0 * (params.num_phi0-1)/2;
 */
 
 	// sample centered at prototype radius, make the step correpond to a ratio of current radius
-    params.step_r = vnl_math_max(0.05 * (xv->radius()), double(1)); 
-    params.num_r = vnl_math_floor(xv->radius()*1.2/params.step_r)+1;
+    params.step_r = vnl_math::max(0.05 * (xv->radius()), double(1)); 
+    params.num_r = vnl_math::floor(xv->radius()*1.2/params.step_r)+1;
     params.min_r = xv->radius() - params.step_r * (params.num_r-1) /2;
 
 /*
 	// sample radius using geometric model
-	params.step_r = vnl_math_max((max_radius-min_radius)/20, double(1)); 
-	params.num_r = vnl_math_floor((max_radius-min_radius)/params.step_r)+1;
+	params.step_r = vnl_math::max((max_radius-min_radius)/20, double(1)); 
+	params.num_r = vnl_math::floor((max_radius-min_radius)/params.step_r)+1;
     params.min_r =  (min_radius+max_radius)/2 - (params.num_r-1) * params.step_r /2;
 */
     vcl_cout << "min_r: "<<params.min_r <<vcl_endl;
@@ -508,35 +508,35 @@ build_xnode_grid_using_xgraph_geom_model(const vgl_box_2d<int >& window)
 
     //>> x
     dbsks_xnode_grid_params params;
-    params.step_x = vnl_math_rnd(cur_graph_size / 16); // heuristic ratio between step size and graph size //8;
-    params.num_x = vnl_math_floor(window.width()/params.step_x+1); // allow some padding
+    params.step_x = vnl_math::rnd(cur_graph_size / 16); // heuristic ratio between step size and graph size //8;
+    params.num_x = vnl_math::floor(window.width()/params.step_x+1); // allow some padding
 
     // if the image is too big, we only consider the center portion of 65 points
-    params.num_x = vnl_math_min(params.num_x, 65);
-    params.num_x = vnl_math_max(params.num_x, 1); //>> make sure we get at least 1 sample
+    params.num_x = vnl_math::min(params.num_x, 65);
+    params.num_x = vnl_math::max(params.num_x, 1); //>> make sure we get at least 1 sample
 
-    params.min_x = vnl_math_rnd(window.centroid_x() - params.step_x*(params.num_x-1)/2 ); // centering
+    params.min_x = vnl_math::rnd(window.centroid_x() - params.step_x*(params.num_x-1)/2 ); // centering
 
     //>> y
-    params.step_y = vnl_math_rnd(cur_graph_size / 16); // heuristic ratio between step size and graph size //8;
-    params.num_y = vnl_math_floor(window.height()/params.step_y+1);
+    params.step_y = vnl_math::rnd(cur_graph_size / 16); // heuristic ratio between step size and graph size //8;
+    params.num_y = vnl_math::floor(window.height()/params.step_y+1);
     
     // if the image is too big, only consider the center portion of 65 points
-    params.num_y = vnl_math_min(params.num_y, 65);
-    params.num_y = vnl_math_max(params.num_y, 1);
+    params.num_y = vnl_math::min(params.num_y, 65);
+    params.num_y = vnl_math::max(params.num_y, 1);
 
-    params.min_y = vnl_math_rnd(window.centroid_y() - params.step_y*(params.num_y-1)/2 ); // centering
+    params.min_y = vnl_math::rnd(window.centroid_y() - params.step_y*(params.num_y-1)/2 ); // centering
 
     //>> psi
     params.step_psi = vnl_math::pi / 8;
-    double range_psi = vnl_math_min(angle_padding_ratio*(max_psi-min_psi), 2*vnl_math::pi);
-    params.num_psi = vnl_math_floor(range_psi / params.step_psi) + 1;
+    double range_psi = vnl_math::min(angle_padding_ratio*(max_psi-min_psi), 2*vnl_math::pi);
+    params.num_psi = vnl_math::floor(range_psi / params.step_psi) + 1;
     params.min_psi = (max_psi+min_psi)/2 - params.step_psi*(params.num_psi-1)/2;
 
     //>> phi0
     params.step_phi0 = vnl_math::pi / 16;
-    double range_phi0 = vnl_math_min(angle_padding_ratio*(max_phi-min_phi), vnl_math::pi);
-    params.num_phi0 = 2*vnl_math_rnd( range_phi0/2 / params.step_phi0) + 1;
+    double range_phi0 = vnl_math::min(angle_padding_ratio*(max_phi-min_phi), vnl_math::pi);
+    params.num_phi0 = 2*vnl_math::rnd( range_phi0/2 / params.step_phi0) + 1;
 
     // re-compute step size so that the final range matches to the [min-max] range
     if (params.num_phi0 > 1)
@@ -544,23 +544,23 @@ build_xnode_grid_using_xgraph_geom_model(const vgl_box_2d<int >& window)
       params.step_phi0 = angle_padding_ratio*(max_phi-min_phi) / (params.num_phi0-1);
     }
     params.min_phi0 = (max_phi+min_phi)/2 - params.step_phi0 * (params.num_phi0-1)/2;
-    params.min_phi0 = vnl_math_max(1e-3, params.min_phi0); // phi0 is always >= 0
+    params.min_phi0 = vnl_math::max(1e-3, params.min_phi0); // phi0 is always >= 0
 
 
     //>> radius
     // We want the step in r to be of the same order as x and y
     params.step_r = params.step_x;
     // compute range for radius. Enforce radius >= 1
-    double range_radius = vnl_math_min(length_padding_ratio * (max_radius-min_radius), (max_radius+min_radius-1));
-    params.num_r = vnl_math_floor(range_radius / params.step_r) + 1;
+    double range_radius = vnl_math::min(length_padding_ratio * (max_radius-min_radius), (max_radius+min_radius-1));
+    params.num_r = vnl_math::floor(range_radius / params.step_r) + 1;
     params.min_r = (min_radius+max_radius)/2 - (params.num_r-1)*params.step_r /2;
 
     if (xv->degree() == 3)
     {
       params.step_phi1 = vnl_math::pi / 8;
-      double range_phi1 = vnl_math_min(angle_padding_ratio*(max_phi_diff-min_phi_diff), vnl_math::pi);
+      double range_phi1 = vnl_math::min(angle_padding_ratio*(max_phi_diff-min_phi_diff), vnl_math::pi);
       
-      params.num_phi1 = vnl_math_floor(range_phi1 / params.step_phi1) + 1;
+      params.num_phi1 = vnl_math::floor(range_phi1 / params.step_phi1) + 1;
       params.min_phi1 = -params.step_phi1*(params.num_phi1-1)/2;
     }
     else

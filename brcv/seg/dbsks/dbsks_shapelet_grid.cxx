@@ -391,7 +391,7 @@ sxnode_grid_to_linear(int i_phiA, int i_rA, int i_psiA) const
 int dbsks_shapelet_grid::
 i_xA(double xA) const
 {
-  int temp = vnl_math_rnd((xA-this->min_xA_) / this->step_xA_);
+  int temp = vnl_math::rnd((xA-this->min_xA_) / this->step_xA_);
   //return dbsks_clip(temp, 0, this->xA_.size()-1);
   return temp;
 }
@@ -400,7 +400,7 @@ i_xA(double xA) const
 int dbsks_shapelet_grid::
 i_yA(double yA) const
 {
-  int temp = vnl_math_rnd((yA-this->min_yA_) / this->step_yA_);
+  int temp = vnl_math::rnd((yA-this->min_yA_) / this->step_yA_);
   //return dbsks_clip(temp, 0, this->yA_.size()-1);
   return temp;
 }
@@ -415,7 +415,7 @@ i_psiA(double psiA) const
   diff = vcl_fmod(diff, 2*vnl_math::pi);
   diff = (diff < 0) ? (diff + 2*vnl_math::pi) : diff;
 
-  int ind = vnl_math_rnd(diff / this->step_psiA_);
+  int ind = vnl_math::rnd(diff / this->step_psiA_);
   return (ind < this->num_psiA_) ? ind : 0;
 }
 
@@ -432,7 +432,7 @@ i_psiA(const vgl_vector_2d<double >& tangentA) const
 int dbsks_shapelet_grid::
 i_m(double m) const
 {
-  int temp = vnl_math_rnd((m-this->min_m_) / this->step_m_);
+  int temp = vnl_math::rnd((m-this->min_m_) / this->step_m_);
   //return dbsks_clip(temp, 0, this->m_.size()-1);
   return temp;
 }
@@ -443,7 +443,7 @@ int dbsks_shapelet_grid::
 i_rA(double rA) const
 {
   double dev = vcl_log(rA / this->ref_rA_) / vnl_math::ln2;
-  int temp = vnl_math_rnd((dev - this->min_log2_rA_) / this->step_log2_rA_);
+  int temp = vnl_math::rnd((dev - this->min_log2_rA_) / this->step_log2_rA_);
   //return dbsks_clip(temp, 0, this->rA_.size()-1);
   return temp;
 }
@@ -453,7 +453,7 @@ int dbsks_shapelet_grid::
 i_len(double len) const
 {
   double dev = vcl_log(len / this->ref_len_) / vnl_math::ln2;
-  int temp = vnl_math_rnd((dev-this->min_log2_len_) / this->step_log2_len_);
+  int temp = vnl_math::rnd((dev-this->min_log2_len_) / this->step_log2_len_);
   //return dbsks_clip(temp, 0, this->len_.size()-1);
   return temp;
 }
@@ -462,7 +462,7 @@ i_len(double len) const
 int dbsks_shapelet_grid::
 i_phiA(double phiA) const
 {
-  int temp = vnl_math_rnd((phiA-this->min_phiA_) / this->step_phiA_);
+  int temp = vnl_math::rnd((phiA-this->min_phiA_) / this->step_phiA_);
   //return dbsks_clip(temp, 0, this->phiA_.size()-1);
   return temp;
 }
@@ -471,7 +471,7 @@ i_phiA(double phiA) const
 int dbsks_shapelet_grid::
 i_phiB(double phiB) const
 {
-  int temp = vnl_math_rnd((phiB-this->min_phiB_) / this->step_phiB_);
+  int temp = vnl_math::rnd((phiB-this->min_phiB_) / this->step_phiB_);
   //return dbsks_clip(temp, 0, this->phiB_.size()-1);
   return temp;
 }

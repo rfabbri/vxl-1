@@ -443,13 +443,13 @@ bool x_read(const vcl_string& filepath, dbsksp_xshock_graph_sptr& xg)
   for (dbsksp_xshock_graph::vertex_iterator vit = graph->vertices_begin();
     vit != graph->vertices_end(); ++vit)
   {
-    max_id = vnl_math_max(max_id, (*vit)->id());
+    max_id = vnl_math::max(max_id, (*vit)->id());
   }
 
   for (dbsksp_xshock_graph::edge_iterator eit = graph->edges_begin();
     eit != graph->edges_end(); ++eit)
   {
-    max_id = vnl_math_max(max_id, (*eit)->id());
+    max_id = vnl_math::max(max_id, (*eit)->id());
   }
   graph->set_next_available_id(max_id);
 

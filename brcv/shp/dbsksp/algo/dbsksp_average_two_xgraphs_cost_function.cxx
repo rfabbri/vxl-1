@@ -175,8 +175,8 @@ compute_kdiff_min_max()
       dbgl_biarc left_bnd = xfrag.bnd_left_as_biarc();
       dbgl_biarc right_bnd = xfrag.bnd_right_as_biarc();
 
-      double kdiff = vnl_math_sqr(left_bnd.k1() - left_bnd.k2()) + 
-        vnl_math_sqr(right_bnd.k1() - right_bnd.k2());
+      double kdiff = vnl_math::sqr(left_bnd.k1() - left_bnd.k2()) + 
+        vnl_math::sqr(right_bnd.k1() - right_bnd.k2());
 
       kdiff1 = kdiff;
     }
@@ -191,15 +191,15 @@ compute_kdiff_min_max()
       dbgl_biarc left_bnd = xfrag.bnd_left_as_biarc();
       dbgl_biarc right_bnd = xfrag.bnd_right_as_biarc();
 
-      double kdiff = vnl_math_sqr(left_bnd.k1() - left_bnd.k2()) + 
-        vnl_math_sqr(right_bnd.k1() - right_bnd.k2());
+      double kdiff = vnl_math::sqr(left_bnd.k1() - left_bnd.k2()) + 
+        vnl_math::sqr(right_bnd.k1() - right_bnd.k2());
 
       kdiff2 = kdiff;
     }
 
     xfrag_properties p;
-    p.kdiff_max = vnl_math_max(kdiff1, kdiff2);
-    p.kdiff_min = vnl_math_min(kdiff1, kdiff2);
+    p.kdiff_max = vnl_math::max(kdiff1, kdiff2);
+    p.kdiff_min = vnl_math::min(kdiff1, kdiff2);
 
     this->map_model_xfrag_properties_.insert(vcl_make_pair(model_xe->id(), p));
   }
@@ -218,8 +218,8 @@ compute_kdiff_cost(unsigned eid, const dbsksp_xshock_fragment& xfrag)
   dbgl_biarc left_bnd = xfrag.bnd_left_as_biarc();
   dbgl_biarc right_bnd = xfrag.bnd_right_as_biarc();
 
-  double kdiff = vnl_math_sqr(left_bnd.k1() - left_bnd.k2()) + 
-    vnl_math_sqr(right_bnd.k1() - right_bnd.k2());
+  double kdiff = vnl_math::sqr(left_bnd.k1() - left_bnd.k2()) + 
+    vnl_math::sqr(right_bnd.k1() - right_bnd.k2());
 
   // compute cost if the sum_kdiff is not within range set by the two original graph
   xfrag_properties p = this->map_model_xfrag_properties_[eid];

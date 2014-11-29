@@ -227,23 +227,23 @@ vidpro1_load_video_process::execute()
       int nj=img->nj();
       
       if(topx_<ni)
-        topx_=vnl_math_max(0,topx_);
+        topx_=vnl_math::max(0,topx_);
       else
         topx_=0;
 
       if(topy_<nj)
-        topy_=vnl_math_max(0,topy_);
+        topy_=vnl_math::max(0,topy_);
       else
         topy_=0;
 
   
       if(lenx_>0)
-        lenx_=vnl_math_min(ni-topx_,lenx_);
+        lenx_=vnl_math::min(ni-topx_,lenx_);
       else
         lenx_=0;
 
       if(leny_>0)
-        leny_=vnl_math_min(nj-topy_,leny_);
+        leny_=vnl_math::min(nj-topy_,leny_);
       else
         leny_=0;
 

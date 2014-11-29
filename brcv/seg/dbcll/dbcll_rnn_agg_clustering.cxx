@@ -131,7 +131,7 @@ dbcll_remainder_heap::nearest_neighbor(const dbcll_cluster_sptr& query, double n
   double best_sim = nn_sim;
   double ball_thresh = -vcl_numeric_limits<double>::infinity();
   double min_thresh = 0;
-  if(vnl_math_isfinite(best_sim)){
+  if(vnl_math::isfinite(best_sim)){
     double srad = 2*vcl_sqrt(query_thresh*best_sim);
     ball_thresh = query_thresh + best_sim - srad;
     min_thresh = query_thresh + best_sim + srad;

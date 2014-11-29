@@ -121,7 +121,7 @@ update_avg_distance()
     edit.set_tree2(this->model_tree_);
     double deform_cost = edit.get_deform_cost(this->dart_corr_parent_to_model_[i]);
     double distance = deform_cost + this->parent_contract_and_splice_cost_[i];
-    sum += this->parent_weights_[i] * vnl_math_sqr(distance);
+    sum += this->parent_weights_[i] * vnl_math::sqr(distance);
 
     this->deform_cost_parent_to_avg_.push_back(deform_cost);
     this->distance_parent_to_avg_[i] = distance;

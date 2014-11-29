@@ -44,12 +44,12 @@ bool dbnl_newton_secant_root( dbnl_newton_root_func& funcd,
     xl = x2;
   }
   rts = 0.5 * (x1 + x2);
-  dxold = vnl_math_abs(x2-x1);
+  dxold = vnl_math::abs(x2-x1);
   dx = dxold;
   funcd.compute(rts, &f, &df);
   for (j = 1; j <= max_iter; j++){
     if ((((rts-xh)*df-f)*((rts-xl)*df-f) > 0.0) || 
-      (vnl_math_abs(2.0*f) > vnl_math_abs(dxold*df)))
+      (vnl_math::abs(2.0*f) > vnl_math::abs(dxold*df)))
     {
       dxold = dx;
       dx = 0.5*(xh-xl);
@@ -69,7 +69,7 @@ bool dbnl_newton_secant_root( dbnl_newton_root_func& funcd,
         return true;
       }
     }
-    if (vnl_math_abs(dx) < xacc){ // convergence criteria
+    if (vnl_math::abs(dx) < xacc){ // convergence criteria
       *root = rts;
       double t1, t2;
       funcd.compute(rts, &t1, &t2);

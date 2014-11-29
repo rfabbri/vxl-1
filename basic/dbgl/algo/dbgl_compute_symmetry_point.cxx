@@ -73,7 +73,7 @@ void dbgl_compute_symmetry_point_on_circ_arc(const dbgl_circ_arc& right_bnd_arc,
 
   double k = right_bnd_arc.k();
 
-  if (vnl_math_abs(k) < dbgl_circ_arc::epsilon)
+  if (vnl_math::abs(k) < dbgl_circ_arc::epsilon)
   {
     dbgl_compute_symmetry_point_on_line(right_bnd_arc.start(), right_bnd_arc.end(),
       left_bnd_pt, left_bnd_tangent, s_along_right_bnd_arc);
@@ -134,13 +134,13 @@ void dbgl_compute_symmetry_point_on_circ_arc(const dbgl_circ_arc& right_bnd_arc,
         vgl_vector_2d<double > tC (cos_x[i], sin_x[i]);
         double ks = signed_angle(tA, tC);
         // if ks is close to zero, force it to be zero
-        ks = (vnl_math_abs(ks) < dbgl_circ_arc::epsilon) ? 0  : ks;
+        ks = (vnl_math::abs(ks) < dbgl_circ_arc::epsilon) ? 0  : ks;
         s[i] = ks / k;
       }
 
-      //double final_s = vnl_math_abs(s[0]) < vnl_math_abs(s[1]) ? s[0] : s[1];
-      double min_s = vnl_math_min(s[0], s[1]);
-      double max_s = vnl_math_max(s[0], s[1]);
+      //double final_s = vnl_math::abs(s[0]) < vnl_math::abs(s[1]) ? s[0] : s[1];
+      double min_s = vnl_math::min(s[0], s[1]);
+      double max_s = vnl_math::max(s[0], s[1]);
 
       double final_s = (min_s < 0) ? max_s : min_s;
       s_along_right_bnd_arc.push_back(final_s);

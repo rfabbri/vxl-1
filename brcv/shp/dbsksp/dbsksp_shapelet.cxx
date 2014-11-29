@@ -35,7 +35,7 @@ set_from(const vgl_point_2d<double >& pt0, double r0,
 {
   // compute the angle between the chord and tangent
   double sin_alpha0 = m0 * vcl_sin(phi0);
-  if (vnl_math_abs(sin_alpha0) > 1 || vnl_math_abs(m0*vcl_sin(phi1)) > 1)
+  if (vnl_math::abs(sin_alpha0) > 1 || vnl_math::abs(m0*vcl_sin(phi1)) > 1)
     return false;
 
   vgl_vector_2d<double> v0 = rotated(tangent0, -vcl_asin(sin_alpha0));
@@ -214,7 +214,7 @@ area_left() const
   double area_quad = ( (r1+r2)*s* dbnl_sinc(a) + r1*r2*vcl_sin(a) ) / 2;
 
   double area_arc_segment = arc.area();
-  return area_quad - vnl_math_sgn(arc.k()) * area_arc_segment;
+  return area_quad - vnl_math::sgn(arc.k()) * area_arc_segment;
 }
 
 //: Return the area of the ``right'' region, bounded by the left boundary,
@@ -237,7 +237,7 @@ area_right() const
   double area_quad = ( (r1+r2)*s* dbnl_sinc(a) - r1*r2*vcl_sin(a) ) / 2;
   double area_arc_segment = arc.area();
   
-  return area_quad + vnl_math_sgn(arc.k()) * area_arc_segment;
+  return area_quad + vnl_math::sgn(arc.k()) * area_arc_segment;
 }
 
 
@@ -560,8 +560,8 @@ is_legal() const
   legal = legal && (this->chord_length() >= 0);
 
   // |m*sin(phi) <= 1|
-  legal = legal && (vnl_math_abs( vcl_sin(this->phi_start()) * this->m_start() ) <= 1); 
-  legal = legal && (vnl_math_abs( vcl_sin(this->phi_end()) * this->m_end() ) <= 1);
+  legal = legal && (vnl_math::abs( vcl_sin(this->phi_start()) * this->m_start() ) <= 1); 
+  legal = legal && (vnl_math::abs( vcl_sin(this->phi_end()) * this->m_end() ) <= 1);
 
   // max_radius condition
   //  when R is too big, self-intersecting happens

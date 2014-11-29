@@ -113,7 +113,7 @@ class dbsta_gaussian_updater : public dbsta_data_updater<T>
     assert(dynamic_cast<dbsta_stats_data<T>* >(&(g.data())));
     T& num = static_cast<dbsta_stats_data<T>& >(g.data()).num_observations;   
     num+=T(1.0);
-    update_gaussian(g, T(1.0)/num, sample);
+    this->update_gaussian(g, T(1.0)/num, sample);
   }
                             
   //: Update the statistics given a Gaussian distribution and a learning rate
@@ -148,7 +148,7 @@ class dbsta_gaussian_window_updater : public dbsta_gaussian_updater<T>
     T& num = static_cast<dbsta_stats_data<T>& >(g.data()).num_observations;
     if(num < window_size)
       num+=T(1.0);
-    update_gaussian(g,T(1.0)/num,sample);
+    this->update_gaussian(g,T(1.0)/num,sample);
   }
                             
   unsigned int window_size;

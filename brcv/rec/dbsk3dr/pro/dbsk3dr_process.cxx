@@ -139,7 +139,7 @@ bool dbsk3dr_pro::save_shock_match_result_file (const vcl_string& filename, cons
 {
   FILE*   fp = vcl_fopen (filename.c_str(), "w");
   if (fp == NULL) {
-    vul_printf (vcl_cerr, "ERROR: Can't write file %s.\n", filename);
+      vul_printf (vcl_cerr, "ERROR: Can't write file %s.\n", filename.c_str());
     return false; 
   }
 

@@ -22,8 +22,8 @@ bool dbdet_resize_edgemap(const dbdet_edgemap_sptr& edgemap, double scale_up_fac
     return true;
 
   // new size of the cell array
-  int new_cols = vnl_math_ceil( edgemap->edge_cells.cols() * scale_up_factor);
-  int new_rows = vnl_math_ceil( edgemap->edge_cells.rows() * scale_up_factor);
+  int new_cols = vnl_math::ceil( edgemap->edge_cells.cols() * scale_up_factor);
+  int new_rows = vnl_math::ceil( edgemap->edge_cells.rows() * scale_up_factor);
 
   // duplicate the edgel list
   vcl_vector<dbdet_edgel* > edgels = edgemap->edgels;

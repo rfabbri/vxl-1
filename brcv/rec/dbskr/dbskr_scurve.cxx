@@ -538,13 +538,13 @@ void dbskr_scurve::compute_arclengths()
   for (int i = 1; i < num_points_; i++) {
     prev = bdry_plus_[i-1];
     curr = bdry_plus_[i];
-    dL1 = vnl_math_hypot(prev.x()-curr.x(), prev.y()-curr.y());
+    dL1 = vnl_math::hypot(prev.x()-curr.x(), prev.y()-curr.y());
     bdry_plus_length_ += dL1;
     bdry_plus_arclength_.push_back(bdry_plus_length_);
 
     prev = bdry_minus_[i-1];
     curr = bdry_minus_[i];
-    dL2 = vnl_math_hypot(prev.x()-curr.x(), prev.y()-curr.y());
+    dL2 = vnl_math::hypot(prev.x()-curr.x(), prev.y()-curr.y());
     bdry_minus_length_ += dL2;
     bdry_minus_arclength_.push_back(bdry_minus_length_);
   }
@@ -626,7 +626,7 @@ vgl_point_2d<double>
 dbskr_scurve::fragment_pt(int index, double radius)
 {
   assert(vcl_fabs(radius)<=time_[index]+1e-10);
-  double vec = theta_[index]+ vnl_math_sgn0(radius)*phi_[index];
+  double vec = theta_[index]+ vnl_math::sgn0(radius)*phi_[index];
   return sh_pt_[index] + vcl_fabs(radius)*vgl_vector_2d<double>(vcl_cos(vec), vcl_sin(vec));
 }
 
@@ -662,7 +662,7 @@ dbskr_scurve::fragment_pt(int i1, int i2, int N, int n, double radius)
 
   assert(vcl_fabs(radius)<=time_int+1e-7);
 
-  double vec = theta_int+ vnl_math_sgn0(radius)*phi_int;
+  double vec = theta_int+ vnl_math::sgn0(radius)*phi_int;
   return pt + vcl_fabs(radius)*vgl_vector_2d<double>(vcl_cos(vec), vcl_sin(vec));
 }
 
@@ -714,7 +714,7 @@ vgl_point_2d<double> dbskr_scurve::fragment_pt(double index, double radius)
 
     assert(vcl_fabs(radius)<=time_int+1e-7);
 
-    double vec = theta_int+ vnl_math_sgn0(radius)*phi_int;
+    double vec = theta_int+ vnl_math::sgn0(radius)*phi_int;
     return pt + vcl_fabs(radius)*vgl_vector_2d<double>(vcl_cos(vec), vcl_sin(vec));
   }
   else {
@@ -727,7 +727,7 @@ vgl_point_2d<double> dbskr_scurve::fragment_pt(double index, double radius)
 
     assert(vcl_fabs(radius)<=time_int+1e-7);
 
-    double vec = theta_int+ vnl_math_sgn0(radius)*phi_int;
+    double vec = theta_int+ vnl_math::sgn0(radius)*phi_int;
     return pt + vcl_fabs(radius)*vgl_vector_2d<double>(vcl_cos(vec), vcl_sin(vec));
   }
 }

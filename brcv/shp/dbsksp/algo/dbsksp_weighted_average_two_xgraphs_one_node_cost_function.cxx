@@ -269,7 +269,7 @@ f(const vnl_vector<double >& x)
   //5) Deviation from the ideal position
   for (int idx =0; idx < 2; ++idx)
   {    
-    fx[idx] = vnl_math_abs( deform_cost[idx] + 
+    fx[idx] = vnl_math::abs( deform_cost[idx] + 
                             this->contract_cost_[idx] -
                             this->target_distance_parent_to_model_[idx]);
   }

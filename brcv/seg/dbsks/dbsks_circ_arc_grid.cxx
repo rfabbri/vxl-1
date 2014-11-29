@@ -236,7 +236,7 @@ grid_to_linear(int i_chord, int i_height, int i_theta) const
 int dbsks_circ_arc_grid::
 i_x(double x) const
 {
-  return vnl_math_rnd((x-this->min_x_) / this->step_x_);
+  return vnl_math::rnd((x-this->min_x_) / this->step_x_);
 }
 
 
@@ -244,7 +244,7 @@ i_x(double x) const
 int dbsks_circ_arc_grid::
 i_y(double y) const
 {
-  return vnl_math_rnd((y-this->min_y_) / this->step_y_);
+  return vnl_math::rnd((y-this->min_y_) / this->step_y_);
 }
 
 
@@ -258,7 +258,7 @@ i_theta(double theta) const
   diff = vcl_fmod(diff, 2*vnl_math::pi);
   diff = (diff < 0) ? (diff + 2*vnl_math::pi) : diff;
   
-  int ind = vnl_math_rnd(diff / this->step_theta_);
+  int ind = vnl_math::rnd(diff / this->step_theta_);
   return (ind < this->num_theta_) ? ind : 0;
 }
 
@@ -267,7 +267,7 @@ i_theta(double theta) const
 int dbsks_circ_arc_grid::
 i_chord(double chord) const
 {
-  return vnl_math_rnd((chord-this->min_chord_) / this->step_chord_);;
+  return vnl_math::rnd((chord-this->min_chord_) / this->step_chord_);;
 }
 
 
@@ -275,7 +275,7 @@ i_chord(double chord) const
 int dbsks_circ_arc_grid::
 i_height(double height) const
 {
-  return vnl_math_rnd((height-this->min_height_) / this->step_height_);;
+  return vnl_math::rnd((height-this->min_height_) / this->step_height_);;
 }
 
 
@@ -292,7 +292,7 @@ arc_to_grid(const dbgl_circ_arc& arc, int& i_x, int& i_y,
   vgl_vector_2d<double > tangent = arc.chord_dir();
   double theta = vcl_atan2(tangent.y(), tangent.x());
   double chord = arc.chord_len();
-  double height = arc.height() * vnl_math_sgn0(arc.k());
+  double height = arc.height() * vnl_math::sgn0(arc.k());
 
   i_x = this->i_x(pt.x());
   i_y = this->i_y(pt.y());

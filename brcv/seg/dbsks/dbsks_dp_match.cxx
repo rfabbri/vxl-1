@@ -774,11 +774,11 @@ trace_suboptimal_solutions(const dbsksp_shock_edge_sptr& e_root,
     {
       vcl_cout << "i_cell [ " << i_cell << " ] j_cell [ " << j_cell << " ]\n";
       // compute the boundary of the cell
-      int cell_xA_start = vnl_math_rnd( i_cell    * num_xA_per_cell);
-      int cell_xA_end   = vnl_math_rnd((i_cell+1)* num_xA_per_cell);
+      int cell_xA_start = vnl_math::rnd( i_cell    * num_xA_per_cell);
+      int cell_xA_end   = vnl_math::rnd((i_cell+1)* num_xA_per_cell);
       
-      int cell_yA_start = vnl_math_rnd( j_cell    * num_yA_per_cell);
-      int cell_yA_end   = vnl_math_rnd((j_cell+1) * num_yA_per_cell);
+      int cell_yA_start = vnl_math::rnd( j_cell    * num_yA_per_cell);
+      int cell_yA_end   = vnl_math::rnd((j_cell+1) * num_yA_per_cell);
 
 
       // cr = cell root
@@ -1989,7 +1989,7 @@ compute_image_cost_using_arc_cost(const dbsks_shapelet_grid& grid,
                   const vnl_matrix<float >& arc_plane_right = arc_image_cost[i_plane_right] ;                
                   for (int i_xA=0; i_xA < grid.num_xA_; ++i_xA)
                   {
-                    int t_x = vnl_math_rnd(ratio_step_x * i_xA);
+                    int t_x = vnl_math::rnd(ratio_step_x * i_xA);
                     int i_x_left =  t_x + i0_x_left;
                     int i_x_right = t_x + i0_x_right;
 
@@ -2002,7 +2002,7 @@ compute_image_cost_using_arc_cost(const dbsks_shapelet_grid& grid,
                   
                     for (int i_yA=0; i_yA < grid.num_yA_; ++i_yA)
                     {
-                      int t_y = vnl_math_rnd(ratio_step_y * i_yA);
+                      int t_y = vnl_math::rnd(ratio_step_y * i_yA);
                       int i_y_left = t_y + i0_y_left;
                       int i_y_right = t_y + i0_y_right;
 
@@ -3346,7 +3346,7 @@ matching_cost(const dbsksp_shapelet_sptr& s_ref,
         //for (int i_xA=0; i_xA < grid.num_xA_; ++i_xA)
         //{
         int i_xA = 0;
-          int t_x = vnl_math_rnd(ratio_step_x * i_xA);
+          int t_x = vnl_math::rnd(ratio_step_x * i_xA);
           int i_x_left =  t_x + i0_x_left;
           int i_x_right = t_x + i0_x_right;
 
@@ -3361,7 +3361,7 @@ matching_cost(const dbsksp_shapelet_sptr& s_ref,
           //for (int i_yA=0; i_yA < grid.num_yA_; ++i_yA)
           //{
           int i_yA = 0;
-            int t_y = vnl_math_rnd(ratio_step_y * i_yA);
+            int t_y = vnl_math::rnd(ratio_step_y * i_yA);
             int i_y_left = t_y + i0_y_left;
             int i_y_right = t_y + i0_y_right;
 
@@ -3455,10 +3455,10 @@ change_shapelet_grids_num_xy(double ratio_xA, double ratio_yA)
     dbsksp_shock_edge_sptr e = it->first;
     dbsks_shapelet_grid& grid_e = it->second;
 
-    int new_num_xA = vnl_math_rnd(ratio_xA*(grid_e.num_xA_-1)/2) *2 + 1;
+    int new_num_xA = vnl_math::rnd(ratio_xA*(grid_e.num_xA_-1)/2) *2 + 1;
     grid_e.change_num_xA(new_num_xA);
 
-    int new_num_yA = vnl_math_rnd(ratio_yA*(grid_e.num_yA_-1)/2) *2 + 1;
+    int new_num_yA = vnl_math::rnd(ratio_yA*(grid_e.num_yA_-1)/2) *2 + 1;
     grid_e.change_num_yA(new_num_yA);
   }
 
@@ -3639,7 +3639,7 @@ print_summary(vcl_ostream& str) const
 //  //  {
 //  //    for (int i_y=0; i_y < grid.num_y_; ++i_y)
 //  //    {
-//  //      float cost = vnl_math_min(plane(i_x, i_y), 10.0f);
+//  //      float cost = vnl_math::min(plane(i_x, i_y), 10.0f);
 //  //      if (cost > 9.0f) continue;
 //
 //  //      assert(cost >=0);

@@ -139,12 +139,12 @@ biarc_to_grid(const vgl_point_2d<double >& start, const vgl_vector_2d<double >& 
 //{
 //  // profile index
 //  double alpha0 = signed_angle(end-start, start_tangent);
-//  int i_alpha0 = vnl_math_rnd( (alpha0-this->alpha0_[0]) / this->step_alpha0_);
+//  int i_alpha0 = vnl_math::rnd( (alpha0-this->alpha0_[0]) / this->step_alpha0_);
 //  if (i_alpha0 < 0 || i_alpha0 >= int(this->alpha0_.size()))
 //    return false;
 //  
 //  double alpha2 = signed_angle(end-start, end_tangent);
-//  int i_alpha2 = vnl_math_rnd( (alpha2-this->alpha2_[0]) / this->step_alpha2_);
+//  int i_alpha2 = vnl_math::rnd( (alpha2-this->alpha2_[0]) / this->step_alpha2_);
 //  if (i_alpha2 < 0 || i_alpha2 >= int(this->alpha2_.size()))
 //    return false;
 //
@@ -164,12 +164,12 @@ compute_biarc_i_profile(const vgl_vector_2d<double >& biarc_chord,
 {
   // profile index
   double alpha0 = signed_angle(biarc_chord, start_tangent);
-  int i_alpha0 = vnl_math_rnd( (alpha0-this->alpha0_[0]) / this->step_alpha0_);
+  int i_alpha0 = vnl_math::rnd( (alpha0-this->alpha0_[0]) / this->step_alpha0_);
   if (i_alpha0 < 0 || i_alpha0 >= int(this->alpha0_.size()))
     return false;
   
   double alpha2 = signed_angle(biarc_chord, end_tangent);
-  int i_alpha2 = vnl_math_rnd( (alpha2-this->alpha2_[0]) / this->step_alpha2_);
+  int i_alpha2 = vnl_math::rnd( (alpha2-this->alpha2_[0]) / this->step_alpha2_);
   if (i_alpha2 < 0 || i_alpha2 >= int(this->alpha2_.size()))
     return false;
 
@@ -186,14 +186,14 @@ compute_biarc_i_dx_and_i_dy(const vgl_vector_2d<double >& biarc_chord,
 {
   // dx-index
   double dx = biarc_chord.x();
-  i_dx = vnl_math_rnd((dx-this->dx_[0]) / this->step_dx_);
+  i_dx = vnl_math::rnd((dx-this->dx_[0]) / this->step_dx_);
   if (i_dx < 0 || i_dx>=int(this->dx_.size()) ) 
     return false;
 
 
   // dy-index
   double dy = biarc_chord.y();
-  i_dy = vnl_math_rnd((dy-this->dy_[0]) / this->step_dy_);
+  i_dy = vnl_math::rnd((dy-this->dy_[0]) / this->step_dy_);
   if (i_dy<0 || i_dy>= int(this->dy_.size()))
     return false;
 
@@ -311,8 +311,8 @@ retrieve_and_scale_samples_from_valid_biarc_index(int i_dx, int i_dy, int i_prof
   
   for (unsigned i =0; i < num_pts; ++i)
   {
-    xs[i] = vnl_math_rnd(samples[i][0] * scaled_up + start.x());
-    ys[i] = vnl_math_rnd(samples[i][1] * scaled_up + start.y());
+    xs[i] = vnl_math::rnd(samples[i][0] * scaled_up + start.x());
+    ys[i] = vnl_math::rnd(samples[i][1] * scaled_up + start.y());
     angle_bins[i] = samples_index[i][2];
   }
   return;
@@ -363,10 +363,10 @@ compute_cache_sample_points()
 
           // determine number of points to compute
           double len = biarc.len();
-          int half_num_pts = vnl_math_floor(len/(2*ds));
+          int half_num_pts = vnl_math::floor(len/(2*ds));
 
           // set upper bound for the number of points to prevent exploding memory
-          half_num_pts = vnl_math_min(half_num_pts, this->max_num_pts_per_biarc_/2);
+          half_num_pts = vnl_math::min(half_num_pts, this->max_num_pts_per_biarc_/2);
 
           
           // allocate memory
@@ -398,9 +398,9 @@ compute_cache_sample_points()
             angle = (angle < 0) ? (angle + 2*vnl_math::pi) : angle;
             
             // indices of these points
-            index(kk, 0) = vnl_math_rnd(pt.x());
-            index(kk, 1) = vnl_math_rnd(pt.y());
-            index(kk, 2) = vnl_math_rnd(angle / radians_per_bin) % this->num_bins_0to2pi_;
+            index(kk, 0) = vnl_math::rnd(pt.x());
+            index(kk, 1) = vnl_math::rnd(pt.y());
+            index(kk, 2) = vnl_math::rnd(angle / radians_per_bin) % this->num_bins_0to2pi_;
           }        
         }      
       }
@@ -632,8 +632,8 @@ compute_samples_using_cache(const vgl_point_2d<double >& start, const vgl_vector
       biarc_dy/this->dy_[0] : biarc_dy/this->dy_[this->dy_.size()-1];
 
     // scaling down value necessary to put the biarc back in range
-    double scale_down = vnl_math_max(scale_down_along_x, scale_down_along_y);
-    assert(vnl_math_abs(scale_down) >= 1);
+    double scale_down = vnl_math::max(scale_down_along_x, scale_down_along_y);
+    assert(vnl_math::abs(scale_down) >= 1);
 
     vgl_point_2d<double > origin(0,0);
     vgl_point_2d<double > end_scaled_down = origin + (end-start)/scale_down;
@@ -683,12 +683,12 @@ compute_samples_not_using_cache(const vgl_point_2d<double >& start, const vgl_ve
   angle_bins.resize(num_pts);
   for (unsigned i =0; i < num_pts; ++i)
   {
-    xs[i] = vnl_math_rnd(x_vec[i]);
-    ys[i] = vnl_math_rnd(y_vec[i]);
+    xs[i] = vnl_math::rnd(x_vec[i]);
+    ys[i] = vnl_math::rnd(y_vec[i]);
     double angle = dbnl_angle_0to2pi(angle_vec[i]); 
 
     //>> compute the bin-index of the angle, use % to handle angle ~= 2pi;
-    angle_bins[i] = vnl_math_rnd(angle / this->radians_per_bin()) % this->num_bins_0to2pi_;
+    angle_bins[i] = vnl_math::rnd(angle / this->radians_per_bin()) % this->num_bins_0to2pi_;
   }
   return true;
 }
@@ -739,7 +739,7 @@ compute_uniform_biarc_samples(const vgl_point_2d<double >& start,
 
   // determine number of points to compute
   double len = biarc.len();
-  int half_num_pts = vnl_math_floor(len/(2*ds));
+  int half_num_pts = vnl_math::floor(len/(2*ds));
 
   x_vec.resize(2*half_num_pts+1);
   y_vec.resize(2*half_num_pts+1);

@@ -112,17 +112,17 @@ bool dbsksp_reduce_A12_Ainfty_nodes(const dbsksp_xshock_graph_sptr& xgraph,
     
     double bnd_len0 = new_bnd_right0.len();
     double bnd_len2 = new_bnd_right2.len();
-    new_bnd_pts.reserve( vnl_math_ceil((bnd_len0 + bnd_len2) / sampling_ds) + 2 );
+    new_bnd_pts.reserve( vnl_math::ceil((bnd_len0 + bnd_len2) / sampling_ds) + 2 );
 
     // first contour
-    int half_num_pts0 = vnl_math_floor(bnd_len0 / (2*sampling_ds));
+    int half_num_pts0 = vnl_math::floor(bnd_len0 / (2*sampling_ds));
     for (int idx = -half_num_pts0; idx <= half_num_pts0; ++idx)
     {
       double s = bnd_len0/2 + idx * sampling_ds;
       new_bnd_pts.push_back(new_bnd_right0.point_at(s));
     }
 
-    int half_num_pts2 = vnl_math_floor(bnd_len2 / (2*sampling_ds));
+    int half_num_pts2 = vnl_math::floor(bnd_len2 / (2*sampling_ds));
     for (int idx = -half_num_pts2; idx <= half_num_pts2; ++idx)
     {
       double s = bnd_len2/2 + idx * sampling_ds;
@@ -136,7 +136,7 @@ bool dbsksp_reduce_A12_Ainfty_nodes(const dbsksp_xshock_graph_sptr& xgraph,
       vgl_point_2d<double > query_pt = new_bnd_pts[i];
       double query_distance = vgl_distance_to_closed_polygon(bnd_x.data_block(), 
         bnd_y.data_block(), bnd_x.size(), query_pt.x(), query_pt.y());
-      max_distance = vnl_math_max(max_distance, query_distance);
+      max_distance = vnl_math::max(max_distance, query_distance);
     }
 
     // d) If the max deviation is less than threshold, mark the node for conversion later

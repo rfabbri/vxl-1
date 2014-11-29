@@ -296,7 +296,7 @@ solve_equations_at_A12_node(
   {
     *alpha0 = vcl_atan( (m0 * vcl_sin(theta)) / (m2 + m0 * vcl_cos(theta)) );
     *alpha2 = -vcl_atan( (m2 * vcl_sin(theta)) / ( m0 + m2 * vcl_cos(theta)) );
-    double sin_phi = vnl_math_abs(vcl_sin(theta)) /
+    double sin_phi = vnl_math::abs(vcl_sin(theta)) /
       vcl_sqrt(m2*m2 + m0*m0 + 2*m2*m0*vcl_cos(theta));
 
     if (vcl_abs(sin_phi) > 1) return false;
@@ -357,7 +357,7 @@ compute_params_at_A12_node_given_2_m_and_1_phi(
 
   //// Shock flow dir is now a constraint rather than a dependent variable
   // temporary - try not constraining it
-  desc_e0->shock_flow_dir = vnl_math_sgn(desc_e0->phi > vnl_math::pi_over_2);
+  desc_e0->shock_flow_dir = vnl_math::sgn(desc_e0->phi > vnl_math::pi_over_2);
   desc_e2->shock_flow_dir = -desc_e0->shock_flow_dir;
   return true;
 }

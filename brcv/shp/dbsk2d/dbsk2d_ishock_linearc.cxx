@@ -198,10 +198,10 @@ double dbsk2d_ishock_linearc::computeMinLTau ()
   }
   else {
     if (_case==5)
-      return vnl_math_max(vnl_math::pi, LEtaToLTau(lBArc()->min_eta(), UNCONSTRAINED));
+      return vnl_math::max(vnl_math::pi, LEtaToLTau(lBArc()->min_eta(), UNCONSTRAINED));
 
     else if (_case==6 || _case==10)
-      return vnl_math_max(0.0, LEtaToLTau(lBLine()->min_eta(), UNCONSTRAINED));
+      return vnl_math::max(0.0, LEtaToLTau(lBLine()->min_eta(), UNCONSTRAINED));
 
     else {      //Case 9:
       double letau = LEtaToLTau(lBArc()->min_eta(), UNCONSTRAINED);
@@ -221,7 +221,7 @@ double dbsk2d_ishock_linearc::computeMaxLTau ()
   else {
     if (_nu==1){
       if (_s==1) //Case 1, 3:
-        return vnl_math_min(vnl_math::pi, LEtaToLTau(lBArc()->min_eta(), UNCONSTRAINED));
+        return vnl_math::min(vnl_math::pi, LEtaToLTau(lBArc()->min_eta(), UNCONSTRAINED));
       else {     //Case 7:
         double letau = LEtaToLTau(lBArc()->min_eta(), UNCONSTRAINED);
 
@@ -243,7 +243,7 @@ double  dbsk2d_ishock_linearc::computeMinRTau ()
     if (_nud==1)    //Case 1, 3, 7:
       return _RsTau;
     else            //Case 5, 9:
-      return vnl_math_max(0.0, REtaToRTau(rBLine()->max_eta(), UNCONSTRAINED));
+      return vnl_math::max(0.0, REtaToRTau(rBLine()->max_eta(), UNCONSTRAINED));
   }
   else {
     if (_nud==1){ 

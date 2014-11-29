@@ -297,7 +297,7 @@ bool dbsksp_fit_shock_path_using_min_num_pts(const dbsksp_shock_path_sptr& in_pa
   // Iteratively increase number of intermediate points until RMS error < tolerance
 
   // Initial values
-  max_num_intervals = vnl_math_min(max_num_intervals, int(list_length.size())-1);
+  max_num_intervals = vnl_math::min(max_num_intervals, int(list_length.size())-1);
   int num_intervals = min_num_intervals;
   double rms_error = vnl_numeric_traits<double >::maxval;
 

@@ -277,7 +277,7 @@ f(const vnl_vector<double >& x)
     }
 
     // add it with external costs
-    fx[idx] = vnl_math_abs( (deform_cost + this->external_cost_[idx] + this->distance_ancestor_to_parent_[idx]) -
+    fx[idx] = vnl_math::abs( (deform_cost + this->external_cost_[idx] + this->distance_ancestor_to_parent_[idx]) -
                             target_distance );
   }
 

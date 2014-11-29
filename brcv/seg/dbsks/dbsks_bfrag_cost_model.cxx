@@ -34,7 +34,7 @@ prob_density(int cost_type, double x) const
       return this->constant_dist_[cost_type];
     case WEIBULL:
       // force cost > 0 to prevent log(0)
-      x = vnl_math_max(x, 1e-5);
+      x = vnl_math::max(x, 1e-5);
       return this->weibull_dist_[cost_type].prob_density(x);
     case NONPARAM:
       return this->nonparam_dist_[cost_type].p(x);

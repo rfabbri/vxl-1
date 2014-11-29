@@ -222,7 +222,7 @@ void dbgl_gaussian_smooth_curve_3d (vcl_vector<vgl_point_3d<double> >& curve,
       double sum_gauss=0, sum_x=0, sum_y=0, sum_z=0;
 
       for (int j=-GK_SIZE; j<=GK_SIZE; j++) {
-        double g = gauss_1d[vnl_math_abs(j)];
+        double g = gauss_1d[vnl_math::abs(j)];
         sum_gauss += g;
         sum_x += curve[i+j].x() * g;
         sum_y += curve[i+j].y() * g;
@@ -267,7 +267,7 @@ void dbgl_gaussian_smooth_curve_3d_th (vcl_vector<vgl_point_3d<double> >& curve,
         double d = vgl_distance (curve[i+j], curve[i]);
         if (d > kernel_th) 
           continue; //thresholding
-        double g = gauss_1d[vnl_math_abs(j)];
+        double g = gauss_1d[vnl_math::abs(j)];
         sum_gauss += g;
         sum_x += curve[i+j].x() * g;
         sum_y += curve[i+j].y() * g;
@@ -311,7 +311,7 @@ void dbgl_gaussian_smooth_curve_z_th (vcl_vector<vgl_point_3d<double> >& curve,
         double d = vgl_distance (curve[i+j], curve[i]);
         if (d > kernel_th) 
           continue; //thresholding
-        double g = gauss_1d[vnl_math_abs(j)];
+        double g = gauss_1d[vnl_math::abs(j)];
         sum_gauss += g;
         sum_z += curve[i+j].z() * g;
       }

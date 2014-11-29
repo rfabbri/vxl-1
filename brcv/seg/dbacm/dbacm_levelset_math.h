@@ -136,7 +136,7 @@ inline void dbacm_levelset_math_compute_curvature(vil_image_view<T >& curvature,
         {
           *pixel_k = numerator / (gradient*gradient*gradient);
         }
-        else if (vnl_math_abs(numerator) < MIN_CURVATURE)
+        else if (vnl_math::abs(numerator) < MIN_CURVATURE)
         {
           *pixel_k = 0;
         }
@@ -145,7 +145,7 @@ inline void dbacm_levelset_math_compute_curvature(vil_image_view<T >& curvature,
           *pixel_k = (xx + yy)/2;
         }
         //// limit large curvature
-        //result(i, j, p) = (vnl_math_abs(pixel_k) > MAX_CURVATURE) ? 
+        //result(i, j, p) = (vnl_math::abs(pixel_k) > MAX_CURVATURE) ? 
         //  0 : pixel_k;
       }
     }

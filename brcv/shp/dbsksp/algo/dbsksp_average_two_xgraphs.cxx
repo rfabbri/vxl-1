@@ -221,7 +221,7 @@ resample_to_match_fine_graph_topology(const dbsksp_xshock_graph_sptr& coarse_mat
     // topology match when all the costs come from deformation cost
     double deform_cost = work.get_deform_cost(correspondence);
 
-    if (vnl_math_abs(edit_cost - deform_cost) < 1e-3)
+    if (vnl_math::abs(edit_cost - deform_cost) < 1e-3)
     {
       need_more_trimming = false;
     }
@@ -304,10 +304,10 @@ resample_to_match_fine_graph_topology(const dbsksp_xshock_graph_sptr& coarse_mat
     // each path should have 2^n edges
     // verify this
     double log2_size1 = vcl_log(double(branch1.size())) / vnl_math::ln2;
-    bool branch1_is_power_2 = (log2_size1 - vnl_math_floor(log2_size1)) < 1e-12;
+    bool branch1_is_power_2 = (log2_size1 - vnl_math::floor(log2_size1)) < 1e-12;
 
     double log2_size2 = vcl_log(double(branch2.size())) / vnl_math::ln2;
-    bool branch2_is_power_2 = (log2_size2 - vnl_math_floor(log2_size2)) < 1e-12;
+    bool branch2_is_power_2 = (log2_size2 - vnl_math::floor(log2_size2)) < 1e-12;
 
     if (!branch1_is_power_2 || !branch2_is_power_2)
     {
@@ -316,8 +316,8 @@ resample_to_match_fine_graph_topology(const dbsksp_xshock_graph_sptr& coarse_mat
     }
 
     // Log of number of edges of each branch
-    int exp_branch1 = vnl_math_floor(log2_size1);
-    int exp_branch2 = vnl_math_floor(log2_size2);
+    int exp_branch1 = vnl_math::floor(log2_size1);
+    int exp_branch2 = vnl_math::floor(log2_size2);
     if (exp_branch1 < exp_branch2)
     {
       // Need to add node to branch 1
@@ -352,7 +352,7 @@ resample_to_match_fine_graph_topology(const dbsksp_xshock_graph_sptr& coarse_mat
     dbsksp_xshock_node_descriptor start = *(xe->source()->descriptor(xe));
     dbsksp_xshock_node_descriptor end   = xe->target()->descriptor(xe)->opposite_xnode();
     dbsksp_xshock_fragment xfrag(start, end);
-    int power_n = vnl_math_rnd(vcl_log(double(num_nodes_to_add+1)) / vnl_math::ln2);
+    int power_n = vnl_math::rnd(vcl_log(double(num_nodes_to_add+1)) / vnl_math::ln2);
     dbsksp_divide_xfrag_into_2_power_n_fragments(xfrag, power_n, list_xsample);
 
     
@@ -419,7 +419,7 @@ update_relative_error()
   {
     this->distance_common_xgraph_to_model_[i] = this->compute_deform_cost(this->common_tree_[i], this->model_tree_, this->corr_common_xgraph_to_model_[i]);
     this->distance_to_parent_[i] = this->distance_parent_to_common_xgraph_[i] + this->distance_common_xgraph_to_model_[i];
-    err[i] = vnl_math_abs(this->distance_to_parent_[i] - d/2);
+    err[i] = vnl_math::abs(this->distance_to_parent_[i] - d/2);
   }
 
   

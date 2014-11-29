@@ -84,10 +84,10 @@ intersect_lines_against_arcs(vcl_list<dbsk2d_bnd_edge_sptr >* tainted_edges,
       for (unsigned int i=0; i<arc_ratios.size(); ++i)
       {
         // ignore if this intersection point is an endpoint
-        if (vnl_math_abs(arc_ratios[i]) < 1e-12 ||
-          vnl_math_abs(arc_ratios[i]-1) < 1e-12 ||
-          vnl_math_abs(line_ratios[i]) < 1e-12 ||
-          vnl_math_abs(line_ratios[i]-1) < 1e-12)
+        if (vnl_math::abs(arc_ratios[i]) < 1e-12 ||
+          vnl_math::abs(arc_ratios[i]-1) < 1e-12 ||
+          vnl_math::abs(line_ratios[i]) < 1e-12 ||
+          vnl_math::abs(line_ratios[i]-1) < 1e-12)
         {
           continue;
         }

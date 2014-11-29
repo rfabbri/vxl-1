@@ -386,8 +386,8 @@ compute_xsamples(const dbsksp_xshock_node_sptr& start_node,
   {
 
     // Estimate number of intervals - we need at least one interval
-    int num_intervals = vnl_math_rnd(total_length / sample_ds);
-    num_intervals = vnl_math_max(1, num_intervals);
+    int num_intervals = vnl_math::rnd(total_length / sample_ds);
+    num_intervals = vnl_math::max(1, num_intervals);
 
     // Call a similar function that computes with pre-defined number of samples
     dbsksp_xgraph_algos::compute_xsamples(num_intervals, start_node, path, list_sample_xdesc);
@@ -504,8 +504,8 @@ compute_xsamples_by_fitting_shapelets(int num_intervals,
   double max_length = chordal_len.get(chordal_len.size()-1);
   
   //// we need at least one interval
-  //int num_intervals = vnl_math_rnd(max_length / sample_ds);
-  //num_intervals = vnl_math_max(1, num_intervals);
+  //int num_intervals = vnl_math::rnd(max_length / sample_ds);
+  //num_intervals = vnl_math::max(1, num_intervals);
   
   vnl_vector<double > list_sample_length(num_intervals+1, 0);
   for (unsigned k =0; k < list_sample_length.size(); ++k)
@@ -569,7 +569,7 @@ compute_xsamples_by_fitting_shapelets(int num_intervals,
   for (unsigned k =0; k < list_sample_t.size(); ++k)
   {
     double t = list_sample_t[k];
-    int shapelet_idx = vnl_math_floor(t);
+    int shapelet_idx = vnl_math::floor(t);
     double shapelet_t = t - shapelet_idx;
 
     if (shapelet_idx < int(list_t_group.size()))
@@ -768,12 +768,12 @@ compute_xsamples_by_sampling_longer_bnd_arc(int num_intervals,
 
     // number of intervals for this segment
     //dbgl_biarc chordal(start.bnd_mid_pt(), start.shock_tangent(), end.bnd_mid_pt(), end.shock_tangent()); 
-    //int num_segments = vnl_math_rnd(num_intervals * chordal.len() / total_length);
-    //num_segments = vnl_math_max(1, num_segments);
+    //int num_segments = vnl_math::rnd(num_intervals * chordal.len() / total_length);
+    //num_segments = vnl_math::max(1, num_segments);
 
     double len = run_lengths[k] - run_lengths[k-1];
-    int num_segments = vnl_math_rnd(num_intervals * len / total_length);
-    num_segments = vnl_math_max(1, num_segments);
+    int num_segments = vnl_math::rnd(num_intervals * len / total_length);
+    num_segments = vnl_math::max(1, num_segments);
 
     // temp_xsamples only contains middle-samples, not the samples at the two end points
     vcl_vector<dbsksp_xshock_node_descriptor > temp_xsamples;

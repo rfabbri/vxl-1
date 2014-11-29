@@ -269,7 +269,7 @@ double dbsk2d_ishock_arcarc::computeMinLTau ()
       if (_nu==1)        //Case 3:
         return _LsTau;
       else               //Case 4:
-        return vnl_math_max(vnl_math::pi, LEtaToLTau(lBArc()->min_eta(), UNCONSTRAINED));
+        return vnl_math::max(vnl_math::pi, LEtaToLTau(lBArc()->min_eta(), UNCONSTRAINED));
     }
   }
   else { //_MU==-1
@@ -289,7 +289,7 @@ double dbsk2d_ishock_arcarc::computeMinLTau ()
       if (_emu==1)       //Case 9, Case 10:
         return _LsTau;
       else               //Case 11, Case 12:
-        return vnl_math_max(vnl_math::pi, LEtaToLTau(lBArc()->min_eta(), UNCONSTRAINED));
+        return vnl_math::max(vnl_math::pi, LEtaToLTau(lBArc()->min_eta(), UNCONSTRAINED));
     }
   }
 }
@@ -298,7 +298,7 @@ double dbsk2d_ishock_arcarc::computeMaxLTau ()
 {
   if (_MU==1) {           //Same as Point-Arc
     if (_s==1) {          //Case 1, Case 2:
-      return vnl_math_min(_LAsymTau, LEtaToLTau(lBArc()->min_eta(), UNCONSTRAINED));
+      return vnl_math::min(_LAsymTau, LEtaToLTau(lBArc()->min_eta(), UNCONSTRAINED));
     }
     else {
       if (_nu==1){          //Case 3:
@@ -317,7 +317,7 @@ double dbsk2d_ishock_arcarc::computeMaxLTau ()
   else { //_MU==-1
     if (_s==1) {          //Inner Hyperbola, _nu==+1/-1 are the same
       if (_hmu==1)        //Case 5, Case 6:
-        return vnl_math_min(_LAsymTau, LEtaToLTau(lBArc()->min_eta(), UNCONSTRAINED));
+        return vnl_math::min(_LAsymTau, LEtaToLTau(lBArc()->min_eta(), UNCONSTRAINED));
       else                //Case 7, Case 8:
         return _LsTau;
     }
@@ -342,7 +342,7 @@ double dbsk2d_ishock_arcarc::computeMinRTau ()
   if (_MU==1) {           //Same as Point-Arc
     if (_s==1) {          //Case 1, Case 2:
       double retau = REtaToRTau(rBArc()->max_eta(), UNCONSTRAINED);
-      return vnl_math_max(retau, _RAsymTau);
+      return vnl_math::max(retau, _RAsymTau);
     }
     else {
       if (_nu==1){        //Case 3:
@@ -361,7 +361,7 @@ double dbsk2d_ishock_arcarc::computeMinRTau ()
     if (_s==1) {          //Inner Hyperbola, _nu==+1/-1 are the same
       if (_hmu==1) {      //Case 5, Case 6:
         double retau = REtaToRTau(rBArc()->max_eta(), UNCONSTRAINED);
-        return vnl_math_max(retau, _RAsymTau);
+        return vnl_math::max(retau, _RAsymTau);
       }
       else                //Case 7, Case 8:
         return _RsTau;
@@ -389,7 +389,7 @@ double dbsk2d_ishock_arcarc::computeMaxRTau ()
     else {
       if (_nu==1) {       //Case 3:
         double retau = REtaToRTau(rBArc()->max_eta(), UNCONSTRAINED);
-        return vnl_math_min(retau, vnl_math::pi);
+        return vnl_math::min(retau, vnl_math::pi);
       }
       else {              //Case 4:
         return _RsTau;

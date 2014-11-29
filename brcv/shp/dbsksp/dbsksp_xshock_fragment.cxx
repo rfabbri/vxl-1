@@ -108,7 +108,7 @@ bnd_has_swallowtail_right() const
 double dbsksp_xshock_fragment::
 area_approx_w_polygon(int num_pts) const
 {
-  int num_pts_per_side = vnl_math_max((num_pts - 2)/2, 2);
+  int num_pts_per_side = vnl_math::max((num_pts - 2)/2, 2);
   vcl_vector<vgl_point_2d<double > > pts;
 
 

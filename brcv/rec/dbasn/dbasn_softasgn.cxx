@@ -33,7 +33,7 @@ void copy_M (double **targetM, double **fromM, const int row, const int col)
 {
   for (int i=0; i<row; i++) {
     for (int j=0; j<col; j++)  {
-      assert (vnl_math_isnan(fromM[i][j]) == false);
+      assert (vnl_math::isnan(fromM[i][j]) == false);
       targetM[i][j] = fromM[i][j];
     }
   }
@@ -43,7 +43,7 @@ void copy_M (double **targetM, long double **fromM, const int row, const int col
 {
   for (int i=0; i<row; i++) {
     for (int j=0; j<col; j++)  {
-      assert (vnl_math_isnan(fromM[i][j]) == false);
+      assert (vnl_math::isnan(fromM[i][j]) == false);
       targetM[i][j] = double (fromM[i][j]);
     }
   }
@@ -53,7 +53,7 @@ void copy_M (long double **targetM, long double **fromM, const int row, const in
 {
   for (int i=0; i<row; i++) {
     for (int j=0; j<col; j++)  {
-      assert (vnl_math_isnan(fromM[i][j]) == false);
+      assert (vnl_math::isnan(fromM[i][j]) == false);
       targetM[i][j] = fromM[i][j];
     }
   }
@@ -223,7 +223,7 @@ bool dbasn_softasgn::run_assign (double** inputM, double** outputM,
     for (int j = 0; j<M_col_; j++) {
       ME_[i][j] = vcl_exp (beta*inputM[i][j]);
       //return false if exp. explosion happens.
-      if (vnl_math_isfinite(ME_[i][j]) == false)
+      if (vnl_math::isfinite(ME_[i][j]) == false)
         return false;
     }
   }

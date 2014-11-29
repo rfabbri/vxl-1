@@ -139,10 +139,10 @@ dbsksp_shock_path_sptr dbsksp_compute_uniform_shock_path(const dbsksp_xshock_nod
 
 
   // Down samples so that points are uniform
-  int num_points = vnl_math_rnd(run_lengths.back() / sample_ds) + 1;
+  int num_points = vnl_math::rnd(run_lengths.back() / sample_ds) + 1;
 
   // we want at least 2 points
-  num_points = vnl_math_max(num_points, 2);
+  num_points = vnl_math::max(num_points, 2);
 
   // Downsample to get uniformly distributed samples
   vcl_vector<dbsksp_xshock_node_descriptor > uniform_xsamples;
@@ -196,10 +196,10 @@ dbsksp_shock_path_sptr dbsksp_compute_uniform_shock_path(const dbsksp_xshock_nod
 
   //// down-sample by 2
   ////sample_ds *= 2;
-  //int num_points = vnl_math_rnd(chord_run_lengths.back() / sample_ds) + 1;
+  //int num_points = vnl_math::rnd(chord_run_lengths.back() / sample_ds) + 1;
 
   //// we want at least 2 points
-  //num_points = vnl_math_max(num_points, 2);
+  //num_points = vnl_math::max(num_points, 2);
 
   //// Interpolate to get uniformly distributed samples
   //vcl_vector<dbsksp_xshock_node_descriptor > uniform_xsamples;

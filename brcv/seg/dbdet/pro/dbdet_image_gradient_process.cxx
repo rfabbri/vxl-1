@@ -376,7 +376,7 @@ dbdet_image_gradient_process::execute()
     //    }
 
     //    //the H measure = det(W)
-    //    double h = vnl_math_max(0.0, (Ix2*Iy2 - IxIy*IxIy)/((Ix2+Iy2)*(Ix2+Iy2))); //remove negative values
+    //    double h = vnl_math::max(0.0, (Ix2*Iy2 - IxIy*IxIy)/((Ix2+Iy2)*(Ix2+Iy2))); //remove negative values
     //    H(x,y) = norm_fac*h;
 
     //    //H(x,y) = norm_fac*vcl_pow(h, 0.25); //normalize
@@ -416,11 +416,11 @@ dbdet_image_gradient_process::execute()
 
     //then compute the h measure from it
     //for(unsigned long i=0; i<Ix.size(); i++)
-    //  h[i] = norm_fac*vnl_math_max(0.0, (ix22[i]*iy22[i] - ixiy2[i]*ixiy2[i])/((ix22[i]+iy22[i])*(ix22[i]+iy22[i])));
+    //  h[i] = norm_fac*vnl_math::max(0.0, (ix22[i]*iy22[i] - ixiy2[i]*ixiy2[i])/((ix22[i]+iy22[i])*(ix22[i]+iy22[i])));
 
     norm_fac = sqrt(sigma)/25.0;
     for(unsigned long i=0; i<Ix.size(); i++)
-      h[i] = norm_fac*vcl_pow(vnl_math_max(0.0, (ix22[i]*iy22[i] - ixiy2[i]*ixiy2[i])), 0.25);// /((ix22[i]+iy22[i])*(ix22[i]+iy22[i])));
+      h[i] = norm_fac*vcl_pow(vnl_math::max(0.0, (ix22[i]*iy22[i] - ixiy2[i]*ixiy2[i])), 0.25);// /((ix22[i]+iy22[i])*(ix22[i]+iy22[i])));
 
   }
 

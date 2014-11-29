@@ -136,7 +136,7 @@ void dbsk2d_ishock_pointline::compute_tau_ranges()
     if (AisLEq(letau, _LsTau))
       _maxLTau = vnl_math::pi;
     else
-      _maxLTau = vnl_math_min(letau, vnl_math::pi);
+      _maxLTau = vnl_math::min(letau, vnl_math::pi);
 
     _minRTau = _RsTau;
     _maxRTau = _l-_rdelta;
@@ -150,7 +150,7 @@ void dbsk2d_ishock_pointline::compute_tau_ranges()
     if (AisGEq(retau, _RsTau))
       _minRTau = vnl_math::pi;
     else
-      _minRTau = vnl_math_max(retau, vnl_math::pi);
+      _minRTau = vnl_math::max(retau, vnl_math::pi);
 
     _maxRTau = _RsTau;
   }

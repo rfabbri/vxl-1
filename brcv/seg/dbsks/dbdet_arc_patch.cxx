@@ -135,7 +135,7 @@ vnl_vector<double > dbdet_compute_HOG(const vil_image_view<double >& Gx,
       int max_dot_bin = 0;
       for (int bin =0; bin < num_bins; ++bin)
       {
-        double dot = vnl_math_abs(gu * uu[bin] + gv * vv[bin]);
+        double dot = vnl_math::abs(gu * uu[bin] + gv * vv[bin]);
         if (max_dot < dot)
         {
           max_dot_bin = bin; 
@@ -144,7 +144,7 @@ vnl_vector<double > dbdet_compute_HOG(const vil_image_view<double >& Gx,
       }
 
       // use magnitude of gradient vector as its weights in the histogram
-      hog[max_dot_bin] += vnl_math_hypot(gu, gv);
+      hog[max_dot_bin] += vnl_math::hypot(gu, gv);
     }
   }
 

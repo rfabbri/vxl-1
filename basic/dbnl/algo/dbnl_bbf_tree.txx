@@ -60,10 +60,10 @@ T dbnl_bbf_dist_sq( const vnl_vector_fixed<T,n>& p, const dbnl_bbf_box<T,n>& b )
     const T& x1 = b.max_point_[i];
     const T& x  = p[i];
     if ( x < x0 ) {
-      sum_sq += vnl_math_sqr( x0 - x );
+      sum_sq += vnl_math::sqr( x0 - x );
     }
     else if ( x > x1 ) {
-      sum_sq += vnl_math_sqr( x1 - x );
+      sum_sq += vnl_math::sqr( x1 - x );
     }
   }
 

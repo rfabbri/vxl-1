@@ -149,8 +149,8 @@ execute()
   {
     vgl_point_2d<double > pt = detector.medial_pts_[i].pt_;
 
-    int pt_i = vnl_math_rnd(pt.x());
-    int pt_j = vnl_math_rnd(pt.y());
+    int pt_i = vnl_math::rnd(pt.x());
+    int pt_j = vnl_math::rnd(pt.y());
 
     if (pt_i >= (int) medial_image.ni() || pt_j >= (int)medial_image.nj())
       continue;

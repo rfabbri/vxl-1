@@ -134,7 +134,7 @@ bool dbsks_adjust_to_standard_scale_sparse(double standard_scale,
                                vcl_vector<vsol_polyline_2d_sptr >& new_polyline_list,
                                vil_image_view<float >& new_edge_angle)
 {
-  int scaling_up = vnl_math_rnd(standard_scale / cur_scale);
+  int scaling_up = vnl_math::rnd(standard_scale / cur_scale);
 
   if (scaling_up <= 1)
   {
@@ -163,8 +163,8 @@ bool dbsks_adjust_to_standard_scale_sparse(double standard_scale,
       for (unsigned m =0; m < poly->size(); ++m)
       {
         vsol_point_2d_sptr pt = poly->vertex(m);
-        int px = vnl_math_rnd(pt->x());
-        int py = vnl_math_rnd(pt->y());
+        int px = vnl_math::rnd(pt->x());
+        int py = vnl_math::rnd(pt->y());
 
         int new_px = px * scaling_up;
         int new_py = py * scaling_up;
@@ -203,7 +203,7 @@ bool dbsks_adjust_to_standard_scale_dense(double standard_scale,
   // all linked contours (in polyline_list) have pixel-accuracy only
   // the scaling factor will be integer
 
-  int ratio = vnl_math_rnd(standard_scale / cur_scale);
+  int ratio = vnl_math::rnd(standard_scale / cur_scale);
 
   // for now, we keep everything the same for large scale objects
   // \todo handle this case properly (scale down the edgemaps)
@@ -233,8 +233,8 @@ bool dbsks_adjust_to_standard_scale_dense(double standard_scale,
       vsol_polyline_2d_sptr new_poly = new vsol_polyline_2d();
 
       // first point
-      int px0 = vnl_math_rnd(poly->vertex(0)->x());
-      int py0 = vnl_math_rnd(poly->vertex(0)->y());
+      int px0 = vnl_math::rnd(poly->vertex(0)->x());
+      int py0 = vnl_math::rnd(poly->vertex(0)->y());
       int new_px0 = ratio * px0;
       int new_py0 = ratio * py0;
       new_poly->add_vertex(new vsol_point_2d(new_px0, new_py0));
@@ -250,7 +250,7 @@ bool dbsks_adjust_to_standard_scale_dense(double standard_scale,
       for (unsigned m =1; m < poly->size(); ++m)
       {
         vsol_point_2d_sptr vertex = poly->vertex(m);
-        vgl_point_2d<int > pt(vnl_math_rnd(vertex->x()), vnl_math_rnd(vertex->y()));
+        vgl_point_2d<int > pt(vnl_math::rnd(vertex->x()), vnl_math::rnd(vertex->y()));
         float pixel_val = cur_edgemap(pt.x(), pt.y());
         float angle = cur_edge_angle(pt.x(), pt.y());
         
@@ -301,7 +301,7 @@ bool dbsks_adjust_to_standard_scale(double standard_scale,
                                vil_image_view<float >& new_edgemap,
                                vil_image_view<float >& new_edge_angle)
 {
-  int scaling_up = vnl_math_rnd(standard_scale / cur_scale);
+  int scaling_up = vnl_math::rnd(standard_scale / cur_scale);
 
   if (scaling_up <= 1)
   {

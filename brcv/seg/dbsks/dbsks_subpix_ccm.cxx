@@ -99,7 +99,7 @@ radians_per_bin() const
 int dbsks_subpix_ccm::
 orient_bin(double angle)
 {
-  int idx = vnl_math_rnd(angle * this->nbins_0topi() / vnl_math::pi);
+  int idx = vnl_math::rnd(angle * this->nbins_0topi() / vnl_math::pi);
   idx %= (2*this->nbins_0topi());
   return (idx > 0) ? idx : (idx + 2*this->nbins_0topi()); // force positve index
 }
@@ -274,8 +274,8 @@ f(const vcl_vector<int >& xs, const vcl_vector<int >& ys, const vcl_vector<int >
 float dbsks_subpix_ccm::
 chamfer_cost(double distance) const
 {
-  double cost = vnl_math_max(0.0, distance-this->distance_tol_near_zero_) / this->distance_threshold_;
-  return float(vnl_math_min(cost, 1.0)); // upper-bound = 1
+  double cost = vnl_math::max(0.0, distance-this->distance_tol_near_zero_) / this->distance_threshold_;
+  return float(vnl_math::min(cost, 1.0)); // upper-bound = 1
 }
 
 
@@ -291,13 +291,13 @@ edge_orient_cost(double signed_angle_diff) const
     diff += vnl_math::pi;
 
   // now convert this angle difference to [0, pi/2]
-  diff = vnl_math_min(diff, vnl_math::pi - diff);
+  diff = vnl_math::min(diff, vnl_math::pi - diff);
            
   // due to discretization, we allow a "tolerance" zone near zero
-  double cost = vnl_math_max(diff- this->orient_tol_near_zero_, 0.0) / this->orient_threshold_;
+  double cost = vnl_math::max(diff- this->orient_tol_near_zero_, 0.0) / this->orient_threshold_;
 
   // clip the cost at 2.0
-  return float(vnl_math_min(cost, 1.0));
+  return float(vnl_math::min(cost, 1.0));
 }
 
 
@@ -346,27 +346,27 @@ contour_orient_cost(int cur_x, int cur_y, int cur_orient_bin,
     double edge_contour_angle = cur_edgel->tangent;
     vgl_vector_2d<double > v_edge(vcl_cos(edge_contour_angle), vcl_sin(edge_contour_angle));
     
-    angle_diff = vnl_math_abs(signed_angle(v_query, v_edge));
+    angle_diff = vnl_math::abs(signed_angle(v_query, v_edge));
 
     // since edge angle has the ambiguity of +-pi, the angle difference cannot be more than pi/2
     // there are two possible values, differeing by pi
-    angle_diff = vnl_math_min(angle_diff, vnl_math::pi - angle_diff);
+    angle_diff = vnl_math::min(angle_diff, vnl_math::pi - angle_diff);
   }
   else
   {
     // Compute orientation of "contour" along the edges
     vgl_vector_2d<double > v_edge = next_edgel->pt -cur_edgel->pt;
-    angle_diff = vnl_math_abs(signed_angle(v_query, v_edge));
+    angle_diff = vnl_math::abs(signed_angle(v_query, v_edge));
   }
 
   assert(angle_diff >= 0); // make sure nothing weird happens
            
   // due to discretization, we allow a "tolerance" zone equal
-  angle_diff = vnl_math_max(angle_diff-this->orient_tol_near_zero_, 0.0);
+  angle_diff = vnl_math::max(angle_diff-this->orient_tol_near_zero_, 0.0);
   double angle_cost = angle_diff / this->orient_threshold_;
 
   // clip the cost at 1.0 // was 2.0
-  return float(vnl_math_min(angle_cost, 1.0));
+  return float(vnl_math::min(angle_cost, 1.0));
 }
 
 
@@ -409,14 +409,14 @@ compute_matched_edgels_using_ocm_cost()
   for (int i =this->roi_.min_x(); i < this->roi_.max_x(); ++i)
   {
     // x-dimension of local window
-    int wmin_x = vnl_math_max(i-radius, 0);
-    int wmax_x = vnl_math_min(i+radius, ni-1);
+    int wmin_x = vnl_math::max(i-radius, 0);
+    int wmax_x = vnl_math::min(i+radius, ni-1);
     
     for (int j =this->roi_.min_y(); j <this->roi_.max_y(); ++j)
     {
       // y-dimension of local window
-      int wmin_y = vnl_math_max(j-radius, 0);
-      int wmax_y = vnl_math_min(j+radius, nj-1);
+      int wmin_y = vnl_math::max(j-radius, 0);
+      int wmax_y = vnl_math::min(j+radius, nj-1);
 
       //a) Check-up: if cost is up-to-date, don't bother to recompute it
       if (this->cost_update_to_date_(i, j))
@@ -432,7 +432,7 @@ compute_matched_edgels_using_ocm_cost()
       {
         for (int wy = wmin_y; wy <= wmax_y; ++wy)
         {
-          if (vnl_math_hypot(wx-i, wy-j) > radius)
+          if (vnl_math::hypot(wx-i, wy-j) > radius)
             continue;
 
           const vcl_vector<dbdet_edgel* >& edgels = this->edgemap()->cell(wx, wy);
@@ -491,7 +491,7 @@ compute_matched_edgels_using_ocm_cost()
             // wrt to the local coordinate system of the query (oriented) point
             double local_dx = dot_product(query_tangent, edgel->pt - query_pt);
 
-            if (vnl_math_abs(local_dx) > half_width)
+            if (vnl_math::abs(local_dx) > half_width)
             {
               continue;
             }
@@ -605,8 +605,8 @@ compute_cost_components_from_matched_edgels()
           double query_angle = p * this->radians_per_bin();
 
           // Coordinate of next point along contour's tangent
-          int next_point_x = vnl_math_rnd(i + vcl_cos(query_angle) * neighborhood_radius);
-          int next_point_y = vnl_math_rnd(j + vcl_sin(query_angle) * neighborhood_radius);
+          int next_point_x = vnl_math::rnd(i + vcl_cos(query_angle) * neighborhood_radius);
+          int next_point_y = vnl_math::rnd(j + vcl_sin(query_angle) * neighborhood_radius);
 
           // assuming orientation doesn't change
           // \todo alternatively, we can average the cost for various next_point_p,
@@ -718,7 +718,7 @@ compute_f_lower_bound() const
         this->weight_edge_orient() * f_edge_orient;
       if (f_ocm.empty())
         continue;
-      fmin = vnl_math_min(fmin, f_ocm.min_value());
+      fmin = vnl_math::min(fmin, f_ocm.min_value());
     } // j
   } // i
 
@@ -756,7 +756,7 @@ compute_f_upper_bound() const
       if (f_ccm.empty())
         continue;
 
-      fmax = vnl_math_max(fmax, f_ccm.max_value());
+      fmax = vnl_math::max(fmax, f_ccm.max_value());
     } // j
   } // i
 

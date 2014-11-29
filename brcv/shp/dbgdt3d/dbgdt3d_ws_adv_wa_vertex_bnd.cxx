@@ -116,7 +116,7 @@ gdt_shock* gdt_ws_manager::_create_L_contact_shock (gdt_welm* Wa, gdt_welm* Wb,
 
   //the current shock distance is at the shock source
   double starttime = Wb->get_dist_at_tau (0);
-  double endtime = Wb->mu() + vnl_math_hypot (tauE-nL, nH);
+  double endtime = Wb->mu() + vnl_math::hypot (tauE-nL, nH);
 
   gdt_shock* S = new gdt_shock (shock_id_counter_++, Wa, Wb, eR, tauE, 
                                 starttime, endtime, Wb->edge()->sV());
@@ -238,7 +238,7 @@ gdt_shock* gdt_ws_manager::_create_R_contact_shock (gdt_welm* Wa, gdt_welm* Wb,
 
   //the current shock distance is at the shock source
   double starttime = Wa->get_dist_at_tau (Wa->etau());
-  double endtime = Wa->mu() + vnl_math_hypot (tauE-nL, nH);
+  double endtime = Wa->mu() + vnl_math::hypot (tauE-nL, nH);
 
   gdt_shock* S = new gdt_shock (shock_id_counter_++, Wa, Wb, eL, tauE, 
                                 starttime, endtime, Wa->edge()->eV());

@@ -44,8 +44,8 @@ compute()
 float dbcsi_shotton_ocm::
 f(double x, double y, double tx, double ty)
 {
-  int im_i = vnl_math_rnd(x);
-  int im_j = vnl_math_rnd(y);
+  int im_i = vnl_math::rnd(x);
+  int im_j = vnl_math::rnd(y);
 
   // range check
   if (im_i < 0 || (im_j+1) >= int(this->edgemap_.ni()) || 
@@ -59,7 +59,7 @@ f(double x, double y, double tx, double ty)
   unsigned max_idx = 0;
   for (unsigned i =0; i < this->channel_sin_.size(); ++i)
   {
-    double dot = vnl_math_abs(tx*this->channel_cos_[i] + ty*this->channel_sin_[i]);
+    double dot = vnl_math::abs(tx*this->channel_cos_[i] + ty*this->channel_sin_[i]);
     if (dot > max_dot)
     {
       max_dot = dot;
@@ -193,7 +193,7 @@ compute_chamfer_cost()
   {
     for (unsigned j =0; j <nj; ++j)
     {
-      float distance = vnl_math_abs(this->dt_(i, j));
+      float distance = vnl_math::abs(this->dt_(i, j));
 
       // any pixel within 'tolerance' from an edge points is on an edge point
       if (distance < this->tol_near_zero_)
@@ -203,7 +203,7 @@ compute_chamfer_cost()
       else
       {        
         float cost = (distance- this->tol_near_zero_) / this->distance_threshold_;
-        this->chamfer_cost_(i, j) = vnl_math_min(cost, 1.0f);
+        this->chamfer_cost_(i, j) = vnl_math::min(cost, 1.0f);
       }
     }
   }
@@ -248,7 +248,7 @@ compute_orientation_cost()
     for (unsigned j =0; j < nj; ++j)
     {
       // if the point is too far, we disregard the orientation
-      if (vnl_math_abs(this->dt_(i, j)) > this->distance_threshold_)
+      if (vnl_math::abs(this->dt_(i, j)) > this->distance_threshold_)
       {
         for (unsigned channel =0; channel < nchannel; ++channel)
         {
@@ -274,7 +274,7 @@ compute_orientation_cost()
             angle_diff += vnl_math::pi;
 
           // now convert this angle difference to [0, pi/2]
-          angle_diff = vnl_math_min(angle_diff, vnl_math::pi - angle_diff);
+          angle_diff = vnl_math::min(angle_diff, vnl_math::pi - angle_diff);
 
           // normalize this cost to [0, 1]
           this->orient_cost_(i, j, channel) = float(angle_diff/vnl_math::pi_over_2);

@@ -336,8 +336,8 @@ int utils::IHS2lab(double I,double H,double S, double &L , double &a, double &lb
   i = r*0.299+0.587*g+0.114*b;
 
 
-  double maxval = vnl_math_max(r, vnl_math_max(g, b));
-  double minval = vnl_math_min(r, vnl_math_min(g, b));
+  double maxval = vnl_math::max(r, vnl_math::max(g, b));
+  double minval = vnl_math::min(r, vnl_math::min(g, b));
 
   //lightness
   double la = (maxval + minval) / 2.f;

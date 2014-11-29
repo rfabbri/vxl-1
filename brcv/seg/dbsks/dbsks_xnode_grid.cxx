@@ -85,8 +85,8 @@ set_psi_vec(double min_psi, double max_psi, double step_psi)
   this->step_psi_ = step_psi;
 
   // make sure the range does not exceed 2pi
-  int num_psi = 2*vnl_math_floor((max_psi-min_psi)/2 / step_psi) + 1;
-  num_psi = vnl_math_min(num_psi, vnl_math_floor(2*vnl_math::pi / step_psi) + 1);
+  int num_psi = 2*vnl_math::floor((max_psi-min_psi)/2 / step_psi) + 1;
+  num_psi = vnl_math::min(num_psi, vnl_math::floor(2*vnl_math::pi / step_psi) + 1);
 
   // center the vector around the mean value
   double xmin = (max_psi+min_psi)/2 - step_psi*(num_psi-1)/2;
@@ -111,14 +111,14 @@ set_phi0_vec(double min_phi0, double max_phi0, double step_phi0)
   assert(max_phi0 >= min_phi0);
   assert(step_phi0 > 0);
 
-  min_phi0 = vnl_math_max(vnl_math::pi/36, min_phi0); // phi0 is always >= 0
-  max_phi0 = vnl_math_min(vnl_math::pi* (1-1.0/36), max_phi0); // phi0 is always < pi;
+  min_phi0 = vnl_math::max(vnl_math::pi/36, min_phi0); // phi0 is always >= 0
+  max_phi0 = vnl_math::min(vnl_math::pi* (1-1.0/36), max_phi0); // phi0 is always < pi;
   
   this->step_phi0_ = step_phi0;
 
   // make sure the range does not exceed pi
-  int num_phi0 = 2*vnl_math_rnd((max_phi0-min_phi0)/2 / step_phi0) + 1;
-  num_phi0 = vnl_math_min(num_phi0, vnl_math_floor(vnl_math::pi / step_phi0) + 1);
+  int num_phi0 = 2*vnl_math::rnd((max_phi0-min_phi0)/2 / step_phi0) + 1;
+  num_phi0 = vnl_math::min(num_phi0, vnl_math::floor(vnl_math::pi / step_phi0) + 1);
 
   // center the vector around the mean value
   double xmin = (max_phi0+min_phi0)/2 - step_phi0*(num_phi0-1)/2;
@@ -292,7 +292,7 @@ cell_linear_to_grid(int i_linear, int& i_psi, int& i_phi0, int& i_r)
 int dbsks_xnode_grid::
 i_x(double x) const
 {
-  return vnl_math_rnd((x-this->x_[0]) / this->step_x_);
+  return vnl_math::rnd((x-this->x_[0]) / this->step_x_);
 }
 
 // -----------------------------------------------------------------------------
@@ -300,7 +300,7 @@ i_x(double x) const
 int dbsks_xnode_grid::
 i_y(double y) const
 {
-  return vnl_math_rnd((y-this->y_[0]) / this->step_y_);
+  return vnl_math::rnd((y-this->y_[0]) / this->step_y_);
 }
 
 
@@ -310,11 +310,11 @@ int dbsks_xnode_grid::
 i_psi(double psi) const
 {
   double psi_0to2pi = dbnl_angle_0to2pi(psi-this->psi_[0]);
-  int i_psi = vnl_math_rnd(psi_0to2pi / this->step_psi_);
+  int i_psi = vnl_math::rnd(psi_0to2pi / this->step_psi_);
 
   // just in case psi_0to2pi is very close to 2pi
   if (i_psi >= (int)this->psi_.size())
-    i_psi = vnl_math_rnd((psi_0to2pi -vnl_math::pi*2) / this->step_psi_);
+    i_psi = vnl_math::rnd((psi_0to2pi -vnl_math::pi*2) / this->step_psi_);
   return i_psi;
 }
 
@@ -326,7 +326,7 @@ i_psi(double psi) const
 int dbsks_xnode_grid::
 i_phi0(double phi0) const
 {
-  return vnl_math_rnd((phi0-this->phi0_[0]) / this->step_phi0_);
+  return vnl_math::rnd((phi0-this->phi0_[0]) / this->step_phi0_);
 }
 
 // -----------------------------------------------------------------------------
@@ -334,7 +334,7 @@ i_phi0(double phi0) const
 int dbsks_xnode_grid::
 i_r(double r) const
 {
-  return vnl_math_rnd( (r - this->r_[0]) / this->step_r_ );
+  return vnl_math::rnd( (r - this->r_[0]) / this->step_r_ );
 }
 
 
@@ -343,7 +343,7 @@ i_r(double r) const
 int dbsks_xnode_grid::
 i_phi1(double phi1) const
 {
-  return vnl_math_rnd((phi1-this->phi1_[0]) / this->step_phi1_);
+  return vnl_math::rnd((phi1-this->phi1_[0]) / this->step_phi1_);
 }
 
 
@@ -361,13 +361,13 @@ sample_xy(double x0, double y0, int num_x_backward, int num_x_forward,
   int i_y0 = this->i_y(y0);
 
   // bounds of indices of the grid
-  int min_i_x = vnl_math_max(i_x0 - num_x_backward, 0);
-  int max_i_x = vnl_math_min(i_x0 + num_x_forward, (int)(this->x_.size())-1);
-  int min_i_y = vnl_math_max(i_y0 - num_y_backward, 0);
-  int max_i_y = vnl_math_min(i_y0 + num_y_forward, (int)(this->y_.size())-1);
+  int min_i_x = vnl_math::max(i_x0 - num_x_backward, 0);
+  int max_i_x = vnl_math::min(i_x0 + num_x_forward, (int)(this->x_.size())-1);
+  int min_i_y = vnl_math::max(i_y0 - num_y_backward, 0);
+  int max_i_y = vnl_math::min(i_y0 + num_y_forward, (int)(this->y_.size())-1);
 
   // total number of grid points
-  int num_pts = vnl_math_max(max_i_x-min_i_x+1, 0) * vnl_math_max(max_i_y-min_i_y+1, 0);
+  int num_pts = vnl_math::max(max_i_x-min_i_x+1, 0) * vnl_math::max(max_i_y-min_i_y+1, 0);
 
   // allocate memory
   xs.resize(num_pts);
@@ -412,8 +412,8 @@ sample_x(double ref_x, int num_x_backward, int num_x_forward,
 
   // index of reference point
   int i0 = this->i_x(ref_x);
-  int min_index = vnl_math_max(i0 - num_x_backward, 0);
-  int max_index = vnl_math_min(i0 + num_x_forward, int(this->x_.size())-1);
+  int min_index = vnl_math::max(i0 - num_x_backward, 0);
+  int max_index = vnl_math::min(i0 + num_x_forward, int(this->x_.size())-1);
 
   // compute index and value for each point
   for (int i = min_index; i <= max_index; ++i)
@@ -440,8 +440,8 @@ sample_y(double ref_y, int num_y_backward, int num_y_forward,
 
   // index of reference point
   int i0 = this->i_y(ref_y);
-  int min_index = vnl_math_max(i0 - num_y_backward, 0);
-  int max_index = vnl_math_min(i0 + num_y_forward, int(this->y_.size())-1);
+  int min_index = vnl_math::max(i0 - num_y_backward, 0);
+  int max_index = vnl_math::min(i0 + num_y_forward, int(this->y_.size())-1);
 
   // compute index and value for each point
   for (int i = min_index; i <= max_index; ++i)
@@ -515,8 +515,8 @@ sample_phi0(double ref_phi0, int num_phi0_backward, int num_phi0_forward,
 
   // index of reference point
   int i0 = this->i_phi0(ref_phi0);
-  int min_index = vnl_math_max(i0 - num_phi0_backward, 0);
-  int max_index = vnl_math_min(i0 + num_phi0_forward, int(this->phi0_.size())-1);
+  int min_index = vnl_math::max(i0 - num_phi0_backward, 0);
+  int max_index = vnl_math::min(i0 + num_phi0_forward, int(this->phi0_.size())-1);
 
   // compute index and value for each point
   for (int i = min_index; i <= max_index; ++i)
@@ -543,8 +543,8 @@ sample_r(double ref_r, int num_r_backward, int num_r_forward,
 
   // index of reference point
   int i0 = this->i_r(ref_r);
-  int min_index = vnl_math_max(i0 - num_r_backward, 0);
-  int max_index = vnl_math_min(i0 + num_r_forward, int(this->r_.size())-1);
+  int min_index = vnl_math::max(i0 - num_r_backward, 0);
+  int max_index = vnl_math::min(i0 + num_r_forward, int(this->r_.size())-1);
 
   // compute index and value for each point
   for (int i = min_index; i <= max_index; ++i)
@@ -572,8 +572,8 @@ sample_phi1(double ref_phi1, int num_phi1_backward, int num_phi1_forward,
 
   // index of reference point
   int i0 = this->i_phi1(ref_phi1);
-  int min_index = vnl_math_max(i0 - num_phi1_backward, 0);
-  int max_index = vnl_math_min(i0 + num_phi1_forward, int(this->phi1_.size())-1);
+  int min_index = vnl_math::max(i0 - num_phi1_backward, 0);
+  int max_index = vnl_math::min(i0 + num_phi1_forward, int(this->phi1_.size())-1);
 
   // compute index and value for each point
   for (int i = min_index; i <= max_index; ++i)

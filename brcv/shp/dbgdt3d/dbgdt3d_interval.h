@@ -326,7 +326,7 @@ public:
   
   //: if possible, should use the regular version which is faster.
   double _get_local_dist (const double input_tau) const {
-    return vnl_math_hypot (input_tau-L_, H_); 
+    return vnl_math::hypot (input_tau-L_, H_); 
   }
 
   double _get_min_dist () const;

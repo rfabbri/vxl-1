@@ -690,7 +690,7 @@ double gdt_interval::_get_d_at_tau (const double input_tau) const
       return edge()->len() - input_tau;
   }
   else {
-    return vnl_math_hypot (input_tau-L_, H_);
+    return vnl_math::hypot (input_tau-L_, H_);
   }
 }
 

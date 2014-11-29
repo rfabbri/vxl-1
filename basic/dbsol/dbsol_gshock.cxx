@@ -34,7 +34,7 @@ make(const dbgl_param_curve *prv, const dbgl_param_curve *cur,
       compute_intersections( *aprv, *anxt, &i1, &i2);
 
    if (n_intercepts == 1) {
-        d1 = vnl_math_hypot(i1.x() - mid_x, i1.y() - mid_y);
+        d1 = vnl_math::hypot(i1.x() - mid_x, i1.y() - mid_y);
 
         if (d1 < shock_point_dist_threshold) {
             loc_.push_back(i1);
@@ -45,8 +45,8 @@ make(const dbgl_param_curve *prv, const dbgl_param_curve *cur,
 
    } else if (n_intercepts == 2) {
         // keep only the shock closest to the midpoint
-        d1 = vnl_math_hypot(i1.x() - mid_x, i1.y() - mid_y);
-        d2 = vnl_math_hypot(i2.x() - mid_x, i2.y() - mid_y);
+        d1 = vnl_math::hypot(i1.x() - mid_x, i1.y() - mid_y);
+        d2 = vnl_math::hypot(i2.x() - mid_x, i2.y() - mid_y);
 
         i1 = (d1 < d2) ? i1 : i2;
         d1 = (d1 < d2) ? d1 : d2;
@@ -81,8 +81,8 @@ fix_outofbound_shock(const dbgl_arc *prv, const dbgl_arc *cur, const dbgl_arc *n
 
    vgl_point_2d<double> loc = this->loc();
 
-   pdist = vnl_math_hypot(loc.x() - pcenter.x(), loc.y() - pcenter.y());
-   ndist = vnl_math_hypot(loc.x() - ncenter.x(), loc.y() - ncenter.y());
+   pdist = vnl_math::hypot(loc.x() - pcenter.x(), loc.y() - pcenter.y());
+   ndist = vnl_math::hypot(loc.x() - ncenter.x(), loc.y() - ncenter.y());
 
    if (vcl_fabs(pdist - (1.0/prv->curvature()) ) < 0.2) {
         // back

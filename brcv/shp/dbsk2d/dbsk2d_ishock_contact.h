@@ -127,8 +127,8 @@ public:
 
   virtual vgl_point_2d<double> getStartPt (void) { return _origin; }
   virtual vgl_point_2d<double> getEndPt (void)   { return _translatePoint (_origin, _n, _endTime); }
-  virtual vgl_point_2d<double> getMidPt (void)   { return _translatePoint (_origin, _n,  vnl_math_min (_endTime, MAX_RADIUS)/2); }
-  virtual vgl_point_2d<double> getEndPtWithinRange (void) { return _translatePoint (_origin, _n,  vnl_math_min (_endTime,MAX_RADIUS)); }
+  virtual vgl_point_2d<double> getMidPt (void)   { return _translatePoint (_origin, _n,  vnl_math::min (_endTime, MAX_RADIUS)/2); }
+  virtual vgl_point_2d<double> getEndPtWithinRange (void) { return _translatePoint (_origin, _n,  vnl_math::min (_endTime,MAX_RADIUS)); }
 
   virtual vgl_point_2d<double> getLFootPt (double tau=0) { return _origin; }
   virtual vgl_point_2d<double> getRFootPt (double tau=0) { return _origin; }

@@ -56,7 +56,7 @@ bool dbdet_screenshot(dbdet_curve_fragment_graph& cfg,
       for (int k = -outer_radius; k <= outer_radius; ++k)
       {
         vgl_point_2d<double > pt = p + k * n;
-        vgl_point_2d<int > pi( vnl_math_rnd(pt.x()), vnl_math_rnd(pt.y()));
+        vgl_point_2d<int > pi( vnl_math::rnd(pt.x()), vnl_math::rnd(pt.y()));
 
         if (screenshot.in_range(pi.x(), pi.y()))
         {
@@ -71,7 +71,7 @@ bool dbdet_screenshot(dbdet_curve_fragment_graph& cfg,
       for (int k = -inner_radius; k <= inner_radius; ++k)
       {
         vgl_point_2d<double > pt = p + k * n;
-        vgl_point_2d<int > pi( vnl_math_rnd(pt.x()), vnl_math_rnd(pt.y()));
+        vgl_point_2d<int > pi( vnl_math::rnd(pt.x()), vnl_math::rnd(pt.y()));
 
         if (screenshot.in_range(pi.x(), pi.y()))
         {

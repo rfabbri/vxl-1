@@ -83,8 +83,8 @@ optimize()
 
   // case : optimize over alpha0
   dbsksp_twoshapelet_sptr ss = 0;
-  if (vnl_math_abs(this->shock_estimate().k1()) < 1e-12 &&
-    vnl_math_abs(this->shock_estimate().k2()) < 1e-12 )
+  if (vnl_math::abs(this->shock_estimate().k1()) < 1e-12 &&
+    vnl_math::abs(this->shock_estimate().k2()) < 1e-12 )
   {
     ss = this->optimize_over_phi1();
     if (ss && ss->is_legal()) return ss;

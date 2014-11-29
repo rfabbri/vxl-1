@@ -122,7 +122,7 @@ void dbsks_collect_shock_nodes_by_depth(const dbsksp_shock_graph_sptr& graph,
   for (dbsksp_shock_graph::vertex_iterator vit = graph->vertices_begin();
     vit != graph->vertices_end(); ++vit)
   {
-    max_depth = vnl_math_max(max_depth, (*vit)->depth());
+    max_depth = vnl_math::max(max_depth, (*vit)->depth());
   }
 
   vertex_bins.clear();
@@ -163,30 +163,30 @@ float dbsks_deform_cost_shock_edit(const dbsksp_shapelet_sptr& sp_ref,
 
   // Components of shock-edit deformation
   // 1. boundary length difference
-  double len_diff_left = vnl_math_abs(arc_left_ref.length() - arc_left_target.length());
-  double len_diff_right = vnl_math_abs(arc_right_ref.length() - arc_right_target.length());
+  double len_diff_left = vnl_math::abs(arc_left_ref.length() - arc_left_target.length());
+  double len_diff_right = vnl_math::abs(arc_right_ref.length() - arc_right_target.length());
   double len_diff = len_diff_left + len_diff_right;
 
   // 2. bending angle difference
-  double bending_diff_left = vnl_math_abs(arc_left_ref.length()*arc_left_ref.k() -
+  double bending_diff_left = vnl_math::abs(arc_left_ref.length()*arc_left_ref.k() -
     arc_left_target.length() * arc_left_target.k());
-  double bending_diff_right = vnl_math_abs(arc_right_ref.length()*arc_right_ref.k() -
+  double bending_diff_right = vnl_math::abs(arc_right_ref.length()*arc_right_ref.k() -
     arc_right_target.length() * arc_right_target.k());
   double bending_diff = bending_diff_left + bending_diff_right;
 
   // 3. starting radius difference
-  double start_radius_diff = vnl_math_abs(s_ref->radius_start() - s_target->radius_start());
+  double start_radius_diff = vnl_math::abs(s_ref->radius_start() - s_target->radius_start());
 
   // 4. radius increment difference
-  double radius_increment_diff = vnl_math_abs(
+  double radius_increment_diff = vnl_math::abs(
     s_ref->radius_increment() - s_target->radius_increment());
 
   // 5. phiA difference
-  double start_phi_diff = vnl_math_abs(
+  double start_phi_diff = vnl_math::abs(
     s_ref->phi_start() - s_target->phi_start());
 
   // 6. phi increment difference
-  double phi_increment_diff = vnl_math_abs(
+  double phi_increment_diff = vnl_math::abs(
     (s_ref->phi_end() - s_ref->phi_start()) - (s_target->phi_end() - s_target->phi_start()));
 
 
@@ -300,8 +300,8 @@ float dbsks_deform_cost_log2_scale_diff(const dbsksp_shapelet_sptr& s_ref,
 //  float shock_edit_deform = dbsks_deform_cost_shock_edit(s_ref, include_front_arc,
 //    include_rear_arc, s_target);
 //
-//  float scale_cost = vnl_math_sqr(scale_diff / scale_sigma);
-//  float shock_edit_cost = vnl_math_sqr(shock_edit_deform / shock_edit_sigma); 
+//  float scale_cost = vnl_math::sqr(scale_diff / scale_sigma);
+//  float shock_edit_cost = vnl_math::sqr(shock_edit_deform / shock_edit_sigma); 
 //
 //  return scale_cost + shock_edit_cost;
 //}
@@ -322,7 +322,7 @@ float dbsks_deform_cost(const dbsksp_shapelet_sptr& s_ref,
   
   // multiply this cost by a constant, depending on how "regularized" the shape 
   // of the fragment is
-  float shock_edit_cost = vnl_math_abs(shock_edit_deform / shock_edit_sigma); 
+  float shock_edit_cost = vnl_math::abs(shock_edit_deform / shock_edit_sigma); 
 
   return shock_edit_cost;
 }

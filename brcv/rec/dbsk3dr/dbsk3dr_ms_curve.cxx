@@ -344,7 +344,7 @@ void dbsk3dr_ms_curve::computeProperties()
     phis_.push_back(phis);
     double thetas = (theta_[i] - theta_[i-1])/s_[i];
     thetas_.push_back(thetas);
-    double curvature = vnl_math_hypot(phis, vcl_sin(phi_[i])*thetas);
+    double curvature = vnl_math::hypot(phis, vcl_sin(phi_[i])*thetas);
     curvature_.push_back(curvature);
 
     //the Tangent[] is normalized.
@@ -456,7 +456,7 @@ void dbsk3dr_ms_curve::computeArcLength()
   {
     double cx=(*storage_)[i]->x();
     double cy=(*storage_)[i]->y();
-    double dL = vnl_math_hypot(cx-px,cy-py);
+    double dL = vnl_math::hypot(cx-px,cy-py);
     length_ += dL;
     arcLength_.push_back(length_);
     s_.push_back(dL);

@@ -96,32 +96,32 @@ set_param_range(double min_psi_start, double max_psi_start,
   double eps = 1e-5;
 
   // make sure the range is less than 2*Pi
-  max_psi_start = vnl_math_min(max_psi_start, min_psi_start + 2*vnl_math::pi);
+  max_psi_start = vnl_math::min(max_psi_start, min_psi_start + 2*vnl_math::pi);
 
   // make sure radius is always positive
-  min_r_start = vnl_math_max(1.0, min_r_start);
-  max_r_start = vnl_math_max(1.0, max_r_start);
-  max_r_start = vnl_math_max(min_r_start + eps, max_r_start);
+  min_r_start = vnl_math::max(1.0, min_r_start);
+  max_r_start = vnl_math::max(1.0, max_r_start);
+  max_r_start = vnl_math::max(min_r_start + eps, max_r_start);
 
   // make sure phi is between 0 and pi
-  min_phi_start = vnl_math_max(min_phi_start, vnl_math::pi / 36);
-  max_phi_start = vnl_math_min(max_phi_start, vnl_math::pi - vnl_math::pi/36);
-  max_phi_start = vnl_math_max(min_phi_start + eps, max_phi_start);
+  min_phi_start = vnl_math::max(min_phi_start, vnl_math::pi / 36);
+  max_phi_start = vnl_math::min(max_phi_start, vnl_math::pi - vnl_math::pi/36);
+  max_phi_start = vnl_math::max(min_phi_start + eps, max_phi_start);
 
   // make sure chord is always positive
-  min_chord = vnl_math_max(1.0, min_chord);
-  max_chord = vnl_math_max(1.0, max_chord);
-  max_chord = vnl_math_max(min_chord + eps, max_chord);
+  min_chord = vnl_math::max(1.0, min_chord);
+  max_chord = vnl_math::max(1.0, max_chord);
+  max_chord = vnl_math::max(min_chord + eps, max_chord);
 
   // make sure radius end is always positive
-  min_r_end = vnl_math_max(1.0, min_r_end);
-  max_r_end = vnl_math_max(1.0, max_r_end);
-  max_r_end = vnl_math_max(min_r_end + eps, max_r_end);
+  min_r_end = vnl_math::max(1.0, min_r_end);
+  max_r_end = vnl_math::max(1.0, max_r_end);
+  max_r_end = vnl_math::max(min_r_end + eps, max_r_end);
 
   // make sure phi_end is between 0 and pi
-  min_phi_end = vnl_math_max(min_phi_end, vnl_math::pi / 36);
-  max_phi_end = vnl_math_min(max_phi_end, vnl_math::pi - vnl_math::pi/36);
-  max_phi_end = vnl_math_max(min_phi_end + eps, max_phi_end);
+  min_phi_end = vnl_math::max(min_phi_end, vnl_math::pi / 36);
+  max_phi_end = vnl_math::min(max_phi_end, vnl_math::pi - vnl_math::pi/36);
+  max_phi_end = vnl_math::max(min_phi_end + eps, max_phi_end);
 
   // set pdf
   dbsks_regularize_min_max_values(min_psi_start, max_psi_start);
@@ -932,9 +932,9 @@ build_from_attr_data()
     double max_phi_start = model->mean() + num_std * vcl_sqrt(model->variance());
 
     // make sure phi is > 0 and less then pi
-    min_phi_start = vnl_math_max(min_phi_start, vnl_math::pi / 36);
-    max_phi_start = vnl_math_min(max_phi_start, vnl_math::pi - vnl_math::pi/36);
-    min_phi_start = vnl_math_min(min_phi_start, max_phi_start);
+    min_phi_start = vnl_math::max(min_phi_start, vnl_math::pi / 36);
+    max_phi_start = vnl_math::min(max_phi_start, vnl_math::pi - vnl_math::pi/36);
+    min_phi_start = vnl_math::min(min_phi_start, max_phi_start);
 
 
     // Generator
@@ -972,9 +972,9 @@ build_from_attr_data()
     double max_phi_end = model->mean() + num_std * vcl_sqrt(model->variance());
 
     // make sure phi is > 0 and less then pi
-    min_phi_end = vnl_math_max(min_phi_end, vnl_math::pi / 36);
-    max_phi_end = vnl_math_min(max_phi_end, vnl_math::pi - vnl_math::pi/36);
-    min_phi_end = vnl_math_min(min_phi_end, max_phi_end);
+    min_phi_end = vnl_math::max(min_phi_end, vnl_math::pi / 36);
+    max_phi_end = vnl_math::min(max_phi_end, vnl_math::pi - vnl_math::pi/36);
+    min_phi_end = vnl_math::min(min_phi_end, max_phi_end);
 
         
     // r_end
@@ -1126,7 +1126,7 @@ bool dbsks_xfrag_geom_model::
 check_start_width_constraint(const dbsksp_xshock_node_descriptor& start, double graph_size) const
 {
   double width = start.radius()*vcl_sin(start.phi()) * (this->graph_size_ / graph_size);
-  double num_sd = vnl_math_abs(width-this->start_width_model_.mean())/this->start_width_model_.sd();
+  double num_sd = vnl_math::abs(width-this->start_width_model_.mean())/this->start_width_model_.sd();
   return (num_sd <= this->start_width_num_std_);
 }
 
@@ -1166,7 +1166,7 @@ pass_norm_curvature_diff_constraint(dbsksp_xshock_fragment::bnd_side side,
   // compare against mean and standard deviation
   double mu = this->nkdiff_model_[side].mean();
   double sigma = this->nkdiff_model_[side].sd();
-  double num_std = vnl_math_abs(norm_curvature_diff - mu) / sigma;
+  double num_std = vnl_math::abs(norm_curvature_diff - mu) / sigma;
   return (num_std <= this->nkdiff_threshold_);
 }
 

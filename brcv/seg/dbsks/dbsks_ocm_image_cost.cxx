@@ -121,7 +121,7 @@ f(const dbsks_circ_arc_grid& grid, float ds,
       vgl_point_2d<double > pt0(x0, y0);
       vgl_vector_2d<double > t0(vcl_cos(theta0), vcl_sin(theta0));
 
-      if (vnl_math_abs(height) > chord/3)
+      if (vnl_math::abs(height) > chord/3)
       {
         continue;
       }
@@ -194,7 +194,7 @@ f(const dbsks_circ_arc_grid& grid, float ds,
     for (int i_height=0; i_height < grid.num_height_; ++i_height)
     { 
       double height = grid.height_[i_height];
-      if (vnl_math_abs(height) > chord/3)
+      if (vnl_math::abs(height) > chord/3)
       {
         continue;
       }
@@ -309,12 +309,12 @@ f_L2(const vcl_vector<vgl_point_2d<double > >& pts,
     }
     else
     {
-      float mag_component = vnl_math_sqr(this->dt_(im_i, im_j) / this->sigma_distance_);
+      float mag_component = vnl_math::sqr(this->dt_(im_i, im_j) / this->sigma_distance_);
 
       // if the gradient is not definite, assume is well-aligned
       if (this->dt_grad_mag_(im_i, im_j) < 0.4)
       {
-        sum += vnl_math_min(mag_component, max_value);
+        sum += vnl_math::min(mag_component, max_value);
       }
       else
       {
@@ -323,10 +323,10 @@ f_L2(const vcl_vector<vgl_point_2d<double > >& pts,
         vgl_vector_2d<double > t0(-grad_y, grad_x);
         float theta = float(angle(t0, tangents[k]));
 
-        theta = vnl_math_min(theta, float(vnl_math::pi - theta));
-        float dir_component = vnl_math_sqr(theta / this->sigma_angle_);
+        theta = vnl_math::min(theta, float(vnl_math::pi - theta));
+        float dir_component = vnl_math::sqr(theta / this->sigma_angle_);
 
-        sum += vnl_math_min(mag_component + dir_component, max_value);
+        sum += vnl_math::min(mag_component + dir_component, max_value);
       }
     }
   }
@@ -366,13 +366,13 @@ f_shotton_ocm(const vcl_vector<vgl_point_2d<double > >& pts,
     {
       //// chamfer component
       //float chamfer_component = 
-      //  vnl_math_abs(this->dt_(im_i, im_j))/this->sigma_distance_;
+      //  vnl_math::abs(this->dt_(im_i, im_j))/this->sigma_distance_;
       //
       //// clip the cost
-      //chamfer_component = vnl_math_min(chamfer_component, max_value);
+      //chamfer_component = vnl_math::min(chamfer_component, max_value);
 
 
-      float distance = vnl_math_abs(this->dt_(im_i, im_j));
+      float distance = vnl_math::abs(this->dt_(im_i, im_j));
       float chamfer_component = this->chamfer_cost_w_near_zero_tolerance(
         distance, this->sigma_distance_, this->tolerance_near_zero_, max_value);
 
@@ -393,18 +393,18 @@ f_shotton_ocm(const vcl_vector<vgl_point_2d<double > >& pts,
         vgl_vector_2d<double > t0(-grad_y, grad_x);
         
         // the angle difference should be between [0, pi/2]
-        float theta = float(vnl_math_abs(angle(t0, tangents[k])));
-        theta = vnl_math_min(theta, float(vnl_math::pi - theta));
+        float theta = float(vnl_math::abs(angle(t0, tangents[k])));
+        theta = vnl_math::min(theta, float(vnl_math::pi - theta));
         orient_component = float(theta / this->sigma_angle_);
 
         // clip the orientation component
-        orient_component = vnl_math_min(orient_component, max_value);
+        orient_component = vnl_math::min(orient_component, max_value);
       }
 
       float ocm = chamfer_component + orient_component;
 
       // clip the final cost
-      ocm = vnl_math_min(ocm, max_value);
+      ocm = vnl_math::min(ocm, max_value);
 
       // update overall sum
       sum += ocm;
@@ -492,13 +492,13 @@ compute_chamfer_cost()
   {
     for (unsigned j =0; j <nj; ++j)
     {
-      float distance = vnl_math_abs(this->dt_(i, j));
+      float distance = vnl_math::abs(this->dt_(i, j));
       
       //// chamfer component
       //float chamfer_component = distance /this->sigma_distance_;
       //
       //// clip the cost
-      //chamfer_cost(i, j) = vnl_math_min(chamfer_component, max_value);    
+      //chamfer_cost(i, j) = vnl_math::min(chamfer_component, max_value);    
       chamfer_cost(i, j) = this->chamfer_cost_w_near_zero_tolerance(
         distance, this->sigma_distance_, this->tolerance_near_zero_, max_value);
     }
@@ -529,7 +529,7 @@ chamfer_cost_w_near_zero_tolerance(float distance,
   float slope = clip_value  / (clip_value - tolerance);
   float y = x * slope;
 
-  return vnl_math_min(y / sigma_distance, clip_cost_value);
+  return vnl_math::min(y / sigma_distance, clip_cost_value);
 }
 
 

@@ -1074,11 +1074,11 @@ bool dbsksp_fit_xgraph::compare_unordered_node_pair::
 operator ()(dbsksp_fit_xgraph::type_branch_key key1, dbsksp_fit_xgraph::type_branch_key key2) const
 {
   // remove the "order" by making each key arranged in increasing order of ids
-  unsigned key1_lower_id = vnl_math_min(key1.first->id(), key1.second->id());
-  unsigned key1_upper_id = vnl_math_max(key1.first->id(), key1.second->id());
+  unsigned key1_lower_id = vnl_math::min(key1.first->id(), key1.second->id());
+  unsigned key1_upper_id = vnl_math::max(key1.first->id(), key1.second->id());
 
-  unsigned key2_lower_id = vnl_math_min(key2.first->id(), key2.second->id());
-  unsigned key2_upper_id = vnl_math_max(key2.first->id(), key2.second->id());
+  unsigned key2_lower_id = vnl_math::min(key2.first->id(), key2.second->id());
+  unsigned key2_upper_id = vnl_math::max(key2.first->id(), key2.second->id());
 
   vcl_pair<unsigned, unsigned > pair1(key1_lower_id, key1_upper_id);
   vcl_pair<unsigned, unsigned > pair2(key2_lower_id, key2_upper_id);

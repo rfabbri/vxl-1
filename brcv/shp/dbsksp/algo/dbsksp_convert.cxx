@@ -30,7 +30,7 @@ dbsksp_xshock_graph_sptr dbsksp_convert_to_xshock_graph(const dbsksp_shock_graph
     dbsksp_shock_node_sptr v = *vit; 
     dbsksp_xshock_node_sptr xv = new dbsksp_xshock_node(v->id());
     node_map.insert(vcl_make_pair(v, xv));
-    max_id = vnl_math_max(max_id, v->id());
+    max_id = vnl_math::max(max_id, v->id());
   }
 
   // create the extrinsic edges
@@ -46,7 +46,7 @@ dbsksp_xshock_graph_sptr dbsksp_convert_to_xshock_graph(const dbsksp_shock_graph
     dbsksp_xshock_edge_sptr xe = new dbsksp_xshock_edge(xsource, xtarget, e->id());
     edge_map.insert(vcl_make_pair(e, xe));
 
-    max_id = vnl_math_max(max_id, e->id());
+    max_id = vnl_math::max(max_id, e->id());
   }
   
   // add the nodes and edges to the graph

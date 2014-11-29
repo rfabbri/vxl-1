@@ -329,7 +329,7 @@ dbdet_generic_color_edge_detector_process::execute()
     double c = (A-C)/d;
 
     n1[i] = sqrt((1+c)/2);
-    n2[i] = vnl_math_sgn(B)*sqrt((1-c)/2);
+    n2[i] = vnl_math::sgn(B)*sqrt((1-c)/2);
     g_mag[i] = vcl_sqrt((A+C+d)/2/3); //take the square root of the squared norm
   }
 

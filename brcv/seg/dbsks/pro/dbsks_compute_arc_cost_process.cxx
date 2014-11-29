@@ -211,8 +211,8 @@ execute()
 
   if (use_image_size)
   {
-    params.half_num_x = vnl_math_rnd(image_resource->ni()/(2*params.step_x)) + 1;
-    params.half_num_y = vnl_math_rnd(image_resource->nj()/(2*params.step_y)) + 1;
+    params.half_num_x = vnl_math::rnd(image_resource->ni()/(2*params.step_x)) + 1;
+    params.half_num_y = vnl_math::rnd(image_resource->nj()/(2*params.step_y)) + 1;
 
     // limite the grid size to 36 x 36
     if (params.half_num_x > 36)

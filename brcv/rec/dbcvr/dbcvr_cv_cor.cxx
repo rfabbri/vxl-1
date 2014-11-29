@@ -58,7 +58,7 @@ dbcvr_cv_cor::dbcvr_cv_cor(const bsol_intrinsic_curve_2d_sptr c1,
   // find total length of curve 2
   vsol_point_2d_sptr p2_last = c2->vertex(c2->size()-1);
   vsol_point_2d_sptr p2_first = c2->vertex(0);
-  length2_ = c2->arcLength(c2->size()-1) + vnl_math_hypot(p2_last->x()-p2_first->x(),
+  length2_ = c2->arcLength(c2->size()-1) + vnl_math::hypot(p2_last->x()-p2_first->x(),
                                                           p2_last->y()-p2_first->y());
 
   // add the correspondence of the final interval 

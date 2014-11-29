@@ -75,7 +75,7 @@ bool dbsks_save_detections_to_folder(const vcl_vector<dbsks_det_desc_xgraph_sptr
  
   // limit the max number of screenshots to write out
   vcl_vector<vcl_string > screenshot_paths(det_list.size(), "");
-  unsigned num_screenshots = vnl_math_min(unsigned(det_list.size()), max_number_screenshots);
+  unsigned num_screenshots = vnl_math::min(unsigned(det_list.size()), max_number_screenshots);
   for (unsigned i =0; i < num_screenshots; ++i)
   {
     // screenshot file

@@ -35,9 +35,9 @@ log_likelihood(int side_id, double ccm_cost)
   if (this->cache_loglike_available_)
   {
     // push the query cost into the allowed range
-    ccm_cost = vnl_math_max(ccm_cost, this->cache_loglike_xmin_);
-    ccm_cost = vnl_math_min(ccm_cost, this->cache_loglike_xmax_);
-    int idx = vnl_math_floor((ccm_cost-this->cache_loglike_xmin_) / this->cache_loglike_dx_);
+    ccm_cost = vnl_math::max(ccm_cost, this->cache_loglike_xmin_);
+    ccm_cost = vnl_math::min(ccm_cost, this->cache_loglike_xmax_);
+    int idx = vnl_math::floor((ccm_cost-this->cache_loglike_xmin_) / this->cache_loglike_dx_);
     return this->cache_loglike_[side_id][idx];  
   }
   else 
@@ -112,7 +112,7 @@ compute_cache_loglike(double xmin, double xmax, int nbins, double max_snr_in_dB)
     for (int i =0; i <= nbins; ++i)
     {
       double cur_loglike = this->cache_loglike_[side_id][i];
-      this->cache_loglike_[side_id][i] = vnl_math_max(min_loglike, cur_loglike);
+      this->cache_loglike_[side_id][i] = vnl_math::max(min_loglike, cur_loglike);
     }
   } // side_id
 

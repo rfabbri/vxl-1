@@ -398,9 +398,9 @@ bool dbsksp_compute_biarc_given_k1(const vgl_point_2d<double >& pt1,
   double temp_s1 = vgl_distance(pt1, pt2) * (1-1e-5)*vnl_math::pi;
 
   // if this is more than half a circle, reduce it to half a circle
-  if (vnl_math_abs(k1 * temp_s1) > (1-1e-5)*vnl_math::pi) // this also confirms k1 is non-zero
+  if (vnl_math::abs(k1 * temp_s1) > (1-1e-5)*vnl_math::pi) // this also confirms k1 is non-zero
   {
-    temp_s1 = vnl_math_abs((1-1e-5)*vnl_math::pi / k1);
+    temp_s1 = vnl_math::abs((1-1e-5)*vnl_math::pi / k1);
   }
   
   // construct a temporary arc
@@ -424,17 +424,17 @@ bool dbsksp_compute_biarc_given_k1(const vgl_point_2d<double >& pt1,
     arc2.set(temp_arc2.end(), temp_arc2.start(), -temp_arc2.k());
     //arc2.set_from(arc1.end(), arc1.tangent_at_end(), pt2);
 
-    return vnl_math_abs(signed_angle(arc2.tangent_at_end(), t2)) < eps;
+    return vnl_math::abs(signed_angle(arc2.tangent_at_end(), t2)) < eps;
   }
   else if (s_along_temp_arc.empty())
   {
     // check to see if this is indeed a straight line
-    if (vnl_math_abs(k1) > eps)
+    if (vnl_math::abs(k1) > eps)
       return false;
 
     vgl_vector_2d<double > v = normalized(pt2 - pt1);
-    if (vnl_math_abs(signed_angle(v, t1)) < eps &&
-      vnl_math_abs(signed_angle(v, t2)) < eps) // condition for a straight line
+    if (vnl_math::abs(signed_angle(v, t1)) < eps &&
+      vnl_math::abs(signed_angle(v, t2)) < eps) // condition for a straight line
     {
       // the biarc is two line segments
       double len1 = v.length() / 2;
