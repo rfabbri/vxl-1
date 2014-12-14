@@ -2,6 +2,7 @@
 # Development Brown Video Library
 
 
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
 INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1/basic )
 
 SET(dbvidl_sources 

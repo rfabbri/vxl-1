@@ -8,6 +8,9 @@ PROJECT( maruthi )
 SET( CMAKE_VLFEAT_LIBS             CACHE PATH "Path of vlfeat libs" )
 SET( CMAKE_VLFEAT_INCLUDES             CACHE PATH "Path of vlfeat includes" )
 
+
+SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
+
 #GO TO SUBDIRS
 #pb Edge Detector code
 #SUBDIRS( pbEdgeDet )
