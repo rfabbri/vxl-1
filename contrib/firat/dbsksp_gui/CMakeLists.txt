@@ -17,7 +17,7 @@ SET(dbsksp_gui_firat_sources
    dbsksp_small_gui_main.cxx
 )
 ADD_EXECUTABLE(dbsksp_gui_firat ${dbsksp_gui_firat_sources})
-TARGET_LINK_LIBRARIES( dbsksp_gui_firat vidl1 bvis1 dbsksp_pro dbsksp_vis dbsol_vis dbsol_pro dbdet_pro dbsks_vis dbsk2d_pro dbsks_pro dbsk2d_vis dbgui dbdet_vis)
+TARGET_LINK_LIBRARIES( dbsksp_gui_firat bvis1 dbsksp_pro dbsksp_vis dbsol_vis dbsol_pro dbdet_pro dbsks_vis dbsk2d_pro dbsks_pro dbsk2d_vis dbgui dbdet_vis)
 
 
 ENDIF (VXL_VGUI_FOUND)
