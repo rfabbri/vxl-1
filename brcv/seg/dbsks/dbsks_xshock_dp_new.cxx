@@ -517,8 +517,8 @@ optimize_child_node_given_parent_node2(const dbsksp_xshock_edge_sptr& xe,
   dbsksp_xshock_node_descriptor xdesc_c = xv_c->descriptor(xe)->opposite_xnode();
   
 
-  if(xv_p->id()==this->root_vid_)
-	num_samples_p*=5;
+  //if(xv_p->id()==this->root_vid_)
+	//num_samples_p*=5;
 
   // Geometric model for this fragment
   dbsks_xfrag_geom_model_sptr geom_model = this->xgraph_geom->map_edge2geom()[xe->id()];
@@ -691,7 +691,7 @@ optimize_degree_2_node(const dbsksp_xshock_node_sptr& xv_p,
   	//> Main function-------------------------------------------------------------
   	this->optimize_child_node_given_parent_node(xe, grid_p, max_acceptable_subtree_cost, opt_cost_p, opt_child); // use the orignal version to optimize the branch end node
   else
-  	this->optimize_child_node_given_parent_node2(xe, grid_p, max_acceptable_subtree_cost, opt_cost_p, opt_child);		
+  	this->optimize_child_node_given_parent_node(xe, grid_p, max_acceptable_subtree_cost, opt_cost_p, opt_child);		
   //------------------------------------------------------------------------------
 
   // Release memory to store optimal child costs since they will no longer be used
@@ -1096,7 +1096,7 @@ optimize_root_node(unsigned root_vid, unsigned major_child_eid)
 
   if (xv_root->degree() == 2)
   {
-    return this->optimize_degree2_root_node_use_both_branches2(root_vid, major_child_eid);
+    return this->optimize_degree2_root_node_use_both_branches(root_vid, major_child_eid);
 
     //return this->optimize_degree2_root_node_ignore_minor_branch(root_vid, major_child_eid);
   }
@@ -2023,7 +2023,7 @@ update_parent_node_cost_given_child_state(unsigned edge_id,
 
 		  //////
 		
-		  if (!geom_model->check_nkdiff_constraint_using_biarc_sampler_cache(xfrag) || !xfrag.is_legal_new())
+		  if (!geom_model->check_nkdiff_constraint_using_biarc_sampler_cache(xfrag) || !xfrag.is_legal())
 		    continue;
 
 		  ++count_legal_samples;
@@ -2067,7 +2067,7 @@ update_parent_node_cost_given_child_state(unsigned edge_id,
 
 		  //////
 		
-		  if (!geom_model->check_nkdiff_constraint_using_biarc_sampler_cache(xfrag) || !xfrag.is_legal_new())
+		  if (!geom_model->check_nkdiff_constraint_using_biarc_sampler_cache(xfrag) || !xfrag.is_legal())
 		    continue;
 
 		  ++count_legal_samples;
@@ -2189,7 +2189,7 @@ find_optimal_child_node_given_parent_state(unsigned edge_id,
       //if (!geom_model->check_constraints(xfrag) || !xfrag.is_legal())
 
       /////////
-      if (!geom_model->check_nkdiff_constraint_using_biarc_sampler_cache(xfrag) || !xfrag.is_legal_new())
+      if (!geom_model->check_nkdiff_constraint_using_biarc_sampler_cache(xfrag) || !xfrag.is_legal())
         continue;
 
 	  //if (!geom_model->check_nkdiff_constraint_using_biarc_sampler_cache(xfrag))
@@ -2895,11 +2895,11 @@ find_xgraph_state_local_optimum(unsigned root_vid,
 //  //  double step_x = grid_p.step_x_;
 //  //  double step_y = grid_p.step_y_;
 //
-//  //  int max_x_idx = vnl_math::ceil( (x0_c+max_chord - x0_p) / step_x);
-//  //  int min_x_idx = vnl_math::floor( (x0_c-max_chord - x0_p) / step_x);
+//  //  int max_x_idx = vnl_math_ceil( (x0_c+max_chord - x0_p) / step_x);
+//  //  int min_x_idx = vnl_math_floor( (x0_c-max_chord - x0_p) / step_x);
 //
-//  //  int max_y_idx = vnl_math::ceil( (y0_c+max_chord - y0_p) / step_y);
-//  //  int min_y_idx = vnl_math::floor( (y0_c-max_chord - y0_p) / step_y);
+//  //  int max_y_idx = vnl_math_ceil( (y0_c+max_chord - y0_p) / step_y);
+//  //  int min_y_idx = vnl_math_floor( (y0_c-max_chord - y0_p) / step_y);
 //
 //  //  // Determine which points of parent grid affected by child point at index (0, 0)
 //  //  // i_x and i_y are running indices for the points in the parent's grid

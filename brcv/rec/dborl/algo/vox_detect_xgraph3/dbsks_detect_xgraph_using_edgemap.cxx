@@ -764,82 +764,94 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
         continue;
     }
 
-    // xshock detection engine
-    dbsks_xshock_detector engine;
-	engine.generate_xnode_grid_option = 4; // use prev dets window
-    engine.xshock_likelihood_ = &ccm_like;
-    engine.xgraph_geom_ = xgraph_geom;
-    engine.set_xgraph(xgraph);
-	if(!prev_dets.empty())
+	if(prev_dets.empty())
 	{
-		//engine.prev_dets_ = prev_dets;
-		engine.prev_dets_.push_back(prev_dets[0]);
-        engine.compute_vertices_para_range();
 	}
+	else
+	{
+	for(int prev_i = 0; prev_i < vcl_min(int(prev_dets.size()), 3); prev_i ++)
+	{
+    // xshock detection engine
+		dbsks_xshock_detector engine;
+		engine.generate_xnode_grid_option = 4; // use prev dets window
+		engine.xshock_likelihood_ = &ccm_like;
+		engine.xgraph_geom_ = xgraph_geom;
+		engine.set_xgraph(xgraph);
+		//engine.prev_dets_ = prev_dets;
+		engine.prev_dets_.push_back(prev_dets[prev_i]);
+		engine.compute_vertices_para_range();
 
-    //--------------------------------------------------------------------------
-    engine.detect(window, float(confidence_lower_threshold));
-    //--------------------------------------------------------------------------
+		//--------------------------------------------------------------------------
+		engine.detect(window, float(confidence_lower_threshold));
+		//--------------------------------------------------------------------------
 
-    //> Construct a vector of detection descriptor
-    dets_window.clear();
-    dets_window.reserve(engine.list_solutions_.size());
+		//> Construct a vector of detection descriptor
+		dets_window.clear();
+		dets_window.reserve(engine.list_solutions_.size());
 
-	vil_image_view<float> L_, prev_L_;
-    vil_convert_planes_to_grey(this->source_image, L_);
-	vil_convert_planes_to_grey(this->source_image, prev_L_);
+		vil_image_view<float> L_, prev_L_;
+		vil_convert_planes_to_grey(this->source_image, L_);
+		vil_convert_planes_to_grey(this->source_image, prev_L_);
 
-	//if(!update_appearance_model(prev_dets, prev_L_))
-	//	vcl_cout<< "Fail in updaing appearance model" << vcl_endl;
+		//if(!update_appearance_model(prev_dets, prev_L_))
+		//	vcl_cout<< "Fail in updaing appearance model" << vcl_endl;
 
-    for (unsigned i =0; i < engine.list_solutions_.size(); ++i)
-    {
-      dbsksp_xshock_graph_sptr sol_xgraph = engine.list_solutions_[i];
-      
-      double confidence = -engine.list_solution_costs_[i];
-      double real_confidence = -engine.list_solution_real_costs_[i];
+		for (unsigned i =0; i < engine.list_solutions_.size(); ++i)
+		{
+			dbsksp_xshock_graph_sptr sol_xgraph = engine.list_solutions_[i];
 
-      // only consider detetion with at least minimal confidence level
-      //if (real_confidence > confidence_lower_threshold)
-      //{
-		// for detection with enough edge support, add appearance confidence into it.
-		vcl_cout <<"edge_confidence:" << real_confidence << vcl_endl;		
+			double confidence = -engine.list_solution_costs_[i];
+			double real_confidence = -engine.list_solution_real_costs_[i];
 
-		double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
-		vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
+			// for detection with enough edge support, add appearance confidence into it.
+			// edge matching cost term
+			vcl_cout <<"edge_confidence:" << real_confidence << vcl_endl;		
 
-		double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[0]->xgraph());
-		vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
+			// appearance term
+			double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
+			vcl_cout <<"\nappearance_cost:" << appearance_cost << vcl_endl;
 
-		// only consider the dets which is not too diff in bg as prototype
-			real_confidence += (50 - appearance_cost/5);
+			// shape change term, now just the differece between radius of shock nodes, but shape is more complex representation
+			double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
+			vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
+
+			//(TODO: change to differece between velocity, delta_x, delta_y, delta_psi)
+
+			// only consider the dets which is not too diff in bg as prototype
+			real_confidence += (50 - appearance_cost);
 			real_confidence += (50 - shape_trans_cost*5); 
 			vcl_cout << " real confidence: " << real_confidence << vcl_endl;
-		    dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
-		    det->compute_bbox();
-		    dets_window.push_back(det);
-      //}
-    } // solution
+			dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
+			det->compute_bbox();
+			dets_window.push_back(det);
+		}
+    	// add detections from this window to the overall list
+    	raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
+	}
+    } // solutions
 
-    //> Save solutions of the selected window to a folder
-    vcl_cout << "\n> Saving detections of selected window to dump folder = " 
-      << storage_dir << "\n";
+    //> Save solutions of the selected window to a folder (on Edge map)
+    vcl_cout << "\n> Saving detections of selected window to dump folder = " << storage_dir << "\n";
     {
-      // form a unique id for this group of detections
-      vcl_string xgraph_name = vul_file::strip_extension(vul_file::strip_directory(xgraph_file));
-      vcl_string det_group_id = xgraph_name + "+" + object_id + "+" + storage_dirname;
-      vcl_string model_category = "";
-      
-      // create a binary image from the edgemap
-      vil_image_view<vxl_byte > bg_view; 
-      dbsks_detect_xgraph_using_edgemap::convert_edgemap_to_bw(edgemap, bg_view);
+		// form a unique id for this group of detections
+		vcl_string xgraph_name = vul_file::strip_extension(vul_file::strip_directory(xgraph_file));
+		vcl_string det_group_id = xgraph_name + "+" + object_id + "+" + storage_dirname;
+		vcl_string model_category = "";
 
-      // save detections to disk
-      dbsks_save_detections_to_folder(dets_window, object_id, model_category, det_group_id, bg_view, storage_dir, "");
+		// create a binary image from the edgemap
+		vil_image_view<vxl_byte > bg_view; 
+		dbsks_detect_xgraph_using_edgemap::convert_edgemap_to_bw(edgemap, bg_view);
+
+		vcl_sort(raw_dets_all_windows.begin(), raw_dets_all_windows.end(), dbsks_decreasing_confidence);
+
+		// only keep the first 10
+
+		if(raw_dets_all_windows.size()>10)
+			raw_dets_all_windows.erase(raw_dets_all_windows.begin()+10, raw_dets_all_windows.end());
+		// save detections to disk
+		dbsks_save_detections_to_folder(raw_dets_all_windows, object_id, model_category, det_group_id, bg_view, storage_dir, "");
     }
 
-    // add detections from this window to the overall list
-    raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
     vcl_cout << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
   } // iw
 
@@ -991,6 +1003,8 @@ compute_appearance_cost(dbsksp_xshock_graph_sptr& sol_xgraph, vil_image_view<flo
 //	double appearance_cost = (var + cost)/bg_vec.size();
 	double appearance_cost = cost/bg_vec.size();
 	//vcl_cout << " appearance cost: "<< appearance_cost << vcl_endl;
+	if(appearance_model_node_value.back()>100)
+		appearance_cost /= 2.5;
 	return appearance_cost;
 }
 
@@ -1052,7 +1066,7 @@ compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_gra
 		proto_r_vec.push_back(radius);
 	}
 
-/*	vcl_vector<double> prev_x_vec, prev_y_vec, prev_r_vec;
+	vcl_vector<double> prev_x_vec, prev_y_vec, prev_r_vec;
 	for (dbsksp_xshock_graph::vertex_iterator vit = prev_xgraph->vertices_begin();
 		vit != prev_xgraph->vertices_end(); ++vit)
 	{
@@ -1065,7 +1079,6 @@ compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_gra
 		prev_y_vec.push_back(y);
 		prev_r_vec.push_back(radius);
 	}
-*/
 	vcl_vector<double> cur_x_vec, cur_y_vec, cur_r_vec;
 	double cur_root_r;
 	for (dbsksp_xshock_graph::vertex_iterator vit = cur_xgraph->vertices_begin();
@@ -1087,6 +1100,7 @@ compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_gra
 	{
 //		diff_dist += (cur_x_vec[i]-prev_x_vec[i])*(cur_x_vec[i]-prev_x_vec[i]) + (cur_y_vec[i]-prev_y_vec[i])*(cur_y_vec[i]-prev_y_vec[i]);
 		diff_r_2 += (cur_r_vec[i]-proto_r_vec[i])*(cur_r_vec[i]-proto_r_vec[i]);
+		//diff_r_2 += (cur_r_vec[i]-prev_r_vec[i])*(cur_r_vec[i]-prev_r_vec[i]);
 //      r_diff use the ratio to the root;
 //		diff_r_2 += (1-(cur_r_vec[i]/cur_root_r/proto_r_vec[i]*proto_root_r))*(1-(cur_r_vec[i]/cur_root_r/proto_r_vec[i]*proto_root_r));
 	}

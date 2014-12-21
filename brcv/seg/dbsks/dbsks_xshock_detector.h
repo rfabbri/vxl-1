@@ -76,6 +76,7 @@ public:
 
   void compute_vertices_para_range();
 
+  bool is_sol_xgraph_legal(dbsksp_xshock_graph_sptr xgraph);
 protected:
   //: Build xnode grid using input xgraph as the only available info
   // All parameters are heuristic, hard-coded.

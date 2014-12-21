@@ -124,24 +124,24 @@ detect(const vgl_box_2d<int >& window, float min_acceptable_confidence)
 
     // only accept as a solution when it corresponds to a real, legal xgraph
     // \todo check legality of "new_graph"
-    if (new_graph)
-    {
-      this->list_solution_costs_.push_back(xshock_dp.list_opt_cost[k]);
-      this->list_solutions_.push_back(new_graph);
-    
-      // Real cost is the computed directly from the likelihood function
-      // (or some other verification function)
-      new_graph->compute_vertex_depths(this->root_vid_);
-      float real_cost = float(-this->xshock_likelihood_->loglike_xgraph(new_graph, vcl_vector<unsigned >(), false));
-      this->list_solution_real_costs_.push_back(real_cost);
-    }
-    else
-    {
+	if (!new_graph )
+	{
       vcl_cout 
         << "\nERROR: couldn't reconstruct xraph for solution k=" << k 
         << "\n  DP cost = " << xshock_dp.list_opt_cost[k] << vcl_endl;
       continue;
-    }
+    }	
+	if(!is_sol_xgraph_legal(new_graph))
+		continue;
+
+	this->list_solution_costs_.push_back(xshock_dp.list_opt_cost[k]);
+	this->list_solutions_.push_back(new_graph);
+
+	// Real cost is the computed directly from the likelihood function
+	// (or some other verification function)
+	new_graph->compute_vertex_depths(this->root_vid_);
+	float real_cost = float(-this->xshock_likelihood_->loglike_xgraph(new_graph, vcl_vector<unsigned >(), false));
+	this->list_solution_real_costs_.push_back(real_cost);
   } // solution
   vcl_cout << "# detections after validating sols: " << this->list_solutions_.size() << vcl_endl;
 
@@ -389,7 +389,7 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
 
 	//////////////////////////////////////////// x
     params.step_x = 2;
-	params.num_x = vnl_math::rnd((xgraph_vertices_max_x_[i]-xgraph_vertices_min_x_[i]+50)/params.step_x); // allow some padding
+	params.num_x = vnl_math::rnd((xgraph_vertices_max_x_[i]-xgraph_vertices_min_x_[i]+42)/params.step_x); // allow some padding
     // if the image is too big, we only consider the center portion of 512 pixels
     params.num_x = vnl_math::min(params.num_x, 65);
     params.min_x = vnl_math::rnd((xgraph_vertices_min_x_[i]+xgraph_vertices_max_x_[i])/2 - params.step_x*(params.num_x-1)/2 ); // centering
@@ -398,7 +398,7 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
 
 	//////////////////////////////////////////// y
     params.step_y = 2;
-	params.num_y = vnl_math::rnd((xgraph_vertices_max_y_[i]-xgraph_vertices_min_y_[i]+50)/params.step_y); // allow some padding
+	params.num_y = vnl_math::rnd((xgraph_vertices_max_y_[i]-xgraph_vertices_min_y_[i]+42)/params.step_y); // allow some padding
     // if the image is too big, only consider the center portion of 512 pixels
     params.num_y = vnl_math::min(params.num_y, 65);
     params.min_y = vnl_math::rnd((xgraph_vertices_min_y_[i]+xgraph_vertices_max_y_[i])/2 - params.step_y*(params.num_y-1)/2 ); // centering
@@ -412,8 +412,8 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
     params.min_psi = (max_psi+min_psi)/2 - params.step_psi*(params.num_psi-1)/2;
 */
     // sample psi from previous dets
-	params.step_psi = vnl_math::pi / 15;
-    double range_psi = (xgraph_vertices_max_psi_[i] - xgraph_vertices_min_psi_[i] + 0.8*vnl_math::pi);
+	params.step_psi = vnl_math::pi / 12;
+    double range_psi = (xgraph_vertices_max_psi_[i] - xgraph_vertices_min_psi_[i] + 0.5*vnl_math::pi);
     params.num_psi = vnl_math::floor(range_psi / params.step_psi)+1;
     params.min_psi = (xgraph_vertices_max_psi_[i]+xgraph_vertices_min_psi_[i])/2 - params.step_psi*(params.num_psi-1)/2;
 /*
@@ -423,8 +423,8 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
     params.min_phi0 = vnl_math::pi_over_2 - params.step_phi0 * (params.num_phi0-1)/2;
 */
 	// sample phi from prev dets 
-    params.step_phi0 = vnl_math::pi / 24;
-    params.num_phi0 = 13;
+    params.step_phi0 = vnl_math::pi / 20;
+    params.num_phi0 = 9;
     params.min_phi0 = (xgraph_vertices_max_phi_[i]+xgraph_vertices_min_phi_[i])/2 - params.step_phi0 * (params.num_phi0-1)/2;
 /*
 	// sample phi center at pi/2 using geom model
@@ -443,8 +443,8 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
 
 	// sample radius from prev dets
     params.step_r = vnl_math::max(0.08 * (xv->radius()), double(1)); 
-    params.num_r = vnl_math::max(vnl_math::floor((xgraph_vertices_max_r_[i]-xgraph_vertices_min_r_[i]+xv->radius()*0.8)/params.step_r)+1,3);
-    params.min_r = (xgraph_vertices_max_r_[i]+xgraph_vertices_min_r_[i])/2 - params.step_r * (params.num_r-1) /2;
+    params.num_r = vnl_math::max(vnl_math::floor((xgraph_vertices_max_r_[i]-xgraph_vertices_min_r_[i]+xv->radius()*0.48)/params.step_r)+1,3);
+    params.min_r = (xgraph_vertices_max_r_[i]+xgraph_vertices_min_r_[i])/2 - params.step_r * vnl_math::floor(double(params.num_r-1)/2);
 /*
 	// sample radius using geometric model
 	params.step_r = vnl_math::max((max_radius-min_radius)/20, double(1)); 
@@ -876,6 +876,25 @@ void dbsks_xshock_detector::compute_vertices_para_range()
 	return;
 }
 
+bool dbsks_xshock_detector::is_sol_xgraph_legal(dbsksp_xshock_graph_sptr xgraph)
+{
+
+for (dbsksp_xshock_graph::edge_iterator eit = xgraph->edges_begin(); eit !=xgraph->edges_end(); ++eit)
+{
+	dbsksp_xshock_edge_sptr xe = *eit;
+	dbsksp_xshock_node_descriptor start = *xe->source()->descriptor(xe);
+	dbsksp_xshock_node_descriptor end = xe->target()->descriptor(xe)->opposite_xnode();
+
+	if(xe->source()->degree()==1 || xe->target()->degree()==1)
+		continue;
+	dbsksp_xshock_fragment xfrag(start, end);
+
+	//if(!xfrag.is_legal_new())
+	if(!xfrag.is_legal())
+		return false;
+}
+return true;
+}
 
 
 

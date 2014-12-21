@@ -2356,11 +2356,11 @@ find_xgraph_state_local_optimum(unsigned root_vid,
 //  //  double step_x = grid_p.step_x_;
 //  //  double step_y = grid_p.step_y_;
 //
-//  //  int max_x_idx = vnl_math::ceil( (x0_c+max_chord - x0_p) / step_x);
-//  //  int min_x_idx = vnl_math::floor( (x0_c-max_chord - x0_p) / step_x);
+//  //  int max_x_idx = vnl_math_ceil( (x0_c+max_chord - x0_p) / step_x);
+//  //  int min_x_idx = vnl_math_floor( (x0_c-max_chord - x0_p) / step_x);
 //
-//  //  int max_y_idx = vnl_math::ceil( (y0_c+max_chord - y0_p) / step_y);
-//  //  int min_y_idx = vnl_math::floor( (y0_c-max_chord - y0_p) / step_y);
+//  //  int max_y_idx = vnl_math_ceil( (y0_c+max_chord - y0_p) / step_y);
+//  //  int min_y_idx = vnl_math_floor( (y0_c-max_chord - y0_p) / step_y);
 //
 //  //  // Determine which points of parent grid affected by child point at index (0, 0)
 //  //  // i_x and i_y are running indices for the points in the parent's grid
