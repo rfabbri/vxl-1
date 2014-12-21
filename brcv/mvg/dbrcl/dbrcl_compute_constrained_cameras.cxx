@@ -6,7 +6,7 @@
 #include <vgl/vgl_distance.h>
 #include <vcl_cstdlib.h>
 #include <vcl_iostream.h>
-
+#include <vcl_fstream.h>
 //---------------------------------------------
 bool 
 dbrcl_compute_constrained_cameras::read_constraint_file( 

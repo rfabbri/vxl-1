@@ -9,8 +9,23 @@
 #define __MATRIX_H__
 
 #include "vector.h"
+#include <vcl_cmath.h>
+#include <vcl_cstdio.h>
+#include "macros.h"
 
 typedef double  *double_ptr;
+
+/* ************************************************************************* */
+static bool
+IsZero (double  val,
+        double  epsilon = -1) {
+  if (epsilon == -1) epsilon = MATH_DBL_EPSILON;
+  if (vcl_fabs (val) < epsilon) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 /* 行列クラス ************************************************************** */
 class Matrix {
@@ -127,7 +142,26 @@ class Matrix {
   friend int    Rank            (const Matrix&  a);
   friend Matrix Inverse         (const Matrix&  a);
   friend Matrix GeneralInverse  (const Matrix&  a,
-                                 int            rank = 0);
+                                 int            rank = 0)
+  {
+      /* *******************************************************************/
+      if (a.row != a.col) {
+          fprintf (stderr, "Matrix size must be square.\n");
+          return Matrix (a);
+      }
+      Matrix        evec, Inv (a.row, a.col);
+      Vector        eval;
+      
+      if (rank == 0) rank = Rank (a);
+      
+      a.Eigen (eval, evec);
+      for (int n = 0; n < rank; n++) {
+          if (!IsZero (eval[n]))  Inv += 1.0 / eval[n] * Matrix (evec(n), 
+                                                                 evec(n));
+      }
+      return Inv;
+  }
+
   friend Vector Diagonal        (const Matrix&  a);
   friend Matrix Diagonal        (const Vector&  v);
   friend Vector ToVector        (const Matrix&  a);
