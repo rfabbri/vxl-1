@@ -6841,6 +6841,9 @@ compute_dense_rgb_sift_cost(
                         ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
                                 ps2.y()/query_scale_ratio);
                     
+                        vgl_point_2d<double> ps1_actual=ps1;
+                        vgl_point_2d<double> ps2_actual=ps2;
+
                         if ( width > 0 )
                         {
                             ps2.set(query_channel_1.ni()-1-ps2.x(),
@@ -6968,14 +6971,14 @@ compute_dense_rgb_sift_cost(
                         //     chi_squared_distance(vec_model,vec_query);
 
                         vcl_vector<vl_sift_pix> msift;
-                        msift.push_back(ps1.x());
-                        msift.push_back(ps1.y());
+                        msift.push_back(ps1_actual.x());
+                        msift.push_back(ps1_actual.y());
                         msift.push_back(model_radius*2.0);
                         msift.push_back(theta_ps1);
 
                         vcl_vector<vl_sift_pix> qsift;
-                        qsift.push_back(ps2.x());
-                        qsift.push_back(ps2.y());
+                        qsift.push_back(ps2_actual.x());
+                        qsift.push_back(ps2_actual.y());
                         qsift.push_back(query_radius*2.0);
                         qsift.push_back(theta_ps2);
 
@@ -6989,6 +6992,9 @@ compute_dense_rgb_sift_cost(
                                 ps1.y()/query_scale_ratio);
                         ps2.set(ps2.x()/model_scale_ratio,
                                 ps2.y()/model_scale_ratio);
+
+                        vgl_point_2d<double> ps1_actual=ps1;
+                        vgl_point_2d<double> ps2_actual=ps2;
 
                         if ( width > 0 )
                         {
@@ -7115,16 +7121,16 @@ compute_dense_rgb_sift_cost(
                         //     chi_squared_distance(vec_model,vec_query);
 
                         vcl_vector<vl_sift_pix> msift;
-                        msift.push_back(ps1.x());
-                        msift.push_back(ps1.y());
-                        msift.push_back(query_radius*2.0);
-                        msift.push_back(theta_ps1);
+                        msift.push_back(ps2_actual.x());
+                        msift.push_back(ps2_actual.y());
+                        msift.push_back(model_radius*2.0);
+                        msift.push_back(theta_ps2);
 
                         vcl_vector<vl_sift_pix> qsift;
-                        qsift.push_back(ps2.x());
-                        qsift.push_back(ps2.y());
-                        qsift.push_back(model_radius*2.0);
-                        qsift.push_back(theta_ps2);
+                        qsift.push_back(ps1_actual.x());
+                        qsift.push_back(ps1_actual.y());
+                        qsift.push_back(query_radius*2.0);
+                        qsift.push_back(theta_ps1);
 
                         model_sift.push_back(msift);
                         query_sift.push_back(qsift);
