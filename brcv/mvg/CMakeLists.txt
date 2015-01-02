@@ -3,6 +3,9 @@
 
 INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/mvg )
 
+# Brown VXL multi-view library
+SUBDIRS ( bmvl )
+
 # Brown Camera Calibration Library
 #SUBDIRS( dbcal )
 

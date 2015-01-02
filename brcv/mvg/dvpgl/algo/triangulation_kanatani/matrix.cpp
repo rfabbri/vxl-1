@@ -5,29 +5,17 @@
  * 
  *                                    Time-stamp: <2008-03-07 13:51:54 sugaya>
  * ************************************************************************* */
-#include <vcl_cstdio.h>
+
 #include <vcl_cstdlib.h>
 #include <vcl_cstring.h>
 #include <vcl_cstdarg.h>
-#include <vcl_cmath.h>
-#include "macros.h"
+
 #include "matrix.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846264338327
 #endif
 
-/* ************************************************************************* */
-static bool
-IsZero (double  val,
-        double  epsilon = -1) {
-  if (epsilon == -1) epsilon = MATH_DBL_EPSILON;
-  if (fabs (val) < epsilon) {
-    return true;
-  } else {
-    return false;
-  }
-}
 
 /* ************************************************************************* *
  * コンストラクタ & デストラクタ
@@ -1276,25 +1264,6 @@ Inverse (const Matrix&  a) {
   return Inv;
 }
 
-/* ************************************************************************* */
-Matrix
-GeneralInverse (const Matrix&   a,
-                int             rank) {
-  if (a.row != a.col) {
-    fprintf (stderr, "Matrix size must be square.\n");
-    return Matrix (a);
-  }
-  Matrix        evec, Inv (a.row, a.col);
-  Vector        eval;
-
-  if (rank == 0) rank = Rank (a);
-
-  a.Eigen (eval, evec);
-  for (int n = 0; n < rank; n++) {
-    if (!IsZero (eval[n]))  Inv += 1.0 / eval[n] * Matrix (evec(n), evec(n));
-  }
-  return Inv;
-}
 
 /* 対角要素を取り出したベクトルを生成 ************************************** */
 Vector

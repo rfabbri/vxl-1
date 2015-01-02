@@ -2,7 +2,7 @@
 # Photogrametry Algorithms Command Line Tools.
 
 
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bmvl )
+INCLUDE_DIRECTORIES(${lems_SOURCE_DIR}/brcv/mvg/bmvl )
 INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR} )
 
 ADD_EXECUTABLE(dvpgl_optimize_cmd dvpgl_optimize_cmd.cxx)

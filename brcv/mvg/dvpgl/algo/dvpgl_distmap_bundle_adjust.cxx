@@ -33,6 +33,8 @@ dvpgl_distmap_bundle_adj_lsqr(
        mask[0].size(),
        // num_params_per_b (X,Y,Z)
        3,
+       // num_params_per_c
+       0, 
        // mask indicating which residuals exist.
        // mask[id_view][id_point] == true if view[id_view]
        // sees a projection of point[id_point].
