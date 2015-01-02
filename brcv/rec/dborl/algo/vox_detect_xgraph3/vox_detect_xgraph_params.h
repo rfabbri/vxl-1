@@ -52,6 +52,7 @@ public:
   vcl_string get_xgraph_prototype_name() const; //> (only) name of the xgraph prototype file
 
   vcl_string get_appearance_prototype_name() const; //> 
+  vcl_string get_bb_file() const;
   // MEMBER VARIABLES ----------------------------------------------------------
 
   //>> Object <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -153,6 +154,8 @@ public:
 
 
   dborl_parameter<vcl_string > appearance_prototype_filename_;
+
+  dborl_parameter<vcl_string > input_bb_folder_;
 
   // Output 
 

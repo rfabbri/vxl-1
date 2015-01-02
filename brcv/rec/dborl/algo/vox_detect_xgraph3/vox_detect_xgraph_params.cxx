@@ -46,7 +46,7 @@ vox_detect_xgraph_params(vcl_string algo_name) :
     "[DATA] input folder to read edgemap file", 
     //"/vision/projects/kimia/shockshape/symseg/results/ETHZ-dataset/reorganized-data/all_edgemaps-clean_using_kovesi-I_15-len_10",
     "/vision/projects/kimia/shockshape/symseg/results/ETHZ-dataset/reorganized-data/all_pb_edges_pyramid-clean_using_kovesi-I_15-len_4",
-    "/media/New_Volume/Research/Project_skeleton/Detect_xshock_BMS/edge_inputs_v2_all");
+    "/media/New_Volume/Research/Project_skeleton/Detect_xshock_BMS/edge_inputs_v2_all_refine");
 
   // extension of the input edgemap
   this->input_edgemap_extension_.set_values(this->param_list_, "io", "input_edgemap_extention", 
@@ -124,14 +124,14 @@ vox_detect_xgraph_params(vcl_string algo_name) :
   //: xgraph Contour-Chamfer-Matching model param filename (.xml)
   this->input_xgraph_ccm_param_filename_.set_values(this->param_list_, "io", "input_xgraph_ccm_param_filename",
           "[MODEL-PARAM] Input xgraph Contour-Chamfer-Matching model parameter filename (full path)",
-          "/media/New_Volume/Research/Project_skeleton/Detect_xshock_BMS/training_set/ccm_params.xml",
-          "/media/New_Volume/Research/Project_skeleton/Detect_xshock_BMS/training_set/ccm_params.xml");
+          "/media/New_Volume/Research/Project_skeleton/Detect_xshock_BMS/training_set2/ccm_params.xml",
+          "/media/New_Volume/Research/Project_skeleton/Detect_xshock_BMS/training_set2/ccm_params.xml");
 
   //: xgraph Contour-Chamfer-Matching model param filename (.xml)
   this->input_xgraph_geom_param_filename_.set_values(this->param_list_, "io", "input_xgraph_geom_param_filename",
           "[MODEL-PARAM] Input xgraph geom model parameter filename (full path)",
-          "/media/New_Volume/Research/Project_skeleton/Detect_xshock_BMS/training_set/geom_params.xml",
-          "/media/New_Volume/Research/Project_skeleton/Detect_xshock_BMS/training_set/geom_params.xml");
+          "/media/New_Volume/Research/Project_skeleton/Detect_xshock_BMS/training_set2/geom_params.xml",
+          "/media/New_Volume/Research/Project_skeleton/Detect_xshock_BMS/training_set2/geom_params.xml");
 
 
 
@@ -167,8 +167,8 @@ vox_detect_xgraph_params(vcl_string algo_name) :
     //: Folder containing the object shock graph
     this->input_xgraph_folder_.set_values(this->param_list_, "io", "input_xgraph_folder",
       "[XGRAPH] input folder to read xgraph file", 
-      "/media/New_Volume/Research/Project_skeleton/Detect_xshock_BMS/training_set",
-      "/media/New_Volume/Research/Project_skeleton/Detect_xshock_BMS/training_set");
+      "/media/New_Volume/Research/Project_skeleton/Detect_xshock_BMS/training_set2",
+      "/media/New_Volume/Research/Project_skeleton/Detect_xshock_BMS/training_set2");
 
     // XML filename of object
     this->input_xgraph_prototype_filename_.set_values(this->param_list_, "io", "input_xgraph_name", 
@@ -179,15 +179,15 @@ vox_detect_xgraph_params(vcl_string algo_name) :
     //: xgraph geometric model filename (.xml)
     this->input_xgraph_geom_filename_.set_values(this->param_list_, "io", "input_xgraph_geom_filename",
       "[GEOM] Input xgraph geometric model filename",
-      "test-geom-model-04212014.xml",
-      "test-geom-model-04212014.xml");
+      "test-geom-model-08272014.xml",
+      "test-geom-model-08272014.xml");
 
 
     //: xgraph Contour-Chamfer-Matching model filename (.xml)
     this->input_xgraph_ccm_filename_.set_values(this->param_list_, "io", "input_xgraph_ccm_filename",
       "[CCM] Input xgraph Contour-Chamfer-Matching model filename",
-      "test-ccm-model-w-04212014.xml",
-      "test-ccm-model-w-04212014.xml");
+      "test-ccm-model-b-08272014.xml",
+      "test-ccm-model-b-08272014.xml");
 
     //: List of contour fragments whose cost will be ignored
     this->input_cfrag_list_to_ignore_.set_values(this->param_list_, "io", "input_cfrag_list_to_ignore", 
@@ -200,6 +200,10 @@ vox_detect_xgraph_params(vcl_string algo_name) :
           "prototype_b_appearance.txt",
           "prototype_b_appearance.txt");
 
+  this->input_bb_folder_.set_values(this->param_list_, "io", "input_bb_folder",
+          "bounding box coodinates",
+          "/media/New_Volume/Research/Project_skeleton/Detect_xshock_BMS/BB_txt/b",
+          "/media/New_Volume/Research/Project_skeleton/Detect_xshock_BMS/BB_txt/b");
   }
   else if (category == "giraffes")
   {
@@ -697,6 +701,19 @@ get_edgemap_file() const
     this->input_edgemap_extension_();
 
   return edgemap_file;
+}
+
+vcl_string vox_detect_xgraph_params::
+get_bb_file() const
+{
+  vcl_string bb_folder;
+
+  bb_folder = this->input_bb_folder_();
+
+  vcl_string bb_file = bb_folder + "/" + this->input_object_name_() + 
+    "_bb.txt";
+
+  return bb_file;
 }
 
  vcl_string vox_detect_xgraph_params::
