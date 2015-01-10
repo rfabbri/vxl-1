@@ -865,7 +865,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
 			// only consider the dets which is not too diff in bg as prototype
 			real_confidence += (50 - appearance_cost);
-			real_confidence += (50 - shape_trans_cost*5); 
+			//real_confidence += (50 - shape_trans_cost*5); 
 			vcl_cout << " real confidence: " << real_confidence << vcl_endl;
 			dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
 			det->compute_bbox();
@@ -876,7 +876,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 	}
 	else
 	{
-		for(int prev_i = 0; prev_i < vcl_min(int(prev_dets.size()), 3); prev_i ++)
+		for(int prev_i = 0; prev_i < vcl_min(int(prev_dets.size()), 4); prev_i ++)
 		{
 		// xshock detection engine
 			dbsks_xshock_detector engine;
@@ -926,7 +926,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
 				// only consider the dets which is not too diff in bg as prototype
 				real_confidence += (50 - appearance_cost);
-				real_confidence += (50 - shape_trans_cost*5); 
+				//real_confidence += (50 - shape_trans_cost*5); 
 				vcl_cout << " real confidence: " << real_confidence << vcl_endl;
 				dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
 				det->compute_bbox();
@@ -966,8 +966,8 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
 	// only keep the first 10
 
-  if(raw_dets_all_windows.size()>10)
-		raw_dets_all_windows.erase(raw_dets_all_windows.begin()+10, raw_dets_all_windows.end());
+  //if(raw_dets_all_windows.size()>10)
+		//raw_dets_all_windows.erase(raw_dets_all_windows.begin()+10, raw_dets_all_windows.end());
 
   vcl_cout << "\n> Number of raw detections: " << raw_dets_all_windows.size() << vcl_endl;
 

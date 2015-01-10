@@ -66,6 +66,9 @@ public:
   //: Set the working graph (and compute its size)
   void set_graph(const dbsksp_xshock_graph_sptr& graph);
 
+//: Set the working graph (and compute its size)
+  void set_prev_graph(const dbsksp_xshock_graph_sptr& prev_graph);
+
   //: Return likelihood calculator
   dbsks_xshock_likelihood* xshock_likelihood() const 
   {
@@ -359,8 +362,13 @@ protected:
   // Working graph
   dbsksp_xshock_graph_sptr graph_;
 
+  // Prev detected graph
+  dbsksp_xshock_graph_sptr prev_graph_;
+
   // cache the size of the working raph
   double graph_size_;
+
+  double prev_graph_size_;
 
   // Internal parameters
   int num_samples_c_; // degree-2 node: number of samples for child

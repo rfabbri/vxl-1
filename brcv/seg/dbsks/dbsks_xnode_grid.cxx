@@ -160,7 +160,7 @@ xdesc_to_grid(const dbsksp_xshock_node_descriptor& xdesc,
   i_psi  = this->i_psi(psi);
   i_phi0 = this->i_phi0(phi);
   i_r    = this->i_r(r);
-  
+
   // legality check
   if (i_x<0 || i_x>= (int)this->x_.size() || 
     i_y<0 || i_y>=(int)this->y_.size() ||
@@ -168,15 +168,40 @@ xdesc_to_grid(const dbsksp_xshock_node_descriptor& xdesc,
     i_phi0<0 || i_phi0>=(int)this->phi0_.size() ||
     i_r<0 || i_r>=(int)this->r_.size())
   {
+	//vcl_cout << "i_x: "<< i_x  << " i_y: "<< i_y << " i_psi: "<< i_psi  << " i_phi0: "<< i_phi0  << " i_r: "<< i_r << vcl_endl;
     return false;
   }
-  
+
   return true;
 }
 
+/*
+// -----------------------------------------------------------------------------
+//: Compute indices of a node descriptor. Return false if out of range
+bool dbsks_xnode_grid::
+xdesc_to_grid(const dbsksp_xshock_node_descriptor& xdesc, 
+              int& i_x, int& i_y, int& i_psi, int& i_phi0, int& i_r) const
+{
+  //> parameter values 
+  double x, y, psi, phi, r;
+  xdesc.get(x, y, psi, phi, r);
 
+  //> parameter indices
+  i_x    = this->i_x(x);
+  i_y    = this->i_y(y);
+  i_psi  = this->i_psi(psi);
+  i_phi0 = this->i_phi0(phi);
+  i_r    = this->i_r(r);
 
+	i_x = vnl_math::max(0, i_x); i_x = vnl_math::min((int)this->x_.size()-1, i_x);
+	i_y = vnl_math::max(0, i_y); i_y = vnl_math::min((int)this->y_.size()-1, i_y);
+	i_psi = vnl_math::max(0, i_psi); i_psi = vnl_math::min((int)this->psi_.size()-1, i_psi);
+	i_phi0 = vnl_math::max(0, i_phi0); i_phi0 = vnl_math::min((int)this->phi0_.size()-1, i_phi0);
+	i_r = vnl_math::max(0, i_r); i_r = vnl_math::min((int)this->r_.size()-1, i_r);
+  return true;
+}
 
+*/
 
 
 
