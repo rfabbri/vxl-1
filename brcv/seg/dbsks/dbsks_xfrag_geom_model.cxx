@@ -129,11 +129,11 @@ set_param_range(double min_psi_start, double max_psi_start,
   //
   dbsks_regularize_min_max_values(min_r_start, max_r_start);
   this->r_start_model_.set(min_r_start, max_r_start);
-  this->r_start_sampler_ = this->r_start_model_.new_sampler();
+  //this->r_start_sampler_ = this->r_start_model_.new_sampler();  //why use this will make the training of geom model wrong
   //
   dbsks_regularize_min_max_values(min_phi_start, max_phi_start);
   this->phi_start_model_.set(min_phi_start, max_phi_start);
-  this->phi_start_sampler_ = this->phi_start_model_.new_sampler();
+  //this->phi_start_sampler_ = this->phi_start_model_.new_sampler();
   //
   dbsks_regularize_min_max_values(min_alpha_start, max_alpha_start);
   this->alpha_start_model_.set(min_alpha_start, max_alpha_start);
@@ -841,6 +841,7 @@ build_from_attr_data()
   };
 //  compute_method method = GAUSSIAN_3STD;
   compute_method method = GAUSSIAN_3STD;
+  //compute_method method = MINMAX;
 
   vcl_vector<double > vcl_psi_start;
   vcl_vector<double > vcl_r_start;

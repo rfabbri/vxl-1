@@ -167,7 +167,8 @@ int main(int argc, char *argv[])
     m.prototype_xgraph_log2_increment_step        = params->prototype_xgraph_log2_increment_step_();
     m.prototype_xgraph_max_size                   = params->prototype_xgraph_max_size_();
     m.prototype_xgraph_ratio_max_size_to_min_size = params->prototype_xgraph_ratio_max_size_to_min_size_();
-    
+	m.bb_file = params->get_bb_file();    
+
     // detection window
     m.det_window_width  = params->detection_window_width_();
     m.det_window_height = params->detection_window_height_();

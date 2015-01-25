@@ -135,7 +135,8 @@ execute()
 
     if (dbsks_load_detections_from_folder(storage_folder, dets))
     {
-      vcl_cout << "\nThis scale has been processed. All records are loaded back.\n";
+      vcl_cout << "\nThis image has been processed. All records are loaded back.\n";
+	  return true;
     }
     else
     {
@@ -157,7 +158,7 @@ execute()
         vil_image_view<vxl_byte > bg_view;
         dbsks_detect_xgraph_using_edgemap::convert_edgemap_to_bw(actual_edgemap, bg_view);
         
-		vcl_sort(dets.begin(), dets.end(), dbsks_decreasing_confidence);
+		//vcl_sort(dets.begin(), dets.end(), dbsks_decreasing_confidence);
         // save detection to disk
         dbsks_save_detections_to_folder(dets, object_id, model_category, 
           det_group_id, bg_view, storage_folder, "");
@@ -307,6 +308,30 @@ load_params_and_models()
   return true;
 }
 
+bool dbsks_detect_xgraph_using_edgemap::
+load_bb_file()
+{
+	vcl_ifstream myfile (this->bb_file.c_str());
+	vcl_cout << this->xgraph_appearance_file << vcl_endl;
+	vcl_string line;
+	if (myfile.is_open())
+	{
+		getline (myfile,line);
+		vcl_istringstream is( line );
+   		double n;
+   		while( is >> n ) 
+		{
+			bb_coordinates.push_back(int(n));
+		}
+		myfile.close();
+	}
+	else
+	{ 
+		vcl_cout << "Unable to open BB file" <<vcl_endl;
+		return false;
+	}
+	return true;
+}
 
 bool dbsks_detect_xgraph_using_edgemap::
 load_appearance_model()
@@ -663,6 +688,28 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
   if(prev_dets.empty())
   {
+
+	  load_bb_file();
+
+	  //> Compute window (rectangular boxes) from input bounding box
+	  vcl_cout << "\n> Computing (rectangular) window from input bounding box...";
+	  //vcl_vector<vgl_box_2d<int > > all_windows;
+	  //dbsks_algos::compute_detection_windows(det_window_width, det_window_height, edgemap->ncols(), edgemap->nrows(), all_windows);
+	  // Print out list of windows
+	  vcl_cout << "\n> detect window: \n";
+
+		vgl_box_2d<int > window(bb_coordinates[0], bb_coordinates[2], bb_coordinates[1], bb_coordinates[3]);
+		vcl_cout
+		  << "  [xmin ymin xmax ymax] = "
+		  << "[" << window.min_x() 
+		  << " " << window.min_y() 
+		  << " " << window.max_x()
+		  << " " << window.max_y() << "]\n";
+		windows.push_back(window);
+	  
+	  vcl_cout << " [ OK ]\n";
+	  vcl_cout.flush();
+/*
 	  //> Compute all windows (rectangular boxes) necessary to cover the whole image
 	  vcl_cout << "\n> Computing sliding (rectangular) windows to cover the whole image ...";
 	  vcl_vector<vgl_box_2d<int > > all_windows;
@@ -688,9 +735,11 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 	  
 	  vcl_cout << " [ OK ]\n";
 	  vcl_cout.flush();
+*/
   }
   else
   {
+
 	// allocate window conners based on best prev dets
 	  int w_min_x = edgemap->ncols()-1;
 	  int w_max_x = 0;
@@ -714,6 +763,8 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 	  // just save this window.
 	  windows.push_back(wd_0);
   }
+
+
   //>> Detect objects within each window
   vcl_cout << "\n> Detecting objects in all computed windows ...";
   vcl_vector<dbsks_det_desc_xgraph_sptr > raw_dets_all_windows;
@@ -731,6 +782,8 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
       << " " << window.max_x()
       << " " << window.max_y() << "]\n";
 
+    vcl_vector<dbsks_det_desc_xgraph_sptr > dets_window;
+/*
     //> Name of folder to store detect records from this scale
     vcl_string storage_dirname = "ROI" + 
       vul_sprintf("_%d_%d_%d_%d", window.min_x(), window.min_y(), window.max_x(), window.max_y());
@@ -747,7 +800,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
     }
 
     // If a scale has been processed, simply load the results back
-    vcl_vector<dbsks_det_desc_xgraph_sptr > dets_window;
+
     if (dbsks_load_detections_from_folder(storage_dir, dets_window))
     {
       vcl_cout << "  This window has been processed. Loading back detection records...";
@@ -755,7 +808,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
       vcl_cout << " Done. Move on to next window.\n";
       continue;
     }
-
+*/
     //> Compute ccm for a region of interest only
     bool cid_status = ccm_like.compute_internal_data(window);
     if(!cid_status)
@@ -766,20 +819,13 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
 	if(prev_dets.empty())
 	{
-	}
-	else
-	{
-	for(int prev_i = 0; prev_i < vcl_min(int(prev_dets.size()), 3); prev_i ++)
-	{
-    // xshock detection engine
+		// xshock detection engine
 		dbsks_xshock_detector engine;
-		engine.generate_xnode_grid_option = 4; // use prev dets window
+		engine.generate_xnode_grid_option = 3; // use prev dets window
 		engine.xshock_likelihood_ = &ccm_like;
 		engine.xgraph_geom_ = xgraph_geom;
 		engine.set_xgraph(xgraph);
-		//engine.prev_dets_ = prev_dets;
-		engine.prev_dets_.push_back(prev_dets[prev_i]);
-		engine.compute_vertices_para_range();
+		//engine.compute_vertices_para_range();
 
 		//--------------------------------------------------------------------------
 		engine.detect(window, float(confidence_lower_threshold));
@@ -811,25 +857,86 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 			double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
 			vcl_cout <<"\nappearance_cost:" << appearance_cost << vcl_endl;
 
-			// shape change term, now just the differece between radius of shock nodes, but shape is more complex representation
-			double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
+//			// shape change term, now just the differece between radius of shock nodes, but shape is more complex representation
+			double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, xgraph_prototype_);
 			vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
 
 			//(TODO: change to differece between velocity, delta_x, delta_y, delta_psi)
 
 			// only consider the dets which is not too diff in bg as prototype
 			real_confidence += (50 - appearance_cost);
-			real_confidence += (50 - shape_trans_cost*5); 
+			//real_confidence += (50 - shape_trans_cost*5); 
 			vcl_cout << " real confidence: " << real_confidence << vcl_endl;
 			dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
 			det->compute_bbox();
 			dets_window.push_back(det);
 		}
-    	// add detections from this window to the overall list
-    	raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
+		// add detections from this window to the overall list
+		raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
 	}
-    } // solutions
+	else
+	{
+		for(int prev_i = 0; prev_i < vcl_min(int(prev_dets.size()), 4); prev_i ++)
+		{
+		// xshock detection engine
+			dbsks_xshock_detector engine;
+			engine.generate_xnode_grid_option = 4; // use prev dets window
+			engine.xshock_likelihood_ = &ccm_like;
+			engine.xgraph_geom_ = xgraph_geom;
+			engine.set_xgraph(xgraph);
+			//engine.prev_dets_ = prev_dets;
+			engine.prev_dets_.push_back(prev_dets[prev_i]);
+			engine.compute_vertices_para_range();
 
+			//--------------------------------------------------------------------------
+			engine.detect(window, float(confidence_lower_threshold));
+			//--------------------------------------------------------------------------
+
+			//> Construct a vector of detection descriptor
+			dets_window.clear();
+			dets_window.reserve(engine.list_solutions_.size());
+
+			vil_image_view<float> L_, prev_L_;
+			vil_convert_planes_to_grey(this->source_image, L_);
+			vil_convert_planes_to_grey(this->source_image, prev_L_);
+
+			//if(!update_appearance_model(prev_dets, prev_L_))
+			//	vcl_cout<< "Fail in updaing appearance model" << vcl_endl;
+
+			for (unsigned i =0; i < engine.list_solutions_.size(); ++i)
+			{
+				dbsksp_xshock_graph_sptr sol_xgraph = engine.list_solutions_[i];
+
+				double confidence = -engine.list_solution_costs_[i];
+				double real_confidence = -engine.list_solution_real_costs_[i];
+
+				// for detection with enough edge support, add appearance confidence into it.
+				// edge matching cost term
+				vcl_cout <<"edge_confidence:" << real_confidence << vcl_endl;		
+
+				// appearance term
+				double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
+				vcl_cout <<"\nappearance_cost:" << appearance_cost << vcl_endl;
+
+				// shape change term, now just the differece between radius of shock nodes, but shape is more complex representation
+				double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
+				vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
+
+				//(TODO: change to differece between velocity, delta_x, delta_y, delta_psi)
+
+				// only consider the dets which is not too diff in bg as prototype
+				real_confidence += (50 - appearance_cost);
+				//real_confidence += (50 - shape_trans_cost*5); 
+				vcl_cout << " real confidence: " << real_confidence << vcl_endl;
+				dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
+				det->compute_bbox();
+				dets_window.push_back(det);
+			}
+			// add detections from this window to the overall list
+			raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
+		}
+    } // solutions
+/*
     //> Save solutions of the selected window to a folder (on Edge map)
     vcl_cout << "\n> Saving detections of selected window to dump folder = " << storage_dir << "\n";
     {
@@ -851,9 +958,16 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 		// save detections to disk
 		dbsks_save_detections_to_folder(raw_dets_all_windows, object_id, model_category, det_group_id, bg_view, storage_dir, "");
     }
-
+*/
     vcl_cout << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
   } // iw
+
+  vcl_sort(raw_dets_all_windows.begin(), raw_dets_all_windows.end(), dbsks_decreasing_confidence);
+
+	// only keep the first 10
+
+  //if(raw_dets_all_windows.size()>10)
+		//raw_dets_all_windows.erase(raw_dets_all_windows.begin()+10, raw_dets_all_windows.end());
 
   vcl_cout << "\n> Number of raw detections: " << raw_dets_all_windows.size() << vcl_endl;
 
@@ -867,7 +981,20 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
   else
   {
     vcl_cout << "\n> No non-max suppression (NMS). All detections accepted.\n";
-    dets = raw_dets_all_windows;
+	// delete the duplicated detections, and only save the top 10
+	dets.push_back(raw_dets_all_windows[0]);
+	int max_size = vnl_math::min(int(raw_dets_all_windows.size()), 10);
+	if(prev_dets.empty())
+		max_size = int(raw_dets_all_windows.size());
+	for(int d = 1; d < max_size; d++)
+	{
+		if(raw_dets_all_windows[d]->confidence() == raw_dets_all_windows[d-1]->confidence())
+			continue;
+		else
+			dets.push_back(raw_dets_all_windows[d]);
+	}
+
+    //dets = raw_dets_all_windows;
   }
   return true;
 }

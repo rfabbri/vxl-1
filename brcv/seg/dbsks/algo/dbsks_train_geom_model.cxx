@@ -133,6 +133,7 @@ collect_data()
   // Iterate thru the xgraph list and collect edge and node info
   for (unsigned index =0; index < list_xgraphs.size(); ++index)
   {
+	vcl_cout << "graph index: " << index << vcl_endl; 
     dbsksp_xshock_graph_sptr xgraph = list_xgraphs[index];
 
     // Normalize the exemplar xgraph to the standard size

@@ -68,7 +68,7 @@ optimize()
   // DYNAMIC PROGRAMMING TO MINIMIZE ENERGY ------------------------------------
 
   // Set sampling parameters
-  this->num_samples_c_ = 60; // degree-2 node: number of samples for child
+  this->num_samples_c_ = 40; // degree-2 node: number of samples for child
 
   // timer to count time spent for each stage
   vul_timer timer;
@@ -224,7 +224,14 @@ set_graph(const dbsksp_xshock_graph_sptr& graph)
 }
 
 
-
+//: ----------------------------------------------------------------------------
+//: Set the prev detected graph (and compute its size)
+void dbsks_xshock_dp_new::
+set_prev_graph(const dbsksp_xshock_graph_sptr& prev_graph) 
+{ 
+  this->prev_graph_ = prev_graph; 
+  this->prev_graph_size_ = vcl_sqrt(prev_graph->area());
+}
 
 
 
@@ -429,6 +436,7 @@ optimize_child_node_given_parent_node(const dbsksp_xshock_edge_sptr& xe,
   // THE BIG LOOP
   //int count_pos_skipped = 0;
   //int count_test = 0;
+  double global_min_cost = vnl_numeric_traits<float >::maxval;
 
   vcl_vector<dbsksp_xshock_node_descriptor > edesc_list;
   for (unsigned k1 =0; k1 < size_x_vec; ++k1)
@@ -475,9 +483,13 @@ optimize_child_node_given_parent_node(const dbsksp_xshock_edge_sptr& xe,
               xv_c->degree(), geom_model, num_samples_c, grid_c, opt_cost_c, 
               min_cost, min_cost_idx, max_acceptable_subtree_cost);
 
+
             // record optimal cost
             opt_cost_p(ip_x, ip_y)[ip_desc] = min_cost;
             opt_child(ip_x, ip_y)[ip_desc] = min_cost_idx;
+
+			if(min_cost < global_min_cost)
+				global_min_cost = min_cost;
           } // k5
         } // k4
       } // k3
@@ -486,6 +498,32 @@ optimize_child_node_given_parent_node(const dbsksp_xshock_edge_sptr& xe,
 
   //vcl_cout << "\nNumer of position skipped: " << count_pos_skipped 
   //  << "/" << size_x_vec * size_y_vec << "\n";
+			// if no edge support is found from current frame, get, and assign the index from prev detected graph
+
+	if(prev_graph_ && global_min_cost == vnl_numeric_traits<float >::maxval)
+	{
+		unsigned prev_xv_p_id =  xv_p->id();
+		
+		dbsksp_xshock_edge_sptr prev_xe = prev_graph_->edge_from_id(xe->id());
+		dbsksp_xshock_node_sptr prev_xv_p = prev_graph_->node_from_id(prev_xv_p_id);
+		dbsksp_xshock_node_sptr prev_xv_c = prev_xe->opposite(prev_xv_p);
+		dbsksp_xshock_node_descriptor prev_xdesc_p = *prev_xv_p->descriptor(prev_xe);
+		dbsksp_xshock_node_descriptor prev_xdesc_c = prev_xv_c->descriptor(prev_xe)->opposite_xnode();
+	
+		int ic_x, ic_y, ic_psi, ic_phi0, ic_r;
+		int ip_x, ip_y, ip_psi, ip_phi0, ip_r;
+		if (grid_c.xdesc_to_grid(prev_xdesc_c, ic_x, ic_y, ic_psi, ic_phi0, ic_r) && grid_p.xdesc_to_grid(prev_xdesc_p, ip_x, ip_y, ip_psi, ip_phi0, ip_r))
+		{
+			double min_cost_idx = grid_c.grid_to_linear(ic_x, ic_y, ic_psi, ic_phi0, ic_r);
+			double min_cost = max_acceptable_subtree_cost+1;
+			
+			int ip_desc = grid_p.cell_grid_to_linear(ip_psi, ip_phi0, ip_r);
+
+			opt_cost_p(ip_x, ip_y)[ip_desc] = min_cost;
+	        opt_child(ip_x, ip_y)[ip_desc] = min_cost_idx;
+		}
+	}
+
 
   return;
 }
@@ -1188,6 +1226,8 @@ optimize_degree2_root_node_use_both_branches(unsigned root_vid, unsigned major_c
   
   // Optimal cost of the graph for each state of the root node
   grid2d_float& opt_cost_p = map_opt_cost[xv_root->id()]; // will compute
+	grid2d_float& opt_cost1_p = map_opt_cost[xv_root->id()];
+	grid2d_float& opt_cost2_p = map_opt_cost[xv_root->id()];
   
   // optimal state of the child nodes for each state of the root node
   grid2d_int& opt_child1 = this->map_opt_child_of_root[xv_c1->id()];
@@ -1201,6 +1241,9 @@ optimize_degree2_root_node_use_both_branches(unsigned root_vid, unsigned major_c
     int size_per_cell = grid_p.num_states_per_cell();
     
     this->allocate_grid2d(opt_cost_p, num_x, num_y, size_per_cell, vnl_numeric_traits<float >::maxval);
+    this->allocate_grid2d(opt_cost1_p, num_x, num_y, size_per_cell, vnl_numeric_traits<float >::maxval);
+    this->allocate_grid2d(opt_cost2_p, num_x, num_y, size_per_cell, vnl_numeric_traits<float >::maxval);
+
     this->allocate_grid2d(opt_child1, num_x, num_y, size_per_cell, -1);
     this->allocate_grid2d(opt_child2, num_x, num_y, size_per_cell, -1);
   }
@@ -1251,6 +1294,9 @@ optimize_degree2_root_node_use_both_branches(unsigned root_vid, unsigned major_c
   vcl_cout << "  size phi0_vec = " << size_phi0_vec << vcl_endl;
   vcl_cout << "  size r_vec = " << size_r_vec << vcl_endl;
     
+
+  double global_min_cost1 = vnl_numeric_traits<float >::maxval;
+  double global_min_cost2 = vnl_numeric_traits<float >::maxval;
   // THE BIG LOOP
   vcl_vector<dbsksp_xshock_node_descriptor > edesc_list;
   for (unsigned k1 =0; k1 < size_x_vec; ++k1)
@@ -1283,12 +1329,17 @@ optimize_degree2_root_node_use_both_branches(unsigned root_vid, unsigned major_c
               xv_c1->degree(), geom_model1, this->num_samples_c_, grid_c1, opt_cost_c1,
               min_cost1, min_cost1_idx, max_acceptable_subtree1_cost);
 
+		    if(min_cost1 < global_min_cost1)
+				global_min_cost1 = min_cost1;
+
             float min_cost2 = vnl_numeric_traits<float >::maxval;
             int min_cost2_idx = -1;
             this->find_optimal_child_node_given_parent_state(xe2->id(), xd_p2, 
               xv_c2->degree(), geom_model2, this->num_samples_c_, grid_c2, opt_cost_c2,
               min_cost2, min_cost2_idx, this->max_acceptable_xgraph_cost_ - min_cost1);
 
+		    if(min_cost2 < global_min_cost2)
+				global_min_cost2 = min_cost2;
             // optimal cost at the root is sum of optimal cost of two branches
             float min_cost = min_cost1 + min_cost2;
             int min_cost_idx1 = min_cost1_idx;
@@ -1296,6 +1347,8 @@ optimize_degree2_root_node_use_both_branches(unsigned root_vid, unsigned major_c
             
             // Record the optimal results
             opt_cost_p(ip_x, ip_y)[ip_desc] = min_cost;
+            opt_cost1_p(ip_x, ip_y)[ip_desc] = min_cost1;
+            opt_cost2_p(ip_x, ip_y)[ip_desc] = min_cost2;
             opt_child1(ip_x, ip_y)[ip_desc] = min_cost_idx1;
             opt_child2(ip_x, ip_y)[ip_desc] = min_cost_idx2;
           } // k5
@@ -1304,13 +1357,77 @@ optimize_degree2_root_node_use_both_branches(unsigned root_vid, unsigned major_c
     } // k2
   } // k1
 
+
+  // modify the cost map
+  float min_cost_p = this->compute_min_value(opt_cost_p);
+
+	// if no edge support is found from current frame, get, and assign the index from prev detected graph
+	if(prev_graph_ && min_cost_p == vnl_numeric_traits<float >::maxval)
+	{
+		dbsksp_xshock_node_sptr prev_xv_p = prev_graph_->node_from_id(root_vid);
+		dbsksp_xshock_edge_sptr prev_xe1 = prev_graph_->edge_from_id(xe1->id());
+		dbsksp_xshock_node_descriptor prev_xdesc_p1 = *prev_xv_p->descriptor(prev_xe1);
+
+		int ip_x, ip_y, ip_psi, ip_phi0, ip_r;
+		int ip_desc = -1;
+		if(grid_p.xdesc_to_grid(prev_xdesc_p1, ip_x, ip_y, ip_psi, ip_phi0, ip_r))
+		{
+			ip_desc = grid_p.cell_grid_to_linear(ip_psi, ip_phi0, ip_r);
+		}
+
+		//double global_opt_cost_p1 = vnl_numeric_traits<float >::maxval;
+		//double global_opt_cost_p2 = vnl_numeric_traits<float >::maxval;
+
+		if (opt_cost1_p(ip_x, ip_y)[ip_desc] == vnl_numeric_traits<float >::maxval)
+		{
+			dbsksp_xshock_node_sptr prev_xv_c1 = prev_xe1->opposite(prev_xv_p);
+			dbsksp_xshock_node_descriptor prev_xdesc_c1 = *prev_xv_c1->descriptor(prev_xe1);
+	
+			int ic_x, ic_y, ic_psi, ic_phi0, ic_r;
+
+			if (grid_c1.xdesc_to_grid(prev_xdesc_c1, ic_x, ic_y, ic_psi, ic_phi0, ic_r))
+			{
+				double min_cost_idx = grid_c1.grid_to_linear(ic_x, ic_y, ic_psi, ic_phi0, ic_r);
+				opt_cost1_p(ip_x, ip_y)[ip_desc] = max_acceptable_subtree1_cost;
+			
+		        opt_child1(ip_x, ip_y)[ip_desc] = min_cost_idx;
+			
+			}
+		}
+
+
+		if (opt_cost2_p(ip_x, ip_y)[ip_desc] == vnl_numeric_traits<float >::maxval)
+		{
+			dbsksp_xshock_edge_sptr prev_xe2 = prev_graph_->edge_from_id(xe2->id());
+			dbsksp_xshock_node_sptr prev_xv_c2 = prev_xe2->opposite(prev_xv_p);
+			//dbsksp_xshock_node_descriptor prev_xdesc_p2 = *prev_xv_p->descriptor(prev_xe2);
+			dbsksp_xshock_node_descriptor prev_xdesc_c2 = prev_xv_c2->descriptor(prev_xe2)->opposite_xnode();
+	
+			int ic_x, ic_y, ic_psi, ic_phi0, ic_r;
+
+			if (grid_c2.xdesc_to_grid(prev_xdesc_c2, ic_x, ic_y, ic_psi, ic_phi0, ic_r))
+			{
+				double min_cost_idx = grid_c2.grid_to_linear(ic_x, ic_y, ic_psi, ic_phi0, ic_r);
+				opt_cost2_p(ip_x, ip_y)[ip_desc] = this->max_acceptable_xgraph_cost_ - max_acceptable_subtree1_cost;
+			
+		        opt_child2(ip_x, ip_y)[ip_desc] = min_cost_idx;
+			}
+		}
+
+
+//		if(opt_cost_p(ip_x, ip_y)[ip_desc] == vnl_numeric_traits<float >::maxval)
+//		{
+			//vcl_cout << "opt_cost_p1 = " << opt_cost1_p(ip_x, ip_y)[ip_desc] <<" opt_cost_p2 = " << opt_cost2_p(ip_x, ip_y)[ip_desc] << "\n";
+			opt_cost_p(ip_x, ip_y)[ip_desc] = opt_cost1_p(ip_x, ip_y)[ip_desc] + opt_cost2_p(ip_x, ip_y)[ip_desc];
+//		}
+	}
+
   // release memory for the optimal cost grids of the child nodes
   opt_cost_c1.clear();
   opt_cost_c2.clear();
 
-  // modify the cost map
-  float min_cost_p = this->compute_min_value(opt_cost_p);
-  
+
+  min_cost_p = this->compute_min_value(opt_cost_p);
   vcl_cout << "\nMin cost for the whole graph (xv_root= "<< xv_root->id() << ") is: " << min_cost_p << "\n";
 
   this->map_node_to_min_cost_.erase(xv_c1->id());
@@ -2002,6 +2119,7 @@ update_parent_node_cost_given_child_state(unsigned edge_id,
 		  // get the grid index of this node descriptor instance
 		  int ip_x, ip_y, ip_psi, ip_phi0, ip_r;
 		  if (!grid_p.xdesc_to_grid(xd_p, ip_x, ip_y, ip_psi, ip_phi0, ip_r))
+		 
 		    continue;
 		  //vcl_cout << "xdesc to grid" << vcl_endl;
 
@@ -2169,6 +2287,10 @@ find_optimal_child_node_given_parent_state(unsigned edge_id,
       int ic_x, ic_y, ic_psi, ic_phi0, ic_r;
       if (!grid_c.xdesc_to_grid(xd_c, ic_x, ic_y, ic_psi, ic_phi0, ic_r))
         continue;
+
+	  // if former sample fall on the same grid, ignore it to avoid duplicate computation
+      if (min_cost_idx == grid_c.grid_to_linear(ic_x, ic_y, ic_psi, ic_phi0, ic_r))
+		continue;
 	  //vcl_cout << "xdesc to grid" << vcl_endl;
 
       float subtree_cost = opt_cost_c(ic_x, ic_y)[grid_c.cell_grid_to_linear(ic_psi, ic_phi0, ic_r)];

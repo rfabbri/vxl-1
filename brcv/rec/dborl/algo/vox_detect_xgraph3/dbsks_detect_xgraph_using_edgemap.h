@@ -86,6 +86,7 @@ public:
     vil_image_view<vxl_byte >& bw_mask);
 
   bool load_appearance_model();
+  bool load_bb_file();
 
   double compute_appearance_cost(dbsksp_xshock_graph_sptr& sol_xgraph, vil_image_view<float>& L);
   vcl_vector<double> compute_bg_vec (dbsksp_xshock_graph_sptr& sol_xgraph, vil_image_view<float>& L);
@@ -108,6 +109,7 @@ public:
   vcl_string xgraph_ccm_param_file;
   vcl_string xgraph_appearance_file;
   vcl_vector<vcl_string > cfrag_list_to_ignore;
+  vcl_string bb_file;
 
   //: Min graph size
   double prototype_xgraph_min_size;
@@ -146,6 +148,7 @@ public:
 
   vcl_vector<int> appearance_model_node_id;
   vcl_vector<int> appearance_model_node_value;
+  vcl_vector<int> bb_coordinates;
 
 protected:
   

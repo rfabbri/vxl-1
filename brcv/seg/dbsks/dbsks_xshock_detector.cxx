@@ -96,6 +96,10 @@ detect(const vgl_box_2d<int >& window, float min_acceptable_confidence)
   dbsks_xshock_dp_new xshock_dp;
   xshock_dp.set_graph(this->xgraph());
 
+  if(!this->prev_dets_.empty())
+  {
+	xshock_dp.set_prev_graph(this->prev_dets_[0]->xgraph());
+  }
   
   // variables to keep
   xshock_dp.root_vid_ = this->root_vid_;
@@ -277,36 +281,36 @@ build_xnode_grid_using_prev_dets_window(const vgl_box_2d<int >& window)
     dbsks_xnode_grid_params params;
 
 	//////////////////////////////////////////// x
-    params.step_x = 4;
+    params.step_x = 2;
     //params.num_x = 20;
     //params.min_x = vnl_math::rnd(x - params.step_x*(params.num_x-1)/2 ); // centering
 	
 	params.num_x = vnl_math::rnd(window.width()/params.step_x); // allow some padding
 
     // if the image is too big, we only consider the center portion of 512 pixels
-    params.num_x = vnl_math::min(params.num_x, 65);
+    //params.num_x = vnl_math::min(params.num_x, 65);
     params.min_x = vnl_math::rnd(window.centroid_x() - params.step_x*(params.num_x-1)/2 ); // centering
 
 	//////////////////////////////////////////// y
-    params.step_y = 4;
+    params.step_y = 2;
     //params.num_y = 20;
     //params.min_y = vnl_math::rnd(y - params.step_y*(params.num_y-1)/2 ); // centering
 	params.num_y = vnl_math::rnd(window.height()/params.step_y); // allow some padding
 
     // if the image is too big, only consider the center portion of 512 pixels
-    params.num_y = vnl_math::min(params.num_y, 65);
+    //params.num_y = vnl_math::min(params.num_y, 65);
     params.min_y = vnl_math::rnd(window.centroid_y() - params.step_y*(params.num_y-1)/2 ); // centering
 
 	// griding of psi and phi should also based on the given xgraph, so that the grid space can be reduced
 
     // griding of psi within [0, 2pi], have to keep the whole possible range, because at branch node, the change of psi between frames can be huge(tail of mouse), but make it denser to increase detection localization
-    params.step_psi = vnl_math::pi / 12;
-    params.num_psi = 24;
+    params.step_psi = vnl_math::pi / 15;
+    params.num_psi = 30;
     params.min_psi = 0;
 
 	// center at pi/2
-    params.step_phi0 = vnl_math::pi / 20;
-    params.num_phi0 = 11;
+    params.step_phi0 = vnl_math::pi / 24;
+    params.num_phi0 = 25;
     params.min_phi0 = vnl_math::pi_over_2 - params.step_phi0 * (params.num_phi0-1)/2;
 
 
@@ -326,9 +330,11 @@ build_xnode_grid_using_prev_dets_window(const vgl_box_2d<int >& window)
     params.min_phi0 = phi - params.step_phi0 * (params.num_phi0-1)/2;*/
 
 	// sample centered at current radius, make the step correpond to a ratio of current radius
-    params.step_r = 0.05 * (xv->radius()); 
-    params.num_r = 11;
-    params.min_r = xv->radius() -(params.num_r-1) * params.step_r /2;
+    params.step_r = vnl_math::max(0.06 * (xv->radius()), double(1)); 
+	params.num_r = vnl_math::max(vnl_math::floor((xv->radius()*0.48)/params.step_r)+1,3);
+    params.min_r = xv->radius() - params.step_r * vnl_math::floor(double(params.num_r-1)/2);
+    //params.num_r = 11;
+    //params.min_r = xv->radius() -(params.num_r-1) * params.step_r /2;
 
     if (xv->degree() == 3)
     {
@@ -389,7 +395,7 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
 
 	//////////////////////////////////////////// x
     params.step_x = 2;
-	params.num_x = vnl_math::rnd((xgraph_vertices_max_x_[i]-xgraph_vertices_min_x_[i]+42)/params.step_x); // allow some padding
+	params.num_x = vnl_math::rnd((xgraph_vertices_max_x_[i]-xgraph_vertices_min_x_[i]+50)/params.step_x); // allow some padding
     // if the image is too big, we only consider the center portion of 512 pixels
     params.num_x = vnl_math::min(params.num_x, 65);
     params.min_x = vnl_math::rnd((xgraph_vertices_min_x_[i]+xgraph_vertices_max_x_[i])/2 - params.step_x*(params.num_x-1)/2 ); // centering
@@ -398,7 +404,7 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
 
 	//////////////////////////////////////////// y
     params.step_y = 2;
-	params.num_y = vnl_math::rnd((xgraph_vertices_max_y_[i]-xgraph_vertices_min_y_[i]+42)/params.step_y); // allow some padding
+	params.num_y = vnl_math::rnd((xgraph_vertices_max_y_[i]-xgraph_vertices_min_y_[i]+50)/params.step_y); // allow some padding
     // if the image is too big, only consider the center portion of 512 pixels
     params.num_y = vnl_math::min(params.num_y, 65);
     params.min_y = vnl_math::rnd((xgraph_vertices_min_y_[i]+xgraph_vertices_max_y_[i])/2 - params.step_y*(params.num_y-1)/2 ); // centering
@@ -412,10 +418,18 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
     params.min_psi = (max_psi+min_psi)/2 - params.step_psi*(params.num_psi-1)/2;
 */
     // sample psi from previous dets
-	params.step_psi = vnl_math::pi / 12;
-    double range_psi = (xgraph_vertices_max_psi_[i] - xgraph_vertices_min_psi_[i] + 0.5*vnl_math::pi);
+	params.step_psi = vnl_math::pi / 15;
+    double range_psi = (xgraph_vertices_max_psi_[i] - xgraph_vertices_min_psi_[i] + 0.8*vnl_math::pi);
     params.num_psi = vnl_math::floor(range_psi / params.step_psi)+1;
     params.min_psi = (xgraph_vertices_max_psi_[i]+xgraph_vertices_min_psi_[i])/2 - params.step_psi*(params.num_psi-1)/2;
+/*
+	if(xv->id()==1 || xv->id()==20)
+	{
+		params.num_psi  = 1;
+		params.min_psi = (xgraph_vertices_max_psi_[i]+xgraph_vertices_min_psi_[i])/2;
+	}
+*/
+	vcl_cout << "min_psi: "<<params.min_psi <<" ";
 /*
 	// center at pi/2
     params.step_phi0 = vnl_math::pi / 24;
@@ -423,9 +437,17 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
     params.min_phi0 = vnl_math::pi_over_2 - params.step_phi0 * (params.num_phi0-1)/2;
 */
 	// sample phi from prev dets 
-    params.step_phi0 = vnl_math::pi / 20;
-    params.num_phi0 = 9;
+    params.step_phi0 = vnl_math::pi / 24;
+    params.num_phi0 = 11;
     params.min_phi0 = (xgraph_vertices_max_phi_[i]+xgraph_vertices_min_phi_[i])/2 - params.step_phi0 * (params.num_phi0-1)/2;
+/*
+	if(xv->id()==1 || xv->id()==20)
+	{
+		params.num_phi0 = 1;
+		params.min_phi0 = (xgraph_vertices_max_phi_[i]+xgraph_vertices_min_phi_[i])/2;
+	}	
+*/
+	vcl_cout << "min_phi0: "<<params.min_phi0 <<" ";
 /*
 	// sample phi center at pi/2 using geom model
     params.step_phi0 = vnl_math::pi / 16;
@@ -442,9 +464,21 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
 */
 
 	// sample radius from prev dets
-    params.step_r = vnl_math::max(0.08 * (xv->radius()), double(1)); 
-    params.num_r = vnl_math::max(vnl_math::floor((xgraph_vertices_max_r_[i]-xgraph_vertices_min_r_[i]+xv->radius()*0.48)/params.step_r)+1,3);
+    params.step_r = vnl_math::max(0.06 * (xv->radius()), double(1)); 
+    params.num_r = vnl_math::max(vnl_math::floor((xv->radius()*0.48)/params.step_r)+1,3);
+
+    //params.step_r = 0.06 * (xv->radius());
+	//params.num_r = 15;
     params.min_r = (xgraph_vertices_max_r_[i]+xgraph_vertices_min_r_[i])/2 - params.step_r * vnl_math::floor(double(params.num_r-1)/2);
+    //params.min_r = (xgraph_vertices_max_r_[i]+xgraph_vertices_min_r_[i])/2 - params.step_r * double(params.num_r-1)/2;
+/*
+	if(xv->id()==1 || xv->id()==20)
+	{
+		params.num_r = 1;
+		params.min_r = (xgraph_vertices_max_r_[i]+xgraph_vertices_min_r_[i])/2;
+	}
+*/
+	vcl_cout << "min_r: "<<params.min_r <<" ";
 /*
 	// sample radius using geometric model
 	params.step_r = vnl_math::max((max_radius-min_radius)/20, double(1)); 
@@ -744,8 +778,9 @@ void dbsks_xshock_detector::compute_vertices_para_range()
 			//vcl_cout<< "read para" <<vcl_endl;
 			xv->descriptor(xv->edge_list().front())->get(x, y, psi, phi, r);
 
-			if( xv->id()==14 || xv->id()==11)
-				xv->descriptor(xv->edge_list().back())->get(x, y, psi, phi, r);
+//////////////////////////////////////////////////////////
+			//if(xv->id()==11)
+				//xv->descriptor(xv->edge_list().back())->get(x, y, psi, phi, r);
 			if(vertices_min_x[j]==-1)
 				vertices_min_x[j] = x;
 			else if(x < vertices_min_x[j])
