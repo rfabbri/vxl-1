@@ -449,7 +449,7 @@ void dbsk2d_sample_ishock::sample_ishock_edge(dbsk2d_ishock_pointpoint* spp, dbs
   cur_sample->edge_id = spp->edgeID();
   cur_sample->label = dbsk2d_xshock_sample::DEGENERATE;
   cur_sample->type = dbsk2d_xshock_sample::NORMALSAMPLE;
-  cur_sample->theta = spp->tangent(etau);
+  cur_sample->theta = angle0To2Pi(spp->tangent(etau));
   cur_sample->speed = spp->v(etau);
   cur_sample->left_bnd_pt = spp->getLFootPt(etau);
   cur_sample->right_bnd_pt = spp->getRFootPt(etau);
@@ -508,7 +508,7 @@ void dbsk2d_sample_ishock::sample_ishock_edge(dbsk2d_ishock_pointline* spl, dbsk
   cur_sample->edge_id = spl->edgeID();
   cur_sample->label = dbsk2d_xshock_sample::SEMI_DEGENERATE;
   cur_sample->type = dbsk2d_xshock_sample::NORMALSAMPLE;
-  cur_sample->theta = spl->tangent(etau);
+  cur_sample->theta = angle0To2Pi(spl->tangent(etau));
   cur_sample->speed = spl->v(etau);
   cur_sample->left_bnd_pt = spl->getLFootPt(etau);
   cur_sample->right_bnd_pt = spl->getRFootPt(etau);
@@ -565,7 +565,7 @@ void dbsk2d_sample_ishock::sample_ishock_edge(dbsk2d_ishock_lineline* sll, dbsk2
   cur_sample->edge_id = sll->edgeID();
   cur_sample->label = dbsk2d_xshock_sample::REGULAR;
   cur_sample->type = dbsk2d_xshock_sample::NORMALSAMPLE;
-  cur_sample->theta = sll->tangent(etau);
+  cur_sample->theta = angle0To2Pi(sll->tangent(etau));
   cur_sample->speed = sll->v(etau);
   cur_sample->left_bnd_pt = sll->getLFootPt(etau);
   cur_sample->right_bnd_pt = sll->getRFootPt(etau);

@@ -237,13 +237,13 @@ void dbskfg_compute_scurve::mirror_shock(dbsk2d_xshock_edge& xshock_edge)
         new_sample->left_bnd_pt = new_left_bnd_pt;
         new_sample->right_bnd_pt = new_right_bnd_pt;
 
-        double new_theta = vnl_math::pi - cur_sample->theta;
+        double new_theta = mirror_angle(cur_sample->theta);
         new_sample->theta = new_theta;
 
-        double new_left_bnd_tangent = vnl_math::pi - 
-            cur_sample->right_bnd_tangent;
-        double new_right_bnd_tangent = vnl_math::pi - 
-            cur_sample->left_bnd_tangent;
+        double new_left_bnd_tangent = 
+            mirror_angle(cur_sample->right_bnd_tangent);
+        double new_right_bnd_tangent =
+            mirror_angle(cur_sample->left_bnd_tangent);
         new_sample->left_bnd_tangent = new_left_bnd_tangent;
         new_sample->right_bnd_tangent = new_right_bnd_tangent;
 

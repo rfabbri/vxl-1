@@ -21,7 +21,8 @@
 #include <dbskfg/dbskfg_composite_link_sptr.h>
 #include <vcl_vector.h>
 #include <vsol/vsol_box_2d_sptr.h>
-
+#include <vnl/vnl_math.h>
+#include <vcl_iostream.h>
 class dbsk2d_xshock_edge;
 
 class dbskfg_compute_scurve
@@ -52,6 +53,39 @@ private:
     
     // mirror shock
     void mirror_shock(dbsk2d_xshock_edge& xshock_edge);
+
+    // mirror angle
+    double mirror_angle(double theta)
+    {
+        double diff(0.0);
+        double output(0.0);
+
+        if ( theta >= 0 && theta <= vnl_math::pi_over_2 )
+        {
+            
+            diff=2*(vnl_math::pi_over_2-theta);
+            output=theta+diff;
+        }
+        else if (theta > vnl_math::pi_over_2 && theta <= vnl_math::pi )
+        {
+    
+            diff=2*(theta-vnl_math::pi_over_2 );
+            output=theta-diff;
+        }
+        else if (theta > vnl_math::pi && theta <= vnl_math::pi_over_2*3 )
+        {
+            diff=2*(vnl_math::pi_over_2*3-theta);    
+            output=theta+diff;
+        }
+        else
+        {
+            diff=2*(theta-vnl_math::pi_over_2*3);
+            output=theta-diff;
+        }
+
+        return output;
+
+    }
 
     // Make copy constructor private
     dbskfg_compute_scurve(const dbskfg_compute_scurve&);
