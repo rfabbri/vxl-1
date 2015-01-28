@@ -53,6 +53,7 @@ public:
 
   vcl_string get_appearance_prototype_name() const; //> 
   vcl_string get_bb_file() const;
+  vcl_string get_initial_edge_file() const;
   // MEMBER VARIABLES ----------------------------------------------------------
 
   //>> Object <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -156,6 +157,8 @@ public:
   dborl_parameter<vcl_string > appearance_prototype_filename_;
 
   dborl_parameter<vcl_string > input_bb_folder_;
+
+  dborl_parameter<vcl_string > initial_edge_folder_;
 
   // Output 
 

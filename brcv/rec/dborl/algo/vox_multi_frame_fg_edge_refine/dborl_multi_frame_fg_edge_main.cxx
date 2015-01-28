@@ -202,7 +202,7 @@ int main(int argc, char *argv[]) {
 	vcl_cout << out_name << vcl_endl;
     dbdet_save_edg_process save_edg_pro;
 	//vcl_string output_file = "/home/guoy/lemsvxl/bin_release/brcv/rec/dborl/algo/vox_multi_frame_fg_edge_refine/0021_fg.edg";
-	vcl_string output_file = output_path + "fg_" + out_name;
+	vcl_string output_file = output_path + out_name;
     bpro1_filepath output(output_file,".edg");
 
     save_edg_pro.parameters()->set_value("-edgoutput",output);
@@ -354,7 +354,7 @@ int main(int argc, char *argv[]) {
 		vcl_cout << out_name << vcl_endl;
 		dbdet_save_edg_process save_edg_pro;
 		//vcl_string output_file = "/home/guoy/lemsvxl/bin_release/brcv/rec/dborl/algo/vox_multi_frame_fg_edge_refine/0021_fg.edg";
-		vcl_string output_file = output_path + "fg_" + out_name;
+		vcl_string output_file = output_path + out_name;
 		bpro1_filepath output(output_file,".edg");
 
 		save_edg_pro.parameters()->set_value("-edgoutput",output);

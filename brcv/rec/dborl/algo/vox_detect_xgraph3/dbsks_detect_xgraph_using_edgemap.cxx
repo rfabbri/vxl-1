@@ -125,7 +125,8 @@ execute()
 //      actual_pyramid_scale, actual_edgemap, actual_xgraph);
 
 	//this->load_edgemap_from_curve_fragments(actual_sel, actual_edgemap, actual_xgraph);
-	this ->load_edgemap_singe_scale(actual_edgemap, actual_xgraph);
+	if(!this ->load_initial_edgemap(actual_edgemap, actual_xgraph))
+		this ->load_edgemap_singe_scale(actual_edgemap, actual_xgraph);
     //> If a scale has been processed, simply load the results back
     vcl_vector<dbsks_det_desc_xgraph_sptr > dets; //> List of detections for this scale
     vcl_vector<dbsks_det_desc_xgraph_sptr > prev_dets; //> List of detections for this scale in prev frame
@@ -224,7 +225,7 @@ load_params_and_models()
     return false;
   }
   source_image = *vil_convert_cast(vxl_byte(), image_resource->get_view());
- 
+/*
   // image
   vil_image_resource_sptr prev_image_resource;
   if (!dbsks_load_image_resource(prev_image_file, prev_image_resource))
@@ -232,7 +233,7 @@ load_params_and_models()
     return false;
   }
   prev_source_image = *vil_convert_cast(vxl_byte(), prev_image_resource->get_view()); 
-
+*/
   // xgraph
   if (!dbsks_load_xgraph(xgraph_file, xgraph_prototype_))
   {
@@ -245,6 +246,22 @@ load_params_and_models()
     return false;
   }
   xgraph_geom->compute_attribute_constraints();
+
+  // geometric model L
+  vcl_string xgraph_geom_file_L = xgraph_geom_file.substr(0, xgraph_geom_file.size()-4) + "-left.xml";
+  if (!dbsks_load_xgraph_geom_model(xgraph_geom_file_L, xgraph_geom_param_file, xgraph_geom_L))
+  {
+    return false;
+  }
+  xgraph_geom_L->compute_attribute_constraints();
+
+  // geometric model R
+  vcl_string xgraph_geom_file_R = xgraph_geom_file.substr(0, xgraph_geom_file.size()-4) + "-right.xml";
+  if (!dbsks_load_xgraph_geom_model(xgraph_geom_file_R, xgraph_geom_param_file, xgraph_geom_R))
+  {
+    return false;
+  }
+  xgraph_geom_R->compute_attribute_constraints();
 
   // Check compatibility between the geometric model and the shock graph (are all edges covered?)
   vcl_cout << "\n>> Checking compatibility between geometric model and xgraph...";
@@ -579,6 +596,31 @@ load_edgemap_singe_scale(dbdet_edgemap_sptr& actual_edgemap,dbsksp_xshock_graph_
 	//actual_xgraph->scale_up(0, 0, target_xgraph_size / cur_xgraph_size);
     return true;
 }
+
+bool dbsks_detect_xgraph_using_edgemap::
+load_initial_edgemap(dbdet_edgemap_sptr& actual_edgemap,dbsksp_xshock_graph_sptr& actual_xgraph)
+{
+	vcl_cout<<"************ Load Initial Frame Edge Map ************"<<vcl_endl;
+	vcl_string edgemap_fname = object_id + edgemap_ext;
+	vcl_string edgemap_file = initial_edge_folder + "/"  + edgemap_fname;
+	if(!std::ifstream(edgemap_file.c_str()))
+		return false;
+
+	// Name of edge orientation file
+	vcl_string edgeorient_fname = object_id + edgeorient_ext;
+	vcl_string edgeorient_file = initial_edge_folder + "/" + edgeorient_fname;
+
+	if(!std::ifstream(edgeorient_file.c_str()))
+		return false;
+	// Load the edgel map/////////////////////////////////////////////////////////
+	actual_edgemap = dbsks_load_subpix_edgemap(edgemap_file, edgeorient_file, 15.0f, 255.0f);
+
+    actual_xgraph = new dbsksp_xshock_graph(*(this->xgraph_prototype_));
+	//double cur_xgraph_size = vcl_sqrt(actual_xgraph->area());
+	//actual_xgraph->scale_up(0, 0, target_xgraph_size / cur_xgraph_size);
+
+	return true;
+}
 //------------------------------------------------------------------------------
 //: Load edgemap corresponding to a target xgraph size to that the actual
 // xgraph size is about the same as the base xgraph size
@@ -817,6 +859,8 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
         continue;
     }
 
+
+	// Pipeline Update: if no previous dets, do window detection in a coarse grid search first. Refine the coarse results in the next steps
 	if(prev_dets.empty())
 	{
 		// xshock detection engine
@@ -872,12 +916,19 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 			dets_window.push_back(det);
 		}
 		// add detections from this window to the overall list
-		raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
+		//raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
+		prev_dets.insert(prev_dets.end(), dets_window.begin(), dets_window.end());
+  		vcl_sort(prev_dets.begin(), prev_dets.end(), dbsks_decreasing_confidence);		
 	}
-	else
-	{
-		for(int prev_i = 0; prev_i < vcl_min(int(prev_dets.size()), 4); prev_i ++)
+//	else
+//	{
+		for(int prev_i = 0; prev_i < vcl_min(int(prev_dets.size()), 2); prev_i ++)
 		{
+
+			vil_image_view<float> L_, prev_L_;
+			vil_convert_planes_to_grey(this->source_image, L_);
+			vil_convert_planes_to_grey(this->source_image, prev_L_);
+
 		// xshock detection engine
 			dbsks_xshock_detector engine;
 			engine.generate_xnode_grid_option = 4; // use prev dets window
@@ -888,6 +939,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 			engine.prev_dets_.push_back(prev_dets[prev_i]);
 			engine.compute_vertices_para_range();
 
+			vcl_cout << "\n Detecting based on Geom Model" << vcl_endl;
 			//--------------------------------------------------------------------------
 			engine.detect(window, float(confidence_lower_threshold));
 			//--------------------------------------------------------------------------
@@ -896,9 +948,6 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 			dets_window.clear();
 			dets_window.reserve(engine.list_solutions_.size());
 
-			vil_image_view<float> L_, prev_L_;
-			vil_convert_planes_to_grey(this->source_image, L_);
-			vil_convert_planes_to_grey(this->source_image, prev_L_);
 
 			//if(!update_appearance_model(prev_dets, prev_L_))
 			//	vcl_cout<< "Fail in updaing appearance model" << vcl_endl;
@@ -934,31 +983,106 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 			}
 			// add detections from this window to the overall list
 			raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
+  			//vcl_sort(raw_dets_all_windows.begin(), raw_dets_all_windows.end(), dbsks_decreasing_confidence);
+
+
+			//////////////////////////////// detect based on geom model left  ///////////////////////////////////////////////////////////////
+			vcl_cout << "\n Detecting based on Left-Turnning Geom Model" << vcl_endl;
+			engine.xgraph_geom_ = xgraph_geom_L;
+
+			//--------------------------------------------------------------------------
+			engine.detect(window, float(confidence_lower_threshold));
+			//--------------------------------------------------------------------------
+
+			//> Construct a vector of detection descriptor
+			dets_window.clear();
+			dets_window.reserve(engine.list_solutions_.size());
+
+			//if(!update_appearance_model(prev_dets, prev_L_))
+			//	vcl_cout<< "Fail in updaing appearance model" << vcl_endl;
+
+			for (unsigned i =0; i < engine.list_solutions_.size(); ++i)
+			{
+				dbsksp_xshock_graph_sptr sol_xgraph = engine.list_solutions_[i];
+
+				double confidence = -engine.list_solution_costs_[i];
+				double real_confidence = -engine.list_solution_real_costs_[i];
+
+				// for detection with enough edge support, add appearance confidence into it.
+				// edge matching cost term
+				vcl_cout <<"edge_confidence:" << real_confidence << vcl_endl;		
+
+				// appearance term
+				double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
+				vcl_cout <<"\nappearance_cost:" << appearance_cost << vcl_endl;
+
+				// shape change term, now just the differece between radius of shock nodes, but shape is more complex representation
+				double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
+				vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
+
+				//(TODO: change to differece between velocity, delta_x, delta_y, delta_psi)
+
+				// only consider the dets which is not too diff in bg as prototype
+				real_confidence += (50 - appearance_cost);
+				//real_confidence += (50 - shape_trans_cost*5); 
+				vcl_cout << " real confidence: " << real_confidence << vcl_endl;
+				dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
+				det->compute_bbox();
+				dets_window.push_back(det);
+			}
+			raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
+
+			//////////////////// detect based on geom model right  //////////////////////////////////////////
+
+			vcl_cout << "\n Detecting based on Right-Turnning Geom Model" << vcl_endl;
+			engine.xgraph_geom_ = xgraph_geom_R;
+
+			//--------------------------------------------------------------------------
+			engine.detect(window, float(confidence_lower_threshold));
+			//--------------------------------------------------------------------------
+
+			//> Construct a vector of detection descriptor
+			dets_window.clear();
+			dets_window.reserve(engine.list_solutions_.size());
+
+
+			//if(!update_appearance_model(prev_dets, prev_L_))
+			//	vcl_cout<< "Fail in updaing appearance model" << vcl_endl;
+
+			for (unsigned i =0; i < engine.list_solutions_.size(); ++i)
+			{
+				dbsksp_xshock_graph_sptr sol_xgraph = engine.list_solutions_[i];
+
+				double confidence = -engine.list_solution_costs_[i];
+				double real_confidence = -engine.list_solution_real_costs_[i];
+
+				// for detection with enough edge support, add appearance confidence into it.
+				// edge matching cost term
+				vcl_cout <<"edge_confidence:" << real_confidence << vcl_endl;		
+
+				// appearance term
+				double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
+				vcl_cout <<"\nappearance_cost:" << appearance_cost << vcl_endl;
+
+				// shape change term, now just the differece between radius of shock nodes, but shape is more complex representation
+				double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
+				vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
+
+				//(TODO: change to differece between velocity, delta_x, delta_y, delta_psi)
+
+				// only consider the dets which is not too diff in bg as prototype
+				real_confidence += (50 - appearance_cost);
+				//real_confidence += (50 - shape_trans_cost*5); 
+				vcl_cout << " real confidence: " << real_confidence << vcl_endl;
+				dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
+				det->compute_bbox();
+				dets_window.push_back(det);
+			}
+			raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
+
 		}
-    } // solutions
-/*
-    //> Save solutions of the selected window to a folder (on Edge map)
-    vcl_cout << "\n> Saving detections of selected window to dump folder = " << storage_dir << "\n";
-    {
-		// form a unique id for this group of detections
-		vcl_string xgraph_name = vul_file::strip_extension(vul_file::strip_directory(xgraph_file));
-		vcl_string det_group_id = xgraph_name + "+" + object_id + "+" + storage_dirname;
-		vcl_string model_category = "";
 
-		// create a binary image from the edgemap
-		vil_image_view<vxl_byte > bg_view; 
-		dbsks_detect_xgraph_using_edgemap::convert_edgemap_to_bw(edgemap, bg_view);
 
-		vcl_sort(raw_dets_all_windows.begin(), raw_dets_all_windows.end(), dbsks_decreasing_confidence);
-
-		// only keep the first 10
-
-		if(raw_dets_all_windows.size()>10)
-			raw_dets_all_windows.erase(raw_dets_all_windows.begin()+10, raw_dets_all_windows.end());
-		// save detections to disk
-		dbsks_save_detections_to_folder(raw_dets_all_windows, object_id, model_category, det_group_id, bg_view, storage_dir, "");
-    }
-*/
     vcl_cout << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
   } // iw
 
@@ -985,7 +1109,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 	dets.push_back(raw_dets_all_windows[0]);
 	int max_size = vnl_math::min(int(raw_dets_all_windows.size()), 10);
 	if(prev_dets.empty())
-		max_size = int(raw_dets_all_windows.size());
+		max_size = vnl_math::min(int(raw_dets_all_windows.size()), 20);
 	for(int d = 1; d < max_size; d++)
 	{
 		if(raw_dets_all_windows[d]->confidence() == raw_dets_all_windows[d-1]->confidence())

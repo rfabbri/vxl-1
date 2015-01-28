@@ -204,6 +204,11 @@ vox_detect_xgraph_params(vcl_string algo_name) :
           "bounding box coodinates",
           "/media/New_Volume/Research/Project_skeleton/Detect_xshock_BMS/BB_txt/b",
           "/media/New_Volume/Research/Project_skeleton/Detect_xshock_BMS/BB_txt/b");
+  
+  this->initial_edge_folder_.set_values(this->param_list_, "io", "initial_edge_folder",
+          "edge maps for the initial frame",
+          "/media/New_Volume/Research/BMS_mice_pose_tracking/initial_imgs/Trial_02/B",
+          "/media/New_Volume/Research/BMS_mice_pose_tracking/initial_imgs/Trial_02/B");
   }
   else if (category == "giraffes")
   {
@@ -701,6 +706,14 @@ get_edgemap_file() const
     this->input_edgemap_extension_();
 
   return edgemap_file;
+}
+
+vcl_string vox_detect_xgraph_params::
+get_initial_edge_file() const
+{
+    vcl_string edgemap_file = this->initial_edge_folder_() + "/" + this->input_object_name_() + 
+        this->input_edgemap_extension_();
+    return edgemap_file;
 }
 
 vcl_string vox_detect_xgraph_params::

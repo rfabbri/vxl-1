@@ -121,6 +121,9 @@ detect(const vgl_box_2d<int >& window, float min_acceptable_confidence)
 
   // retrieve the solution shock graphs
   unsigned num_sols = xshock_dp.list_opt_xgraph_state.size();
+
+  if(num_sols == 0)
+	return;
   for (unsigned k =0; k < num_sols; ++k)
   {
     vcl_map<unsigned, int >& map_node_state = xshock_dp.list_opt_xgraph_state[k];
@@ -270,18 +273,39 @@ build_xnode_grid_using_prev_dets_window(const vgl_box_2d<int >& window)
   for (dbsksp_xshock_graph::vertex_iterator vit = this->xgraph()->vertices_begin();
     vit != this->xgraph()->vertices_end(); ++vit)
   {
+
     dbsksp_xshock_node_sptr xv = *vit;
+    // ignore degree-1 nodes
+    if (xv->degree()==1)
+      continue;
 
 	double x, y, psi, phi, radius;
 	//vcl_cout<< "read para" <<vcl_endl;
 	xv->descriptor(xv->edge_list().front())->get(x, y, psi, phi, radius);
+
+    //vcl_cout << "vid: " <<xv->id()<< " \n";
+
+    double cur_graph_size = vcl_sqrt(this->xgraph()->area());
+
+    dbsks_xnode_geom_model_sptr xnode_geom = this->xgraph_geom_->map_node2geom()[xv->id()];
+    double min_psi, max_psi;
+    double min_radius, max_radius;
+    double min_phi, max_phi;
+    double min_phi_diff, max_phi_diff;
+    double graph_size;
+    xnode_geom->get_param_range(min_psi, max_psi, min_radius, max_radius, 
+      min_phi, max_phi, min_phi_diff, max_phi_diff, graph_size);
 	
+    // scale up the radii up to match with current graph's size
+    min_radius *= cur_graph_size / graph_size;
+    max_radius *= cur_graph_size / graph_size;
+
 	//vcl_cout << " x " << x << " y "<< y << " psi " << psi << " phi " << phi << " radius "<< radius << " degree "<< xv->degree()<< " id "<<xv->id()<< vcl_endl;
     // set parameters for the grid
     dbsks_xnode_grid_params params;
 
 	//////////////////////////////////////////// x
-    params.step_x = 2;
+    params.step_x = 4;
     //params.num_x = 20;
     //params.min_x = vnl_math::rnd(x - params.step_x*(params.num_x-1)/2 ); // centering
 	
@@ -292,7 +316,7 @@ build_xnode_grid_using_prev_dets_window(const vgl_box_2d<int >& window)
     params.min_x = vnl_math::rnd(window.centroid_x() - params.step_x*(params.num_x-1)/2 ); // centering
 
 	//////////////////////////////////////////// y
-    params.step_y = 2;
+    params.step_y = 4;
     //params.num_y = 20;
     //params.min_y = vnl_math::rnd(y - params.step_y*(params.num_y-1)/2 ); // centering
 	params.num_y = vnl_math::rnd(window.height()/params.step_y); // allow some padding
@@ -301,40 +325,30 @@ build_xnode_grid_using_prev_dets_window(const vgl_box_2d<int >& window)
     //params.num_y = vnl_math::min(params.num_y, 65);
     params.min_y = vnl_math::rnd(window.centroid_y() - params.step_y*(params.num_y-1)/2 ); // centering
 
-	// griding of psi and phi should also based on the given xgraph, so that the grid space can be reduced
-
     // griding of psi within [0, 2pi], have to keep the whole possible range, because at branch node, the change of psi between frames can be huge(tail of mouse), but make it denser to increase detection localization
     params.step_psi = vnl_math::pi / 15;
     params.num_psi = 30;
     params.min_psi = 0;
 
+/*
 	// center at pi/2
     params.step_phi0 = vnl_math::pi / 24;
     params.num_phi0 = 25;
     params.min_phi0 = vnl_math::pi_over_2 - params.step_phi0 * (params.num_phi0-1)/2;
+*/
+	// sample phi center at (max_phi+min_phi) using geom model: looks like the range of phi make more sense from geometric model
+    params.step_phi0 = vnl_math::pi / 20;
+    double range_phi0 = vnl_math::min((max_phi-min_phi), vnl_math::pi);
+    params.num_phi0 = 2*vnl_math::ceil( range_phi0/2 / params.step_phi0) + 1;
+    params.min_phi0 = (max_phi+min_phi)/2 - params.step_phi0 * (params.num_phi0-1)/2;
 
-
-/*	// sample griding of psi centered at the psi from prev detected graph, this range should still be reletively large because the branch node orientation change can be huge, but samples should be dense enough
-	// change scope to [0 2pi] if necessuary
-    params.step_psi = vnl_math::pi / 18;
-    params.num_psi = 17;
-	if(psi < 0)
-	{
-		psi += (2*vnl_math::pi);
-	}
-	params.min_psi = psi - params.step_psi * (params.num_psi-1)/2; */
-
-/*	// sample griding of phi centered at the phi from prev detected graph
-    params.step_phi0 = vnl_math::pi / 32;
-    params.num_phi0 = 9;
-    params.min_phi0 = phi - params.step_phi0 * (params.num_phi0-1)/2;*/
 
 	// sample centered at current radius, make the step correpond to a ratio of current radius
-    params.step_r = vnl_math::max(0.06 * (xv->radius()), double(1)); 
-	params.num_r = vnl_math::max(vnl_math::floor((xv->radius()*0.48)/params.step_r)+1,3);
+    //params.step_r = vnl_math::max(0.06 * (xv->radius()), double(1)); 
+	params.step_r = 1;
+	params.num_r = vnl_math::max(vnl_math::floor((xv->radius()*0.6)/params.step_r)+1,3);
     params.min_r = xv->radius() - params.step_r * vnl_math::floor(double(params.num_r-1)/2);
-    //params.num_r = 11;
-    //params.min_r = xv->radius() -(params.num_r-1) * params.step_r /2;
+
 
     if (xv->degree() == 3)
     {
@@ -375,6 +389,9 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
     if (xv->degree()==1)
       continue;
 
+  // size of the reference graph
+    //double cur_graph_size = vcl_sqrt(this->xgraph()->area());
+
 	dbsks_xnode_geom_model_sptr xnode_geom = this->xgraph_geom_->map_node2geom()[xv->id()];
     double min_psi, max_psi;
     double min_radius, max_radius;
@@ -383,12 +400,11 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
     double graph_size;
     xnode_geom->get_param_range(min_psi, max_psi, min_radius, max_radius, 
       min_phi, max_phi, min_phi_diff, max_phi_diff, graph_size);
-
-	//double x, y, psi, phi, radius;
-	//vcl_cout<< "read para" <<vcl_endl;
-	//xv->descriptor(xv->edge_list().front())->get(x, y, psi, phi, radius);
-	//vcl_cout << " x " << x << " y "<< y << " psi " << psi << " phi " << phi << " radius "<< radius << " degree "<< xv->degree()<< " id "<<xv->id()<< vcl_endl;
     
+    // scale up the radii up to match with current graph's size
+    //min_radius *= cur_graph_size / graph_size;
+    //max_radius *= cur_graph_size / graph_size;
+
     vcl_cout << "vid: " <<xv->id()<< " ";
 // set parameters for the grid
     dbsks_xnode_grid_params params;
@@ -419,65 +435,40 @@ build_xnode_grid_using_prev_dets_xgraphs(const vgl_box_2d<int >& window)
 */
     // sample psi from previous dets
 	params.step_psi = vnl_math::pi / 15;
-    double range_psi = (xgraph_vertices_max_psi_[i] - xgraph_vertices_min_psi_[i] + 0.8*vnl_math::pi);
+    double range_psi = (xgraph_vertices_max_psi_[i] - xgraph_vertices_min_psi_[i] + 1.0*vnl_math::pi);
     params.num_psi = vnl_math::floor(range_psi / params.step_psi)+1;
     params.min_psi = (xgraph_vertices_max_psi_[i]+xgraph_vertices_min_psi_[i])/2 - params.step_psi*(params.num_psi-1)/2;
-/*
-	if(xv->id()==1 || xv->id()==20)
-	{
-		params.num_psi  = 1;
-		params.min_psi = (xgraph_vertices_max_psi_[i]+xgraph_vertices_min_psi_[i])/2;
-	}
-*/
+
 	vcl_cout << "min_psi: "<<params.min_psi <<" ";
+
 /*
-	// center at pi/2
-    params.step_phi0 = vnl_math::pi / 24;
-    params.num_phi0 = 18;
-    params.min_phi0 = vnl_math::pi_over_2 - params.step_phi0 * (params.num_phi0-1)/2;
-*/
 	// sample phi from prev dets 
     params.step_phi0 = vnl_math::pi / 24;
-    params.num_phi0 = 11;
-    params.min_phi0 = (xgraph_vertices_max_phi_[i]+xgraph_vertices_min_phi_[i])/2 - params.step_phi0 * (params.num_phi0-1)/2;
-/*
-	if(xv->id()==1 || xv->id()==20)
-	{
-		params.num_phi0 = 1;
-		params.min_phi0 = (xgraph_vertices_max_phi_[i]+xgraph_vertices_min_phi_[i])/2;
-	}	
-*/
-	vcl_cout << "min_phi0: "<<params.min_phi0 <<" ";
-/*
-	// sample phi center at pi/2 using geom model
-    params.step_phi0 = vnl_math::pi / 16;
-    double range_phi0 = vnl_math::min((max_phi-min_phi), vnl_math::pi);
-    params.num_phi0 = 2*vnl_math::rnd( range_phi0/2 / params.step_phi0) + 1;
+    params.num_phi0 = 15;
+    //params.min_phi0 = (xgraph_vertices_max_phi_[i]+xgraph_vertices_min_phi_[i])/2 - params.step_phi0 * (params.num_phi0-1)/2;
     params.min_phi0 = vnl_math::pi_over_2 - params.step_phi0 * (params.num_phi0-1)/2;
 */
 
-/*
-	// sample centered at prototype radius, make the step correpond to a ratio of current radius
-    params.step_r = vnl_math::max(0.05 * (xv->radius()), double(1)); 
-    params.num_r = vnl_math::floor(xv->radius()*1.2/params.step_r)+1;
-    params.min_r = xv->radius() - params.step_r * (params.num_r-1) /2;
-*/
+
+	// sample phi center at (max_phi+min_phi) using geom model: looks like the range of phi make more sense from geometric model
+    params.step_phi0 = vnl_math::pi / 20;
+    double range_phi0 = vnl_math::min((max_phi-min_phi), vnl_math::pi);
+    params.num_phi0 = 2*vnl_math::ceil( range_phi0/2 / params.step_phi0) + 1;
+    params.min_phi0 = (max_phi+min_phi)/2 - params.step_phi0 * (params.num_phi0-1)/2;
+
+
+	vcl_cout << "min_phi0: "<<params.min_phi0 <<" ";
 
 	// sample radius from prev dets
-    params.step_r = vnl_math::max(0.06 * (xv->radius()), double(1)); 
-    params.num_r = vnl_math::max(vnl_math::floor((xv->radius()*0.48)/params.step_r)+1,3);
+    //.step_r = vnl_math::max(0.06 * (xv->radius()), double(1)); 
+	params.step_r = 1;
+    params.num_r = vnl_math::max(vnl_math::floor((xv->radius()*0.6)/params.step_r)+1,3);
 
     //params.step_r = 0.06 * (xv->radius());
-	//params.num_r = 15;
+	//params.num_r = 11;
     params.min_r = (xgraph_vertices_max_r_[i]+xgraph_vertices_min_r_[i])/2 - params.step_r * vnl_math::floor(double(params.num_r-1)/2);
     //params.min_r = (xgraph_vertices_max_r_[i]+xgraph_vertices_min_r_[i])/2 - params.step_r * double(params.num_r-1)/2;
-/*
-	if(xv->id()==1 || xv->id()==20)
-	{
-		params.num_r = 1;
-		params.min_r = (xgraph_vertices_max_r_[i]+xgraph_vertices_min_r_[i])/2;
-	}
-*/
+
 	vcl_cout << "min_r: "<<params.min_r <<" ";
 /*
 	// sample radius using geometric model

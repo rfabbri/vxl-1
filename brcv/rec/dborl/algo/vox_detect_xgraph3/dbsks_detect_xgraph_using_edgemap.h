@@ -68,6 +68,8 @@ public:
 
   bool load_edgemap_singe_scale(dbdet_edgemap_sptr& actual_edgemap,dbsksp_xshock_graph_sptr& actual_xgraph);
 
+  bool load_initial_edgemap(dbdet_edgemap_sptr& actual_edgemap,dbsksp_xshock_graph_sptr& actual_xgraph);
+
   bool load_edgemap_from_curve_fragments(dbdet_sel_storage_sptr& actual_sel, dbdet_edgemap_sptr& actual_edgemap,dbsksp_xshock_graph_sptr& actual_xgraph);
 
   //: Perform detection on a specific edgemap
@@ -97,6 +99,7 @@ public:
   vcl_string image_file;
   vcl_string prev_image_file;
   vcl_string edgemap_folder;
+  vcl_string initial_edge_folder;
   vcl_string object_id; // string id of the image running detection on
   vcl_string edgemap_ext;
   vcl_string edgeorient_ext;
@@ -178,6 +181,8 @@ protected:
 
   //: geometry (shape) model
   dbsks_xgraph_geom_model_sptr xgraph_geom;
+  dbsks_xgraph_geom_model_sptr xgraph_geom_L;
+  dbsks_xgraph_geom_model_sptr xgraph_geom_R;
 
   //: Contour chamfer matching (appearance) model
   dbsks_xgraph_ccm_model_sptr xgraph_ccm;

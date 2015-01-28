@@ -147,6 +147,7 @@ int main(int argc, char *argv[])
 
     // edgemap files
     m.edgemap_folder           =  params->input_edgemap_folder_();
+	m.initial_edge_folder      =  params->initial_edge_folder_();
     m.edgemap_ext              = params->input_edgemap_extension_();
     m.edgeorient_ext           = params->input_edgeorient_extension_();
     m.edgemap_log2_scale_ratio = params->input_edgemap_log2_scale_ratio_();
