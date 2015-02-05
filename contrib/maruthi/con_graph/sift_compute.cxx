@@ -10,7 +10,7 @@
 #include <vl/imopv.h>
 #include <vl/sift.h>
 #include <vnl/vnl_vector.h>
-
+#include <vil/algo/vil_orientations.h>
 
 void compute_grad_maps(vil_image_resource_sptr& input_image,
                        vl_sift_pix** grad_data,
@@ -21,6 +21,10 @@ void compute_grad_color_maps(
     vl_sift_pix** grad_data,
     unsigned int channel);
 
+void compute_sobel_grad_color_maps(
+    vil_image_resource_sptr& input_image,
+    double** grad_data,
+    unsigned int channel);
 
 void compute_grad_maps(vil_image_resource_sptr& input_image,
                        vl_sift_pix** grad_data,
@@ -132,7 +136,43 @@ void compute_grad_color_maps(
 
 }
 
+void compute_sobel_grad_color_maps(
+    vil_image_resource_sptr& input_image,
+    vl_sift_pix** grad_data,
+    unsigned int channel)
+{
 
+ 
+    vil_image_view<vxl_byte> imview = input_image->get_view();
+    vil_image_view<vxl_byte> temp   = vil_plane(imview,channel);
+
+    unsigned int width  = temp.ni();
+    unsigned int height = temp.nj();
+
+    vil_image_view<vl_sift_pix> grad_mag;
+    vil_image_view<vl_sift_pix> grad_angle;
+    
+    vil_orientations_from_sobel(temp,grad_mag,grad_angle);
+
+    *grad_data=(vl_sift_pix*) vl_malloc(sizeof(vl_sift_pix)*width*height*2);
+    
+    vl_sift_pix* gradient_magnitude=grad_mag.top_left_ptr();
+    vl_sift_pix* gradient_angle=grad_angle.top_left_ptr();
+
+    unsigned int index=0;
+    for ( unsigned int i=0; i < width*height; ++i)
+    {
+        double mag  = gradient_magnitude[i];
+        double angle= gradient_angle[i];
+        (*grad_data)[index]=mag;
+        ++index;
+        (*grad_data)[index]=angle;
+        ++index;
+    }
+
+
+
+}
 
 int main( int argc, char *argv[] )
 {
