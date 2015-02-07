@@ -6,7 +6,8 @@
 #include "dbsksp_screenshot.h"
 #include <dbsksp/dbsksp_xshock_graph.h>
 #include <dbsksp/dbsksp_xshock_fragment.h>
-
+#include <vgl/vgl_line_segment_2d.h>
+#include <vgl/vgl_distance.h>
 
 //------------------------------------------------------------------------------
 //: Superimpose a shock graph on top of an image
@@ -49,9 +50,164 @@ bool dbsksp_screenshot(const vil_image_view<vxl_byte >& bg_image,
 
 
 
+//------------------------------------------------------------------------------
+//: Draw the shock graph on top of an existing image
+bool dbsksp_screenshot_in_place(const dbsksp_xshock_graph_sptr& xgraph,
+                       vil_image_view<vxl_byte >& screenshot,
+                       int contour_radius,
+                       int padding_width,
+                       vil_rgb<vxl_byte > contour_color,
+                       vil_rgb<vxl_byte > padding_color)
+{
+  if (!xgraph) return false;
+  if (screenshot.size() == 0) return false;
 
 
+  vxl_byte inner_color[] = {contour_color.R(), contour_color.G(), contour_color.B()}; //{0, 0, 255}; // blue
+  vxl_byte outer_color[] = {padding_color.R(), padding_color.G(), padding_color.B()}; //{255, 255, 255}; // white
+  
+  vxl_byte chord_color[] = {255, 0, 0};
+  vxl_byte radius_color[] = {0, 255, 0};
 
+
+  
+  int inner_radius = contour_radius;
+  int outer_radius = inner_radius + padding_width;
+
+  for (dbsksp_xshock_graph::edge_iterator eit = xgraph->edges_begin(); eit !=
+    xgraph->edges_end(); ++eit)
+  {
+    dbsksp_xshock_edge_sptr xe = *eit;
+    dbsksp_xshock_node_descriptor start = *xe->source()->descriptor(xe);
+    dbsksp_xshock_node_descriptor end = xe->target()->descriptor(xe)->opposite_xnode();
+    dbsksp_xshock_fragment xfrag(start, end);
+
+    dbgl_biarc bnd[] = {xfrag.bnd_left_as_biarc(), xfrag.bnd_right_as_biarc()};
+    for (int i=0; i < 2; ++i)
+    {
+      dbgl_biarc biarc = bnd[i];
+      double len = biarc.len();
+      for (double s = 0; s <= len; s = s+1)
+      {
+        vgl_point_2d<double > p = biarc.point_at(s);
+        vgl_vector_2d<double > t = biarc.tangent_at(s);
+        vgl_vector_2d<double > n(-t.y(), t.x());
+
+        // outer color
+        for (int k = -outer_radius; k <= outer_radius; ++k)
+        {
+          vgl_point_2d<double > pt = p + k * n;
+          vgl_point_2d<int > pi( int(pt.x()), int(pt.y()));
+
+          if (screenshot.in_range(pi.x(), pi.y()))
+          {
+            for (unsigned plane =0; plane < screenshot.nplanes(); ++plane)
+            {
+              screenshot(pi.x(), pi.y(), plane) = outer_color[plane];
+            }
+          }
+        } // for
+
+        // inner color
+        for (int k = -inner_radius; k <= inner_radius; ++k)
+        {
+          vgl_point_2d<double > pt = p + k * n;
+          vgl_point_2d<int > pi( int(pt.x()), int(pt.y()));
+
+          if (screenshot.in_range(pi.x(), pi.y()))
+          {
+            for (unsigned plane =0; plane < screenshot.nplanes(); ++plane)
+            {
+              screenshot(pi.x(), pi.y(), plane) = inner_color[plane];
+            }
+          }
+        } // for
+      }
+    }
+
+    vgl_point_2d< double > start_pt_L = bnd[0].start();
+    vgl_point_2d< double > end_pt_L = bnd[0].end();
+    vgl_point_2d< double > start_pt_R = bnd[1].start();
+    vgl_point_2d< double > end_pt_R = bnd[1].end();
+	vgl_point_2d< double > start_shock_pt = start.pt();
+	vgl_point_2d< double > end_shock_pt = end.pt();
+
+    vgl_line_segment_2d< double > chord (start_shock_pt, end_shock_pt);
+	vgl_line_segment_2d< double > r1_L (start_shock_pt, start_pt_L);
+	vgl_line_segment_2d< double > r1_R (start_shock_pt, start_pt_R);
+	vgl_line_segment_2d< double > r2_L (end_shock_pt, end_pt_L);
+	vgl_line_segment_2d< double > r2_R (end_shock_pt, end_pt_R);
+
+	double len = vgl_distance(start_shock_pt, end_shock_pt);
+	for (double s = 0; s <= len; s = s+1)
+    {
+      vgl_point_2d<double > pi = chord.point_t(s/len);
+      if (screenshot.in_range(pi.x(), pi.y()))
+      {
+        for (unsigned plane =0; plane < screenshot.nplanes(); ++plane)
+        {
+          screenshot(pi.x(), pi.y(), plane) = chord_color[plane];
+        }
+      }		
+	}
+
+	len = vgl_distance(start_shock_pt, start_pt_L);
+	for (double s = 0; s <= len; s = s+1)
+    {
+      vgl_point_2d<double > pi = r1_L.point_t(s/len);
+      if (screenshot.in_range(pi.x(), pi.y()))
+      {
+        for (unsigned plane =0; plane < screenshot.nplanes(); ++plane)
+        {
+          screenshot(pi.x(), pi.y(), plane) = radius_color[plane];
+        }
+      }		
+	}
+
+	len = vgl_distance(start_shock_pt, start_pt_R);
+	for (double s = 0; s <= len; s = s+1)
+    {
+      vgl_point_2d<double > pi = r1_R.point_t(s/len);
+      if (screenshot.in_range(pi.x(), pi.y()))
+      {
+        for (unsigned plane =0; plane < screenshot.nplanes(); ++plane)
+        {
+          screenshot(pi.x(), pi.y(), plane) = radius_color[plane];
+        }
+      }		
+	}
+
+	len = vgl_distance(end_shock_pt, end_pt_L);
+	for (double s = 0; s <= len; s = s+1)
+    {
+      vgl_point_2d<double > pi = r2_L.point_t(s/len);
+      if (screenshot.in_range(pi.x(), pi.y()))
+      {
+        for (unsigned plane =0; plane < screenshot.nplanes(); ++plane)
+        {
+          screenshot(pi.x(), pi.y(), plane) = radius_color[plane];
+        }
+      }		
+	}
+
+	len = vgl_distance(end_shock_pt, end_pt_R);
+	for (double s = 0; s <= len; s = s+1)
+    {
+      vgl_point_2d<double > pi = r2_R.point_t(s/len);
+      if (screenshot.in_range(pi.x(), pi.y()))
+      {
+        for (unsigned plane =0; plane < screenshot.nplanes(); ++plane)
+        {
+          screenshot(pi.x(), pi.y(), plane) = radius_color[plane];
+        }
+      }		
+	}
+
+  }
+  return true;
+}
+
+/*
 //------------------------------------------------------------------------------
 //: Draw the shock graph on top of an existing image
 bool dbsksp_screenshot_in_place(const dbsksp_xshock_graph_sptr& xgraph,
@@ -126,7 +282,7 @@ bool dbsksp_screenshot_in_place(const dbsksp_xshock_graph_sptr& xgraph,
   return true;
 }
 
-
+*/
 
 
 

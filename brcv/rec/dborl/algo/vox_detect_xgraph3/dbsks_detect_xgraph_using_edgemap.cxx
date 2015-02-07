@@ -751,33 +751,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 	  
 	  vcl_cout << " [ OK ]\n";
 	  vcl_cout.flush();
-/*
-	  //> Compute all windows (rectangular boxes) necessary to cover the whole image
-	  vcl_cout << "\n> Computing sliding (rectangular) windows to cover the whole image ...";
-	  vcl_vector<vgl_box_2d<int > > all_windows;
-	  dbsks_algos::compute_detection_windows(det_window_width, det_window_height, edgemap->ncols(), edgemap->nrows(), all_windows);
-	  // Print out list of windows
-	  vcl_cout << "\n> Total #windows = " << all_windows.size() << "\n";
-	  vcl_cout << "\n> List of windows: \n";
-	  for (unsigned iw =0; iw < all_windows.size(); ++iw)
-	  {
-		vgl_box_2d<int > window = all_windows[iw];
-		// remain the window covering a considerable potion of foreground edges
-		if (!is_edges_covered_in_window (window, edgemap->edgels))
-			continue;
-		vcl_cout 
-		  << "  - Window index= " << iw
-		  << "  [xmin ymin xmax ymax] = "
-		  << "[" << window.min_x() 
-		  << " " << window.min_y() 
-		  << " " << window.max_x()
-		  << " " << window.max_y() << "]\n";
-		windows.push_back(window);
-	  }
-	  
-	  vcl_cout << " [ OK ]\n";
-	  vcl_cout.flush();
-*/
+
   }
   else
   {
@@ -825,32 +799,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
       << " " << window.max_y() << "]\n";
 
     vcl_vector<dbsks_det_desc_xgraph_sptr > dets_window;
-/*
-    //> Name of folder to store detect records from this scale
-    vcl_string storage_dirname = "ROI" + 
-      vul_sprintf("_%d_%d_%d_%d", window.min_x(), window.min_y(), window.max_x(), window.max_y());
-    vcl_string storage_dir = work_dir + "/" + storage_dirname;
 
-    //> create the directory if not yet done
-    if (!vul_file::is_directory(storage_dir))
-    {
-      if (!vul_file::make_directory(storage_dir))
-      {
-        vcl_cout << "\nERROR: cannot create dump_folder to save detections.\n";
-        continue;
-      }
-    }
-
-    // If a scale has been processed, simply load the results back
-
-    if (dbsks_load_detections_from_folder(storage_dir, dets_window))
-    {
-      vcl_cout << "  This window has been processed. Loading back detection records...";
-      raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
-      vcl_cout << " Done. Move on to next window.\n";
-      continue;
-    }
-*/
     //> Compute ccm for a region of interest only
     bool cid_status = ccm_like.compute_internal_data(window);
     if(!cid_status)
@@ -859,13 +808,15 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
         continue;
     }
 
+	bool is_initial = false;
 
 	// Pipeline Update: if no previous dets, do window detection in a coarse grid search first. Refine the coarse results in the next steps
 	if(prev_dets.empty())
 	{
+		is_initial = true;
 		// xshock detection engine
 		dbsks_xshock_detector engine;
-		engine.generate_xnode_grid_option = 3; // use prev dets window
+		engine.generate_xnode_grid_option = 3; // use bounding box window
 		engine.xshock_likelihood_ = &ccm_like;
 		engine.xgraph_geom_ = xgraph_geom;
 		engine.set_xgraph(xgraph);
@@ -901,15 +852,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 			double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
 			vcl_cout <<"\nappearance_cost:" << appearance_cost << vcl_endl;
 
-//			// shape change term, now just the differece between radius of shock nodes, but shape is more complex representation
-			double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, xgraph_prototype_);
-			vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
-
-			//(TODO: change to differece between velocity, delta_x, delta_y, delta_psi)
-
-			// only consider the dets which is not too diff in bg as prototype
-			real_confidence += (50 - appearance_cost);
-			//real_confidence += (50 - shape_trans_cost*5); 
+			//real_confidence += (20 - 0.3*appearance_cost);
 			vcl_cout << " real confidence: " << real_confidence << vcl_endl;
 			dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
 			det->compute_bbox();
@@ -951,135 +894,154 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
 			//if(!update_appearance_model(prev_dets, prev_L_))
 			//	vcl_cout<< "Fail in updaing appearance model" << vcl_endl;
-
-			for (unsigned i =0; i < engine.list_solutions_.size(); ++i)
+			if(engine.list_solutions_.size()==0)
+				dets_window.push_back(prev_dets[prev_i]);
+			else
 			{
-				dbsksp_xshock_graph_sptr sol_xgraph = engine.list_solutions_[i];
+				for (unsigned i =0; i < engine.list_solutions_.size(); ++i)
+				{
+					dbsksp_xshock_graph_sptr sol_xgraph = engine.list_solutions_[i];
 
-				double confidence = -engine.list_solution_costs_[i];
-				double real_confidence = -engine.list_solution_real_costs_[i];
+					double confidence = -engine.list_solution_costs_[i];
+					double real_confidence = -engine.list_solution_real_costs_[i];
 
-				// for detection with enough edge support, add appearance confidence into it.
-				// edge matching cost term
-				vcl_cout <<"edge_confidence:" << real_confidence << vcl_endl;		
+					// for detection with enough edge support, add appearance confidence into it.
+					// edge matching cost term
+					vcl_cout <<"edge_confidence:" << real_confidence << vcl_endl;		
 
-				// appearance term
-				double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
-				vcl_cout <<"\nappearance_cost:" << appearance_cost << vcl_endl;
+					// appearance term
+					double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
+					vcl_cout <<"\nappearance_cost:" << appearance_cost << vcl_endl;
 
-				// shape change term, now just the differece between radius of shock nodes, but shape is more complex representation
-				double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
-				vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
+					// shape change term, now just the differece between radius of shock nodes, but shape is more complex representation
+					double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
+					vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
 
-				//(TODO: change to differece between velocity, delta_x, delta_y, delta_psi)
+					//(TODO: change to differece between velocity, delta_x, delta_y, delta_psi)
 
-				// only consider the dets which is not too diff in bg as prototype
-				real_confidence += (50 - appearance_cost);
-				//real_confidence += (50 - shape_trans_cost*5); 
-				vcl_cout << " real confidence: " << real_confidence << vcl_endl;
-				dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
-				det->compute_bbox();
-				dets_window.push_back(det);
+					// only consider the dets which is not too diff in bg as prototype
+					real_confidence += (20 - 0.3*appearance_cost);
+					if(!is_initial)
+						real_confidence += (10 - shape_trans_cost); 
+					vcl_cout << " real confidence: " << real_confidence << vcl_endl;
+					dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
+					det->compute_bbox();
+					dets_window.push_back(det);
+				}
 			}
 			// add detections from this window to the overall list
 			raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
-  			//vcl_sort(raw_dets_all_windows.begin(), raw_dets_all_windows.end(), dbsks_decreasing_confidence);
+  			vcl_sort(raw_dets_all_windows.begin(), raw_dets_all_windows.end(), dbsks_decreasing_confidence);
 
-
-			//////////////////////////////// detect based on geom model left  ///////////////////////////////////////////////////////////////
-			vcl_cout << "\n Detecting based on Left-Turnning Geom Model" << vcl_endl;
-			engine.xgraph_geom_ = xgraph_geom_L;
-
-			//--------------------------------------------------------------------------
-			engine.detect(window, float(confidence_lower_threshold));
-			//--------------------------------------------------------------------------
-
-			//> Construct a vector of detection descriptor
-			dets_window.clear();
-			dets_window.reserve(engine.list_solutions_.size());
-
-			//if(!update_appearance_model(prev_dets, prev_L_))
-			//	vcl_cout<< "Fail in updaing appearance model" << vcl_endl;
-
-			for (unsigned i =0; i < engine.list_solutions_.size(); ++i)
+			if(!is_initial && raw_dets_all_windows.front()->confidence()<40)
 			{
-				dbsksp_xshock_graph_sptr sol_xgraph = engine.list_solutions_[i];
+				//////////////////////////////// detect based on geom model left  ///////////////////////////////////////////////////////////////
+				vcl_cout << "\n Detecting based on Left-Turnning Geom Model" << vcl_endl;
+				engine.xgraph_geom_ = xgraph_geom_L;
 
-				double confidence = -engine.list_solution_costs_[i];
-				double real_confidence = -engine.list_solution_real_costs_[i];
+				//--------------------------------------------------------------------------
+				engine.detect(window, float(confidence_lower_threshold));
+				//--------------------------------------------------------------------------
 
-				// for detection with enough edge support, add appearance confidence into it.
-				// edge matching cost term
-				vcl_cout <<"edge_confidence:" << real_confidence << vcl_endl;		
+				//> Construct a vector of detection descriptor
+				dets_window.clear();
+				dets_window.reserve(engine.list_solutions_.size());
 
-				// appearance term
-				double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
-				vcl_cout <<"\nappearance_cost:" << appearance_cost << vcl_endl;
+				//if(!update_appearance_model(prev_dets, prev_L_))
+				//	vcl_cout<< "Fail in updaing appearance model" << vcl_endl;
+				if(engine.list_solutions_.size()!=0)
+				{
+					for (unsigned i =0; i < engine.list_solutions_.size(); ++i)
+					{
+						dbsksp_xshock_graph_sptr sol_xgraph = engine.list_solutions_[i];
 
-				// shape change term, now just the differece between radius of shock nodes, but shape is more complex representation
-				double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
-				vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
+						double confidence = -engine.list_solution_costs_[i];
+						double real_confidence = -engine.list_solution_real_costs_[i];
 
-				//(TODO: change to differece between velocity, delta_x, delta_y, delta_psi)
+						// for detection with enough edge support, add appearance confidence into it.
+						// edge matching cost term
+						vcl_cout <<"edge_confidence:" << real_confidence << vcl_endl;		
 
-				// only consider the dets which is not too diff in bg as prototype
-				real_confidence += (50 - appearance_cost);
-				//real_confidence += (50 - shape_trans_cost*5); 
-				vcl_cout << " real confidence: " << real_confidence << vcl_endl;
-				dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
-				det->compute_bbox();
-				dets_window.push_back(det);
+						// appearance term
+						double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
+						vcl_cout <<"\nappearance_cost:" << appearance_cost << vcl_endl;
+
+						// shape change term, now just the differece between radius of shock nodes, but shape is more complex representation
+						double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
+						vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
+
+						//(TODO: change to differece between velocity, delta_x, delta_y, delta_psi)
+
+						// only consider the dets which is not too diff in bg as prototype
+						real_confidence += (20 - 0.3*appearance_cost);
+						if(!is_initial)
+							real_confidence += (10 - shape_trans_cost);
+						real_confidence *= 0.9;
+						vcl_cout << " real confidence: " << real_confidence << vcl_endl;
+						dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
+						det->compute_bbox();
+						dets_window.push_back(det);
+					}
+					raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
+		  			vcl_sort(raw_dets_all_windows.begin(), raw_dets_all_windows.end(), dbsks_decreasing_confidence);
+				}
 			}
-			raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
-
-			//////////////////// detect based on geom model right  //////////////////////////////////////////
-
-			vcl_cout << "\n Detecting based on Right-Turnning Geom Model" << vcl_endl;
-			engine.xgraph_geom_ = xgraph_geom_R;
-
-			//--------------------------------------------------------------------------
-			engine.detect(window, float(confidence_lower_threshold));
-			//--------------------------------------------------------------------------
-
-			//> Construct a vector of detection descriptor
-			dets_window.clear();
-			dets_window.reserve(engine.list_solutions_.size());
 
 
-			//if(!update_appearance_model(prev_dets, prev_L_))
-			//	vcl_cout<< "Fail in updaing appearance model" << vcl_endl;
-
-			for (unsigned i =0; i < engine.list_solutions_.size(); ++i)
+			if(!is_initial && raw_dets_all_windows.front()->confidence()<36)
 			{
-				dbsksp_xshock_graph_sptr sol_xgraph = engine.list_solutions_[i];
+				//////////////////// detect based on geom model right  //////////////////////////////////////////
 
-				double confidence = -engine.list_solution_costs_[i];
-				double real_confidence = -engine.list_solution_real_costs_[i];
+				vcl_cout << "\n Detecting based on Right-Turnning Geom Model" << vcl_endl;
+				engine.xgraph_geom_ = xgraph_geom_R;
 
-				// for detection with enough edge support, add appearance confidence into it.
-				// edge matching cost term
-				vcl_cout <<"edge_confidence:" << real_confidence << vcl_endl;		
+				//--------------------------------------------------------------------------
+				engine.detect(window, float(confidence_lower_threshold));
+				//--------------------------------------------------------------------------
 
-				// appearance term
-				double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
-				vcl_cout <<"\nappearance_cost:" << appearance_cost << vcl_endl;
+				//> Construct a vector of detection descriptor
+				dets_window.clear();
+				dets_window.reserve(engine.list_solutions_.size());
 
-				// shape change term, now just the differece between radius of shock nodes, but shape is more complex representation
-				double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
-				vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
 
-				//(TODO: change to differece between velocity, delta_x, delta_y, delta_psi)
+				//if(!update_appearance_model(prev_dets, prev_L_))
+				//	vcl_cout<< "Fail in updaing appearance model" << vcl_endl;
+				if(engine.list_solutions_.size()!=0)
+				{
+					for (unsigned i =0; i < engine.list_solutions_.size(); ++i)
+					{
+						dbsksp_xshock_graph_sptr sol_xgraph = engine.list_solutions_[i];
 
-				// only consider the dets which is not too diff in bg as prototype
-				real_confidence += (50 - appearance_cost);
-				//real_confidence += (50 - shape_trans_cost*5); 
-				vcl_cout << " real confidence: " << real_confidence << vcl_endl;
-				dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
-				det->compute_bbox();
-				dets_window.push_back(det);
+						double confidence = -engine.list_solution_costs_[i];
+						double real_confidence = -engine.list_solution_real_costs_[i];
+
+						// for detection with enough edge support, add appearance confidence into it.
+						// edge matching cost term
+						vcl_cout <<"edge_confidence:" << real_confidence << vcl_endl;		
+
+						// appearance term
+						double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
+						vcl_cout <<"\nappearance_cost:" << appearance_cost << vcl_endl;
+
+						// shape change term, now just the differece between radius of shock nodes, but shape is more complex representation
+						double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
+						vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
+
+						//(TODO: change to differece between velocity, delta_x, delta_y, delta_psi)
+
+						// only consider the dets which is not too diff in bg as prototype
+						real_confidence += (20 - 0.3*appearance_cost);
+						if(!is_initial)
+							real_confidence += (10 - shape_trans_cost);
+						real_confidence *= 0.9;
+						vcl_cout << " real confidence: " << real_confidence << vcl_endl;
+						dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
+						det->compute_bbox();
+						dets_window.push_back(det);
+					}
+					raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
+				}
 			}
-			raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
-
 		}
 
 
@@ -1303,20 +1265,6 @@ double dbsks_detect_xgraph_using_edgemap::
 compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_graph_sptr prev_xgraph)
 {
 
-	vcl_vector<double> proto_r_vec;
-	double proto_root_r;
-	for (dbsksp_xshock_graph::vertex_iterator vit = xgraph_prototype_->vertices_begin();
-		vit != xgraph_prototype_->vertices_end(); ++vit)
-	{
-		dbsksp_xshock_node_sptr xv = *vit;
-		double x, y, psi, phi, radius;
-		//vcl_cout<< "read para" <<vcl_endl;
-		xv->descriptor(xv->edge_list().front())->get(x, y, psi, phi, radius);
-		if(unsigned(xv->id()) == xgraph_prototype_->root_vertex_id())
-			proto_root_r = radius;
-		proto_r_vec.push_back(radius);
-	}
-
 	vcl_vector<double> prev_x_vec, prev_y_vec, prev_r_vec;
 	for (dbsksp_xshock_graph::vertex_iterator vit = prev_xgraph->vertices_begin();
 		vit != prev_xgraph->vertices_end(); ++vit)
@@ -1330,6 +1278,21 @@ compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_gra
 		prev_y_vec.push_back(y);
 		prev_r_vec.push_back(radius);
 	}
+	vcl_vector<double> prev_chord_vec;
+	for (dbsksp_xshock_graph::edge_iterator eit = prev_xgraph->edges_begin(); eit !=prev_xgraph->edges_end(); ++eit)
+	{
+		dbsksp_xshock_edge_sptr xe = *eit;
+		dbsksp_xshock_node_descriptor start = *xe->source()->descriptor(xe);
+		dbsksp_xshock_node_descriptor end = xe->target()->descriptor(xe)->opposite_xnode();
+
+		if(xe->source()->degree()==1 || xe->target()->degree()==1)
+			continue;
+		//dbsksp_xshock_fragment xfrag(start, end);
+
+		double chord_len = vgl_distance(start.pt(), end.pt());
+		prev_chord_vec.push_back(chord_len);
+	}
+
 	vcl_vector<double> cur_x_vec, cur_y_vec, cur_r_vec;
 	double cur_root_r;
 	for (dbsksp_xshock_graph::vertex_iterator vit = cur_xgraph->vertices_begin();
@@ -1346,18 +1309,35 @@ compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_gra
 		cur_r_vec.push_back(radius);
 	}
 
-	double diff_dist=0, diff_r_2=0;
+	vcl_vector<double> cur_chord_vec;
+	for (dbsksp_xshock_graph::edge_iterator eit = cur_xgraph->edges_begin(); eit !=cur_xgraph->edges_end(); ++eit)
+	{
+		dbsksp_xshock_edge_sptr xe = *eit;
+		dbsksp_xshock_node_descriptor start = *xe->source()->descriptor(xe);
+		dbsksp_xshock_node_descriptor end = xe->target()->descriptor(xe)->opposite_xnode();
+
+		if(xe->source()->degree()==1 || xe->target()->degree()==1)
+			continue;
+		//dbsksp_xshock_fragment xfrag(start, end);
+
+		double chord_len = vgl_distance(start.pt(), end.pt());
+		cur_chord_vec.push_back(chord_len);
+	}
+
+// Compute the cost of shape consistency: radius change + chord length change
+	double diff_dist=0, diff_r_2=0, diff_chord=0;
 	for (int i = 0; i< cur_x_vec.size(); i++)
 	{
 //		diff_dist += (cur_x_vec[i]-prev_x_vec[i])*(cur_x_vec[i]-prev_x_vec[i]) + (cur_y_vec[i]-prev_y_vec[i])*(cur_y_vec[i]-prev_y_vec[i]);
-		diff_r_2 += (cur_r_vec[i]-proto_r_vec[i])*(cur_r_vec[i]-proto_r_vec[i]);
-		//diff_r_2 += (cur_r_vec[i]-prev_r_vec[i])*(cur_r_vec[i]-prev_r_vec[i]);
-//      r_diff use the ratio to the root;
-//		diff_r_2 += (1-(cur_r_vec[i]/cur_root_r/proto_r_vec[i]*proto_root_r))*(1-(cur_r_vec[i]/cur_root_r/proto_r_vec[i]*proto_root_r));
+		//diff_r_2 += (cur_r_vec[i]-proto_r_vec[i])*(cur_r_vec[i]-proto_r_vec[i]);
+		diff_r_2 += (cur_r_vec[i]-prev_r_vec[i])*(cur_r_vec[i]-prev_r_vec[i]);
 	}
 
-//	double cost = vcl_sqrt(diff_dist)/3 + vcl_sqrt(diff_r_2); // only consider dist to prev det 1 is problematic
-	double cost = vcl_sqrt(diff_r_2);
+	for (int i = 0; i< cur_chord_vec.size(); i++)
+	{
+		diff_chord += (cur_chord_vec[i]-prev_chord_vec[i])*(cur_chord_vec[i]-prev_chord_vec[i]);
+	}
+	double cost = vcl_sqrt(diff_r_2) + vcl_sqrt(diff_chord);
 
 	return cost;
 
