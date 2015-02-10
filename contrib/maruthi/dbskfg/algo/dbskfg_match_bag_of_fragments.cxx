@@ -80,6 +80,7 @@ extern "C" {
 #include <dbdet/pro/dbdet_edgemap_storage.h>
 #include <dbdet/pro/dbdet_edgemap_storage_sptr.h>
 #include <dbdet/edge/dbdet_edgemap_sptr.h>
+#include <vil/algo/vil_orientations.h>
 
 dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
 ( 
@@ -5389,56 +5390,108 @@ void dbskfg_match_bag_of_fragments::compute_grad_color_maps(
         flipped_image=orig_image;
     }
 
+
+
+
     unsigned int width  = flipped_image.ni();
     unsigned int height = flipped_image.nj();
 
-    double* gradient_magnitude = (double*) 
-        vl_malloc(width*height*sizeof(double));
-    double* gradient_angle     = (double*) 
-        vl_malloc(width*height*sizeof(double));
 
-    double* flipped_image_data=flipped_image.top_left_ptr();
-
-    vl_imgradient_polar_d(
-        gradient_magnitude, // gradient magnitude 
-        gradient_angle,     // gradient angle
-        1,                  // output width
-        width,              // output height
-        flipped_image_data, // input image
-        width,              // input image width
-        height,             // input image height
-        width);             // input image stride
+    vil_image_view<vl_sift_pix> grad_mag;
+    vil_image_view<vl_sift_pix> grad_angle;
+    
+    vil_orientations_from_sobel(flipped_image,grad_angle,grad_mag);
 
     *grad_data=(vl_sift_pix*) vl_malloc(sizeof(vl_sift_pix)*width*height*2);
     
+    vl_sift_pix* gradient_magnitude=grad_mag.top_left_ptr();
+    vl_sift_pix* gradient_angle=grad_angle.top_left_ptr();
+
     unsigned int index=0;
-    for ( unsigned int i=0; i < width*height; ++i)
+    for ( unsigned int row=0; row < grad_mag.nj() ; ++row)
     {
-        double mag  = gradient_magnitude[i];
-        double angle= gradient_angle[i];
-
-        div_t divresult = div(i,width);
-        
-        int xcoord=divresult.rem;
-        int ycoord=divresult.quot;
-        
-        if ( mask_grad )
+        for ( unsigned int col=0; col < grad_mag.ni() ; ++col)
         {
-            if ( !poly.contains(xcoord,ycoord))
-            {
-                mag=0;
-                angle=0;
-            }
+            vl_sift_pix mag  = grad_mag(col,row);
+            vl_sift_pix angle= angle0To2Pi(grad_angle(col,row));
+       
+            (*grad_data)[index]=mag;
+            ++index;
+            (*grad_data)[index]=angle;
+            ++index;
+            
         }
-
-        (*grad_data)[index]=mag;
-        ++index;
-        (*grad_data)[index]=angle;
-        ++index;
     }
 
-    vl_free(gradient_magnitude);
-    vl_free(gradient_angle);
+    // vil_image_view<double> flipped_image(orig_image.ni(),
+    //                                      orig_image.nj());
+    // if ( fliplr )
+    // {
+    //     for ( unsigned int cols=0; cols < flipped_image.nj() ; ++cols)
+    //     {
+    //         for ( unsigned int rows=0; rows < flipped_image.ni() ; ++rows)
+    //         {
+    //             flipped_image(rows,cols)=orig_image(flipped_image.ni()-1-rows,
+    //                                                 cols);
+
+    //         }
+    //     }
+    // }
+    // else
+    // {
+    //     flipped_image=orig_image;
+    // }
+
+    // unsigned int width  = flipped_image.ni();
+    // unsigned int height = flipped_image.nj();
+
+    // double* gradient_magnitude = (double*) 
+    //     vl_malloc(width*height*sizeof(double));
+    // double* gradient_angle     = (double*) 
+    //     vl_malloc(width*height*sizeof(double));
+
+    // double* flipped_image_data=flipped_image.top_left_ptr();
+
+    // vl_imgradient_polar_d(
+    //     gradient_magnitude, // gradient magnitude 
+    //     gradient_angle,     // gradient angle
+    //     1,                  // output width
+    //     width,              // output height
+    //     flipped_image_data, // input image
+    //     width,              // input image width
+    //     height,             // input image height
+    //     width);             // input image stride
+
+    // *grad_data=(vl_sift_pix*) vl_malloc(sizeof(vl_sift_pix)*width*height*2);
+    
+    // unsigned int index=0;
+    // for ( unsigned int i=0; i < width*height; ++i)
+    // {
+    //     double mag  = gradient_magnitude[i];
+    //     double angle= gradient_angle[i];
+
+    //     div_t divresult = div(i,width);
+        
+    //     int xcoord=divresult.rem;
+    //     int ycoord=divresult.quot;
+        
+    //     if ( mask_grad )
+    //     {
+    //         if ( !poly.contains(xcoord,ycoord))
+    //         {
+    //             mag=0;
+    //             angle=0;
+    //         }
+    //     }
+
+    //     (*grad_data)[index]=mag;
+    //     ++index;
+    //     (*grad_data)[index]=angle;
+    //     ++index;
+    // }
+
+    // vl_free(gradient_magnitude);
+    // vl_free(gradient_angle);
 
 }
 
