@@ -69,6 +69,10 @@ SET(dbskfg_algo_sources
 
   #add new curve match file
   dbskfg_app_curve_match.h dbskfg_app_curve_match.cxx
+
+  #add new sift compute file
+  dbskfg_compute_sift.h dbskfg_compute_sift.cxx
+
 )
 
 ADD_LIBRARY(dbskfg_algo ${dbskfg_algo_sources})
