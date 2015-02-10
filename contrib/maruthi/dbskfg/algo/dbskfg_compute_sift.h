@@ -16,6 +16,7 @@
 #include <vgl/vgl_point_2d.h>
 #include <vil/vil_image_view.h>
 #include <vl/sift.h>
+#include <vnl/vnl_vector.h>
 
 class dbskfg_compute_sift
 {
@@ -54,12 +55,15 @@ public:
         double& theta,
         VlSiftFilt* filter,
         double& scale_ratio,
-        vil_image_view<double>& red_grad_mod,
-        vil_image_view<double>& red_grad_angle,
-        vil_image_view<double>& green_grad_mod,
-        vil_image_view<double>& green_grad_angle,
-        vil_image_view<double>& blue_grad_mod,
-        vil_image_view<double>& blue_grad_angle);
+        vil_image_view<vl_sift_pix>& red_grad_mod,
+        vil_image_view<vl_sift_pix>& red_grad_angle,
+        vil_image_view<vl_sift_pix>& green_grad_mod,
+        vil_image_view<vl_sift_pix>& green_grad_angle,
+        vil_image_view<vl_sift_pix>& blue_grad_mod,
+        vil_image_view<vl_sift_pix>& blue_grad_angle,
+        vnl_vector<vl_sift_pix>& output);
+
+    double distance(){return distance_;}
 
 private:
 
@@ -113,7 +117,9 @@ private:
     vil_image_view<vl_sift_pix> query_blue_grad_mod_;
     vil_image_view<vl_sift_pix> query_blue_grad_angle_;
 
-    
+    // Final distance
+    double distance_;
+
     // Copy ctor private
     dbskfg_compute_sift(const dbskfg_compute_sift& );
     

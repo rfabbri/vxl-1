@@ -6,6 +6,7 @@
 #include <dbsk2d/dbsk2d_utils.h>
 #include <vil/vil_bilin_interp.h>
 #include <vcl_cstring.h>
+#include <vl/mathop.h>
 
 dbskfg_compute_sift::dbskfg_compute_sift
 (        
@@ -34,7 +35,8 @@ dbskfg_compute_sift::dbskfg_compute_sift
     query_radius_(query_radius),
     query_theta_(query_theta),
     query_scale_ratio_(query_scale_ratio),
-    query_sift_filter_(query_sift_filter)
+    query_sift_filter_(query_sift_filter),
+    distance_(0.0)
 {
     model_red_grad_mod_.set_to_memory(&model_red_grad_data[0],
                                       model_sift_filter_->width,
@@ -133,6 +135,55 @@ dbskfg_compute_sift::dbskfg_compute_sift
                                          2.0*query_sift_filter_->width,
                                          0);
 
+    vnl_vector<vl_sift_pix> model_vector(384,0.0);
+    vnl_vector<vl_sift_pix> query_vector(384,0.0);
+
+
+    compute_descriptors(model_pt_,
+                        model_radius_,
+                        model_theta_,
+                        model_sift_filter_,
+                        model_scale_ratio_,
+                        model_red_grad_mod_,
+                        model_red_grad_angle_,
+                        model_green_grad_mod_,
+                        model_green_grad_angle_,
+                        model_blue_grad_mod_,
+                        model_blue_grad_angle_,
+                        model_vector);
+
+    compute_descriptors(query_pt_,
+                        query_radius_,
+                        query_theta_,
+                        query_sift_filter_,
+                        query_scale_ratio_,
+                        query_red_grad_mod_,
+                        query_red_grad_angle_,
+                        query_green_grad_mod_,
+                        query_green_grad_angle_,
+                        query_blue_grad_mod_,
+                        query_blue_grad_angle_,
+                        query_vector);
+    
+    model_vector.normalize();
+    query_vector.normalize();
+    
+    vl_sift_pix result_final[1];
+
+
+    VlFloatVectorComparisonFunction Chi2_distance =    
+      vl_get_vector_comparison_function_f (VlDistanceChi2) ;
+
+    vl_eval_vector_comparison_on_all_pairs_f(result_final,
+                                             model_vector.size(),
+                                             model_vector.data_block(),
+                                             1,
+                                             query_vector.data_block(),
+                                             1,
+                                             Chi2_distance);
+
+    distance_ = 0.5*result_final[0];
+
 } 
 
 
@@ -142,12 +193,13 @@ void dbskfg_compute_sift::compute_descriptors(
     double& angle0,
     VlSiftFilt* filter,
     double& scale_ratio,
-    vil_image_view<double>& red_grad_mod,
-    vil_image_view<double>& red_grad_angle,
-    vil_image_view<double>& green_grad_mod,
-    vil_image_view<double>& green_grad_angle,
-    vil_image_view<double>& blue_grad_mod,
-    vil_image_view<double>& blue_grad_angle)
+    vil_image_view<vl_sift_pix>& red_grad_mod,
+    vil_image_view<vl_sift_pix>& red_grad_angle,
+    vil_image_view<vl_sift_pix>& green_grad_mod,
+    vil_image_view<vl_sift_pix>& green_grad_angle,
+    vil_image_view<vl_sift_pix>& blue_grad_mod,
+    vil_image_view<vl_sift_pix>& blue_grad_angle,
+    vnl_vector<vl_sift_pix>& output)
 {
 
     int angle_bins=8;
@@ -341,6 +393,14 @@ void dbskfg_compute_sift::compute_descriptors(
         }
     }
 
+
+
+    for ( unsigned int d=0; d < angle_bins*spatial_bins*spatial_bins ; ++d)
+    {
+        output.put(d,red_descr[d]);
+        output.put(d+128,green_descr[d]);
+        output.put(d+256,blue_descr[d]);
+    }
 
 }
 
