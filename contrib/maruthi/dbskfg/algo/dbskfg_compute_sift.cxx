@@ -140,7 +140,7 @@ dbskfg_compute_sift::dbskfg_compute_sift
 
 
     compute_descriptors(model_pt_,
-                        model_radius_,
+                        model_radius_/2.0,
                         model_theta_,
                         model_sift_filter_,
                         model_scale_ratio_,
@@ -153,7 +153,7 @@ dbskfg_compute_sift::dbskfg_compute_sift
                         model_vector);
 
     compute_descriptors(query_pt_,
-                        query_radius_,
+                        query_radius_/2.0,
                         query_theta_,
                         query_sift_filter_,
                         query_scale_ratio_,
@@ -188,11 +188,11 @@ dbskfg_compute_sift::dbskfg_compute_sift
 
 
 void dbskfg_compute_sift::compute_descriptors(
-    vgl_point_2d<double>& keypoint,
-    double& radius,
-    double& angle0,
+    vgl_point_2d<double> keypoint,
+    double radius,
+    double angle0,
     VlSiftFilt* filter,
-    double& scale_ratio,
+    double scale_ratio,
     vil_image_view<vl_sift_pix>& red_grad_mod,
     vil_image_view<vl_sift_pix>& red_grad_angle,
     vil_image_view<vl_sift_pix>& green_grad_mod,
@@ -274,32 +274,35 @@ void dbskfg_compute_sift::compute_descriptors(
             dxi <= vnl_math::min(+ W, w - xi -1) ; ++ dxi)
         {
 
+            vgl_point_2d<double> interp_pt(dxi+xi,
+                                           dyi+yi);
+
             // Process red channel
             vl_sift_pix red_mod     = vil_bilin_interp(red_grad_mod,
-                                                     dxi+xi,
-                                                     dyi+yi);
+                                                       interp_pt.x(),
+                                                       interp_pt.y());
             vl_sift_pix red_angle   = vil_bilin_interp(red_grad_angle,
-                                                       dxi+xi,
-                                                       dyi+yi);
+                                                       interp_pt.x(),
+                                                       interp_pt.y());
             vl_sift_pix red_theta   = angle0To2Pi (red_angle - angle0) ;
 
             // Process green channel
             vl_sift_pix green_mod     = vil_bilin_interp(green_grad_mod,
-                                                     dxi+xi,
-                                                     dyi+yi);
+                                                         interp_pt.x(),
+                                                         interp_pt.y());
             vl_sift_pix green_angle   = vil_bilin_interp(green_grad_angle,
-                                                       dxi+xi,
-                                                       dyi+yi);
+                                                         interp_pt.x(),
+                                                         interp_pt.y());
             vl_sift_pix green_theta   = angle0To2Pi (green_angle - angle0) ;
 
 
             // Process blue channel
             vl_sift_pix blue_mod     = vil_bilin_interp(blue_grad_mod,
-                                                     dxi+xi,
-                                                     dyi+yi);
+                                                        interp_pt.x(),
+                                                        interp_pt.y());
             vl_sift_pix blue_angle   = vil_bilin_interp(blue_grad_angle,
-                                                       dxi+xi,
-                                                       dyi+yi);
+                                                        interp_pt.x(),
+                                                        interp_pt.y());
             vl_sift_pix blue_theta   = angle0To2Pi (blue_angle - angle0) ;
 
 

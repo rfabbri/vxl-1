@@ -50,11 +50,11 @@ public:
 
     // Compute descriptors
     void compute_descriptors(
-        vgl_point_2d<double>& pt,
-        double& radius,
-        double& theta,
+        vgl_point_2d<double> pt,
+        double radius,
+        double theta,
         VlSiftFilt* filter,
-        double& scale_ratio,
+        double scale_ratio,
         vil_image_view<vl_sift_pix>& red_grad_mod,
         vil_image_view<vl_sift_pix>& red_grad_angle,
         vil_image_view<vl_sift_pix>& green_grad_mod,
