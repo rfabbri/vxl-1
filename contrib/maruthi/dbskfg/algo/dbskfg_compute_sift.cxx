@@ -38,6 +38,7 @@ dbskfg_compute_sift::dbskfg_compute_sift
     query_sift_filter_(query_sift_filter),
     distance_(0.0)
 {
+
     model_red_grad_mod_.set_to_memory(&model_red_grad_data[0],
                                       model_sift_filter_->width,
                                       model_sift_filter_->height,
@@ -140,7 +141,7 @@ dbskfg_compute_sift::dbskfg_compute_sift
 
 
     compute_descriptors(model_pt_,
-                        model_radius_/2.0,
+                        model_radius_,
                         model_theta_,
                         model_sift_filter_,
                         model_scale_ratio_,
@@ -153,7 +154,7 @@ dbskfg_compute_sift::dbskfg_compute_sift
                         model_vector);
 
     compute_descriptors(query_pt_,
-                        query_radius_/2.0,
+                        query_radius_,
                         query_theta_,
                         query_sift_filter_,
                         query_scale_ratio_,
@@ -202,15 +203,21 @@ void dbskfg_compute_sift::compute_descriptors(
     vnl_vector<vl_sift_pix>& output)
 {
 
+    // Apply scale ratio
+    keypoint.set(keypoint.x()*scale_ratio,
+                 keypoint.y()*scale_ratio);
+
+    radius=(radius*scale_ratio)/2.0;
+
     int angle_bins=8;
     int spatial_bins=4;
 
     double const magnif = filter->magnif ;
 
-    int          w      = filter->width ;
-    int          h      = filter->height ;
-    int const    xo     = 2 ;         /* x-stride */
-    int const    yo     = 2 * w ;     /* y-stride */
+    int          w      = filter->width  * scale_ratio;
+    int          h      = filter->height * scale_ratio;
+    // int const    xo     = 2 ;         /* x-stride */
+    // int const    yo     = 2 * w ;     /* y-stride */
 
     int          xi     = (int) (keypoint.x() + 0.5) ;
     int          yi     = (int) (keypoint.y() + 0.5) ;
@@ -274,8 +281,8 @@ void dbskfg_compute_sift::compute_descriptors(
             dxi <= vnl_math::min(+ W, w - xi -1) ; ++ dxi)
         {
 
-            vgl_point_2d<double> interp_pt(dxi+xi,
-                                           dyi+yi);
+            vgl_point_2d<double> interp_pt(((double) dxi+xi)/scale_ratio,
+                                           ((double) dyi+yi)/scale_ratio);
 
             // Process red channel
             vl_sift_pix red_mod     = vil_bilin_interp(red_grad_mod,
