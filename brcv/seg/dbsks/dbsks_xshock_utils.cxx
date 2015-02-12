@@ -11,7 +11,7 @@
 #include <vnl/vnl_math.h>
 #include <vcl_utility.h>
 #include <vcl_algorithm.h>
-
+#include <vgl/vgl_distance.h>
 //// -----------------------------------------------------------------------------
 ////: Update descriptors around a degree-2 node, given the descriptor of the child edge
 //void dbsks_update_degree2_node(const dbsksp_xshock_node_sptr& xv, 
@@ -405,7 +405,78 @@ vnl_vector<double > dbsks_compute_angle_minmax(const vnl_vector<double >& angles
   return x;
 }
 
+bool dbsks_fill_in_silhouette(const dbsksp_xshock_graph_sptr& xgraph, const vil_image_view<vxl_byte >& source_image, vcl_vector<vgl_point_2d<int > >& points, vil_image_view<vxl_byte >& screenshot_image)
+{
+	points.clear();
+    screenshot_image.set_size(source_image.ni(),source_image.nj());
+    screenshot_image.fill(0);
 
+	// draw the shock graph on top of the black window
+    dbsksp_screenshot_binary(xgraph, screenshot_image, 1, points);
+
+	for (dbsksp_xshock_graph::vertex_iterator vit = xgraph->vertices_begin();
+	vit != xgraph->vertices_end(); ++vit)
+	{
+		dbsksp_xshock_node_sptr xv = *vit;
+		//dbsksp_xshock_node_sptr xv = xgraph->node_from_id(xgraph->root_vertex_id());
+
+		vcl_vector<vil_chord> region;
+		vil_flood_fill8(screenshot_image, xv->pt().x(), xv->pt().y(), vxl_byte(0), vxl_byte(255), region);
+
+		for (int c = 0; c < region.size(); c++)
+		{
+			int xlo = region[c].ilo;
+			int xhi = region[c].ihi;
+			int y = region[c].j;
+
+			for (int x = xlo; x<= xhi; x++)
+			{
+				vgl_point_2d<int> pt(x,y);
+				points.push_back(pt);
+			}
+		}
+	}
+	return true;
+}
+
+vcl_vector<vnl_matrix<double> > dbsks_compute_appearance_id_matrix(vcl_vector<vgl_point_2d<int > >& points, const vil_image_view<vxl_byte >& source_image)
+{
+	vnl_matrix <double> appearance_id_matrix_1 (21, 21, 0);
+	vnl_matrix <double> appearance_id_matrix_2 (21, 21, 0);
+
+	vcl_vector<vnl_matrix<double> > two_matrix;
+	//vcl_vector <double> dist_V;
+	//vcl_vector <double> int_sum_V;
+	//vcl_vector <double> int_sub_V;
+
+	//vcl_cout << "\n compute appearce id matrix \n";
+	for(int i = 0; i< points.size(); i++)
+	{
+		for(int j = i+1; j<points.size(); j++)
+		{
+			double dist = vgl_distance(points[i], points[j]);
+			int dist_id = vnl_math::floor(dist/10);
+			double int_sum = double(source_image(points[i].x(), points[i].y()) + source_image(points[j].x(), points[j].y()))/255;
+			int int_sum_id = vnl_math::floor(int_sum/0.1);
+			double int_diff = double(vnl_math::abs(source_image(points[i].x(), points[i].y()) - source_image(points[j].x(), points[j].y())))/255;
+			int int_diff_id = vnl_math::floor(int_diff/0.1);
+
+			appearance_id_matrix_1(dist_id, int_sum_id) +=1;
+			appearance_id_matrix_2(dist_id, int_diff_id) +=1;
+			//dist_V.push_back();
+			//int_sum_V.push_back();
+			//int_sub_V.push_back();
+		}
+	}
+
+	appearance_id_matrix_1 /= appearance_id_matrix_1.absolute_value_sum();
+	appearance_id_matrix_2 /= appearance_id_matrix_2.absolute_value_sum();
+
+
+	two_matrix.push_back(appearance_id_matrix_1);
+	two_matrix.push_back(appearance_id_matrix_2);
+	return two_matrix;
+}
 
 
 

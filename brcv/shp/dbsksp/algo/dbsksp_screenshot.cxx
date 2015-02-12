@@ -6,7 +6,6 @@
 #include "dbsksp_screenshot.h"
 #include <dbsksp/dbsksp_xshock_graph.h>
 #include <dbsksp/dbsksp_xshock_fragment.h>
-#include <vgl/vgl_line_segment_2d.h>
 #include <vgl/vgl_distance.h>
 
 //------------------------------------------------------------------------------
@@ -207,26 +206,18 @@ bool dbsksp_screenshot_in_place(const dbsksp_xshock_graph_sptr& xgraph,
   return true;
 }
 
-/*
+
 //------------------------------------------------------------------------------
 //: Draw the shock graph on top of an existing image
-bool dbsksp_screenshot_in_place(const dbsksp_xshock_graph_sptr& xgraph,
+bool dbsksp_screenshot_binary(const dbsksp_xshock_graph_sptr& xgraph,
                        vil_image_view<vxl_byte >& screenshot,
                        int contour_radius,
-                       int padding_width,
-                       vil_rgb<vxl_byte > contour_color,
-                       vil_rgb<vxl_byte > padding_color)
+                       vcl_vector<vgl_point_2d<int > >& points)
 {
   if (!xgraph) return false;
   if (screenshot.size() == 0) return false;
 
-
-  vxl_byte inner_color[] = {contour_color.R(), contour_color.G(), contour_color.B()}; //{0, 0, 255}; // blue
-  vxl_byte outer_color[] = {padding_color.R(), padding_color.G(), padding_color.B()}; //{255, 255, 255}; // white
-
-  
   int inner_radius = contour_radius;
-  int outer_radius = inner_radius + padding_width;
 
   for (dbsksp_xshock_graph::edge_iterator eit = xgraph->edges_begin(); eit !=
     xgraph->edges_end(); ++eit)
@@ -247,20 +238,63 @@ bool dbsksp_screenshot_in_place(const dbsksp_xshock_graph_sptr& xgraph,
         vgl_vector_2d<double > t = biarc.tangent_at(s);
         vgl_vector_2d<double > n(-t.y(), t.x());
 
-        // outer color
-        for (int k = -outer_radius; k <= outer_radius; ++k)
-        {
-          vgl_point_2d<double > pt = p + k * n;
-          vgl_point_2d<int > pi( int(pt.x()), int(pt.y()));
 
-          if (screenshot.in_range(pi.x(), pi.y()))
+		// print the 8-connected pixel of the each point on the boundary to ensure closure
+          vgl_point_2d<int > pi( int(p.x()), int(p.y()));
+          if (screenshot.in_range(pi.x(), pi.y()) && screenshot(pi.x(), pi.y())==0)
           {
-            for (unsigned plane =0; plane < screenshot.nplanes(); ++plane)
-            {
-              screenshot(pi.x(), pi.y(), plane) = outer_color[plane];
-            }
+              screenshot(pi.x(), pi.y()) = 255;
+			  points.push_back(pi);
           }
-        } // for
+
+          pi.set( int(p.x()+1), int(p.y()));
+          if (screenshot.in_range(pi.x(), pi.y()) && screenshot(pi.x(), pi.y())==0)
+          {
+              screenshot(pi.x(), pi.y()) = 255;
+			  points.push_back(pi);
+          }
+          pi.set( int(p.x()+1), int(p.y()+1));
+          if (screenshot.in_range(pi.x(), pi.y()) && screenshot(pi.x(), pi.y())==0)
+          {
+              screenshot(pi.x(), pi.y()) = 255;
+			  points.push_back(pi);
+          }
+          pi.set( int(p.x()+1), int(p.y()-1));
+          if (screenshot.in_range(pi.x(), pi.y()) && screenshot(pi.x(), pi.y())==0)
+          {
+              screenshot(pi.x(), pi.y()) = 255;
+			  points.push_back(pi);
+          }
+          pi.set( int(p.x()), int(p.y()+1));
+          if (screenshot.in_range(pi.x(), pi.y()) && screenshot(pi.x(), pi.y())==0)
+          {
+              screenshot(pi.x(), pi.y()) = 255;
+			  points.push_back(pi);
+          }
+          pi.set( int(p.x()), int(p.y()-1));
+          if (screenshot.in_range(pi.x(), pi.y()) && screenshot(pi.x(), pi.y())==0)
+          {
+              screenshot(pi.x(), pi.y()) = 255;
+			  points.push_back(pi);
+          }
+          pi.set( int(p.x()-1), int(p.y()));
+          if (screenshot.in_range(pi.x(), pi.y()) && screenshot(pi.x(), pi.y())==0)
+          {
+              screenshot(pi.x(), pi.y()) = 255;
+			  points.push_back(pi);
+          }
+          pi.set( int(p.x()-1), int(p.y()+1));
+          if (screenshot.in_range(pi.x(), pi.y()) && screenshot(pi.x(), pi.y())==0)
+          {
+              screenshot(pi.x(), pi.y()) = 255;
+			  points.push_back(pi);
+          }
+          pi.set( int(p.x()-1), int(p.y()-1));
+          if (screenshot.in_range(pi.x(), pi.y()) && screenshot(pi.x(), pi.y())==0)
+          {
+              screenshot(pi.x(), pi.y()) = 255;
+			  points.push_back(pi);
+          }
 
         // inner color
         for (int k = -inner_radius; k <= inner_radius; ++k)
@@ -268,21 +302,21 @@ bool dbsksp_screenshot_in_place(const dbsksp_xshock_graph_sptr& xgraph,
           vgl_point_2d<double > pt = p + k * n;
           vgl_point_2d<int > pi( int(pt.x()), int(pt.y()));
 
-          if (screenshot.in_range(pi.x(), pi.y()))
+          if (screenshot.in_range(pi.x(), pi.y()) && screenshot(pi.x(), pi.y())==0)
           {
-            for (unsigned plane =0; plane < screenshot.nplanes(); ++plane)
-            {
-              screenshot(pi.x(), pi.y(), plane) = inner_color[plane];
-            }
+			screenshot(pi.x(), pi.y()) = 255;
+			points.push_back(pi);
           }
         } // for
+
+
       }
     }
   }
   return true;
 }
 
-*/
+
 
 
 

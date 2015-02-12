@@ -95,6 +95,8 @@ public:
   bool update_appearance_model(vcl_vector<dbsks_det_desc_xgraph_sptr > prev_dets, vil_image_view<float>& L);
   double compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_graph_sptr prev_xgraph);
 
+  double compute_appearance_cost_v2(dbsksp_xshock_graph_sptr& cur_xgraph, vil_image_view<vxl_byte>& cur_image, dbsksp_xshock_graph_sptr prev_xgraph, vil_image_view<vxl_byte>& prev_image);
+
 public:
   vcl_string image_file;
   vcl_string prev_image_file;

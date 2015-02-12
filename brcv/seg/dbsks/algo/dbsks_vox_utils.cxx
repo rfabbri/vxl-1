@@ -12,7 +12,6 @@
 #include <dbsksp/dbsksp_xshock_graph_sptr.h>
 #include <dbsksp/dbsksp_xshock_graph.h>
 #include <dbsksp/xio/dbsksp_xio_xshock_graph.h>
-#include <dbsksp/algo/dbsksp_screenshot.h>
 #include <bpro1/bpro1_parameters.h>
 
 #include <vsol/vsol_box_2d.h>
@@ -85,6 +84,7 @@ bool dbsks_save_detections_to_folder(const vcl_vector<dbsks_det_desc_xgraph_sptr
 
     // draw the shock graph on top of the source image
     vil_image_view<vxl_byte > screenshot_image;
+
     vil_rgb<vxl_byte> contour_color(0, 0, 255); // blue
     vil_rgb<vxl_byte> padding_color(255, 255, 0); // yellow
     dbsksp_screenshot(source_image, det_list[i]->xgraph(), screenshot_image, 
@@ -102,6 +102,49 @@ bool dbsks_save_detections_to_folder(const vcl_vector<dbsks_det_desc_xgraph_sptr
 
     // record the names
     screenshot_paths[i] = "/" + det_record_dirname + "/" + screenshot_filename;
+ 
+	// only save once
+	if(source_image.nplanes()>1)
+	{
+	// save the binary shape, in case to use in latter dynamic programming for optimal sequence of pose tracking
+		vil_image_view<vxl_byte > screenshot_binary;
+		vcl_vector<vgl_point_2d<int > > region_pts;
+		if(!dbsks_fill_in_silhouette(det_list[i]->xgraph(), source_image, region_pts, screenshot_binary))
+			vcl_cout << "failed in fill the silhouette.\n";
+		else
+		{
+			vcl_cout << "\n  Number of shape points: " << region_pts.size() << "...";	
+			vcl_string screenshot_filename2 = vul_sprintf("%s.%d_binary.png", det_group_id.c_str(), i);
+			vcl_string screenshot_file2 = det_record_dir + "/" + screenshot_filename2;
+			vcl_cout << "\n  Saving screenshot file " << screenshot_file2 << "...";		
+			if (!vil_save(screenshot_binary, screenshot_file2.c_str()))
+			{
+			  vcl_cout << "failed.\n";
+			} 
+			else
+			{
+			  vcl_cout << "done.\n";
+			}
+
+
+	/*
+			vcl_string appear_id_filename1 = vul_sprintf("%s.%d_appearance_1.txt", det_group_id.c_str(), i);
+			vcl_string appear_id_file1 = det_record_dir + "/" + appear_id_filename1;
+			vcl_string appear_id_filename2 = vul_sprintf("%s.%d_appearance_2.txt", det_group_id.c_str(), i);
+			vcl_string appear_id_file2 = det_record_dir + "/" + appear_id_filename2;
+			// compute the appearance id matrix
+			vcl_vector<vnl_matrix<double> > appearance_id_matrix = dbsks_compute_appearance_id_matrix( region_pts, source_image);
+
+			vcl_ofstream ofs1(appear_id_file1.c_str()), ofs2(appear_id_file2.c_str());
+			appearance_id_matrix[0].print(ofs1);
+			appearance_id_matrix[1].print(ofs2);
+			ofs1.close();
+			ofs2.close();
+	*/
+		
+		}
+	}
+
   }
 
 
@@ -201,3 +244,6 @@ bool dbsks_load_detections_from_folder(const vcl_string& storage_folder,
   // return false if there is no xml_det_record_... files
   return (num_xml_det_record_files > 0);
 }
+
+
+
