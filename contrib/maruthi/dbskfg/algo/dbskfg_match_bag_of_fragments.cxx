@@ -9874,6 +9874,8 @@ void dbskfg_match_bag_of_fragments::compute_similarity(
     double width)
 {
 
+    // vcl_ofstream model_stream("model_points.txt");
+    // vcl_ofstream query_stream("query_points.txt");
 
     vcl_vector< rgrl_feature_sptr > pts1;
     vcl_vector< rgrl_feature_sptr > pts2;
@@ -9911,6 +9913,11 @@ void dbskfg_match_bag_of_fragments::compute_similarity(
                 radius_ps1 = radius_ps1/model_scale_ratio;
                 radius_ps2 = radius_ps2/query_scale_ratio;
 
+                if ( width )
+                {
+                    theta_ps2=vnl_math::pi-theta_ps2;
+                }
+
                 vgl_point_2d<double> pt_p_sc1 = _translatePoint(
                     ps1, 
                     theta_ps1+phi_ps1, 
@@ -9929,6 +9936,16 @@ void dbskfg_match_bag_of_fragments::compute_similarity(
                     theta_ps2-phi_ps2, 
                     radius_ps2);
 
+                // model_stream<<pt_p_sc1.x()<<" "  
+                //             <<pt_p_sc1.y()<<" "
+                //             <<pt_m_sc1.x()<<" "
+                //             <<pt_m_sc1.y()<<vcl_endl;
+
+                // query_stream<<pt_p_sc2.x()<<" "  
+                //             <<pt_p_sc2.y()<<" "
+                //             <<pt_m_sc2.x()<<" "
+                //             <<pt_m_sc2.y()<<vcl_endl;
+                
                 // scurve 1
                 v[0] = pt_m_sc1.x();
                 v[1] = pt_m_sc1.y();
@@ -9959,6 +9976,11 @@ void dbskfg_match_bag_of_fragments::compute_similarity(
                 radius_ps1 = radius_ps1/query_scale_ratio;
                 radius_ps2 = radius_ps2/model_scale_ratio;
 
+                if ( width )
+                {
+                    theta_ps1=vnl_math::pi-theta_ps1;
+                }
+
                 vgl_point_2d<double> pt_p_sc1 = _translatePoint(
                     ps1, 
                     theta_ps1+phi_ps1, 
@@ -9976,6 +9998,16 @@ void dbskfg_match_bag_of_fragments::compute_similarity(
                     ps2, 
                     theta_ps2-phi_ps2, 
                     radius_ps2);
+
+                // query_stream<<pt_p_sc1.x()<<" "  
+                //             <<pt_p_sc1.y()<<" "
+                //             <<pt_m_sc1.x()<<" "
+                //             <<pt_m_sc1.y()<<vcl_endl;
+
+                // model_stream<<pt_p_sc2.x()<<" "  
+                //             <<pt_p_sc2.y()<<" "
+                //             <<pt_m_sc2.x()<<" "
+                //             <<pt_m_sc2.y()<<vcl_endl;
 
                 // scurve 1
                 v[0] = pt_m_sc1.x();
@@ -10000,6 +10032,9 @@ void dbskfg_match_bag_of_fragments::compute_similarity(
         }
     }
  
+    // model_stream.close();
+    // query_stream.close();
+
     rgrl_match_set_sptr ms = new 
         rgrl_match_set( rgrl_feature_point::type_id() );
 
