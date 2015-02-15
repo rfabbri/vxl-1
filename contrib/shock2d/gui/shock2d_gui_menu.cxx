@@ -30,8 +30,6 @@
 #include <dbsk2d/vis/dbsk2d_rich_map_query_tool.h>
 #include <dbsk2d/vis/dbsk2d_shock_image_fragment_tool.h>
 
-#include <dbskfg/vis/dbskfg_composite_graph_transform_tool.h>
-
 #include <dbskr/vis/dbskr_debug_scurve_tool.h>
 #include <dbskr/vis/dbskr_subgraph_scurve_tool.h>
 
@@ -237,9 +235,6 @@ shock2d_gui_menu::setup_menu()
     MENU_ADD_TOOL( dbsk2d_shock_subgraph_tool, patch_tools_menu );
     MENU_ADD_TOOL( dbskr_subgraph_scurve_tool, patch_tools_menu );
 
-    vgui_menu cg_tools_menu;
-    MENU_ADD_TOOL( dbskfg_composite_graph_transform_tool,cg_tools_menu);
-
   vgui_menu lvwr_tools_menu;
     MENU_ADD_TOOL( dbdet_livewire_tool, lvwr_tools_menu );
     
@@ -255,7 +250,6 @@ shock2d_gui_menu::setup_menu()
   tools.add("vsol2D",      vsol2D_tools_menu );
   tools.add("2D Geometry", soview2D_tools_menu);
   tools.add("Shock",       shock_tools_menu);
-  tools.add("Composite_Graph",cg_tools_menu);
   tools.add("Shock patches", patch_tools_menu);
   tools.add("Livewire", lvwr_tools_menu);
   // tools.add("Shape Modeling", shockshape_tools_menu);
