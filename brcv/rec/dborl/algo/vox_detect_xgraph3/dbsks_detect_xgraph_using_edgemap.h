@@ -90,9 +90,9 @@ public:
   bool load_appearance_model();
   bool load_bb_file();
 
-  double compute_appearance_cost(dbsksp_xshock_graph_sptr& sol_xgraph, vil_image_view<float>& L);
-  vcl_vector<double> compute_bg_vec (dbsksp_xshock_graph_sptr& sol_xgraph, vil_image_view<float>& L);
-  bool update_appearance_model(vcl_vector<dbsks_det_desc_xgraph_sptr > prev_dets, vil_image_view<float>& L);
+  double compute_appearance_cost(dbsksp_xshock_graph_sptr& sol_xgraph, vil_image_view<vxl_byte>& L);
+  vcl_vector<double> compute_bg_vec (dbsksp_xshock_graph_sptr& sol_xgraph, vil_image_view<vxl_byte>& L);
+  bool update_appearance_model(vcl_vector<dbsks_det_desc_xgraph_sptr > prev_dets, vil_image_view<vxl_byte>& L);
   double compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_graph_sptr prev_xgraph);
 
   double compute_appearance_cost_v2(dbsksp_xshock_graph_sptr& cur_xgraph, vil_image_view<vxl_byte>& cur_image, dbsksp_xshock_graph_sptr prev_xgraph, vil_image_view<vxl_byte>& prev_image);

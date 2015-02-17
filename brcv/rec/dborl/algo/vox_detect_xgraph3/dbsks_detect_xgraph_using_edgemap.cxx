@@ -858,10 +858,10 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 				vcl_cout <<"\nedge_confidence:" << real_confidence << vcl_endl;		
 
 				// appearance term
-				//double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
-				//vcl_cout <<"\nappearance_cost:" << appearance_cost << vcl_endl;
+				double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
+				vcl_cout <<"\nappearance_cost:" << appearance_cost << vcl_endl;
 
-				//real_confidence += (20 - appearance_cost);
+				real_confidence += (20 - appearance_cost);
 				vcl_cout << " real confidence: " << real_confidence << vcl_endl;
 				dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
 				det->compute_bbox();
@@ -904,10 +904,11 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 					vcl_cout <<"\nedge_confidence:" << real_confidence << vcl_endl;		
 
 					// appearance term
-					//double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
-					//vcl_cout <<"\nappearance_cost:" << appearance_cost << vcl_endl;
+					double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
+					vcl_cout <<"\nappearance_cost:" << appearance_cost << vcl_endl;
 
-					//real_confidence += (20 - appearance_cost);
+					real_confidence += (20 - appearance_cost);
+					real_confidence *= 0.9;
 					vcl_cout << " real confidence: " << real_confidence << vcl_endl;
 					dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
 					det->compute_bbox();
@@ -918,10 +919,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 				prev_dets.insert(prev_dets.end(), dets_window.begin(), dets_window.end());
 		  		vcl_sort(prev_dets.begin(), prev_dets.end(), dbsks_decreasing_confidence);		
 			}
-		}
 
-		if(prev_dets.size()==0)
-		{
 		//////////////////////////////// detect based on geom model right  ///////////////////////////////////////////////////////////////
 			vcl_cout << "\n Detecting based on Right-Turnning Geom Model" << vcl_endl;
 			engine.xgraph_geom_ = xgraph_geom_R;
@@ -950,10 +948,11 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 					vcl_cout <<"\nedge_confidence:" << real_confidence << vcl_endl;		
 
 					// appearance term
-					//double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
-					//vcl_cout <<"\nappearance_cost:" << appearance_cost << vcl_endl;
+					double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
+					vcl_cout <<"\nappearance_cost:" << appearance_cost << vcl_endl;
 
-					//real_confidence += (20 - appearance_cost);
+					real_confidence += (20 - appearance_cost);
+					real_confidence *= 0.9;
 					vcl_cout << " real confidence: " << real_confidence << vcl_endl;
 					dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
 					det->compute_bbox();
@@ -1013,7 +1012,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 					vcl_cout <<"\nedge_confidence:" << real_confidence << vcl_endl;		
 
 					// appearance term
-					double appearance_cost = compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[prev_i]->xgraph(), prev_L_);
+					double appearance_cost = compute_appearance_cost(sol_xgraph, L_) + compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[prev_i]->xgraph(), prev_L_);
 					vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
 
 					// shape change term, now just the differece between radius of shock nodes, but shape is more complex representation
@@ -1036,7 +1035,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 			raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
   			vcl_sort(raw_dets_all_windows.begin(), raw_dets_all_windows.end(), dbsks_decreasing_confidence);
 
-			if(!is_initial && raw_dets_all_windows.front()->confidence()<40)
+			if(!is_initial && raw_dets_all_windows.size()<10)
 			{
 				//////////////////////////////// detect based on geom model left  ///////////////////////////////////////////////////////////////
 				vcl_cout << "\n Detecting based on Left-Turnning Geom Model" << vcl_endl;
@@ -1066,7 +1065,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 						vcl_cout <<"\nedge_confidence:" << real_confidence << vcl_endl;		
 
 						// appearance term
-						double appearance_cost = compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[prev_i]->xgraph(), prev_L_);
+						double appearance_cost = compute_appearance_cost(sol_xgraph, L_) + compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[prev_i]->xgraph(), prev_L_);
 						vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
 
 						// shape change term, now just the differece between radius of shock nodes, but shape is more complex representation
@@ -1088,11 +1087,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 					raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
 		  			vcl_sort(raw_dets_all_windows.begin(), raw_dets_all_windows.end(), dbsks_decreasing_confidence);
 				}
-			}
 
-
-			if(!is_initial && raw_dets_all_windows.front()->confidence()<36)
-			{
 				//////////////////// detect based on geom model right  //////////////////////////////////////////
 
 				vcl_cout << "\n Detecting based on Right-Turnning Geom Model" << vcl_endl;
@@ -1123,7 +1118,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 						vcl_cout <<"\nedge_confidence:" << real_confidence << vcl_endl;		
 
 						// appearance term
-						double appearance_cost = compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[prev_i]->xgraph(), prev_L_);
+						double appearance_cost = compute_appearance_cost(sol_xgraph, L_) + compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[prev_i]->xgraph(), prev_L_);
 						vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
 
 						// shape change term, now just the differece between radius of shock nodes, but shape is more complex representation
@@ -1190,7 +1185,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
 
 vcl_vector<double> dbsks_detect_xgraph_using_edgemap::
-compute_bg_vec (dbsksp_xshock_graph_sptr& sol_xgraph, vil_image_view<float>& L)
+compute_bg_vec (dbsksp_xshock_graph_sptr& sol_xgraph, vil_image_view<vxl_byte>& L)
 {
 	int ni = L.ni();
 	int nj = L.nj();
@@ -1231,7 +1226,7 @@ compute_bg_vec (dbsksp_xshock_graph_sptr& sol_xgraph, vil_image_view<float>& L)
 }
 
 bool dbsks_detect_xgraph_using_edgemap::
-update_appearance_model(vcl_vector<dbsks_det_desc_xgraph_sptr > prev_dets, vil_image_view<float>& L)
+update_appearance_model(vcl_vector<dbsks_det_desc_xgraph_sptr > prev_dets, vil_image_view<vxl_byte>& L)
 {
 	int num_dets = 2; 
 	if(prev_dets.size()==0)
@@ -1263,7 +1258,7 @@ update_appearance_model(vcl_vector<dbsks_det_desc_xgraph_sptr > prev_dets, vil_i
 }
 
 double dbsks_detect_xgraph_using_edgemap::
-compute_appearance_cost(dbsksp_xshock_graph_sptr& sol_xgraph, vil_image_view<float>& L)
+compute_appearance_cost(dbsksp_xshock_graph_sptr& sol_xgraph, vil_image_view<vxl_byte>& L)
 {
 	
 	int ni = L.ni();
@@ -1287,7 +1282,7 @@ compute_appearance_cost(dbsksp_xshock_graph_sptr& sol_xgraph, vil_image_view<flo
 
 		if (pos < this->appearance_model_node_id.size())
 		{
-			vcl_cout << " pos: " << pos;
+			//vcl_cout << " pos: " << pos;
 			// compute the average brightness in a 9 X 9 window centered at the nodes which are included in appearance model
 			int cnt = 0;
 			int sum_bg = 0;
@@ -1301,7 +1296,7 @@ compute_appearance_cost(dbsksp_xshock_graph_sptr& sol_xgraph, vil_image_view<flo
 			}
 			double avg_bg = double(sum_bg)/double(cnt);
 
-			vcl_cout << " bg: " << avg_bg;
+			//vcl_cout << " bg: " << avg_bg;
 			bg_vec.push_back(avg_bg);
 			bg_sum += avg_bg;
 			cost+= vcl_sqrt((avg_bg - this->appearance_model_node_value[pos])*(avg_bg - this->appearance_model_node_value[pos]));
@@ -1398,7 +1393,7 @@ double dbsks_detect_xgraph_using_edgemap::
 compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_graph_sptr prev_xgraph)
 {
 
-	vcl_vector<double> prev_x_vec, prev_y_vec, prev_r_vec;
+	vcl_vector<double> prev_x_vec, prev_y_vec, prev_r_vec, prev_psi_vec, prev_phi_vec;
 	for (dbsksp_xshock_graph::vertex_iterator vit = prev_xgraph->vertices_begin();
 		vit != prev_xgraph->vertices_end(); ++vit)
 	{
@@ -1410,6 +1405,8 @@ compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_gra
 		prev_x_vec.push_back(x);
 		prev_y_vec.push_back(y);
 		prev_r_vec.push_back(radius);
+		prev_psi_vec.push_back(psi);
+		prev_phi_vec.push_back(phi);		
 	}
 	vcl_vector<double> prev_chord_vec;
 	for (dbsksp_xshock_graph::edge_iterator eit = prev_xgraph->edges_begin(); eit !=prev_xgraph->edges_end(); ++eit)
@@ -1426,7 +1423,7 @@ compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_gra
 		prev_chord_vec.push_back(chord_len);
 	}
 
-	vcl_vector<double> cur_x_vec, cur_y_vec, cur_r_vec;
+	vcl_vector<double> cur_x_vec, cur_y_vec, cur_r_vec, cur_psi_vec, cur_phi_vec;
 	double cur_root_r;
 	for (dbsksp_xshock_graph::vertex_iterator vit = cur_xgraph->vertices_begin();
 		vit != cur_xgraph->vertices_end(); ++vit)
@@ -1440,6 +1437,8 @@ compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_gra
 		cur_x_vec.push_back(x);
 		cur_y_vec.push_back(y);
 		cur_r_vec.push_back(radius);
+		cur_psi_vec.push_back(psi);
+		cur_phi_vec.push_back(phi);
 	}
 
 	vcl_vector<double> cur_chord_vec;
@@ -1458,19 +1457,22 @@ compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_gra
 	}
 
 // Compute the cost of shape consistency: radius change + chord length change
-	double diff_dist=0, diff_r_2=0, diff_chord=0;
+	double diff_dist=0, diff_r_2=0, diff_chord=0, diff_psi=0, diff_phi=0;
 	for (int i = 0; i< cur_x_vec.size(); i++)
 	{
 //		diff_dist += (cur_x_vec[i]-prev_x_vec[i])*(cur_x_vec[i]-prev_x_vec[i]) + (cur_y_vec[i]-prev_y_vec[i])*(cur_y_vec[i]-prev_y_vec[i]);
 		//diff_r_2 += (cur_r_vec[i]-proto_r_vec[i])*(cur_r_vec[i]-proto_r_vec[i]);
-		diff_r_2 += (cur_r_vec[i]-prev_r_vec[i])*(cur_r_vec[i]-prev_r_vec[i]);
+		diff_r_2 += (cur_r_vec[i]-prev_r_vec[i])*(cur_r_vec[i]-prev_r_vec[i])/prev_r_vec[i]/prev_r_vec[i];
+		diff_psi += (cur_psi_vec[i]-prev_psi_vec[i])*(cur_psi_vec[i]-prev_psi_vec[i])/vnl_math::pi/vnl_math::pi*4;
+		diff_phi += (cur_phi_vec[i]-prev_phi_vec[i])*(cur_phi_vec[i]-prev_phi_vec[i])/vnl_math::pi/vnl_math::pi*4;
 	}
 
 	for (int i = 0; i< cur_chord_vec.size(); i++)
 	{
-		diff_chord += (cur_chord_vec[i]-prev_chord_vec[i])*(cur_chord_vec[i]-prev_chord_vec[i]);
+		diff_chord += (cur_chord_vec[i]-prev_chord_vec[i])*(cur_chord_vec[i]-prev_chord_vec[i])/prev_chord_vec[i]/prev_chord_vec[i];
 	}
-	double cost = vcl_sqrt(diff_r_2) + vcl_sqrt(diff_chord);
+
+	double cost = vcl_sqrt(diff_r_2) + vcl_sqrt(diff_chord) + vcl_sqrt(diff_psi) + vcl_sqrt(diff_phi);
 
 	return cost;
 
