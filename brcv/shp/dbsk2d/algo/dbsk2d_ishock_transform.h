@@ -74,7 +74,8 @@ public:
 
     //: write state
     void write_state(vcl_string filename, 
-                     vcl_vector<vgl_polygon<double> >& polys);
+                     vcl_vector<vgl_polygon<double> >& polys,
+		     bool show_shock=true);
 
     //: get shock graph
     dbsk2d_ishock_graph_sptr get_shock_graph(){return ishock_graph_;}

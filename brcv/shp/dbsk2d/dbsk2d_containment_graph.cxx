@@ -29,14 +29,18 @@ dbsk2d_containment_graph::dbsk2d_containment_graph
     double path_threshold,
     unsigned int loop_type,
     bool expand_outside,
-    bool train
+    bool train,
+    bool debug,
+    bool show_shock
 ):ishock_graph_(ishock_graph),
   path_threshold_(path_threshold),
   loop_type_(loop_type),
   next_available_id_(0),
   gap_id_(0),
   expand_outside_(expand_outside),
-  train_(train)
+  train_(train),
+  debug_(debug),
+  show_shock_(show_shock)
 {
 }
 
@@ -111,19 +115,28 @@ void dbsk2d_containment_graph::construct_graph()
             }
 
 
-            // dbsk2d_ishock_transform temp_trans(ishock_graph_,
-            //                                    dbsk2d_ishock_transform::GAP);
-            // vcl_vector<vgl_polygon<double> > foobar; 
-            // foobar.push_back(poly);
-            // vcl_stringstream stream;
-            // stream<<"Node_"<<root_node->get_id()<<".ps";
-            // temp_trans.write_state(stream.str(),foobar);
-
+	    if ( debug_ )
+	    {
+		
+		dbsk2d_ishock_transform temp_trans
+		    (
+		     ishock_graph_,
+		     dbsk2d_ishock_transform::GAP);
+		
+		vcl_vector<vgl_polygon<double> > foobar; 
+		foobar.push_back(poly);
+		vcl_stringstream stream;
+		stream<<"Node_"<<root_node->get_id()<<".ps";
+		temp_trans.write_state(stream.str(),foobar,
+				       show_shock_);
+	    }
+	    
         }
 
         if ( con_ratio >= 0.4 &&
              frag_edges[(*it).first].size() > 1  &&
-             (expand_outside_ || grouper.region_within_image((*it).first)))  
+             (expand_outside_
+	      || grouper.region_within_image((*it).first)))  
         {
             vcl_map<int,dbsk2d_ishock_bline*> extra_belms;
             vcl_set<int> key;
@@ -241,7 +254,12 @@ void dbsk2d_containment_graph::construct_graph()
                 }
             }
             stack_.pop();
-            node->destroy_transform();
+
+	    if ( !debug_ )
+	    {
+		node->destroy_transform();
+	    }
+	    
             continue;
         }
 
@@ -250,8 +268,7 @@ void dbsk2d_containment_graph::construct_graph()
 
         // 0. Grab original id
         int orig_id=ishock_graph_->getAvailableID();
-        // vcl_stringstream stream;
-        // stream<<"Node_"<<node->get_id()<<".ps";
+
         // node->get_parent_transform()->write_boundary(stream.str());
 
         // 1. First execute incoming transform
@@ -466,8 +483,14 @@ void dbsk2d_containment_graph::construct_graph()
             
         }
 
-        // node->get_parent_transform()->write_state(stream.str(),polys);
-        
+	if ( debug_ )
+	{
+	    vcl_stringstream stream;
+	    stream<<"Node_"<<node->get_id()<<".ps";
+	    node->get_parent_transform()->write_state(stream.str(),polys,
+						      show_shock_);
+        }
+	
         // 3. expand node
         if ( region_outer_nodes.size()  )
         {
@@ -526,7 +549,7 @@ void dbsk2d_containment_graph::construct_graph()
             }
         }
 
-        merge_closed_regions();
+        //merge_closed_regions();
     }
 }
 

@@ -123,6 +123,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
       output_match_file_(output_file),
       output_html_file_(output_file),
       output_binary_file_(output_file),
+      output_binary_h_file_(output_file),
       output_removed_regions_(output_file),
       scale_bbox_(scale_bbox),
       scale_root_(scale_root),
@@ -196,6 +197,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
     output_match_file_ = output_match_file_ + "_similarity_matrix.xml";
     output_html_file_  = output_html_file_ +  "_similarity_matrix.html";
     output_binary_file_ = output_binary_file_ + "_binary_similarity_matrix.bin";
+    output_binary_h_file_ = output_binary_h_file_ + "_binary_h_matrix.bin";
     output_removed_regions_ = output_removed_regions_ + "_removed_regions.txt";
 
     // Load model
@@ -1632,7 +1634,10 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
         ::iterator m_iterator;
     vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
         ::iterator q_iterator;
-
+    
+    // Keep all h_matrices
+    vcl_vector<double> h_matrices;
+    
     for ( m_iterator = model_fragments_.begin() ; 
           m_iterator != model_fragments_.end() ; ++m_iterator)
     {
@@ -1682,6 +1687,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
         for ( q_iterator = query_fragments_.begin() ; 
               q_iterator != query_fragments_.end() ; ++q_iterator)
         {
+            H_matrix_.fill(0);
 
             scurve_matching_R_=backup;
             double query_area=query_fragments_area_[(*q_iterator).first]
@@ -1990,6 +1996,18 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             binary_app_norm_sim_matrix_[model_id][query_id]=norm_app_cost;
             binary_app_rgb_sim_matrix_[model_id][query_id]=rgb_avg_cost;
 
+            double* data=H_matrix_.data_block();
+            
+            h_matrices.push_back(data[0]);
+            h_matrices.push_back(data[1]);
+            h_matrices.push_back(data[2]);
+            h_matrices.push_back(data[3]);
+            h_matrices.push_back(data[4]);
+            h_matrices.push_back(data[5]);
+            h_matrices.push_back(data[6]);
+            h_matrices.push_back(data[7]);
+            h_matrices.push_back(data[8]);
+            
             query_tree=0;
             model_tree=0;
         }
@@ -2043,6 +2061,26 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
     } 
     
     binary_sim_file.close();
+
+
+    vcl_ofstream binary_h_file;
+    binary_h_file.open(output_binary_h_file_.c_str(),
+                       vcl_ios::out | 
+                       vcl_ios::app | 
+                       vcl_ios::binary);
+
+    matrix_size=h_matrices.size();
+    binary_h_file.write(reinterpret_cast<char *>(&matrix_size),
+                        sizeof(double));
+
+    for ( unsigned int i=0; i < h_matrices.size() ; ++i)
+    {
+        double value=h_matrices[i];
+        binary_h_file.write(reinterpret_cast<char *>(&value),
+                            sizeof(double));
+    }
+
+    binary_h_file.close();
 
     if ( model_sift_filter_)
     {
@@ -4019,7 +4057,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs(
     //                    flag);
     
     // vcl_pair<double,double> p1=
-    //     compute_transformed_polygon(H,model_tree,query_tree);
+    //      compute_transformed_polygon(H,model_tree,query_tree);
 
 }
 
@@ -4329,9 +4367,16 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     //vcl_cerr<<"************ Shape Time taken: "<<shape_time<<" sec"<<vcl_endl;
     
     double norm=0.0;
-
+    vnl_matrix_fixed<double, 3,3 > M;
     if ( curve_list1.size() && curve_list2.size())
     {
+        double width=0.0;
+
+        if ( mirror )
+        {
+            width=query_tree->bbox()->width();
+        }
+
         unsigned int ds=scurve_sample_ds_;
         vgl_h_matrix_2d<double> H;
         compute_similarity(H,
@@ -4340,9 +4385,12 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                            map_list,
                            path_map,
                            ds,
-                           flag);
+                           flag,
+                           model_tree->get_scale_ratio(),
+                           query_tree->get_scale_ratio(),
+                           width);
         
-        vnl_matrix_fixed< double, 3, 3 > M=H.get_matrix();
+        M=H.get_matrix();
         norm=M.frobenius_norm();
     }
     else
@@ -4373,8 +4421,20 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
 
                     flag_mirror=false;
                 }
+                else
+                {
+                    H_matrix_=M;
+                }
+            }
+            else
+            {
+                H_matrix_=M;
             }
         }
+    }
+    else
+    {
+        H_matrix_=M;
     }
 
     frob_norm=norm;
@@ -9808,9 +9868,15 @@ void dbskfg_match_bag_of_fragments::compute_similarity(
     vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
     vcl_vector< pathtable_key >& path_map,
     unsigned int sampling_interval,
-    bool flag)
+    bool flag,
+    double model_scale_ratio,
+    double query_scale_ratio,
+    double width)
 {
-    
+
+    // vcl_ofstream model_stream("model_points.txt");
+    // vcl_ofstream query_stream("query_points.txt");
+
     vcl_vector< rgrl_feature_sptr > pts1;
     vcl_vector< rgrl_feature_sptr > pts2;
     for (unsigned i = 0; i < map_list.size(); i++)
@@ -9819,30 +9885,156 @@ void dbskfg_match_bag_of_fragments::compute_similarity(
         dbskr_scurve_sptr sc1 = curve_list1[i];
         dbskr_scurve_sptr sc2 = curve_list2[i];
         
-        for (unsigned j = 0; j < map_list[i].size(); j+=sampling_interval) 
+        for (unsigned j = 0; j < map_list[i].size(); ++j) 
         {
             vcl_pair<int, int> cor = map_list[i][j];
             
             vnl_vector<double> v(2);
 
-            v[0] = sc1->bdry_minus_pt(cor.first).x();
-            v[1] = sc1->bdry_minus_pt(cor.first).y();
-            pts1.push_back(new rgrl_feature_point(v));
-            
-            v[0] = sc2->bdry_minus_pt(cor.second).x();
-            v[1] = sc2->bdry_minus_pt(cor.second).y();
-            pts2.push_back(new rgrl_feature_point(v));
+            // Shock Point 1 from Model
+            vgl_point_2d<double> ps1  = sc1->sh_pt(cor.first);
+            double radius_ps1         = sc1->time(cor.first);
+            double theta_ps1          = sc1->theta(cor.first);
+            double phi_ps1            = sc1->phi(cor.first);
+
+            vgl_point_2d<double> ps2  = sc2->sh_pt(cor.second);
+            double radius_ps2         = sc2->time(cor.second);
+            double theta_ps2          = sc2->theta(cor.second);
+            double phi_ps2            = sc2->phi(cor.second);
+
+            if ( !flag )
+            {
+                
+                ps1.set(ps1.x()/model_scale_ratio,
+                        ps1.y()/model_scale_ratio);
+                ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
+                        ps2.y()/query_scale_ratio);
+                
+                radius_ps1 = radius_ps1/model_scale_ratio;
+                radius_ps2 = radius_ps2/query_scale_ratio;
+
+                if ( width )
+                {
+                    theta_ps2=vnl_math::pi-theta_ps2;
+                }
+
+                vgl_point_2d<double> pt_p_sc1 = _translatePoint(
+                    ps1, 
+                    theta_ps1+phi_ps1, 
+                    radius_ps1);
+                vgl_point_2d<double> pt_m_sc1 = _translatePoint(
+                    ps1, 
+                    theta_ps1-phi_ps1, 
+                    radius_ps1);
+
+                vgl_point_2d<double> pt_p_sc2 = _translatePoint(
+                    ps2, 
+                    theta_ps2+phi_ps2, 
+                    radius_ps2);
+                vgl_point_2d<double> pt_m_sc2 = _translatePoint(
+                    ps2, 
+                    theta_ps2-phi_ps2, 
+                    radius_ps2);
+
+                // model_stream<<pt_p_sc1.x()<<" "  
+                //             <<pt_p_sc1.y()<<" "
+                //             <<pt_m_sc1.x()<<" "
+                //             <<pt_m_sc1.y()<<vcl_endl;
+
+                // query_stream<<pt_p_sc2.x()<<" "  
+                //             <<pt_p_sc2.y()<<" "
+                //             <<pt_m_sc2.x()<<" "
+                //             <<pt_m_sc2.y()<<vcl_endl;
+                
+                // scurve 1
+                v[0] = pt_m_sc1.x();
+                v[1] = pt_m_sc1.y();
+                pts1.push_back(new rgrl_feature_point(v));
         
-            v[0] = sc1->bdry_plus_pt(cor.first).x();
-            v[1] = sc1->bdry_plus_pt(cor.first).y();
-            pts1.push_back(new rgrl_feature_point(v));
+                v[0] = pt_p_sc1.x();
+                v[1] = pt_p_sc1.y();
+                pts1.push_back(new rgrl_feature_point(v));
+
+                // scurve 2
+                v[0] = pt_m_sc2.x();
+                v[1] = pt_m_sc2.y();
+                pts2.push_back(new rgrl_feature_point(v));
         
-            v[0] = sc2->bdry_plus_pt(cor.second).x();
-            v[1] = sc2->bdry_plus_pt(cor.second).y();
-            pts2.push_back(new rgrl_feature_point(v));
+                v[0] = pt_p_sc2.x();
+                v[1] = pt_p_sc2.y();
+                pts2.push_back(new rgrl_feature_point(v));
+                
+            }
+            else
+            {
+
+                ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
+                        ps1.y()/query_scale_ratio);
+                ps2.set(ps2.x()/model_scale_ratio,
+                        ps2.y()/model_scale_ratio);
+
+                radius_ps1 = radius_ps1/query_scale_ratio;
+                radius_ps2 = radius_ps2/model_scale_ratio;
+
+                if ( width )
+                {
+                    theta_ps1=vnl_math::pi-theta_ps1;
+                }
+
+                vgl_point_2d<double> pt_p_sc1 = _translatePoint(
+                    ps1, 
+                    theta_ps1+phi_ps1, 
+                    radius_ps1);
+                vgl_point_2d<double> pt_m_sc1 = _translatePoint(
+                    ps1, 
+                    theta_ps1-phi_ps1, 
+                    radius_ps1);
+
+                vgl_point_2d<double> pt_p_sc2 = _translatePoint(
+                    ps2, 
+                    theta_ps2+phi_ps2, 
+                    radius_ps2);
+                vgl_point_2d<double> pt_m_sc2 = _translatePoint(
+                    ps2, 
+                    theta_ps2-phi_ps2, 
+                    radius_ps2);
+
+                // query_stream<<pt_p_sc1.x()<<" "  
+                //             <<pt_p_sc1.y()<<" "
+                //             <<pt_m_sc1.x()<<" "
+                //             <<pt_m_sc1.y()<<vcl_endl;
+
+                // model_stream<<pt_p_sc2.x()<<" "  
+                //             <<pt_p_sc2.y()<<" "
+                //             <<pt_m_sc2.x()<<" "
+                //             <<pt_m_sc2.y()<<vcl_endl;
+
+                // scurve 1
+                v[0] = pt_m_sc1.x();
+                v[1] = pt_m_sc1.y();
+                pts1.push_back(new rgrl_feature_point(v));
+        
+                v[0] = pt_p_sc1.x();
+                v[1] = pt_p_sc1.y();
+                pts1.push_back(new rgrl_feature_point(v));
+
+                // scurve 2
+                v[0] = pt_m_sc2.x();
+                v[1] = pt_m_sc2.y();
+                pts2.push_back(new rgrl_feature_point(v));
+        
+                v[0] = pt_p_sc2.x();
+                v[1] = pt_p_sc2.y();
+                pts2.push_back(new rgrl_feature_point(v));
+
+ 
+            }
         }
     }
  
+    // model_stream.close();
+    // query_stream.close();
+
     rgrl_match_set_sptr ms = new 
         rgrl_match_set( rgrl_feature_point::type_id() );
 
@@ -9890,7 +10082,6 @@ void dbskfg_match_bag_of_fragments::compute_similarity(
     t_matrix(2,2) = 1;
     H.set(t_matrix);
     H.set_translation(s_trans->t()[0], s_trans->t()[1]);
-
 }
 
 

@@ -28,7 +28,6 @@
 #include <dbdet/pro/dbdet_sel_storage.h>
 #include <dber/pro/dber_edge_match_storage.h>
 #include <dbdet/pro/dbdet_edgemap_storage.h>
-#include <dbskfg/pro/dbskfg_composite_graph_storage.h>
 //#include <pro/dbrl_match_set_storage.h>
 
 // Displayer header files
@@ -45,7 +44,6 @@
 #include <dber/vis/dber_edge_match_displayer.h>
 #include <dber/vis/dber_instance_displayer.h>
 #include <dbdet/vis/dbdet_edgemap_displayer.h>
-#include <dbskfg/vis/dbskfg_composite_graph_displayer.h>
 //#include <vis/dbrl_match_set_displayer.h>
 
 // Process header files
@@ -117,20 +115,6 @@
 #include <dber/pro/dber_load_instances_process.h>
 #include <dber/pro/dber_save_instances_process.h>
 
-#include <dbskfg/pro/dbskfg_form_composite_graph_process.h>
-#include <dbskfg/pro/dbskfg_detect_transforms_process.h>
-#include <dbskfg/pro/dbskfg_apply_transforms_process.h>
-#include <dbskfg/pro/dbskfg_match_composite_graph_process.h>
-#include <dbskfg/pro/dbskfg_load_composite_graph_process.h>
-#include <dbskfg/pro/dbskfg_read_training_process.h>
-#include <dbskfg/pro/dbskfg_save_composite_graph_process.h>
-#include <dbskfg/pro/dbskfg_extract_fragments_process.h>
-#include <dbskfg/pro/dbskfg_prune_fragments_process.h>
-#include <dbskfg/pro/dbskfg_match_bag_of_fragments_process.h>
-#include <dbskfg/pro/dbskfg_detect_fragments_process.h>
-#include <dbskfg/pro/dbskfg_load_binary_composite_graph_process.h>
-#include <con_graph/pro/dbskfg_form_containment_graph_process.h>
-#include <con_graph/pro/dbskfg_form_containment_graph_region_process.h>
 
 //#include <pro/superimpose_frames_process.h>
 
@@ -152,7 +136,6 @@ int main(int argc, char** argv)
   //REG_DISPLAYER( dbrl_match_set_displayer );
   REG_DISPLAYER( dbskr_shock_patch_displayer );
   REG_DISPLAYER( dbskr_shock_patch_match_displayer );
-  REG_DISPLAYER( dbskfg_composite_graph_displayer );
 
   
   // Register the storage types
@@ -169,7 +152,7 @@ int main(int argc, char** argv)
   //REG_STORAGE( dbrl_match_set_storage );
   REG_STORAGE( dbskr_shock_patch_storage );
   REG_STORAGE( dbskr_shock_patch_match_storage );
-  REG_STORAGE( dbskfg_composite_graph_storage );
+
   
   // Register all the processes
   REG_PROCESS( vidpro1_load_image_process );
@@ -234,20 +217,6 @@ int main(int argc, char** argv)
   REG_PROCESS( dber_edge_db_match_process );
   REG_PROCESS( dber_load_instances_process );
   REG_PROCESS( dber_save_instances_process );
-  REG_PROCESS( dbskfg_form_composite_graph_process );
-  REG_PROCESS( dbskfg_detect_transforms_process );
-  REG_PROCESS( dbskfg_apply_transforms_process );
-  REG_PROCESS( dbskfg_match_composite_graph_process );
-  REG_PROCESS( dbskfg_load_composite_graph_process );
-  REG_PROCESS( dbskfg_save_composite_graph_process );
-  REG_PROCESS( dbskfg_extract_fragments_process );
-  REG_PROCESS( dbskfg_prune_fragments_process );
-  REG_PROCESS( dbskfg_match_bag_of_fragments_process );
-  REG_PROCESS( dbskfg_detect_fragments_process );
-  REG_PROCESS( dbskfg_form_containment_graph_process );
-  REG_PROCESS( dbskfg_form_containment_graph_region_process );
-  REG_PROCESS( dbskfg_read_training_process );
-  REG_PROCESS( dbskfg_load_binary_composite_graph_process );
   //REG_PROCESS( superimpose_frames_process );
 
   shock2d_gui_menu menubar;

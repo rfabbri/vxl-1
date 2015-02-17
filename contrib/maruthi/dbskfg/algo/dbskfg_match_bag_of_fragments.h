@@ -352,6 +352,7 @@ private:
     vcl_string output_match_file_;
     vcl_string output_html_file_;
     vcl_string output_binary_file_;
+    vcl_string output_binary_h_file_;
     vcl_string output_removed_regions_;
 
     // Amirs elastic splice cost 
@@ -414,6 +415,9 @@ private:
     // Raw color space to use for computing color histograms
     RawColorSpace raw_color_space_;
 
+    // Store h matrix
+    vnl_matrix_fixed<double,3,3> H_matrix_;
+
     void load_model(vcl_string model_dir);
     void load_query(vcl_string query_dir);
 
@@ -439,7 +443,10 @@ private:
                             < vcl_pair <int,int> > >& map_list,
                             vcl_vector< pathtable_key >& path_map,
                             unsigned int sampling_interval,
-                            bool flag);
+                            bool flag,
+                            double model_scale_ratio=1.0,
+                            double query_scale_ratio=1.0,
+                            double width=0.0);
 
     vcl_pair<double,double> compute_transformed_polygon(
         vgl_h_matrix_2d<double>& H,
