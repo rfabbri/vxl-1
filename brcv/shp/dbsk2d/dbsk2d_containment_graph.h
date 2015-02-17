@@ -38,7 +38,9 @@ public:
                              double path_threshold,
                              unsigned int loop_type,
                              bool expand_outside=false,
-                             bool train=false);
+                             bool train=false,
+			     bool debug=false,
+			     bool show_shock=false);
 
     //:Destructor
     ~dbsk2d_containment_graph();
@@ -97,6 +99,13 @@ private:
     // write out training data
     bool train_;
 
+    //: debug mode
+    bool debug_;
+
+    //: show shock
+    bool show_shock_;
+
+    
     //: get next available id 
     unsigned int next_available_id()
     {

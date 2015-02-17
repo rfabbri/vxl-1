@@ -72,11 +72,14 @@ dbskfg_form_containment_graph_region_process()
                             (bool) false) ||
         !parameters()->add( "Train" , "-train" , 
                             (bool) false) ||
+	!parameters()->add( "Debug" , "-debug" , 
+                            (bool) false) ||
+        !parameters()->add( "Show shock" , "-show_shock" , 
+                            (bool) false) ||
         !parameters()->add( "Output folder:" , 
                             "-output_folder", bpro1_filepath("", "")) ||
         !parameters()->add( "Output file prefix:" , 
                             "-output_prefix", vcl_string(""))
-
         )
     {
          vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;

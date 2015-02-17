@@ -423,7 +423,8 @@ void dbsk2d_ishock_transform::write_boundary(vcl_string filename)
 
 void dbsk2d_ishock_transform::write_state(
     vcl_string filename,
-    vcl_vector<vgl_polygon<double> >& polys)
+    vcl_vector<vgl_polygon<double> >& polys,
+    bool show_shock)
 {
 
     // create a ps file object
@@ -499,35 +500,41 @@ void dbsk2d_ishock_transform::write_state(
         }
     }
 
-    psfile.set_fg_color(0.0f,1.0f,0.0f);
-
-    //draw the edges first
-    for ( dbsk2d_ishock_graph::edge_iterator curE = 
-              ishock_graph_->all_edges().begin();
-          curE != ishock_graph_->all_edges().end();
-          curE++ ) 
+    if ( show_shock )
     {
-        dbsk2d_ishock_edge* selm = (*curE);
-        vcl_vector<vgl_point_2d<double> > ex_pts= selm->ex_pts();
+	
+	psfile.set_fg_color(0.0f,1.0f,0.0f);
 
-        if ( selm->is_a_contact() )
-        {
-            continue;
-        }
+	//draw the edges first
+	for ( dbsk2d_ishock_graph::edge_iterator curE = 
+		  ishock_graph_->all_edges().begin();
+	      curE != ishock_graph_->all_edges().end();
+	      curE++ ) 
+	{
+	    dbsk2d_ishock_edge* selm = (*curE);
+	    vcl_vector<vgl_point_2d<double> > ex_pts= selm->ex_pts();
 
-        for ( unsigned int i=0; i < (ex_pts.size()-1) ; ++i)
-        {
-            vgl_point_2d<double> s_pt=ex_pts[i];
-            vgl_point_2d<double> e_pt=ex_pts[i+1];
+	    if ( selm->is_a_contact() )
+	    {
+		continue;
+	    }
+
+	    for ( unsigned int i=0; i < (ex_pts.size()-1) ; ++i)
+	    {
+		vgl_point_2d<double> s_pt=ex_pts[i];
+		vgl_point_2d<double> e_pt=ex_pts[i+1];
             
-            psfile.line(
-                s_pt.x(),
-                s_pt.y(),
-                e_pt.x(),
-                e_pt.y());
+		psfile.line(
+			    s_pt.x(),
+			    s_pt.y(),
+			    e_pt.x(),
+			    e_pt.y());
             
-        }
+	    }
+	}
+
     }
+    
 }
 
 

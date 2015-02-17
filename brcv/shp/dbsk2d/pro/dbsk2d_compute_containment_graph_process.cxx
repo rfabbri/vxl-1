@@ -70,6 +70,10 @@ dbsk2d_compute_containment_graph_process()
                             (bool) false) ||
         !parameters()->add( "Train" , "-train" , 
                             (bool) false) ||
+	!parameters()->add( "Debug" , "-debug" , 
+                            (bool) false) ||
+        !parameters()->add( "Show shock" , "-show_shock" , 
+                            (bool) false) ||	
         !parameters()->add( "Output folder:" , 
                             "-output_folder", bpro1_filepath("", "")) ||
         !parameters()->add( "Output file prefix:" , 
@@ -144,7 +148,10 @@ bool dbsk2d_compute_containment_graph_process::execute()
     double gap_distance(2.0);
     bool outside(false);
     bool train(false);
+    bool debug(false);
+    bool show_shock(false);
 
+    
     bpro1_filepath output_folder_filepath;
     this->parameters()->get_value("-output_folder", output_folder_filepath);
     vcl_string output_folder = output_folder_filepath.path;
@@ -160,6 +167,9 @@ bool dbsk2d_compute_containment_graph_process::execute()
     parameters()->get_value( "-gap_distance" , gap_distance );
     parameters()->get_value( "-outside" ,  outside ); 
     parameters()->get_value( "-train" , train );
+    parameters()->get_value( "-debug" , debug );
+    parameters()->get_value( "-show_shock" , show_shock );
+    
 
     bool status = true;
     
@@ -171,6 +181,16 @@ bool dbsk2d_compute_containment_graph_process::execute()
     vidpro1_image_storage_sptr frame_image;
     frame_image.vertical_cast(input_data_[0][1]);
 
+    if ( !dbsk2d_transform_manager::Instance().gPb_loaded() )
+    {
+	vcl_cout<<"gPb data not loaded, setting all thresholds to negative"
+	       <<vcl_endl;
+	
+	transform_threshold  = -1.0;
+	preprocess_threshold = -1.0;
+	path_threshold       = -1.0;
+    }
+    
     // Set other thresholds
     dbsk2d_transform_manager::Instance().set_threshold(transform_threshold);
     dbsk2d_transform_manager::Instance().set_output_frag_folder(output_folder);
@@ -197,7 +217,7 @@ bool dbsk2d_compute_containment_graph_process::execute()
            output_region_stats_file);
             
     }
-
+    
     // Redo input vsol storage
 
     // 2) Set id equivalent to what they are
@@ -312,14 +332,14 @@ bool dbsk2d_compute_containment_graph_process::execute()
         
     }
 
-    vcl_map< double, vsol_spatial_object_2d_sptr >::iterator it;
-    for ( it = low_prob_curves.begin() ; it != low_prob_curves.end() ; ++it)
-    {
-        if ( (*it).first < .13 )
-        {
-            input_vsol->remove_object((*it).second);
-        }
-    }
+    // vcl_map< double, vsol_spatial_object_2d_sptr >::iterator it;
+    // for ( it = low_prob_curves.begin() ; it != low_prob_curves.end() ; ++it)
+    // {
+    //     if ( (*it).first < .13 )
+    //     {
+    //         input_vsol->remove_object((*it).second);
+    //     }
+    // }
     
     if ( remove_closed )
     {
@@ -428,12 +448,18 @@ bool dbsk2d_compute_containment_graph_process::execute()
                                     path_threshold,
                                     loop_cost,
                                     outside,
-                                    train);
+                                    train,
+				    debug,
+				    show_shock);
 
     cgraph.construct_graph();
     cgraph.write_stats(stats_filestream);
-    // cgraph.write_graph(filename);
 
+    if ( debug )
+    {
+	cgraph.write_graph(filename);
+    }
+    
 
     if ( remove_closed )
     {

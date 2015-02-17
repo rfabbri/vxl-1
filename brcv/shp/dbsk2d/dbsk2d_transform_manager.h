@@ -174,6 +174,21 @@ public:
     // : get closest point
     dbsk2d_ishock_bpoint* get_anchor_pt(vcl_pair<dbsk2d_ishock_bpoint*,
                                         dbsk2d_ishock_bline*>& pair );
+
+    //: see if gpb data loaded
+    bool gPb_loaded()
+    {
+	if ( gPb_image_.ni() )
+	{
+	    return true;
+	    
+	}
+	else
+	{
+	    return false;
+	}
+    }
+    
 private:
 
     //: store image
