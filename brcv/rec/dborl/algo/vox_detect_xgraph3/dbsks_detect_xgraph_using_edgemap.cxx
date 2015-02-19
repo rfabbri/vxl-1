@@ -1016,15 +1016,15 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 					vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
 
 					// shape change term, now just the differece between radius of shock nodes, but shape is more complex representation
-					double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
-					vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
+					//double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
+					//vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
 
 					//(TODO: change to differece between velocity, delta_x, delta_y, delta_psi)
 
 					// only consider the dets which is not too diff in bg as prototype
 					real_confidence += (20 - appearance_cost);
-					if(!is_initial)
-						real_confidence += (10 - shape_trans_cost); 
+					//if(!is_initial)
+						//real_confidence += (10 - shape_trans_cost); 
 					vcl_cout << " real confidence: " << real_confidence << vcl_endl;
 					dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
 					det->compute_bbox();
@@ -1069,15 +1069,15 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 						vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
 
 						// shape change term, now just the differece between radius of shock nodes, but shape is more complex representation
-						double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
-						vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
+						//double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
+						//vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
 
 						//(TODO: change to differece between velocity, delta_x, delta_y, delta_psi)
 
 						// only consider the dets which is not too diff in bg as prototype
 						real_confidence += (20 - appearance_cost);
-						if(!is_initial)
-							real_confidence += (10 - shape_trans_cost);
+						//if(!is_initial)
+							//real_confidence += (10 - shape_trans_cost);
 						real_confidence *= 0.9;
 						vcl_cout << " real confidence: " << real_confidence << vcl_endl;
 						dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
@@ -1122,15 +1122,15 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 						vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
 
 						// shape change term, now just the differece between radius of shock nodes, but shape is more complex representation
-						double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
-						vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
+						//double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
+						//vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
 
 						//(TODO: change to differece between velocity, delta_x, delta_y, delta_psi)
 
 						// only consider the dets which is not too diff in bg as prototype
 						real_confidence += (20 - appearance_cost);
-						if(!is_initial)
-							real_confidence += (10 - shape_trans_cost);
+						//if(!is_initial)
+							//real_confidence += (10 - shape_trans_cost);
 						real_confidence *= 0.9;
 						vcl_cout << " real confidence: " << real_confidence << vcl_endl;
 						dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
