@@ -1035,8 +1035,8 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 			raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
   			vcl_sort(raw_dets_all_windows.begin(), raw_dets_all_windows.end(), dbsks_decreasing_confidence);
 
-			if(!is_initial && raw_dets_all_windows.size()<10)
-			{
+			//if(!is_initial)
+			//{
 				//////////////////////////////// detect based on geom model left  ///////////////////////////////////////////////////////////////
 				vcl_cout << "\n Detecting based on Left-Turnning Geom Model" << vcl_endl;
 				engine.xgraph_geom_ = xgraph_geom_L;
@@ -1139,7 +1139,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 					}
 					raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
 				}
-			}
+			//}
 		}
 
 
