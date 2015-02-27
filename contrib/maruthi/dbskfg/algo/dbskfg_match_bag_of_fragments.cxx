@@ -51,7 +51,7 @@ extern "C" {
 #include <string.h>
 #include <vul/vul_timer.h>
 #include <vnl/vnl_vector.h>
-
+#include <vnl/vnl_matrix_ref.h>
 #include <vnl/algo/vnl_symmetric_eigensystem.h>
 
 #include <rgrl/rgrl_est_similarity2d.h>
@@ -2063,24 +2063,24 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
     binary_sim_file.close();
 
 
-    vcl_ofstream binary_h_file;
-    binary_h_file.open(output_binary_h_file_.c_str(),
-                       vcl_ios::out | 
-                       vcl_ios::app | 
-                       vcl_ios::binary);
+    // vcl_ofstream binary_h_file;
+    // binary_h_file.open(output_binary_h_file_.c_str(),
+    //                    vcl_ios::out | 
+    //                    vcl_ios::app | 
+    //                    vcl_ios::binary);
 
-    matrix_size=h_matrices.size();
-    binary_h_file.write(reinterpret_cast<char *>(&matrix_size),
-                        sizeof(double));
+    // matrix_size=h_matrices.size();
+    // binary_h_file.write(reinterpret_cast<char *>(&matrix_size),
+    //                     sizeof(double));
 
-    for ( unsigned int i=0; i < h_matrices.size() ; ++i)
-    {
-        double value=h_matrices[i];
-        binary_h_file.write(reinterpret_cast<char *>(&value),
-                            sizeof(double));
-    }
+    // for ( unsigned int i=0; i < h_matrices.size() ; ++i)
+    // {
+    //     double value=h_matrices[i];
+    //     binary_h_file.write(reinterpret_cast<char *>(&value),
+    //                         sizeof(double));
+    // }
 
-    binary_h_file.close();
+    // binary_h_file.close();
 
     if ( model_sift_filter_)
     {
@@ -4385,10 +4385,10 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                            map_list,
                            path_map,
                            ds,
-                           flag,
-                           model_tree->get_scale_ratio(),
-                           query_tree->get_scale_ratio(),
-                           width);
+                           flag);
+                           // model_tree->get_scale_ratio(),
+                           // query_tree->get_scale_ratio(),
+                           // width);
         
         M=H.get_matrix();
         norm=M.frobenius_norm();
@@ -7458,6 +7458,169 @@ compute_dense_rgb_sift_cost(
     return app_diff;
 }
 
+vnl_vector<vl_sift_pix> dbskfg_match_bag_of_fragments::
+compress_sift(vl_sift_pix* red_sift,
+              vl_sift_pix* green_sift,
+              vl_sift_pix* blue_sift,
+              int nbp)
+{
+
+    int angle_bins=8;
+    vnl_vector<vl_sift_pix> output(3*angle_bins*nbp*nbp,0);
+
+
+    vnl_matrix_ref<vl_sift_pix> red_model_data(16,8,red_sift);
+    vnl_matrix_ref<vl_sift_pix> green_model_data(16,8,green_sift);
+    vnl_matrix_ref<vl_sift_pix> blue_model_data(16,8,blue_sift);
+
+    if ( nbp == 2 )
+    {
+        
+        // Start with red
+        output.update(
+            red_model_data.get_row(0)+
+            red_model_data.get_row(1)+
+            red_model_data.get_row(4)+
+            red_model_data.get_row(5),0*angle_bins);
+        
+        output.update(
+            red_model_data.get_row(2)+
+            red_model_data.get_row(3)+
+            red_model_data.get_row(6)+
+            red_model_data.get_row(7),1*angle_bins);
+
+        output.update(
+            red_model_data.get_row(8)+
+            red_model_data.get_row(9)+
+            red_model_data.get_row(12)+
+            red_model_data.get_row(13),2*angle_bins);
+
+        output.update(
+            red_model_data.get_row(10)+
+            red_model_data.get_row(11)+
+            red_model_data.get_row(14)+
+            red_model_data.get_row(15),3*angle_bins);
+
+
+        // Now do green
+        output.update(
+            green_model_data.get_row(0)+
+            green_model_data.get_row(1)+
+            green_model_data.get_row(4)+
+            green_model_data.get_row(5),4*angle_bins);
+        
+        output.update(
+            green_model_data.get_row(2)+
+            green_model_data.get_row(3)+
+            green_model_data.get_row(6)+
+            green_model_data.get_row(7),5*angle_bins);
+
+        output.update(
+            green_model_data.get_row(8)+
+            green_model_data.get_row(9)+
+            green_model_data.get_row(12)+
+            green_model_data.get_row(13),6*angle_bins);
+
+        output.update(
+            green_model_data.get_row(10)+
+            green_model_data.get_row(11)+
+            green_model_data.get_row(14)+
+            green_model_data.get_row(15),7*angle_bins);
+
+
+        // Now do blue
+        output.update(
+            blue_model_data.get_row(0)+
+            blue_model_data.get_row(1)+
+            blue_model_data.get_row(4)+
+            blue_model_data.get_row(5),8*angle_bins);
+        
+        output.update(
+            blue_model_data.get_row(2)+
+            blue_model_data.get_row(3)+
+            blue_model_data.get_row(6)+
+            blue_model_data.get_row(7),9*angle_bins);
+
+        output.update(
+            blue_model_data.get_row(8)+
+            blue_model_data.get_row(9)+
+            blue_model_data.get_row(12)+
+            blue_model_data.get_row(13),10*angle_bins);
+
+        output.update(
+            blue_model_data.get_row(10)+
+            blue_model_data.get_row(11)+
+            blue_model_data.get_row(14)+
+            blue_model_data.get_row(15),11*angle_bins);
+
+
+
+    }
+    else
+    {
+        // Do red first
+        output.update(
+            red_model_data.get_row(0)+
+            red_model_data.get_row(1)+
+            red_model_data.get_row(2)+
+            red_model_data.get_row(3)+
+            red_model_data.get_row(4)+
+            red_model_data.get_row(5)+
+            red_model_data.get_row(6)+
+            red_model_data.get_row(7)+
+            red_model_data.get_row(8)+
+            red_model_data.get_row(9)+
+            red_model_data.get_row(10)+
+            red_model_data.get_row(11)+
+            red_model_data.get_row(12)+
+            red_model_data.get_row(13)+
+            red_model_data.get_row(14)+
+            red_model_data.get_row(15),0*angle_bins);
+
+        // Do green next
+        output.update(
+            green_model_data.get_row(0)+
+            green_model_data.get_row(1)+
+            green_model_data.get_row(2)+
+            green_model_data.get_row(3)+
+            green_model_data.get_row(4)+
+            green_model_data.get_row(5)+
+            green_model_data.get_row(6)+
+            green_model_data.get_row(7)+
+            green_model_data.get_row(8)+
+            green_model_data.get_row(9)+
+            green_model_data.get_row(10)+
+            green_model_data.get_row(11)+
+            green_model_data.get_row(12)+
+            green_model_data.get_row(13)+
+            green_model_data.get_row(14)+
+            green_model_data.get_row(15),1*angle_bins);
+
+
+        // Do blue next
+        output.update(
+            blue_model_data.get_row(0)+
+            blue_model_data.get_row(1)+
+            blue_model_data.get_row(2)+
+            blue_model_data.get_row(3)+
+            blue_model_data.get_row(4)+
+            blue_model_data.get_row(5)+
+            blue_model_data.get_row(6)+
+            blue_model_data.get_row(7)+
+            blue_model_data.get_row(8)+
+            blue_model_data.get_row(9)+
+            blue_model_data.get_row(10)+
+            blue_model_data.get_row(11)+
+            blue_model_data.get_row(12)+
+            blue_model_data.get_row(13)+
+            blue_model_data.get_row(14)+
+            blue_model_data.get_row(15),1*angle_bins);
+            
+
+    }
+
+    return output;
+}
 
 vcl_pair<double,double> dbskfg_match_bag_of_fragments::
 compute_o2p_dense(

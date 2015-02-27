@@ -612,6 +612,11 @@ private:
         double query_sift_scale=1.0,
         vcl_string prefix="");
 
+    vnl_vector<vl_sift_pix> compress_sift(vl_sift_pix* red_sift,
+                                          vl_sift_pix* green_sift,
+                                          vl_sift_pix* blue_sift,
+                                          int nbp);
+
     vcl_pair<double,double> compute_o2p_dense(
         vcl_vector<dbskr_scurve_sptr>& curve_list1,
         vcl_vector<dbskr_scurve_sptr>& curve_list2,
