@@ -7614,7 +7614,7 @@ compress_sift(vl_sift_pix* red_sift,
             blue_model_data.get_row(12)+
             blue_model_data.get_row(13)+
             blue_model_data.get_row(14)+
-            blue_model_data.get_row(15),1*angle_bins);
+            blue_model_data.get_row(15),2*angle_bins);
             
 
     }
@@ -9528,10 +9528,8 @@ double dbskfg_match_bag_of_fragments::descr_cost(
                                 query_theta);
 
 
-    vl_sift_pix result_red[1];
-    vl_sift_pix result_green[1];
-    vl_sift_pix result_blue[1];
-    vl_sift_pix result_final[1];
+  
+    double min_radius = vnl_math::min(model_radius*2.0,query_radius*2.0);
 
     vnl_vector<vl_sift_pix> descr1(384,0.0);
     vnl_vector<vl_sift_pix> descr2(384,0.0);
@@ -9549,11 +9547,65 @@ double dbskfg_match_bag_of_fragments::descr_cost(
         
     }
 
+
+    // vnl_vector<vl_sift_pix> descr1;
+    // vnl_vector<vl_sift_pix> descr2;
+
+    // int nbp=4;
+    // if ( min_radius >= 8.0 )
+    // {
+    //     nbp=4;
+    //     descr1.set_size(384);
+    //     descr2.set_size(384);
+    //     for ( unsigned int d=0; d < 128 ; ++d)
+    //     {
+    //         descr1.put(d,descr_ps1_red[d]);
+    //         descr1.put(d+128,descr_ps1_green[d]);
+    //         descr1.put(d+256,descr_ps1_blue[d]);
+            
+    //         descr2.put(d,descr_ps2_red[d]);
+    //         descr2.put(d+128,descr_ps2_green[d]);
+    //         descr2.put(d+256,descr_ps2_blue[d]);
+        
+        
+    //     }
+
+    // }
+    // else if ( min_radius < 8.0 && min_radius >= 4.0 )
+    // {
+    //     nbp=2;
+    //     descr1=compress_sift(descr_ps1_red,
+    //                          descr_ps1_green,
+    //                          descr_ps1_blue,
+    //                          nbp);
+    //     descr2=compress_sift(descr_ps2_red,
+    //                          descr_ps2_green,
+    //                          descr_ps2_blue,
+    //                          nbp);
+            
+    // }
+    // else
+    // {
+    //     nbp=1;
+    //     descr1=compress_sift(descr_ps1_red,
+    //                          descr_ps1_green,
+    //                          descr_ps1_blue,
+    //                          nbp);
+    //     descr2=compress_sift(descr_ps2_red,
+    //                          descr_ps2_green,
+    //                          descr_ps2_blue,
+    //                          nbp);
+
+    // }
+
+
     descr1.normalize();
     descr2.normalize();
 
+    vl_sift_pix result_final[1];
+
     vl_eval_vector_comparison_on_all_pairs_f(result_final,
-                                             384,
+                                             descr1.size(),
                                              descr1.data_block(),
                                              1,
                                              descr2.data_block(),
