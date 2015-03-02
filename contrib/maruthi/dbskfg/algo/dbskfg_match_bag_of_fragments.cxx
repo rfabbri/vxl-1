@@ -6979,41 +6979,41 @@ compute_dense_rgb_sift_cost(
                         model_radius+=context;
                         query_radius+=context;
 
-                        dbskfg_compute_sift sift_process(
-                            ps1,
-                            model_radius*2.0,
-                            theta_ps1,
-                            model_scale_ratio,
-                            model_sift_filter,
-                            ps2,
-                            query_radius*2.0,
-                            theta_ps2,
-                            query_scale_ratio,
-                            query_sift_filter,
-                            model_red_grad_data,
-                            query_red_grad_data,
-                            model_green_grad_data,
-                            query_green_grad_data,
-                            model_blue_grad_data,
-                            query_blue_grad_data);
-
-                        local_distance += sift_process.distance();
-
-                        // local_distance += descr_cost(
+                        // dbskfg_compute_sift sift_process(
                         //     ps1,
-                        //     model_radius,
+                        //     model_radius*2.0,
                         //     theta_ps1,
+                        //     model_scale_ratio,
+                        //     model_sift_filter,
                         //     ps2,
-                        //     query_radius,
+                        //     query_radius*2.0,
                         //     theta_ps2,
+                        //     query_scale_ratio,
+                        //     query_sift_filter,
                         //     model_red_grad_data,
                         //     query_red_grad_data,
                         //     model_green_grad_data,
                         //     query_green_grad_data,
                         //     model_blue_grad_data,
-                        //     query_blue_grad_data,
-                        //     model_sift_filter,
-                        //     query_sift_filter);
+                        //     query_blue_grad_data);
+
+                        // local_distance += sift_process.distance();
+
+                        local_distance += descr_cost(
+                            ps1,
+                            model_radius,
+                            theta_ps1,
+                            ps2,
+                            query_radius,
+                            theta_ps2,
+                            model_red_grad_data,
+                            query_red_grad_data,
+                            model_green_grad_data,
+                            query_green_grad_data,
+                            model_blue_grad_data,
+                            query_blue_grad_data,
+                            model_sift_filter,
+                            query_sift_filter);
 
                         // local_distance += descr_cost_enriched_sift(
                         //     ps1,
@@ -7150,41 +7150,41 @@ compute_dense_rgb_sift_cost(
                         model_radius+=context;
                         query_radius+=context;
 
-                        dbskfg_compute_sift sift_process(
-                            ps2,
-                            model_radius*2.0,
-                            theta_ps2,
-                            model_scale_ratio,
-                            model_sift_filter,
-                            ps1,
-                            query_radius*2.0,
-                            theta_ps1,
-                            query_scale_ratio,
-                            query_sift_filter,
-                            model_red_grad_data,
-                            query_red_grad_data,
-                            model_green_grad_data,
-                            query_green_grad_data,
-                            model_blue_grad_data,
-                            query_blue_grad_data);
-
-                        local_distance += sift_process.distance();
-
-                        // local_distance += descr_cost(
+                        // dbskfg_compute_sift sift_process(
                         //     ps2,
-                        //     model_radius,
+                        //     model_radius*2.0,
                         //     theta_ps2,
+                        //     model_scale_ratio,
+                        //     model_sift_filter,
                         //     ps1,
-                        //     query_radius,
+                        //     query_radius*2.0,
                         //     theta_ps1,
+                        //     query_scale_ratio,
+                        //     query_sift_filter,
                         //     model_red_grad_data,
                         //     query_red_grad_data,
                         //     model_green_grad_data,
                         //     query_green_grad_data,
                         //     model_blue_grad_data,
-                        //     query_blue_grad_data,
-                        //     model_sift_filter,
-                        //     query_sift_filter);
+                        //     query_blue_grad_data);
+
+                        // local_distance += sift_process.distance();
+
+                        local_distance += descr_cost(
+                            ps2,
+                            model_radius,
+                            theta_ps2,
+                            ps1,
+                            query_radius,
+                            theta_ps1,
+                            model_red_grad_data,
+                            query_red_grad_data,
+                            model_green_grad_data,
+                            query_green_grad_data,
+                            model_blue_grad_data,
+                            query_blue_grad_data,
+                            model_sift_filter,
+                            query_sift_filter);
 
                         // local_distance += descr_cost_enriched_sift(
                         //     ps2,
@@ -9547,6 +9547,31 @@ double dbskfg_match_bag_of_fragments::descr_cost(
         
     }
 
+    // {
+    //     vcl_ofstream model_stream("opp_sift_model.txt");
+    //     vcl_ofstream query_stream("opp_sift_query.txt");
+
+    //     for ( unsigned int d=0; d < 128 ; ++d)
+    //     {
+    //         model_stream<<descr_ps1_red[d]<<vcl_endl;
+    //         query_stream<<descr_ps2_red[d]<<vcl_endl;
+    //     }
+
+    //     for ( unsigned int d=0; d < 128 ; ++d)
+    //     {
+    //         model_stream<<descr_ps1_green[d]<<vcl_endl;
+    //         query_stream<<descr_ps2_green[d]<<vcl_endl;
+    //     }
+
+    //     for ( unsigned int d=0; d < 128 ; ++d)
+    //     {
+    //         model_stream<<descr_ps1_blue[d]<<vcl_endl;
+    //         query_stream<<descr_ps2_blue[d]<<vcl_endl;
+    //     }
+
+    //     model_stream.close();
+    //     query_stream.close();
+    // }
 
     // vnl_vector<vl_sift_pix> descr1;
     // vnl_vector<vl_sift_pix> descr2;
