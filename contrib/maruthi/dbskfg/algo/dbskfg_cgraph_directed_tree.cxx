@@ -1345,6 +1345,164 @@ void dbskfg_cgraph_directed_tree::compute_scurve_polygons
 }
 
 
+//------------------------------------------------------------------------------
+//: uses the already existing scurves, so if circular_ends = true 
+// while acquiring the tree then the outline will have circular completions
+void dbskfg_cgraph_directed_tree::compute_sift_tree
+(vcl_vector<vl_sift_pix>& descriptors)
+{
+  //: find the set of darts to use
+  vcl_vector<unsigned> to_use;
+  for (unsigned i = 0; i < dart_cnt_; i++) {
+    if (leaf_[i]) {
+      to_use.push_back(i);
+      continue;
+    }
+
+    if (leaf_[mate_[i]]) 
+      continue;
+    
+    bool contain = false;
+    for (unsigned j = 0; j < to_use.size(); j++) {
+      if (to_use[j] == mate_[i]) {
+        contain = true;
+        break;
+      }
+    }
+
+    if (!contain)
+      to_use.push_back(i);
+  }
+
+  //: now concatanate the scurves  
+  unsigned j = 0;
+  for (unsigned i = 0; i < dart_cnt_; i++) 
+  { 
+
+    if (i == to_use[j]) 
+    {
+
+      vcl_pair<int, int> p;
+      p.first = i;
+      p.second = i;
+      vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
+          dart_path_scurve_map_.find(p);
+      
+      dbskr_scurve_sptr sc = (iter->second)->coarse;
+      for ( int cx=0; cx < sc->num_points() ; ++cx)
+      {
+          
+          // Shock Point 1 from Model
+          vgl_point_2d<double> medial_pt = sc->sh_pt(cx);
+          double medial_radius           = sc->time(cx);
+          double medial_theta            = sc->theta(cx);
+          
+          compute_descriptor(medial_pt,
+                             medial_radius,
+                             medial_theta,
+                             descriptors);
+
+          for ( int rx=1; rx < medial_radius ; ++rx )
+          {
+
+              double plus_radius = medial_radius - rx;
+              double minus_radius = -plus_radius;
+
+              vgl_point_2d<double> plus_pt = sc->fragment_pt(cx,
+                                                             plus_radius);
+
+              vgl_point_2d<double> minus_pt = sc->fragment_pt(cx,
+                                                              minus_radius);
+
+              
+              compute_descriptor(plus_pt,
+                                 plus_radius,
+                                 medial_theta,
+                                 descriptors);
+
+              compute_descriptor(minus_pt,
+                                 minus_radius,
+                                 medial_theta,
+                                 descriptors);
+
+
+          }
+
+      }
+      j++;
+    }
+  }
+
+}
+
+//: compute descriptor
+void dbskfg_cgraph_directed_tree::compute_descriptor(
+    vgl_point_2d<double>& model_pt,
+    double& model_radius,
+    double& model_theta,
+    vcl_vector<vl_sift_pix>& descriptors)
+{
+
+    vl_sift_pix descr_ps1_red[128];
+    memset(descr_ps1_red, 0, sizeof(vl_sift_pix)*128);
+    
+    vl_sift_pix descr_ps1_green[128];
+    memset(descr_ps1_green, 0, sizeof(vl_sift_pix)*128);
+    
+    vl_sift_pix descr_ps1_blue[128];
+    memset(descr_ps1_blue, 0, sizeof(vl_sift_pix)*128);
+
+    vl_sift_calc_raw_descriptor(sift_filter_,
+                                red_grad_data_,
+                                descr_ps1_red,
+                                sift_filter_->width,
+                                sift_filter_->height,
+                                model_pt.x(),
+                                model_pt.y(),
+                                model_radius,
+                                model_theta);
+
+    vl_sift_calc_raw_descriptor(sift_filter_,
+                                green_grad_data_,
+                                descr_ps1_green,
+                                sift_filter_->width,
+                                sift_filter_->height,
+                                model_pt.x(),
+                                model_pt.y(),
+                                model_radius,
+                                model_theta);
+
+    vl_sift_calc_raw_descriptor(sift_filter_,
+                                blue_grad_data_,
+                                descr_ps1_blue,
+                                sift_filter_->width,
+                                sift_filter_->height,
+                                model_pt.x(),
+                                model_pt.y(),
+                                model_radius,
+                                model_theta);
+
+    
+    vnl_vector<vl_sift_pix> descr1(384,0.0);
+    
+    for ( unsigned int dx=0; dx < 128 ; ++dx)
+    {
+        descr1.put(dx,descr_ps1_red[dx]);
+        descr1.put(dx+128,descr_ps1_green[dx]);
+        descr1.put(dx+256,descr_ps1_blue[dx]);
+    }
+
+    descr1.normalize();
+
+    for ( unsigned int rx=0; rx < descr1.size() ; ++rx)
+    {
+        descriptors.push_back(descr1[rx]);
+    }
+
+
+
+}
+
 //: return the total length of the reconstructed boundary with this tree
 // (trees from the same shock graph may return different values 
 // since they may be constructed with different parameters,

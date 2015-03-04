@@ -153,6 +153,8 @@ public:
   void compute_reconstructed_boundary_polygon(vgl_polygon<double>& poly);
 
   void compute_scurve_polygons(vcl_string& prefix);
+  
+  void compute_sift_tree(vcl_vector<vl_sift_pix>& descriptors);
 
   // compute appeance
   bool compute_appearance()
@@ -167,6 +169,11 @@ public:
       /*     return true; */
       /* } */
   }
+
+  void compute_descriptor( vgl_point_2d<double>& model_pt,
+                           double& model_radius,
+                           double& model_theta,
+                           vcl_vector<vl_sift_pix>& descriptors);
 
   // get bounding box
   vsol_box_2d_sptr bbox(){return bbox_;}

@@ -2201,6 +2201,7 @@ bool dbskfg_match_bag_of_fragments::train_bag_of_words(int keywords)
             ((*m_iterator).second.second, elastic_splice_cost_, 
              circular_ends_, combined_edit_);
 
+        model_tree->compute_sift_tree(descriptors);
 
     }
 
