@@ -83,6 +83,8 @@ dbskfg_match_bag_of_fragments_process::dbskfg_match_bag_of_fragments_process()
         !parameters()->add("reference area",
                            "-ref_area", (double) 10000.0f)||
         !parameters()->add("mask gradient", "-mask",(bool)false) ||
+        !parameters()->add("train bow", "-bow",(bool)false) ||
+        !parameters()->add("keywords", "-centers",(int)256) ||
         !parameters()->add("shape algorithm", "-shape_alg",choices,1) ||
         !parameters()->add("grad color space", "-grad_color_space",
                            grad_color_choices,1) ||
@@ -198,6 +200,8 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     unsigned int color_alg      = 1;
     unsigned int raw_color      = 1;
     bool mask_grad              = false;
+    bool bow                    = false;
+    bool centers                = 256;
 
     parameters()->get_value("-elastic_splice_cost"  , elastic_splice_cost); 
     parameters()->get_value("-scurve_sample_ds"     , scurve_sample_ds);
@@ -220,6 +224,8 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     parameters()->get_value("-grad_color_space"     , color_alg );
     parameters()->get_value("-mask"                 , mask_grad );
     parameters()->get_value("-raw_color_space"      , raw_color );
+    parameters()->get_value("-bow"                  , bow);
+    parameters()->get_value("-centers"              , centers);
 
     dbskfg_match_bag_of_fragments::ShapeAlgorithmArea shape_alg_area=
         dbskfg_match_bag_of_fragments::SCALE_TO_MEAN;
@@ -315,22 +321,29 @@ bool dbskfg_match_bag_of_fragments_process::execute()
    
     bool status(true);
     
-    if (!scale_bbox)
+    if ( bow )
     {
-        if ( !scale_root && !scale_area && !scale_length) 
-        {
-            match_frags.binary_match();
-        }
-        else
-        {
-            match_frags.binary_scale_root_match();
-        }
+
+        match_frags.train_bag_of_words(centers);
     }
     else
     {
-        match_frags.binary_scale_match();
+        if (!scale_bbox)
+        {
+            if ( !scale_root && !scale_area && !scale_length) 
+            {
+                match_frags.binary_match();
+            }
+            else
+            {
+                match_frags.binary_scale_root_match();
+            }
+        }
+        else
+        {
+            match_frags.binary_scale_match();
+        }
     }
-
     //Set storage with new transform graph
     clear_output();
 

@@ -131,6 +131,9 @@ public:
     //: Match the fragments
     bool binary_scale_root_match();
 
+    //: train bag of words computation
+    bool train_bag_of_words(int keywords);
+ 
     //: binary scale to mean shape 
     bool binary_scale_mean_shape();
 

@@ -44,6 +44,7 @@
 extern "C" {
 #include <vl/imopv.h>
 #include <vl/generic.h>
+#include <vl/kmeans.h>
 }
 
 #include <vgl/vgl_homg_point_2d.h>
@@ -2119,6 +2120,150 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
     return true;
 }
 
+
+bool dbskfg_match_bag_of_fragments::train_bag_of_words(int keywords)
+{
+    // Let time how long this takes
+    // Start timer
+    vul_timer t;
+
+    if ( model_fragments_.size() == 0 || query_fragments_.size() == 0 )
+    {
+        vcl_cerr<<"Matching fragments sets have one that is zero"<<vcl_endl;
+        return false;
+    }
+
+    // keep track of sift features in vcl vector
+    vcl_vector<vl_sift_pix> descriptors;
+
+    // Loop over model and query
+    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+        ::iterator m_iterator;
+    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+        ::iterator q_iterator;
+
+    for ( m_iterator = model_fragments_.begin() ; 
+          m_iterator != model_fragments_.end() ; ++m_iterator)
+    {
+        vl_sift_pix* model_images_grad_data=
+            model_images_grad_data_.count((*m_iterator).second.first)?
+            model_images_grad_data_[(*m_iterator).second.first]:
+            0;
+
+        VlSiftFilt*model_images_sift_filter=
+            model_images_sift_filter_.count((*m_iterator).second.first)?
+            model_images_sift_filter_[(*m_iterator).second.first]:
+            0;
+
+        vl_sift_pix* model_images_grad_data_red=
+            model_images_grad_data_red_.count((*m_iterator).second.first)?
+            model_images_grad_data_red_[(*m_iterator).second.first]:
+            0;
+
+        vl_sift_pix* model_images_grad_data_green=
+            model_images_grad_data_green_.count((*m_iterator).second.first)?
+            model_images_grad_data_green_[(*m_iterator).second.first]:
+            0;
+
+        vl_sift_pix* model_images_grad_data_blue=
+            model_images_grad_data_blue_.count((*m_iterator).second.first)?
+            model_images_grad_data_blue_[(*m_iterator).second.first]:
+            0;
+
+        vil_image_view<double> model_channel1(model_images_chan1_data_
+                                               [(*m_iterator).second.first]);
+        
+        vil_image_view<double> model_channel2(model_images_chan2_data_
+                                               [(*m_iterator).second.first]);
+
+        vil_image_view<double> model_channel3(model_images_chan3_data_
+                                               [(*m_iterator).second.first]);
+    
+        //: prepare the trees also
+        dbskfg_cgraph_directed_tree_sptr model_tree = new 
+            dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
+                                        scurve_interpolate_ds_, 
+                                        scurve_matching_R_,
+                                        false,
+                                        area_weight_,
+                                        model_images_grad_data,
+                                        model_images_sift_filter,
+                                        model_images_grad_data_red,
+                                        model_images_grad_data_green,
+                                        model_images_grad_data_blue,
+                                        (*m_iterator).first,
+                                        &model_channel1,
+                                        &model_channel2,
+                                        &model_channel3);
+
+
+        bool f1=model_tree->acquire
+            ((*m_iterator).second.second, elastic_splice_cost_, 
+             circular_ends_, combined_edit_);
+
+
+    }
+
+    vl_sift_pix* centers(0);
+    vl_sift_pix* data=descriptors.data();
+    int dimension  = 384;
+    int numData    = descriptors.size()/384;
+    int numCenters = 256;
+
+    vcl_cout<<"Clustering "<<numData<<" opp sift descriptors "<<vcl_endl;
+
+    // Let time how long this takes
+    // Start timer
+    vul_timer t2;
+
+    // Use float data and the L2 distance for clustering
+    VlKMeans* kmeans = vl_kmeans_new (VL_TYPE_FLOAT,VlDistanceL2) ;
+    
+    // Use Lloyd algorithm
+    vl_kmeans_set_algorithm (kmeans, VlKMeansElkan) ;
+
+    // Initialize the cluster centers by randomly sampling the data
+    vl_kmeans_init_centers_plus_plus(kmeans, data, dimension, 
+                                     numData, numCenters) ;
+    
+
+    // Run at most 100 iterations of cluster refinement using Lloyd algorithm
+    vl_kmeans_set_max_num_iterations (kmeans, 100) ;
+    vl_kmeans_refine_centers (kmeans, data, numData) ;
+
+    // Obtain the cluster centers
+    centers = (vl_sift_pix*) vl_kmeans_get_centers(kmeans) ;
+
+    double vox_time2 = t2.real()/1000.0;
+    t2.mark();
+    vcl_cout<<vcl_endl;
+    vcl_cout<<"Clustering Time: "
+            <<vox_time2<<" sec"<<vcl_endl;
+
+    
+    // Write out centers
+    vcl_ofstream center_stream("bag_of_words_sift.txt");
+
+    center_stream<<numCenters<<vcl_endl;
+    center_stream<<dimension<<vcl_endl;
+
+    for ( unsigned int c=0; c < numCenters*dimension ; ++c)
+    {
+        center_stream<<centers[c]<<vcl_endl;
+
+    }
+
+    center_stream.close();
+
+    double vox_time = t.real()/1000.0;
+    t.mark();
+    vcl_cout<<vcl_endl;
+    vcl_cout<<"TrainTime: "
+            <<vox_time<<" sec"<<vcl_endl;
+    return true;
+
+
+}
 bool dbskfg_match_bag_of_fragments::binary_scale_mean_shape()
 {
     // Let time how long this takes
