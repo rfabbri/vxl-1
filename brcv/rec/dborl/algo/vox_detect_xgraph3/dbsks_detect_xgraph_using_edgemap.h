@@ -81,6 +81,15 @@ public:
 	vcl_vector<dbsks_det_desc_xgraph_sptr > prev_dets);
 
 
+  //: A Post Process of ranking results and print out cost terms
+  bool rank_detection_results(const dbdet_edgemap_sptr& edgemap, 
+    const dbsksp_xshock_graph_sptr& xgraph,
+    double confidence_lower_threshold,
+    const vcl_string& work_dir,
+    vcl_vector<dbsks_det_desc_xgraph_sptr >& dets,
+	vcl_vector<dbsks_det_desc_xgraph_sptr > prev_dets);
+
+
   // Utilities------------------------------------------------------------------
 
   //: Compute black/white mask for an edge map: 255 at edge pixels and 0 otherwise

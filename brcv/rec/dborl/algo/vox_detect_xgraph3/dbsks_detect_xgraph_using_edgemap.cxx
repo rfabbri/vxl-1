@@ -46,12 +46,13 @@
 #include <vul/vul_timer.h>
 #include <vul/vul_sprintf.h>
 
-//#include <vcl_iostream.h>
-//#include <vcl_fstream.h>
+#include <vcl_iostream.h>
+#include <vcl_fstream.h>
 #include <vcl_sstream.h>
 
 static bool is_edges_covered_in_window (vgl_box_2d<int > window, vcl_vector<dbdet_edgel*> edgels);
 
+static bool b_rank_order_results = true;
 //------------------------------------------------------------------------------
 //:
 bool dbsks_detect_xgraph_using_edgemap::
@@ -137,6 +138,10 @@ execute()
     if (dbsks_load_detections_from_folder(storage_folder, dets))
     {
       vcl_cout << "\nThis image has been processed. All records are loaded back.\n";
+	  if(prev_dets.size()>0 && b_rank_order_results)
+		  this->rank_detection_results(actual_edgemap, actual_xgraph, min_accepted_confidence, 
+        storage_folder, dets, prev_dets);
+	  this->output_det_list = dets;
 	  return true;
     }
     else
@@ -768,7 +773,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 	  int w_min_y = edgemap->nrows()-1;
 	  int w_max_y = 0;
 
-	  for (int id = 0; id< vcl_min(int(prev_dets.size()), 5); id++)
+	  for (int id = 0; id< vcl_min(int(prev_dets.size()), 2); id++)
 	  {
 		if(prev_dets[id]->bbox()->get_min_x() < w_min_x)
 			w_min_x = prev_dets[id]->bbox()->get_min_x();
@@ -780,7 +785,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 			w_max_y = prev_dets[id]->bbox()->get_max_y();
 	  }
   	  vcl_cout << w_min_x << " " << w_max_x << " " << w_min_y << " " << w_max_y << vcl_endl;
-	  vgl_box_2d<int> wd_0(vcl_max(w_min_x-40, 0), vcl_min(w_max_x+40, int(edgemap->ncols()-1)), vcl_max(0, w_min_y-40), vcl_min(int(edgemap->nrows()-1),w_max_y+40));
+	  vgl_box_2d<int> wd_0(vcl_max(w_min_x-60, 0), vcl_min(w_max_x+60, int(edgemap->ncols()-1)), vcl_max(0, w_min_y-60), vcl_min(int(edgemap->nrows()-1),w_max_y+60));
 
 	  // just save this window.
 	  windows.push_back(wd_0);
@@ -1476,5 +1481,130 @@ compute_shape_trans_cost(dbsksp_xshock_graph_sptr& cur_xgraph, dbsksp_xshock_gra
 
 	return cost;
 
+}
+
+
+bool dbsks_detect_xgraph_using_edgemap::
+	rank_detection_results(const dbdet_edgemap_sptr& edgemap, 
+							const dbsksp_xshock_graph_sptr& xgraph,
+							double confidence_lower_threshold,
+							const vcl_string& work_dir,
+							vcl_vector<dbsks_det_desc_xgraph_sptr >& dets,
+							vcl_vector<dbsks_det_desc_xgraph_sptr > prev_dets)
+{
+
+	//> Contour-Chamfer-Matching cost function...................................
+	vcl_cout << "\n> Constructing a likelihood function based on CCM cost ...";
+
+	dbsks_xshock_ccm_likelihood ccm_like;
+	ccm_like.set_edgemap(edgemap);
+	ccm_like.set_biarc_sampler(&this->biarc_sampler);
+	ccm_like.set_ccm_model(xgraph_ccm);
+	vcl_cout << " [ OK ]\n";
+
+
+  
+    vcl_vector<vgl_box_2d<int > > windows; // list of detection windows
+
+
+	// allocate window conners based on best prev dets
+	int w_min_x = edgemap->ncols()-1;
+	int w_max_x = 0;
+	int w_min_y = edgemap->nrows()-1;
+	int w_max_y = 0;
+
+	for (int id = 0; id< vcl_min(int(prev_dets.size()), 2); id++)
+	{
+	if(prev_dets[id]->bbox()->get_min_x() < w_min_x)
+		w_min_x = prev_dets[id]->bbox()->get_min_x();
+	if(prev_dets[id]->bbox()->get_max_x() > w_max_x)
+		w_max_x = prev_dets[id]->bbox()->get_max_x();
+	if(prev_dets[id]->bbox()->get_min_y() < w_min_y)
+		w_min_y = prev_dets[id]->bbox()->get_min_y();
+	if(prev_dets[id]->bbox()->get_max_y() > w_max_y)
+		w_max_y = prev_dets[id]->bbox()->get_max_y();
+	}
+	vcl_cout << w_min_x << " " << w_max_x << " " << w_min_y << " " << w_max_y << vcl_endl;
+	vgl_box_2d<int> wd_0(vcl_max(w_min_x-60, 0), vcl_min(w_max_x+60, int(edgemap->ncols()-1)), vcl_max(0, w_min_y-60), vcl_min(int(edgemap->nrows()-1),w_max_y+60));
+
+	// just save this window.
+	windows.push_back(wd_0);
+
+	vcl_ofstream myfile;
+	vcl_string out_conf_file = work_folder + "_conf.txt";
+   	vcl_cout << "\nSaving conficence of detections in " << out_conf_file << vcl_endl;
+    myfile.open (out_conf_file.c_str());
+
+    for (unsigned iw =0; iw < windows.size(); ++iw)
+    {
+		vgl_box_2d<int > window = windows[iw];
+		vcl_cout 
+		  << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+		  << "\n> Window index = " << iw 
+		  << "\n    [xmin ymin xmax ymax] = "
+		  << "[" << window.min_x() 
+		  << " " << window.min_y() 
+		  << " " << window.max_x()
+		  << " " << window.max_y() << "]\n";
+
+		vcl_vector<dbsks_det_desc_xgraph_sptr > dets_window;
+
+		//> Compute ccm for a region of interest only
+		bool cid_status = ccm_like.compute_internal_data(window);
+		if(!cid_status)
+		{
+		    vcl_cout << "CCM Likelihood Error in this window. Skip..." << vcl_endl;
+		    continue;
+		}
+
+
+		vil_image_view<vxl_byte> L_, prev_L_;
+		vil_convert_planes_to_grey(this->source_image, L_);
+		vil_convert_planes_to_grey(this->prev_source_image, prev_L_);
+
+		for (unsigned i =0; i < dets.size(); ++i)
+		{
+			dbsksp_xshock_graph_sptr sol_xgraph = dets[i]->xgraph();
+
+			// for detection with enough edge support, add appearance confidence into it.
+			// edge matching cost term
+			double edge_confidence = float(ccm_like.loglike_xgraph(sol_xgraph, vcl_vector<unsigned >(), false));
+			vcl_cout <<"\nedge_confidence:" << edge_confidence << vcl_endl;	
+
+			// appearance term
+			double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
+			vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
+
+			// appearance term2
+			double appearance_cost2 = compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[0]->xgraph(), prev_L_);
+			if(prev_dets.size()>1)
+				appearance_cost2 = vnl_math::min(compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[0]->xgraph(), prev_L_), compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[1]->xgraph(), prev_L_));
+			vcl_cout <<"appearance_cost2:" << appearance_cost2 << vcl_endl;
+
+			// shape change term, now just the differece between radius of shock nodes, but shape is more complex representation
+			double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[0]->xgraph());
+			if(prev_dets.size()>1)
+				shape_trans_cost = vnl_math::min(compute_shape_trans_cost(sol_xgraph, prev_dets[0]->xgraph()), compute_shape_trans_cost(sol_xgraph, prev_dets[1]->xgraph()));
+			vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
+
+			double real_confidence = (edge_confidence - appearance_cost - appearance_cost2 - shape_trans_cost);
+			vcl_cout << " real confidence: " << real_confidence << vcl_endl;
+			dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
+			det->compute_bbox();
+			dets_window.push_back(det);
+
+			vcl_vector<double> conf_vector(4, 0);
+			conf_vector[0] = edge_confidence;
+			conf_vector[1] = -appearance_cost;
+			conf_vector[2] = -appearance_cost2;
+			conf_vector[3] = -shape_trans_cost;
+			
+		
+		  myfile << conf_vector[0] << " " << conf_vector[1] << " "<< conf_vector[2] << " "<< conf_vector[3] << " " << real_confidence <<"\n";
+
+		}
+  		myfile.close();
+	}
+	return true;
 }
 
