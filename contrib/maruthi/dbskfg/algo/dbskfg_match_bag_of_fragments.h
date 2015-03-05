@@ -28,6 +28,7 @@
 #include <vil/vil_image_resource_sptr.h>
 #include <vl/sift.h>
 #include <vl/mathop.h>
+#include <vl/kdtree.h>
 
 #include <dbskr/dbskr_scurve.h>
 #include <vcl_utility.h>
@@ -134,6 +135,9 @@ public:
     //: train bag of words computation
     bool train_bag_of_words(int keywords);
  
+    //: upload training
+    void set_bow_train(vcl_string& file_path);
+
     //: binary scale to mean shape 
     bool binary_scale_mean_shape();
 
@@ -420,6 +424,12 @@ private:
 
     // Store h matrix
     vnl_matrix_fixed<double,3,3> H_matrix_;
+
+    // Store kd forest
+    VlKDForest* forest_;
+
+    // Store searcher
+    VlKDForestSearcher* searcher_;
 
     void load_model(vcl_string model_dir);
     void load_query(vcl_string query_dir);

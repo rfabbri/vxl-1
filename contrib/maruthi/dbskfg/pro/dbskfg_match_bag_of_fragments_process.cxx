@@ -43,6 +43,8 @@ dbskfg_match_bag_of_fragments_process::dbskfg_match_bag_of_fragments_process()
                             "-query_folder" , bpro1_filepath("", "")) ||
         !parameters()->add( "Model image file:" , 
                             "-model_image_file" , bpro1_filepath("", "")) ||
+        !parameters()->add( "Train BOW File:" , 
+                            "-bow_file" , bpro1_filepath("", "")) ||
         !parameters()->add( "Output folder:", 
                             "-output_folder", bpro1_filepath("", "")) ||
         !parameters()->add( "Output file prefix:" , 
@@ -168,6 +170,11 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     bpro1_filepath model_image_file;
     this->parameters()->get_value("-model_image_file" , model_image_file);
     vcl_string model_image_path=model_image_file.path;
+
+
+    bpro1_filepath bow_file;
+    this->parameters()->get_value("-bow_file" , bow_file);
+    vcl_string bow_path=bow_file.path;
     
     bpro1_filepath output_folder_filepath;
     this->parameters()->get_value("-output_folder", output_folder_filepath);
@@ -323,7 +330,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     
     if ( bow )
     {
-
+        match_frags.set_bow_train(bow_path);
         match_frags.train_bag_of_words(centers);
     }
     else

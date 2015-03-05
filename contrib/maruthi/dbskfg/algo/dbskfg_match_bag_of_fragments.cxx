@@ -658,6 +658,18 @@ dbskfg_match_bag_of_fragments::~dbskfg_match_bag_of_fragments()
         vl_free(query_grad_data_);
         query_grad_data_=0;
     }
+
+    if ( forest_ )
+    {
+        vl_sift_pix* tree_data = (vl_sift_pix*) forest_->data;
+        vl_free(tree_data);
+        vl_kdforest_delete(forest_);
+    }
+    
+    if ( searcher_ )
+    {
+        vl_kdforestsearcher_delete(searcher_);
+    }
     
 }
 
@@ -2229,11 +2241,14 @@ bool dbskfg_match_bag_of_fragments::train_bag_of_words(int keywords)
     
 
     // Run at most 100 iterations of cluster refinement using Lloyd algorithm
+    vl_kmeans_set_verbosity	(kmeans,1);
     vl_kmeans_set_max_num_iterations (kmeans, 100) ;
     vl_kmeans_refine_centers (kmeans, data, numData) ;
 
     // Obtain the cluster centers
     centers = (vl_sift_pix*) vl_kmeans_get_centers(kmeans) ;
+
+    vl_kmeans_delete(kmeans);
 
     double vox_time2 = t2.real()/1000.0;
     t2.mark();
@@ -2265,6 +2280,45 @@ bool dbskfg_match_bag_of_fragments::train_bag_of_words(int keywords)
 
 
 }
+
+void dbskfg_match_bag_of_fragments::set_bow_train(vcl_string& file_path)
+{
+
+    vcl_cout<<"Loading bow training data"<<vcl_endl;
+
+    int dimension  = 384;
+    int numCenters = 0;
+
+    vl_sift_pix* data(0);
+
+
+    vcl_ifstream myfile (file_path.c_str());
+    if (myfile.is_open())
+    {
+        myfile>>numCenters;
+        myfile>>dimension;
+        
+        data = (vl_sift_pix*) vl_malloc(
+            sizeof(vl_sift_pix)*dimension*numCenters);
+        
+        for ( unsigned int c=0; c < numCenters ; ++c)
+        {
+            myfile>>data[c];
+
+        }
+    }
+
+    myfile.close();
+
+
+    /* KDTree, L2 comparison metric, dimension 128, 1 tree, L1 metric */
+    forest_ = vl_kdforest_new(VL_TYPE_FLOAT, 384, 1, VlDistanceL2);
+
+    // Construct searcher
+    searcher_  = vl_kdforest_new_searcher(forest_);
+
+}
+
 bool dbskfg_match_bag_of_fragments::binary_scale_mean_shape()
 {
     // Let time how long this takes
