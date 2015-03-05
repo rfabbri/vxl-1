@@ -139,6 +139,8 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
       shape_alg_(shape_alg),
       grad_color_space_(grad_color_space),
       raw_color_space_(raw_color_space),
+      forest_(0),
+      searcher_(0),
       model_image_(model_image),
       query_image_(query_image),
       model_grad_data_(0),
@@ -667,10 +669,10 @@ dbskfg_match_bag_of_fragments::~dbskfg_match_bag_of_fragments()
         vl_kdforest_delete(forest_);
     }
     
-    if ( searcher_ )
-    {
-        vl_kdforestsearcher_delete(searcher_);
-    }
+    // if ( searcher_ )
+    // {
+    //     vl_kdforestsearcher_delete(searcher_);
+    // }
     
 }
 
@@ -2222,7 +2224,7 @@ bool dbskfg_match_bag_of_fragments::train_bag_of_words(int keywords)
     vl_sift_pix* data=descriptors.data();
     int dimension  = 384;
     int numData    = descriptors.size()/384;
-    int numCenters = 256;
+    int numCenters = keywords;
 
     vcl_cout<<"Clustering "<<numData<<" opp sift descriptors "<<vcl_endl;
 
@@ -2285,7 +2287,7 @@ bool dbskfg_match_bag_of_fragments::train_bag_of_words(int keywords)
 void dbskfg_match_bag_of_fragments::set_bow_train(vcl_string& file_path)
 {
 
-    vcl_cout<<"Loading bow training data"<<vcl_endl;
+    vcl_cout<<"Loading bow training file: "<<file_path<<vcl_endl;
 
     int dimension  = 384;
     int numCenters = 0;
@@ -2299,6 +2301,9 @@ void dbskfg_match_bag_of_fragments::set_bow_train(vcl_string& file_path)
         myfile>>numCenters;
         myfile>>dimension;
         
+        vcl_cout<<"Num Centers: "<<numCenters<<vcl_endl;
+        vcl_cout<<"Dimension:   "<<dimension<<vcl_endl;
+
         data = (vl_sift_pix*) vl_malloc(
             sizeof(vl_sift_pix)*dimension*numCenters);
         
@@ -2314,6 +2319,11 @@ void dbskfg_match_bag_of_fragments::set_bow_train(vcl_string& file_path)
 
     /* KDTree, L2 comparison metric, dimension 128, 1 tree, L1 metric */
     forest_ = vl_kdforest_new(VL_TYPE_FLOAT, 384, 1, VlDistanceL2);
+
+    // Build tree
+    vl_kdforest_build(forest_,
+                      numCenters,
+                      data);
 
     // Construct searcher
     searcher_  = vl_kdforest_new_searcher(forest_);
@@ -4721,7 +4731,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
             query_tree->get_root_node_radius(),
             title.str());
 
-        // vcl_pair<double,double> mutual_info=compute_mi(
+        // vcl_pair<double,double> sift_rgb_cost=compute_mi(
         //     curve_list1,
         //     curve_list2,
         //     map_list,
@@ -7878,7 +7888,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_mi(
 
 
     vl_sift_pix range= forest_->numData;
-    unsigned int bins= 256;
+    unsigned int bins= forest_->numData;
 
     bsta_histogram<vl_sift_pix> model_hist(range, bins);
     bsta_histogram<vl_sift_pix> query_hist(range, bins);
@@ -8276,6 +8286,9 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_mi(
 
     double mi=model_entropy+query_entropy-joint_entropy;
     double metric_mi=joint_entropy-mi;
+
+    // vcl_cout<<"Mutual Information is: "<<mi<<vcl_endl;
+    // vcl_cout<<"Mutual Information metric: "<<metric_mi<<vcl_endl;
 
     vcl_pair<double,double> distance=vcl_make_pair(mi,metric_mi);
     return distance;

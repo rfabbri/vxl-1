@@ -208,7 +208,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     unsigned int raw_color      = 1;
     bool mask_grad              = false;
     bool bow                    = false;
-    bool centers                = 256;
+    int centers                 = 256;
 
     parameters()->get_value("-elastic_splice_cost"  , elastic_splice_cost); 
     parameters()->get_value("-scurve_sample_ds"     , scurve_sample_ds);
@@ -330,11 +330,15 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     
     if ( bow )
     {
-        match_frags.set_bow_train(bow_path);
         match_frags.train_bag_of_words(centers);
     }
     else
     {
+        if ( bow_path.size() )
+        {
+            match_frags.set_bow_train(bow_path);
+        }
+
         if (!scale_bbox)
         {
             if ( !scale_root && !scale_area && !scale_length) 
