@@ -32,6 +32,7 @@
 #include <vil/vil_bilin_interp.h>
 #include <vil/vil_flip.h>
 #include <bsta/bsta_histogram.h>
+#include <bsta/bsta_joint_histogram.h>
 #include <bsta/bsta_joint_histogram_3d.h>
 #include <bsta/bsta_spherical_histogram.h>
 #include <bbas/bil/algo/bil_color_conversions.h>
@@ -1232,7 +1233,7 @@ bool dbskfg_match_bag_of_fragments::binary_match()
     }
 
     // write out data
-    write_out_dart_data();
+    // write_out_dart_data();
 
     vcl_ofstream binary_sim_file;
     binary_sim_file.open(output_binary_file_.c_str(),
@@ -4719,6 +4720,31 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
             model_tree->get_root_node_radius(),
             query_tree->get_root_node_radius(),
             title.str());
+
+        // vcl_pair<double,double> mutual_info=compute_mi(
+        //     curve_list1,
+        //     curve_list2,
+        //     map_list,
+        //     path_map,
+        //     dart_distances,
+        //     *model_channel1,
+        //     *model_channel2,
+        //     *model_channel3,
+        //     *query_channel1,
+        //     *query_channel2,
+        //     *query_channel3,
+        //     flag,
+        //     width,
+        //     model_red_grad_data,
+        //     query_red_grad_data,
+        //     model_green_grad_data,
+        //     query_green_grad_data,
+        //     model_blue_grad_data,
+        //     query_blue_grad_data,
+        //     model_sift_filter,
+        //     query_sift_filter,
+        //     model_tree->get_scale_ratio(),
+        //     query_tree->get_scale_ratio());
         
         // vcl_pair<double,double> app_cost=compute_body_centric_sift(
         //     curve_list1,
@@ -4756,81 +4782,81 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //     flag,
         //     width);
          
-        unsigned int model_tag=model_tree->get_id();
+        // unsigned int model_tag=model_tree->get_id();
         
-        if ( model_dart_distances_.count(model_tag))
-        {
-            model_dart_distances_.erase(model_tag);
-            model_dart_curves_.erase(model_tag);
-        }
+        // if ( model_dart_distances_.count(model_tag))
+        // {
+        //     model_dart_distances_.erase(model_tag);
+        //     model_dart_curves_.erase(model_tag);
+        // }
 
-        if ( !flag )
-        {
-            // Get matching pairs
-            for (unsigned m = 0; m < map_list.size(); m++) 
-            {
-                dbskr_scurve_sptr mc = curve_list1[m];
-                vcl_pair<unsigned int,unsigned int> query_key(
-                    curve_list2[m]->get_curve_id().first,
-                    curve_list2[m]->get_curve_id().second);
-                if ( !query_dart_curves_.count(query_key))
-                {
-                    vcl_pair<unsigned int,unsigned int> temp
-                        = query_key;
-                    query_key.first=temp.second;
-                    query_key.second=temp.first;                        
-                }
+        // if ( !flag )
+        // {
+        //     // Get matching pairs
+        //     for (unsigned m = 0; m < map_list.size(); m++) 
+        //     {
+        //         dbskr_scurve_sptr mc = curve_list1[m];
+        //         vcl_pair<unsigned int,unsigned int> query_key(
+        //             curve_list2[m]->get_curve_id().first,
+        //             curve_list2[m]->get_curve_id().second);
+        //         if ( !query_dart_curves_.count(query_key))
+        //         {
+        //             vcl_pair<unsigned int,unsigned int> temp
+        //                 = query_key;
+        //             query_key.first=temp.second;
+        //             query_key.second=temp.first;                        
+        //         }
                 
-                double cost=dart_distances[m];
+        //         double cost=dart_distances[m];
                 
-                vcl_pair<vcl_pair<int,int>,double> key1;
-                vcl_pair<vcl_pair<int,int>,dbskr_scurve_sptr> key2;
+        //         vcl_pair<vcl_pair<int,int>,double> key1;
+        //         vcl_pair<vcl_pair<int,int>,dbskr_scurve_sptr> key2;
                     
-                key1.first=query_key;
-                key1.second=cost;
+        //         key1.first=query_key;
+        //         key1.second=cost;
                 
-                key2.first=query_key;
-                key2.second=mc;
+        //         key2.first=query_key;
+        //         key2.second=mc;
                 
-                model_dart_distances_[model_tag].push_back(key1);
-                model_dart_curves_[model_tag].push_back(key2);
-            }
+        //         model_dart_distances_[model_tag].push_back(key1);
+        //         model_dart_curves_[model_tag].push_back(key2);
+        //     }
                 
             
-        }
-        else
-        {
-            // Get matching pairs
-            for (unsigned m = 0; m < map_list.size(); m++) 
-            {
-                dbskr_scurve_sptr mc = curve_list2[m];
-                vcl_pair<unsigned int,unsigned int> query_key(
-                    curve_list1[m]->get_curve_id().first,
-                    curve_list1[m]->get_curve_id().second);
-                if ( !query_dart_curves_.count(query_key))
-                {
-                    vcl_pair<unsigned int,unsigned int> temp
-                        = query_key;
-                    query_key.first=temp.second;
-                    query_key.second=temp.first;
+        // }
+        // else
+        // {
+        //     // Get matching pairs
+        //     for (unsigned m = 0; m < map_list.size(); m++) 
+        //     {
+        //         dbskr_scurve_sptr mc = curve_list2[m];
+        //         vcl_pair<unsigned int,unsigned int> query_key(
+        //             curve_list1[m]->get_curve_id().first,
+        //             curve_list1[m]->get_curve_id().second);
+        //         if ( !query_dart_curves_.count(query_key))
+        //         {
+        //             vcl_pair<unsigned int,unsigned int> temp
+        //                 = query_key;
+        //             query_key.first=temp.second;
+        //             query_key.second=temp.first;
                     
-                }
-                double cost=dart_distances[m];
+        //         }
+        //         double cost=dart_distances[m];
                 
-                vcl_pair<vcl_pair<int,int>,double> key1;
-                vcl_pair<vcl_pair<int,int>,dbskr_scurve_sptr> key2;
+        //         vcl_pair<vcl_pair<int,int>,double> key1;
+        //         vcl_pair<vcl_pair<int,int>,dbskr_scurve_sptr> key2;
                 
-                key1.first=query_key;
-                key1.second=cost;
+        //         key1.first=query_key;
+        //         key1.second=cost;
                 
-                key2.first=query_key;
-                key2.second=mc;
+        //         key2.first=query_key;
+        //         key2.second=mc;
                 
-                model_dart_distances_[model_tag].push_back(key1);
-                model_dart_curves_[model_tag].push_back(key2);
+        //         model_dart_distances_[model_tag].push_back(key1);
+        //         model_dart_curves_[model_tag].push_back(key2);
                 
-            }
-        }
+        //     }
+        // }
     
             
         double app_time = app_timer.real()/1000.0;
@@ -7820,6 +7846,439 @@ compress_sift(vl_sift_pix* red_sift,
     }
 
     return output;
+}
+
+
+vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_mi(
+    vcl_vector<dbskr_scurve_sptr>& curve_list1,
+    vcl_vector<dbskr_scurve_sptr>& curve_list2,
+    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    vcl_vector< pathtable_key >& path_map,
+    vcl_vector<double>& dart_distances,
+    vil_image_view<double>& model_channel_1,
+    vil_image_view<double>& model_channel_2,
+    vil_image_view<double>& model_channel_3,
+    vil_image_view<double>& query_channel_1,
+    vil_image_view<double>& query_channel_2,
+    vil_image_view<double>& query_channel_3,
+    bool flag,
+    double width,
+    vl_sift_pix* model_red_grad_data,
+    vl_sift_pix* query_red_grad_data,
+    vl_sift_pix* model_green_grad_data,
+    vl_sift_pix* query_green_grad_data,
+    vl_sift_pix* model_blue_grad_data,
+    vl_sift_pix* query_blue_grad_data,
+    VlSiftFilt* model_sift_filter,
+    VlSiftFilt* query_sift_filter,
+    double model_scale_ratio,
+    double query_scale_ratio)
+{
+
+
+
+    vl_sift_pix range= forest_->numData;
+    unsigned int bins= 256;
+
+    bsta_histogram<vl_sift_pix> model_hist(range, bins);
+    bsta_histogram<vl_sift_pix> query_hist(range, bins);
+    
+    bsta_joint_histogram<vl_sift_pix> joint_hist(range, bins);
+
+    // Get matching pairs
+    for (unsigned i = 0; i < map_list.size(); i++) 
+    {
+        dbskr_scurve_sptr sc1 = curve_list1[i];
+        dbskr_scurve_sptr sc2 = curve_list2[i];
+
+        
+        double step_size=1.0;
+
+        for (unsigned j = 0; j < map_list[i].size(); ++j) 
+        {
+            vcl_pair<int, int> cor = map_list[i][j];
+            
+            // Shock Point 1 from Model
+            double radius_ps1        = sc1->time(cor.first);
+            double theta_ps1         = sc1->theta(cor.first);
+
+            // Shock Point 2 from Query
+            double radius_ps2        = sc2->time(cor.second);
+            double theta_ps2         = sc2->theta(cor.second);
+
+            double r1=0;
+            double R1=radius_ps1;
+            double R2=radius_ps2;
+            double ratio = (R2/R1);
+
+            do
+            {
+                double r2=r1*ratio;
+                
+                vgl_point_2d<double> ps1;
+                vgl_point_2d<double> ps2;
+
+                vgl_point_2d<double> ps1_plus;
+                vgl_point_2d<double> ps1_minus;
+
+                vgl_point_2d<double> ps2_plus;
+                vgl_point_2d<double> ps2_minus;
+
+
+                if ( r1 == 0 )
+                {
+                    ps1=sc1->sh_pt(cor.first);
+                    ps2=sc2->sh_pt(cor.second);
+
+                    ps1_plus=ps1;
+                    ps1_minus=ps1;
+
+                    ps2_plus=ps2;
+                    ps2_minus=ps2;
+
+                }
+                else
+                {
+                    ps1_plus=sc1->fragment_pt(cor.first,r1);
+                    ps2_plus=sc2->fragment_pt(cor.second,r2);
+
+                    ps1_minus=sc1->fragment_pt(cor.first,-r1);
+                    ps2_minus=sc2->fragment_pt(cor.second,-r2);
+                    
+                    ps1=ps1_plus;
+                    ps2=ps2_plus;
+                }
+ 
+                if ( !flag )
+                {   
+                    ps1.set(ps1.x()/model_scale_ratio,
+                            ps1.y()/model_scale_ratio);
+                    ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
+                            ps2.y()/query_scale_ratio);
+
+                    ps1_plus.set(ps1_plus.x()/model_scale_ratio,
+                                 ps1_plus.y()/model_scale_ratio);
+                    ps2_plus.set(vcl_fabs(width-(ps2_plus.x()/
+                                                 query_scale_ratio)),
+                                 ps2_plus.y()/query_scale_ratio);
+                    
+                    ps1_minus.set(ps1_minus.x()/model_scale_ratio,
+                                  ps1_minus.y()/model_scale_ratio);
+                    ps2_minus.set(vcl_fabs(width-(ps2_minus.x()/
+                                                  query_scale_ratio)),
+                                  ps2_minus.y()/query_scale_ratio);
+                                       
+
+                    if ( width > 0 )
+                    {
+                        ps2.set(query_channel_1.ni()-1-ps2.x(),
+                                ps2.y());
+
+                        ps2_plus.set(query_channel_1.ni()-1-
+                                     ps2_plus.x(),
+                                     ps2_plus.y());
+                        
+                        ps2_minus.set(query_channel_1.ni()-
+                                      1-ps2_minus.x(),
+                                      ps2_minus.y());
+                    }
+                    
+                    
+                    double model_radius=((R1-r1)/model_scale_ratio)/2.0;
+                    double query_radius=((R2-r2)/query_scale_ratio)/2.0;
+
+                    if ( r1 == 0 )
+                    {
+
+                        vnl_vector<vl_sift_pix> model_descriptor(384,0.0);
+                        vnl_vector<vl_sift_pix> query_descriptor(384,0.0);
+   
+                        compute_descr(ps1,
+                                      model_radius,
+                                      theta_ps1,
+                                      model_red_grad_data,
+                                      model_green_grad_data,
+                                      model_blue_grad_data,
+                                      model_sift_filter,
+                                      model_descriptor);
+                        
+                        compute_descr(ps2,
+                                      query_radius,
+                                      theta_ps2,
+                                      query_red_grad_data,
+                                      query_green_grad_data,
+                                      query_blue_grad_data,
+                                      query_sift_filter,
+                                      query_descriptor);
+                        
+
+                        VlKDForestNeighbor model_keyword[0];
+                        VlKDForestNeighbor query_keyword[1];
+
+                        int nvisited = vl_kdforestsearcher_query(
+                            searcher_, model_keyword, 1, model_descriptor
+                            .data_block());
+
+                        nvisited = vl_kdforestsearcher_query(
+                            searcher_, query_keyword, 1, query_descriptor
+                            .data_block());
+                        
+                        model_hist.upcount(model_keyword[0].index,1.0f);
+                        query_hist.upcount(query_keyword[0].index,1.0f);
+                        joint_hist.upcount(model_keyword[0].index,1.0f,
+                                           query_keyword[0].index,1.0f);
+                    }
+                    else
+                    {
+                        vnl_vector<vl_sift_pix> model_plus_descriptor(384,0.0);
+                        vnl_vector<vl_sift_pix> query_plus_descriptor(384,0.0);
+
+                        vnl_vector<vl_sift_pix> model_minus_descriptor(384,0.0);
+                        vnl_vector<vl_sift_pix> query_minus_descriptor(384,0.0);
+   
+                        compute_descr(ps1_plus,
+                                      model_radius,
+                                      theta_ps1,
+                                      model_red_grad_data,
+                                      model_green_grad_data,
+                                      model_blue_grad_data,
+                                      model_sift_filter,
+                                      model_plus_descriptor);
+
+                        compute_descr(ps1_minus,
+                                      model_radius,
+                                      theta_ps1,
+                                      model_red_grad_data,
+                                      model_green_grad_data,
+                                      model_blue_grad_data,
+                                      model_sift_filter,
+                                      model_minus_descriptor);
+
+                        
+                        compute_descr(ps2_plus,
+                                      query_radius,
+                                      theta_ps2,
+                                      query_red_grad_data,
+                                      query_green_grad_data,
+                                      query_blue_grad_data,
+                                      query_sift_filter,
+                                      query_plus_descriptor);
+
+                        compute_descr(ps2_minus,
+                                      query_radius,
+                                      theta_ps2,
+                                      query_red_grad_data,
+                                      query_green_grad_data,
+                                      query_blue_grad_data,
+                                      query_sift_filter,
+                                      query_minus_descriptor);
+
+
+                        VlKDForestNeighbor model_plus_keyword[1];
+                        VlKDForestNeighbor model_minus_keyword[1];
+
+                        int nvisited = vl_kdforestsearcher_query(
+                            searcher_, model_plus_keyword, 1, 
+                            model_plus_descriptor.data_block());
+
+                        nvisited = vl_kdforestsearcher_query(
+                            searcher_, model_minus_keyword, 1, 
+                            model_minus_descriptor.data_block());
+
+                        VlKDForestNeighbor query_plus_keyword[1];
+                        VlKDForestNeighbor query_minus_keyword[1];
+
+                        nvisited = vl_kdforestsearcher_query(
+                            searcher_, query_plus_keyword, 1, 
+                            query_plus_descriptor.data_block());
+
+                        nvisited = vl_kdforestsearcher_query(
+                            searcher_, query_minus_keyword, 1, 
+                            query_minus_descriptor.data_block());
+
+                        model_hist.upcount(model_plus_keyword[0].index,1.0f);
+                        query_hist.upcount(query_plus_keyword[0].index,1.0f);
+                        joint_hist.upcount(model_plus_keyword[0].index,1.0f,
+                                           query_plus_keyword[0].index,1.0f);
+
+                        model_hist.upcount(model_minus_keyword[0].index,1.0f);
+                        query_hist.upcount(query_minus_keyword[0].index,1.0f);
+                        joint_hist.upcount(model_minus_keyword[0].index,1.0f,
+                                           query_minus_keyword[0].index,1.0f);
+
+
+                    }
+                }
+                else
+                {
+                    ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
+                            ps1.y()/query_scale_ratio);
+                    ps2.set(ps2.x()/model_scale_ratio,
+                            ps2.y()/model_scale_ratio);
+
+                    ps1_plus.set(vcl_fabs(
+                                     width-(
+                                         ps1_plus.x()/query_scale_ratio)),
+                                 ps1_plus.y()/query_scale_ratio);
+                    ps2_minus.set(ps2_minus.x()/model_scale_ratio,
+                                  ps2_minus.y()/model_scale_ratio);
+
+                    if ( width > 0 )
+                    {
+                        ps1.set(query_channel_1.ni()-1-ps1.x(),
+                                ps1.y());
+
+                        ps1_plus.set(query_channel_1.ni()-1-ps1_plus.x(),
+                                     ps1_plus.y());
+                        
+                        ps1_minus.set(query_channel_1.ni()-1-ps1_minus.x(),
+                                      ps1_minus.y());
+                    }
+                    
+                    double query_radius=((R1-r1)/query_scale_ratio)/2.0;
+                    double model_radius=((R2-r2)/model_scale_ratio)/2.0;
+                    
+                    if ( r1 == 0 )
+                    {
+
+                        vnl_vector<vl_sift_pix> model_descriptor(384,0.0);
+                        vnl_vector<vl_sift_pix> query_descriptor(384,0.0);
+   
+                        compute_descr(ps2,
+                                      model_radius,
+                                      theta_ps2,
+                                      model_red_grad_data,
+                                      model_green_grad_data,
+                                      model_blue_grad_data,
+                                      model_sift_filter,
+                                      model_descriptor);
+                        
+                        compute_descr(ps1,
+                                      query_radius,
+                                      theta_ps1,
+                                      query_red_grad_data,
+                                      query_green_grad_data,
+                                      query_blue_grad_data,
+                                      query_sift_filter,
+                                      query_descriptor);
+
+                        VlKDForestNeighbor model_keyword[1];
+                        VlKDForestNeighbor query_keyword[1];
+
+                        int nvisited = vl_kdforestsearcher_query(
+                            searcher_, model_keyword, 1, model_descriptor
+                            .data_block());
+
+                        nvisited = vl_kdforestsearcher_query(
+                            searcher_, query_keyword, 1, query_descriptor
+                            .data_block());
+
+                        model_hist.upcount(model_keyword[0].index,1.0f);
+                        query_hist.upcount(query_keyword[0].index,1.0f);
+                        joint_hist.upcount(model_keyword[0].index,1.0f,
+                                           query_keyword[0].index,1.0f);
+                        
+                    }
+                    else
+                    {
+                        vnl_vector<vl_sift_pix> model_plus_descriptor(384,0.0);
+                        vnl_vector<vl_sift_pix> query_plus_descriptor(384,0.0);
+
+                        vnl_vector<vl_sift_pix> model_minus_descriptor(384,0.0);
+                        vnl_vector<vl_sift_pix> query_minus_descriptor(384,0.0);
+   
+                        compute_descr(ps2_plus,
+                                      model_radius,
+                                      theta_ps2,
+                                      model_red_grad_data,
+                                      model_green_grad_data,
+                                      model_blue_grad_data,
+                                      model_sift_filter,
+                                      model_plus_descriptor);
+
+                        compute_descr(ps2_minus,
+                                      model_radius,
+                                      theta_ps2,
+                                      model_red_grad_data,
+                                      model_green_grad_data,
+                                      model_blue_grad_data,
+                                      model_sift_filter,
+                                      model_minus_descriptor);
+
+                        
+                        compute_descr(ps1_plus,
+                                      query_radius,
+                                      theta_ps1,
+                                      query_red_grad_data,
+                                      query_green_grad_data,
+                                      query_blue_grad_data,
+                                      query_sift_filter,
+                                      query_plus_descriptor);
+
+                        compute_descr(ps1_minus,
+                                      query_radius,
+                                      theta_ps1,
+                                      query_red_grad_data,
+                                      query_green_grad_data,
+                                      query_blue_grad_data,
+                                      query_sift_filter,
+                                      query_minus_descriptor);
+
+                        VlKDForestNeighbor model_plus_keyword[1];
+                        VlKDForestNeighbor model_minus_keyword[1];
+
+                        int nvisited = vl_kdforestsearcher_query(
+                            searcher_, model_plus_keyword, 1, 
+                            model_plus_descriptor.data_block());
+
+                        nvisited = vl_kdforestsearcher_query(
+                            searcher_, model_minus_keyword, 1, 
+                            model_minus_descriptor.data_block());
+
+                        VlKDForestNeighbor query_plus_keyword[1];
+                        VlKDForestNeighbor query_minus_keyword[1];
+
+                        nvisited = vl_kdforestsearcher_query(
+                            searcher_, query_plus_keyword, 1, 
+                            query_plus_descriptor.data_block());
+
+                        nvisited = vl_kdforestsearcher_query(
+                            searcher_, query_minus_keyword, 1, 
+                            query_minus_descriptor.data_block());
+
+                        model_hist.upcount(model_plus_keyword[0].index,1.0f);
+                        query_hist.upcount(query_plus_keyword[0].index,1.0f);
+                        joint_hist.upcount(model_plus_keyword[0].index,1.0f,
+                                           query_plus_keyword[0].index,1.0f);
+
+                        model_hist.upcount(model_minus_keyword[0].index,1.0f);
+                        query_hist.upcount(query_minus_keyword[0].index,1.0f);
+                        joint_hist.upcount(model_minus_keyword[0].index,1.0f,
+                                           query_minus_keyword[0].index,1.0f);
+
+
+                    }
+
+                }
+                
+                r1+=step_size;
+
+            }while (r1 <= R1 );
+            
+        }
+
+
+    }
+    
+    double model_entropy=model_hist.entropy();
+    double query_entropy=query_hist.entropy();
+    double joint_entropy=joint_hist.entropy();
+
+    double mi=model_entropy+query_entropy-joint_entropy;
+    double metric_mi=joint_entropy-mi;
+
+    vcl_pair<double,double> distance=vcl_make_pair(mi,metric_mi);
+    return distance;
 }
 
 vcl_pair<double,double> dbskfg_match_bag_of_fragments::

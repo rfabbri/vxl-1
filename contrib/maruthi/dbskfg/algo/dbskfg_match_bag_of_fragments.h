@@ -649,6 +649,31 @@ private:
         double model_scale_ratio=1.0,
         double query_scale_ratio=1.0);
 
+    vcl_pair<double,double> compute_mi(
+        vcl_vector<dbskr_scurve_sptr>& curve_list1,
+        vcl_vector<dbskr_scurve_sptr>& curve_list2,
+        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        vcl_vector< pathtable_key >& path_map,
+        vcl_vector<double>& dart_distances,
+        vil_image_view<double>& model_channel_1,
+        vil_image_view<double>& model_channel_2,
+        vil_image_view<double>& model_channel_3,
+        vil_image_view<double>& query_channel_1,
+        vil_image_view<double>& query_channel_2,
+        vil_image_view<double>& query_channel_3,
+        bool flag=false,
+        double width=0.0,
+        vl_sift_pix* model_red_grad_data=0,
+        vl_sift_pix* query_red_grad_data=0,
+        vl_sift_pix* model_green_grad_data=0,
+        vl_sift_pix* query_green_grad_data=0,
+        vl_sift_pix* model_blue_grad_data=0,
+        vl_sift_pix* query_blue_grad_data=0,
+        VlSiftFilt* model_sift_filter=0,
+        VlSiftFilt* query_sift_filter=0,
+        double model_scale_ratio=1.0,
+        double query_scale_ratio=1.0);
+
     vcl_pair<double,double> compute_3d_hist_color(
         vcl_vector<dbskr_scurve_sptr>& curve_list1,
         vcl_vector<dbskr_scurve_sptr>& curve_list2,
