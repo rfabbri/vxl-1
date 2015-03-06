@@ -2274,6 +2274,16 @@ bool dbskfg_match_bag_of_fragments::train_bag_of_words(int keywords)
 
     center_stream.close();
 
+    // Write out raw data 
+    // vcl_ofstream stream("raw_data.txt");
+    
+    // for ( unsigned int s=0; s < descriptors.size() ; ++s)
+    // {
+    //     stream<<descriptors[s]<<vcl_endl;
+    // }
+    
+    // stream.close() ;
+
     double vox_time = t.real()/1000.0;
     t.mark();
     vcl_cout<<vcl_endl;
@@ -2307,7 +2317,7 @@ void dbskfg_match_bag_of_fragments::set_bow_train(vcl_string& file_path)
         data = (vl_sift_pix*) vl_malloc(
             sizeof(vl_sift_pix)*dimension*numCenters);
         
-        for ( unsigned int c=0; c < numCenters ; ++c)
+        for ( unsigned int c=0; c < dimension*numCenters ; ++c)
         {
             myfile>>data[c];
 
@@ -7890,10 +7900,10 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_mi(
     vl_sift_pix range= forest_->numData;
     unsigned int bins= forest_->numData;
 
-    bsta_histogram<vl_sift_pix> model_hist(range, bins);
-    bsta_histogram<vl_sift_pix> query_hist(range, bins);
+    bsta_histogram<double> model_hist(range, bins);
+    bsta_histogram<double> query_hist(range, bins);
     
-    bsta_joint_histogram<vl_sift_pix> joint_hist(range, bins);
+    bsta_joint_histogram<double> joint_hist(range, bins);
 
     // Get matching pairs
     for (unsigned i = 0; i < map_list.size(); i++) 
@@ -8286,7 +8296,9 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_mi(
 
     double mi=model_entropy+query_entropy-joint_entropy;
     double metric_mi=joint_entropy-mi;
-
+    // vcl_cout<<"Model entropy: "<<model_entropy<<vcl_endl;
+    // vcl_cout<<"query entropy: "<<query_entropy<<vcl_endl;
+    // vcl_cout<<"Joint entropy: "<<joint_entropy<<vcl_endl;
     // vcl_cout<<"Mutual Information is: "<<mi<<vcl_endl;
     // vcl_cout<<"Mutual Information metric: "<<metric_mi<<vcl_endl;
 
@@ -10547,12 +10559,6 @@ void dbskfg_match_bag_of_fragments::compute_descr(
                                 theta);
 
 
-
-    vl_sift_pix result_red[1];
-    vl_sift_pix result_green[1];
-    vl_sift_pix result_blue[1];
-    vl_sift_pix result_final[1];
-
     for ( unsigned int d=0; d < 128 ; ++d)
     {
         descriptor.put(d,descr_ps1_red[d]);
@@ -10560,6 +10566,8 @@ void dbskfg_match_bag_of_fragments::compute_descr(
         descriptor.put(d+256,descr_ps1_blue[d]);
         
     }
+
+    descriptor.normalize();
 
 }
 
