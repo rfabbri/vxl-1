@@ -1374,13 +1374,12 @@ void dbskfg_cgraph_directed_tree::compute_sift_tree
       to_use.push_back(i);
   }
 
+
   //: now concatanate the scurves  
-  unsigned j = 0;
-  for (unsigned i = 0; i < dart_cnt_; i++) 
+  for (unsigned j = 0; j < to_use.size() ; j++) 
   { 
 
-    if (i == to_use[j]) 
-    {
+      unsigned i = to_use[j];
 
       vcl_pair<int, int> p;
       p.first = i;
@@ -1397,22 +1396,25 @@ void dbskfg_cgraph_directed_tree::compute_sift_tree
           double medial_radius           = sc->time(cx);
           double medial_theta            = sc->theta(cx);
           
+          double model_radius=medial_radius/2.0;
+
           compute_descriptor(medial_pt,
-                             medial_radius,
+                             model_radius,
                              medial_theta,
                              descriptors);
 
-          for ( int rx=1; rx < medial_radius ; ++rx )
+
+          for ( double rx=1; rx < medial_radius ; ++rx )
           {
 
-              double plus_radius = medial_radius - rx;
-              double minus_radius = -plus_radius;
+              double plus_radius  = (medial_radius - rx)/2.0;
+              double minus_radius = plus_radius;
 
               vgl_point_2d<double> plus_pt = sc->fragment_pt(cx,
-                                                             plus_radius);
+                                                             rx);
 
               vgl_point_2d<double> minus_pt = sc->fragment_pt(cx,
-                                                              minus_radius);
+                                                             -rx);
 
               
               compute_descriptor(plus_pt,
@@ -1420,17 +1422,18 @@ void dbskfg_cgraph_directed_tree::compute_sift_tree
                                  medial_theta,
                                  descriptors);
 
-              compute_descriptor(minus_pt,
-                                 minus_radius,
-                                 medial_theta,
-                                 descriptors);
-
+              if ( minus_pt != plus_pt )
+              {
+                  compute_descriptor(minus_pt,
+                                     minus_radius,
+                                     medial_theta,
+                                     descriptors);
+              }
 
           }
 
       }
-      j++;
-    }
+      
   }
 
 }
@@ -1494,9 +1497,12 @@ void dbskfg_cgraph_directed_tree::compute_descriptor(
 
     descr1.normalize();
 
-    for ( unsigned int rx=0; rx < descr1.size() ; ++rx)
+    if ( descr1.magnitude() > 0 )
     {
-        descriptors.push_back(descr1[rx]);
+        for ( unsigned int rx=0; rx < descr1.size() ; ++rx)
+        {
+            descriptors.push_back(descr1[rx]);
+        }
     }
 
 
