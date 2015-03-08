@@ -34,6 +34,7 @@
 
 #include <vul/vul_timer.h>
 #include <vnl/vnl_math.h>
+#include <vnl/vnl_vector.h>
 #include <vcl_utility.h>
 
 
@@ -130,6 +131,7 @@ collect_data()
     map_node2geom[xv->id()].reserve(num_xgraphs);
   }
 
+  vnl_vector<double> xgraphs_size_vec(list_xgraphs.size(), 0);
   // Iterate thru the xgraph list and collect edge and node info
   for (unsigned index =0; index < list_xgraphs.size(); ++index)
   {
@@ -138,6 +140,8 @@ collect_data()
 
     // Normalize the exemplar xgraph to the standard size
     double cur_size = vcl_sqrt(xgraph->area());
+	xgraphs_size_vec[index] = cur_size;
+	
 	if(this->params_.b_normalize)
     	xgraph->scale_up(0, 0, normalized_size / cur_size);
  
@@ -217,7 +221,9 @@ collect_data()
     } // edge iterator
   } // index of xgraphs
 
-
+  vcl_cout << "\nmean of xgraph sizes: " << xgraphs_size_vec.mean();
+  vcl_cout << "\nmin of xgraph sizes: " << xgraphs_size_vec.min_value();
+  vcl_cout << "\nmax of xgraph sizes: " << xgraphs_size_vec.max_value() <<"\n\n";
   
   return true;
 }

@@ -346,8 +346,10 @@ build_xnode_grid_using_prev_dets_window(const vgl_box_2d<int >& window)
 	// sample centered at current radius, make the step correpond to a ratio of current radius
     //params.step_r = vnl_math::max(0.06 * (xv->radius()), double(1)); 
 	params.step_r = 1;
-	params.num_r = vnl_math::max(vnl_math::floor((xv->radius()*0.6)/params.step_r)+1,3);
-    params.min_r = xv->radius() - params.step_r * vnl_math::floor(double(params.num_r-1)/2);
+	params.num_r = vnl_math::max(vnl_math::floor((min_radius + max_radius)/2/params.step_r)+1,3);	
+	params.min_r = (min_radius + max_radius)/2 - params.step_r * vnl_math::floor(double(params.num_r-1)/2);
+	//params.num_r = vnl_math::max(vnl_math::floor((xv->radius()*0.6)/params.step_r)+1,3);
+    //params.min_r = xv->radius() - params.step_r * vnl_math::floor(double(params.num_r-1)/2);
 
 
     if (xv->degree() == 3)

@@ -18,6 +18,7 @@ dbsks_train_xshock_geom_model_process()
     !parameters()->add("xgraph list file:" , "-xgraph-list-file", bpro1_filepath("")) ||
     !parameters()->add("Root vertex id:" , "-root-vid", unsigned(0)) ||
 	!parameters()->add("Normalize xgraph? " , "-b-normalize", bool(true)) ||
+	!parameters()->add("Normalize xgraph Size : sqrt(area) " , "-normalized_xgraph_size", double(100)) ||
     !parameters()->add("pseudo parent edge id:" , "-pseudo-parent-eid", unsigned(0)) ||
     !parameters()->add("Output file:" , "-output-file", bpro1_filepath(""))
     )
@@ -118,6 +119,9 @@ execute()
   unsigned pseudo_parent_eid = 0;
   this->parameters()->get_value("-pseudo-parent-eid", pseudo_parent_eid);
 
+  double normalized_xgraph_size = 100;
+  this->parameters()->get_value("-normalized_xgraph_size", normalized_xgraph_size);
+
   bool b_normalize = true;
   this->parameters()->get_value("-b-normalize", b_normalize);
 
@@ -134,7 +138,7 @@ execute()
 
   // trainer parameter
   dbsks_train_geom_model_params params;
-  params.normalized_xgraph_size = 100; // \todo make this a parameter
+  params.normalized_xgraph_size = normalized_xgraph_size; // \todo make this a parameter
   params.b_normalize = b_normalize;
   params.output_file = output_file.path;
   params.pseudo_parent_eid = pseudo_parent_eid;
