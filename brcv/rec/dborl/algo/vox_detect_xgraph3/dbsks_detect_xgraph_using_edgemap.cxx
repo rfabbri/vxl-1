@@ -258,7 +258,7 @@ load_params_and_models()
   }
   xgraph_geom->compute_attribute_constraints();
 
-/*
+
   // geometric model L
   vcl_string xgraph_geom_file_L = xgraph_geom_file.substr(0, xgraph_geom_file.size()-4) + "-left.xml";
   if (!dbsks_load_xgraph_geom_model(xgraph_geom_file_L, xgraph_geom_param_file, xgraph_geom_L))
@@ -274,7 +274,7 @@ load_params_and_models()
     return false;
   }
   xgraph_geom_R->compute_attribute_constraints();
-*/
+
   // Check compatibility between the geometric model and the shock graph (are all edges covered?)
   vcl_cout << "\n>> Checking compatibility between geometric model and xgraph...";
   if (!xgraph_geom->is_compatible(xgraph_prototype_))
@@ -892,7 +892,97 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 				// add detections from this window to the overall list
 				//raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
 				prev_dets.insert(prev_dets.end(), dets_window.begin(), dets_window.end());
-			}		
+			}	
+
+			// for the mean size, perform detection of left and right turning model
+			if(s==2)	
+			{
+				vcl_cout << "\n Detecting based on Left-Turnning Geom Model" << vcl_endl;
+				engine.xgraph_geom_ = xgraph_geom_L;
+
+				//--------------------------------------------------------------------------
+				engine.detect(window, float(confidence_lower_threshold));
+
+				if(engine.list_solutions_.size()!=0)
+				{
+					//> Construct a vector of detection descriptor
+					dets_window.clear();
+					dets_window.reserve(engine.list_solutions_.size());
+
+
+					//if(!update_appearance_model(prev_dets, prev_L_))
+					//	vcl_cout<< "Fail in updaing appearance model" << vcl_endl;
+
+					for (unsigned i =0; i < engine.list_solutions_.size(); ++i)
+					{
+						dbsksp_xshock_graph_sptr sol_xgraph = engine.list_solutions_[i];
+
+						double confidence = -engine.list_solution_costs_[i];
+						double real_confidence = -engine.list_solution_real_costs_[i];
+
+						// for detection with enough edge support, add appearance confidence into it.
+						// edge matching cost term
+						vcl_cout <<"\nedge_confidence:" << real_confidence << vcl_endl;		
+
+						// appearance term
+						double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
+						vcl_cout <<"\nappearance_cost:" << appearance_cost << vcl_endl;
+
+						real_confidence += (20 - appearance_cost);
+						//real_confidence *= 0.9;
+						vcl_cout << " real confidence: " << real_confidence << vcl_endl;
+						dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
+						det->compute_bbox();
+						dets_window.push_back(det);
+					}
+					// add detections from this window to the overall list
+					//raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
+					prev_dets.insert(prev_dets.end(), dets_window.begin(), dets_window.end());
+				}
+
+			//////////////////////////////// detect based on geom model right  ///////////////////////////////////////////////////////////////
+				vcl_cout << "\n Detecting based on Right-Turnning Geom Model" << vcl_endl;
+				engine.xgraph_geom_ = xgraph_geom_R;
+
+				//--------------------------------------------------------------------------
+				engine.detect(window, float(confidence_lower_threshold));
+
+				if(engine.list_solutions_.size()!=0)
+				{
+					//> Construct a vector of detection descriptor
+					dets_window.clear();
+					dets_window.reserve(engine.list_solutions_.size());
+
+					//if(!update_appearance_model(prev_dets, prev_L_))
+					//	vcl_cout<< "Fail in updaing appearance model" << vcl_endl;
+
+					for (unsigned i =0; i < engine.list_solutions_.size(); ++i)
+					{
+						dbsksp_xshock_graph_sptr sol_xgraph = engine.list_solutions_[i];
+
+						double confidence = -engine.list_solution_costs_[i];
+						double real_confidence = -engine.list_solution_real_costs_[i];
+
+						// for detection with enough edge support, add appearance confidence into it.
+						// edge matching cost term
+						vcl_cout <<"\nedge_confidence:" << real_confidence << vcl_endl;		
+
+						// appearance term
+						double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
+						vcl_cout <<"\nappearance_cost:" << appearance_cost << vcl_endl;
+
+						real_confidence += (20 - appearance_cost);
+						//real_confidence *= 0.9;
+						vcl_cout << " real confidence: " << real_confidence << vcl_endl;
+						dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
+						det->compute_bbox();
+						dets_window.push_back(det);
+					}
+					// add detections from this window to the overall list
+					//raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
+					prev_dets.insert(prev_dets.end(), dets_window.begin(), dets_window.end());
+				}				
+			}
 		}
 		vcl_sort(prev_dets.begin(), prev_dets.end(), dbsks_decreasing_confidence);
 		raw_dets_all_windows.insert(raw_dets_all_windows.end(), prev_dets.begin(), prev_dets.end());
@@ -902,6 +992,9 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 		vil_convert_planes_to_grey(this->prev_source_image, prev_L_);
 	}
 
+	int max_prev_num = 2;
+	if(is_initial)
+		max_prev_num = 3;
 	for(int prev_i = 0; prev_i < vcl_min(int(prev_dets.size()), 2); prev_i ++)
 	{
 
@@ -962,10 +1055,111 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 				det->compute_bbox();
 				dets_window.push_back(det);
 			}
+			// add detections from this window to the overall list
+			raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
 		}
-		// add detections from this window to the overall list
-		raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
-		//vcl_sort(raw_dets_all_windows.begin(), raw_dets_all_windows.end(), dbsks_decreasing_confidence);
+
+		//////////////////////////////// detect based on geom model left  ///////////////////////////////////////////////////////////////
+		vcl_cout << "\n Detecting based on Left-Turnning Geom Model" << vcl_endl;
+		engine.xgraph_geom_ = xgraph_geom_L;
+
+		//--------------------------------------------------------------------------
+		engine.detect(window, float(confidence_lower_threshold));
+		//--------------------------------------------------------------------------
+
+		//> Construct a vector of detection descriptor
+		dets_window.clear();
+		dets_window.reserve(engine.list_solutions_.size());
+
+		//if(!update_appearance_model(prev_dets, prev_L_))
+		//	vcl_cout<< "Fail in updaing appearance model" << vcl_endl;
+		if(engine.list_solutions_.size()!=0)
+		{
+			for (unsigned i =0; i < engine.list_solutions_.size(); ++i)
+			{
+				dbsksp_xshock_graph_sptr sol_xgraph = engine.list_solutions_[i];
+
+				double confidence = -engine.list_solution_costs_[i];
+				double real_confidence = -engine.list_solution_real_costs_[i];
+
+				// for detection with enough edge support, add appearance confidence into it.
+				// edge matching cost term
+				vcl_cout <<"\nedge_confidence:" << real_confidence << vcl_endl;		
+
+				// appearance term
+				double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
+				if(!is_initial)
+					appearance_cost += compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[prev_i]->xgraph(), prev_L_);
+				vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
+
+				// shape change term,
+				//double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
+				//vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
+
+				// only consider the dets which is not too diff in bg as prototype
+				real_confidence += (20 - appearance_cost);
+				//if(!is_initial)
+					//real_confidence += (10 - shape_trans_cost); 
+				real_confidence *= 0.9;
+				vcl_cout << " real confidence: " << real_confidence << vcl_endl;
+				dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
+				det->compute_bbox();
+				dets_window.push_back(det);
+			}
+			raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
+		}
+
+		//////////////////// detect based on geom model right  //////////////////////////////////////////
+
+		vcl_cout << "\n Detecting based on Right-Turnning Geom Model" << vcl_endl;
+		engine.xgraph_geom_ = xgraph_geom_R;
+
+		//--------------------------------------------------------------------------
+		engine.detect(window, float(confidence_lower_threshold));
+		//--------------------------------------------------------------------------
+
+		//> Construct a vector of detection descriptor
+		dets_window.clear();
+		dets_window.reserve(engine.list_solutions_.size());
+
+
+		//if(!update_appearance_model(prev_dets, prev_L_))
+		//	vcl_cout<< "Fail in updaing appearance model" << vcl_endl;
+		if(engine.list_solutions_.size()!=0)
+		{
+			for (unsigned i =0; i < engine.list_solutions_.size(); ++i)
+			{
+				dbsksp_xshock_graph_sptr sol_xgraph = engine.list_solutions_[i];
+
+				double confidence = -engine.list_solution_costs_[i];
+				double real_confidence = -engine.list_solution_real_costs_[i];
+
+				// for detection with enough edge support, add appearance confidence into it.
+				// edge matching cost term
+				vcl_cout <<"\nedge_confidence:" << real_confidence << vcl_endl;		
+
+				// appearance term
+				double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
+				if(!is_initial)
+					appearance_cost += compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[prev_i]->xgraph(), prev_L_);
+				vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
+
+				// shape change term,
+				//double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
+				//vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
+
+				// only consider the dets which is not too diff in bg as prototype
+				real_confidence += (20 - appearance_cost);
+				//if(!is_initial)
+					//real_confidence += (10 - shape_trans_cost); 
+				real_confidence *= 0.9;
+				vcl_cout << " real confidence: " << real_confidence << vcl_endl;
+				dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
+				det->compute_bbox();
+				dets_window.push_back(det);
+			}
+			raw_dets_all_windows.insert(raw_dets_all_windows.end(), dets_window.begin(), dets_window.end());
+		}
 	}
 
     vcl_cout << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
