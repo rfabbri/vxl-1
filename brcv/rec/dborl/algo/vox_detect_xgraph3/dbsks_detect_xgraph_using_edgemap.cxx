@@ -895,7 +895,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 			}	
 
 			// for the mean size, perform detection of left and right turning model
-			if(s==2)	
+			if(s==1)	
 			{
 				vcl_cout << "\n Detecting based on Left-Turnning Geom Model" << vcl_endl;
 				engine.xgraph_geom_ = xgraph_geom_L;
@@ -1100,7 +1100,8 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 				real_confidence += (20 - appearance_cost);
 				//if(!is_initial)
 					//real_confidence += (10 - shape_trans_cost); 
-				real_confidence *= 0.9;
+				if(!is_initial)
+					real_confidence *= 0.9;
 				vcl_cout << " real confidence: " << real_confidence << vcl_endl;
 				dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
 				det->compute_bbox();
@@ -1152,7 +1153,8 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 				real_confidence += (20 - appearance_cost);
 				//if(!is_initial)
 					//real_confidence += (10 - shape_trans_cost); 
-				real_confidence *= 0.9;
+				if(!is_initial)
+					real_confidence *= 0.9;
 				vcl_cout << " real confidence: " << real_confidence << vcl_endl;
 				dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
 				det->compute_bbox();
