@@ -833,7 +833,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 		vcl_vector<double> graph_size_vector;
 		graph_size_vector.push_back(45);
 		graph_size_vector.push_back(55);
-		graph_size_vector.push_back(65);
+		graph_size_vector.push_back(70);
 
 		for (int s = 0; s< graph_size_vector.size(); s++)
 		{
