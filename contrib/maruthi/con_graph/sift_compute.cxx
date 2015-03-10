@@ -11,6 +11,7 @@
 #include <vl/sift.h>
 #include <vnl/vnl_vector.h>
 #include <vil/algo/vil_orientations.h>
+#include <dbsk2d/dbsk2d_utils.h>
 
 void compute_grad_maps(vil_image_resource_sptr& input_image,
                        vl_sift_pix** grad_data,
@@ -23,7 +24,7 @@ void compute_grad_color_maps(
 
 void compute_sobel_grad_color_maps(
     vil_image_resource_sptr& input_image,
-    double** grad_data,
+    vl_sift_pix** grad_data,
     unsigned int channel);
 
 void compute_grad_maps(vil_image_resource_sptr& input_image,
@@ -145,14 +146,17 @@ void compute_sobel_grad_color_maps(
  
     vil_image_view<vxl_byte> imview = input_image->get_view();
     vil_image_view<vxl_byte> temp   = vil_plane(imview,channel);
+    
+    vil_image_view<double> orig_image;
+    vil_convert_cast(temp,orig_image);
 
-    unsigned int width  = temp.ni();
-    unsigned int height = temp.nj();
+    unsigned int width  = orig_image.ni();
+    unsigned int height = orig_image.nj();
 
     vil_image_view<vl_sift_pix> grad_mag;
     vil_image_view<vl_sift_pix> grad_angle;
     
-    vil_orientations_from_sobel(temp,grad_mag,grad_angle);
+    vil_orientations_from_sobel(orig_image,grad_angle,grad_mag);
 
     *grad_data=(vl_sift_pix*) vl_malloc(sizeof(vl_sift_pix)*width*height*2);
     
@@ -162,8 +166,9 @@ void compute_sobel_grad_color_maps(
     unsigned int index=0;
     for ( unsigned int i=0; i < width*height; ++i)
     {
-        double mag  = gradient_magnitude[i];
-        double angle= gradient_angle[i];
+        vl_sift_pix mag  = gradient_magnitude[i];     
+        vl_sift_pix angle= angle0To2Pi(gradient_angle[i]);
+
         (*grad_data)[index]=mag;
         ++index;
         (*grad_data)[index]=angle;
@@ -262,17 +267,17 @@ int main( int argc, char *argv[] )
 
         VlSiftFilt* filter = vl_sift_new(width,height,-1,-1,0);
         
-        compute_grad_color_maps(img_sptr,
-                                &red_grad_data,
-                                0);
+        compute_sobel_grad_color_maps(img_sptr,
+                                      &red_grad_data,
+                                      0);
 
-        compute_grad_color_maps(img_sptr,
-                                &green_grad_data,
-                                1);
-
-        compute_grad_color_maps(img_sptr,
-                                &blue_grad_data,
-                                2);
+        compute_sobel_grad_color_maps(img_sptr,
+                                      &green_grad_data,
+                                      1);
+        
+        compute_sobel_grad_color_maps(img_sptr,
+                                      &blue_grad_data,
+                                      2);
 
         vl_sift_set_magnif(filter,1.0);
 
@@ -293,7 +298,7 @@ int main( int argc, char *argv[] )
                                     filter->height,
                                     x_coord, 
                                     y_coord,
-                                    scale,
+                                    scale/2.0,
                                     theta);
 
         vl_sift_calc_raw_descriptor(filter,
@@ -303,7 +308,7 @@ int main( int argc, char *argv[] )
                                     filter->height,
                                     x_coord, 
                                     y_coord,
-                                    scale,
+                                    scale/2.0,
                                     theta);
 
         vl_sift_calc_raw_descriptor(filter,
@@ -313,7 +318,7 @@ int main( int argc, char *argv[] )
                                     filter->height,
                                     x_coord, 
                                     y_coord,
-                                    scale,
+                                    scale/2.0,
                                     theta);
 
 
@@ -330,7 +335,7 @@ int main( int argc, char *argv[] )
         
         for ( unsigned int i=0; i < 384; ++i)
         {
-            vcl_cout<<512*descr1[i]<<vcl_endl;
+            vcl_cout<<descr1[i]<<vcl_endl;
             
         }
         
