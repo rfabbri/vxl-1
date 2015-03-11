@@ -53,6 +53,7 @@
 static bool is_edges_covered_in_window (vgl_box_2d<int > window, vcl_vector<dbdet_edgel*> edgels);
 
 static bool b_rank_order_results = true;
+static bool is_initial = false;
 //------------------------------------------------------------------------------
 //:
 bool dbsks_detect_xgraph_using_edgemap::
@@ -138,10 +139,10 @@ execute()
     if (dbsks_load_detections_from_folder(storage_folder, dets))
     {
       vcl_cout << "\nThis image has been processed. All records are loaded back.\n";
-	  if(prev_dets.size()>0 && b_rank_order_results)
+	  if(b_rank_order_results)
 		  this->rank_detection_results(actual_edgemap, actual_xgraph, min_accepted_confidence, 
         storage_folder, dets, prev_dets);
-	  this->output_det_list = dets;
+	  //this->output_det_list = dets;
 	  return true;
     }
     else
@@ -190,6 +191,11 @@ execute()
     raw_dets_all_scales.insert(raw_dets_all_scales.end(), dets.begin(), dets.end());
     vcl_cout
       << "\n-------------------------------------------------------------------\n";
+
+  if(is_initial)
+		prev_dets.clear();
+  if(b_rank_order_results)
+	  this->rank_detection_results(actual_edgemap, actual_xgraph, min_accepted_confidence, storage_folder, dets, prev_dets);
 //  }
 
   //> Summarize detections for all scales
@@ -792,7 +798,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 	  windows.push_back(wd_0);
   }
 
-  bool is_initial = false;
+
 
   //>> Detect objects within each window
   vcl_cout << "\n> Detecting objects in all computed windows ...";
@@ -1523,28 +1529,58 @@ bool dbsks_detect_xgraph_using_edgemap::
     vcl_vector<vgl_box_2d<int > > windows; // list of detection windows
 
 
+  if(prev_dets.empty())
+  {
+
+	  load_bb_file();
+
+	  //> Compute window (rectangular boxes) from input bounding box
+	  vcl_cout << "\n> Computing (rectangular) window from input bounding box...";
+	  //vcl_vector<vgl_box_2d<int > > all_windows;
+	  //dbsks_algos::compute_detection_windows(det_window_width, det_window_height, edgemap->ncols(), edgemap->nrows(), all_windows);
+	  // Print out list of windows
+	  vcl_cout << "\n> detect window: \n";
+
+		vgl_box_2d<int > window(bb_coordinates[0], bb_coordinates[2], bb_coordinates[1], bb_coordinates[3]);
+		vcl_cout
+		  << "  [xmin ymin xmax ymax] = "
+		  << "[" << window.min_x() 
+		  << " " << window.min_y() 
+		  << " " << window.max_x()
+		  << " " << window.max_y() << "]\n";
+		windows.push_back(window);
+	  
+	  vcl_cout << " [ OK ]\n";
+	  vcl_cout.flush();
+
+  }
+  else
+  {
+
 	// allocate window conners based on best prev dets
-	int w_min_x = edgemap->ncols()-1;
-	int w_max_x = 0;
-	int w_min_y = edgemap->nrows()-1;
-	int w_max_y = 0;
+	  int w_min_x = edgemap->ncols()-1;
+	  int w_max_x = 0;
+	  int w_min_y = edgemap->nrows()-1;
+	  int w_max_y = 0;
 
-	for (int id = 0; id< vcl_min(int(prev_dets.size()), 2); id++)
-	{
-	if(prev_dets[id]->bbox()->get_min_x() < w_min_x)
-		w_min_x = prev_dets[id]->bbox()->get_min_x();
-	if(prev_dets[id]->bbox()->get_max_x() > w_max_x)
-		w_max_x = prev_dets[id]->bbox()->get_max_x();
-	if(prev_dets[id]->bbox()->get_min_y() < w_min_y)
-		w_min_y = prev_dets[id]->bbox()->get_min_y();
-	if(prev_dets[id]->bbox()->get_max_y() > w_max_y)
-		w_max_y = prev_dets[id]->bbox()->get_max_y();
-	}
-	vcl_cout << w_min_x << " " << w_max_x << " " << w_min_y << " " << w_max_y << vcl_endl;
-	vgl_box_2d<int> wd_0(vcl_max(w_min_x-60, 0), vcl_min(w_max_x+60, int(edgemap->ncols()-1)), vcl_max(0, w_min_y-60), vcl_min(int(edgemap->nrows()-1),w_max_y+60));
+	  for (int id = 0; id< vcl_min(int(prev_dets.size()), 2); id++)
+	  {
+		if(prev_dets[id]->bbox()->get_min_x() < w_min_x)
+			w_min_x = prev_dets[id]->bbox()->get_min_x();
+		if(prev_dets[id]->bbox()->get_max_x() > w_max_x)
+			w_max_x = prev_dets[id]->bbox()->get_max_x();
+		if(prev_dets[id]->bbox()->get_min_y() < w_min_y)
+			w_min_y = prev_dets[id]->bbox()->get_min_y();
+		if(prev_dets[id]->bbox()->get_max_y() > w_max_y)
+			w_max_y = prev_dets[id]->bbox()->get_max_y();
+	  }
+  	  vcl_cout << w_min_x << " " << w_max_x << " " << w_min_y << " " << w_max_y << vcl_endl;
+	  vgl_box_2d<int> wd_0(vcl_max(w_min_x-60, 0), vcl_min(w_max_x+60, int(edgemap->ncols()-1)), vcl_max(0, w_min_y-60), vcl_min(int(edgemap->nrows()-1),w_max_y+60));
 
-	// just save this window.
-	windows.push_back(wd_0);
+	  // just save this window.
+	  windows.push_back(wd_0);
+  }
+
 
 	vcl_ofstream myfile;
 	vcl_string out_conf_file = work_folder + "_conf.txt";
@@ -1592,22 +1628,29 @@ bool dbsks_detect_xgraph_using_edgemap::
 			vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
 
 			// appearance term2
-			double appearance_cost2 = compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[0]->xgraph(), prev_L_);
+			double appearance_cost2 = 0;
+  			if(!prev_dets.empty())
+				appearance_cost2 = compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[0]->xgraph(), prev_L_);
 			if(prev_dets.size()>1)
 				appearance_cost2 = vnl_math::min(compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[0]->xgraph(), prev_L_), compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[1]->xgraph(), prev_L_));
+
+
 			vcl_cout <<"appearance_cost2:" << appearance_cost2 << vcl_endl;
 
 			// shape change term, now just the differece between radius of shock nodes, but shape is more complex representation
-			double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[0]->xgraph());
+			double shape_trans_cost = 0;
+  			if(!prev_dets.empty())
+				shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[0]->xgraph());
 			if(prev_dets.size()>1)
 				shape_trans_cost = vnl_math::min(compute_shape_trans_cost(sol_xgraph, prev_dets[0]->xgraph()), compute_shape_trans_cost(sol_xgraph, prev_dets[1]->xgraph()));
+
 			vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
 
 			double real_confidence = (edge_confidence - appearance_cost - appearance_cost2 - shape_trans_cost);
 			vcl_cout << " real confidence: " << real_confidence << vcl_endl;
-			dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
-			det->compute_bbox();
-			dets_window.push_back(det);
+			//dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
+			//det->compute_bbox();
+			//dets_window.push_back(det);
 
 			vcl_vector<double> conf_vector(4, 0);
 			conf_vector[0] = edge_confidence;
