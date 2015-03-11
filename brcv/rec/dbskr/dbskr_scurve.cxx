@@ -11,6 +11,7 @@
 
 #include <vcl_cstdio.h>
 #include <vcl_algorithm.h>
+#include <vcl_sstream.h>
 #include <dbsk2d/dbsk2d_geometry_utils.h>
 #include <dbskr/dbskr_dpmatch_combined.h>
 #include <vsol/vsol_polygon_2d.h>
@@ -646,25 +647,13 @@ vgl_point_2d<double> dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt)
     {
         vgl_polygon<double> poly(1);
 
-        if ( vgl_distance(sh_pt_[i-1],sh_pt_[i]) > 1.0e-8 )
-        {
-            poly.push_back(sh_pt_[i-1].x(),sh_pt_[i-1].y());
-            poly.push_back(bdry_plus_[i-1].x(),bdry_plus_[i-1].y());
-            poly.push_back(bdry_plus_[i].x(),bdry_plus_[i].y());
+        poly.push_back(sh_pt_[i-1].x(),sh_pt_[i-1].y());
+        poly.push_back(bdry_plus_[i-1].x(),bdry_plus_[i-1].y());
+        poly.push_back(bdry_plus_[i].x(),bdry_plus_[i].y());
             
-            poly.push_back(sh_pt_[i].x(),sh_pt_[i].y());
-            poly.push_back(bdry_minus_[i].x(),bdry_minus_[i].y());
-            poly.push_back(bdry_minus_[i-1].x(),bdry_minus_[i-1].y());
-
-        }
-        else
-        {
-            poly.push_back(sh_pt_[i].x(),sh_pt_[i].y());
-            poly.push_back(bdry_plus_[i].x(),bdry_plus_[i].y());
-            poly.push_back(bdry_minus_[i].x(),bdry_minus_[i].y());
-         
-
-        }
+        poly.push_back(sh_pt_[i].x(),sh_pt_[i].y());
+        poly.push_back(bdry_minus_[i].x(),bdry_minus_[i].y());
+        poly.push_back(bdry_minus_[i-1].x(),bdry_minus_[i-1].y());
 
         if ( poly.contains(pt) )
         {
@@ -684,15 +673,32 @@ vgl_point_2d<double> dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt)
     if ( vgl_distance(s_pt,e_pt) < 1.0e-8 )
     {
 
+        vgl_point_2d<double> arc_start;
+        vgl_point_2d<double> arc_stop;
+
+        if ( vgl_distance(bdry_minus_[start_index],bdry_minus_[stop_index])
+             < 1.0e-8)
+        {
+            arc_start=bdry_plus_[start_index];
+            arc_stop= bdry_plus_[stop_index];
+            
+        }
+        else
+        {
+
+            arc_start=bdry_minus_[start_index];
+            arc_stop=bdry_minus_[stop_index];
+        }
+
         vgl_point_2d<double> bdry_plus = bdry_plus_[start_index];
         vgl_point_2d<double> bdry_minus = bdry_minus_[start_index];
 
         vgl_line_segment_2d<double> pt_ray(s_pt,
                                            pt);
         vgl_line_segment_2d<double> start_ray(s_pt,
-                                              bdry_plus);
+                                              arc_start);
         vgl_line_segment_2d<double> stop_ray(s_pt,
-                                             bdry_minus);
+                                             arc_stop);
 
         double angle_sector=angle(start_ray.direction(),
                                   stop_ray.direction());
