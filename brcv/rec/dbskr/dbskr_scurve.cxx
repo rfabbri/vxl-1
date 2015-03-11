@@ -5,6 +5,8 @@
 #include <vgl/vgl_polygon.h>
 #include <vgl/vgl_area.h>
 #include <vgl/vgl_line_2d.h>
+#include <vgl/vgl_closest_point.h>
+#include <vgl/vgl_intersection.h>
 #include <dbgl/algo/dbgl_eulerspiral.h>
 
 #include <vcl_cstdio.h>
@@ -630,6 +632,130 @@ dbskr_scurve::fragment_pt(int index, double radius)
   return sh_pt_[index] + vcl_fabs(radius)*vgl_vector_2d<double>(vcl_cos(vec), vcl_sin(vec));
 }
 
+//: return a continuous index and radius, of where you are
+//  fragment coordinates(s(i),t) { i.e., (x,y)->(s,t) 
+vgl_point_2d<double> dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt)
+{
+    unsigned int start_index=0;
+    unsigned int stop_index=1;
+
+    vgl_point_2d<double> shock_coords;
+    vgl_polygon<double> poly_keep(1);
+
+    for (unsigned int i = 1; i < num_points_; i++) 
+    {
+        vgl_polygon<double> poly(1);
+
+        if ( vgl_distance(sh_pt_[i-1],sh_pt_[i]) > 1.0e-8 )
+        {
+            poly.push_back(sh_pt_[i-1].x(),sh_pt_[i-1].y());
+            poly.push_back(bdry_plus_[i-1].x(),bdry_plus_[i-1].y());
+            poly.push_back(bdry_plus_[i].x(),bdry_plus_[i].y());
+            
+            poly.push_back(sh_pt_[i].x(),sh_pt_[i].y());
+            poly.push_back(bdry_minus_[i].x(),bdry_minus_[i].y());
+            poly.push_back(bdry_minus_[i-1].x(),bdry_minus_[i-1].y());
+
+        }
+        else
+        {
+            poly.push_back(sh_pt_[i].x(),sh_pt_[i].y());
+            poly.push_back(bdry_plus_[i].x(),bdry_plus_[i].y());
+            poly.push_back(bdry_minus_[i].x(),bdry_minus_[i].y());
+         
+
+        }
+
+        if ( poly.contains(pt) )
+        {
+            start_index=i-1;
+            stop_index=i;
+            poly_keep=poly;
+            break;
+        }
+        
+
+    }
+
+    vgl_point_2d<double> s_pt = sh_pt_[start_index];
+    vgl_point_2d<double> e_pt = sh_pt_[stop_index];
+    
+    // Degenerate case
+    if ( vgl_distance(s_pt,e_pt) < 1.0e-8 )
+    {
+
+        vgl_point_2d<double> bdry_plus = bdry_plus_[start_index];
+        vgl_point_2d<double> bdry_minus = bdry_minus_[start_index];
+
+        vgl_line_segment_2d<double> pt_ray(s_pt,
+                                           pt);
+        vgl_line_segment_2d<double> start_ray(s_pt,
+                                              bdry_plus);
+        vgl_line_segment_2d<double> stop_ray(s_pt,
+                                             bdry_minus);
+
+        double angle_sector=angle(start_ray.direction(),
+                                  stop_ray.direction());
+
+        double angle_ray = angle(start_ray.direction(),
+                                 pt_ray.direction());
+
+        double ratio = angle_ray/angle_sector;
+
+        double con_index=start_index + ratio;
+        double distance_t= vgl_distance(pt,s_pt);
+
+        shock_coords.set(con_index,distance_t);
+                                              
+        
+
+    }
+    else
+    {
+
+        vgl_point_2d<double> bdry_plus = bdry_plus_[start_index];
+        vgl_point_2d<double> bdry_minus = bdry_minus_[start_index];
+
+        vgl_line_segment_2d<double> start_ray(s_pt,
+                                              bdry_plus);
+
+        vgl_line_2d<double> pt_line(pt,
+                                    start_ray.direction());
+        
+        vgl_line_2d<double> shock_line(s_pt,
+                                       e_pt);
+
+
+        vgl_point_2d<double> footPt;
+        vgl_intersection(pt_line,shock_line,footPt);
+
+
+        double distance =vgl_distance(s_pt,
+                                      e_pt);
+
+
+        double distance_s= vgl_distance(s_pt,footPt);
+        double distance_t= vgl_distance(footPt,pt);
+        
+
+        double ratio = distance_s/distance;
+
+        double con_index=start_index + ratio;
+
+        bool pointAboveLine= _isPointAboveLine(pt,
+                                               s_pt,
+                                               e_pt);
+
+        if ( !pointAboveLine )
+        {
+            distance_t=distance_t*-1.0;
+        }
+        shock_coords.set(con_index,distance_t);
+
+    }
+
+    return shock_coords;
+}
 //: return the radius at an interpolated point
 double dbskr_scurve::interp_radius(int i1, int i2, int N, int n)
 {

@@ -190,6 +190,10 @@ public:
   //  radius>0 for plus side and <0 for minus side
   vgl_point_2d<double> fragment_pt(int index, double radius);
 
+  //: return a continuous index and radius, of where you are
+  //  fragment coordinates(s(i),t) { i.e., (x,y)->(s,t) }
+  vgl_point_2d<double> intrinsinc_pt(vgl_point_2d<double> pt);
+
   //: return the radius at an interpolated point
   double interp_radius(int i1, int i2, int N, int n);
 
