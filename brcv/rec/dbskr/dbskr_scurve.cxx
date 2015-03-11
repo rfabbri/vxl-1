@@ -648,12 +648,43 @@ vgl_point_2d<double> dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt)
         vgl_polygon<double> poly(1);
 
         poly.push_back(sh_pt_[i-1].x(),sh_pt_[i-1].y());
-        poly.push_back(bdry_plus_[i-1].x(),bdry_plus_[i-1].y());
-        poly.push_back(bdry_plus_[i].x(),bdry_plus_[i].y());
-            
-        poly.push_back(sh_pt_[i].x(),sh_pt_[i].y());
-        poly.push_back(bdry_minus_[i].x(),bdry_minus_[i].y());
-        poly.push_back(bdry_minus_[i-1].x(),bdry_minus_[i-1].y());
+
+        bool degenerate = (vgl_distance(sh_pt_[i],
+                                        sh_pt_[i-1])<1.0e-8)
+            ?true:false;
+
+        if ( vgl_distance(bdry_plus_[i-1],bdry_plus_[i]) > 1.0e-8 )
+        {
+            poly.push_back(bdry_plus_[i-1].x(),bdry_plus_[i-1].y());
+            poly.push_back(bdry_plus_[i].x(),bdry_plus_[i].y());
+        }
+        else
+        {
+            if ( !degenerate )
+            {
+                poly.push_back(bdry_plus_[i-1].x(),bdry_plus_[i-1].y());
+            }
+
+        }
+        
+        if ( vgl_distance(sh_pt_[i-1],sh_pt_[i]) > 1.0e-8 )
+        {
+            poly.push_back(sh_pt_[i].x(),sh_pt_[i].y());
+        }
+
+        if ( vgl_distance(bdry_minus_[i-1],bdry_minus_[i]) > 1.0e-8 )
+        {
+            poly.push_back(bdry_minus_[i].x(),bdry_minus_[i].y());
+            poly.push_back(bdry_minus_[i-1].x(),bdry_minus_[i-1].y());
+        }
+        else
+        {
+            if ( !degenerate )
+            {
+                poly.push_back(bdry_minus_[i].x(),bdry_minus_[i].y());
+            }
+
+        }
 
         if ( poly.contains(pt) )
         {
