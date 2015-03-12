@@ -719,44 +719,87 @@ vgl_point_2d<double> dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt)
     else
     {
 
-        vgl_point_2d<double> bdry_plus = bdry_plus_[start_index];
-        vgl_point_2d<double> bdry_minus = bdry_minus_[start_index];
-
-        vgl_line_segment_2d<double> start_ray(s_pt,
-                                              bdry_plus);
-
-        vgl_line_2d<double> pt_line(pt,
-                                    start_ray.direction());
-        
         vgl_line_2d<double> shock_line(s_pt,
                                        e_pt);
-
-
-        vgl_point_2d<double> footPt;
-        vgl_intersection(pt_line,shock_line,footPt);
-
-
-        double distance =vgl_distance(s_pt,
-                                      e_pt);
-
-
-        double distance_s= vgl_distance(s_pt,footPt);
-        double distance_t= vgl_distance(footPt,pt);
         
-
-        double ratio = distance_s/distance;
-
-        double con_index=start_index + ratio;
-
         bool pointAboveLine= _isPointAboveLine(pt,
                                                s_pt,
                                                e_pt);
 
-        if ( !pointAboveLine )
+        double distance =vgl_distance(s_pt,
+                                      e_pt);
+        
+        if ( pointAboveLine )
         {
-            distance_t=distance_t*-1.0;
+            vgl_point_2d<double> bdry_plus_start = bdry_plus_[start_index];
+            vgl_point_2d<double> bdry_plus_stop  = bdry_plus_[stop_index];
+            
+            vgl_line_2d<double> bdry_plus_start_line(s_pt,
+                                                     bdry_plus_start);
+            vgl_line_2d<double> bdry_plus_stop_line(e_pt,
+                                                    bdry_plus_stop);
+
+        
+            vgl_point_2d<double> intersection_pt;
+            bool flag=vgl_intersection(bdry_plus_start_line,
+                                       bdry_plus_stop_line,
+                                       intersection_pt);
+
+            if ( flag )
+            {
+
+                vgl_line_2d<double> pt_line(intersection_pt,
+                                           pt);
+
+                vgl_point_2d<double> footPt;
+                vgl_intersection(pt_line,shock_line,footPt);
+
+                double distance_s= vgl_distance(s_pt,footPt);
+                double distance_t= vgl_distance(footPt,pt);
+        
+
+                double ratio = distance_s/distance;
+
+                double con_index=start_index + ratio;
+
+                shock_coords.set(con_index,distance_t);
+
+            }
+            else
+            {
+                vgl_line_segment_2d<double> start_ray(s_pt,
+                                                      bdry_plus_start);
+                
+                vgl_line_2d<double> pt_line(pt,
+                                            start_ray.direction());
+                
+                vgl_point_2d<double> footPt;
+                vgl_intersection(pt_line,shock_line,footPt);
+
+                double distance_s= vgl_distance(s_pt,footPt);
+                double distance_t= vgl_distance(footPt,pt);
+        
+
+                double ratio = distance_s/distance;
+
+                double con_index=start_index + ratio;
+
+                shock_coords.set(con_index,distance_t);
+
+
+            }
+            
+
+
         }
-        shock_coords.set(con_index,distance_t);
+        else
+        {
+
+
+
+        }
+
+
 
     }
 
