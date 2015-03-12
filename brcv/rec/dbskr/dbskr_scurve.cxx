@@ -708,6 +708,12 @@ vgl_point_2d<double> dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt)
 
         double ratio = angle_ray/angle_sector;
 
+        if ( angle_ray > angle_sector )
+        {
+            ratio=0.0;
+        }
+        
+
         double con_index=start_index + ratio;
         double distance_t= vgl_distance(pt,s_pt);
 
@@ -778,7 +784,7 @@ vgl_point_2d<double> dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt)
 
                 double distance_s= vgl_distance(s_pt,footPt);
                 double distance_t= vgl_distance(footPt,pt);
-        
+
 
                 double ratio = distance_s/distance;
 
