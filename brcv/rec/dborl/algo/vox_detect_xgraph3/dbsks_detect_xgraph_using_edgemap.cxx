@@ -54,6 +54,28 @@ static bool is_edges_covered_in_window (vgl_box_2d<int > window, vcl_vector<dbde
 
 static bool b_rank_order_results = true;
 static bool is_initial = false;
+static bool is_Black = true;
+static double b_ranking_weights[] = {0.0705, 0.0688, 0.2222, 0.1026};
+static double b_ranking_weights_initial[] = {0.1004, 0.0880, 0, 0};
+static double w_ranking_weights[] = {0.0964, 0.0000, 0.2317, 0.1273};
+static double w_ranking_weights_initial[] = {0.1121, 0.0089, 0, 0};
+
+
+static double compute_real_conf(double edge_confidence, double appearance_cost, double appearance_cost2, double shape_trans_cost )
+{
+
+	vcl_vector<double> ranking_weights;
+	if(is_initial && is_Black)
+		ranking_weights.assign(b_ranking_weights_initial, b_ranking_weights_initial+4);
+	if(is_initial && !is_Black)
+		ranking_weights.assign(w_ranking_weights_initial, w_ranking_weights_initial+4);
+	if(!is_initial && is_Black)
+		ranking_weights.assign(b_ranking_weights, b_ranking_weights+4);
+	if(!is_initial && !is_Black)
+		ranking_weights.assign(w_ranking_weights, w_ranking_weights+4);
+
+	return 10- ranking_weights[0]*(40-edge_confidence) - ranking_weights[1]*appearance_cost - ranking_weights[2]*appearance_cost2 - ranking_weights[3]*shape_trans_cost;
+}
 //------------------------------------------------------------------------------
 //:
 bool dbsks_detect_xgraph_using_edgemap::
@@ -135,41 +157,64 @@ execute()
 
     if (!dbsks_load_detections_from_folder(prev_storage_folder, prev_dets))
 		vcl_cout << "\n [Fail] loading previous dets \n";
+	else
+		is_initial = true;
 
     if (dbsks_load_detections_from_folder(storage_folder, dets))
     {
-      vcl_cout << "\nThis image has been processed. All records are loaded back.\n";
-	  if(b_rank_order_results)
-		  this->rank_detection_results(actual_edgemap, actual_xgraph, min_accepted_confidence, 
+        vcl_cout << "\nThis image has been processed. All records are loaded back.\n";
+	    if(b_rank_order_results)
+		    this->rank_detection_results(actual_edgemap, actual_xgraph, min_accepted_confidence, 
         storage_folder, dets, prev_dets);
-	  //this->output_det_list = dets;
+
+	    this->output_det_list = dets;
+		//> Dump the detections to a folder for backing up
+		vcl_cout << "\n> Saving detections of selected scale to dump folder = " 
+		<< storage_folder << "\n";
+     
+		// form a unique id for this group of detections
+		vcl_string xgraph_name = vul_file::strip_extension(vul_file::strip_directory(xgraph_file));
+		vcl_string det_group_id = xgraph_name + "+" + object_id + "+" + storage_foldername;
+		vcl_string model_category = "";
+
+		// create a binary image from the edgemap
+		vil_image_view<vxl_byte > bg_view;
+		dbsks_detect_xgraph_using_edgemap::convert_edgemap_to_bw(actual_edgemap, bg_view);
+
+		// save detection to disk
+		dbsks_save_detections_to_folder(dets, object_id, model_category, 
+		  det_group_id, bg_view, storage_folder, "");
+
 	  return true;
     }
     else
     {
-      //> Detect xgraph with the specified scale
-      dets.clear();
-      this->run_detection_on(actual_edgemap, actual_xgraph, min_accepted_confidence, 
-        storage_folder, dets, prev_dets);
+		//> Detect xgraph with the specified scale
+		dets.clear();
+		this->run_detection_on(actual_edgemap, actual_xgraph, min_accepted_confidence, 
+		storage_folder, dets, prev_dets);
 
-      //> Dump the detections to a folder for backing up
-      vcl_cout << "\n> Saving detections of selected scale to dump folder = " 
-        << storage_folder << "\n";
-      {
-        // form a unique id for this group of detections
-        vcl_string xgraph_name = vul_file::strip_extension(vul_file::strip_directory(xgraph_file));
-        vcl_string det_group_id = xgraph_name + "+" + object_id + "+" + storage_foldername;
-        vcl_string model_category = "";
+		//> Dump the detections to a folder for backing up
+		vcl_cout << "\n> Saving detections of selected scale to dump folder = " 
+		<< storage_folder << "\n";
+     
+		// form a unique id for this group of detections
+		vcl_string xgraph_name = vul_file::strip_extension(vul_file::strip_directory(xgraph_file));
+		vcl_string det_group_id = xgraph_name + "+" + object_id + "+" + storage_foldername;
+		vcl_string model_category = "";
 
-        // create a binary image from the edgemap
-        vil_image_view<vxl_byte > bg_view;
-        dbsks_detect_xgraph_using_edgemap::convert_edgemap_to_bw(actual_edgemap, bg_view);
-        
-		//vcl_sort(dets.begin(), dets.end(), dbsks_decreasing_confidence);
-        // save detection to disk
-        dbsks_save_detections_to_folder(dets, object_id, model_category, 
-          det_group_id, bg_view, storage_folder, "");
-      }
+		// create a binary image from the edgemap
+		vil_image_view<vxl_byte > bg_view;
+		dbsks_detect_xgraph_using_edgemap::convert_edgemap_to_bw(actual_edgemap, bg_view);
+
+  	    if(is_initial)
+			prev_dets.clear();
+  	    if(b_rank_order_results)
+	  		this->rank_detection_results(actual_edgemap, actual_xgraph, min_accepted_confidence, storage_folder, dets, prev_dets);
+		// save detection to disk
+		dbsks_save_detections_to_folder(dets, object_id, model_category, 
+		  det_group_id, bg_view, storage_folder, "");
+      
     } // if exist
     
 
@@ -192,10 +237,7 @@ execute()
     vcl_cout
       << "\n-------------------------------------------------------------------\n";
 
-  if(is_initial)
-		prev_dets.clear();
-  if(b_rank_order_results)
-	  this->rank_detection_results(actual_edgemap, actual_xgraph, min_accepted_confidence, storage_folder, dets, prev_dets);
+
 //  }
 
   //> Summarize detections for all scales
@@ -338,6 +380,8 @@ load_params_and_models()
   else
   {
     vcl_cout << "[ OK ]\n";
+	if(appearance_model_node_value.back()>100)
+		is_Black = false;
   }
 
   return true;
@@ -879,17 +923,23 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 					dbsksp_xshock_graph_sptr sol_xgraph = engine.list_solutions_[i];
 
 					double confidence = -engine.list_solution_costs_[i];
-					double real_confidence = -engine.list_solution_real_costs_[i];
+					double edge_confidence = -engine.list_solution_real_costs_[i];
 
 					// for detection with enough edge support, add appearance confidence into it.
 					// edge matching cost term
-					vcl_cout <<"\nedge_confidence:" << real_confidence << vcl_endl;		
+					vcl_cout <<"\nedge_confidence:" << edge_confidence << vcl_endl;		
 
 					// appearance term
 					double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
-					vcl_cout <<"\nappearance_cost:" << appearance_cost << vcl_endl;
+					vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
 
-					real_confidence += (20 - appearance_cost);
+					double appearance_cost2 = 0;
+
+					// shape change term,
+					double shape_trans_cost = 0;
+
+					// only consider the dets which is not too diff in bg as prototype
+					double real_confidence  = compute_real_conf(edge_confidence, appearance_cost, appearance_cost2, shape_trans_cost );
 					vcl_cout << " real confidence: " << real_confidence << vcl_endl;
 					dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
 					det->compute_bbox();
@@ -924,17 +974,23 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 						dbsksp_xshock_graph_sptr sol_xgraph = engine.list_solutions_[i];
 
 						double confidence = -engine.list_solution_costs_[i];
-						double real_confidence = -engine.list_solution_real_costs_[i];
+						double edge_confidence = -engine.list_solution_real_costs_[i];
 
 						// for detection with enough edge support, add appearance confidence into it.
 						// edge matching cost term
-						vcl_cout <<"\nedge_confidence:" << real_confidence << vcl_endl;		
+						vcl_cout <<"\nedge_confidence:" << edge_confidence << vcl_endl;		
 
 						// appearance term
 						double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
-						vcl_cout <<"\nappearance_cost:" << appearance_cost << vcl_endl;
+						vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
 
-						real_confidence += (20 - appearance_cost);
+						double appearance_cost2 = 0;
+
+						// shape change term,
+						double shape_trans_cost = 0;
+
+						// only consider the dets which is not too diff in bg as prototype
+						double real_confidence  = compute_real_conf(edge_confidence, appearance_cost, appearance_cost2, shape_trans_cost );
 						//real_confidence *= 0.9;
 						vcl_cout << " real confidence: " << real_confidence << vcl_endl;
 						dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
@@ -967,17 +1023,23 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 						dbsksp_xshock_graph_sptr sol_xgraph = engine.list_solutions_[i];
 
 						double confidence = -engine.list_solution_costs_[i];
-						double real_confidence = -engine.list_solution_real_costs_[i];
+						double edge_confidence = -engine.list_solution_real_costs_[i];
 
 						// for detection with enough edge support, add appearance confidence into it.
 						// edge matching cost term
-						vcl_cout <<"\nedge_confidence:" << real_confidence << vcl_endl;		
+						vcl_cout <<"\nedge_confidence:" << edge_confidence << vcl_endl;		
 
 						// appearance term
 						double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
-						vcl_cout <<"\nappearance_cost:" << appearance_cost << vcl_endl;
+						vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
 
-						real_confidence += (20 - appearance_cost);
+						double appearance_cost2 = 0;
+
+						// shape change term,
+						double shape_trans_cost = 0;
+
+						// only consider the dets which is not too diff in bg as prototype
+						double real_confidence  = compute_real_conf(edge_confidence, appearance_cost, appearance_cost2, shape_trans_cost );
 						//real_confidence *= 0.9;
 						vcl_cout << " real confidence: " << real_confidence << vcl_endl;
 						dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
@@ -1036,26 +1098,29 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 				dbsksp_xshock_graph_sptr sol_xgraph = engine.list_solutions_[i];
 
 				double confidence = -engine.list_solution_costs_[i];
-				double real_confidence = -engine.list_solution_real_costs_[i];
+				double edge_confidence = -engine.list_solution_real_costs_[i];
 
 				// for detection with enough edge support, add appearance confidence into it.
 				// edge matching cost term
-				vcl_cout <<"\nedge_confidence:" << real_confidence << vcl_endl;		
+				vcl_cout <<"\nedge_confidence:" << edge_confidence << vcl_endl;		
 
 				// appearance term
 				double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
-				if(!is_initial)
-					appearance_cost += compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[prev_i]->xgraph(), prev_L_);
 				vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
 
+				double appearance_cost2 = 0;
+				if(!is_initial)
+					appearance_cost2 = compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[prev_i]->xgraph(), prev_L_);
+				vcl_cout <<"appearance_cost2:" << appearance_cost2 << vcl_endl;
+
 				// shape change term,
-				//double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
-				//vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
+				double shape_trans_cost = 0;
+				if(!is_initial)
+					shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
+				vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
 
 				// only consider the dets which is not too diff in bg as prototype
-				real_confidence += (20 - appearance_cost);
-				//if(!is_initial)
-					//real_confidence += (10 - shape_trans_cost); 
+				double real_confidence  = compute_real_conf(edge_confidence, appearance_cost, appearance_cost2, shape_trans_cost );
 				vcl_cout << " real confidence: " << real_confidence << vcl_endl;
 				dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
 				det->compute_bbox();
@@ -1086,26 +1151,29 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 				dbsksp_xshock_graph_sptr sol_xgraph = engine.list_solutions_[i];
 
 				double confidence = -engine.list_solution_costs_[i];
-				double real_confidence = -engine.list_solution_real_costs_[i];
+				double edge_confidence = -engine.list_solution_real_costs_[i];
 
 				// for detection with enough edge support, add appearance confidence into it.
 				// edge matching cost term
-				vcl_cout <<"\nedge_confidence:" << real_confidence << vcl_endl;		
+				vcl_cout <<"\nedge_confidence:" << edge_confidence << vcl_endl;		
 
 				// appearance term
 				double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
-				if(!is_initial)
-					appearance_cost += compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[prev_i]->xgraph(), prev_L_);
 				vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
 
+				double appearance_cost2 = 0;
+				if(!is_initial)
+					appearance_cost2 = compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[prev_i]->xgraph(), prev_L_);
+				vcl_cout <<"appearance_cost2:" << appearance_cost2 << vcl_endl;
+
 				// shape change term,
-				//double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
-				//vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
+				double shape_trans_cost = 0;
+				if(!is_initial)
+					shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
+				vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
 
 				// only consider the dets which is not too diff in bg as prototype
-				real_confidence += (20 - appearance_cost);
-				//if(!is_initial)
-					//real_confidence += (10 - shape_trans_cost); 
+				double real_confidence  = compute_real_conf(edge_confidence, appearance_cost, appearance_cost2, shape_trans_cost );
 				if(!is_initial)
 					real_confidence *= 0.9;
 				vcl_cout << " real confidence: " << real_confidence << vcl_endl;
@@ -1139,26 +1207,30 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 				dbsksp_xshock_graph_sptr sol_xgraph = engine.list_solutions_[i];
 
 				double confidence = -engine.list_solution_costs_[i];
-				double real_confidence = -engine.list_solution_real_costs_[i];
+				double edge_confidence = -engine.list_solution_real_costs_[i];
 
 				// for detection with enough edge support, add appearance confidence into it.
 				// edge matching cost term
-				vcl_cout <<"\nedge_confidence:" << real_confidence << vcl_endl;		
+				vcl_cout <<"\nedge_confidence:" << edge_confidence << vcl_endl;		
 
 				// appearance term
 				double appearance_cost = compute_appearance_cost(sol_xgraph, L_);
-				if(!is_initial)
-					appearance_cost += compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[prev_i]->xgraph(), prev_L_);
 				vcl_cout <<"appearance_cost:" << appearance_cost << vcl_endl;
 
+				double appearance_cost2 = 0;
+				if(!is_initial)
+					appearance_cost2 = compute_appearance_cost_v2(sol_xgraph, L_, prev_dets[prev_i]->xgraph(), prev_L_);
+				vcl_cout <<"appearance_cost2:" << appearance_cost2 << vcl_endl;
+
 				// shape change term,
-				//double shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
-				//vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
+				double shape_trans_cost = 0;
+				if(!is_initial)
+					shape_trans_cost = compute_shape_trans_cost(sol_xgraph, prev_dets[prev_i]->xgraph());
+				vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
 
 				// only consider the dets which is not too diff in bg as prototype
-				real_confidence += (20 - appearance_cost);
-				//if(!is_initial)
-					//real_confidence += (10 - shape_trans_cost); 
+				double real_confidence  = compute_real_conf(edge_confidence, appearance_cost, appearance_cost2, shape_trans_cost );
+
 				if(!is_initial)
 					real_confidence *= 0.9;
 				vcl_cout << " real confidence: " << real_confidence << vcl_endl;
@@ -1646,8 +1718,9 @@ bool dbsks_detect_xgraph_using_edgemap::
 
 			vcl_cout <<"shape_cost:" << shape_trans_cost << vcl_endl;
 
-			double real_confidence = (edge_confidence - appearance_cost - appearance_cost2 - shape_trans_cost);
+			double real_confidence = compute_real_conf(edge_confidence, appearance_cost, appearance_cost2, shape_trans_cost );
 			vcl_cout << " real confidence: " << real_confidence << vcl_endl;
+
 			//dbsks_det_desc_xgraph_sptr det = new dbsks_det_desc_xgraph(sol_xgraph, real_confidence );
 			//det->compute_bbox();
 			//dets_window.push_back(det);
@@ -1658,9 +1731,16 @@ bool dbsks_detect_xgraph_using_edgemap::
 			conf_vector[2] = -appearance_cost2;
 			conf_vector[3] = -shape_trans_cost;
 			
+			dets[i]->set_confidence(real_confidence);
+			dets[i]->set_conf_vec(conf_vector);
 		
-		  myfile << conf_vector[0] << " " << conf_vector[1] << " "<< conf_vector[2] << " "<< conf_vector[3] << " " << real_confidence <<"\n";
-
+		}
+		
+		vcl_sort(dets.begin(), dets.end(), dbsks_decreasing_confidence);
+		
+		for (unsigned i =0; i < dets.size(); ++i)
+		{
+			myfile << dets[i]->conf_vec()[0] << " " << dets[i]->conf_vec()[1] << " "<< dets[i]->conf_vec()[2] << " "<< dets[i]->conf_vec()[2] << " " << dets[i]->confidence()<<"\n";
 		}
   		myfile.close();
 	}

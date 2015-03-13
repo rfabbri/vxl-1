@@ -20,7 +20,7 @@
 #include <dborl/dborl_det_desc.h>
 #include <dbsks/dbsks_det_desc_xgraph_sptr.h>
 #include <vsol/vsol_box_2d_sptr.h>
-
+#include <vcl_vector.h>
 
 
 // ============================================================================
@@ -63,6 +63,12 @@ public:
     this->xgraph_ = xgraph;
   }
 
+  vcl_vector<double> conf_vec(){return this->conf_vec_;}
+  void set_conf_vec(vcl_vector<double> conf_vec)
+  {
+	this->conf_vec_ = conf_vec;
+  }
+
   //: Compute bounding box from xgraph_
   bool compute_bbox();
 
@@ -71,6 +77,7 @@ protected:
   vsol_box_2d_sptr bbox_;
   double confidence_;
   dbsksp_xshock_graph_sptr xgraph_; 
+  vcl_vector<double> conf_vec_;
 };
 
 
