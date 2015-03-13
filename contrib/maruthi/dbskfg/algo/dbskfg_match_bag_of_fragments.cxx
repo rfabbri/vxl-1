@@ -2328,7 +2328,7 @@ void dbskfg_match_bag_of_fragments::set_bow_train(vcl_string& file_path)
 
 
     /* KDTree, L2 comparison metric, dimension 128, 1 tree, L1 metric */
-    forest_ = vl_kdforest_new(VL_TYPE_FLOAT, 384, 1, VlDistanceL2);
+    forest_ = vl_kdforest_new(VL_TYPE_FLOAT, 384, 4, VlDistanceL2);
 
     // Build tree
     vl_kdforest_build(forest_,
@@ -8382,7 +8382,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_bow(
         bsta_histogram<double> sc2_hist(range, bins);
 
 
-        for ( unsigned int c1=0; sc1->num_points(); ++c1 )
+        for ( unsigned int c1=0; c1 < sc1->num_points(); ++c1 )
         {
 
             // Shock Point 1 from Model
@@ -8441,7 +8441,7 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_bow(
             model_hist.upcount(ps1_keyword[0].index,1.0f);
         }
         
-        for ( unsigned int c2=0; sc2->num_points(); ++c2 )
+        for ( unsigned int c2=0; c2 < sc2->num_points(); ++c2 )
         {
 
             // Shock Point 1 from Model
@@ -10822,7 +10822,7 @@ void dbskfg_match_bag_of_fragments::compute_descr(
         
     }
 
-    descriptor.normalize();
+    // descriptor.normalize();
 
 }
 
