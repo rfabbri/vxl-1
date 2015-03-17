@@ -875,15 +875,15 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
 	vil_image_view<vxl_byte> L_, prev_L_;
 	vil_convert_planes_to_grey(this->source_image, L_);
-
+	vcl_vector<double> graph_size_vector;
+	graph_size_vector.push_back(45);
+	graph_size_vector.push_back(55);
+	graph_size_vector.push_back(70);
 	// Pipeline Update: if no previous dets, do window detection in a coarse grid search first. Refine the coarse results in the next steps
 	if(prev_dets.empty())
 	{
 		is_initial = true;
-		vcl_vector<double> graph_size_vector;
-		graph_size_vector.push_back(45);
-		graph_size_vector.push_back(55);
-		graph_size_vector.push_back(70);
+
 
 		for (int s = 0; s< graph_size_vector.size(); s++)
 		{
@@ -1072,7 +1072,16 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 		engine.generate_xnode_grid_option = 4; // use prev dets window
 		engine.xshock_likelihood_ = &ccm_like;
 		engine.xgraph_geom_ = xgraph_geom;
-		engine.set_xgraph(prev_dets[prev_i]->xgraph());
+
+
+		dbsksp_xshock_graph_sptr target_xgraph = new dbsksp_xshock_graph(*(prev_dets[prev_i]->xgraph()));
+		double cur_xgraph_size = vcl_sqrt(target_xgraph->area());
+
+		if(cur_xgraph_size < graph_size_vector[0])
+			target_xgraph->scale_up(0, 0, graph_size_vector[0] / cur_xgraph_size);
+		
+		engine.set_xgraph(target_xgraph);
+
 		//engine.prev_dets_ = prev_dets;
 		engine.prev_dets_.push_back(prev_dets[prev_i]);
 		engine.compute_vertices_para_range();
@@ -1244,8 +1253,10 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
     vcl_cout << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
   } // iw
-
   vcl_sort(raw_dets_all_windows.begin(), raw_dets_all_windows.end(), dbsks_decreasing_confidence);
+
+
+
 
 	// only keep the first 10
 
@@ -1253,6 +1264,9 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 		//raw_dets_all_windows.erase(raw_dets_all_windows.begin()+10, raw_dets_all_windows.end());
 
   vcl_cout << "\n> Number of raw detections: " << raw_dets_all_windows.size() << vcl_endl;
+
+  if(raw_dets_all_windows.size()==0)
+	  raw_dets_all_windows.insert(raw_dets_all_windows.end(), prev_dets.begin(), prev_dets.end());
 
   //> Non-max supression on the boundary polygon
   if (run_nms_based_on_overlap)
