@@ -5,6 +5,7 @@
 #include <vgl/vgl_polygon.h>
 #include <vgl/vgl_area.h>
 #include <vgl/vgl_line_2d.h>
+#include <vgl/vgl_lineseg_test.h>
 #include <vgl/vgl_closest_point.h>
 #include <vgl/vgl_intersection.h>
 #include <dbgl/algo/dbgl_eulerspiral.h>
@@ -745,6 +746,9 @@ vgl_point_2d<double> dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt)
         vgl_line_2d<double> shock_line(s_pt,
                                        e_pt);
         
+        vgl_line_segment_2d<double> shock_line_segment(s_pt,
+                                               e_pt);
+
         bool pointAboveLine= _isPointAboveLine(pt,
                                                s_pt,
                                                e_pt);
@@ -793,46 +797,115 @@ vgl_point_2d<double> dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt)
             start_ray.set(s_pt,
                           bdry_minus_start);
         }
-        
-        if ( flag )
+
+        // Look at special case fragment
+        if ( vgl_distance(bdry_plus_stop,bdry_minus_stop) <= 1.0e-8 )
         {
 
-            vgl_line_2d<double> pt_line(intersection_pt,
-                                        pt);
+            vgl_line_2d<double> pt_line(pt,
+                                        start_ray.direction());
+
+            vgl_line_2d<double> new_shock_line(s_pt,bdry_plus_stop);
+            distance=vgl_distance(s_pt,bdry_plus_stop);
 
             vgl_point_2d<double> footPt;
-            vgl_intersection(pt_line,shock_line,footPt);
-
+            vgl_intersection(pt_line,new_shock_line,footPt);
+                
             double distance_s= vgl_distance(s_pt,footPt);
-            double distance_t= vgl_distance(footPt,pt);
-        
-
+                
             double ratio = distance_s/distance;
-
+                
             double con_index=start_index + ratio;
 
+
+            double dx = sh_pt_[stop_index].x() - sh_pt_[start_index].x();
+            double dy = sh_pt_[stop_index].y() - sh_pt_[start_index].y();
+            
+            vgl_point_2d<double> frag_pt(sh_pt_[start_index].x()+ratio*dx, 
+                                         sh_pt_[start_index].y()+ratio*dy);
+
+            double distance_t=vgl_distance(frag_pt,pt);
+
             shock_coords.set(con_index,distance_t);
+            
+
 
         }
         else
         {
+            if ( flag )
+            {
                 
-            vgl_line_2d<double> pt_line(pt,
-                                        start_ray.direction());
+                vgl_line_2d<double> pt_line(intersection_pt,
+                                            pt);
                 
-            vgl_point_2d<double> footPt;
-            vgl_intersection(pt_line,shock_line,footPt);
+                vgl_point_2d<double> footPt;
+                bool pointOnLine = vgl_intersection(pt_line,shock_line,footPt);
+                
+                if ( !pointOnLine )
+                {
+                    double distance_s= vgl_distance(s_pt,footPt);
+                    double distance_t= vgl_distance(footPt,pt);
+                    
+                    
+                    double ratio = distance_s/distance;
+                    
+                    double con_index=start_index + ratio;
+                    
+                    shock_coords.set(con_index,distance_t);
+                }
+                else
+                {
+                    double distance_s = vgl_distance(s_pt,pt);
+                    double distance_t = 0.0;
 
-            double distance_s= vgl_distance(s_pt,footPt);
-            double distance_t= vgl_distance(footPt,pt);
+                    double ratio = distance_s/distance;
+
+                    double con_index =start_index + ratio;
+
+                    shock_coords.set(con_index,distance_t);
+
+                    pointAboveLine=true;
+
+                }
+            }
+            else
+            {
+                
+                vgl_line_2d<double> pt_line(pt,
+                                            start_ray.direction());
+                
+                vgl_point_2d<double> footPt;
+                bool pointOnLine = vgl_intersection(pt_line,shock_line,footPt);
+                
+                if ( !pointOnLine )
+                {
+                    double distance_s= vgl_distance(s_pt,footPt);
+                    double distance_t= vgl_distance(footPt,pt);
+                    
+                    
+                    double ratio = distance_s/distance;
+                    
+                    double con_index=start_index + ratio;
+                    
+                    shock_coords.set(con_index,distance_t);
+
+                }
+                else
+                {
+                    double distance_s = vgl_distance(s_pt,pt);
+                    double distance_t = 0.0;
+
+                    double ratio = distance_s/distance;
+
+                    double con_index =start_index + ratio;
+
+                    shock_coords.set(con_index,distance_t);
 
 
-            double ratio = distance_s/distance;
-
-            double con_index=start_index + ratio;
-
-            shock_coords.set(con_index,distance_t);
-
+                    pointAboveLine=true;
+                }
+            }
 
         }    
 
