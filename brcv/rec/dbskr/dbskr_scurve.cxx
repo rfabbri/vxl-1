@@ -842,7 +842,7 @@ vgl_point_2d<double> dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt)
                 vgl_point_2d<double> footPt;
                 bool pointOnLine = vgl_intersection(pt_line,shock_line,footPt);
                 
-                if ( !pointOnLine )
+                if ( pointOnLine )
                 {
                     double distance_s= vgl_distance(s_pt,footPt);
                     double distance_t= vgl_distance(footPt,pt);
@@ -878,7 +878,7 @@ vgl_point_2d<double> dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt)
                 vgl_point_2d<double> footPt;
                 bool pointOnLine = vgl_intersection(pt_line,shock_line,footPt);
                 
-                if ( !pointOnLine )
+                if ( pointOnLine )
                 {
                     double distance_s= vgl_distance(s_pt,footPt);
                     double distance_t= vgl_distance(footPt,pt);
