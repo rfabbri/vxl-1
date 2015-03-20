@@ -625,7 +625,7 @@ private:
         double query_sift_scale=1.0,
         vcl_string prefix="");
 
-    vgl_point_2d<double> find_part_correpondences(
+    vgl_point_2d<double> find_part_correspondences(
         vgl_point_2d<double> query_pt,
         vcl_vector<dbskr_scurve_sptr>& curve_list1,
         vcl_vector<dbskr_scurve_sptr>& curve_list2,

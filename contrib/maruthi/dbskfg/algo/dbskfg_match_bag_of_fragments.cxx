@@ -7006,7 +7006,7 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
 }
 
 
-vgl_point_2d<double> find_part_correpondences(
+vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
     vgl_point_2d<double> query_pt,
     vcl_vector<dbskr_scurve_sptr>& curve_list1,
     vcl_vector<dbskr_scurve_sptr>& curve_list2,
@@ -7049,18 +7049,33 @@ vgl_point_2d<double> find_part_correpondences(
 
         vcl_vector<vcl_pair<int,int> > curve_map=map_list[c];
 
-        int floor_index= vcl_floor(int_pt.x());
-        int ceil_index = vcl_ceil(int_pt.x());
+        double index=int_pt.x();
+
+        double index_ratio=0.0;
+
         unsigned int v=0; 
+
+        int model_int_diff(0);
+        double int_diff(0.0);
+
         for ( ; v < curve_map.size()-1 ; ++v)
         {
 
-            int test_ind1=curve_map[v].first;
-            int test_ind2=curve_map[v+1].first;
+            int lower=curve_map[v].first;
+            int upper=curve_map[v+1].first;
 
-            if ( floor_index == test_ind1 && 
-                 ceil_index == test_ind2 )
+            if ( upper < lower )
             {
+                int temp=upper;
+                upper=lower;
+                lower=temp;
+            }
+            
+            if ( index >= lower &&
+                 index < upper )
+            {
+                model_int_diff=upper-lower;
+                int_diff=index-lower;
                 break;
                 
             }
@@ -7068,13 +7083,33 @@ vgl_point_2d<double> find_part_correpondences(
             
         }
 
+        
         // Find mapping point
         int start_index=curve_map[v].second;
         int stop_index=curve_map[v+1].second;
 
-        double s_distance=vgl_distance(query_curve->sh_pt(start_index),
-                                       query_curve->sh_pt(stop_index));
-        double s_map = int_pt.x() * s_distance;
+        if ( stop_index < start_index)
+        {
+            int temp=stop_index;
+            stop_index=start_index;
+            start_index=temp;
+        }
+
+        int query_int_diff=stop_index-start_index;
+
+        double s_map(0.0);
+
+        if ( query_int_diff == 0 )
+        {
+            s_map=start_index;
+
+        }
+        else
+        {
+            double ratio=((double) query_int_diff)/((double) model_int_diff);
+            s_map = int_diff*ratio;
+
+        }
 
         double t_rad_model = model_curve->time(int_pt.x());
         double t_rad_query = query_curve->time(s_map);
@@ -7111,18 +7146,33 @@ vgl_point_2d<double> find_part_correpondences(
 
         vcl_vector<vcl_pair<int,int> > curve_map=map_list[c];
 
-        int floor_index= vcl_floor(int_pt.x());
-        int ceil_index = vcl_ceil(int_pt.x());
+        double index=int_pt.x();
+
+        double index_ratio=0.0;
+
         unsigned int v=0; 
+
+        int model_int_diff(0);
+        double int_diff(0.0);
+
         for ( ; v < curve_map.size()-1 ; ++v)
         {
 
-            int test_ind1=curve_map[v].second;
-            int test_ind2=curve_map[v+1].second;
+            int lower=curve_map[v].second;
+            int upper=curve_map[v+1].second;
 
-            if ( floor_index == test_ind1 && 
-                 ceil_index == test_ind2 )
+            if ( upper < lower )
             {
+                int temp=upper;
+                upper=lower;
+                lower=temp;
+            }
+            
+            if ( index >= lower &&
+                 index < upper )
+            {
+                model_int_diff=upper-lower;
+                int_diff=index-lower;
                 break;
                 
             }
@@ -7130,13 +7180,33 @@ vgl_point_2d<double> find_part_correpondences(
             
         }
 
+        
         // Find mapping point
         int start_index=curve_map[v].first;
         int stop_index=curve_map[v+1].first;
 
-        double s_distance=vgl_distance(query_curve->sh_pt(start_index),
-                                       query_curve->sh_pt(stop_index));
-        double s_map = int_pt.x() * s_distance;
+        if ( stop_index < start_index)
+        {
+            int temp=stop_index;
+            stop_index=start_index;
+            start_index=temp;
+        }
+
+        int query_int_diff=stop_index-start_index;
+
+        double s_map(0.0);
+
+        if ( query_int_diff == 0 )
+        {
+            s_map=start_index;
+
+        }
+        else
+        {
+            double ratio=((double) query_int_diff)/((double) model_int_diff);
+            s_map = int_diff*ratio;
+
+        }
 
         double t_rad_model = model_curve->time(int_pt.x());
         double t_rad_query = query_curve->time(s_map);
