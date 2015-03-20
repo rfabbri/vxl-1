@@ -7024,7 +7024,7 @@ vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
     ps1.set(ps1.x()*model_scale_ratio,
             ps1.y()*model_scale_ratio);
     
-    if ( flag )
+    if ( !flag )
     {
 
         unsigned int c=0;
@@ -7107,7 +7107,7 @@ vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
         else
         {
             double ratio=((double) query_int_diff)/((double) model_int_diff);
-            s_map = int_diff*ratio;
+            s_map = start_index+int_diff*ratio;
 
         }
 
@@ -7204,7 +7204,7 @@ vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
         else
         {
             double ratio=((double) query_int_diff)/((double) model_int_diff);
-            s_map = int_diff*ratio;
+            s_map = start_index+int_diff*ratio;
 
         }
 
