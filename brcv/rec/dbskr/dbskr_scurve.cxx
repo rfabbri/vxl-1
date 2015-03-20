@@ -672,7 +672,6 @@ vgl_point_2d<double> dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt)
     // Degenerate case
     if ( vgl_distance(s_pt,e_pt) < 1.0e-8 )
     {
-
         vgl_point_2d<double> arc_start;
         vgl_point_2d<double> arc_stop;
 
@@ -708,14 +707,32 @@ vgl_point_2d<double> dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt)
 
         double ratio = angle_ray/angle_sector;
 
+        vgl_vector_2d<double> tangent(vcl_cos(theta_[start_index]),
+                                      vcl_sin(theta_[start_index]));
+
+        vgl_line_2d<double> tan_line(s_pt,
+                                     tangent);
+        
+        vgl_point_2d<double> pt1,pt2;
+        tan_line.get_two_points(pt1,pt2);
+
         if ( angle_ray > angle_sector )
         {
             ratio=0.0;
+
         }
         
-
+        bool pointAboveLine= _isPointAboveLine(pt,
+                                               pt1,
+                                               pt2);
+        
         double con_index=start_index + ratio;
         double distance_t= vgl_distance(pt,s_pt);
+
+        if ( !pointAboveLine )
+        {
+            distance_t=distance_t*-1.0;
+        }
 
         shock_coords.set(con_index,distance_t);
                                               
@@ -724,7 +741,7 @@ vgl_point_2d<double> dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt)
     }
     else
     {
-
+        // Non-degenerate case
         vgl_line_2d<double> shock_line(s_pt,
                                        e_pt);
         
@@ -734,77 +751,96 @@ vgl_point_2d<double> dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt)
 
         double distance =vgl_distance(s_pt,
                                       e_pt);
-        
+
+        vgl_point_2d<double> bdry_plus_start = bdry_plus_[start_index];
+        vgl_point_2d<double> bdry_plus_stop  = bdry_plus_[stop_index];
+       
+        vgl_point_2d<double> bdry_minus_start = bdry_minus_[start_index];
+        vgl_point_2d<double> bdry_minus_stop  = bdry_minus_[stop_index];
+     
+        bool flag=false;
+        vgl_point_2d<double> intersection_pt;
+        vgl_line_segment_2d<double> start_ray;
+
         if ( pointAboveLine )
         {
-            vgl_point_2d<double> bdry_plus_start = bdry_plus_[start_index];
-            vgl_point_2d<double> bdry_plus_stop  = bdry_plus_[stop_index];
             
             vgl_line_2d<double> bdry_plus_start_line(s_pt,
                                                      bdry_plus_start);
             vgl_line_2d<double> bdry_plus_stop_line(e_pt,
                                                     bdry_plus_stop);
 
-        
-            vgl_point_2d<double> intersection_pt;
-            bool flag=vgl_intersection(bdry_plus_start_line,
-                                       bdry_plus_stop_line,
-                                       intersection_pt);
+            flag=vgl_intersection(bdry_plus_start_line,
+                                  bdry_plus_stop_line,
+                                  intersection_pt);
 
-            if ( flag )
-            {
-
-                vgl_line_2d<double> pt_line(intersection_pt,
-                                           pt);
-
-                vgl_point_2d<double> footPt;
-                vgl_intersection(pt_line,shock_line,footPt);
-
-                double distance_s= vgl_distance(s_pt,footPt);
-                double distance_t= vgl_distance(footPt,pt);
-        
-
-                double ratio = distance_s/distance;
-
-                double con_index=start_index + ratio;
-
-                shock_coords.set(con_index,distance_t);
-
-            }
-            else
-            {
-                vgl_line_segment_2d<double> start_ray(s_pt,
-                                                      bdry_plus_start);
-                
-                vgl_line_2d<double> pt_line(pt,
-                                            start_ray.direction());
-                
-                vgl_point_2d<double> footPt;
-                vgl_intersection(pt_line,shock_line,footPt);
-
-                double distance_s= vgl_distance(s_pt,footPt);
-                double distance_t= vgl_distance(footPt,pt);
-
-
-                double ratio = distance_s/distance;
-
-                double con_index=start_index + ratio;
-
-                shock_coords.set(con_index,distance_t);
-
-
-            }
-            
-
+            start_ray.set(s_pt,
+                          bdry_plus_start);
 
         }
         else
         {
+            
+            vgl_line_2d<double> bdry_minus_start_line(s_pt,
+                                                     bdry_minus_start);
+            vgl_line_2d<double> bdry_minus_stop_line(e_pt,
+                                                    bdry_minus_stop);
 
+            flag=vgl_intersection(bdry_minus_start_line,
+                                  bdry_minus_stop_line,
+                                  intersection_pt);
 
+            start_ray.set(s_pt,
+                          bdry_minus_start);
+        }
+        
+        if ( flag )
+        {
+
+            vgl_line_2d<double> pt_line(intersection_pt,
+                                        pt);
+
+            vgl_point_2d<double> footPt;
+            vgl_intersection(pt_line,shock_line,footPt);
+
+            double distance_s= vgl_distance(s_pt,footPt);
+            double distance_t= vgl_distance(footPt,pt);
+        
+
+            double ratio = distance_s/distance;
+
+            double con_index=start_index + ratio;
+
+            shock_coords.set(con_index,distance_t);
 
         }
+        else
+        {
+                
+            vgl_line_2d<double> pt_line(pt,
+                                        start_ray.direction());
+                
+            vgl_point_2d<double> footPt;
+            vgl_intersection(pt_line,shock_line,footPt);
 
+            double distance_s= vgl_distance(s_pt,footPt);
+            double distance_t= vgl_distance(footPt,pt);
+
+
+            double ratio = distance_s/distance;
+
+            double con_index=start_index + ratio;
+
+            shock_coords.set(con_index,distance_t);
+
+
+        }    
+
+        if ( !pointAboveLine )
+        {
+            shock_coords.set(shock_coords.x(),
+                             shock_coords.y()*-1);
+        }
 
 
     }
