@@ -8655,12 +8655,11 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_bow(
             }
 
             
-            VlKDForestNeighbor ps1_keyword[0];
+            VlKDForestNeighbor ps1_keyword[1];
             
-            vl_sift_pix* const ptr=ps1_descriptor.data_block();
-
             int nvisited = vl_kdforestsearcher_query(
-                searcher_, ps1_keyword, 1, ptr);
+                searcher_, ps1_keyword, 1, 
+                ps1_descriptor.data_block());
 
             sc1_hist.upcount(ps1_keyword[0].index,1.0f);
             model_hist.upcount(ps1_keyword[0].index,1.0f);
@@ -8714,12 +8713,11 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_bow(
 
             }
             
-            VlKDForestNeighbor ps2_keyword[0];
+            VlKDForestNeighbor ps2_keyword[1];
             
-            vl_sift_pix* const ptr=ps2_descriptor.data_block();
-
             int nvisited = vl_kdforestsearcher_query(
-                searcher_, ps2_keyword, 1, ptr);
+                searcher_, ps2_keyword, 1, 
+                ps2_descriptor.data_block());
             
             sc2_hist.upcount(ps2_keyword[0].index,1.0f);
             query_hist.upcount(ps2_keyword[0].index,1.0f);
