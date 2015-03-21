@@ -8593,6 +8593,8 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_bow(
     bsta_joint_histogram<double> joint_hist(range, bins);
 
     vnl_vector<double> hist_distances(map_list.size(),0);
+    vnl_vector<double> sc1_part_hists(map_list.size()*bins,0);
+    vnl_vector<double> sc2_part_hists(map_list.size()*bins,0);
 
     // Get matching pairs
     for (unsigned ii = 0; ii < map_list.size(); ii++) 
@@ -8655,9 +8657,10 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_bow(
             
             VlKDForestNeighbor ps1_keyword[0];
             
+            vl_sift_pix* const ptr=ps1_descriptor.data_block();
+
             int nvisited = vl_kdforestsearcher_query(
-                searcher_, ps1_keyword, 1, ps1_descriptor
-                .data_block());
+                searcher_, ps1_keyword, 1, ptr);
 
             sc1_hist.upcount(ps1_keyword[0].index,1.0f);
             model_hist.upcount(ps1_keyword[0].index,1.0f);
@@ -8713,9 +8716,10 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_bow(
             
             VlKDForestNeighbor ps2_keyword[0];
             
+            vl_sift_pix* const ptr=ps2_descriptor.data_block();
+
             int nvisited = vl_kdforestsearcher_query(
-                searcher_, ps2_keyword, 1, ps2_descriptor
-                .data_block());
+                searcher_, ps2_keyword, 1, ptr);
             
             sc2_hist.upcount(ps2_keyword[0].index,1.0f);
             query_hist.upcount(ps2_keyword[0].index,1.0f);
@@ -8744,6 +8748,14 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_bow(
         
         hist_distances.put(ii,(0.5)*result_final[0]);
 
+        unsigned int start_index=ii*bins;
+
+        for ( unsigned int kkk=0; kkk < sc1_counts.size() ; ++kkk)
+        {
+            sc1_part_hists.put(kkk+start_index,sc1_counts[kkk]);
+            sc2_part_hists.put(kkk+start_index,sc2_counts[kkk]);
+
+        }
         
     }
 
@@ -8771,14 +8783,23 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_bow(
 
     vcl_pair<double,double> distances(0,0);
 
-    // First Distance sum parts, and average
-    double dist1=hist_distances.mean();
-
-    double dist2=(hist_distances.sum()+overall_dist)/(hist_distances.size()+1);
+    // Lets look at chi squared distance first
+    double  average_chi = (hist_distances.sum()+overall_dist)/
+        (hist_distances.size()+1);
     
-    distances.first=dist1;
-    distances.second=dist2;
+    distances.first=average_chi;
 
+    // Lets look at L2 distance
+
+    double global_l2_distance = vcl_sqrt(vnl_vector_ssd(descr1,descr2));
+
+    sc1_part_hists.normalize();
+    sc2_part_hists.normalize();
+
+    double part_l2_distance = vcl_sqrt(vnl_vector_ssd(sc1_part_hists,
+                                                      sc2_part_hists));
+
+    distances.second = global_l2_distance+part_l2_distance;
     return distances;
         
 }
