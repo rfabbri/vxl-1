@@ -45,6 +45,8 @@ dbskfg_match_bag_of_fragments_process::dbskfg_match_bag_of_fragments_process()
                             "-model_image_file" , bpro1_filepath("", "")) ||
         !parameters()->add( "Train BOW File:" , 
                             "-bow_file" , bpro1_filepath("", "")) ||
+        !parameters()->add( "Part File:" , 
+                            "-part_file" , bpro1_filepath("", "")) ||
         !parameters()->add( "Output folder:", 
                             "-output_folder", bpro1_filepath("", "")) ||
         !parameters()->add( "Output file prefix:" , 
@@ -175,7 +177,11 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     bpro1_filepath bow_file;
     this->parameters()->get_value("-bow_file" , bow_file);
     vcl_string bow_path=bow_file.path;
-    
+
+    bpro1_filepath part_file;
+    this->parameters()->get_value("-part_file" , part_file);
+    vcl_string part_path=part_file.path;
+
     bpro1_filepath output_folder_filepath;
     this->parameters()->get_value("-output_folder", output_folder_filepath);
     vcl_string output_folder = output_folder_filepath.path;
@@ -337,6 +343,11 @@ bool dbskfg_match_bag_of_fragments_process::execute()
         if ( bow_path.size() )
         {
             match_frags.set_bow_train(bow_path);
+        }
+
+        if ( part_path.size() )
+        {
+            match_frags.set_part_file(part_path);
         }
 
         if (!scale_bbox)

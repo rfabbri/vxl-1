@@ -138,6 +138,9 @@ public:
     //: upload training
     void set_bow_train(vcl_string& file_path);
 
+    //: upload training
+    void set_part_file(vcl_string& file_path);
+
     //: binary scale to mean shape 
     bool binary_scale_mean_shape();
 
@@ -322,6 +325,12 @@ private:
     
     vil_image_resource_sptr query_image_;
 
+    // Keep track of model parts
+    vcl_map<unsigned int,vcl_vector<vgl_point_2d<double> > > model_parts_;
+
+    // Keep track of query parts
+    vcl_map<unsigned int,vcl_vector<vgl_point_2d<double> > > query_parts_;
+
     // Create a map of all cost
     vcl_vector<vcl_map<double,vcl_pair<unsigned int,unsigned int> > > 
         sim_matrix_;
@@ -361,6 +370,7 @@ private:
     vcl_string output_binary_file_;
     vcl_string output_binary_h_file_;
     vcl_string output_removed_regions_;
+    vcl_string output_parts_file_;
 
     // Amirs elastic splice cost 
     bool elastic_splice_cost_;

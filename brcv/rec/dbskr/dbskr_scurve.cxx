@@ -636,12 +636,13 @@ dbskr_scurve::fragment_pt(int index, double radius)
 
 //: return a continuous index and radius, of where you are
 //  fragment coordinates(s(i),t) { i.e., (x,y)->(s,t) 
-vgl_point_2d<double> dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt)
+bool dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt,
+                                 vgl_point_2d<double>& shock_coords)
 {
     unsigned int start_index=0;
     unsigned int stop_index=1;
 
-    vgl_point_2d<double> shock_coords;
+    bool poly_found=false;
     vgl_polygon<double> poly_keep(1);
 
     for (unsigned int i = 1; i < num_points_; i++) 
@@ -661,10 +662,17 @@ vgl_point_2d<double> dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt)
             start_index=i-1;
             stop_index=i;
             poly_keep=poly;
+            poly_found=true;
             break;
         }
         
 
+    }
+
+    if (!poly_found )
+    {
+        shock_coords.set(-1.0,-1.0);
+        return false;
     }
 
     vgl_point_2d<double> s_pt = sh_pt_[start_index];
@@ -918,8 +926,9 @@ vgl_point_2d<double> dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt)
 
     }
 
-    return shock_coords;
+    return true;
 }
+
 //: return the radius at an interpolated point
 double dbskr_scurve::interp_radius(int i1, int i2, int N, int n)
 {

@@ -192,7 +192,8 @@ public:
 
   //: return a continuous index and radius, of where you are
   //  fragment coordinates(s(i),t) { i.e., (x,y)->(s,t) }
-  vgl_point_2d<double> intrinsinc_pt(vgl_point_2d<double> pt);
+  bool intrinsinc_pt(vgl_point_2d<double> pt,
+                     vgl_point_2d<double>& shock_coords);
 
   //: return the radius at an interpolated point
   double interp_radius(int i1, int i2, int N, int n);

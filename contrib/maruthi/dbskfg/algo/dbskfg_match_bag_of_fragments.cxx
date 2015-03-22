@@ -127,6 +127,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
       output_binary_file_(output_file),
       output_binary_h_file_(output_file),
       output_removed_regions_(output_file),
+      output_parts_file_(output_file),
       scale_bbox_(scale_bbox),
       scale_root_(scale_root),
       scale_area_(scale_area),
@@ -202,6 +203,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
     output_html_file_  = output_html_file_ +  "_similarity_matrix.html";
     output_binary_file_ = output_binary_file_ + "_binary_similarity_matrix.bin";
     output_binary_h_file_ = output_binary_h_file_ + "_binary_h_matrix.bin";
+    output_parts_file_ = output_binary_h_file_ + "_parts.txt";
     output_removed_regions_ = output_removed_regions_ + "_removed_regions.txt";
 
     // Load model
@@ -2098,6 +2100,29 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
 
     // binary_h_file.close();
 
+
+    vcl_ofstream parts_file;
+    parts_file.open(output_parts_file_.c_str(),
+                    vcl_ios::out | 
+                    vcl_ios::app ); 
+                    
+
+    parts_file<<query_parts_.size()<<vcl_endl;
+
+    vcl_map<unsigned int,vcl_vector<vgl_point_2d<double> > >::iterator it;
+
+    for ( it = query_parts_.begin() ; it != query_parts_.end() ; ++it)
+    {
+        vcl_vector<vgl_point_2d<double> > pts=(*it).second;
+
+        for ( unsigned int p=0; p < pts.size() ; ++p)
+        {
+            parts_file<<pts[p].x()<<" "<<pts[p].y()<<vcl_endl;
+        }
+    }
+
+    parts_file.close();
+
     if ( model_sift_filter_)
     {
         vl_sift_delete(model_sift_filter_);
@@ -2337,6 +2362,68 @@ void dbskfg_match_bag_of_fragments::set_bow_train(vcl_string& file_path)
 
     // Construct searcher
     searcher_  = vl_kdforest_new_searcher(forest_);
+
+}
+
+
+void dbskfg_match_bag_of_fragments::set_part_file(vcl_string& file_path)
+{
+
+    vcl_cout<<"Loading Parts file: "<<file_path<<vcl_endl;
+
+    vcl_ifstream myfile(file_path.c_str());
+
+    unsigned int index=0;
+
+    bool flag=false;
+    if (myfile.is_open())
+    {
+        while(1)
+        {
+            vcl_vector<vgl_point_2d<double> > parts;
+            for ( unsigned int s=0; s < 15; ++s)
+            {
+                vcl_string line;
+                
+                if ( !vcl_getline(myfile,line) )
+                {
+                    flag=true;
+                    break;
+                }
+                
+                
+                vcl_stringstream stream(line);
+                
+                unsigned int id(0),part_id(0);
+                
+                double x_location(0.0),y_location(0.0);
+                
+                unsigned int visible(0);
+                
+                stream>>id
+                      >>part_id
+                      >>x_location
+                      >>y_location
+                      >>visible;
+                
+                vgl_point_2d<double> part_location(x_location-1,y_location-1);
+                
+                model_parts_[index].push_back(part_location);
+                
+            }
+
+            if ( flag )
+            {
+                break;
+            }
+            index++;
+        }
+        
+        
+    }
+
+    myfile.close();
+
 
 }
 
@@ -4659,6 +4746,54 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     }
 
     frob_norm=norm;
+
+    // Doing find part correpondences
+    if ( flag_mirror )
+    {
+
+        double width=0.0;
+        if ( mirror )
+        {
+            vcl_cout<<"Performing mirror find part correpondences"<<vcl_endl;
+            width=query_tree->bbox()->width();
+        }
+
+        unsigned int model_id = model_tree->get_id();
+        
+        if ( query_parts_.count(model_id) )
+        {
+            query_parts_[model_id].clear();
+        }
+        
+        vcl_vector<vgl_point_2d<double> > model_parts = model_parts_[model_id];
+
+        for ( unsigned int id=0; id < model_parts.size() ; ++id)
+        {
+            vgl_point_2d<double> query_pt(model_parts[id]);
+            vgl_point_2d<double> test(-1.0,-1.0);
+            vgl_point_2d<double> mapping_pt(-1.0,-1.0);
+
+            if ( query_pt != test )
+            {
+            
+                mapping_pt=
+                    find_part_correspondences(query_pt,
+                                              curve_list1,
+                                              curve_list2,
+                                              map_list,
+                                              flag,
+                                              width,
+                                              model_tree
+                                              ->get_scale_ratio(),
+                                              query_tree
+                                              ->get_scale_ratio());
+            }
+
+            query_parts_[model_id].push_back(mapping_pt);
+            
+        }
+    }
+
 
     if ( app_sift_ && flag_mirror )
     {
@@ -7045,7 +7180,14 @@ vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
         dbskr_scurve_sptr query_curve=curve_list2[c];
 
         // Find point in model curve
-        vgl_point_2d<double> int_pt = model_curve->intrinsinc_pt(ps1);
+        vgl_point_2d<double> int_pt;
+        bool found=model_curve->intrinsinc_pt(ps1,int_pt);
+
+        if ( !found )
+        {
+            mapping_pt.set(-1.0,-1.0);
+            return mapping_pt;
+        }
 
         vcl_vector<vcl_pair<int,int> > curve_map=map_list[c];
 
@@ -7142,7 +7284,14 @@ vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
         dbskr_scurve_sptr query_curve=curve_list1[c];
 
         // Find point in model curve
-        vgl_point_2d<double> int_pt = model_curve->intrinsinc_pt(ps1);
+        vgl_point_2d<double> int_pt;
+        bool found = model_curve->intrinsinc_pt(ps1,int_pt);
+
+        if ( !found )
+        {
+            mapping_pt.set(-1.0,-1.0);
+            return mapping_pt;
+        }
 
         vcl_vector<vcl_pair<int,int> > curve_map=map_list[c];
 
