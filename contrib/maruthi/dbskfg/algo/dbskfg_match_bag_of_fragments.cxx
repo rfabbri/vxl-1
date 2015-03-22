@@ -203,7 +203,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
     output_html_file_  = output_html_file_ +  "_similarity_matrix.html";
     output_binary_file_ = output_binary_file_ + "_binary_similarity_matrix.bin";
     output_binary_h_file_ = output_binary_h_file_ + "_binary_h_matrix.bin";
-    output_parts_file_ = output_binary_h_file_ + "_parts.txt";
+    output_parts_file_ = output_parts_file_ + "_parts.txt";
     output_removed_regions_ = output_removed_regions_ + "_removed_regions.txt";
 
     // Load model
@@ -7161,7 +7161,7 @@ vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
     
     if ( !flag )
     {
-
+        bool in_part=false;
         unsigned int c=0;
         for ( ; c < curve_list1.size() ; ++c)
         {
@@ -7171,9 +7171,16 @@ vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
 
             if ( poly.contains(query_pt.x(),query_pt.y()))
             {
+                in_part=true;
                 break;
             }
             
+        }
+        
+        if ( !in_part)
+        {
+            mapping_pt.set(-1.0,-1.0);
+            return mapping_pt;
         }
 
         dbskr_scurve_sptr model_curve=curve_list1[c];
@@ -7185,6 +7192,7 @@ vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
 
         if ( !found )
         {
+            vcl_cerr<<"Point not found in middle shape poly"<<vcl_endl;
             mapping_pt.set(-1.0,-1.0);
             return mapping_pt;
         }
@@ -7266,6 +7274,7 @@ vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
     }
     else
     {
+        bool in_part=false;
         unsigned int c=0;
         for ( ; c < curve_list2.size() ; ++c)
         {
@@ -7275,9 +7284,17 @@ vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
 
             if ( poly.contains(query_pt.x(),query_pt.y()))
             {
+                in_part=true;
                 break;
             }
             
+        }
+
+        if ( !in_part )
+        {
+            vcl_cerr<<"Point not found in middle shape poly"<<vcl_endl;
+            mapping_pt.set(-1.0,-1.0);
+            return mapping_pt;
         }
 
         dbskr_scurve_sptr model_curve=curve_list2[c];
