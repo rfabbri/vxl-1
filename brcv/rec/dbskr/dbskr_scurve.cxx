@@ -9,6 +9,7 @@
 #include <vgl/vgl_closest_point.h>
 #include <vgl/vgl_intersection.h>
 #include <dbgl/algo/dbgl_eulerspiral.h>
+#include <dbgl/algo/dbgl_circ_arc.h>
 
 #include <vcl_cstdio.h>
 #include <vcl_algorithm.h>
@@ -927,6 +928,170 @@ bool dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt,
     }
 
     return true;
+}
+
+
+//: return a continuous index and radius, of where you are
+//  fragment coordinates(s(i),t) { i.e., (x,y)->(s,t) }
+void dbskr_scurve::draw_grid(vcl_vector<
+                             vcl_pair< vgl_point_2d<double>,
+                             vgl_point_2d<double> > >&
+                             lines)
+{
+
+    for (unsigned int i = 1; i < num_points_; i++) 
+    {
+        vgl_polygon<double> poly(1);
+
+        poly.push_back(sh_pt_[i-1].x(),sh_pt_[i-1].y());
+        poly.push_back(bdry_plus_[i-1].x(),bdry_plus_[i-1].y());
+        poly.push_back(bdry_plus_[i].x(),bdry_plus_[i].y());
+            
+        poly.push_back(sh_pt_[i].x(),sh_pt_[i].y());
+        poly.push_back(bdry_minus_[i].x(),bdry_minus_[i].y());
+        poly.push_back(bdry_minus_[i-1].x(),bdry_minus_[i-1].y());
+
+        
+        int start_index=i-1;
+        int stop_index=i;
+        
+        vgl_point_2d<double> s_pt = sh_pt_[start_index];
+        vgl_point_2d<double> e_pt = sh_pt_[stop_index];
+
+        // Degenerate case
+        if ( vgl_distance(s_pt,e_pt) < 1.0e-8 )
+        {
+
+            vgl_point_2d<double> arc_start;
+            vgl_point_2d<double> arc_stop;
+            
+            if ( vgl_distance(bdry_minus_[start_index],bdry_minus_[stop_index])
+                 < 1.0e-8)
+            {
+                arc_start=bdry_plus_[start_index];
+                arc_stop= bdry_plus_[stop_index];
+                
+            }
+            else
+            {
+                
+                arc_start=bdry_minus_[start_index];
+                arc_stop=bdry_minus_[stop_index];
+            }
+            
+            vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> >
+                line1(s_pt,arc_start);
+
+            vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> >
+                line2(s_pt,arc_stop);
+
+
+            lines.push_back(line1);
+            lines.push_back(line2);
+
+            double diameter = time_[start_index];
+
+            for ( double radius=1; radius < diameter ; ++radius)
+            {
+                vgl_point_2d<double> start_arc=
+                    fragment_pt(start_index,radius);
+                vgl_point_2d<double> stop_arc=
+                    fragment_pt(stop_index,radius);
+                vgl_point_2d<double> middle_arc=
+                    fragment_pt((double)(start_index)+0.5,radius);
+
+                dbgl_circ_arc circ_arc;
+
+                circ_arc.set_from(start_arc,
+                                  stop_arc,
+                                  middle_arc);
+                             
+                vcl_vector<vgl_point_2d<double > > samples
+                    = circ_arc.compute_samples(1.0);
+
+                for ( unsigned int c=1; c < samples.size() ; ++c)
+                {
+                    vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> >
+                        arc(samples[c-1],samples[c]);
+                    lines.push_back(arc);
+                }
+
+            } 
+
+        }
+        else
+        {
+            // Non-degenerate case
+            vcl_pair<vgl_point_2d<double>,
+                     vgl_point_2d<double> > shock_line(s_pt,
+                                                       e_pt);
+
+            vgl_point_2d<double> bdry_plus_start = bdry_plus_[start_index];
+            vgl_point_2d<double> bdry_plus_stop  = bdry_plus_[stop_index];
+            
+            vgl_point_2d<double> bdry_minus_start = bdry_minus_[start_index];
+            vgl_point_2d<double> bdry_minus_stop  = bdry_minus_[stop_index];
+
+            vcl_pair<vgl_point_2d<double>,
+                     vgl_point_2d<double> > plus_start_line(s_pt,
+                                                            bdry_plus_start);
+
+            vcl_pair<vgl_point_2d<double>,
+                     vgl_point_2d<double> > plus_stop_line(e_pt,
+                                                           bdry_plus_stop);
+            
+            vcl_pair<vgl_point_2d<double>,
+                     vgl_point_2d<double> > minus_start_line(s_pt,
+                                                             bdry_minus_start);
+
+            vcl_pair<vgl_point_2d<double>,
+                     vgl_point_2d<double> > minus_stop_line(e_pt,
+                                                            bdry_minus_stop);
+
+            lines.push_back(shock_line);
+            lines.push_back(plus_start_line);
+            lines.push_back(plus_stop_line);
+            lines.push_back(minus_start_line);
+            lines.push_back(minus_stop_line);
+
+            double diameter = time_[start_index];
+            double ratio = time_[stop_index]/diameter;
+
+            for ( double radius=1; radius < diameter ; ++radius)
+            {
+
+                double stop_radius=radius*ratio;
+
+                vgl_point_2d<double> plus_start=fragment_pt(start_index,
+                                                            radius);
+                
+                vgl_point_2d<double> plus_stop=fragment_pt(stop_index,
+                                                           stop_radius);
+                
+                vgl_point_2d<double> minus_start=fragment_pt(start_index,
+                                                             -radius);
+                
+                vgl_point_2d<double> minus_stop=fragment_pt(stop_index,
+                                                            -stop_radius);
+
+                vcl_pair<vgl_point_2d<double>,
+                         vgl_point_2d<double> > plus_line(plus_start,
+                                                          plus_stop);
+
+                vcl_pair<vgl_point_2d<double>,
+                         vgl_point_2d<double> > minus_line(minus_start,
+                                                           minus_stop);
+
+            
+                lines.push_back(plus_line);
+                lines.push_back(minus_line);
+
+            }
+
+
+        }
+    }
+
 }
 
 //: return the radius at an interpolated point

@@ -152,6 +152,12 @@ public:
   //while acquiring the tree then the outline will have circular completions
   void compute_reconstructed_boundary_polygon(vgl_polygon<double>& poly);
 
+  //------------------------------------------------------------------------
+  //: uses the already existing scurves, so if circular_ends = true 
+  //while acquiring the tree then the outline will have circular completions
+  void compute_grid(vcl_vector<vcl_pair<vgl_point_2d<double>,
+                    vgl_point_2d<double> > >& lines);
+
   void compute_scurve_polygons(vcl_string& prefix);
   
   void compute_sift_tree(vcl_vector<vl_sift_pix>& descriptors);
