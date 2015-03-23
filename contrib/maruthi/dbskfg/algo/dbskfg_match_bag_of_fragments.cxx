@@ -8968,6 +8968,145 @@ vcl_pair<double,double> dbskfg_match_bag_of_fragments::compute_bow(
         
 }
 
+
+
+void dbskfg_match_bag_of_fragments::compute_app_alignment(
+    vcl_vector<dbskr_scurve_sptr>& curve_list1,
+    vcl_vector<dbskr_scurve_sptr>& curve_list2,
+    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    vil_image_view<double>& model_channel_1,
+    vil_image_view<double>& query_channel_1,
+    bool flag,
+    double width,
+    vl_sift_pix* model_grad_data,
+    VlSiftFilt*  model_sift_filter,
+    vl_sift_pix* query_grad_data,
+    VlSiftFilt*  query_sift_filter,
+    double model_scale_ratio,
+    double query_scale_ratio)
+{
+    
+    unsigned int stop=map_list.size();
+
+    map_list.clear();
+
+    // Get matching pairs
+    for (unsigned ii = 0; ii < stop; ii++) 
+    {
+        dbskr_scurve_sptr sc1 = curve_list1[ii];
+        dbskr_scurve_sptr sc2 = curve_list2[ii];
+
+        vnl_matrix<vl_sift_pix> sc1_matrix(128,sc1->num_points(),0.0);
+        vnl_matrix<vl_sift_pix> sc2_matrix(128,sc2->num_points(),0.0);
+
+        for ( unsigned int c1=0; c1 < sc1->num_points(); ++c1 )
+        {
+
+            // Shock Point 1 from Model
+            vgl_point_2d<double> ps1 = sc1->sh_pt(c1);
+            double radius_ps1        = sc1->time(c1)/2.0;
+            double theta_ps1         = sc1->theta(c1);
+
+            vnl_vector<vl_sift_pix> ps1_descriptor(384,0.0);
+
+            if ( !flag )
+            {   
+                ps1.set(ps1.x()/model_scale_ratio,
+                        ps1.y()/model_scale_ratio);
+
+                compute_descr(ps1,
+                              radius_ps1,
+                              theta_ps1,
+                              model_grad_data,
+                              model_sift_filter,
+                              ps1_descriptor);
+
+            }
+            else
+            {
+                ps1.set(vcl_fabs(width-(ps1.x()/query_scale_ratio)),
+                        ps1.y()/query_scale_ratio);
+
+                if ( width > 0 )
+                {
+                    ps1.set(query_channel_1.ni()-1-ps1.x(),
+                            ps1.y());
+                
+                }
+
+                compute_descr(ps1,
+                              radius_ps1,
+                              theta_ps1,
+                              query_grad_data,
+                              query_sift_filter,
+                              ps1_descriptor);
+                
+            }
+
+            sc1_matrix.set_column(c1,ps1_descriptor);
+        }
+        
+        for ( unsigned int c2=0; c2 < sc2->num_points(); ++c2 )
+        {
+
+            // Shock Point 1 from Model
+            vgl_point_2d<double> ps2 = sc2->sh_pt(c2);
+            double radius_ps2        = sc2->time(c2)/2.0;
+            double theta_ps2         = sc2->theta(c2);
+
+            vnl_vector<vl_sift_pix> ps2_descriptor(384,0.0);
+
+            if ( !flag )
+            {   
+                ps2.set(vcl_fabs(width-(ps2.x()/query_scale_ratio)),
+                        ps2.y()/query_scale_ratio);
+                
+                if ( width > 0 )
+                {
+                    ps2.set(query_channel_1.ni()-1-ps2.x(),
+                            ps2.y());
+                }
+
+                compute_descr(ps2,
+                              radius_ps2,
+                              theta_ps2,
+                              query_grad_data,
+                              query_sift_filter,
+                              ps2_descriptor);
+
+
+            }
+            else
+            {
+                ps2.set(ps2.x()/model_scale_ratio,
+                        ps2.y()/model_scale_ratio);
+                
+                compute_descr(ps2,
+                              radius_ps2,
+                              theta_ps2,
+                              model_grad_data,
+                              model_sift_filter,
+                              ps2_descriptor);
+
+            }
+
+            sc1_matrix.set_column(c2,ps2_descriptor);
+        }
+
+        
+        dbskfg_app_curve_match dpMatch(sc1_matrix,sc2_matrix);
+        dpMatch.Match();
+
+        vcl_vector<vcl_pair<int,int> > fmap=*(dpMatch.finalMap());
+        map_list.push_back(fmap);
+        
+    }
+
+        
+
+
+}
+
 vcl_pair<double,double> dbskfg_match_bag_of_fragments::
 compute_o2p_dense(
     vcl_vector<dbskr_scurve_sptr>& curve_list1,
@@ -11166,6 +11305,40 @@ double dbskfg_match_bag_of_fragments::descr_cost_enriched_sift(
 
     return (0.5)*result_final[0];
     
+}
+
+void dbskfg_match_bag_of_fragments::compute_descr(
+    vgl_point_2d<double>& pt,
+    double& radius,
+    double& theta,
+    vl_sift_pix* grad_data,
+    VlSiftFilt* sift_filter,
+    vnl_vector<vl_sift_pix>& descriptor)
+{
+
+
+    vl_sift_pix descr_ps1[128];
+    memset(descr_ps1, 0, sizeof(vl_sift_pix)*128);
+            
+
+    vl_sift_calc_raw_descriptor(sift_filter,
+                                grad_data,
+                                descr_ps1,
+                                sift_filter->width,
+                                sift_filter->height,
+                                pt.x(),
+                                pt.y(),
+                                radius,
+                                theta);
+
+
+    for ( unsigned int d=0; d < 128 ; ++d)
+    {
+        descriptor.put(d,descr_ps1[d]);
+    }
+
+    // descriptor.normalize();
+
 }
 
 void dbskfg_match_bag_of_fragments::compute_descr(

@@ -607,6 +607,21 @@ private:
         double query_sift_scale=1.0,
         vcl_string prefix="");
 
+    void compute_app_alignment(
+        vcl_vector<dbskr_scurve_sptr>& curve_list1,
+        vcl_vector<dbskr_scurve_sptr>& curve_list2,
+        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        vil_image_view<double>& model_channel_1,
+        vil_image_view<double>& query_channel_1,
+        bool flag=false,
+        double width=0.0,
+        vl_sift_pix* model_grad_data=0,
+        VlSiftFilt*  model_sift_filter=0,
+        vl_sift_pix* query_grad_data=0,
+        VlSiftFilt*  query_sift_filter=0,
+        double model_scale_ratio=1.0,
+        double query_scale_ratio=1.0);
+
     vcl_pair<double,double> compute_dense_rgb_sift_cost(
         vcl_vector<dbskr_scurve_sptr>& curve_list1,
         vcl_vector<dbskr_scurve_sptr>& curve_list2,
@@ -810,6 +825,13 @@ private:
         VlSiftFilt* model_filter,
         vnl_vector<vl_sift_pix>& descriptor);
 
+    void compute_descr(
+        vgl_point_2d<double>& pt,
+        double& radius,
+        double& theta,
+        vl_sift_pix* grad_data,
+        VlSiftFilt* sift_filter,
+        vnl_vector<vl_sift_pix>& descriptor);
 
     void convert_to_color_space(
         vil_image_resource_sptr& input_image,
