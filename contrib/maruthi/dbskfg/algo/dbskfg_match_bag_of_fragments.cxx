@@ -4758,6 +4758,21 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
             width=query_tree->bbox()->width();
         }
 
+        compute_app_alignment(
+                curve_list1,
+                curve_list2,
+                map_list,
+                *model_tree->get_channel1(),
+                *query_tree->get_channel1(),
+                flag,
+                width,
+                model_tree->get_grad_data(),
+                model_tree->get_sift_filter(),
+                query_tree->get_grad_data(),
+                query_tree->get_sift_filter(),
+                model_tree->get_scale_ratio(),
+                query_tree->get_scale_ratio());
+
         unsigned int model_id = model_tree->get_id();
         
         if ( query_parts_.count(model_id) )
@@ -6845,7 +6860,7 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
     vcl_string prefix)
 {
     
-    
+
     double total_alignment = 0.0;
 
     // Get matching pairs
@@ -9007,7 +9022,7 @@ void dbskfg_match_bag_of_fragments::compute_app_alignment(
             double radius_ps1        = sc1->time(c1)/2.0;
             double theta_ps1         = sc1->theta(c1);
 
-            vnl_vector<vl_sift_pix> ps1_descriptor(384,0.0);
+            vnl_vector<vl_sift_pix> ps1_descriptor(128,0.0);
 
             if ( !flag )
             {   
@@ -9045,7 +9060,7 @@ void dbskfg_match_bag_of_fragments::compute_app_alignment(
 
             sc1_matrix.set_column(c1,ps1_descriptor);
         }
-        
+
         for ( unsigned int c2=0; c2 < sc2->num_points(); ++c2 )
         {
 
@@ -9054,7 +9069,7 @@ void dbskfg_match_bag_of_fragments::compute_app_alignment(
             double radius_ps2        = sc2->time(c2)/2.0;
             double theta_ps2         = sc2->theta(c2);
 
-            vnl_vector<vl_sift_pix> ps2_descriptor(384,0.0);
+            vnl_vector<vl_sift_pix> ps2_descriptor(128,0.0);
 
             if ( !flag )
             {   
@@ -9090,10 +9105,9 @@ void dbskfg_match_bag_of_fragments::compute_app_alignment(
 
             }
 
-            sc1_matrix.set_column(c2,ps2_descriptor);
+            sc2_matrix.set_column(c2,ps2_descriptor);
         }
 
-        
         dbskfg_app_curve_match dpMatch(sc1_matrix,sc2_matrix);
         dpMatch.Match();
 
