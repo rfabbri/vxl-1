@@ -1292,10 +1292,12 @@ void dbskfg_cgraph_directed_tree::compute_reconstructed_boundary_polygon
 //------------------------------------------------------------------------------
 //: uses the already existing scurves, so if circular_ends = true 
 // while acquiring the tree then the outline will have circular completions
-void dbskfg_cgraph_directed_tree::compute_grid
-(vcl_vector<vcl_pair<vgl_point_2d<double>,
- vgl_point_2d<double> > >& lines)
+void dbskfg_cgraph_directed_tree::compute_grid()
 {
+
+    vcl_vector<vcl_pair<vgl_point_2d<double>,
+                        vgl_point_2d<double> > > lines;
+        
   //: find the set of darts to use
   vcl_vector<unsigned> to_use;
   for (unsigned i = 0; i < dart_cnt_; i++) {
@@ -1338,6 +1340,24 @@ void dbskfg_cgraph_directed_tree::compute_grid
       j++;
     }
   }
+
+  vcl_stringstream sstream;
+  sstream<<"Model_grid_000"<<id_<<".txt";
+
+  vcl_ofstream stream(sstream.str().c_str());
+
+  for ( unsigned int kk=0; kk < lines.size(); ++kk)
+  {
+      vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> >
+          pair=lines[kk];
+      stream<<pair.first.x()<<" "
+            <<pair.first.y()<<" "
+            <<pair.second.x()<<" "
+            <<pair.second.y()<<vcl_endl;
+
+  }
+
+  stream.close();
 
 }
 

@@ -155,8 +155,7 @@ public:
   //------------------------------------------------------------------------
   //: uses the already existing scurves, so if circular_ends = true 
   //while acquiring the tree then the outline will have circular completions
-  void compute_grid(vcl_vector<vcl_pair<vgl_point_2d<double>,
-                    vgl_point_2d<double> > >& lines);
+  void compute_grid();
 
   void compute_scurve_polygons(vcl_string& prefix);
   
