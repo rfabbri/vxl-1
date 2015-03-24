@@ -9,7 +9,6 @@
 #include <vgl/vgl_closest_point.h>
 #include <vgl/vgl_intersection.h>
 #include <dbgl/algo/dbgl_eulerspiral.h>
-#include <dbgl/algo/dbgl_circ_arc.h>
 
 #include <vcl_cstdio.h>
 #include <vcl_algorithm.h>
@@ -961,15 +960,32 @@ void dbskr_scurve::draw_grid(vcl_vector<
         // Degenerate case
         if ( vgl_distance(s_pt,e_pt) < 1.0e-8 )
         {
-
             vgl_point_2d<double> arc_start;
             vgl_point_2d<double> arc_stop;
             
+
+            vgl_vector_2d<double> tangent(vcl_cos(theta_[start_index]),
+                                          vcl_sin(theta_[start_index]));
+            
+            vgl_line_2d<double> tan_line(s_pt,
+                                         tangent);
+
+            vgl_point_2d<double> pt1,pt2;
+            tan_line.get_two_points(pt1,pt2);
+      
+            bool pointAboveLine=false;
+
             if ( vgl_distance(bdry_minus_[start_index],bdry_minus_[stop_index])
                  < 1.0e-8)
             {
                 arc_start=bdry_plus_[start_index];
                 arc_stop= bdry_plus_[stop_index];
+
+                
+                pointAboveLine= _isPointAboveLine(bdry_minus_[start_index],
+                                                  pt1,
+                                                  pt2);
+
                 
             }
             else
@@ -977,8 +993,17 @@ void dbskr_scurve::draw_grid(vcl_vector<
                 
                 arc_start=bdry_minus_[start_index];
                 arc_stop=bdry_minus_[stop_index];
+
+                pointAboveLine= _isPointAboveLine(bdry_plus_[start_index],
+                                                  pt1,
+                                                  pt2);
+
+
             }
             
+
+        
+
             vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> >
                 line1(s_pt,arc_start);
 
@@ -991,36 +1016,31 @@ void dbskr_scurve::draw_grid(vcl_vector<
 
             double diameter = time_[start_index];
 
-            for ( double radius=1; radius < diameter ; ++radius)
+            for ( double radius=1; radius <= diameter ; ++radius)
             {
-                vgl_point_2d<double> start_arc=
-                    fragment_pt(start_index,radius);
-                vgl_point_2d<double> stop_arc=
-                    fragment_pt(stop_index,radius);
-                vgl_point_2d<double> middle_arc=
-                    fragment_pt((double)(start_index)+0.5,radius);
+                double test_rad=radius;
 
-                dbgl_circ_arc circ_arc;
-
-                circ_arc.set_from(start_arc,
-                                  stop_arc,
-                                  middle_arc);
-                             
-                vcl_vector<vgl_point_2d<double > > samples
-                    = circ_arc.compute_samples(1.0);
-
-                for ( unsigned int c=1; c < samples.size() ; ++c)
+                if ( pointAboveLine )
                 {
-                    vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> >
-                        arc(samples[c-1],samples[c]);
-                    lines.push_back(arc);
+                    test_rad=test_rad*-1;
                 }
+                
+                vgl_point_2d<double> start_arc=
+                    fragment_pt(start_index,test_rad);
+
+                vgl_point_2d<double> stop_arc=
+                    fragment_pt(stop_index,test_rad);
+
+                vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> >
+                    arc(start_arc,stop_arc);
+                lines.push_back(arc);
 
             } 
 
         }
         else
         {
+
             // Non-degenerate case
             vcl_pair<vgl_point_2d<double>,
                      vgl_point_2d<double> > shock_line(s_pt,
@@ -1057,7 +1077,7 @@ void dbskr_scurve::draw_grid(vcl_vector<
             double diameter = time_[start_index];
             double ratio = time_[stop_index]/diameter;
 
-            for ( double radius=1; radius < diameter ; ++radius)
+            for ( double radius=1; radius <= diameter ; ++radius)
             {
 
                 double stop_radius=radius*ratio;
