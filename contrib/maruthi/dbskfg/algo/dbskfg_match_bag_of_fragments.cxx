@@ -7155,6 +7155,223 @@ dbskfg_match_bag_of_fragments::compute_app_alignment_cost(
     return final_cost;
 }
 
+void dbskfg_match_bag_of_fragments::draw_part_correspondence(
+    vcl_vector<dbskr_scurve_sptr>& curve_list1,
+    vcl_vector<dbskr_scurve_sptr>& curve_list2,
+    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    bool flag,
+    double width,
+    double model_scale_ratio,
+    double query_scale_ratio,
+    vcl_string prefix)
+{
+    
+    vcl_vector<vgl_polygon<double> > sc1_polys;
+    vcl_vector<vgl_polygon<double> > sc2_polys;
+    
+    // Get matching pairs
+    for (unsigned i = 0; i < map_list.size(); i++) 
+    {
+        dbskr_scurve_sptr sc1 = curve_list1[i];
+        dbskr_scurve_sptr sc2 = curve_list2[i];
+
+        for (unsigned j = 1; j < map_list[i].size(); ++j) 
+        {
+            vcl_pair<int, int> start_pair = map_list[i][j-1];
+            vcl_pair<int, int> stop_pair = map_list[i][j];
+            
+
+            unsigned int sc1_start=start_pair.first;
+            unsigned int sc1_stop=stop_pair.first;
+            
+            for ( ; sc1_start < sc1_stop ; ++sc1_start)
+            {
+
+                vgl_point_2d<double> sh_pt_start=sc1->sh_pt(sc1_start);
+                vgl_point_2d<double> bdry_plus_start=sc1->bdry_plus_pt
+                    (sc1_start);
+                vgl_point_2d<double> bdry_plus_stop=sc1->bdry_plus_pt(
+                    sc1_start+1);
+
+                vgl_point_2d<double> sh_pt_stop=sc1->sh_pt(sc1_start+1);
+                vgl_point_2d<double> bdry_minus_start=sc1->bdry_minus_pt
+                    (sc1_start+1);
+                vgl_point_2d<double> bdry_minus_stop=sc1->bdry_minus_pt(
+                    sc1_start);
+
+                if ( !flag )
+                {   
+                    sh_pt_start.set(sh_pt_start.x()/model_scale_ratio,
+                                    sh_pt_start.y()/model_scale_ratio);
+                    bdry_plus_start.set(bdry_plus_start.x()/model_scale_ratio,
+                                        bdry_plus_start.y()/model_scale_ratio);
+                    bdry_plus_stop.set(bdry_plus_stop.x()/model_scale_ratio,
+                                       bdry_plus_stop.y()/model_scale_ratio);
+
+                    sh_pt_stop.set(sh_pt_stop.x()/model_scale_ratio,
+                                   sh_pt_stop.y()/model_scale_ratio);
+                    bdry_minus_start.set(
+                        bdry_minus_start.x()/model_scale_ratio,
+                        bdry_minus_start.y()/model_scale_ratio);
+                    bdry_minus_stop.set(bdry_minus_stop.x()/model_scale_ratio,
+                                        bdry_minus_stop.y()/model_scale_ratio);
+
+                }
+                else
+                {
+                    sh_pt_start.set(
+                        vcl_fabs(width-(sh_pt_start.x()/query_scale_ratio)),
+                        sh_pt_start.y()/query_scale_ratio);
+                    bdry_plus_start.set(
+                        vcl_fabs(width-(bdry_plus_start.x()/query_scale_ratio)),
+                        bdry_plus_start.y()/query_scale_ratio);
+                    bdry_plus_stop.set(
+                        vcl_fabs(width-(bdry_plus_stop.x()/query_scale_ratio)),
+                        bdry_plus_stop.y()/query_scale_ratio);
+
+                    sh_pt_stop.set(
+                        vcl_fabs(width-(sh_pt_stop.x()/query_scale_ratio)),
+                        sh_pt_stop.y()/query_scale_ratio);
+                    bdry_minus_start.set(
+                        vcl_fabs(width-(bdry_minus_start.x()
+                                        /query_scale_ratio)),
+                        bdry_minus_start.y()/query_scale_ratio);
+                    bdry_minus_stop.set(
+                        vcl_fabs(width-(bdry_minus_stop.x()/query_scale_ratio)),
+                        bdry_minus_stop.y()/query_scale_ratio);
+
+                }
+                vgl_polygon<double> poly_plus(1),poly_minus(1);
+
+                poly_plus.push_back(sh_pt_start);
+                poly_plus.push_back(bdry_plus_start);
+                poly_plus.push_back(bdry_plus_stop);
+                poly_plus.push_back(sh_pt_stop);
+
+                poly_minus.push_back(sh_pt_stop);
+                poly_minus.push_back(bdry_minus_start);
+                poly_minus.push_back(bdry_minus_stop);
+                poly_minus.push_back(sh_pt_start);
+
+                sc1_polys.push_back(poly_plus);
+                sc1_polys.push_back(poly_minus);
+            }
+
+            unsigned int sc2_start=start_pair.second;
+            unsigned int sc2_stop=stop_pair.second;
+            
+            for ( ; sc2_start < sc2_stop ; ++sc2_start)
+            {
+
+                vgl_point_2d<double> sh_pt_start=sc2->sh_pt(sc2_start);
+                vgl_point_2d<double> bdry_plus_start=sc2->bdry_plus_pt
+                    (sc2_start);
+                vgl_point_2d<double> bdry_plus_stop=sc2->bdry_plus_pt(
+                    sc2_start+1);
+
+                vgl_point_2d<double> sh_pt_stop=sc2->sh_pt(sc2_start+1);
+                vgl_point_2d<double> bdry_minus_start=sc2->bdry_minus_pt
+                    (sc2_start+1);
+                vgl_point_2d<double> bdry_minus_stop=sc2->bdry_minus_pt(
+                    sc2_start);
+
+                if ( !flag )
+                {   
+                    sh_pt_start.set(
+                        vcl_fabs(width-(sh_pt_start.x()/query_scale_ratio)),
+                        sh_pt_start.y()/query_scale_ratio);
+                    bdry_plus_start.set(
+                        vcl_fabs(width-(bdry_plus_start.x()/query_scale_ratio)),
+                        bdry_plus_start.y()/query_scale_ratio);
+                    bdry_plus_stop.set(
+                        vcl_fabs(width-(bdry_plus_stop.x()/query_scale_ratio)),
+                        bdry_plus_stop.y()/query_scale_ratio);
+
+                    sh_pt_stop.set(
+                        vcl_fabs(width-(sh_pt_stop.x()/query_scale_ratio)),
+                        sh_pt_stop.y()/query_scale_ratio);
+                    bdry_minus_start.set(
+                        vcl_fabs(width-(bdry_minus_start.x()
+                                        /query_scale_ratio)),
+                        bdry_minus_start.y()/query_scale_ratio);
+                    bdry_minus_stop.set(
+                        vcl_fabs(width-(bdry_minus_stop.x()/query_scale_ratio)),
+                        bdry_minus_stop.y()/query_scale_ratio);
+
+                }
+                else
+                {
+
+                    sh_pt_start.set(sh_pt_start.x()/model_scale_ratio,
+                                    sh_pt_start.y()/model_scale_ratio);
+                    bdry_plus_start.set(bdry_plus_start.x()/model_scale_ratio,
+                                        bdry_plus_start.y()/model_scale_ratio);
+                    bdry_plus_stop.set(bdry_plus_stop.x()/model_scale_ratio,
+                                       bdry_plus_stop.y()/model_scale_ratio);
+
+                    sh_pt_stop.set(sh_pt_stop.x()/model_scale_ratio,
+                                   sh_pt_stop.y()/model_scale_ratio);
+                    bdry_minus_start.set(
+                        bdry_minus_start.x()/model_scale_ratio,
+                        bdry_minus_start.y()/model_scale_ratio);
+                    bdry_minus_stop.set(bdry_minus_stop.x()/model_scale_ratio,
+                                        bdry_minus_stop.y()/model_scale_ratio);
+
+                }
+
+                vgl_polygon<double> poly_plus(1),poly_minus(1);
+
+                poly_plus.push_back(sh_pt_start);
+                poly_plus.push_back(bdry_plus_start);
+                poly_plus.push_back(bdry_plus_stop);
+                poly_plus.push_back(sh_pt_stop);
+
+                poly_minus.push_back(sh_pt_stop);
+                poly_minus.push_back(bdry_minus_start);
+                poly_minus.push_back(bdry_minus_stop);
+                poly_minus.push_back(sh_pt_start);
+
+                sc2_polys.push_back(poly_plus);
+                sc2_polys.push_back(poly_minus);
+
+            }
+
+        }
+        
+
+        
+
+    }
+
+
+    vcl_string title=prefix+"_correspondence.txt";
+
+    vcl_ofstream stream(title.c_str());
+    
+    {
+    
+        for ( unsigned int d=0; d < sc1_polys.size() ; ++d )
+        {
+            
+            vgl_polygon<double> sc1=sc1_polys[d];
+            vgl_polygon<double> sc2=sc2_polys[d];
+            
+            for (unsigned int s = 0; s < sc1.num_sheets(); ++s)
+            {
+                for (unsigned int p = 0; p < sc1[s].size(); ++p)
+                {
+                    stream<<sc1[s][p].x()<<" "
+                          <<sc1[s][p].y()<<" "
+                          <<sc2[s][p].x()<<" "
+                          <<sc2[s][p].y()<<vcl_endl;
+                }
+            }
+        }
+    }
+       
+    stream.close();
+
+}
 
 vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
     vgl_point_2d<double> query_pt,

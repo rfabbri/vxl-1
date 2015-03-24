@@ -660,6 +660,17 @@ private:
         double model_scale_ratio=1.0,
         double query_scale_ratio=1.0);
 
+
+    void draw_part_correspondence(
+        vcl_vector<dbskr_scurve_sptr>& curve_list1,
+        vcl_vector<dbskr_scurve_sptr>& curve_list2,
+        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        bool flag=false,
+        double width=0.0,
+        double model_scale_ratio=1.0,
+        double query_scale_ratio=1.0,
+        vcl_string prefix="");
+
     vnl_vector<vl_sift_pix> compress_sift(vl_sift_pix* red_sift,
                                           vl_sift_pix* green_sift,
                                           vl_sift_pix* blue_sift,
