@@ -972,7 +972,7 @@ void dbskr_scurve::draw_grid(vcl_vector<
 
             vgl_point_2d<double> pt1,pt2;
             tan_line.get_two_points(pt1,pt2);
-      
+
             bool pointAboveLine=false;
 
             if ( vgl_distance(bdry_minus_[start_index],bdry_minus_[stop_index])
@@ -980,13 +980,8 @@ void dbskr_scurve::draw_grid(vcl_vector<
             {
                 arc_start=bdry_plus_[start_index];
                 arc_stop= bdry_plus_[stop_index];
-
-                
-                pointAboveLine= _isPointAboveLine(bdry_minus_[start_index],
-                                                  pt1,
-                                                  pt2);
-
-                
+             
+                pointAboveLine= false;
             }
             else
             {
@@ -994,13 +989,11 @@ void dbskr_scurve::draw_grid(vcl_vector<
                 arc_start=bdry_minus_[start_index];
                 arc_stop=bdry_minus_[stop_index];
 
-                pointAboveLine= _isPointAboveLine(bdry_plus_[start_index],
-                                                  pt1,
-                                                  pt2);
-
+                pointAboveLine= true;
 
             }
             
+
 
         
 
