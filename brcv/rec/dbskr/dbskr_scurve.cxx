@@ -993,10 +993,7 @@ void dbskr_scurve::draw_grid(vcl_vector<
 
             }
             
-
-
-        
-
+            
             vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> >
                 line1(s_pt,arc_start);
 
@@ -1846,6 +1843,72 @@ void dbskr_scurve::get_polygon(vgl_polygon<double>& poly,double width)
     {
         points.push_back(final_pt);
     }
+
+    vcl_vector< vgl_point_2d<double> >::reverse_iterator rit;
+    for ( rit = minus_pts.rbegin() ; rit != minus_pts.rend() ; ++rit)
+    {
+        points.push_back(*rit);
+        
+    }
+    
+    for ( unsigned int c=0; c < points.size() ; ++c)
+    {
+
+        poly.push_back(vcl_fabs(width-points[c].x()),
+                       points[c].y());
+    }
+
+}
+
+
+//: for visualization purposes
+void dbskr_scurve::get_polygon(int start_index,
+                               int stop_index,
+                               vgl_polygon<double>& poly,
+                               double width)
+{
+
+
+    vcl_vector<vgl_point_2d<double> > minus_pts;
+    vcl_vector<vgl_point_2d<double> > points;
+
+    vgl_point_2d<double> start_pt=sh_pt_[start_index];
+    start_pt.set(start_pt.x()/scale_ratio_,
+                 start_pt.y()/scale_ratio_);
+
+
+    vgl_point_2d<double> final_pt=sh_pt_[stop_index];
+    final_pt.set(final_pt.x()/scale_ratio_,
+                 final_pt.y()/scale_ratio_);
+
+    points.push_back(start_pt);
+
+
+    //reconstruct the bnd points from the intrinsic parameters
+    for (int i=start_index; i<= stop_index; i++)
+    {
+        vgl_point_2d<double> sh_pt_scaled=sh_pt_[i];
+        sh_pt_scaled.set(sh_pt_scaled.x()/scale_ratio_,
+                         sh_pt_scaled.y()/scale_ratio_);
+
+        double radius=time_[i]/scale_ratio_;
+        
+        vgl_point_2d<double> pt_p = _translatePoint(sh_pt_scaled, 
+                                                    theta_[i]+phi_[i], 
+                                                    radius);
+    
+        vgl_point_2d<double> pt_m = _translatePoint(sh_pt_scaled, 
+                                                    theta_[i]-phi_[i], 
+                                                    radius);
+
+        minus_pts.push_back(pt_m);
+
+        points.push_back(pt_p);
+        
+    }
+
+    points.push_back(final_pt);
+    
 
     vcl_vector< vgl_point_2d<double> >::reverse_iterator rit;
     for ( rit = minus_pts.rbegin() ; rit != minus_pts.rend() ; ++rit)

@@ -130,6 +130,10 @@ public:
 
   void write_polygon(vcl_string title,double width=0.0);
   void get_polygon(vgl_polygon<double>& poly,double width=0.0);
+  void get_polygon(int start_index,
+                   int stop_index,
+                   vgl_polygon<double>& poly,
+                   double width=0);
 
 protected:
   //: This function takes a sampled shock curve and interpolates it.
