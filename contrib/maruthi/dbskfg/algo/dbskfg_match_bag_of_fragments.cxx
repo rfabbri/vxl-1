@@ -4748,66 +4748,66 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     frob_norm=norm;
 
     // Doing find part correpondences
-    if ( flag_mirror )
-    {
+    // if ( flag_mirror )
+    // {
 
-        double width=0.0;
-        if ( mirror )
-        {
-            vcl_cout<<"Performing mirror find part correpondences"<<vcl_endl;
-            width=query_tree->bbox()->width();
-        }
+    //     double width=0.0;
+    //     if ( mirror )
+    //     {
+    //         vcl_cout<<"Performing mirror find part correpondences"<<vcl_endl;
+    //         width=query_tree->bbox()->width();
+    //     }
 
-        compute_app_alignment(
-                curve_list1,
-                curve_list2,
-                map_list,
-                *model_tree->get_channel1(),
-                *query_tree->get_channel1(),
-                flag,
-                width,
-                model_tree->get_grad_data(),
-                model_tree->get_sift_filter(),
-                query_tree->get_grad_data(),
-                query_tree->get_sift_filter(),
-                model_tree->get_scale_ratio(),
-                query_tree->get_scale_ratio());
+    //     compute_app_alignment(
+    //             curve_list1,
+    //             curve_list2,
+    //             map_list,
+    //             *model_tree->get_channel1(),
+    //             *query_tree->get_channel1(),
+    //             flag,
+    //             width,
+    //             model_tree->get_grad_data(),
+    //             model_tree->get_sift_filter(),
+    //             query_tree->get_grad_data(),
+    //             query_tree->get_sift_filter(),
+    //             model_tree->get_scale_ratio(),
+    //             query_tree->get_scale_ratio());
 
-        unsigned int model_id = model_tree->get_id();
+    //     unsigned int model_id = model_tree->get_id();
         
-        if ( query_parts_.count(model_id) )
-        {
-            query_parts_[model_id].clear();
-        }
+    //     if ( query_parts_.count(model_id) )
+    //     {
+    //         query_parts_[model_id].clear();
+    //     }
         
-        vcl_vector<vgl_point_2d<double> > model_parts = model_parts_[model_id];
+    //     vcl_vector<vgl_point_2d<double> > model_parts = model_parts_[model_id];
 
-        for ( unsigned int id=0; id < model_parts.size() ; ++id)
-        {
-            vgl_point_2d<double> query_pt(model_parts[id]);
-            vgl_point_2d<double> test(-1.0,-1.0);
-            vgl_point_2d<double> mapping_pt(-1.0,-1.0);
+    //     for ( unsigned int id=0; id < model_parts.size() ; ++id)
+    //     {
+    //         vgl_point_2d<double> query_pt(model_parts[id]);
+    //         vgl_point_2d<double> test(-1.0,-1.0);
+    //         vgl_point_2d<double> mapping_pt(-1.0,-1.0);
 
-            if ( query_pt != test )
-            {
+    //         if ( query_pt != test )
+    //         {
             
-                mapping_pt=
-                    find_part_correspondences(query_pt,
-                                              curve_list1,
-                                              curve_list2,
-                                              map_list,
-                                              flag,
-                                              width,
-                                              model_tree
-                                              ->get_scale_ratio(),
-                                              query_tree
-                                              ->get_scale_ratio());
-            }
+    //             mapping_pt=
+    //                 find_part_correspondences(query_pt,
+    //                                           curve_list1,
+    //                                           curve_list2,
+    //                                           map_list,
+    //                                           flag,
+    //                                           width,
+    //                                           model_tree
+    //                                           ->get_scale_ratio(),
+    //                                           query_tree
+    //                                           ->get_scale_ratio());
+    //         }
 
-            query_parts_[model_id].push_back(mapping_pt);
+    //         query_parts_[model_id].push_back(mapping_pt);
             
-        }
-    }
+    //     }
+    // }
 
 
     if ( app_sift_ && flag_mirror )
@@ -4843,6 +4843,25 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
 
         VlSiftFilt* model_sift_filter=model_tree->get_sift_filter();
         VlSiftFilt* query_sift_filter=query_tree->get_sift_filter();
+
+
+        // vcl_stringstream title;
+        // title<<"Model_"<<model_tree->get_id()<<"_vs_"
+        //      <<"Query_"<<query_tree->get_id();
+
+        // vcl_string pref=title.str();
+
+        // draw_part_correspondence(
+        //     curve_list1,
+        //     curve_list2,
+        //     map_list,
+        //     flag,
+        //     width,
+        //     model_tree->get_scale_ratio(),
+        //     query_tree->get_scale_ratio(),
+        //     pref);
+
+
 
         vul_timer app_timer;
         app_timer.mark();
@@ -7166,8 +7185,8 @@ void dbskfg_match_bag_of_fragments::draw_part_correspondence(
     vcl_string prefix)
 {
     
-    vcl_vector<vgl_polygon<double> > sc1_polys;
-    vcl_vector<vgl_polygon<double> > sc2_polys;
+    vcl_vector<vgl_polygon<double> > model_polys;
+    vcl_vector<vgl_polygon<double> > query_polys;
     
     // Get matching pairs
     for (unsigned i = 0; i < map_list.size(); i++) 
@@ -7181,168 +7200,38 @@ void dbskfg_match_bag_of_fragments::draw_part_correspondence(
             vcl_pair<int, int> stop_pair = map_list[i][j];
             
 
-            unsigned int sc1_start=start_pair.first;
-            unsigned int sc1_stop=stop_pair.first;
+            unsigned int sc1_start=vcl_min(start_pair.first,stop_pair.first);
+            unsigned int sc1_stop=vcl_max(start_pair.first,stop_pair.first);
             
-            for ( ; sc1_start < sc1_stop ; ++sc1_start)
+            unsigned int sc2_start=vcl_min(start_pair.second,stop_pair.second);
+            unsigned int sc2_stop=vcl_max(start_pair.second,stop_pair.second);
+            
+            vgl_polygon<double> sc1_poly(1);
+            vgl_polygon<double> sc2_poly(1);
+
+            if ( !flag )
             {
-
-                vgl_point_2d<double> sh_pt_start=sc1->sh_pt(sc1_start);
-                vgl_point_2d<double> bdry_plus_start=sc1->bdry_plus_pt
-                    (sc1_start);
-                vgl_point_2d<double> bdry_plus_stop=sc1->bdry_plus_pt(
-                    sc1_start+1);
-
-                vgl_point_2d<double> sh_pt_stop=sc1->sh_pt(sc1_start+1);
-                vgl_point_2d<double> bdry_minus_start=sc1->bdry_minus_pt
-                    (sc1_start+1);
-                vgl_point_2d<double> bdry_minus_stop=sc1->bdry_minus_pt(
-                    sc1_start);
-
-                if ( !flag )
-                {   
-                    sh_pt_start.set(sh_pt_start.x()/model_scale_ratio,
-                                    sh_pt_start.y()/model_scale_ratio);
-                    bdry_plus_start.set(bdry_plus_start.x()/model_scale_ratio,
-                                        bdry_plus_start.y()/model_scale_ratio);
-                    bdry_plus_stop.set(bdry_plus_stop.x()/model_scale_ratio,
-                                       bdry_plus_stop.y()/model_scale_ratio);
-
-                    sh_pt_stop.set(sh_pt_stop.x()/model_scale_ratio,
-                                   sh_pt_stop.y()/model_scale_ratio);
-                    bdry_minus_start.set(
-                        bdry_minus_start.x()/model_scale_ratio,
-                        bdry_minus_start.y()/model_scale_ratio);
-                    bdry_minus_stop.set(bdry_minus_stop.x()/model_scale_ratio,
-                                        bdry_minus_stop.y()/model_scale_ratio);
-
-                }
-                else
-                {
-                    sh_pt_start.set(
-                        vcl_fabs(width-(sh_pt_start.x()/query_scale_ratio)),
-                        sh_pt_start.y()/query_scale_ratio);
-                    bdry_plus_start.set(
-                        vcl_fabs(width-(bdry_plus_start.x()/query_scale_ratio)),
-                        bdry_plus_start.y()/query_scale_ratio);
-                    bdry_plus_stop.set(
-                        vcl_fabs(width-(bdry_plus_stop.x()/query_scale_ratio)),
-                        bdry_plus_stop.y()/query_scale_ratio);
-
-                    sh_pt_stop.set(
-                        vcl_fabs(width-(sh_pt_stop.x()/query_scale_ratio)),
-                        sh_pt_stop.y()/query_scale_ratio);
-                    bdry_minus_start.set(
-                        vcl_fabs(width-(bdry_minus_start.x()
-                                        /query_scale_ratio)),
-                        bdry_minus_start.y()/query_scale_ratio);
-                    bdry_minus_stop.set(
-                        vcl_fabs(width-(bdry_minus_stop.x()/query_scale_ratio)),
-                        bdry_minus_stop.y()/query_scale_ratio);
-
-                }
-                vgl_polygon<double> poly_plus(1),poly_minus(1);
-
-                poly_plus.push_back(sh_pt_start);
-                poly_plus.push_back(bdry_plus_start);
-                poly_plus.push_back(bdry_plus_stop);
-                poly_plus.push_back(sh_pt_stop);
-
-                poly_minus.push_back(sh_pt_stop);
-                poly_minus.push_back(bdry_minus_start);
-                poly_minus.push_back(bdry_minus_stop);
-                poly_minus.push_back(sh_pt_start);
-
-                sc1_polys.push_back(poly_plus);
-                sc1_polys.push_back(poly_minus);
+                sc1->get_polygon(sc1_start,sc1_stop,sc1_poly);
+                sc2->get_polygon(sc2_start,sc2_stop,sc2_poly,width);
+                
+                model_polys.push_back(sc1_poly);
+                query_polys.push_back(sc2_poly);
             }
-
-            unsigned int sc2_start=start_pair.second;
-            unsigned int sc2_stop=stop_pair.second;
-            
-            for ( ; sc2_start < sc2_stop ; ++sc2_start)
+            else
             {
-
-                vgl_point_2d<double> sh_pt_start=sc2->sh_pt(sc2_start);
-                vgl_point_2d<double> bdry_plus_start=sc2->bdry_plus_pt
-                    (sc2_start);
-                vgl_point_2d<double> bdry_plus_stop=sc2->bdry_plus_pt(
-                    sc2_start+1);
-
-                vgl_point_2d<double> sh_pt_stop=sc2->sh_pt(sc2_start+1);
-                vgl_point_2d<double> bdry_minus_start=sc2->bdry_minus_pt
-                    (sc2_start+1);
-                vgl_point_2d<double> bdry_minus_stop=sc2->bdry_minus_pt(
-                    sc2_start);
-
-                if ( !flag )
-                {   
-                    sh_pt_start.set(
-                        vcl_fabs(width-(sh_pt_start.x()/query_scale_ratio)),
-                        sh_pt_start.y()/query_scale_ratio);
-                    bdry_plus_start.set(
-                        vcl_fabs(width-(bdry_plus_start.x()/query_scale_ratio)),
-                        bdry_plus_start.y()/query_scale_ratio);
-                    bdry_plus_stop.set(
-                        vcl_fabs(width-(bdry_plus_stop.x()/query_scale_ratio)),
-                        bdry_plus_stop.y()/query_scale_ratio);
-
-                    sh_pt_stop.set(
-                        vcl_fabs(width-(sh_pt_stop.x()/query_scale_ratio)),
-                        sh_pt_stop.y()/query_scale_ratio);
-                    bdry_minus_start.set(
-                        vcl_fabs(width-(bdry_minus_start.x()
-                                        /query_scale_ratio)),
-                        bdry_minus_start.y()/query_scale_ratio);
-                    bdry_minus_stop.set(
-                        vcl_fabs(width-(bdry_minus_stop.x()/query_scale_ratio)),
-                        bdry_minus_stop.y()/query_scale_ratio);
-
-                }
-                else
-                {
-
-                    sh_pt_start.set(sh_pt_start.x()/model_scale_ratio,
-                                    sh_pt_start.y()/model_scale_ratio);
-                    bdry_plus_start.set(bdry_plus_start.x()/model_scale_ratio,
-                                        bdry_plus_start.y()/model_scale_ratio);
-                    bdry_plus_stop.set(bdry_plus_stop.x()/model_scale_ratio,
-                                       bdry_plus_stop.y()/model_scale_ratio);
-
-                    sh_pt_stop.set(sh_pt_stop.x()/model_scale_ratio,
-                                   sh_pt_stop.y()/model_scale_ratio);
-                    bdry_minus_start.set(
-                        bdry_minus_start.x()/model_scale_ratio,
-                        bdry_minus_start.y()/model_scale_ratio);
-                    bdry_minus_stop.set(bdry_minus_stop.x()/model_scale_ratio,
-                                        bdry_minus_stop.y()/model_scale_ratio);
-
-                }
-
-                vgl_polygon<double> poly_plus(1),poly_minus(1);
-
-                poly_plus.push_back(sh_pt_start);
-                poly_plus.push_back(bdry_plus_start);
-                poly_plus.push_back(bdry_plus_stop);
-                poly_plus.push_back(sh_pt_stop);
-
-                poly_minus.push_back(sh_pt_stop);
-                poly_minus.push_back(bdry_minus_start);
-                poly_minus.push_back(bdry_minus_stop);
-                poly_minus.push_back(sh_pt_start);
-
-                sc2_polys.push_back(poly_plus);
-                sc2_polys.push_back(poly_minus);
-
+                sc1->get_polygon(sc1_start,sc1_stop,sc1_poly,width);
+                sc2->get_polygon(sc2_start,sc2_stop,sc2_poly);
+             
+                model_polys.push_back(sc2_poly);
+                query_polys.push_back(sc1_poly);
             }
 
         }
-        
-
-        
 
     }
 
+    vcl_cout<<"Model poly size: "<<model_polys.size()<<" vs "
+            <<query_polys.size()<<vcl_endl;
 
     vcl_string title=prefix+"_correspondence.txt";
 
@@ -7350,22 +7239,44 @@ void dbskfg_match_bag_of_fragments::draw_part_correspondence(
     
     {
     
-        for ( unsigned int d=0; d < sc1_polys.size() ; ++d )
+        for ( unsigned int d=0; d < model_polys.size() ; ++d )
         {
             
-            vgl_polygon<double> sc1=sc1_polys[d];
-            vgl_polygon<double> sc2=sc2_polys[d];
+            vgl_polygon<double> sc1=model_polys[d];
+            vgl_polygon<double> sc2=query_polys[d];
             
-            for (unsigned int s = 0; s < sc1.num_sheets(); ++s)
+            for (unsigned int p = 0; p < sc1[0].size(); ++p)
             {
-                for (unsigned int p = 0; p < sc1[s].size(); ++p)
+                stream<<sc1[0][p].x()<<" "<<sc1[0][p].y();
+
+                if ( p == sc1[0].size()-1)
                 {
-                    stream<<sc1[s][p].x()<<" "
-                          <<sc1[s][p].y()<<" "
-                          <<sc2[s][p].x()<<" "
-                          <<sc2[s][p].y()<<vcl_endl;
+                    stream <<vcl_endl;;
+
+                }
+                else
+                {
+                    stream<<" ";
                 }
             }
+
+            for (unsigned int p = 0; p < sc2[0].size(); ++p)
+            {
+                stream<<sc2[0][p].x()<<" "<<sc2[0][p].y();
+
+                if ( p == sc2[0].size()-1)
+                {
+                    stream <<vcl_endl;;
+
+                }
+                else
+                {
+                    stream<<" ";
+                }
+            }
+
+            
+            
         }
     }
        
