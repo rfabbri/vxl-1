@@ -13,6 +13,12 @@
 #include <vcl_cstdio.h>
 #include <vcl_cassert.h>
 
+#include <rsdl/rsdl_point.h>
+#include <rsdl/rsdl_kd_tree.h>
+
+#include <vnl/vnl_double_2.h>
+#include <vgl/vgl_polygon_scan_iterator.h>
+
 //#include <dbsksp/algo/dbsksp_compute_scurve.h>
 //#include <vsol/vsol_polygon_2d.h>
 
@@ -1288,6 +1294,131 @@ void dbskfg_cgraph_directed_tree::compute_reconstructed_boundary_polygon
 
 }
 
+//------------------------------------------------------------------------------
+//: uses the already existing scurves, so if circular_ends = true 
+// while acquiring the tree then the outline will have circular completions
+void dbskfg_cgraph_directed_tree::compute_extrinsic_mapping()
+{
+    
+    int N=5;
+    double step_size=1;
+    vcl_vector<rsdl_point> xy_points;
+    vcl_vector<vgl_point_2d<double> > st_points;
+
+    //: find the set of darts to use
+    vcl_vector<unsigned> to_use;
+    for (unsigned i = 0; i < dart_cnt_; i++) {
+        if (leaf_[i]) {
+            to_use.push_back(i);
+            continue;
+        }
+
+        if (leaf_[mate_[i]]) 
+            continue;
+    
+        bool contain = false;
+        for (unsigned j = 0; j < to_use.size(); j++) {
+            if (to_use[j] == mate_[i]) {
+                contain = true;
+                break;
+            }
+        }
+
+        if (!contain)
+            to_use.push_back(i);
+    }
+
+
+    //: now concatanate the scurves  
+    for (unsigned j = 0; j < to_use.size() ; j++) 
+    { 
+
+        unsigned i = to_use[j];
+
+        vcl_pair<int, int> p;
+        p.first = i;
+        p.second = i;
+        vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
+            dart_path_scurve_map_.find(p);
+      
+        dbskr_scurve_sptr sc = (iter->second)->coarse;
+        for ( int cx=0; cx < sc->num_points() ; ++cx)
+        {
+            for (int n = 0; n<N; n++)
+            { 
+                
+                double ratio_n = double(n)/N;
+                double interp_index=ratio_n+cx;
+                double R1=sc->interp_radius(interp_index);
+               
+                double r1=0.0;
+
+                vgl_point_2d<double> shock_pt = sc->fragment_pt(interp_index,
+                                                                r1);
+
+                vnl_double_2 vec(shock_pt.x(),shock_pt.y());
+                xy_points.push_back(rsdl_point(vec));
+                st_points.push_back(vgl_point_2d<double>(interp_index,
+                                                         r1));
+
+                r1 +=step_size;
+
+                while (r1 <= R1) 
+                {
+                    vgl_point_2d<double> plus_pt= sc->fragment_pt(interp_index
+                                                                  , r1);
+                    vnl_double_2 vec_p(plus_pt.x(),plus_pt.y());
+                    xy_points.push_back(rsdl_point(vec_p));
+                    st_points.push_back(vgl_point_2d<double>(interp_index,
+                                                             r1));
+
+                    vgl_point_2d<double> minus_pt= sc->fragment_pt(interp_index
+                                                                   , -r1);
+                    vnl_double_2 vec_m(minus_pt.x(),minus_pt.y());
+                    xy_points.push_back(rsdl_point(vec_m));
+                    st_points.push_back(vgl_point_2d<double>(interp_index,
+                                                             -r1));
+
+                    r1 += step_size;
+                }
+            }
+
+
+        }
+      
+    }
+
+    rsdl_kd_tree kd_tree(xy_points);
+
+    // compute polygon
+    vgl_polygon<double> poly(1);
+
+    this->compute_reconstructed_boundary_polygon(poly);
+
+    vgl_polygon_scan_iterator<double> psi(poly, false);  
+    for (psi.reset(); psi.next(); ) 
+    {
+        int y = psi.scany();
+        for (int x = psi.startx(); x <= psi.endx(); ++x) 
+        {
+            vnl_double_2 temp(x,y);
+            rsdl_point query(temp);
+
+            vcl_vector< rsdl_point > cpoints;
+            vcl_vector< int > cindices;
+
+            kd_tree.n_nearest( query, 1, cpoints, cindices);
+
+            vcl_pair<int,int> key(x,y);
+            xy_st_mapping_[key]=st_points[cindices[0]];
+        }
+
+    }
+
+
+
+
+}
 
 //------------------------------------------------------------------------------
 //: uses the already existing scurves, so if circular_ends = true 

@@ -157,6 +157,25 @@ public:
   //while acquiring the tree then the outline will have circular completions
   void compute_grid();
 
+  //------------------------------------------------------------------------
+  //: uses the already existing scurves, so if circular_ends = true 
+  //while acquiring the tree then the outline will have circular completions  
+  void compute_extrinsic_mapping();
+
+  //------------------------------------------------------------------------
+  //: uses the already existing scurves, so if circular_ends = true 
+  //while acquiring the tree then the outline will have circular completions  
+  vgl_point_2d<double> get_mapping(vcl_pair<int,int>& key)
+  {
+      vgl_point_2d<double> pt(-1,-1);
+      if ( xy_st_mapping_.count(key))
+      {
+          pt=xy_st_mapping_[key];
+      }
+
+      return pt;
+  }
+
   void compute_scurve_polygons(vcl_string& prefix);
   
   void compute_sift_tree(vcl_vector<vl_sift_pix>& descriptors);
@@ -311,6 +330,9 @@ protected:
   vil_image_view<double>* channel3_;
 
   unsigned int id_;
+
+  vcl_map<vcl_pair<int,int>,vgl_point_2d<double> > xy_st_mapping_;
+
 };
 
 #endif // dbskfg_cgraph_directed_tree_h_
