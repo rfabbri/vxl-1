@@ -880,7 +880,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 	graph_size_vector.push_back(55);
 	graph_size_vector.push_back(70);
 	// Pipeline Update: if no previous dets, do window detection in a coarse grid search first. Refine the coarse results in the next steps
-	if(prev_dets.empty())
+	if(prev_dets.size()<3) // change the rule to be very few dets
 	{
 		is_initial = true;
 
@@ -1265,8 +1265,8 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
   vcl_cout << "\n> Number of raw detections: " << raw_dets_all_windows.size() << vcl_endl;
 
-  if(raw_dets_all_windows.size()==0)
-	  raw_dets_all_windows.insert(raw_dets_all_windows.end(), prev_dets.begin(), prev_dets.end());
+//  if(raw_dets_all_windows.size()==0)
+//	  raw_dets_all_windows.push_back(prev_dets[0]); // only add the top
 
   //> Non-max supression on the boundary polygon
   if (run_nms_based_on_overlap)
