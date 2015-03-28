@@ -1265,8 +1265,8 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
   vcl_cout << "\n> Number of raw detections: " << raw_dets_all_windows.size() << vcl_endl;
 
-//  if(raw_dets_all_windows.size()==0)
-//	  raw_dets_all_windows.push_back(prev_dets[0]); // only add the top
+  if(raw_dets_all_windows.size()==0)
+	  raw_dets_all_windows.push_back(prev_dets[0]); // only add the top
 
   //> Non-max supression on the boundary polygon
   if (run_nms_based_on_overlap)
