@@ -689,10 +689,14 @@ bool dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt,
     vgl_point_2d<double> e_pt = sh_pt_[stop_index];
     
     // Degenerate case
-    if ( vgl_distance(s_pt,e_pt) < 1.0e-8 )
+    if ( vgl_distance(s_pt,e_pt) < 1.0e-8 && 
+         vgl_distance(bdry_plus_[stop_index],bdry_minus_[stop_index])
+         >1.0e-8)
     {
         vgl_point_2d<double> arc_start;
         vgl_point_2d<double> arc_stop;
+
+        bool pointAboveLine= false;
 
         if ( vgl_distance(bdry_minus_[start_index],bdry_minus_[stop_index])
              < 1.0e-8)
@@ -700,12 +704,15 @@ bool dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt,
             arc_start=bdry_plus_[start_index];
             arc_stop= bdry_plus_[stop_index];
             
+            pointAboveLine=false;
         }
         else
         {
 
             arc_start=bdry_minus_[start_index];
             arc_stop=bdry_minus_[stop_index];
+
+            pointAboveLine=true;
         }
 
         vgl_point_2d<double> bdry_plus = bdry_plus_[start_index];
@@ -740,15 +747,11 @@ bool dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt,
             ratio=0.0;
 
         }
-        
-        bool pointAboveLine= _isPointAboveLine(pt,
-                                               pt1,
-                                               pt2);
-        
+               
         double con_index=start_index + ratio;
         double distance_t= vgl_distance(pt,s_pt);
 
-        if ( !pointAboveLine )
+        if ( pointAboveLine )
         {
             distance_t=distance_t*-1.0;
         }
