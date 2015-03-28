@@ -46,6 +46,11 @@
 #include <vsol/vsol_polygon_2d_sptr.h>
 #include "dbskr_scurve_sptr.h"
 #include <vcl_utility.h>
+
+#include <vnl/vnl_double_2.h>
+#include <rsdl/rsdl_point.h>
+#include <rsdl/rsdl_kd_tree.h>
+
 #define EPS 1E-2
 
 double fixAngleMPiPi_new(double a);
@@ -201,10 +206,32 @@ public:
 
   //: return a continuous index and radius, of where you are
   //  fragment coordinates(s(i),t) { i.e., (x,y)->(s,t) }
+  bool intrinsinc_pt_bf(vgl_point_2d<double> pt,
+                        vgl_point_2d<double>& shock_coords)
+  {
+      vnl_double_2 temp(pt.x(),pt.y());
+      rsdl_point query(temp);
+      
+      vcl_vector< rsdl_point > cpoints;
+      vcl_vector< int > cindices;
+      
+      kd_tree_->n_nearest( query, 1, cpoints, cindices);
+
+      shock_coords=st_points_[cindices[0]];
+
+      return true;
+
+  }
+
+  //: return a continuous index and radius, of where you are
+  //  fragment coordinates(s(i),t) { i.e., (x,y)->(s,t) }
   void draw_grid(vcl_vector<
                  vcl_pair< vgl_point_2d<double>,vgl_point_2d<double> > >&
                  lines,
                  vcl_vector<bool>& shock_lines);
+
+  // : cache mapping of st to xy in kd tree
+  void cache_st_mapping();
 
   //: return the radius at an interpolated point
   double interp_radius(int i1, int i2, int N, int n);
@@ -304,6 +331,10 @@ protected:
   unsigned int branch_points_;
 
   unsigned int midpoint_index_;
+
+  vcl_vector<vgl_point_2d<double> > st_points_;
+
+  rsdl_kd_tree* kd_tree_;
 
 };
 

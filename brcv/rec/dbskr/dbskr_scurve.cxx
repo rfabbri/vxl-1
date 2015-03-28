@@ -17,6 +17,7 @@
 #include <dbskr/dbskr_dpmatch_combined.h>
 #include <vsol/vsol_polygon_2d.h>
 
+
 #define ZERO_TOLERANCE 1E-1
 
 double fixAngleMPiPi_new(double a) {
@@ -61,7 +62,7 @@ dbskr_scurve::dbskr_scurve(int num_points,
     interpolate_ds_(interpolate_ds), subsample_ds_(subsample_ds),
     virtual_length_(0.0),area_factor_(0.0),leaf_edge_(leaf_edge),
     scale_ratio_(scale_ratio),curve_id_(0,0),branch_points_(0),
-    midpoint_index_(0)
+    midpoint_index_(0),kd_tree_(0)
 {
   if (binterpolate){
     vcl_vector<int> lmap; //dummy map 
@@ -96,6 +97,9 @@ dbskr_scurve::dbskr_scurve(int num_points,
 
   // now compute the areas
   compute_areas();
+
+  // cache st mapping
+  cache_st_mapping();
 
 }
 
@@ -165,6 +169,12 @@ dbskr_scurve::~dbskr_scurve()
   bdry_minus_.clear(); ///< corresponding bndry pt on the - side 
   bdry_minus_arclength_.clear();       ///< arclength along the - bndry curve
   bdry_minus_angle_.clear();           ///< tangent to the - bndry curve
+
+  if ( kd_tree_ )
+  {
+      delete kd_tree_;
+      kd_tree_=0;
+  }
 }
 
 //: assignment operator
@@ -929,6 +939,64 @@ bool dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt,
     return true;
 }
 
+
+//: return a continuous index and radius, of where you are
+//  fragment coordinates(s(i),t) { i.e., (x,y)->(s,t) 
+void dbskr_scurve::cache_st_mapping()
+{
+
+    st_points_.clear();
+
+    int N=5;
+    double step_size=1.0;
+    vcl_vector<rsdl_point> xy_points;
+
+    for ( int cx=0; cx < num_points_ ; ++cx)
+    {
+        for (int n = 0; n<N; n++)
+        { 
+            
+            double ratio_n = double(n)/N;
+            double interp_index=ratio_n+cx;
+            double R1=this->interp_radius(interp_index);
+               
+            double r1=0.0;
+            
+            vgl_point_2d<double> shock_pt = this->fragment_pt(interp_index,
+                                                              r1);
+            vnl_double_2 vec(shock_pt.x(),shock_pt.y());
+            xy_points.push_back(rsdl_point(vec));
+            st_points_.push_back(vgl_point_2d<double>(interp_index,
+                                                      r1));
+
+            r1 +=step_size;
+            
+            while (r1 <= R1) 
+            {
+                vgl_point_2d<double> plus_pt= this->fragment_pt(interp_index
+                                                              , r1);
+                vnl_double_2 vec_p(plus_pt.x(),plus_pt.y());
+                xy_points.push_back(rsdl_point(vec_p));
+                st_points_.push_back(vgl_point_2d<double>(interp_index,
+                                                          r1));
+
+                vgl_point_2d<double> minus_pt= this->fragment_pt(interp_index
+                                                                 , -r1);
+                vnl_double_2 vec_m(minus_pt.x(),minus_pt.y());
+                xy_points.push_back(rsdl_point(vec_m));
+                st_points_.push_back(vgl_point_2d<double>(interp_index,
+                                                             -r1));
+
+                r1 += step_size;
+            }
+        }
+
+
+    }
+    
+    kd_tree_ = new rsdl_kd_tree(xy_points);
+
+}
 
 //: return a continuous index and radius, of where you are
 //  fragment coordinates(s(i),t) { i.e., (x,y)->(s,t) }
