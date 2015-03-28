@@ -29,8 +29,13 @@
 
 #include <vl/sift.h>
 #include <vnl/vnl_vector_fixed.h>
+#include <vnl/vnl_double_2.h>
 #include <vcl_algorithm.h>
 #include <vil/vil_image_view.h>
+
+#include <rsdl/rsdl_point.h>
+#include <rsdl/rsdl_kd_tree.h>
+
 
 //==============================================================================
 // dbskfg_cgraph_directed_tree
@@ -174,6 +179,22 @@ public:
       }
 
       return pt;
+  }
+
+  //------------------------------------------------------------------------
+  //: uses the already existing scurves, so if circular_ends = true 
+  //while acquiring the tree then the outline will have circular completions  
+  vgl_point_2d<double> get_mapping(vgl_point_2d<double> pt)
+  {
+      vnl_double_2 temp(pt.x(),pt.y());
+      rsdl_point query(temp);
+      
+      vcl_vector< rsdl_point > cpoints;
+      vcl_vector< int > cindices;
+      
+      kd_tree_->n_nearest( query, 1, cpoints, cindices);
+
+      return st_points_[cindices[0]];
   }
 
   void compute_scurve_polygons(vcl_string& prefix);
@@ -333,6 +354,9 @@ protected:
 
   vcl_map<vcl_pair<int,int>,vgl_point_2d<double> > xy_st_mapping_;
 
+  vcl_vector<vgl_point_2d<double> > st_points_;
+
+  rsdl_kd_tree* kd_tree_;
 };
 
 #endif // dbskfg_cgraph_directed_tree_h_

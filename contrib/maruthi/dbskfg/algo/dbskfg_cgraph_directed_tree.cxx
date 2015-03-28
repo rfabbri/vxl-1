@@ -13,10 +13,6 @@
 #include <vcl_cstdio.h>
 #include <vcl_cassert.h>
 
-#include <rsdl/rsdl_point.h>
-#include <rsdl/rsdl_kd_tree.h>
-
-#include <vnl/vnl_double_2.h>
 #include <vgl/vgl_polygon_scan_iterator.h>
 
 //#include <dbsksp/algo/dbsksp_compute_scurve.h>
@@ -56,7 +52,8 @@ dbskfg_cgraph_directed_tree(
      id_(id),
      channel1_(channel1),
      channel2_(channel2),
-     channel3_(channel3)
+     channel3_(channel3),
+     kd_tree_(0)
 { 
 }
 
@@ -67,6 +64,12 @@ dbskfg_cgraph_directed_tree::
 {
     this->clear();
     bbox_=0;
+
+    if ( kd_tree_)
+    {
+        delete kd_tree_;
+        kd_tree_=0;
+    }
 }
 
 
@@ -1299,11 +1302,13 @@ void dbskfg_cgraph_directed_tree::compute_reconstructed_boundary_polygon
 // while acquiring the tree then the outline will have circular completions
 void dbskfg_cgraph_directed_tree::compute_extrinsic_mapping()
 {
-    
+
+    st_points_.clear();
+    xy_st_mapping_.clear();
+
     int N=5;
     double step_size=1;
     vcl_vector<rsdl_point> xy_points;
-    vcl_vector<vgl_point_2d<double> > st_points;
 
     //: find the set of darts to use
     vcl_vector<unsigned> to_use;
@@ -1358,7 +1363,7 @@ void dbskfg_cgraph_directed_tree::compute_extrinsic_mapping()
 
                 vnl_double_2 vec(shock_pt.x(),shock_pt.y());
                 xy_points.push_back(rsdl_point(vec));
-                st_points.push_back(vgl_point_2d<double>(interp_index,
+                st_points_.push_back(vgl_point_2d<double>(interp_index,
                                                          r1));
 
                 r1 +=step_size;
@@ -1369,14 +1374,14 @@ void dbskfg_cgraph_directed_tree::compute_extrinsic_mapping()
                                                                   , r1);
                     vnl_double_2 vec_p(plus_pt.x(),plus_pt.y());
                     xy_points.push_back(rsdl_point(vec_p));
-                    st_points.push_back(vgl_point_2d<double>(interp_index,
+                    st_points_.push_back(vgl_point_2d<double>(interp_index,
                                                              r1));
 
                     vgl_point_2d<double> minus_pt= sc->fragment_pt(interp_index
                                                                    , -r1);
                     vnl_double_2 vec_m(minus_pt.x(),minus_pt.y());
                     xy_points.push_back(rsdl_point(vec_m));
-                    st_points.push_back(vgl_point_2d<double>(interp_index,
+                    st_points_.push_back(vgl_point_2d<double>(interp_index,
                                                              -r1));
 
                     r1 += step_size;
@@ -1388,32 +1393,32 @@ void dbskfg_cgraph_directed_tree::compute_extrinsic_mapping()
       
     }
 
-    rsdl_kd_tree kd_tree(xy_points);
+    kd_tree_ = new rsdl_kd_tree(xy_points);
+    
+    // // compute polygon
+    // vgl_polygon<double> poly(1);
 
-    // compute polygon
-    vgl_polygon<double> poly(1);
+    // this->compute_reconstructed_boundary_polygon(poly);
 
-    this->compute_reconstructed_boundary_polygon(poly);
+    // vgl_polygon_scan_iterator<double> psi(poly, false);  
+    // for (psi.reset(); psi.next(); ) 
+    // {
+    //     int y = psi.scany();
+    //     for (int x = psi.startx(); x <= psi.endx(); ++x) 
+    //     {
+    //         vnl_double_2 temp(x,y);
+    //         rsdl_point query(temp);
 
-    vgl_polygon_scan_iterator<double> psi(poly, false);  
-    for (psi.reset(); psi.next(); ) 
-    {
-        int y = psi.scany();
-        for (int x = psi.startx(); x <= psi.endx(); ++x) 
-        {
-            vnl_double_2 temp(x,y);
-            rsdl_point query(temp);
+    //         vcl_vector< rsdl_point > cpoints;
+    //         vcl_vector< int > cindices;
 
-            vcl_vector< rsdl_point > cpoints;
-            vcl_vector< int > cindices;
+    //         kd_tree.n_nearest( query, 1, cpoints, cindices);
 
-            kd_tree.n_nearest( query, 1, cpoints, cindices);
+    //         vcl_pair<int,int> key(x,y);
+    //         xy_st_mapping_[key]=st_points_[cindices[0]];
+    //     }
 
-            vcl_pair<int,int> key(x,y);
-            xy_st_mapping_[key]=st_points[cindices[0]];
-        }
-
-    }
+    // }
 
 
 
