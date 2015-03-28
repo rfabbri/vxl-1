@@ -935,7 +935,8 @@ bool dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt,
 void dbskr_scurve::draw_grid(vcl_vector<
                              vcl_pair< vgl_point_2d<double>,
                              vgl_point_2d<double> > >&
-                             lines)
+                             lines,
+                             vcl_vector<bool>& shock_lines)
 {
 
     for (unsigned int i = 1; i < num_points_; i++) 
@@ -1002,7 +1003,10 @@ void dbskr_scurve::draw_grid(vcl_vector<
 
 
             lines.push_back(line1);
+            shock_lines.push_back(false);
+
             lines.push_back(line2);
+            shock_lines.push_back(false);
 
             double diameter = time_[start_index];
 
@@ -1024,7 +1028,7 @@ void dbskr_scurve::draw_grid(vcl_vector<
                 vcl_pair<vgl_point_2d<double>,vgl_point_2d<double> >
                     arc(start_arc,stop_arc);
                 lines.push_back(arc);
-
+                shock_lines.push_back(false);
             } 
 
         }
@@ -1059,10 +1063,19 @@ void dbskr_scurve::draw_grid(vcl_vector<
                                                             bdry_minus_stop);
 
             lines.push_back(shock_line);
+            shock_lines.push_back(true);
+
             lines.push_back(plus_start_line);
+            shock_lines.push_back(false);
+
             lines.push_back(plus_stop_line);
+            shock_lines.push_back(false);
+
             lines.push_back(minus_start_line);
+            shock_lines.push_back(false);
+
             lines.push_back(minus_stop_line);
+            shock_lines.push_back(false);
 
             double diameter = time_[start_index];
             double ratio = time_[stop_index]/diameter;
@@ -1094,7 +1107,10 @@ void dbskr_scurve::draw_grid(vcl_vector<
 
             
                 lines.push_back(plus_line);
+                shock_lines.push_back(false);
+
                 lines.push_back(minus_line);
+                shock_lines.push_back(false);
 
             }
 

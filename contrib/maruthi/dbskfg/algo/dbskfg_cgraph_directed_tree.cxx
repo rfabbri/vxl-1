@@ -1297,7 +1297,8 @@ void dbskfg_cgraph_directed_tree::compute_grid()
 
     vcl_vector<vcl_pair<vgl_point_2d<double>,
                         vgl_point_2d<double> > > lines;
-        
+    vcl_vector<bool> shock_lines;
+
   //: find the set of darts to use
   vcl_vector<unsigned> to_use;
   for (unsigned i = 0; i < dart_cnt_; i++) {
@@ -1336,7 +1337,7 @@ void dbskfg_cgraph_directed_tree::compute_grid()
           dart_path_scurve_map_.find(p);
       dbskr_scurve_sptr sc = (iter->second)->coarse;
 
-      sc->draw_grid(lines);
+      sc->draw_grid(lines,shock_lines);
       j++;
     }
   }
@@ -1353,7 +1354,8 @@ void dbskfg_cgraph_directed_tree::compute_grid()
       stream<<pair.first.x()<<" "
             <<pair.first.y()<<" "
             <<pair.second.x()<<" "
-            <<pair.second.y()<<vcl_endl;
+            <<pair.second.y()<<" "
+            <<shock_lines[kk]<<vcl_endl;
 
   }
 
