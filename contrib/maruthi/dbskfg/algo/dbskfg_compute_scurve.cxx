@@ -11,6 +11,7 @@
 
 // vgl headers
 #include <vgl/vgl_point_2d.h>
+#include <vgl/vgl_distance.h>
 
 // dbsk2d headers
 #include <dbsk2d/dbsk2d_ishock_bpoint.h>
@@ -171,49 +172,54 @@ void dbskfg_compute_scurve::sample_shock_link(dbskfg_composite_link_sptr link,
     dbskfg_shock_link* shock_link = dynamic_cast<dbskfg_shock_link*>
         (&(*link));
 
-    // dbsk2d_ishock_edge* cur_iedge = shock_link->ishock_edge();
+    dbsk2d_ishock_edge* cur_iedge = shock_link->ishock_edge();
 
     //: set extrinsinc points
-    vcl_vector<dbsk2d_xshock_sample_sptr> samples= 
-        shock_link->get_sampled_shock_points();
+    // vcl_vector<dbsk2d_xshock_sample_sptr> samples= 
+    //     shock_link->get_sampled_shock_points();
 
-    for ( unsigned int s=0; s < samples.size() ; ++s)
+    // for ( unsigned int s=0; s < samples.size() ; ++s)
+    // {
+    //     xshock_edge.push_back(samples[s]);
+    // }
+
+
+    // Make a dummy coarse shock graph
+    dbsk2d_shock_graph_sptr coarse_graph;
+    dbsk2d_sample_ishock sampler(coarse_graph);
+    sampler.set_sample_resolution(1.0);
+
+    if ( vgl_distance(cur_iedge->getStartPt(),cur_iedge->getEndPt())<=1.0e-8)
     {
-        xshock_edge.push_back(samples[s]);
+        return;
     }
 
-
-    // // Make a dummy coarse shock graph
-    // dbsk2d_shock_graph_sptr coarse_graph;
-    // dbsk2d_sample_ishock sampler(coarse_graph);
-    // sampler.set_sample_resolution(1.0);
-
-    // if ( shock_link->shock_compute_type() == dbskfg_utilities::LL )
-    // {
+    if ( shock_link->shock_compute_type() == dbskfg_utilities::LL )
+    {
    
-    //     sampler.sample_ishock_edge((dbsk2d_ishock_lineline*)cur_iedge,
-    //                                &xshock_edge);
-    // }
-    // else if( shock_link->shock_compute_type() == dbskfg_utilities::LLRP )
-    // {
+        sampler.sample_ishock_edge((dbsk2d_ishock_lineline*)cur_iedge,
+                                   &xshock_edge);
+    }
+    else if( shock_link->shock_compute_type() == dbskfg_utilities::LLRP )
+    {
 
-    //     sampler.sample_ishock_edge((dbsk2d_ishock_pointline*)cur_iedge,
-    //                                &xshock_edge);
+        sampler.sample_ishock_edge((dbsk2d_ishock_pointline*)cur_iedge,
+                                   &xshock_edge);
  
-    // }
-    // else if( shock_link->shock_compute_type() == dbskfg_utilities::RLLP )
-    // {
+    }
+    else if( shock_link->shock_compute_type() == dbskfg_utilities::RLLP )
+    {
 
-    //     sampler.sample_ishock_edge((dbsk2d_ishock_pointline*)cur_iedge,
-    //                                &xshock_edge);
+        sampler.sample_ishock_edge((dbsk2d_ishock_pointline*)cur_iedge,
+                                   &xshock_edge);
  
-    // }
-    // else if ( shock_link->shock_compute_type() == dbskfg_utilities::PP )
-    // {
-    //     sampler.sample_ishock_edge((dbsk2d_ishock_pointpoint*)cur_iedge,
-    //                                &xshock_edge);
+    }
+    else if ( shock_link->shock_compute_type() == dbskfg_utilities::PP )
+    {
+        sampler.sample_ishock_edge((dbsk2d_ishock_pointpoint*)cur_iedge,
+                                   &xshock_edge);
  
-    // }
+    }
 
 
     if ( mirror )
