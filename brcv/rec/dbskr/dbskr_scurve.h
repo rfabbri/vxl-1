@@ -203,7 +203,8 @@ public:
   //  fragment coordinates(s(i),t) { i.e., (x,y)->(s,t) }
   void draw_grid(vcl_vector<
                  vcl_pair< vgl_point_2d<double>,vgl_point_2d<double> > >&
-                 lines);
+                 lines,
+                 vcl_vector<bool>& shock_lines);
 
   //: return the radius at an interpolated point
   double interp_radius(int i1, int i2, int N, int n);
