@@ -959,7 +959,9 @@ void dbskr_scurve::draw_grid(vcl_vector<
         vgl_point_2d<double> e_pt = sh_pt_[stop_index];
 
         // Degenerate case
-        if ( vgl_distance(s_pt,e_pt) < 1.0e-8 )
+        if ( vgl_distance(s_pt,e_pt) <= 1.0e-8 && 
+             vgl_distance(bdry_plus_[stop_index],bdry_minus_[stop_index])
+             >1.0e-8 )
         {
             vgl_point_2d<double> arc_start;
             vgl_point_2d<double> arc_stop;
