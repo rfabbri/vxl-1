@@ -14,6 +14,7 @@
 #include <vcl_cassert.h>
 
 #include <vgl/vgl_polygon_scan_iterator.h>
+#include <vgl/vgl_distance.h>
 
 //#include <dbsksp/algo/dbsksp_compute_scurve.h>
 //#include <vsol/vsol_polygon_2d.h>
@@ -1295,6 +1296,112 @@ void dbskfg_cgraph_directed_tree::compute_reconstructed_boundary_polygon
   //     poly.push_back(first_point);
   // }
 
+}
+
+//------------------------------------------------------------------------
+// verify_mapping
+void dbskfg_cgraph_directed_tree::verify_mapping()
+{
+    //: find the set of darts to use
+    vcl_vector<unsigned> to_use;
+    for (unsigned i = 0; i < dart_cnt_; i++) {
+        if (leaf_[i]) {
+            to_use.push_back(i);
+            continue;
+        }
+
+        if (leaf_[mate_[i]]) 
+            continue;
+    
+        bool contain = false;
+        for (unsigned j = 0; j < to_use.size(); j++) {
+            if (to_use[j] == mate_[i]) {
+                contain = true;
+                break;
+            }
+        }
+
+        if (!contain)
+            to_use.push_back(i);
+    }
+
+    vcl_vector<vgl_point_2d<double> > points;
+    vcl_vector<double > distances;
+
+    //: now concatanate the scurves  
+    for (unsigned j = 0; j < to_use.size() ; j++) 
+    { 
+
+        unsigned i = to_use[j];
+
+        vcl_pair<int, int> p;
+        p.first = i;
+        p.second = i;
+        vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
+            dart_path_scurve_map_.find(p);
+
+        dbskr_scurve_sptr sc = (iter->second)->coarse;
+
+        vgl_polygon<double> poly(1);
+        sc->get_polygon(poly);
+        
+        // do not include boundary
+        vgl_polygon_scan_iterator<double> psi(poly, false);  
+        for (psi.reset(); psi.next(); ) 
+        {
+            int y = psi.scany();
+            for (int x = psi.startx(); x <= psi.endx(); ++x) 
+            {
+                vgl_point_2d<double> query(x,y);
+                vgl_point_2d<double> st;
+                bool flag=sc->intrinsinc_pt(query,st);
+
+                vgl_point_2d<double> actual_pt=sc->fragment_pt(
+                    st.x(),st.y());
+
+                double distance=vgl_distance(actual_pt,
+                                             query);
+
+                if ( !flag )
+                {
+                    distance=1000;
+                }
+
+                points.push_back(query);
+                distances.push_back(distance);
+            }
+
+        }
+
+        
+
+    }
+
+
+    vcl_stringstream streamer;
+
+    if ( id_ < 10 )
+    {
+        streamer<<"Model_000"<<id_<<"_mapping.txt";
+    }
+    else if ( id_ >= 10 && id_ < 99 )
+    {
+        streamer<<"Model_00"<<id_<<"_mapping.txt";
+    }
+    else
+    {
+        streamer<<"Model_0"<<id_<<"_mapping.txt";
+    }
+
+    vcl_ofstream output(streamer.str().c_str());
+
+    for ( unsigned int kk=0; kk < distances.size() ; ++kk)
+    {
+        output<<points[kk].x()<<" "<<points[kk].y()<<" "
+              <<distances[kk]<<vcl_endl;
+    }
+    
+    
 }
 
 //------------------------------------------------------------------------------

@@ -168,6 +168,10 @@ public:
   void compute_extrinsic_mapping();
 
   //------------------------------------------------------------------------
+  // verify_mapping
+  void verify_mapping();
+
+  //------------------------------------------------------------------------
   //: uses the already existing scurves, so if circular_ends = true 
   //while acquiring the tree then the outline will have circular completions  
   vgl_point_2d<double> get_mapping(vcl_pair<int,int>& key)
