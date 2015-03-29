@@ -880,7 +880,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 	graph_size_vector.push_back(55);
 	graph_size_vector.push_back(70);
 	// Pipeline Update: if no previous dets, do window detection in a coarse grid search first. Refine the coarse results in the next steps
-	if(prev_dets.size()<3) // change the rule to be very few dets
+	if(prev_dets.size()<2) // change the rule to be very few dets
 	{
 		is_initial = true;
 
