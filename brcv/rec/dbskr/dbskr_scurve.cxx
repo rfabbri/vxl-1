@@ -706,7 +706,8 @@ bool dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt,
             
             pointAboveLine=false;
         }
-        else
+        else if ( vgl_distance(bdry_plus_[start_index],bdry_plus_[stop_index])
+                  < 1.0e-8 )
         {
 
             arc_start=bdry_minus_[start_index];
@@ -714,7 +715,33 @@ bool dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt,
 
             pointAboveLine=true;
         }
+        else
+        {
 
+            vgl_polygon<double> poly_plus(1);
+            
+            poly_plus.push_back(s_pt);
+            poly_plus.push_back(bdry_plus_[start_index]);
+            poly_plus.push_back(bdry_plus_[stop_index]);
+
+
+            if ( poly_plus.contains(pt) )
+            {
+
+                arc_start=bdry_plus_[start_index];
+                arc_stop= bdry_plus_[stop_index];
+
+                pointAboveLine=false;
+            }
+            else
+            {
+                arc_start=bdry_minus_[start_index];
+                arc_stop= bdry_minus_[stop_index];
+
+                pointAboveLine=true;
+            }                                   
+
+        }
         vgl_point_2d<double> bdry_plus = bdry_plus_[start_index];
         vgl_point_2d<double> bdry_minus = bdry_minus_[start_index];
 
