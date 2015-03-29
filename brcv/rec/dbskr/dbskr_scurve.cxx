@@ -823,32 +823,56 @@ bool dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt,
         if ( vgl_distance(bdry_plus_stop,bdry_minus_stop) <= 1.0e-8 )
         {
 
-            vgl_line_2d<double> pt_line(pt,
-                                        start_ray.direction());
+            int N=20;
+            double step_size=1.0;
+            double distance=1.0e6;
 
-            vgl_line_2d<double> new_shock_line(s_pt,bdry_plus_stop);
-            distance=vgl_distance(s_pt,bdry_plus_stop);
-
-            vgl_point_2d<double> footPt;
-            vgl_intersection(pt_line,new_shock_line,footPt);
-                
-            double distance_s= vgl_distance(s_pt,footPt);
-                
-            double ratio = distance_s/distance;
-                
-            double con_index=start_index + ratio;
-
-
-            double dx = sh_pt_[stop_index].x() - sh_pt_[start_index].x();
-            double dy = sh_pt_[stop_index].y() - sh_pt_[start_index].y();
+            for (int n = 0; n<N; n++)
+            { 
             
-            vgl_point_2d<double> frag_pt(sh_pt_[start_index].x()+ratio*dx, 
-                                         sh_pt_[start_index].y()+ratio*dy);
-
-            double distance_t=vgl_distance(frag_pt,pt);
-
-            shock_coords.set(con_index,distance_t);
+                double ratio_n = double(n)/N;
+                double interp_index=ratio_n+(double)(start_index);
+                double R1=this->interp_radius(interp_index);
+               
+                double r1=0.0;
             
+                vgl_point_2d<double> shock_pt = this->fragment_pt(interp_index,
+                                                                  r1);
+
+
+                if ( vgl_distance(shock_pt,pt) < distance )
+                {
+                    distance=vgl_distance(shock_pt,pt);
+                    shock_coords.set(interp_index,r1);
+                }
+
+                r1 +=step_size;
+            
+                while (r1 <= R1) 
+                {
+                    vgl_point_2d<double> plus_pt= this->fragment_pt(
+                        interp_index
+                        ,r1);
+                    if ( vgl_distance(plus_pt,pt) < distance )
+                    {
+                        distance=vgl_distance(plus_pt,pt);
+                        shock_coords.set(interp_index,r1);
+                    }
+
+                    vgl_point_2d<double> minus_pt= this->fragment_pt(
+                        interp_index
+                        , -r1);
+                    if ( vgl_distance(minus_pt,pt) < distance )
+                    {
+                        distance=vgl_distance(minus_pt,pt);
+                        shock_coords.set(interp_index,-r1);
+                    }
+
+                    r1 += step_size;
+                }
+            }
+            
+            pointAboveLine=true;
 
 
         }
