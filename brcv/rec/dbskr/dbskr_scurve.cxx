@@ -99,7 +99,7 @@ dbskr_scurve::dbskr_scurve(int num_points,
   compute_areas();
 
   // cache st mapping
-  cache_st_mapping();
+  // cache_st_mapping();
 
 }
 
