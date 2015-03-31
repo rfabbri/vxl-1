@@ -57,9 +57,9 @@ extern "C" {
   typedef unsigned int uint32_t;
 #endif
 #define this c_this
-#include <mpeg2dec/video_out.h>
+// #include <mpeg2dec/video_out.h>
 #include <mpeg2dec/mpeg2.h>
-#include <mpeg2dec/mm_accel.h>
+#include <a52dec/mm_accel.h>
 #undef this
 }
 

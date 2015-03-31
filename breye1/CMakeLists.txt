@@ -24,6 +24,4 @@ add_subdirectory( dbvis1 )
 add_subdirectory( vorl1 )
 
 #To be compatible with latest verison of vxl copy over library
-add_subdirectory( vidl1 )
-
-
+#add_subdirectory( vidl1 )
