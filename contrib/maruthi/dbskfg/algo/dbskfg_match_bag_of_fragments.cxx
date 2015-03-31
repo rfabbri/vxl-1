@@ -4761,20 +4761,20 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     //         width=query_tree->bbox()->width();
     //     }
 
-    //     compute_app_alignment(
-    //             curve_list1,
-    //             curve_list2,
-    //             map_list,
-    //             *model_tree->get_channel1(),
-    //             *query_tree->get_channel1(),
-    //             flag,
-    //             width,
-    //             model_tree->get_grad_data(),
-    //             model_tree->get_sift_filter(),
-    //             query_tree->get_grad_data(),
-    //             query_tree->get_sift_filter(),
-    //             model_tree->get_scale_ratio(),
-    //             query_tree->get_scale_ratio());
+    //     // compute_app_alignment(
+    //     //         curve_list1,
+    //     //         curve_list2,
+    //     //         map_list,
+    //     //         *model_tree->get_channel1(),
+    //     //         *query_tree->get_channel1(),
+    //     //         flag,
+    //     //         width,
+    //     //         model_tree->get_grad_data(),
+    //     //         model_tree->get_sift_filter(),
+    //     //         query_tree->get_grad_data(),
+    //     //         query_tree->get_sift_filter(),
+    //     //         model_tree->get_scale_ratio(),
+    //     //         query_tree->get_scale_ratio());
 
     //     unsigned int model_id = model_tree->get_id();
         
@@ -4782,6 +4782,15 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     //     {
     //         query_parts_[model_id].clear();
     //     }
+        
+    //     // warp_image(
+    //     //     model_tree,
+    //     //     query_tree,
+    //     //     curve_list1,
+    //     //     curve_list2,
+    //     //     map_list,
+    //     //     flag,
+    //     //     width);
         
     //     vcl_vector<vgl_point_2d<double> > model_parts = model_parts_[model_id];
 
@@ -7294,9 +7303,7 @@ void dbskfg_match_bag_of_fragments::warp_image(
     vcl_vector<dbskr_scurve_sptr>& curve_list2,
     vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
     bool flag,
-    double width,
-    double model_scale_ratio,
-    double query_scale_ratio)
+    double width)
 {
 
     
@@ -7305,8 +7312,8 @@ void dbskfg_match_bag_of_fragments::warp_image(
     vil_image_view<double>* query_channel3=query_tree->get_channel3();
 
 
-    vil_image_view<vil_rgb<vxl_byte> > temp(query_channel1->ni(),
-                                            query_channel2->nj());
+    vil_image_view<vil_rgb<vxl_byte> > temp(model_tree->get_channel1()->ni(),
+                                            model_tree->get_channel1()->nj());
     vil_rgb<vxl_byte> bg_col(255, 255, 255);
     temp.fill(bg_col);
 
@@ -7345,6 +7352,7 @@ void dbskfg_match_bag_of_fragments::warp_image(
                 double blue  = vil_bilin_interp_safe(*query_channel3,xx,yy);
                 
                 temp(x,y)=vil_rgb<vxl_byte>(red,green,blue);
+
             }
         }
     }
