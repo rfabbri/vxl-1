@@ -157,8 +157,8 @@ execute()
 
     if (!dbsks_load_detections_from_folder(prev_storage_folder, prev_dets))
 		vcl_cout << "\n [Fail] loading previous dets \n";
-	else
-		is_initial = true;
+//	else
+//		is_initial = true;
 
     if (dbsks_load_detections_from_folder(storage_folder, dets))
     {
@@ -1063,7 +1063,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 	int max_prev_num = 2;
 	if(is_initial)
 		max_prev_num = 3;
-	for(int prev_i = 0; prev_i < vcl_min(int(prev_dets.size()), 2); prev_i ++)
+	for(int prev_i = 0; prev_i < max_prev_num; prev_i ++)
 	{
 
 
@@ -1098,9 +1098,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 
 		//if(!update_appearance_model(prev_dets, prev_L_))
 		//	vcl_cout<< "Fail in updaing appearance model" << vcl_endl;
-		if(engine.list_solutions_.size()==0)
-			dets_window.push_back(prev_dets[prev_i]);
-		else
+		if(engine.list_solutions_.size()!=0)
 		{
 			for (unsigned i =0; i < engine.list_solutions_.size(); ++i)
 			{

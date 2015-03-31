@@ -32,5 +32,5 @@ AUX_SOURCE_DIRECTORY(Templates dbil_pro_sources)
 
 ADD_LIBRARY(dbil_pro ${dbil_pro_sources})
 
-TARGET_LINK_LIBRARIES(dbil_pro dbil_algo bil vil vil_algo dbpro bil_algo osl )
+TARGET_LINK_LIBRARIES(dbil_pro dbil_algo vidpro1 bpro1 bil vil vil_algo dbpro bil_algo osl )
 

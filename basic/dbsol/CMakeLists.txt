@@ -29,7 +29,12 @@ AUX_SOURCE_DIRECTORY(Templates dbsol_sources)
 
 ADD_LIBRARY(dbsol ${dbsol_sources})
 
-TARGET_LINK_LIBRARIES( dbsol dbgl dbgl_algo vgl vsol vil )
+if(Boost_FOUND)
+  TARGET_LINK_LIBRARIES( dbsol dbgl dbgl_algo vgl vsol vil ${Boost_LIBRARIES} )
+  INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIRS} )
+else()
+  TARGET_LINK_LIBRARIES( dbsol dbgl dbgl_algo vgl vsol vil )
+endif()
 
 IF( Boost_FOUND )
   TARGET_LINK_LIBRARIES( dbsol ${Boost_LIBRARIES})

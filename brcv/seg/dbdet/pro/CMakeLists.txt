@@ -116,7 +116,7 @@ ENDIF(OCTAVE_FOUND)
 
 ADD_LIBRARY(dbdet_pro ${dbdet_pro_sources})
 
-TARGET_LINK_LIBRARIES(dbdet_pro dbdet_algo dbdet_xio vidpro1 vgui bil)
+TARGET_LINK_LIBRARIES(dbdet_pro dbdet_algo dbdet_xio vidpro1 bvis1 vgui bil)
 
 #IF(BUILD_TESTING)
 #  SUBDIRS(tests)
