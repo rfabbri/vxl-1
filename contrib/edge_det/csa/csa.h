@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <sys/types.h>
 //#include <sys/times.h>
 //#include "times.h"
