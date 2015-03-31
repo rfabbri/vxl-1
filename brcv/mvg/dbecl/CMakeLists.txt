@@ -18,7 +18,7 @@ AUX_SOURCE_DIRECTORY(Templates dbecl_sources)
 
 ADD_LIBRARY(dbecl ${dbecl_sources})
 
-TARGET_LINK_LIBRARIES(dbecl vpgl vgl dbgl_algo vbl vul vnl vil vsol)
+TARGET_LINK_LIBRARIES(dbecl vpgl dbgl_algo vbl vul vnl vil vsol vgl)
 
 # Processing Library
 SUBDIRS(pro)

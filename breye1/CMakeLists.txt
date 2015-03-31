@@ -24,6 +24,6 @@ SUBDIRS( dbvis1 )
 SUBDIRS( vorl1 )
 
 #To be compatible with latest verison of vxl copy over library
-SUBDIRS( vidl1 )
+#SUBDIRS( vidl1 )
 
 
