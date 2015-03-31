@@ -17,4 +17,4 @@ SET(edge_det_pro_sources
 
 ADD_LIBRARY(edge_det_pro ${edge_det_pro_sources})
 
-TARGET_LINK_LIBRARIES(edge_det_pro csa)
+TARGET_LINK_LIBRARIES(edge_det_pro csa bpro1 dbpro)
