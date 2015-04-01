@@ -4922,6 +4922,17 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
             query_tree->get_root_node_radius(),
             title.str());
 
+
+        // vcl_pair<double,double> sift_rgb_cost =
+        //     compute_common_frame_distance(
+        //         model_tree,
+        //         query_tree,
+        //         curve_list1,
+        //         curve_list2,
+        //         map_list,
+        //         flag,
+        //         width);
+
         // vcl_pair<double,double> sift_rgb_cost=compute_mi(
         //     curve_list1,
         //     curve_list2,
@@ -7329,12 +7340,15 @@ void dbskfg_match_bag_of_fragments::warp_image(
         {
             vgl_point_2d<double> query_pt(x,y);
 
-      
+            vgl_point_2d<double> rt_model(0,0),rt_query(0,0);
+
             vgl_point_2d<double> mapping_pt=
                 find_part_correspondences(query_pt,
                                           curve_list1,
                                           curve_list2,
                                           map_list,
+                                          rt_model,
+                                          rt_query,
                                           flag,
                                           width,
                                           model_tree
@@ -7402,6 +7416,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance(
     vgl_polygon<double> poly=model_fragments_polys_
         [model_tree->get_id()].second;
     
+    vcl_vector<vgl_point_2d<double> > bc_coords;
+
     // do not include boundary
     vgl_polygon_scan_iterator<double> psi(poly, false);  
     for (psi.reset(); psi.next(); ) 
@@ -7411,12 +7427,15 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance(
         {
             vgl_point_2d<double> query_pt(x,y);
 
-      
+            vgl_point_2d<double> model_rt(0,0),query_rt(0,0);
+
             vgl_point_2d<double> mapping_pt=
                 find_part_correspondences(query_pt,
                                           curve_list1,
                                           curve_list2,
                                           map_list,
+                                          model_rt,
+                                          query_rt,
                                           flag,
                                           width,
                                           model_tree
@@ -7436,6 +7455,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance(
                 temp(x,y)=vil_rgb<vxl_byte>(red,green,blue);
 
             }
+
+            bc_coords.push_back(model_rt);
         }
     }
 
@@ -7471,6 +7492,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance(
     double trad_sift_distance=0.0;
     double bc_sift_distance=0.0;
 
+    unsigned int index=0;
+
     for (psi.reset(); psi.next(); ) 
     {
         int y = psi.scany();
@@ -7494,11 +7517,31 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance(
                 model_sift_filter,
                 model_sift_filter);
 
+            double bc_radius=bc_coords[index].x()/2.0;
+            double bc_theta =bc_coords[index].y();
+
+            bc_sift_distance += descr_cost(
+                model_pt,
+                bc_radius,
+                bc_theta,
+                model_pt,
+                bc_radius,
+                bc_theta,
+                model_red_grad_data,
+                query_red_grad_data,
+                model_green_grad_data,
+                query_green_grad_data,
+                model_blue_grad_data,
+                query_blue_grad_data,
+                model_sift_filter,
+                model_sift_filter);
             
+            index=index+1;
         }
     }
     
-    app_distance.first= trad_sift_distance;
+    app_distance.first  = trad_sift_distance/index;
+    app_distance.second = bc_sift_distance/index;
 
     vl_free(query_red_grad_data);
     vl_free(query_green_grad_data);
@@ -7517,6 +7560,8 @@ vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
     vcl_vector<dbskr_scurve_sptr>& curve_list1,
     vcl_vector<dbskr_scurve_sptr>& curve_list2,
     vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    vgl_point_2d<double>& rt_model,
+    vgl_point_2d<double>& rt_query,
     bool flag,
     double width,
     double model_scale_ratio,
@@ -7632,15 +7677,20 @@ vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
 
         }
 
-        double t_rad_model = model_curve->time(int_pt.x());
-        double t_rad_query = query_curve->time(s_map);
+        double t_rad_model = model_curve->interp_radius(int_pt.x());
+        double t_rad_query = query_curve->interp_radius(s_map);
 
         double t_map = int_pt.y()*(t_rad_query/t_rad_model);
 
         mapping_pt = query_curve->fragment_pt(s_map,
                                               t_map);
 
-        
+        rt_model.set(int_pt.y(),
+                     model_curve->interp_theta(int_pt.x()));
+
+        rt_query.set(t_map,
+                     query_curve->interp_theta(s_map));
+
         
     }
     else
@@ -7745,14 +7795,19 @@ vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
 
         }
 
-        double t_rad_model = model_curve->time(int_pt.x());
-        double t_rad_query = query_curve->time(s_map);
+        double t_rad_model = model_curve->interp_radius(int_pt.x());
+        double t_rad_query = query_curve->interp_radius(s_map);
 
         double t_map = int_pt.y()*(t_rad_query/t_rad_model);
 
         mapping_pt = query_curve->fragment_pt(s_map,
                                               t_map);
 
+        rt_model.set(int_pt.y(),
+                     model_curve->interp_theta(int_pt.x()));
+
+        rt_query.set(t_map,
+                     query_curve->interp_theta(s_map));
 
 
     }

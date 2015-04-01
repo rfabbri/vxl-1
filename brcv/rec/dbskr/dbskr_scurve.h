@@ -245,6 +245,9 @@ public:
   //: return the radius at an interpolated point defined by the continuous index
   double interp_radius(double index);
 
+  //: return the radius at an interpolated point defined by the continuous index
+  double interp_theta(double index);
+
   //: return an extrinsic point corresponding to the intrinsic 
   //  fragment coordinates(s(i),t) { i.e., (s(i),t)->(x,y) }
   //  radius>0 for plus side and <0 for minus side defined in terms

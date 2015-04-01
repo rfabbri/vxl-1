@@ -1298,6 +1298,33 @@ double dbskr_scurve::interp_radius(double index)
     return time_[ind];
 }
 
+
+//: return the radius at an interpolated point defined by the continuous index
+double dbskr_scurve::interp_theta(double index)
+{
+    assert(index>=0 && index<=num_points_-1);
+
+    //the integer index less than the continuous one
+    int ind = (int)vcl_floor(index);
+
+    //if the continuous index is between two integer indices
+    // we need to interpolate the values
+    if (ind<index)
+    {
+        double ratio = index - vcl_floor(index);
+        double dtheta = angleDiff_new(theta_[ind+1], theta_[ind]);
+        double theta_int = theta_[ind] + ratio*dtheta;
+
+    
+        return theta_int;
+    }
+    else //return the value at the integer index
+    {
+        return theta_[ind];
+    }
+
+}
+
 //: return an extrinsic point corresponding to the intrinsic 
 //  fragment coordinates(s(i),t) { i.e., (s(i),t)->(x,y) }
 //  radius>0 for plus side and <0 for minus side defined in terms
