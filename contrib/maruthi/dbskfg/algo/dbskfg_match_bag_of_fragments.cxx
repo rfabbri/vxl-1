@@ -7453,7 +7453,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance(
     for (psi.reset(); psi.next(); ) 
     {
         int y = psi.scany();
-        for (int x = psi.startx(); x <= psi.endx(); x=x+3) 
+        for (int x = psi.startx(); x <= psi.endx(); ++x) 
         {
             vgl_point_2d<double> query_pt(x,y);
 
@@ -7527,7 +7527,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance(
     for (psi.reset(); psi.next(); ) 
     {
         int y = psi.scany();
-        for (int x = psi.startx(); x <= psi.endx(); ++x) 
+        for (int x = psi.startx(); x <= psi.endx(); x=x+3) 
         {
             vgl_point_2d<double> model_pt(x,y);
             
