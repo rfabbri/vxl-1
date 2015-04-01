@@ -10,7 +10,7 @@ SET( dvpgl_algo_pro_sources
 
 ADD_LIBRARY(dvpgl_algo_pro ${dvpgl_algo_pro_sources})
 
-TARGET_LINK_LIBRARIES(dvpgl_algo_pro vpgl_algo vidpro1 )
+TARGET_LINK_LIBRARIES(dvpgl_algo_pro vpgl_algo bpgl_algo vidpro1 )
 
 
 IF(BUILD_TESTING)

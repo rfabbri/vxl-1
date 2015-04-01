@@ -7,8 +7,8 @@
 #include <vgl/vgl_point_2d.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vpgl/vpgl_poly_radial_distortion.h>
-#include <vpgl/algo/vpgl_vsol_lens_warp.h>
 #include <vpgl/algo/vpgl_lens_warp_mapper.h>
+#include <bpgl/algo/bpgl_vsol_lens_warp.h>
 
 
 //: Constructor
@@ -134,7 +134,7 @@ dvpgl_vsol_lens_warp_process::execute()
     vcl_vector<vsol_spatial_object_2d_sptr> objs 
       = frame_vsol->data_named(groups[g]);
     for(unsigned v=0; v<objs.size(); ++v)
-      output_vsol->add_object(vpgl_vsol_lens_warp(objs[v], *lens, invert, mpthresh), 
+      output_vsol->add_object(bpgl_vsol_lens_warp(objs[v], *lens, invert, mpthresh), 
                               groups[g]);
   }
   
