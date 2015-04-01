@@ -1,14 +1,13 @@
 #include <testlib/testlib_test.h>
 
 #include <vcl_limits.h>
+#include <vcl_iostream.h>
 
 #include <vgl/vgl_distance.h>
 #include <vgl/algo/vgl_norm_trans_2d.h>
 
 #include <vpgl/algo/vpgl_fm_compute_8_point.h>
 #include <vpgl/algo/vpgl_fm_compute_7_point.h>
-#include <vpgl/algo/vpgl_fm_compute_ransac.h>
-#include <vpgl/algo/vpgl_fm_compute_ransac.h>
 
 #include <mvl/FMatrix.h>
 #include <mvl/FMatrixComputeLinear.h>
