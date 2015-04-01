@@ -2,6 +2,7 @@
 # Tests for dvpgl_algo library
 
 INCLUDE_DIRECTORIES(${VXL_OXL_INCLUDE_DIR} )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/mvg/bmvl)
 
 ADD_EXECUTABLE( dvpgl_algo_test_all
   # Driver source and utilities

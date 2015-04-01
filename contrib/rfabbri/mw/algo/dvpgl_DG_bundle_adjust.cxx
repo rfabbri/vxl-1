@@ -22,7 +22,7 @@ dvpgl_DG_bundle_adj_lsqr::
                         const vcl_vector<dbdif_3rd_order_point_2d>& image_points,
                         const vcl_vector<vcl_vector<bool> >& mask,
                         bool use_confidence_weights)
- : vnl_sparse_lst_sqr_function(K.size(),6,mask[0].size(),3,mask,3,use_gradient),
+ : vnl_sparse_lst_sqr_function(K.size(),6,mask[0].size(),3,0,mask,3,use_gradient),
    K_(K),
    image_points_(image_points),
    use_covars_(false),
