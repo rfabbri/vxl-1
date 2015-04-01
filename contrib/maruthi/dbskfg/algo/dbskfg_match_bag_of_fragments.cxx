@@ -31,6 +31,8 @@
 
 #include <vil/vil_bilin_interp.h>
 #include <vil/vil_flip.h>
+#include <vil/vil_save.h>
+#include <vil/vil_new.h>
 #include <bsta/bsta_histogram.h>
 #include <bsta/bsta_joint_histogram.h>
 #include <bsta/bsta_joint_histogram_3d.h>
@@ -48,6 +50,7 @@ extern "C" {
 #include <vl/kmeans.h>
 }
 
+#include <vgl/vgl_polygon_scan_iterator.h>
 #include <vgl/vgl_homg_point_2d.h>
 #include <vgl/vgl_distance.h>
 #include <string.h>
@@ -4758,20 +4761,20 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     //         width=query_tree->bbox()->width();
     //     }
 
-    //     compute_app_alignment(
-    //             curve_list1,
-    //             curve_list2,
-    //             map_list,
-    //             *model_tree->get_channel1(),
-    //             *query_tree->get_channel1(),
-    //             flag,
-    //             width,
-    //             model_tree->get_grad_data(),
-    //             model_tree->get_sift_filter(),
-    //             query_tree->get_grad_data(),
-    //             query_tree->get_sift_filter(),
-    //             model_tree->get_scale_ratio(),
-    //             query_tree->get_scale_ratio());
+    //     // compute_app_alignment(
+    //     //         curve_list1,
+    //     //         curve_list2,
+    //     //         map_list,
+    //     //         *model_tree->get_channel1(),
+    //     //         *query_tree->get_channel1(),
+    //     //         flag,
+    //     //         width,
+    //     //         model_tree->get_grad_data(),
+    //     //         model_tree->get_sift_filter(),
+    //     //         query_tree->get_grad_data(),
+    //     //         query_tree->get_sift_filter(),
+    //     //         model_tree->get_scale_ratio(),
+    //     //         query_tree->get_scale_ratio());
 
     //     unsigned int model_id = model_tree->get_id();
         
@@ -4779,6 +4782,15 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
     //     {
     //         query_parts_[model_id].clear();
     //     }
+        
+    //     // warp_image(
+    //     //     model_tree,
+    //     //     query_tree,
+    //     //     curve_list1,
+    //     //     curve_list2,
+    //     //     map_list,
+    //     //     flag,
+    //     //     width);
         
     //     vcl_vector<vgl_point_2d<double> > model_parts = model_parts_[model_id];
 
@@ -7283,6 +7295,79 @@ void dbskfg_match_bag_of_fragments::draw_part_correspondence(
     stream.close();
 
 }
+
+void dbskfg_match_bag_of_fragments::warp_image(
+    dbskfg_cgraph_directed_tree_sptr& model_tree,
+    dbskfg_cgraph_directed_tree_sptr& query_tree,
+    vcl_vector<dbskr_scurve_sptr>& curve_list1,
+    vcl_vector<dbskr_scurve_sptr>& curve_list2,
+    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    bool flag,
+    double width)
+{
+
+    
+    vil_image_view<double>* query_channel1=query_tree->get_channel1();
+    vil_image_view<double>* query_channel2=query_tree->get_channel2();
+    vil_image_view<double>* query_channel3=query_tree->get_channel3();
+
+
+    vil_image_view<vil_rgb<vxl_byte> > temp(model_tree->get_channel1()->ni(),
+                                            model_tree->get_channel1()->nj());
+    vil_rgb<vxl_byte> bg_col(255, 255, 255);
+    temp.fill(bg_col);
+
+    vgl_polygon<double> poly=model_fragments_polys_
+        [model_tree->get_id()].second;
+    
+    // do not include boundary
+    vgl_polygon_scan_iterator<double> psi(poly, false);  
+    for (psi.reset(); psi.next(); ) 
+    {
+        int y = psi.scany();
+        for (int x = psi.startx(); x <= psi.endx(); ++x) 
+        {
+            vgl_point_2d<double> query_pt(x,y);
+
+      
+            vgl_point_2d<double> mapping_pt=
+                find_part_correspondences(query_pt,
+                                          curve_list1,
+                                          curve_list2,
+                                          map_list,
+                                          flag,
+                                          width,
+                                          model_tree
+                                          ->get_scale_ratio(),
+                                          query_tree
+                                          ->get_scale_ratio());
+            
+            if ( mapping_pt.x() != -1 )
+            {
+                double xx=mapping_pt.x();
+                double yy=mapping_pt.y();
+                
+                double red   = vil_bilin_interp_safe(*query_channel1,xx,yy);
+                double green = vil_bilin_interp_safe(*query_channel2,xx,yy);
+                double blue  = vil_bilin_interp_safe(*query_channel3,xx,yy);
+                
+                temp(x,y)=vil_rgb<vxl_byte>(red,green,blue);
+
+            }
+        }
+    }
+    
+
+    vcl_stringstream name;
+    name<<"Model_"<<model_tree->get_id()<<"_vs_Query_"<<query_tree->get_id()
+        <<"_warp.png";
+
+    vil_image_resource_sptr out_img = vil_new_image_resource_of_view(temp);
+    vil_save_image_resource(out_img, 
+                            name.str().c_str()); 
+
+}   
+
 
 vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
     vgl_point_2d<double> query_pt,

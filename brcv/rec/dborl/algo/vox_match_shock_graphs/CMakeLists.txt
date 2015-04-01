@@ -1,4 +1,5 @@
 INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/db3p )
+INCLUDE_DIRECTORIES( ${VXL_RPL_INCLUDE_DIR} )
 
 SET( vox_match_shock_graphs_sources
   vox_match_shock_graphs_params.h 
