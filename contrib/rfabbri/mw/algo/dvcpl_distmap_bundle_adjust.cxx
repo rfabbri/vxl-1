@@ -35,6 +35,8 @@ dvcpl_distmap_bundle_adj_lsqr(
        mask[0].size(),
        // num_params_per_b (X,Y,Z)
        3,
+       // num_params_per_c
+       0,
        // mask indicating which residuals exist.
        // mask[id_view][id_point] == true if view[id_view]
        // sees a projection of point[id_point].
@@ -156,7 +158,8 @@ optimize(vcl_vector<vpgl_perspective_camera<double> > &cameras,
   lm.set_max_function_evals(1000);
   lm.set_trace(true);
   lm.set_verbose(true);
-  if (!lm.minimize(a_,b_))
+  vnl_vector<double> c_dummy;
+  if (!lm.minimize(a_,b_, c_dummy))
     vcl_cerr << "Warning: bundle adjustment did not converge properly" << vcl_endl;
 
   start_error_ = lm.get_start_error();
