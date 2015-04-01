@@ -7453,7 +7453,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance(
     for (psi.reset(); psi.next(); ) 
     {
         int y = psi.scany();
-        for (int x = psi.startx(); x <= psi.endx(); ++x) 
+        for (int x = psi.startx(); x <= psi.endx(); x=x+3) 
         {
             vgl_point_2d<double> query_pt(x,y);
 
@@ -7547,24 +7547,24 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance(
                 model_sift_filter,
                 model_sift_filter);
 
-            double bc_radius=bc_coords[index].x()/2.0;
-            double bc_theta =bc_coords[index].y();
+            // double bc_radius=bc_coords[index].x()/2.0;
+            // double bc_theta =bc_coords[index].y();
 
-            bc_sift_distance += descr_cost(
-                model_pt,
-                bc_radius,
-                bc_theta,
-                model_pt,
-                bc_radius,
-                bc_theta,
-                model_red_grad_data,
-                query_red_grad_data,
-                model_green_grad_data,
-                query_green_grad_data,
-                model_blue_grad_data,
-                query_blue_grad_data,
-                model_sift_filter,
-                model_sift_filter);
+            // bc_sift_distance += descr_cost(
+            //     model_pt,
+            //     bc_radius,
+            //     bc_theta,
+            //     model_pt,
+            //     bc_radius,
+            //     bc_theta,
+            //     model_red_grad_data,
+            //     query_red_grad_data,
+            //     model_green_grad_data,
+            //     query_green_grad_data,
+            //     model_blue_grad_data,
+            //     query_blue_grad_data,
+            //     model_sift_filter,
+            //     model_sift_filter);
             
             index=index+1;
         }
