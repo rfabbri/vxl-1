@@ -5897,22 +5897,52 @@ void dbskfg_match_bag_of_fragments::compute_grad_color_maps(
 
     vil_image_view<double> flipped_image(orig_image.ni(),
                                          orig_image.nj());
-    if ( fliplr )
+    if ( mask_grad )
     {
-        for ( unsigned int cols=0; cols < flipped_image.nj() ; ++cols)
-        {
-            for ( unsigned int rows=0; rows < flipped_image.ni() ; ++rows)
-            {
-                flipped_image(rows,cols)=orig_image(flipped_image.ni()-1-rows,
-                                                    cols);
+        flipped_image.fill(0.0);
 
+        // do not include boundary
+        vgl_polygon_scan_iterator<double> psi(poly, false);  
+        for (psi.reset(); psi.next(); ) 
+        {
+            int y = psi.scany();
+            for (int x = psi.startx(); x <= psi.endx(); ++x) 
+            {
+                if ( fliplr )
+                {
+                    flipped_image(x,y)=orig_image(
+                        flipped_image.ni()-1-x,
+                        y);
+                }
+                else
+                {
+                    flipped_image(x,y)=orig_image(x,y);
+                }
             }
         }
     }
     else
     {
-        flipped_image=orig_image;
+        if ( fliplr )
+        {
+            for ( unsigned int cols=0; cols < flipped_image.nj() ; ++cols)
+            {
+                for ( unsigned int rows=0; rows < flipped_image.ni() ; ++rows)
+                {
+                    flipped_image(rows,cols)=orig_image(
+                        flipped_image.ni()-1-rows,
+                        cols);
+
+                }
+            }
+        }
+        else
+        {
+            flipped_image=orig_image;
+        }
     }
+
+    
 
 
 
@@ -7410,7 +7440,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance(
 
     vil_image_view<vil_rgb<vxl_byte> > temp(model_tree->get_channel1()->ni(),
                                             model_tree->get_channel1()->nj());
-    vil_rgb<vxl_byte> bg_col(255, 255, 255);
+    vil_rgb<vxl_byte> bg_col(0, 0, 0);
     temp.fill(bg_col);
 
     vgl_polygon<double> poly=model_fragments_polys_
@@ -7551,6 +7581,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance(
     query_green_grad_data=0;
     query_blue_grad_data=0;
 
+    // vcl_cout<<app_distance.first<<" "<<app_distance.second<<vcl_endl;
     return app_distance;
 }   
 
@@ -11534,8 +11565,8 @@ double dbskfg_match_bag_of_fragments::descr_cost(
     // }
 
 
-    descr1.normalize();
-    descr2.normalize();
+    // descr1.normalize();
+    // descr2.normalize();
 
     vl_sift_pix result_final[1];
 
