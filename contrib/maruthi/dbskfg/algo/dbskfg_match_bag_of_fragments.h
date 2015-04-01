@@ -680,6 +680,16 @@ private:
         bool flag=false,
         double width=0.0);
 
+
+    vcl_pair<double,double> compute_common_frame_distance(
+        dbskfg_cgraph_directed_tree_sptr& model_tree,
+        dbskfg_cgraph_directed_tree_sptr& query_tree,
+        vcl_vector<dbskr_scurve_sptr>& curve_list1,
+        vcl_vector<dbskr_scurve_sptr>& curve_list2,
+        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        bool flag=false,
+        double width=0.0);
+
     vnl_vector<vl_sift_pix> compress_sift(vl_sift_pix* red_sift,
                                           vl_sift_pix* green_sift,
                                           vl_sift_pix* blue_sift,

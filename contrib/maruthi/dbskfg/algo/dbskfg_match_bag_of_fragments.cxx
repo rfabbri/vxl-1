@@ -4722,7 +4722,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
   	}
         else
         {
-            if ( !(vcl_fabs(orig_edit_distance-shape_cost_splice) >= 0.1))
+            if ( !(vcl_fabs(orig_edit_distance-shape_cost_splice) >= 0.05))
             {
                 if ( norm > frob_norm)
                 {
@@ -7366,6 +7366,149 @@ void dbskfg_match_bag_of_fragments::warp_image(
     vil_save_image_resource(out_img, 
                             name.str().c_str()); 
 
+}   
+
+
+vcl_pair<double,double> 
+dbskfg_match_bag_of_fragments::compute_common_frame_distance(
+    dbskfg_cgraph_directed_tree_sptr& model_tree,
+    dbskfg_cgraph_directed_tree_sptr& query_tree,
+    vcl_vector<dbskr_scurve_sptr>& curve_list1,
+    vcl_vector<dbskr_scurve_sptr>& curve_list2,
+    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    bool flag,
+    double width)
+{
+    
+    
+    vcl_pair<double,double> app_distance(0.0,0.0);
+
+    vl_sift_pix* model_red_grad_data=model_tree->get_red_grad_data();    
+    vl_sift_pix* model_green_grad_data=model_tree->get_green_grad_data();      
+    vl_sift_pix* model_blue_grad_data=model_tree->get_blue_grad_data();
+
+    VlSiftFilt* model_sift_filter=model_tree->get_sift_filter();
+
+    vil_image_view<double>* query_channel1=query_tree->get_channel1();
+    vil_image_view<double>* query_channel2=query_tree->get_channel2();
+    vil_image_view<double>* query_channel3=query_tree->get_channel3();
+
+
+    vil_image_view<vil_rgb<vxl_byte> > temp(model_tree->get_channel1()->ni(),
+                                            model_tree->get_channel1()->nj());
+    vil_rgb<vxl_byte> bg_col(255, 255, 255);
+    temp.fill(bg_col);
+
+    vgl_polygon<double> poly=model_fragments_polys_
+        [model_tree->get_id()].second;
+    
+    // do not include boundary
+    vgl_polygon_scan_iterator<double> psi(poly, false);  
+    for (psi.reset(); psi.next(); ) 
+    {
+        int y = psi.scany();
+        for (int x = psi.startx(); x <= psi.endx(); ++x) 
+        {
+            vgl_point_2d<double> query_pt(x,y);
+
+      
+            vgl_point_2d<double> mapping_pt=
+                find_part_correspondences(query_pt,
+                                          curve_list1,
+                                          curve_list2,
+                                          map_list,
+                                          flag,
+                                          width,
+                                          model_tree
+                                          ->get_scale_ratio(),
+                                          query_tree
+                                          ->get_scale_ratio());
+            
+            if ( mapping_pt.x() != -1 )
+            {
+                double xx=mapping_pt.x();
+                double yy=mapping_pt.y();
+                
+                double red   = vil_bilin_interp_safe(*query_channel1,xx,yy);
+                double green = vil_bilin_interp_safe(*query_channel2,xx,yy);
+                double blue  = vil_bilin_interp_safe(*query_channel3,xx,yy);
+                
+                temp(x,y)=vil_rgb<vxl_byte>(red,green,blue);
+
+            }
+        }
+    }
+
+    vil_image_resource_sptr out_img = vil_new_image_resource_of_view(temp);
+
+    vl_sift_pix* query_red_grad_data(0);
+    vl_sift_pix* query_green_grad_data(0);
+    vl_sift_pix* query_blue_grad_data(0);
+    
+    vil_image_view<double> o1,o2,o3;
+    convert_to_color_space(out_img,o1,o2,o3,
+                           grad_color_space_);
+
+    
+    compute_grad_color_maps(o1,
+                            &query_red_grad_data,
+                            poly,
+                            false);
+    
+    compute_grad_color_maps(o2,
+                            &query_green_grad_data,
+                            poly,
+                            false);
+    
+    compute_grad_color_maps(o3,
+                            &query_blue_grad_data,
+                            poly,
+                            false);
+
+    double fixed_radius=8;
+    double fixed_theta=0.0;
+
+    double trad_sift_distance=0.0;
+    double bc_sift_distance=0.0;
+
+    for (psi.reset(); psi.next(); ) 
+    {
+        int y = psi.scany();
+        for (int x = psi.startx(); x <= psi.endx(); ++x) 
+        {
+            vgl_point_2d<double> model_pt(x,y);
+            
+            trad_sift_distance += descr_cost(
+                model_pt,
+                fixed_radius,
+                fixed_theta,
+                model_pt,
+                fixed_radius,
+                fixed_theta,
+                model_red_grad_data,
+                query_red_grad_data,
+                model_green_grad_data,
+                query_green_grad_data,
+                model_blue_grad_data,
+                query_blue_grad_data,
+                model_sift_filter,
+                model_sift_filter);
+
+            
+        }
+    }
+    
+    app_distance.first= trad_sift_distance;
+
+    vl_free(query_red_grad_data);
+    vl_free(query_green_grad_data);
+    vl_free(query_blue_grad_data);
+
+    query_red_grad_data=0;
+    query_green_grad_data=0;
+    query_blue_grad_data=0;
+
+    return app_distance;
 }   
 
 
