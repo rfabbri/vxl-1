@@ -7585,6 +7585,185 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance(
     return app_distance;
 }   
 
+vcl_pair<double,double> 
+dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
+    dbskfg_cgraph_directed_tree_sptr& model_tree,
+    dbskfg_cgraph_directed_tree_sptr& query_tree,
+    vcl_vector<dbskr_scurve_sptr>& curve_list1,
+    vcl_vector<dbskr_scurve_sptr>& curve_list2,
+    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    bool flag,
+    double width)
+{
+    
+    vcl_pair<double,double> app_distance(0.0,0.0);
+
+    vl_sift_pix* query_red_grad_data  =query_tree->get_red_grad_data();    
+    vl_sift_pix* query_green_grad_data=query_tree->get_green_grad_data();      
+    vl_sift_pix* query_blue_grad_data =query_tree->get_blue_grad_data();
+
+    VlSiftFilt* query_sift_filter=query_tree->get_sift_filter();
+
+    vil_image_view<double>* model_channel1=model_tree->get_channel1();
+    vil_image_view<double>* model_channel2=model_tree->get_channel2();
+    vil_image_view<double>* model_channel3=model_tree->get_channel3();
+
+    vil_image_view<vil_rgb<vxl_byte> > temp(query_tree->get_channel1()->ni(),
+                                            query_tree->get_channel1()->nj());
+    vil_rgb<vxl_byte> bg_col(0,0,0);
+    temp.fill(bg_col);
+
+    int ni=query_tree->get_channel1()->ni();
+
+    vgl_polygon<double> poly=query_fragments_polys_
+        [query_tree->get_id()].second;
+    
+    vcl_vector<vgl_point_2d<double> > bc_coords;
+
+    // do not include boundary
+    vgl_polygon_scan_iterator<double> psi(poly, false);  
+    for (psi.reset(); psi.next(); ) 
+    {
+        int y = psi.scany();
+        for (int x = psi.startx(); x <= psi.endx(); ++x) 
+        {
+            vgl_point_2d<double> query_pt(x,y);
+
+            vgl_point_2d<double> model_rt(0,0),query_rt(0,0);
+
+            vgl_point_2d<double> mapping_pt=
+                find_part_correspondences_qm(query_pt,
+                                             curve_list1,
+                                             curve_list2,
+                                             map_list,
+                                             model_rt,
+                                             query_rt,
+                                             flag,
+                                             width,
+                                             model_tree
+                                             ->get_scale_ratio(),
+                                             query_tree
+                                             ->get_scale_ratio());
+
+            if ( mapping_pt.x() != -1 )
+            {
+                double xx=mapping_pt.x();
+                double yy=mapping_pt.y();
+                
+                double red   = vil_bilin_interp_safe(*model_channel1,xx,yy);
+                double green = vil_bilin_interp_safe(*model_channel2,xx,yy);
+                double blue  = vil_bilin_interp_safe(*model_channel3,xx,yy);
+                
+
+                if ( width )
+                {
+                    temp(ni-1-x,y)=vil_rgb<vxl_byte>(red,green,blue);
+                }
+                else
+                {
+                    temp(x,y)=vil_rgb<vxl_byte>(red,green,blue);
+                }
+            }
+
+            bc_coords.push_back(model_rt);
+        }
+    }
+
+    vil_image_resource_sptr out_img = vil_new_image_resource_of_view(temp);
+
+    vl_sift_pix* model_red_grad_data(0);
+    vl_sift_pix* model_green_grad_data(0);
+    vl_sift_pix* model_blue_grad_data(0);
+    
+    vil_image_view<double> o1,o2,o3;
+    convert_to_color_space(out_img,o1,o2,o3,
+                           grad_color_space_);
+
+    
+    compute_grad_color_maps(o1,
+                            &model_red_grad_data,
+                            poly,
+                            false);
+    
+    compute_grad_color_maps(o2,
+                            &model_green_grad_data,
+                            poly,
+                            false);
+    
+    compute_grad_color_maps(o3,
+                            &model_blue_grad_data,
+                            poly,
+                            false);
+
+    double fixed_radius=8;
+    double fixed_theta=0.0;
+
+    double trad_sift_distance=0.0;
+    double bc_sift_distance=0.0;
+
+    unsigned int index=0;
+
+    for (psi.reset(); psi.next(); ) 
+    {
+        int y = psi.scany();
+        for (int x = psi.startx(); x <= psi.endx(); x=x+3) 
+        {
+            vgl_point_2d<double> model_pt(x,y);
+            
+            trad_sift_distance += descr_cost(
+                model_pt,
+                fixed_radius,
+                fixed_theta,
+                model_pt,
+                fixed_radius,
+                fixed_theta,
+                model_red_grad_data,
+                query_red_grad_data,
+                model_green_grad_data,
+                query_green_grad_data,
+                model_blue_grad_data,
+                query_blue_grad_data,
+                query_sift_filter,
+                query_sift_filter);
+
+            // double bc_radius=bc_coords[index].x()/2.0;
+            // double bc_theta =bc_coords[index].y();
+
+            // bc_sift_distance += descr_cost(
+            //     model_pt,
+            //     bc_radius,
+            //     bc_theta,
+            //     model_pt,
+            //     bc_radius,
+            //     bc_theta,
+            //     model_red_grad_data,
+            //     query_red_grad_data,
+            //     model_green_grad_data,
+            //     query_green_grad_data,
+            //     model_blue_grad_data,
+            //     query_blue_grad_data,
+            //     model_sift_filter,
+            //     model_sift_filter);
+            
+            index=index+1;
+        }
+    }
+    
+    app_distance.first  = trad_sift_distance/index;
+    app_distance.second = bc_sift_distance/index;
+
+    vl_free(model_red_grad_data);
+    vl_free(model_green_grad_data);
+    vl_free(model_blue_grad_data);
+
+    model_red_grad_data=0;
+    model_green_grad_data=0;
+    model_blue_grad_data=0;
+
+    // vcl_cout<<app_distance.first<<" "<<app_distance.second<<vcl_endl;
+    return app_distance;
+}   
+
 
 vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
     vgl_point_2d<double> query_pt,
@@ -7639,7 +7818,7 @@ vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
 
         if ( !found )
         {
-            vcl_cerr<<"Point not found in middle shape poly"<<vcl_endl;
+           
             mapping_pt.set(-1.0,-1.0);
             return mapping_pt;
         }
@@ -7744,7 +7923,7 @@ vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
 
         if ( !in_part )
         {
-            vcl_cerr<<"Point not found in middle shape poly"<<vcl_endl;
+
             mapping_pt.set(-1.0,-1.0);
             return mapping_pt;
         }
@@ -7870,9 +8049,16 @@ find_part_correspondences_qm(
 
     vgl_point_2d<double> ps1(query_pt);
     
-    ps1.set(vcl_fabs(width-ps1.x())*query_scale_ratio,
-            ps1.y()*query_scale_ratio);
-    
+    if ( width > 0 )
+    {
+        ps1.set((width-ps1.x())*query_scale_ratio,
+                ps1.y()*query_scale_ratio);
+    }
+    else
+    {
+        ps1.set(ps1.x()*query_scale_ratio,ps1.y()*query_scale_ratio);
+    }
+
     if ( !flag )
     {
         bool in_part=false;
@@ -7881,7 +8067,7 @@ find_part_correspondences_qm(
         {
             vgl_polygon<double> poly(1);
             dbskr_scurve_sptr sc1=curve_list2[c];
-            sc1->get_polygon(poly);
+            sc1->get_polygon(poly,width);
 
             if ( poly.contains(query_pt.x(),query_pt.y()))
             {
@@ -7906,7 +8092,7 @@ find_part_correspondences_qm(
 
         if ( !found )
         {
-            vcl_cerr<<"Point not found in middle shape poly"<<vcl_endl;
+
             mapping_pt.set(-1.0,-1.0);
             return mapping_pt;
         }
@@ -7999,7 +8185,7 @@ find_part_correspondences_qm(
         {
             vgl_polygon<double> poly(1);
             dbskr_scurve_sptr sc1=curve_list1[c];
-            sc1->get_polygon(poly);
+            sc1->get_polygon(poly,width);
 
             if ( poly.contains(query_pt.x(),query_pt.y()))
             {
@@ -8011,7 +8197,7 @@ find_part_correspondences_qm(
 
         if ( !in_part )
         {
-            vcl_cerr<<"Point not found in middle shape poly"<<vcl_endl;
+
             mapping_pt.set(-1.0,-1.0);
             return mapping_pt;
         }
