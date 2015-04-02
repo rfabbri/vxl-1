@@ -7850,6 +7850,273 @@ vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
     return mapping_pt;
 }
 
+
+
+vgl_point_2d<double> dbskfg_match_bag_of_fragments::
+find_part_correspondences_qm(
+    vgl_point_2d<double> query_pt,
+    vcl_vector<dbskr_scurve_sptr>& curve_list1,
+    vcl_vector<dbskr_scurve_sptr>& curve_list2,
+    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    vgl_point_2d<double>& rt_model,
+    vgl_point_2d<double>& rt_query,
+    bool flag,
+    double width,
+    double model_scale_ratio,
+    double query_scale_ratio)
+{
+
+    vgl_point_2d<double> mapping_pt;
+
+    vgl_point_2d<double> ps1(query_pt);
+    
+    ps1.set(vcl_fabs(width-ps1.x())*query_scale_ratio,
+            ps1.y()*query_scale_ratio);
+    
+    if ( !flag )
+    {
+        bool in_part=false;
+        unsigned int c=0;
+        for ( ; c < curve_list2.size() ; ++c)
+        {
+            vgl_polygon<double> poly(1);
+            dbskr_scurve_sptr sc1=curve_list2[c];
+            sc1->get_polygon(poly);
+
+            if ( poly.contains(query_pt.x(),query_pt.y()))
+            {
+                in_part=true;
+                break;
+            }
+            
+        }
+        
+        if ( !in_part)
+        {
+            mapping_pt.set(-1.0,-1.0);
+            return mapping_pt;
+        }
+
+        dbskr_scurve_sptr model_curve=curve_list2[c];
+        dbskr_scurve_sptr query_curve=curve_list1[c];
+
+        // Find point in model curve
+        vgl_point_2d<double> int_pt;
+        bool found=model_curve->intrinsinc_pt(ps1,int_pt);
+
+        if ( !found )
+        {
+            vcl_cerr<<"Point not found in middle shape poly"<<vcl_endl;
+            mapping_pt.set(-1.0,-1.0);
+            return mapping_pt;
+        }
+
+        vcl_vector<vcl_pair<int,int> > curve_map=map_list[c];
+
+        double index=int_pt.x();
+
+        double index_ratio=0.0;
+
+        unsigned int v=0; 
+
+        int model_int_diff(0);
+        double int_diff(0.0);
+
+        for ( ; v < curve_map.size()-1 ; ++v)
+        {
+
+            int lower=curve_map[v].second;
+            int upper=curve_map[v+1].second;
+
+            if ( upper < lower )
+            {
+                int temp=upper;
+                upper=lower;
+                lower=temp;
+            }
+            
+            if ( index >= lower &&
+                 index < upper )
+            {
+                model_int_diff=upper-lower;
+                int_diff=index-lower;
+                break;
+                
+            }
+
+            
+        }
+
+        
+        // Find mapping point
+        int start_index=curve_map[v].first;
+        int stop_index=curve_map[v+1].first;
+
+        if ( stop_index < start_index)
+        {
+            int temp=stop_index;
+            stop_index=start_index;
+            start_index=temp;
+        }
+
+        int query_int_diff=stop_index-start_index;
+
+        double s_map(0.0);
+
+        if ( query_int_diff == 0 )
+        {
+            s_map=start_index;
+
+        }
+        else
+        {
+            double ratio=((double) query_int_diff)/((double) model_int_diff);
+            s_map = start_index+int_diff*ratio;
+
+        }
+
+        double t_rad_model = model_curve->interp_radius(int_pt.x());
+        double t_rad_query = query_curve->interp_radius(s_map);
+
+        double t_map = int_pt.y()*(t_rad_query/t_rad_model);
+
+        mapping_pt = query_curve->fragment_pt(s_map,
+                                              t_map);
+
+        rt_model.set(int_pt.y(),
+                     model_curve->interp_theta(int_pt.x()));
+
+        rt_query.set(t_map,
+                     query_curve->interp_theta(s_map));
+
+        
+    }
+    else
+    {
+        bool in_part=false;
+        unsigned int c=0;
+        for ( ; c < curve_list1.size() ; ++c)
+        {
+            vgl_polygon<double> poly(1);
+            dbskr_scurve_sptr sc1=curve_list1[c];
+            sc1->get_polygon(poly);
+
+            if ( poly.contains(query_pt.x(),query_pt.y()))
+            {
+                in_part=true;
+                break;
+            }
+            
+        }
+
+        if ( !in_part )
+        {
+            vcl_cerr<<"Point not found in middle shape poly"<<vcl_endl;
+            mapping_pt.set(-1.0,-1.0);
+            return mapping_pt;
+        }
+
+        dbskr_scurve_sptr model_curve=curve_list1[c];
+        dbskr_scurve_sptr query_curve=curve_list2[c];
+
+        // Find point in model curve
+        vgl_point_2d<double> int_pt;
+        bool found = model_curve->intrinsinc_pt(ps1,int_pt);
+
+        if ( !found )
+        {
+            mapping_pt.set(-1.0,-1.0);
+            return mapping_pt;
+        }
+
+        vcl_vector<vcl_pair<int,int> > curve_map=map_list[c];
+
+        double index=int_pt.x();
+
+        double index_ratio=0.0;
+
+        unsigned int v=0; 
+
+        int model_int_diff(0);
+        double int_diff(0.0);
+
+        for ( ; v < curve_map.size()-1 ; ++v)
+        {
+
+            int lower=curve_map[v].first;
+            int upper=curve_map[v+1].first;
+
+            if ( upper < lower )
+            {
+                int temp=upper;
+                upper=lower;
+                lower=temp;
+            }
+            
+            if ( index >= lower &&
+                 index < upper )
+            {
+                model_int_diff=upper-lower;
+                int_diff=index-lower;
+                break;
+                
+            }
+
+            
+        }
+
+        
+        // Find mapping point
+        int start_index=curve_map[v].second;
+        int stop_index=curve_map[v+1].second;
+
+        if ( stop_index < start_index)
+        {
+            int temp=stop_index;
+            stop_index=start_index;
+            start_index=temp;
+        }
+
+        int query_int_diff=stop_index-start_index;
+
+        double s_map(0.0);
+
+        if ( query_int_diff == 0 )
+        {
+            s_map=start_index;
+
+        }
+        else
+        {
+            double ratio=((double) query_int_diff)/((double) model_int_diff);
+            s_map = start_index+int_diff*ratio;
+
+        }
+
+        double t_rad_model = model_curve->interp_radius(int_pt.x());
+        double t_rad_query = query_curve->interp_radius(s_map);
+
+        double t_map = int_pt.y()*(t_rad_query/t_rad_model);
+
+        mapping_pt = query_curve->fragment_pt(s_map,
+                                              t_map);
+
+        rt_model.set(int_pt.y(),
+                     model_curve->interp_theta(int_pt.x()));
+
+        rt_query.set(t_map,
+                     query_curve->interp_theta(s_map));
+
+
+    }
+
+
+    mapping_pt.set(mapping_pt.x()/model_scale_ratio,
+                   mapping_pt.y()/model_scale_ratio);
+
+    return mapping_pt;
+}
+
 vcl_pair<double,double> dbskfg_match_bag_of_fragments::
 compute_dense_rgb_sift_cost(
     vcl_vector<dbskr_scurve_sptr>& curve_list1,

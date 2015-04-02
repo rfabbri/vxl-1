@@ -662,6 +662,18 @@ private:
         double model_scale_ratio=1.0,
         double query_scale_ratio=1.0);
 
+    vgl_point_2d<double> find_part_correspondences_qm(
+        vgl_point_2d<double> query_pt,
+        vcl_vector<dbskr_scurve_sptr>& curve_list1,
+        vcl_vector<dbskr_scurve_sptr>& curve_list2,
+        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        vgl_point_2d<double>& rt_model,
+        vgl_point_2d<double>& rt_query,
+        bool flag=false,
+        double width=0.0,
+        double model_scale_ratio=1.0,
+        double query_scale_ratio=1.0);
+
 
     void draw_part_correspondence(
         vcl_vector<dbskr_scurve_sptr>& curve_list1,
