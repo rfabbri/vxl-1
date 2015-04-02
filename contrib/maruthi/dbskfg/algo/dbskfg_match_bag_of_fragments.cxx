@@ -5910,9 +5910,10 @@ void dbskfg_match_bag_of_fragments::compute_grad_color_maps(
             {
                 if ( fliplr )
                 {
-                    flipped_image(x,y)=orig_image(
-                        flipped_image.ni()-1-x,
-                        y);
+                    flipped_image(flipped_image.ni()-1-x,y)=
+                        orig_image(
+                            x,
+                            y);
                 }
                 else
                 {
@@ -7679,7 +7680,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
     convert_to_color_space(out_img,o1,o2,o3,
                            grad_color_space_);
 
-    
+
     compute_grad_color_maps(o1,
                             &model_red_grad_data,
                             poly,
@@ -7709,6 +7710,11 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
         for (int x = psi.startx(); x <= psi.endx(); x=x+3) 
         {
             vgl_point_2d<double> model_pt(x,y);
+            
+            if ( width )
+            {
+                model_pt.set(ni-1-x,y);
+            }
             
             trad_sift_distance += descr_cost(
                 model_pt,
