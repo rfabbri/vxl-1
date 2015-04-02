@@ -990,6 +990,59 @@ bool dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt,
 
     }
 
+    if ( shock_coords.x() > num_points_-1.0 )
+    {
+        
+        int N=20;
+        double step_size=1.0;
+        double distance=1.0e6;
+
+        for (int n = 0; n<N; n++)
+        { 
+            
+            double ratio_n = double(n)/N;
+            double interp_index=ratio_n+(double)(start_index);
+            double R1=this->interp_radius(interp_index);
+               
+            double r1=0.0;
+            
+            vgl_point_2d<double> shock_pt = this->fragment_pt(interp_index,
+                                                              r1);
+
+
+            if ( vgl_distance(shock_pt,pt) < distance )
+            {
+                distance=vgl_distance(shock_pt,pt);
+                shock_coords.set(interp_index,r1);
+            }
+
+            r1 +=step_size;
+            
+            while (r1 <= R1) 
+            {
+                vgl_point_2d<double> plus_pt= this->fragment_pt(
+                    interp_index
+                    ,r1);
+                if ( vgl_distance(plus_pt,pt) < distance )
+                {
+                    distance=vgl_distance(plus_pt,pt);
+                    shock_coords.set(interp_index,r1);
+                }
+
+                vgl_point_2d<double> minus_pt= this->fragment_pt(
+                    interp_index
+                    , -r1);
+                if ( vgl_distance(minus_pt,pt) < distance )
+                {
+                    distance=vgl_distance(minus_pt,pt);
+                    shock_coords.set(interp_index,-r1);
+                }
+
+                r1 += step_size;
+            }
+        }
+        
+    }
     return true;
 }
 
