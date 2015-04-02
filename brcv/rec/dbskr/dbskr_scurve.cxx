@@ -757,7 +757,10 @@ bool dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt,
 
         double angle_ray = angle(start_ray.direction(),
                                  pt_ray.direction());
-
+        if ( isnan(angle_ray) )
+        {
+            angle_ray=0.0;
+        }
         double ratio = angle_ray/angle_sector;
 
         vgl_vector_2d<double> tangent(vcl_cos(theta_[start_index]),
@@ -784,12 +787,12 @@ bool dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt,
         }
 
         shock_coords.set(con_index,distance_t);
-                                              
         
-
+        
     }
     else
     {
+
         // Non-degenerate case
         vgl_line_2d<double> shock_line(s_pt,
                                        e_pt);
