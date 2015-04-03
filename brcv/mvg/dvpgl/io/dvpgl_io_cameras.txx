@@ -255,13 +255,13 @@ void vsl_b_read_dvpgl(vsl_b_istream & is, vpgl_camera<T>* &camera)
   if (cam_type == "vpgl_proj_camera") {
     // projective camera
     vpgl_proj_camera<T>* procam = new vpgl_proj_camera<T>();
-    vsl_b_read(is,*procam);  // use new I/O as it is identical to the old one
+    vsl_b_read(is,*procam);  // uses new I/O as it is identical to the old one
     camera = procam;
   }
   else if (cam_type == "vpgl_perspective_camera") {
     // perspective camera
     vpgl_perspective_camera<T>* percam = new vpgl_perspective_camera<T>();
-    vsl_b_read(is,*percam);
+    vsl_b_read_dvpgl(is,*percam);  // uses old I/O
     camera = percam;
   }
   else if (cam_type == "vpgl_affine_camera") {
