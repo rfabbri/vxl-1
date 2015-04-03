@@ -32,6 +32,7 @@ b_read_dvpgl(vsl_b_istream &is, vpgl_calibration_matrix<T>* self)
 {
   if (!is) return;
   assert(self);
+  vcl_cerr << "[dvpgl_io] Warning: using legacy I/O format\n";
 
   vgl_point_2d<T> pp;
 
@@ -66,6 +67,7 @@ b_read_dvpgl(vsl_b_istream &is, vpgl_calibration_matrix<T>* self)
 template <class T> void 
 b_write_dvpgl(vsl_b_ostream &os, const vpgl_calibration_matrix<T>* self)
 {
+  vcl_cerr << "[dvpgl_io] Warning: using legacy I/O format\n";
   vsl_b_write(os, 1);  // matches latest in b_read_dvpgl
   vsl_b_write(os, self->focal_length());
   vsl_b_write(os, self->principal_point());
@@ -109,6 +111,7 @@ template <class T> void
 b_read_dvpgl(vsl_b_istream &is, vpgl_perspective_camera<T>* self)
 {
   if (!is) return;
+  vcl_cerr << "[dvpgl_io] Warning: using legacy I/O format\n";
 
   vnl_matrix_fixed<T,4,4> Rot;
   vgl_rotation_3d<T> vglRot;
@@ -154,6 +157,7 @@ b_read_dvpgl(vsl_b_istream &is, vpgl_perspective_camera<T>* self)
 template <class T> void
 b_write_dvpgl(vsl_b_ostream &os, const vpgl_perspective_camera<T>* self)
 {
+  vcl_cerr << "[dvpgl_io] Warning: using legacy I/O format\n";
   vsl_b_write(os, 2); // matches version 2 in b_read_dvpgl
   vsl_b_write(os, *static_cast<const vpgl_proj_camera<T> *>(self));
   b_write_dvpgl(os, &(self->get_calibration())); // K.b_read(is);
@@ -190,6 +194,104 @@ vsl_b_read_dvpgl(vsl_b_istream &is, vpgl_perspective_camera<T>* &p)
     p = 0;
 }
 
+// dvpgl_camera basepointer I/O -----------------------------------------------
+
+//: Binary save camera to stream
+template <class T>
+void vsl_b_write_dvpgl(vsl_b_ostream & os, vpgl_camera<T>* const camera)
+{
+  vcl_cerr << "[dvpgl_io] Warning: using legacy I/O format\n";
+  if ( camera->type_name() == "vpgl_proj_camera" ){
+    // projective camera
+    vpgl_proj_camera<T>* procam = static_cast<vpgl_proj_camera<T>*>(camera);
+    vsl_b_write(os,procam->type_name());
+    vsl_b_write(os,*procam);
+  }
+  else if ( camera->type_name() == "vpgl_perspective_camera" ) {
+    // perspective camera
+    vpgl_perspective_camera<T>* percam =
+      static_cast<vpgl_perspective_camera<T>*>(camera);
+    vsl_b_write(os,percam->type_name());
+    vsl_b_write(os,*percam);
+  }
+  else if ( camera->type_name() == "vpgl_affine_camera" ) {
+    // affine camera
+    vpgl_affine_camera<T>* affcam =
+      static_cast<vpgl_affine_camera<T>*>(camera);
+    vsl_b_write(os,affcam->type_name());
+    vsl_b_write(os,*affcam);
+  }
+  else if ( camera->type_name() == "vpgl_rational_camera" ) {
+    // rational camera
+    vpgl_rational_camera<T>* ratcam =
+      static_cast<vpgl_rational_camera<T>*>(camera);
+    vsl_b_write(os,ratcam->type_name());
+    vsl_b_write(os,*ratcam);
+  }
+  else if ( camera->type_name() == "vpgl_local_rational_camera" ) {
+    // local rational camera
+    vpgl_local_rational_camera<T>* lratcam =
+      static_cast<vpgl_local_rational_camera<T>*>(camera);
+    vsl_b_write(os,lratcam->type_name());
+    vsl_b_write(os,*lratcam);
+  }
+  else {
+    vcl_cerr << "tried to write unknown camera type!\n";
+    vcl_string cam_type("unknown");
+    vsl_b_write(os,cam_type);
+  }
+  return;
+}
+
+
+//: Binary load camera from stream.
+template <class T>
+void vsl_b_read_dvpgl(vsl_b_istream & is, vpgl_camera<T>* &camera)
+{
+  vcl_string cam_type;
+  vsl_b_read(is,cam_type);
+  vcl_cerr << "[dvpgl_io] Warning: using legacy I/O format\n";
+
+  if (cam_type == "vpgl_proj_camera") {
+    // projective camera
+    vpgl_proj_camera<T>* procam = new vpgl_proj_camera<T>();
+    vsl_b_read(is,*procam);  // use new I/O as it is identical to the old one
+    camera = procam;
+  }
+  else if (cam_type == "vpgl_perspective_camera") {
+    // perspective camera
+    vpgl_perspective_camera<T>* percam = new vpgl_perspective_camera<T>();
+    vsl_b_read(is,*percam);
+    camera = percam;
+  }
+  else if (cam_type == "vpgl_affine_camera") {
+    // rational camera
+    vpgl_affine_camera<T>* affcam = new vpgl_affine_camera<T>();
+    vsl_b_read(is,*affcam);
+    camera = affcam;
+  }
+  else if (cam_type == "vpgl_rational_camera") {
+    // rational camera
+    vpgl_rational_camera<T>* ratcam = new vpgl_rational_camera<T>();
+    vsl_b_read(is,*ratcam);
+    camera = ratcam;
+  }
+  else if (cam_type == "vpgl_local_rational_camera") {
+    // rational camera
+    vpgl_local_rational_camera<T>* lratcam=new vpgl_local_rational_camera<T>();
+    vsl_b_read(is,*lratcam);
+    camera = lratcam;
+  }
+  else if (cam_type == "unknown") {
+    vcl_cerr << "cannot read camera of unknown type!\n";
+  }
+  else {
+    vcl_cerr << "error reading vpgl_camera!\n";
+  }
+  return;
+}
+
+
 
 #undef DVPGL_IO_CAMERAS_INSTANTIATE
 #define DVPGL_IO_CAMERAS_INSTANTIATE(T) \
@@ -200,6 +302,9 @@ template void b_write_dvpgl(vsl_b_ostream &, const vpgl_calibration_matrix<T>* )
 template void vsl_b_read_dvpgl(vsl_b_istream &, vpgl_perspective_camera<T >* &); \
 template void vsl_b_write_dvpgl(vsl_b_ostream &, const vpgl_perspective_camera<T > *); \
 template void b_read_dvpgl(vsl_b_istream &, vpgl_perspective_camera<T>* ); \
-template void b_write_dvpgl(vsl_b_ostream &, const vpgl_perspective_camera<T>* );
+template void b_write_dvpgl(vsl_b_ostream &, const vpgl_perspective_camera<T>* );\
+template void vsl_b_read_dvpgl(vsl_b_istream &, vpgl_camera<T >* &); \
+template void vsl_b_write_dvpgl(vsl_b_ostream &, vpgl_camera<T >* const)
+
   
 //template void vsl_add_to_binary_loader(vpgl_proj_camera<T > const& b);

@@ -43,7 +43,9 @@ dvpgl_camera_storage::b_write(vsl_b_ostream &os) const
 {
   vsl_b_write(os, version());
   bpro1_storage::b_write(os);
-  vsl_b_write(os, static_cast<vpgl_camera<double> *> (camera_) ); 
+  // to use the new one, uncomment:
+  //vsl_b_write(os, static_cast<vpgl_camera<double> *> (camera_) ); 
+  vsl_b_write_dvpgl(os, camera_);  // stick to old I/O
 }
 
 
@@ -60,9 +62,11 @@ dvpgl_camera_storage::b_read(vsl_b_istream &is)
   case 1:
   {
     bpro1_storage::b_read(is);
-    vpgl_camera<double> *basecam;
-    vsl_b_read(is, basecam);
-    camera_ = static_cast<vpgl_proj_camera<double> *> (basecam);
+    vsl_b_read_dvpgl(is, camera_);   // stick to old I/O
+      //    to use the new one:
+//    vpgl_camera<double> *basecam;
+//    vsl_b_read(is, basecam);
+//    camera_ = static_cast<vpgl_proj_camera<double> *> (basecam);
     break;
   }
 

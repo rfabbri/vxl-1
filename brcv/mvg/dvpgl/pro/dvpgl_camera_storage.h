@@ -37,10 +37,10 @@ public:
   //: Return IO version number;
   short version() const;
   
-  //: Binary save self to stream.
+  //: Binary save self to stream. Uses old dvpgl instead of vpgl
   void b_write(vsl_b_ostream &os) const;
 
-  //: Binary load self from stream.
+  //: Binary load self from stream. Uses old dvpgl instead of vpgl
   void b_read(vsl_b_istream &is);
   
   //: Create a copy of the object on the heap.
@@ -58,6 +58,7 @@ public:
 
 
 protected:
+  // storage can hold any camera derived from proj_camera
   vpgl_proj_camera<double>  *camera_;
 };
 
