@@ -11,7 +11,6 @@
 #include <vpgl/io/vpgl_io_proj_camera.h>
 
 
-
 //: Allows derived class to be loaded by base-class pointer
 //  A loader object exists which is invoked by calls
 //  of the form "vsl_b_read(os,base_ptr)".  This loads derived class
@@ -21,8 +20,24 @@
 //  an instance of each derived class that might be
 //  found.  This function gives the model class to
 //  the appropriate loader.
-template <class T>
-void vsl_add_to_binary_loader(vpgl_proj_camera<T> const& b);
+//template <class T>
+//void vsl_add_to_binary_loader(vpgl_proj_camera<T> const& b);
+
+//: Binary load self from stream.
+template <class T> void 
+b_read_dvpgl(vsl_b_istream &is, vpgl_perspective_camera<T>* &tis);
+
+//: Binary save self to stream.
+template <class T> void 
+b_write_dvpgl(vsl_b_ostream &os, const vpgl_perspective_camera<T>* tis);
+
+//: Binary save
+template <class T> void 
+vsl_b_write_dvpgl(vsl_b_ostream &os, const vpgl_perspective_camera<T>* p);
+
+//: Binary read
+template <class T> void 
+vsl_b_read_dvpgl(vsl_b_istream &is, vpgl_perspective_camera<T>* &p);
 
 
 #endif
