@@ -22,6 +22,7 @@
 #include <bpro1/bpro1_storage.h>
 #include "dvpgl_camera_storage_sptr.h"
 #include <vpgl/vpgl_proj_camera.h>
+#include <vpgl/io/vpgl_io_proj_camera.h>
 
 #include <vcl_string.h>
 

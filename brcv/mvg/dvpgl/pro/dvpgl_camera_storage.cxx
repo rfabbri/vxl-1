@@ -3,6 +3,9 @@
 
 #include "dvpgl_camera_storage.h"
 #include <vpgl/vpgl_perspective_camera.h>
+#include <vpgl/vpgl_camera.h>
+#include <vpgl/io/vpgl_io_proj_camera.h>
+#include <vpgl/io/vpgl_io_camera.h>
 
 bool dvpgl_camera_storage::registered_ = false;
 
@@ -43,7 +46,7 @@ dvpgl_camera_storage::b_write(vsl_b_ostream &os) const
 {
   vsl_b_write(os, version());
   bpro1_storage::b_write(os);
-  vsl_b_write(os, camera_); 
+  vsl_b_write(os, static_cast<vpgl_camera<double> *> (camera_) ); 
 }
 
 
