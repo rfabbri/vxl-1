@@ -23,6 +23,8 @@
 //template <class T>
 //void vsl_add_to_binary_loader(vpgl_proj_camera<T> const& b);
 
+// dvpgl_perspective_camera I/O -----------------------------------------------
+
 //: Binary load self from stream.
 template <class T> void 
 b_read_dvpgl(vsl_b_istream &is, vpgl_perspective_camera<T>* &tis);
@@ -39,6 +41,23 @@ vsl_b_write_dvpgl(vsl_b_ostream &os, const vpgl_perspective_camera<T>* p);
 template <class T> void 
 vsl_b_read_dvpgl(vsl_b_istream &is, vpgl_perspective_camera<T>* &p);
 
+// dvpgl_calibration_matrix I/O -----------------------------------------------
+
+//: Binary load self from stream.
+template <class T> void 
+b_read_dvpgl(vsl_b_istream &is, vpgl_calibration_matrix<T>* &tis);
+
+//: Binary save self to stream.
+template <class T> void 
+b_write_dvpgl(vsl_b_ostream &os, const vpgl_calibration_matrix<T>* tis);
+
+//: Binary save
+template <class T> void 
+vsl_b_write_dvpgl(vsl_b_ostream &os, const vpgl_calibration_matrix<T>* p);
+
+//: Binary read
+template <class T> void 
+vsl_b_read_dvpgl(vsl_b_istream &is, vpgl_calibration_matrix<T>* &p);
+
 
 #endif
-

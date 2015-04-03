@@ -16,12 +16,12 @@
 //  vsl_binary_loader<vpgl_proj_camera<T> >::instance().add(b);
 //}
 
+// dvpgl_perspective_camera I/O -----------------------------------------------
 
 // helper struct holding
 struct dvpgl_perspective_camera {
 };
 
-//-------------------------------
 template <class T> void 
 b_read_dvpgl(vsl_b_istream &is, vpgl_perspective_camera<T>* &self);
 {
@@ -68,7 +68,6 @@ b_read_dvpgl(vsl_b_istream &is, vpgl_perspective_camera<T>* &self);
   self->recompute_matrix();
 }
 
-//-------------------------------
 //: Binary save self to stream.
 // \remark cached_svd_ not written
 template <class T> void
@@ -110,11 +109,93 @@ vsl_b_read_dvpgl(vsl_b_istream &is, vpgl_perspective_camera<T>* &p)
     p = 0;
 }
 
+// dvpgl_calibration_matrix I/O -----------------------------------------------
+
+template <class T> void 
+b_read_dvpgl(vsl_b_istream &is, vpgl_calibration_matrix<T>* &self);
+{
+  if (!is) return;
+  assert(self);
+
+  short ver;
+  vsl_b_read(is, ver);
+  switch (ver)
+  {
+   case 1:
+     T tmp;
+     vsl_b_read(is, tmp);
+     self->set_focal_length(tmp)
+
+     vgl_point_2d<T> pp;
+     vsl_b_read(is, pp);
+     self->set_principal_point(pp);
+
+     vsl_b_read(is, tmp);
+     self->set_x_scale(tmp)
+     vsl_b_read(is, tmp);
+     self->set_y_scale(tmp)
+     vsl_b_read(is, tmp);
+     self->set_skew(tmp)
+    break;
+   default:
+    vcl_cerr << "I/O ERROR: vpgl_calibration_matrix::b_read(vsl_b_istream&)\n"
+             << "           Unknown version number "<< ver << '\n';
+    is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
+    return;
+  }
+}
+
+//: Binary save self to stream.
+// \remark cached_svd_ not written
+template <class T> void b_write_dvpgl(vsl_b_ostream &os, vpgl_calibration_matrix<T>* &self) const
+{
+  vsl_b_write(os, this->version());
+  vsl_b_write(os, focal_length_);
+  vsl_b_write(os, principal_point_);
+  vsl_b_write(os, x_scale_);
+  vsl_b_write(os, y_scale_);
+  vsl_b_write(os, skew_);
+}
+
+//: Binary save
+template <class T> void
+vsl_b_write_dvpgl(vsl_b_ostream &os, const vpgl_calibration_matrix<T> * p)
+{
+  if (p==0) {
+    vsl_b_write(os, false); // Indicate null pointer stored
+  }
+  else {
+    vsl_b_write(os,true); // Indicate non-null pointer stored
+    b_write_dvpgl(os, p);
+  }
+}
+
+
+//: Binary load
+template <class T> void
+vsl_b_read_dvpgl(vsl_b_istream &is, vpgl_calibration_matrix<T>* &p)
+{
+  delete p;
+  bool not_null_ptr;
+  vsl_b_read(is, not_null_ptr);
+  if (not_null_ptr) {
+    p = new vpgl_calibration_matrix<T>();
+    b_read_dvpgl(is);
+  }
+  else
+    p = 0;
+}
+
+
 #undef DVPGL_IO_PROJ_CAMERA_INSTANTIATE
 #define DVPGL_IO_PROJ_CAMERA_INSTANTIATE(T) \
 template void vsl_b_read(vsl_b_istream &is, vpgl_perspective_camera<T >* &p); \
 template void vsl_b_write(vsl_b_ostream &os, const vpgl_perspective_camera<T > * p); \
 template void b_read_dvpgl(vsl_b_istream &is, vpgl_perspective_camera<T>* &tis); \
-template void b_write_dvpgl(vsl_b_ostream &os, const vpgl_perspective_camera<T>* tis);
+template void b_write_dvpgl(vsl_b_ostream &os, const vpgl_perspective_camera<T>* tis); \
+template void vsl_b_read(vsl_b_istream &is, vpgl_calibration_matrix<T >* &p); \
+template void vsl_b_write(vsl_b_ostream &os, const vpgl_calibration_matrix<T > * p); \
+template void b_read_dvpgl(vsl_b_istream &is, vpgl_calibration_matrix<T>* &tis); \
+template void b_write_dvpgl(vsl_b_ostream &os, const vpgl_calibration_matrix<T>* tis); \
   
 //template void vsl_add_to_binary_loader(vpgl_proj_camera<T > const& b);
