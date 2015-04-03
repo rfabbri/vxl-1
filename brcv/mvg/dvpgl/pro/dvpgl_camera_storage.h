@@ -19,12 +19,12 @@
 // \endverbatim
 
 
+#include <vcl_string.h>
 #include <bpro1/bpro1_storage.h>
 #include "dvpgl_camera_storage_sptr.h"
 #include <vpgl/vpgl_proj_camera.h>
 // #include <dvpgl/io/dvpgl_io_proj_camera.h>
 
-#include <vcl_string.h>
 
 class dvpgl_camera_storage : public bpro1_storage {
 
