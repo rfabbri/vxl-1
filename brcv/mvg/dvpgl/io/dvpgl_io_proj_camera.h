@@ -7,7 +7,8 @@
 // \date  April 2 2015
 //
 #include <vsl/vsl_binary_io.h>
-#include <vpgl/vpgl_proj_camera.h>
+#include <vsl/vsl_binary_loader.h>
+#include <vpgl/io/vpgl_io_proj_camera.h>
 
 
 
