@@ -9,6 +9,18 @@
 #include <vgl/io/vgl_io_point_3d.h>
 #include <vsl/vsl_binary_loader.h>
 
+#include <vpgl/vpgl_proj_camera.h>
+#include <vpgl/vpgl_perspective_camera.h>
+#include <vpgl/vpgl_affine_camera.h>
+#include <vpgl/vpgl_rational_camera.h>
+#include <vpgl/vpgl_local_rational_camera.h>
+#include <vpgl/io/vpgl_io_proj_camera.h>
+#include <vpgl/io/vpgl_io_perspective_camera.h>
+#include <vpgl/io/vpgl_io_affine_camera.h>
+#include <vpgl/io/vpgl_io_rational_camera.h>
+#include <vpgl/io/vpgl_io_local_rational_camera.h>
+
+
 
 //: Allows derived class to be loaded by base-class pointer.
 //  A loader object exists which is invoked by calls
@@ -205,14 +217,14 @@ void vsl_b_write_dvpgl(vsl_b_ostream & os, vpgl_camera<T>* const camera)
     // projective camera
     vpgl_proj_camera<T>* procam = static_cast<vpgl_proj_camera<T>*>(camera);
     vsl_b_write(os,procam->type_name());
-    vsl_b_write(os,*procam);
+    vsl_b_write(os,*procam); // uses new I/O as it is identical to the old one
   }
   else if ( camera->type_name() == "vpgl_perspective_camera" ) {
     // perspective camera
     vpgl_perspective_camera<T>* percam =
       static_cast<vpgl_perspective_camera<T>*>(camera);
     vsl_b_write(os,percam->type_name());
-    vsl_b_write(os,*percam);
+    vsl_b_write_dvpgl(os,percam); // use the old I/O
   }
   else if ( camera->type_name() == "vpgl_affine_camera" ) {
     // affine camera
@@ -261,7 +273,7 @@ void vsl_b_read_dvpgl(vsl_b_istream & is, vpgl_camera<T>* &camera)
   else if (cam_type == "vpgl_perspective_camera") {
     // perspective camera
     vpgl_perspective_camera<T>* percam = new vpgl_perspective_camera<T>();
-    vsl_b_read_dvpgl(is,*percam);  // uses old I/O
+    vsl_b_read_dvpgl(is,percam);  // uses old I/O
     camera = percam;
   }
   else if (cam_type == "vpgl_affine_camera") {
