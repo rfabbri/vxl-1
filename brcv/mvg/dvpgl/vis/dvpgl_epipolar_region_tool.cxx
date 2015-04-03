@@ -73,11 +73,12 @@ dvpgl_epipolar_region_tool::activate ()
 
   cam_storage.vertical_cast(p);
 
-  p1_ = cam_storage->get_camera()->cast_to_perspective_camera();
-  if(!p1_) {
+  if (cam_storage->get_camera()->type_name() != "vpgl_perspective_camera") {
     vcl_cerr << "Error: tool requires a perspective camera" << vcl_endl;
     return;
   }
+
+  p1_ = static_cast<const vpgl_perspective_camera<double> *> (cam_storage->get_camera());
 
   vcl_cout << "NAME: " << cam_storage->name() << vcl_endl;
   //  vcl_cout << "Camera1: \n" << p1_->get_matrix();
@@ -88,12 +89,12 @@ dvpgl_epipolar_region_tool::activate ()
 
   cam_storage.vertical_cast(p);
 
-  p2_ = cam_storage->get_camera()->cast_to_perspective_camera();
-
-  if(!p2_) {
+  if (cam_storage->get_camera()->type_name() != "vpgl_perspective_camera") {
     vcl_cerr << "Error: tool requires a perspective camera" << vcl_endl;
     return;
   }
+
+  p2_ = static_cast<const vpgl_perspective_camera<double> *> (cam_storage->get_camera());
 
   vcl_cout << "NAME2: " << cam_storage->name() << vcl_endl;
   //  vcl_cout << "Camera2: \n" << p2_->get_matrix();

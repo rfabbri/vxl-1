@@ -59,7 +59,6 @@ public:
 
 protected:
   vpgl_proj_camera<double>  *camera_;
-
 };
 
 
