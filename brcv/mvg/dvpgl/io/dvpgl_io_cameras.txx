@@ -1,4 +1,4 @@
-#include "dvpgl_io_proj_camera.h"
+#include "dvpgl_io_cameras.h"
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/algo/vgl_rotation_3d.h>
@@ -191,8 +191,8 @@ vsl_b_read_dvpgl(vsl_b_istream &is, vpgl_perspective_camera<T>* &p)
 }
 
 
-#undef DVPGL_IO_PROJ_CAMERA_INSTANTIATE
-#define DVPGL_IO_PROJ_CAMERA_INSTANTIATE(T) \
+#undef DVPGL_IO_CAMERAS_INSTANTIATE
+#define DVPGL_IO_CAMERAS_INSTANTIATE(T) \
 template void vsl_b_read_dvpgl(vsl_b_istream &, vpgl_calibration_matrix<T >* &); \
 template void vsl_b_write_dvpgl(vsl_b_ostream &, const vpgl_calibration_matrix<T > *); \
 template void b_read_dvpgl(vsl_b_istream &, vpgl_calibration_matrix<T>* ); \
