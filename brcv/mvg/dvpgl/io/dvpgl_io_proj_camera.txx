@@ -149,12 +149,12 @@ b_read_dvpgl(vsl_b_istream &is, vpgl_calibration_matrix<T>* &self);
 // \remark cached_svd_ not written
 template <class T> void b_write_dvpgl(vsl_b_ostream &os, vpgl_calibration_matrix<T>* &self) const
 {
-  vsl_b_write(os, this->version());
-  vsl_b_write(os, focal_length_);
-  vsl_b_write(os, principal_point_);
-  vsl_b_write(os, x_scale_);
-  vsl_b_write(os, y_scale_);
-  vsl_b_write(os, skew_);
+  vsl_b_write(os, 1);  // matches latest in b_read_dvpgl
+  vsl_b_write(os, self->focal_length_);
+  vsl_b_write(os, self->principal_point_);
+  vsl_b_write(os, self->x_scale_);
+  vsl_b_write(os, self->y_scale_);
+  vsl_b_write(os, self->skew_);
 }
 
 //: Binary save
