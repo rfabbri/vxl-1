@@ -41,21 +41,23 @@ b_read_dvpgl(vsl_b_istream &is, vpgl_perspective_camera<T>* &self);
      vcl_cerr << "[dvpgl_io] warning: camera i/o version 1 might also currently be the new vpgl I/O\n"; 
      // vpgl_proj_camera<T>::b_read(is);
      b_read_dvpgl(is, static_cast<vpgl_proj_camera<T> *>(self));
-     K.b_read(is);
+     b_read_dvpgl(is, &K); // K.b_read(is);
      self->set_calibration(K);
      vsl_b_read(is, camera_center);
      self->set_camera_center(camera_center);
      vsl_b_read(is, Rot);
-     self->R_ = vgl_rotation_3d<T>(vgl_h_matrix_3d<T>(Rot));
+     self.set_rotation(vgl_rotation_3d<T>(vgl_h_matrix_3d<T>(Rot)));
      // TODO: if error, then try to load new core/vpgl/io style
     break;
    case 2:
      //vpgl_proj_camera<T>::b_read(is);
      b_read_dvpgl(is, static_cast<vpgl_proj_camera<T> *>(self));
-     self->K_.b_read(is);
-     vsl_b_read(is, self->camera_center_);
-     vsl_b_read(is, self->q);
-     self->R_ = vgl_rotation_3d<T>(vnl_quaternion<T>(self->q));
+     b_read_dvpgl(is, &K); // K.b_read(is);
+     self->set_calibration(K);
+     vsl_b_read(is, camera_center);
+     self->set_camera_center(camera_center);
+     vsl_b_read(is, q);
+     self.set_rotation(vgl_rotation_3d<T>(vnl_quaternion<T>(q)));
     break;
    default:
     vcl_cerr << "I/O ERROR: vpgl_persperctive_camera::b_read(vsl_b_istream&)\n"
@@ -63,20 +65,20 @@ b_read_dvpgl(vsl_b_istream &is, vpgl_perspective_camera<T>* &self);
     is.is().clear(vcl_ios::badbit); // Set an unrecoverable IO error on stream
     return;
   }
-  this->recompute_matrix();
+  self->recompute_matrix();
 }
 
 //-------------------------------
 //: Binary save self to stream.
 // \remark cached_svd_ not written
-template <class T> void vpgl_perspective_camera<T>::
-b_write_dvpgl(vsl_b_ostream &os) const
+template <class T> void
+b_write_dvpgl(vsl_b_ostream &os, vpgl_perspective_camera<T>* &self) const
 {
-  vsl_b_write(os, this->version());
-  vpgl_proj_camera<T>::b_write(os);
-  K_.b_write(os);
-  vsl_b_write(os, camera_center_);
-  vsl_b_write(os, static_cast<vnl_vector_fixed<T,4> >(R_.as_quaternion()));
+  vsl_b_write(os, 2); // matches version 2 in b_read_dvpgl
+  b_write_dvpgl(is, static_cast<vpgl_proj_camera<T> *>(self));
+  b_write_dvpgl(is, self->get_calibration()); // K.b_read(is);
+  vsl_b_write(os, self->get_camera_center());
+  vsl_b_write(os, static_cast<vnl_vector_fixed<T,4> >(self->get_rotation().as_quaternion()));
 }
 
 //: Binary save
@@ -88,7 +90,7 @@ vsl_b_write_dvpgl(vsl_b_ostream &os, const vpgl_perspective_camera<T> * p)
   }
   else{
     vsl_b_write(os,true); // Indicate non-null pointer stored
-    p->b_write(os);
+    b_write_dvpgl(os, p);
   }
 }
 
@@ -102,7 +104,7 @@ vsl_b_read_dvpgl(vsl_b_istream &is, vpgl_perspective_camera<T>* &p)
   vsl_b_read(is, not_null_ptr);
   if (not_null_ptr) {
     p = new vpgl_perspective_camera<T>();
-    p->b_read(is);
+    b_read_dvpgl(is);
   }
   else
     p = 0;
