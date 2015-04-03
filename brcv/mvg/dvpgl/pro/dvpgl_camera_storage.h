@@ -22,7 +22,7 @@
 #include <bpro1/bpro1_storage.h>
 #include "dvpgl_camera_storage_sptr.h"
 #include <vpgl/vpgl_proj_camera.h>
-#include <dvpgl/io/dvpgl_io_proj_camera.h>
+// #include <dvpgl/io/dvpgl_io_proj_camera.h>
 
 #include <vcl_string.h>
 
@@ -43,9 +43,6 @@ public:
   //: Binary load self from stream.
   void b_read(vsl_b_istream &is);
   
-  //: Register camera types for I/O
-  void register_binary_io() const;
-
   //: Create a copy of the object on the heap.
   // The caller is responsible for deletion
   virtual bpro1_storage* clone() const;
@@ -62,10 +59,6 @@ public:
 
 protected:
   vpgl_proj_camera<double>  *camera_;
-
-private:
-  //: Is the binary I/O registered
-  static bool registered_; 
 
 };
 
