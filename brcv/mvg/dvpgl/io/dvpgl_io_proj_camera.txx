@@ -111,5 +111,10 @@ vsl_b_read_dvpgl(vsl_b_istream &is, vpgl_perspective_camera<T>* &p)
 }
 
 #undef DVPGL_IO_PROJ_CAMERA_INSTANTIATE
-#define DVPGL_IO_PROJ_CAMERA_INSTANTIATE(T) // \
+#define DVPGL_IO_PROJ_CAMERA_INSTANTIATE(T) \
+template void vsl_b_read(vsl_b_istream &is, vpgl_perspective_camera<T >* &p); \
+template void vsl_b_write(vsl_b_ostream &os, const vpgl_perspective_camera<T > * p); \
+template void b_read_dvpgl(vsl_b_istream &is, vpgl_perspective_camera<T>* &tis); \
+template void b_write_dvpgl(vsl_b_ostream &os, const vpgl_perspective_camera<T>* tis);
+  
 //template void vsl_add_to_binary_loader(vpgl_proj_camera<T > const& b);
