@@ -155,7 +155,7 @@ template <class T> void
 b_write_dvpgl(vsl_b_ostream &os, const vpgl_perspective_camera<T>* self)
 {
   vsl_b_write(os, 2); // matches version 2 in b_read_dvpgl
-  b_write_dvpgl(os, static_cast<const vpgl_proj_camera<T> *>(self));
+  vsl_b_write(os, *static_cast<const vpgl_proj_camera<T> *>(self));
   b_write_dvpgl(os, self->get_calibration()); // K.b_read(is);
   vsl_b_write(os, self->get_camera_center());
   vsl_b_write(os, static_cast<vnl_vector_fixed<T,4> >(self->get_rotation().as_quaternion()));
