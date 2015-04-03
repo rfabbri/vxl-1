@@ -63,15 +63,15 @@ b_read_dvpgl(vsl_b_istream &is, vpgl_calibration_matrix<T>* self)
 }
 
 //: Binary save self to stream.
-// \remark cached_svd_ not written
-template <class T> void b_write_dvpgl(vsl_b_ostream &os, vpgl_calibration_matrix<T>* self)
+template <class T> void 
+b_write_dvpgl(vsl_b_ostream &os, const vpgl_calibration_matrix<T>* self)
 {
   vsl_b_write(os, 1);  // matches latest in b_read_dvpgl
-  vsl_b_write(os, self->focal_length_);
-  vsl_b_write(os, self->principal_point_);
-  vsl_b_write(os, self->x_scale_);
-  vsl_b_write(os, self->y_scale_);
-  vsl_b_write(os, self->skew_);
+  vsl_b_write(os, self->focal_length());
+  vsl_b_write(os, self->principal_point());
+  vsl_b_write(os, self->x_scale());
+  vsl_b_write(os, self->y_scale());
+  vsl_b_write(os, self->skew());
 }
 
 //: Binary save
@@ -151,12 +151,11 @@ b_read_dvpgl(vsl_b_istream &is, vpgl_perspective_camera<T>* self)
 }
 
 //: Binary save self to stream.
-// \remark cached_svd_ not written
 template <class T> void
-b_write_dvpgl(vsl_b_ostream &os, vpgl_perspective_camera<T>* self)
+b_write_dvpgl(vsl_b_ostream &os, const vpgl_perspective_camera<T>* self)
 {
   vsl_b_write(os, 2); // matches version 2 in b_read_dvpgl
-  b_write_dvpgl(os, static_cast<vpgl_proj_camera<T> *>(self));
+  b_write_dvpgl(os, static_cast<const vpgl_proj_camera<T> *>(self));
   b_write_dvpgl(os, self->get_calibration()); // K.b_read(is);
   vsl_b_write(os, self->get_camera_center());
   vsl_b_write(os, static_cast<vnl_vector_fixed<T,4> >(self->get_rotation().as_quaternion()));
@@ -194,13 +193,13 @@ vsl_b_read_dvpgl(vsl_b_istream &is, vpgl_perspective_camera<T>* &p)
 
 #undef DVPGL_IO_PROJ_CAMERA_INSTANTIATE
 #define DVPGL_IO_PROJ_CAMERA_INSTANTIATE(T) \
-template void vsl_b_read(vsl_b_istream &is, vpgl_calibration_matrix<T >* &p); \
-template void vsl_b_write(vsl_b_ostream &os, const vpgl_calibration_matrix<T > * p); \
-template void b_read_dvpgl(vsl_b_istream &is, vpgl_calibration_matrix<T>* tis); \
-template void b_write_dvpgl(vsl_b_ostream &os, const vpgl_calibration_matrix<T>* tis); \
-template void vsl_b_read(vsl_b_istream &is, vpgl_perspective_camera<T >* &p); \
-template void vsl_b_write(vsl_b_ostream &os, const vpgl_perspective_camera<T > * p); \
-template void b_read_dvpgl(vsl_b_istream &is, vpgl_perspective_camera<T>* tis); \
-template void b_write_dvpgl(vsl_b_ostream &os, const vpgl_perspective_camera<T>* tis);
+template void vsl_b_read(vsl_b_istream &, vpgl_calibration_matrix<T >* &); \
+template void vsl_b_write(vsl_b_ostream &, const vpgl_calibration_matrix<T > *); \
+template void b_read_dvpgl(vsl_b_istream &, vpgl_calibration_matrix<T>* ); \
+template void b_write_dvpgl(vsl_b_ostream &, const vpgl_calibration_matrix<T>* ); \
+template void vsl_b_read(vsl_b_istream &, vpgl_perspective_camera<T >* &); \
+template void vsl_b_write(vsl_b_ostream &, const vpgl_perspective_camera<T > *); \
+template void b_read_dvpgl(vsl_b_istream &, vpgl_perspective_camera<T>* ); \
+template void b_write_dvpgl(vsl_b_ostream &, const vpgl_perspective_camera<T>* );
   
 //template void vsl_add_to_binary_loader(vpgl_proj_camera<T > const& b);
