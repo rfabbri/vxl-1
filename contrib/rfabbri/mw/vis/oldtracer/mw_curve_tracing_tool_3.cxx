@@ -2,6 +2,7 @@
 
 #include "mw_curve_tracing_tool_3.h"
 #include "mw_curve_tracing_tool_utils_3.h"
+#include <dvpgl/io/dvpgl_io_cameras.h>
 #include <vgl/vgl_intersection.h>
 
 
@@ -97,7 +98,7 @@ activate ()
 
       const vpgl_perspective_camera<double> *pcam;
 
-      pcam = cam_storage->get_camera()->cast_to_perspective_camera();
+      pcam = dvpgl_cast_to_perspective_camera(cam_storage->get_camera());
       if(!pcam) {
         vcl_cerr << "Error: tool requires a perspective camera" << vcl_endl;
         return;

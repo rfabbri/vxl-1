@@ -14,7 +14,7 @@
 #include <bgui/bgui_vsol2D_tableau.h>
 #include <bgui/bgui_vsol2D_tableau_sptr.h>
 #include <bgui/bgui_vsol_soview2D.h>
-#include <bgui/bgui_selector_tableau_sptr.h>
+//#include <bgui/bgui_selector_tableau_sptr.h>
 #include <bvis1/bvis1_tool.h>
 
 #include <vpgl/vpgl_perspective_camera.h>

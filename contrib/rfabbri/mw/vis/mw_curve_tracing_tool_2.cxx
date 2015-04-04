@@ -2,6 +2,7 @@
 #include "mw_curve_tracing_tool_common_2.h"
 
 #include <dbdet/pro/dbdet_sel_storage.h>
+#include <dvpgl/io/dvpgl_io_cameras.h>
 #include <mw/algo/mw_algo_util.h>
 
 mw_curve_tracing_tool_2::
@@ -545,7 +546,7 @@ get_cameras()
 
     const vpgl_perspective_camera<double> *pcam;
 
-    pcam = cam_storage->get_camera()->cast_to_perspective_camera();
+    pcam = dvpgl_cast_to_perspective_camera(cam_storage->get_camera());
     if(!pcam) {
       vcl_cerr << "Error: tool requires a perspective camera" << vcl_endl;
       return;
@@ -921,7 +922,7 @@ break_curves_into_episegs()
     {
       vcl_vector< bvis1_view_tableau_sptr > views;
       views = MANAGER->get_views();
-      bgui_selector_tableau &selector = *(views[v]->selector());
+      vgui_selector_tableau &selector = *(views[v]->selector());
       for (unsigned i=0; i < 50; ++i) {
         vcl_ostringstream s;
         if (i != 0) {

@@ -11,10 +11,10 @@
 #include <bvis1/bvis1_tool.h>
 #include <vgui/vgui_event_condition.h>
 #include <vgui/vgui_style_sptr.h>
+#include <vgui/vgui_selector_tableau_sptr.h>
 #include <bgui/bgui_vsol2D_tableau.h>
 #include <bgui/bgui_vsol2D_tableau_sptr.h>
 #include <bgui/bgui_vsol_soview2D.h>
-#include <bgui/bgui_selector_tableau_sptr.h>
 
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vpgl/vpgl_fundamental_matrix.h>
