@@ -12,8 +12,25 @@ class dvpgl_proj_camera_vsl
  public:
   // ----------------- Constructors:----------------------
 
-  //: Default constructor makes an identity camera.
-  dvpgl_proj_camera_vsl();
+  dvpgl_proj_camera_vsl() : cam_(0) { }
+
+  //: Binary save self to stream.
+  virtual void b_write(vsl_b_ostream &os) const { 
+    assert (cam_ != 0);
+    vsl_b_write(os, *cam_);
+  }
+
+  //: Binary load self from stream.
+  virtual void b_read(vsl_b_istream &is) {
+    assert (cam_ != 0);
+    vsl_b_read(os, *cam_);
+  }
+
+  //: IO version number
+  short version() const {return 1;}
+
+  //: Print an ascii summary to the stream
+  void print_summary(vcl_ostream &os) const { os << *this; }
 
   //: Return a platform independent string identifying the class
   virtual vcl_string is_a() const { return vcl_string("vpgl_proj_camera"); }
@@ -24,8 +41,8 @@ class dvpgl_proj_camera_vsl
 
   //: Return `this' if `this' is a vpgl_proj_camera, 0 otherwise
   // This is used by e.g. polymorphic binary i/o
-  virtual vpgl_proj_camera<T> *cast_to_proj_camera() {return this;}
-  virtual const vpgl_proj_camera<T> *cast_to_proj_camera() const {return this;}
+  virtual vpgl_proj_camera<T> *cast_to_proj_camera() {return cam_;}
+  virtual const vpgl_proj_camera<T> *cast_to_proj_camera() const {return cam_;}
 
   //: Return `this' if `this' is a vpgl_perspective_camera, 0 otherwise
   // This is used by e.g. the storage class
@@ -33,9 +50,12 @@ class dvpgl_proj_camera_vsl
   virtual vpgl_perspective_camera<T> *cast_to_perspective_camera() {return 0;}
   virtual const vpgl_perspective_camera<T> *cast_to_perspective_camera() const {return 0;}
 
-  virtual ~dvpgl_proj_camera_vsl();
+  virtual ~dvpgl_proj_camera_vsl() { delete cam_; }
 
- private:
+  vpgl_proj_camera<T> * get() { return cam_; }
+  void set(vpgl_proj_camera<T> *c) { assert (c); return cam_ = c; }
+
+ protected:
   vpgl_proj_camera<t> *cam_;
 };
 

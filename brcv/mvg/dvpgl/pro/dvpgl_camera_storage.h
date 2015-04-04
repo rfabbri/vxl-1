@@ -52,14 +52,17 @@ public:
 
   //: Sets the camera pointer. Storage must be allocated by the user and will be
   // deleted by _this_ class. In the future, this might be replaced by a smart pointer.
-  void set_camera( vpgl_proj_camera<double>* camera ){ camera_ = camera; }
+  void set_camera( vpgl_proj_camera<double>* camera ){ camera_.set(camera); }
 
-  const vpgl_proj_camera<double> *get_camera(){ return camera_; }
+  const vpgl_proj_camera<double> *get_camera(){ return camera_.get(); }
 
 
 protected:
-  // storage can hold any camera derived from proj_camera
-  vpgl_proj_camera<double>  *camera_;
+  // storage should be able to hold any camera derived from proj_camera
+  dvpgl_proj_camera_vsl<double>  *camera_;
+private:
+  //: Is the binary I/O registered
+  static bool registered_;
 };
 
 

@@ -6,6 +6,8 @@ SET(dvpgl_io_sources
 #    dpgl_io_proj_camera.h             vpgl_io_proj_camera.txx
 #    dpgl_io_perspective_camera.h      vpgl_io_perspective_camera.txx
     dvpgl_io_cameras.h   dvpgl_io_cameras.txx
+    dvpgl_perspective_camera_vsl.h dvpgl_perspective_camera_vsl.txx
+    dvpgl_proj_camera_vsl.h dvpgl_proj_camera_vsl.txx
 )
 
 AUX_SOURCE_DIRECTORY(Templates dvpgl_io_sources)

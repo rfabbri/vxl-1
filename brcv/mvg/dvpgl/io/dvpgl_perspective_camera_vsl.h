@@ -12,7 +12,7 @@ class dvpgl_perspective_camera_vsl : public dvpgl_proj_camera_vsl<T>
 {
  public:
   //: Default constructor
-  dvpgl_perspective_camera_vsl();
+  dvpgl_perspective_camera_vsl() {}
 
   //: Destructor
   virtual ~vpgl_perspective_camera() {}
@@ -20,14 +20,20 @@ class dvpgl_perspective_camera_vsl : public dvpgl_proj_camera_vsl<T>
   //: Return `this' if `this' is a vpgl_perspective_camera, 0 otherwise
   // This is used by e.g. the storage class
   // \todo code for affine camera and other children
-  virtual vpgl_perspective_camera<T> *cast_to_perspective_camera() {return this;}
-  virtual const vpgl_perspective_camera<T> *cast_to_perspective_camera() const {return this;}
+  virtual vpgl_perspective_camera<T> *cast_to_perspective_camera() {return static_cast<vpgl_perspective_camera<T> *> (cam_);}
+  virtual const vpgl_perspective_camera<T> *cast_to_perspective_camera() const {return static_cast<vpgl_perspective_camera<T> *> (cam_);}
 
   //: Binary save self to stream.
-  virtual void b_write(vsl_b_ostream &os) const;
+  virtual void b_write(vsl_b_ostream &os) const {
+    assert(cam_ != 0);
+    b_write_dvpgl(os, cam_);
+  }
 
   //: Binary load self from stream.
-  virtual void b_read(vsl_b_istream &is);
+  virtual void b_read(vsl_b_istream &is)  {
+    assert(cam_ != 0);
+    b_read_dvpgl(os, cam_);
+  }
 
   //: IO version number
   short version() const {return 2;}

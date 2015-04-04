@@ -80,3 +80,18 @@ dvpgl_camera_storage::b_read(vsl_b_istream &is)
     return;
   }
 }
+
+
+//: Register camera types for I/O
+void 
+dvpgl_camera_storage::register_binary_io() const
+{
+  if(!registered_){
+    // XXX
+    vsl_add_to_binary_loader(vpgl_proj_camera<double>());
+    vsl_add_to_binary_loader(vpgl_perspective_camera<double>());
+    // TODO add affine and other specializations here to support their IO when available
+    registered_ = true;
+  }
+}
+
