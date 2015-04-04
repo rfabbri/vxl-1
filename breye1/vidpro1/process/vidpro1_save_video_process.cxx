@@ -13,6 +13,10 @@
 #include <vil/vil_new.h>
 #include <vil/vil_convert.h>
 
+#include <vidl1/vidl1_movie.h>
+#include <vidl1/vidl1_frame.h>
+#include <vidl1/vidl1_io.h>
+#include <vidl1/vidl1_clip.h>
 #include <vul/vul_sprintf.h>
 #include <vil/vil_convert.h>
 #include <vil/vil_save.h>

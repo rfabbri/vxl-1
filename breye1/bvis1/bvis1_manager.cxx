@@ -19,6 +19,11 @@
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <vcl_sstream.h>
 
+#include <bvis1/bvis1_gl_codec.h>
+#include <vidl1/vidl1_movie.h>
+#include <vidl1/vidl1_clip.h>
+#include <vidl1/vidl1_io.h>
+
 #include <bvis1/bvis1_util.h>
 
 
@@ -399,8 +404,6 @@ bvis1_manager::view_repository()
 void 
 bvis1_manager::save_view_as_movie() const
 {
-  vcl_cerr << "FIXME not supported (rfabbri)\n";
-#if 0
   vgui_dialog save_rep_dlg("Save Views as Movie");
   int start = 1;
   int end = bvis1_manager::instance()->repository()->num_frames();
@@ -428,7 +431,6 @@ bvis1_manager::save_view_as_movie() const
 
   vidl1_movie_sptr movie = new vidl1_movie(new vidl1_clip(new bvis1_gl_codec(start,end)));
   vidl1_io::save(movie, file_name.c_str(), supported_codecs[id_codec].c_str());
-#endif
 }
 
 //: Access the selector tableau in the active view
