@@ -80,7 +80,7 @@ void vsl_b_read_dvpgl(vsl_b_istream & is, vpgl_camera<T>* &camera);
 
 // some missing functions from the new vpgl that were used in old I/O ----------
 
-const vpgl_perspective_camera<double> *
+inline const vpgl_perspective_camera<double> *
 dvpgl_cast_to_perspective_camera(const vpgl_proj_camera<double> *cam)
 {
   if (cam->type_name() != "vpgl_perspective_camera")
