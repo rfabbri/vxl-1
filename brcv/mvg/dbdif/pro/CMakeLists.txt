@@ -11,4 +11,4 @@ dbdif_edgel_data_process.cxx dbdif_edgel_data_process.h
 
 ADD_LIBRARY(dbdif_pro ${dbdif_pro_sources})
 
-TARGET_LINK_LIBRARIES(dbdif_pro dbdif bpro1)
+TARGET_LINK_LIBRARIES(dbdif_pro dbdif_algo vidpro1 bpro1)
