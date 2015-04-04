@@ -16,6 +16,7 @@
 #include <dbdet/algo/dbdet_load_edg.h>
 #include <bvis1/bvis1_macros.h>
 #include <vnl/vnl_random.h>
+#include <dvpgl/io/dvpgl_io_cameras.h>
 
 
 static vnl_random myrand;
@@ -301,7 +302,7 @@ init(mw_stereo_app_args &arg)
             abort();
           }
 
-          cam_[i].Pr_.b_write(bp_out);
+          b_write_dvpgl(bp_out, &(cam_[i].Pr_));
           bp_out.close();
         }
       }

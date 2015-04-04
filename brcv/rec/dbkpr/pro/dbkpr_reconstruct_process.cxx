@@ -8,6 +8,7 @@
 #include <dbdet/dbdet_keypoint_corr3d.h>
 #include <dbkpr/dbkpr_view_span_tree.h>
 #include <vpgl/algo/vpgl_bundle_adjust.h>
+#include <vpgl/algo/vpgl_ba_fixed_k_lsqr.h>
 #include <vnl/algo/vnl_sparse_lm.h>
 #include <vnl/vnl_quaternion.h>
 #include <vcl_algorithm.h>
@@ -146,11 +147,11 @@ dbkpr_reconstruct_process::finish()
       all_corr3d = frame_corr3d->correspondences();
 
     const vpgl_perspective_camera<double> *pcam;
-    pcam = frame_corr3d->get_camera()->cast_to_perspective_camera();
-    if(!pcam) {
+    if (frame_corr3d->get_camera()->type_name() != "vpgl_perspective_camera") {
       vcl_cerr << "Error: requires a perspective  camera" << vcl_endl;
       return false;
     }
+    pcam = static_cast<const vpgl_perspective_camera<double> *> (frame_corr3d->get_camera());
     cameras.push_back(*pcam);
   }
 
@@ -164,6 +165,10 @@ dbkpr_reconstruct_process::finish()
   parameters()->get_value( "-minproj" , minproj );
   parameters()->get_value( "-maxitr" , maxitr );
   parameters()->get_value( "-usewgt" , usewgt );
+
+  vcl_cerr << "Warning: implementation uses new vpgl and treats use_weight to use_m_estimator\n";
+  vcl_cerr << "Warning: implementation uses new vpgl and has not been thoroughly tested\n";
+
   parameters()->get_value( "-verbose" , verbose );
   parameters()->get_value( "-gtol" , gtol );
 
@@ -192,23 +197,26 @@ dbkpr_reconstruct_process::finish()
 
   vcl_cout << "==========================================\n";
   vcl_cout << "Calibration BEFORE bundle adjustment:\n";
+  // This is a customized version of what is already implemented inside the
+  // bpgl_bundle_adjust class
   vcl_vector<vpgl_calibration_matrix<double> > Ks;
-  vnl_vector<double> init_a = vpgl_bundle_adj_lsqr::create_param_vector(cameras);
-  vnl_vector<double> init_b = vpgl_bundle_adj_lsqr::create_param_vector(world_points);
+  vnl_vector<double> init_a = vpgl_ba_fixed_k_lsqr::create_param_vector(cameras);
+  vnl_vector<double> init_b = vpgl_ba_fixed_k_lsqr::create_param_vector(world_points);
   for(unsigned int i=0; i<cameras.size(); ++i){
     Ks.push_back(cameras[i].get_calibration());
     vcl_cout << "\nK" << i << ":\n" << Ks.back().get_matrix() << vcl_endl;
   }
   
-  vnl_vector<double> a(init_a), b(init_b);
+  vnl_vector<double> a(init_a), b(init_b), c(0);
   // do the bundle adjustment
-  vpgl_bundle_adj_lsqr ba_func(Ks,image_points,mask,usewgt);
+  vpgl_ba_fixed_k_lsqr ba_func_fixed(Ks,image_points,mask);
+  vpgl_bundle_adjust_lsqr &ba_func = ba_func_fixed;
   vnl_sparse_lm lm(ba_func);
   lm.set_max_function_evals(maxitr);
   lm.set_g_tolerance(gtol);
   lm.set_trace(true);
   lm.set_verbose(verbose);
-  if(!lm.minimize(a,b))
+  if(!lm.minimize(a,b,c, true, usewgt))
     return false;
   lm.diagnose_outcome();
 
@@ -226,7 +234,7 @@ dbkpr_reconstruct_process::finish()
 
     ba_func.reset();
     // do the bundle adjustment again
-    if(!lm.minimize(a2,b2))
+    if(!lm.minimize(a2,b2,c,true,usewgt))
       return false;
     lm.diagnose_outcome();
 
@@ -240,17 +248,18 @@ dbkpr_reconstruct_process::finish()
   
   // Update the camera parameters
   for(unsigned int i=0; i<cameras.size(); ++i)
-    cameras[i] = ba_func.param_to_cam(i,a);
+    cameras[i] = ba_func.param_to_cam(i,a,c);
     
   // Update the world points
   for(unsigned int j=0; j<world_points.size(); ++j){
-    world_points[j] = ba_func.param_to_point(j,b);
+    world_points[j] = ba_func.param_to_point(j,b,c);
     some_corr3d[j]->set(world_points[j].x(),world_points[j].y(),world_points[j].z());
   }
   
   if(usewgt)
   {
-    vcl_vector<double> weights = ba_func.weights();
+    vcl_vector<double> weights = vcl_vector<double>(lm.get_weights().begin(), lm.get_weights().end());
+
     const vnl_crs_index& crs = ba_func.residual_indices();
     typedef vnl_crs_index::sparse_vector::iterator sv_itr;
     for(unsigned int i=0; i<cameras.size(); ++i)
