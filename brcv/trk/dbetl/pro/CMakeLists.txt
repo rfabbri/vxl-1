@@ -12,7 +12,7 @@ SET(dbetl_pro_sources
 
 ADD_LIBRARY(dbetl_pro ${dbetl_pro_sources})
 
-TARGET_LINK_LIBRARIES(dbetl_pro dbetl vidpro1)
+TARGET_LINK_LIBRARIES(dbetl_pro dbetl dbecl_pro vidpro1)
 
 
 IF(BUILD_TESTING)
