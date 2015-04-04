@@ -6,7 +6,7 @@
 #include <vgl/vgl_distance.h>
 #include <dbdif/algo/dbdif_data.h>
 #include <mw/algo/mw_algo_util.h>
-#include <vpgl/algo/vpgl_construct_cameras.h>
+#include <bpgl/algo/bpgl_construct_cameras.h>
 
 #include <bpro1/bpro1_parameters.h>
 #include <dbdet/edge/dbdet_edgemap_sptr.h>
@@ -346,7 +346,7 @@ initialize_poses(
       p1.push_back(vgl_point_2d<double>(crv2d_[iv][pt_id_[ip]].gama[0],crv2d_[iv][pt_id_[ip]].gama[1]));
     }
 
-    vpgl_construct_cameras cstr(p0,p1,&K);
+    bpgl_construct_cameras cstr(p0,p1,&K);
     cstr.construct();
     cstr.get_world_points(world_points_ini[iv]);
     pcam_ini[iv]  = new vpgl_perspective_camera<double> (cstr.get_camera2());

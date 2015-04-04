@@ -29,5 +29,5 @@ dbmcs_nearest_edgels_process.h dbmcs_nearest_edgels_process.cxx
 
 ADD_LIBRARY(mw_pro ${mw_pro_sources})
 
-TARGET_LINK_LIBRARIES(mw_pro mw_algo vpgl_algo dbkpr_pro dvpgl_pro dbdet_pro bvis1 bpro1 dbpro vsl)
+TARGET_LINK_LIBRARIES(mw_pro mw_algo bpgl_algo vpgl_algo dbkpr_pro dvpgl_pro dbdet_pro bvis1 bpro1 dbpro vsl)
 

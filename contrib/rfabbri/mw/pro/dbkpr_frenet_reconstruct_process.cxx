@@ -8,6 +8,7 @@
 #include <dbdet/dbdet_keypoint_corr3d.h>
 #include <dbkpr/dbkpr_view_span_tree.h>
 #include <vpgl/algo/vpgl_bundle_adjust.h>
+#include <vpgl/algo/vpgl_ba_fixed_k_lsqr.h>
 #include <vnl/algo/vnl_sparse_lm.h>
 #include <vnl/vnl_quaternion.h>
 #include <vcl_algorithm.h>
@@ -210,8 +211,8 @@ dbkpr_frenet_reconstruct_process::finish()
 
 
   vcl_vector<vpgl_calibration_matrix<double> > Ks;
-  vnl_vector<double> init_a = vpgl_bundle_adj_lsqr::create_param_vector(cameras);
-  vnl_vector<double> init_b = vpgl_bundle_adj_lsqr::create_param_vector(world_points);
+  vnl_vector<double> init_a = vpgl_ba_fixed_k_lsqr::create_param_vector(cameras);
+  vnl_vector<double> init_b = vpgl_ba_fixed_k_lsqr::create_param_vector(world_points);
 
   for(unsigned int i=0; i<cameras.size(); ++i){
     Ks.push_back(cameras[i].get_calibration());
@@ -288,14 +289,14 @@ dbkpr_frenet_reconstruct_process::finish()
 
   // ------- CORE
   
-  vnl_vector<double> a(init_a), b(init_b);
+  vnl_vector<double> a(init_a), b(init_b), c(0);
   dvpgl_DG_bundle_adj_lsqr ba_func(Ks,image_points,mask,usewgt);
   vnl_sparse_lm lm(ba_func);
   lm.set_max_function_evals(maxitr);
   lm.set_g_tolerance(gtol);
   lm.set_trace(true);
   lm.set_verbose(verbose);
-  if(!lm.minimize(a,b)) {
+  if(!lm.minimize(a,b,c, true, usewgt)) {
     vcl_cout << "No convergence...\n";
 //    return false;
   }
