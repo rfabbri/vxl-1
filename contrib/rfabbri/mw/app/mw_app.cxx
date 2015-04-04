@@ -38,6 +38,7 @@
 
 #include <dbgl/algo/dbgl_curve_smoothing.h>
 #include <vgui/vgui_dialog.h>
+#include <vgui/vgui_selector_tableau.h>
 
 #include <dbsol/dbsol_file_io.h>
 #include <dbdet/edge/dbdet_edgemap.h>
@@ -210,7 +211,7 @@ mw_load_mcs_instance()
   views = MANAGER->get_views();
   // make curves active
   for (unsigned v=0; v < views.size(); ++v) {
-    bgui_selector_tableau &selector = *(views[v]->selector());
+    vgui_selector_tableau &selector = *(views[v]->selector());
     selector.set_active("original_cfrags");
     selector.active_to_top();
   }
@@ -316,7 +317,7 @@ mw_load_current_working_repository_curve_tracing_tool()
   // Search for storage named broken_vsols. If any, make it active.
 
   for (unsigned v=0; v < views.size(); ++v) {
-    bgui_selector_tableau &selector = *(views[v]->selector());
+    vgui_selector_tableau &selector = *(views[v]->selector());
 
     // activate broken_vsols[i] with the largest possible i
 
