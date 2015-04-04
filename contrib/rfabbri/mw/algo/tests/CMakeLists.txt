@@ -21,6 +21,7 @@ ADD_EXECUTABLE (mw_algo_test_all
 
 if(Boost_FOUND)
   TARGET_LINK_LIBRARIES(mw_algo_test_all mw_algo vpgl_algo mw_pro testlib ${Boost_LIBRARIES})
+  INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIRS} )
 else()
   TARGET_LINK_LIBRARIES(mw_algo_test_all mw_algo vpgl_algo mw_pro testlib)
 endif()
