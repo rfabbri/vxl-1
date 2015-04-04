@@ -13,6 +13,7 @@
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
 
 #include <dvpgl/pro/dvpgl_camera_storage.h>
+#include <dvpgl/io/dvpgl_io_cameras.h>
 
 
 
@@ -108,11 +109,12 @@ mw_project_cube_process::execute()
 
   cam_storage.vertical_cast(input_data_[0][0]);
 
-  const vpgl_perspective_camera<double> *pcam = cam_storage->get_camera()->cast_to_perspective_camera();
-  if(!pcam) {
+  if(cam_storage->get_camera()->type_name() != "vpgl_perspective_camera") {
     vcl_cerr << "Error: process requires a perspective camera" << vcl_endl;
     return false;
   }
+  const vpgl_perspective_camera<double> *pcam = 
+    static_cast<const vpgl_perspective_camera<double> *>(cam_storage->get_camera());
 
   vcl_cout << "NAME: " << cam_storage->name() << vcl_endl;
   vcl_cout << "Camera: \n" << pcam->get_matrix();

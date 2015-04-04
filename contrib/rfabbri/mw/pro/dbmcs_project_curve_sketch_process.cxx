@@ -22,6 +22,7 @@
 #include <vsol/vsol_polyline_2d.h>
 #include <mw/mw_util.h> 
 #include <mw/dbmcs_curve_3d_sketch.h>
+#include <dvpgl/io/dvpgl_io_cameras.h>
 
 
 
@@ -108,7 +109,8 @@ dbmcs_project_curve_sketch_process::execute()
 
   cam_storage.vertical_cast(input_data_[0][0]);
 
-  const vpgl_perspective_camera<double> *pcam = cam_storage->get_camera()->cast_to_perspective_camera();
+  const vpgl_perspective_camera<double> *pcam = 
+    dvpgl_cast_to_perspective_camera(cam_storage->get_camera());
   if(!pcam) {
     vcl_cerr << "Error: process requires a perspective camera" << vcl_endl;
     return false;

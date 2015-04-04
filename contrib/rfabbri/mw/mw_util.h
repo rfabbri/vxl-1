@@ -30,10 +30,12 @@
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vpgl/vpgl_fundamental_matrix.h>
 #include <vgl/vgl_point_3d.h>
+// #include <dvpgl/io/dvpgl_io_cameras.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
 #include <vsol/vsol_polyline_2d.h>
 #include <dbdif/dbdif_frenet.h>
 #include <dbbl/dbbl_subsequence.h>
+
 
 #define mw_vector_3d vnl_vector_fixed<double,3>
 #define mw_vector_2d vnl_vector_fixed<double,2>

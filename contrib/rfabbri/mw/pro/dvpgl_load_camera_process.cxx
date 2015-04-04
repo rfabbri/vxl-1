@@ -12,6 +12,7 @@
 
 #include <mw/mw_util.h>
 #include <mw/app/mw_load_data.h>
+#include <dvpgl/io/dvpgl_io_cameras.h>
 #include <dbdif/algo/dbdif_data.h>
 
 // camfiletype parameter:
@@ -26,7 +27,7 @@ dvpgl_load_camera_process::dvpgl_load_camera_process() : bpro1_process()
       !parameters()->add( "Input file name" , "-nameprefix" , bpro1_filepath("","*.*")) ||
       !parameters()->add( "File type ASCII Camera matrix?" , "-camera_matrix_ftype" , false)  ||
       !parameters()->add( "File type ASCII Intrinsic/Extrinsic?" , "-intrinsic_extrinsic_ftype" , false)  ||
-      !parameters()->add( "File type binary VSL?" , "-vsl_ftype" , false)  ||
+      !parameters()->add( "File type binary VSL (old dvpgl)?" , "-vsl_ftype" , false)  ||
       !parameters()->add( "Multiple Intrinsic/Extrinsic Sequence?" , "-multi_intrextr" , true)  ||
       !parameters()->add( "     # of first file (integer from 0 to 499)" , "-multi_intrextr_first_file"     , 0 ) ||
       !parameters()->add( "     Reset numbering?" , "-multi_intrextr_reset" , false)  ||
@@ -179,13 +180,13 @@ bool dvpgl_load_camera_process::execute()
       if (! read_3x4_matrix_into_cam(input.path,&cam) )
          return false;
     } else if (vsl_ftype){
-      vcl_cout << "Selected type: " << "VSL binary" << vcl_endl;
+      vcl_cout << "Selected type: " << "VSL binary OLD format" << vcl_endl;
       vsl_b_ifstream bp_in(input.path);
       if (!bp_in) {
         vcl_cerr << "ERROR: couldn't open file: " << input.path << vcl_endl;
         return false;
       }
-      cam.b_read(bp_in);
+      b_read_dvpgl(bp_in, &cam);
       bp_in.close();
     } else {
       vcl_cerr << "Error: no camera type selected!\n";
@@ -204,9 +205,11 @@ bool dvpgl_load_camera_process::execute()
 
   output_data_[0].push_back(cam_storage);
   
-  
+  if (cam_storage->get_camera()->type_name() != "vpgl_perspective_camera")
+    vcl_cerr << "Error: load camera requires perspective camera\n";
+
   const vpgl_perspective_camera<double> *psp_cam = 
-    dynamic_cast<const vpgl_perspective_camera<double>*>(cam_storage->get_camera());
+    static_cast<const vpgl_perspective_camera<double>*>(cam_storage->get_camera());
 
   vcl_cout << "Camera (process): \n" << *psp_cam;
 

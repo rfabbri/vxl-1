@@ -28,6 +28,7 @@
 
 #include <vsol/vsol_line_2d_sptr.h>
 #include <vsol/vsol_line_2d.h>
+#include <dvpgl/io/dvpgl_io_cameras.h>
 
 
 //: Constructor
@@ -136,7 +137,8 @@ dbkpr_frenet_reconstruct_process::finish()
       all_corr3d = frame_corr3d->correspondences();
 
     const vpgl_perspective_camera<double> *pcam;
-    pcam = frame_corr3d->get_camera()->cast_to_perspective_camera();
+
+    pcam = dvpgl_cast_to_perspective_camera(frame_corr3d->get_camera());
     if(!pcam) {
       vcl_cerr << "Error: requires a perspective  camera" << vcl_endl;
       return false;

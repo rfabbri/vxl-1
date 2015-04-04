@@ -13,6 +13,7 @@
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
 
 #include <dvpgl/pro/dvpgl_camera_storage.h>
+#include <dvpgl/io/dvpgl_io_cameras.h>
 
 #include <vsol/vsol_point_3d.h>
 #include <vsol/vsol_point_3d_sptr.h>
@@ -95,7 +96,8 @@ mw_project_polyline_process::execute()
 
   cam_storage.vertical_cast(input_data_[0][0]);
 
-  const vpgl_perspective_camera<double> *pcam = cam_storage->get_camera()->cast_to_perspective_camera();
+  const vpgl_perspective_camera<double> *pcam = 
+    dvpgl_cast_to_perspective_camera(cam_storage->get_camera());
   if(!pcam) {
     vcl_cerr << "Error: process requires a perspective camera" << vcl_endl;
     return false;

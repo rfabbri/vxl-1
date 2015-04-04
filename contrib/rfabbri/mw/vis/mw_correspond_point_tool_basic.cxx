@@ -12,6 +12,7 @@
 #define MANAGER bvis1_manager::instance()
 
 #include <dvpgl/pro/dvpgl_camera_storage.h>
+#include <dvpgl/io/dvpgl_io_cameras.h>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_projection_inspector.h>
@@ -154,7 +155,7 @@ activate ()
 
       const vpgl_perspective_camera<double> *pcam;
 
-      pcam = cam_storage->get_camera()->cast_to_perspective_camera();
+      pcam = dvpgl_cast_to_perspective_camera(cam_storage->get_camera());
       if(!pcam) {
         vcl_cerr << "Error: tool requires a perspective camera" << vcl_endl;
         return;
