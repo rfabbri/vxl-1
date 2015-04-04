@@ -33,7 +33,7 @@ AUX_SOURCE_DIRECTORY(Templates mw_sources)
 
 ADD_LIBRARY(mw_algo ${mw_algo_sources})
 
-TARGET_LINK_LIBRARIES(mw_algo mw vidpro1 bgui vil dbil_algo dbdet_pro dbgl_algo brct dvpgl_algo dbecl dbcsi dbdif_algo dbspi dbul)
+TARGET_LINK_LIBRARIES(mw_algo mw vidpro1 bgui vil dbil_algo dbdet_pro dbgl_algo brct dvpgl_algo dbecl dbcsi dvpgl_io dbdif_algo dbspi dbul)
 
 IF( BUILD_TESTING )
   SUBDIRS(tests)
