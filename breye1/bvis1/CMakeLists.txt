@@ -47,7 +47,7 @@ AUX_SOURCE_DIRECTORY(Templates bvis1_sources)
 
 ADD_LIBRARY(bvis1  ${bvis1_sources})
 
-TARGET_LINK_LIBRARIES(bvis1 vidpro1 bgui mvl)
+TARGET_LINK_LIBRARIES(bvis1 vidpro1 vidl1 bgui mvl)
 
 
 IF( BUILD_EXAMPLES )
