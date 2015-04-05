@@ -17,6 +17,7 @@
 #include <dbsks/dbsks_xshock_detector.h>
 #include <dbsks/dbsks_xgraph_geom_model.h>
 #include <dbsks/dbsks_xgraph_ccm_model.h>
+#include <dbsks/dbsks_xnode_geom_model.h>
 #include <dbsks/dbsks_xshock_ccm_likelihood.h>
 #include <dbsks/xio/dbsks_xio_xshock_det.h>
 
@@ -1763,10 +1764,23 @@ bool dbsks_detect_xgraph_using_edgemap::
 	 is_xgraph_in_BB(vcl_vector<dbsks_det_desc_xgraph_sptr > dets)
 
 {
+
 	if(dets.size()==0)
 		return false;
 	vcl_cout << "\n Checking BB and Traget Location \n"; 
 	int root_id = xgraph_geom->root_vid();
+
+	dbsks_xnode_geom_model_sptr xnode_geom = this->xgraph_geom->map_node2geom()[root_id];
+    double min_psi, max_psi;
+    double min_radius, max_radius;
+    double min_phi, max_phi;
+    double min_phi_diff, max_phi_diff;
+    double graph_size;
+    xnode_geom->get_param_range(min_psi, max_psi, min_radius, max_radius, 
+      min_phi, max_phi, min_phi_diff, max_phi_diff, graph_size);
+
+	vcl_cout << "valid radius range: [" << min_radius <<", " << max_radius << "]\n";
+
 	int max_num = vnl_math::min(int(dets.size()), 3);
 	double center_x = (bb_coordinates[0] + bb_coordinates[2]) /2 ,  center_y = (bb_coordinates[1] + bb_coordinates[3]) /2;
 	int min_x = bb_coordinates[0], min_y = bb_coordinates[1], max_x = bb_coordinates[2], max_y = bb_coordinates[3];
@@ -1777,10 +1791,14 @@ bool dbsks_detect_xgraph_using_edgemap::
 		double x, y, psi, phi, radius;
 		xv->descriptor(xv->edge_list().front())->get(x, y, psi, phi, radius);
 
-		if(x > min_x && x < max_x && y > min_y && y < max_y && vcl_sqrt((center_x - x)*(center_x - x) + (center_y - y)*(center_y - y))<40)
+		double cur_xgraph_size = vcl_sqrt(dets[i]->xgraph()->area());
+	//actual_xgraph->scale_up(0, 0, target_xgraph_size / cur_xgraph_size);
+		radius *= (graph_size/cur_xgraph_size);
+
+		if(x > min_x && x < max_x && y > min_y && y < max_y && vcl_sqrt((center_x - x)*(center_x - x) + (center_y - y)*(center_y - y))<40  && radius > min_radius-2 && radius < max_radius+2)
 			return true;
 		else
-			vcl_cout << "\nDetection fall off target BB: x = " << x << " y = "<< y << " \n"; 
+			vcl_cout << "\nDetection invalid: x = " << x << " y = "<< y << " cannonical radius = "<< radius <<" \n"; 
 	}
 
 	return false;
