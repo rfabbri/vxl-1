@@ -3,6 +3,7 @@
 
 #include <vpgl/vpgl_proj_camera.h>
 #include <vpgl/vpgl_perspective_camera.h>
+#include <vpgl/io/vpgl_io_proj_camera.h>
 #include <vsl/vsl_binary_io.h>
 
 
@@ -38,7 +39,7 @@ class dvpgl_proj_camera_vsl
   short version() const {return 1;}
 
   //: Print an ascii summary to the stream
-  void print_summary(vcl_ostream &os) const { os << *this; }
+  void print_summary(vcl_ostream &os) const { os << *this->get(); }
 
   //: Return a platform independent string identifying the class
   virtual vcl_string is_a() const { return vcl_string("vpgl_proj_camera"); }
@@ -61,11 +62,13 @@ class dvpgl_proj_camera_vsl
   virtual ~dvpgl_proj_camera_vsl() { delete cam_; }
 
   vpgl_proj_camera<T> * get() { return cam_; }
+  const vpgl_proj_camera<T> * get() const { return cam_; }
   void set(vpgl_proj_camera<T> *c) { assert (c); cam_ = c; }
 
   //: Clone `this': creation of a new object and initialization
   //  See Prototype pattern
   virtual dvpgl_proj_camera_vsl<T>* clone(void) const { return new dvpgl_proj_camera_vsl<T>(*this); }
+
 
  protected:
   vpgl_proj_camera<T> *cam_;
