@@ -106,6 +106,7 @@ public:
 
   double compute_appearance_cost_v2(dbsksp_xshock_graph_sptr& cur_xgraph, vil_image_view<vxl_byte>& cur_image, dbsksp_xshock_graph_sptr prev_xgraph, vil_image_view<vxl_byte>& prev_image);
 
+  bool is_xgraph_in_BB(vcl_vector<dbsks_det_desc_xgraph_sptr > dets);
 public:
   vcl_string image_file;
   vcl_string prev_image_file;
@@ -162,7 +163,7 @@ public:
 
   vcl_vector<int> appearance_model_node_id;
   vcl_vector<int> appearance_model_node_value;
-  vcl_vector<int> bb_coordinates;
+  vcl_vector<int> bb_coordinates; // min_x, min_y, max_x, max_y
 
 protected:
   
