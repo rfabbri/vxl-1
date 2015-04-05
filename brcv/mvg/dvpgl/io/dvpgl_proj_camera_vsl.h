@@ -59,6 +59,17 @@ class dvpgl_proj_camera_vsl
   vpgl_proj_camera<t> *cam_;
 };
 
+//: Allows derived class to be loaded by base-class pointer
+//  A loader object exists which is invoked by calls
+//  of the form "vsl_b_read(os,base_ptr)".  This loads derived class
+//  objects from the disk, places them on the heap and
+//  returns a base class pointer.
+//  In order to work the loader object requires
+//  an instance of each derived class that might be
+//  found.  This function gives the model class to
+//  the appropriate loader.
+template <class T>
+void vsl_add_to_binary_loader(dvpgl_proj_camera_vsl<T> const& b);
 
 
 #endif // dvpgl_proj_camera_vsl_h_

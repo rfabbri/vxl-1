@@ -6,6 +6,7 @@
 #include <vpgl/vpgl_camera.h>
 #include <vpgl/io/vpgl_io_proj_camera.h>
 #include <vpgl/io/vpgl_io_camera.h>
+#include <dvpgl/io/dvpgl_perspective_camera_vsl.h>
 
 //: Constructor
 dvpgl_camera_storage::dvpgl_camera_storage()
@@ -43,7 +44,6 @@ dvpgl_camera_storage::b_write(vsl_b_ostream &os) const
 {
   vsl_b_write(os, version());
   bpro1_storage::b_write(os);
-  // no way to support perspective camera right now XXX
   vsl_b_write(os, *camera_); 
   // to use the new one, uncomment:
   // vsl_b_write(os, static_cast<vpgl_camera<double> *> (camera_) ); 
@@ -64,7 +64,7 @@ dvpgl_camera_storage::b_read(vsl_b_istream &is)
   case 1:
   {
     bpro1_storage::b_read(is);
-    vsl_b_read(is, *camera_);   // I/O is not polymorphic this way - no perspective support? XXX
+    vsl_b_read(is, *camera_);  
       //    to use the new one, can try this, but assumes type vcl_string in
       //    file, which is not the case for the legacy I/O
 //    vpgl_camera<double> *basecam;
@@ -87,9 +87,8 @@ void
 dvpgl_camera_storage::register_binary_io() const
 {
   if(!registered_){
-    // XXX
-    vsl_add_to_binary_loader(vpgl_proj_camera<double>());
-    vsl_add_to_binary_loader(vpgl_perspective_camera<double>());
+    vsl_add_to_binary_loader(dvpgl_proj_camera_vsl<double>());
+    vsl_add_to_binary_loader(dvpgl_perspective_camera_vsl<double>());
     // TODO add affine and other specializations here to support their IO when available
     registered_ = true;
   }

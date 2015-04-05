@@ -51,5 +51,14 @@ class dvpgl_perspective_camera_vsl : public dvpgl_proj_camera_vsl<T>
 
 };
 
+//: Binary save
+template <class T>
+void vsl_b_write(vsl_b_ostream &os, const dvpgl_perspective_camera_vsl<T>* p);
+
+
+//: Binary read
+template <class T>
+void vsl_b_read(vsl_b_istream &is, dvpgl_perspective_camera_vsl<T>* &p);
+
 
 #endif // dvpgl_perspective_camera_vsl_h_

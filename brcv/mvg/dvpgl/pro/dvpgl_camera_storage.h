@@ -24,7 +24,7 @@
 #include "dvpgl_camera_storage_sptr.h"
 #include <vpgl/vpgl_proj_camera.h>
 // #include <dvpgl/io/dvpgl_io_proj_camera.h>
-
+#include <dvpgl/io/dvpgl_proj_camera_vsl.h>
 
 class dvpgl_camera_storage : public bpro1_storage {
 
