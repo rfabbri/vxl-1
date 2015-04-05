@@ -160,7 +160,10 @@ execute()
 //	else
 //		is_initial = true;
 
-    if (dbsks_load_detections_from_folder(storage_folder, dets))
+	load_bb_file();
+	dbsks_load_detections_from_folder(storage_folder, dets);
+
+    if (dets.size()>0 && is_xgraph_in_BB(dets))
     {
         vcl_cout << "\nThis image has been processed. All records are loaded back.\n";
 	    if(b_rank_order_results)
@@ -391,7 +394,7 @@ bool dbsks_detect_xgraph_using_edgemap::
 load_bb_file()
 {
 	vcl_ifstream myfile (this->bb_file.c_str());
-	vcl_cout << this->xgraph_appearance_file << vcl_endl;
+	vcl_cout << "Loading BB:"<< this->bb_file << vcl_endl;
 	vcl_string line;
 	if (myfile.is_open())
 	{
@@ -409,6 +412,8 @@ load_bb_file()
 		vcl_cout << "Unable to open BB file" <<vcl_endl;
 		return false;
 	}
+	vcl_cout << "Done Loading BB file\n";
+	vcl_cout << "BB coordinates: "<< bb_coordinates[0]<< " "<< bb_coordinates[1]<< " "<< bb_coordinates[2]<< " "<< bb_coordinates[3]<< vcl_endl;
 	return true;
 }
 
@@ -785,15 +790,12 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
   ccm_like.set_biarc_sampler(&this->biarc_sampler);
   ccm_like.set_ccm_model(xgraph_ccm);
   vcl_cout << " [ OK ]\n";
-
-
   
   vcl_vector<vgl_box_2d<int > > windows; // list of detection windows
 
+  bool is_target_valid = true;
   if(prev_dets.empty())
   {
-
-	  load_bb_file();
 
 	  //> Compute window (rectangular boxes) from input bounding box
 	  vcl_cout << "\n> Computing (rectangular) window from input bounding box...";
@@ -818,6 +820,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
   else
   {
 
+	is_target_valid = is_xgraph_in_BB(prev_dets);
 	// allocate window conners based on best prev dets
 	  int w_min_x = edgemap->ncols()-1;
 	  int w_max_x = 0;
@@ -835,7 +838,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 		if(prev_dets[id]->bbox()->get_max_y() > w_max_y)
 			w_max_y = prev_dets[id]->bbox()->get_max_y();
 	  }
-  	  vcl_cout << w_min_x << " " << w_max_x << " " << w_min_y << " " << w_max_y << vcl_endl;
+  	  //vcl_cout << w_min_x << " " << w_max_x << " " << w_min_y << " " << w_max_y << vcl_endl;
 	  vgl_box_2d<int> wd_0(vcl_max(w_min_x-60, 0), vcl_min(w_max_x+60, int(edgemap->ncols()-1)), vcl_max(0, w_min_y-60), vcl_min(int(edgemap->nrows()-1),w_max_y+60));
 
 	  // just save this window.
@@ -880,7 +883,7 @@ run_detection_on(const dbdet_edgemap_sptr& edgemap,
 	graph_size_vector.push_back(55);
 	graph_size_vector.push_back(70);
 	// Pipeline Update: if no previous dets, do window detection in a coarse grid search first. Refine the coarse results in the next steps
-	if(prev_dets.size()<2) // change the rule to be very few dets
+	if(prev_dets.size()<2 || !is_target_valid) // change the rule to be very few dets
 	{
 		is_initial = true;
 
@@ -1612,11 +1615,8 @@ bool dbsks_detect_xgraph_using_edgemap::
   
     vcl_vector<vgl_box_2d<int > > windows; // list of detection windows
 
-
   if(prev_dets.empty())
   {
-
-	  load_bb_file();
 
 	  //> Compute window (rectangular boxes) from input bounding box
 	  vcl_cout << "\n> Computing (rectangular) window from input bounding box...";
@@ -1757,5 +1757,32 @@ bool dbsks_detect_xgraph_using_edgemap::
   		myfile.close();
 	}
 	return true;
+}
+
+bool dbsks_detect_xgraph_using_edgemap::
+	 is_xgraph_in_BB(vcl_vector<dbsks_det_desc_xgraph_sptr > dets)
+
+{
+	if(dets.size()==0)
+		return false;
+	vcl_cout << "\n Checking BB and Traget Location \n"; 
+	int root_id = xgraph_geom->root_vid();
+	int max_num = vnl_math::min(int(dets.size()), 3);
+	double center_x = (bb_coordinates[0] + bb_coordinates[2]) /2 ,  center_y = (bb_coordinates[1] + bb_coordinates[3]) /2;
+	int min_x = bb_coordinates[0], min_y = bb_coordinates[1], max_x = bb_coordinates[2], max_y = bb_coordinates[3];
+
+	for(int i =0 ; i<max_num; i++)
+	{
+		dbsksp_xshock_node_sptr xv = dets[i]->xgraph()->node_from_id(root_id);
+		double x, y, psi, phi, radius;
+		xv->descriptor(xv->edge_list().front())->get(x, y, psi, phi, radius);
+
+		if(x > min_x && x < max_x && y > min_y && y < max_y && vcl_sqrt((center_x - x)*(center_x - x) + (center_y - y)*(center_y - y))<40)
+			return true;
+		else
+			vcl_cout << "\nDetection fall off target BB: x = " << x << " y = "<< y << " \n"; 
+	}
+
+	return false;
 }
 
