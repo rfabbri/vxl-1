@@ -3,6 +3,8 @@
 
 #include <vpgl/vpgl_proj_camera.h>
 #include <vpgl/vpgl_perspective_camera.h>
+#include <vsl/vsl_binary_io.h>
+
 
 //: Wrapper class on the new vpgl_perspective_camera to allow for old binary
 // I/O
@@ -14,6 +16,12 @@ class dvpgl_proj_camera_vsl
 
   dvpgl_proj_camera_vsl() : cam_(0) { }
 
+  //: Copy constructor.
+  dvpgl_proj_camera_vsl( const dvpgl_proj_camera_vsl& c ) :
+      cam_(c.cam_)
+  {}
+  
+
   //: Binary save self to stream.
   virtual void b_write(vsl_b_ostream &os) const { 
     assert (cam_ != 0);
@@ -23,7 +31,7 @@ class dvpgl_proj_camera_vsl
   //: Binary load self from stream.
   virtual void b_read(vsl_b_istream &is) {
     assert (cam_ != 0);
-    vsl_b_read(os, *cam_);
+    vsl_b_read(is, *cam_);
   }
 
   //: IO version number
@@ -53,10 +61,14 @@ class dvpgl_proj_camera_vsl
   virtual ~dvpgl_proj_camera_vsl() { delete cam_; }
 
   vpgl_proj_camera<T> * get() { return cam_; }
-  void set(vpgl_proj_camera<T> *c) { assert (c); return cam_ = c; }
+  void set(vpgl_proj_camera<T> *c) { assert (c); cam_ = c; }
+
+  //: Clone `this': creation of a new object and initialization
+  //  See Prototype pattern
+  virtual dvpgl_proj_camera_vsl<T>* clone(void) const { return new dvpgl_proj_camera_vsl<T>(*this); }
 
  protected:
-  vpgl_proj_camera<t> *cam_;
+  vpgl_proj_camera<T> *cam_;
 };
 
 //: Allows derived class to be loaded by base-class pointer

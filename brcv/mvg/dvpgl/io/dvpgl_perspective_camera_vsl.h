@@ -15,7 +15,7 @@ class dvpgl_perspective_camera_vsl : public dvpgl_proj_camera_vsl<T>
   dvpgl_perspective_camera_vsl() {}
 
   //: Destructor
-  virtual ~vpgl_perspective_camera() {}
+  virtual ~dvpgl_perspective_camera_vsl() {}
 
   //: Return `this' if `this' is a vpgl_perspective_camera, 0 otherwise
   // This is used by e.g. the storage class
@@ -47,7 +47,7 @@ class dvpgl_perspective_camera_vsl : public dvpgl_proj_camera_vsl<T>
 
   //: Return true if the argument matches the string identifying the class or any parent class
   virtual bool is_class(vcl_string const& cls) const
-  { return cls==is_a() || vpgl_proj_camera<double>::is_class(cls); }
+  { return cls==is_a() || vpgl_proj_camera<T>::is_class(cls); }
 
 };
 
