@@ -42,6 +42,9 @@ public:
 
   //: Binary load self from stream. Uses old dvpgl instead of vpgl
   void b_read(vsl_b_istream &is);
+
+  //: Register camera types for I/O
+  void register_binary_io() const;
   
   //: Create a copy of the object on the heap.
   // The caller is responsible for deletion
@@ -52,9 +55,9 @@ public:
 
   //: Sets the camera pointer. Storage must be allocated by the user and will be
   // deleted by _this_ class. In the future, this might be replaced by a smart pointer.
-  void set_camera( vpgl_proj_camera<double>* camera ){ camera_.set(camera); }
+  void set_camera( vpgl_proj_camera<double>* camera ){ camera_->set(camera); }
 
-  const vpgl_proj_camera<double> *get_camera(){ return camera_.get(); }
+  const vpgl_proj_camera<double> *get_camera(){ return camera_->get(); }
 
 
 protected:

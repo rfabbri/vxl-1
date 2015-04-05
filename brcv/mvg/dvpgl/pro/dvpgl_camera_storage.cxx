@@ -6,7 +6,10 @@
 #include <vpgl/vpgl_camera.h>
 #include <vpgl/io/vpgl_io_proj_camera.h>
 #include <vpgl/io/vpgl_io_camera.h>
+#include <dvpgl/io/dvpgl_proj_camera_vsl.h>
 #include <dvpgl/io/dvpgl_perspective_camera_vsl.h>
+
+bool dvpgl_camera_storage::registered_ = false;
 
 //: Constructor
 dvpgl_camera_storage::dvpgl_camera_storage()
@@ -44,7 +47,7 @@ dvpgl_camera_storage::b_write(vsl_b_ostream &os) const
 {
   vsl_b_write(os, version());
   bpro1_storage::b_write(os);
-  vsl_b_write(os, *camera_); 
+  vsl_b_write(os, camera_); 
   // to use the new one, uncomment:
   // vsl_b_write(os, static_cast<vpgl_camera<double> *> (camera_) ); 
   // vsl_b_write_dvpgl(os, camera_);  // stick to old I/O
@@ -64,7 +67,7 @@ dvpgl_camera_storage::b_read(vsl_b_istream &is)
   case 1:
   {
     bpro1_storage::b_read(is);
-    vsl_b_read(is, *camera_);  
+    vsl_b_read(is, camera_);  
       //    to use the new one, can try this, but assumes type vcl_string in
       //    file, which is not the case for the legacy I/O
 //    vpgl_camera<double> *basecam;
