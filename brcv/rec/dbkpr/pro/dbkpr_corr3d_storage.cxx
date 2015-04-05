@@ -67,7 +67,7 @@ dbkpr_corr3d_storage::b_read(vsl_b_istream &is)
     vpgl_perspective_camera<double> *pcam;
     pcam = new vpgl_perspective_camera<double>();
     vpgl_perspective_decomposition( camera_matrix, *pcam ); 
-    camera_ = pcam;
+    this->set_camera(pcam);
     vsl_b_read(is, ni_);
     vsl_b_read(is, nj_);
     tree_ = 0;
