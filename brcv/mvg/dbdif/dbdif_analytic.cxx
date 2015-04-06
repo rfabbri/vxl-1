@@ -418,7 +418,7 @@ helix_curve(
 }
 
 
-//: Defines the curve (rcos(t), rsint(t), rcos(2*t))
+//: Defines the curve (rcos(t), rsin(t), rcos(2*t))
 // \param[in] radius Radius of the circle
 // \param[out] curve 3D Curve geometry for each theta value parameters
 // \param[out] t The actual vector of parameter values (in radians)
