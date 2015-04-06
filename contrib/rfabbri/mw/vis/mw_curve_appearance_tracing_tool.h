@@ -14,7 +14,7 @@
 #include <bgui/bgui_vsol2D_tableau.h>
 #include <bgui/bgui_vsol2D_tableau_sptr.h>
 #include <bgui/bgui_vsol_soview2D.h>
-//#include <bgui/bgui_selector_tableau_sptr.h>
+#include <bgui/bgui_selector_tableau_sptr.h>
 #include <bvis1/bvis1_tool.h>
 
 #include <vpgl/vpgl_perspective_camera.h>
@@ -23,8 +23,6 @@
 #include <dbdif/dbdif_camera.h>
 #include <dbdif/dbdif_rig.h>
 #include <mw/mw_curves.h>
-#include <mw/mw_sift_curve.h>
-#include <mw/algo/mw_sift_curve_algo.h>
 
 
 
@@ -119,20 +117,14 @@ protected:
   unsigned pn_idx_;
   unsigned current_curve_id_;
 
-  //Variables used in point correspondence establishment tool
-  vcl_vector<bool> frame_map_;  //:< boolean map that tells which views had point correspondence established for at least one curve
-  vcl_vector<unsigned> frame_numbers_;  //:< a vector of frame numbers in which point correspondence was established for at least one curve
-
   vcl_vector<vsol_polyline_2d_sptr> selected_crv_; //:< selected curve in each view (for reconstruction, etc)
-  vcl_vector<bgui_vsol_soview2D_polyline *> selected_crv_soviews_n_; //:< selected curve segments in views #3 and up
 
-  vcl_vector<vcl_vector<unsigned> > selected_pts_; //:< indexes of selected points on a curve for establishing correspondence
+  vcl_vector<bgui_vsol_soview2D_polyline *> selected_crv_soviews_n_; //:< selected curve segments in views #3 and up
 
   vsol_polyline_2d_sptr subcurve_; //:< selected curve segment
 
   bgui_vsol_soview2D_polyline *curvelet_soview_; //:< selected curve segment
   bgui_vsol_soview2D_polyline *best_match_soview_; //:< best curve fragment after a stereo match.
-  vcl_vector<bgui_vsol_soview2D_polyline *> top_5_match_soview_;
   bool selected_new_curve_;
 
   struct mycolor {
@@ -206,17 +198,10 @@ protected:
   mw_intersection_sets  isets_;
 
   bool click_selects_whole_curve_;
-  bool use_calibration_;
-  bool use_DP_;
-  bool corresp_;
 
   // Best matches
   vcl_list<bgui_vsol_soview2D_polyline *> crv_best_matches_soviews_; 
   vcl_vector<vgui_style_sptr> best_match_style_;  //:< style for curve segts
-  vgui_style_sptr point_style_; //:<style for points
-
-  // Storage for descriptors in the second frame
-  vcl_vector<mw_sift_curve> sc_img1_;
 
 private: 
   //: Some definitions are in mw_curve_appearance_tracing_tool_rec.cxx
@@ -235,9 +220,7 @@ private:
   void update_display_for_epipolar_curve_pencil();
   void reconstruct_possible_matches();
   void reconstruct_multiview();
-  void compute_descriptors();
   bool match_using_hog();
-  bool compute_and_write_selected_descriptors();
 
   void linearly_reconstruct_pts(
       const vcl_vector<vsol_point_2d_sptr> &pt_img,
