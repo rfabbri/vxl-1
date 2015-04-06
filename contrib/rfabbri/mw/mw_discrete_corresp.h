@@ -181,181 +181,179 @@ inline void vsl_print_summary(vcl_ostream &os, const mw_attributed_object &p)
 //
 struct mw_discrete_corresp {
 public:
-    typedef vcl_list< mw_attributed_object > one_corresp_list;
-    typedef vcl_list< mw_attributed_object >::iterator one_corresp_list_iter;
-    typedef vcl_list< mw_attributed_object >::const_iterator one_corresp_list_const_iter;
-    typedef vcl_vector < vcl_list< mw_attributed_object > > corresp_data;
+  typedef vcl_list< mw_attributed_object > one_corresp_list;
+  typedef vcl_list< mw_attributed_object >::iterator one_corresp_list_iter;
+  typedef vcl_list< mw_attributed_object >::const_iterator one_corresp_list_const_iter;
+  typedef vcl_vector < vcl_list< mw_attributed_object > > corresp_data;
 
-mw_discrete_corresp(unsigned num_objs0, unsigned num_objs1) 
-:
-    corresp_(num_objs0+1),
-        num_counterdomain_(num_objs1+1),
-        cksum_(num_objs0+2*num_objs1) // arbitrary hash.
-    { }
-    mw_discrete_corresp() {}
-    ~mw_discrete_corresp() {}
+  mw_discrete_corresp(unsigned num_objs0, unsigned num_objs1) 
+     :
+     corresp_(num_objs0+1),
+     num_counterdomain_(num_objs1+1),
+     cksum_(num_objs0+2*num_objs1) // arbitrary hash.
+  { }
+  mw_discrete_corresp() {}
+  ~mw_discrete_corresp() {}
 
-    void set_size(unsigned num_objs0, unsigned num_objs1) 
-    { corresp_.resize(num_objs0+1); num_counterdomain_ = num_objs1+1; }
+  void set_size(unsigned num_objs0, unsigned num_objs1) 
+  { corresp_.resize(num_objs0+1); num_counterdomain_ = num_objs1+1; }
 
-    //: Set a checksum for the objects in the domain and counter-domain. This is
-    // to ensure this correspondence is for the objects it was intended for.
-    void set_checksum(unsigned long long c) { cksum_ = c;}
-    unsigned long checksum() const {return cksum_; }
+  //: Set a checksum for the objects in the domain and counter-domain. This is
+  // to ensure this correspondence is for the objects it was intended for.
+  void set_checksum(unsigned long long c) { cksum_ = c;}
+  unsigned long checksum() const {return cksum_; }
 
-    //: adds object, testing if is unique, and also resize corresp. list if needed
-    bool add_unique(const mw_attributed_object &e, unsigned i, 
-                    vcl_list<mw_attributed_object>::iterator *itr);
+  //: adds object, testing if is unique, and also resize corresp. list if needed
+  bool add_unique(const mw_attributed_object &e, unsigned i, 
+      vcl_list<mw_attributed_object>::iterator *itr);
 
-    void threshold_by_cost(double cost);
-    void threshold_by_cost_lteq(double cost);
-    void sort();
+  void threshold_by_cost(double cost);
+  void threshold_by_cost_lteq(double cost);
+  void sort();
 
-    //: \param[in] maxmin : if true, keep only max cost. if false, keep only min
-    // cost.
-    void keep_only_extreme_cost(bool keep_max)
-    {
-        sort();
-        for (unsigned i=0; i < n0(); ++i) {
-            if (corresp_[i].empty())
-                continue;
-            mw_attributed_object attr;
-            if (keep_max)
-                attr = corresp_[i].back();
-            else
-                attr = corresp_[i].front();
-            corresp_[i].clear();
-            corresp_[i].push_back(attr);
-        }
+  //: \param[in] maxmin : if true, keep only max cost. if false, keep only min
+  // cost.
+  void keep_only_extreme_cost(bool keep_max)
+  {
+    sort();
+    for (unsigned i=0; i < n0(); ++i) {
+      if (corresp_[i].empty())
+        continue;
+      mw_attributed_object attr;
+      if (keep_max)
+        attr = corresp_[i].back();
+      else
+        attr = corresp_[i].front();
+      corresp_[i].clear();
+      corresp_[i].push_back(attr);
     }
+  }
 
-    //: Use lowe-style disambiguation, i.e.,
-    // keep only the match having max #votes,
-    // if this #votes is better than the ratio*#votes of second best.
-    //
-    // If there is no second best to compare, demand that the match be way beyond
-    // lonely_threshold.
-    //
-    // Extremes behavior is as follows:
-    //
-    // With ratio == 0, the behavior is that of keeping the max cost.
-    //
-    // With ratio != 0 and: 
-    //    - lonely_threshold == infinity, the behavior is to never include loners
-    //    - lonely_threshold == 0, the behavior is to always include loners
-    //
-    // With ratio == infinity and lonely_threshold != infinity, the behavior is to
-    // never include correspondences having a second best, no matter how bad the
-    // second best is.
-    //
-    // This assumes there are no correspondences with 0 or Inf cost.
-    void keep_only_unambiguous_max(double ratio=1.5, double lonely_threshold = 5.0);
+  //: Use lowe-style disambiguation, i.e.,
+  // keep only the match having max #votes,
+  // if this #votes is better than the ratio*#votes of second best.
+  //
+  // If there is no second best to compare, demand that the match be way beyond
+  // lonely_threshold.
+  //
+  // Extremes behavior is as follows:
+  //
+  // With ratio == 0, the behavior is that of keeping the max cost.
+  //
+  // With ratio != 0 and: 
+  //    - lonely_threshold == infinity, the behavior is to never include loners
+  //    - lonely_threshold == 0, the behavior is to always include loners
+  //
+  // With ratio == infinity and lonely_threshold != infinity, the behavior is to
+  // never include correspondences having a second best, no matter how bad the
+  // second best is.
+  //
+  // This assumes there are no correspondences with 0 or Inf cost.
+  void keep_only_unambiguous_max(double ratio=1.5, double lonely_threshold = 5.0);
 
-    //: returns the total number of correspondences.
-    unsigned num_corresps() const
-    {
-        unsigned sum = 0;
-        for (unsigned i=0; i < n0(); ++i) {
-            sum += corresp_[i].size();
-        }
-        return sum;
+  //: returns the total number of correspondences.
+  unsigned num_corresps() const
+  {
+    unsigned sum = 0;
+    for (unsigned i=0; i < n0(); ++i) {
+      sum += corresp_[i].size();
     }
-    const one_corresp_list & operator[](unsigned i) const { assert (i < n0()); return corresp_[i]; }
-    one_corresp_list & operator[](unsigned i) { assert (i < n0()); return corresp_[i]; }
+    return sum;
+  }
+  const one_corresp_list & operator[](unsigned i) const { assert (i < n0()); return corresp_[i]; }
+  one_corresp_list & operator[](unsigned i) { assert (i < n0()); return corresp_[i]; }
 
-    // todo: add as heap / sorted insert
+  // todo: add as heap / sorted insert
 
-    // Functions to be moved to algo ----------------------------------------
+  // Functions to be moved to algo ----------------------------------------
 
-    vcl_list<mw_attributed_object>::const_iterator 
-    find_right_corresp_mincost(unsigned p1_idx, const mw_discrete_corresp *gt) const;
+  vcl_list<mw_attributed_object>::const_iterator 
+  find_right_corresp_mincost(unsigned p1_idx, const mw_discrete_corresp *gt) const;
 
-    void 
-    percentage_of_matches_above_truth(unsigned &n, unsigned &n_valid, const mw_discrete_corresp *gt) const;
+  void 
+  percentage_of_matches_above_truth(unsigned &n, unsigned &n_valid, const mw_discrete_corresp *gt) const;
 
-    void
-    number_of_pts1_with_gt_among_any_candidates(unsigned &n_w_gt, const mw_discrete_corresp *gt) const;
+  void
+  number_of_pts1_with_gt_among_any_candidates(unsigned &n_w_gt, const mw_discrete_corresp *gt) const;
 
-    //: computes ROC statistics (TP, FP, TN, FN, etc) on the space of
-    // correspondences being (i,k) with i=0,...,n0()-1 and k=0,...,n1()-1.
-    // Let c be (*this). Then, given a correspondence (i,k) in this space, then:
-    //
-    // if (i,k) in c[i] and in gt[i], it is a true positive.
-    // if (i,k) in c[i] and _not_ in gt[i], it is a false positive.
-    // if (i,k) not in c[i] and not in gt[i], it is a true negative.
-    // if (i,k) not in c[i] and in gt[i], it is a false negative.
-    //
-    // \remarks we treat infinite correspondence as non-existent.
-    void exp_stats(dborl_exp_stat &s, const mw_discrete_corresp *gt) const;
+  //: computes ROC statistics (TP, FP, TN, FN, etc) on the space of
+  // correspondences being (i,k) with i=0,...,n0()-1 and k=0,...,n1()-1.
+  // Let c be (*this). Then, given a correspondence (i,k) in this space, then:
+  //
+  // if (i,k) in c[i] and in gt[i], it is a true positive.
+  // if (i,k) in c[i] and _not_ in gt[i], it is a false positive.
+  // if (i,k) not in c[i] and not in gt[i], it is a true negative.
+  // if (i,k) not in c[i] and in gt[i], it is a false negative.
+  //
+  // \remarks we treat infinite correspondence as non-existent.
+  void exp_stats(dborl_exp_stat &s, const mw_discrete_corresp *gt) const;
 
 
-    //: This is a variant of exp_stats where, if c[i] contained in gt[i], then it
-    // is as if all remaining gt[i] are also in c[i]. That is, c[i] needs to hit
-    // a subset of gt[i]. 
-    //
-    // This is useful when gt[i] provide equally good alternatives for
-    // correspondences (i,k), so that we're happy if c[i] hits the ground 
-    // truth gt[i], but we don't penalize if not all gt[i] have been hit.
-    //
-    // The problem is that we will be giving more weight for the correspondences
-    // having multiple alternatives. If \p c misses that, it is penalized multiple
-    // times.
-    //
-    // \remarks We treat infinite cost correspondences as non-existent
-    void exp_stats_hitmiss(dborl_exp_stat &s, const mw_discrete_corresp *gt) const;
+  //: This is a variant of exp_stats where, if c[i] contained in gt[i], then it
+  // is as if all remaining gt[i] are also in c[i]. That is, c[i] needs to hit
+  // a subset of gt[i]. 
+  //
+  // This is useful when gt[i] provide equally good alternatives for
+  // correspondences (i,k), so that we're happy if c[i] hits the ground 
+  // truth gt[i], but we don't penalize if not all gt[i] have been hit.
+  //
+  // The problem is that we will be giving more weight for the correspondences
+  // having multiple alternatives. If \p c misses that, it is penalized multiple
+  // times.
+  //
+  // \remarks We treat infinite cost correspondences as non-existent
+  void exp_stats_hitmiss(dborl_exp_stat &s, const mw_discrete_corresp *gt) const;
 
-    bool is_gt_among_top5(unsigned p1_idx, const mw_discrete_corresp *gt) const;
+  bool is_gt_among_top5(unsigned p1_idx, const mw_discrete_corresp *gt) const;
 
-    unsigned short is_gt_among_top5_strict(unsigned p1_idx, const mw_discrete_corresp *gt) const;
+  //: \todo functional access
 
-    //: \todo functional access
+  friend vcl_ostream&  operator<<(vcl_ostream& s, const mw_discrete_corresp &c);
 
-    friend vcl_ostream&  operator<<(vcl_ostream& s, const mw_discrete_corresp &c);
+  //: Equality test
+  inline bool operator==(mw_discrete_corresp const &that) const
+  { return corresp_ == that.corresp_; }
 
-    //: Equality test
-    inline bool operator==(mw_discrete_corresp const &that) const
-    { return corresp_ == that.corresp_; }
+  // I/O ------------------------------------------------------------------
 
-    // I/O ------------------------------------------------------------------
+  //: Binary save self to stream.
+  void b_write(vsl_b_ostream &os) const;
 
-    //: Binary save self to stream.
-    void b_write(vsl_b_ostream &os) const;
+  //: Binary load self from stream.
+  void b_read(vsl_b_istream &is);
 
-    //: Binary load self from stream.
-    void b_read(vsl_b_istream &is);
+  //: Return IO version number;
+  short version() const;
 
-    //: Return IO version number;
-    short version() const;
+  //: Print an ascii summary to the stream
+  void print_summary(vcl_ostream &os) const;
 
-    //: Print an ascii summary to the stream
-    void print_summary(vcl_ostream &os) const;
+  //: Return a platform independent string identifying the class
+  vcl_string is_a() const;
 
-    //: Return a platform independent string identifying the class
-    vcl_string is_a() const;
+  //: # objects in view 1; returns (unsigned) -1  in case nothing was initialized yet
+  unsigned n_objects_view_0() const {return corresp_.size() - 1; }
+  unsigned n_objects_view_1() const {return n1() - 1; }
+  unsigned n0() const { return corresp_.size(); }
+  unsigned n1() const { return num_counterdomain_;}
 
-    //: # objects in view 1; returns (unsigned) -1  in case nothing was initialized yet
-    unsigned n_objects_view_0() const {return corresp_.size() - 1; }
-    unsigned n_objects_view_1() const {return n1() - 1; }
-    unsigned n0() const { return corresp_.size(); }
-    unsigned n1() const { return num_counterdomain_;}
+  unsigned size() const {return n_objects_view_0(); }
+  bool is_empty() const {return corresp_.size() == 0; }
 
-    unsigned size() const {return n_objects_view_0(); }
-    bool is_empty() const {return corresp_.size() == 0; }
+  // returns the number of objects (in image 1) having no correspondence.
+  // If the dummy object has no correspondence, it also counts.
+  unsigned count_empty() const { 
+    return vcl_count_if(corresp_.begin(), corresp_.end(), 
+                        vcl_mem_fun_ref(&one_corresp_list::empty )); 
+  }
 
-    // returns the number of objects (in image 1) having no correspondence.
-    // If the dummy object has no correspondence, it also counts.
-    unsigned count_empty() const { 
-        return vcl_count_if(corresp_.begin(), corresp_.end(), 
-                            vcl_mem_fun_ref(&one_corresp_list::empty )); 
-    }
-
-    void compare_and_print( const mw_discrete_corresp *gt) const;
+  void compare_and_print( const mw_discrete_corresp *gt) const;
 
 public:
-    corresp_data corresp_;
+   corresp_data corresp_;
 private:
-    unsigned num_counterdomain_;
-    unsigned long cksum_;
+   unsigned num_counterdomain_;
+   unsigned long cksum_;
 };
 
 //: Binary save vnl_my_class to stream.

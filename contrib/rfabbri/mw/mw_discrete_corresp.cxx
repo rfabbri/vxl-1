@@ -63,7 +63,7 @@ vcl_ostream&  operator<<(vcl_ostream& s, const mw_discrete_corresp &c)
   s << "===========  mw_discrete_corresp ===========\n";
   s << "# of Domain objects = num_objs0 + 1 = " << c.corresp_.size() << vcl_endl;
 
-  unsigned  max_domain_elts=100, count_nonzero=0;
+  unsigned  max_domain_elts=20, count_nonzero=0;
   unsigned  i;
   unsigned  total_n_corresp=0;
   for (i=0; i < c.corresp_.size(); ++i) {
@@ -71,7 +71,7 @@ vcl_ostream&  operator<<(vcl_ostream& s, const mw_discrete_corresp &c)
       s << "obj_id: " << i << " #corresp: " << c.corresp_[i].size() << vcl_endl;
 
       vcl_list< mw_attributed_object >::const_iterator  itr;
-      const unsigned  max_elts=10; 
+      const unsigned  max_elts=3; 
       unsigned  nn=1;
       for (itr = c.corresp_[i].begin(); itr != c.corresp_[i].end(); ++itr, ++nn) {
         if (nn > max_elts)
@@ -480,35 +480,29 @@ percentage_of_matches_above_truth(unsigned &n, unsigned &n_valid, const mw_discr
 void mw_discrete_corresp::
 number_of_pts1_with_gt_among_any_candidates(unsigned &n_w_gt, const mw_discrete_corresp *gt) const
 {
-    n_w_gt = 0;
-    for (unsigned p1_idx=0; p1_idx < this->size(); ++p1_idx) {
-        vcl_list< mw_attributed_object >::const_iterator  itr;
+  n_w_gt = 0;
+  for (unsigned p1_idx=0; p1_idx < this->size(); ++p1_idx) {
+    vcl_list< mw_attributed_object >::const_iterator  itr;
 
-        // Special cases
-        if (corresp_[p1_idx].empty()) 
-        {
-            if (gt->corresp_[p1_idx].empty())
-                ++n_w_gt;
-        } 
-        else 
-        {
-            if (!gt->corresp_[p1_idx].empty()) 
-            {
-                bool found=false;
-                for (itr = corresp_[p1_idx].begin(); itr != corresp_[p1_idx].end() && !found; ++itr) 
-                {
-                    vcl_list<mw_attributed_object>::const_iterator 
-                        result = find_if(gt->corresp_[p1_idx].begin(), gt->corresp_[p1_idx].end(), mw_attributed_object_eq(itr->obj_)); 
+    // Special cases
+    if (corresp_[p1_idx].empty()) {
+      if (gt->corresp_[p1_idx].empty())
+        ++n_w_gt;
+    } else {
+      if (!gt->corresp_[p1_idx].empty()) {
+        bool found=false;
+        for (itr = corresp_[p1_idx].begin(); itr != corresp_[p1_idx].end() && !found; ++itr) {
+          vcl_list<mw_attributed_object>::const_iterator 
+            result = find_if(gt->corresp_[p1_idx].begin(), gt->corresp_[p1_idx].end(), mw_attributed_object_eq(itr->obj_)); 
 
-                    if (result != gt->corresp_[p1_idx].end()) 
-                    {
-                        found = true;
-                        ++n_w_gt;
-                    }
-                }
-            }
+          if (result != gt->corresp_[p1_idx].end()) {
+            found = true;
+            ++n_w_gt;
+          }
         }
+      }
     }
+  }
 }
 
 //: returns pointer to the right match (p2) having the lowest cost in gt
@@ -565,66 +559,31 @@ bool mw_discrete_corresp::
 is_gt_among_top5(unsigned p1_idx, const mw_discrete_corresp *gt) const
 {
 
-    unsigned i = p1_idx;
-    vcl_list<mw_attributed_object>::const_iterator min_cost_itr = corresp_[i].end();
+  unsigned i = p1_idx;
+  vcl_list<mw_attributed_object>::const_iterator min_cost_itr = corresp_[i].end();
 
-    if (gt->corresp_[i].empty())
+  if (gt->corresp_[i].empty())
+    return true;
+
+  unsigned ncorr_atual = 0;
+  vcl_list< mw_attributed_object >::const_iterator  itr;
+  for (itr = corresp_[i].begin(); itr != corresp_[i].end() && ncorr_atual < 5; ++itr, ++ncorr_atual) {
+    if (!vnl_math_isfinite(itr->cost_))
+      continue;
+
+    vcl_list<mw_attributed_object>::const_iterator 
+      result = find_if(gt->corresp_[i].begin(), gt->corresp_[i].end(), mw_attributed_object_eq(itr->obj_)); 
+
+    if (result != gt->corresp_[i].end()) {
+      if (vnl_math_isfinite(result->cost_)) { 
         return true;
-
-    unsigned ncorr_atual = 0;
-    vcl_list< mw_attributed_object >::const_iterator  itr;
-    for (itr = corresp_[i].begin(); itr != corresp_[i].end() && ncorr_atual < 5; ++itr, ++ncorr_atual) {
-        if (!vnl_math_isfinite(itr->cost_))
-            continue;
-
-        vcl_list<mw_attributed_object>::const_iterator 
-            result = find_if(gt->corresp_[i].begin(), gt->corresp_[i].end(), mw_attributed_object_eq(itr->obj_)); 
-
-        if (result != gt->corresp_[i].end()) {
-            if (vnl_math_isfinite(result->cost_)) { 
-                return true;
-            } else {
-                vcl_cout << "Warning: non-finite cost in ground-truth corresp\n";
-            }
-        }
+      } else {
+        vcl_cout << "Warning: non-finite cost in ground-truth corresp\n";
+      }
     }
+  }
 
-    return false;
-}
-
-// Same as the function above, but is able to return more conditions
-// 0: gt exists and is not among top 5 matches
-// 1: gt does not exist
-// 2: gt exists and is among top 5 matches
-unsigned short mw_discrete_corresp::
-is_gt_among_top5_strict(unsigned p1_idx, const mw_discrete_corresp *gt) const
-{
-    unsigned i = p1_idx;
-    vcl_list<mw_attributed_object>::const_iterator min_cost_itr = corresp_[i].end();
-
-    if (gt->corresp_[i].empty())
-        return 1;
-
-    unsigned ncorr_atual = 0;
-    vcl_list< mw_attributed_object >::const_iterator  itr;
-    for (itr = corresp_[i].begin(); itr != corresp_[i].end() && ncorr_atual < 5; ++itr, ++ncorr_atual) {
-        if (!vnl_math_isfinite(itr->cost_))
-            continue;
-
-        vcl_list<mw_attributed_object>::const_iterator 
-            result = find_if(gt->corresp_[i].begin(), gt->corresp_[i].end(), mw_attributed_object_eq(itr->obj_)); 
-
-        if (result != gt->corresp_[i].end()) {
-            if (vnl_math_isfinite(result->cost_)) { 
-                return 2;
-            } else {
-                vcl_cout << "Warning: non-finite cost in ground-truth corresp\n";
-            }
-        }
-    }
-
-    return 0;
-
+  return false;
 }
 
 void 
