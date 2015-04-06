@@ -108,7 +108,7 @@ void
 mw_load_current_working_repository()
 {
   // Set this to whatever I'm working with right now.
-  mw_load_current_working_repository_curve_tracing_tool();
+  mw_load_current_working_repository_edgel_tracing_tool();
 }
 
 //: Loads the data of an mcs_stereo_instance into frames.
@@ -116,8 +116,7 @@ void
 mw_load_mcs_instance()
 {
   vcl_string data_dir="./";
-//  mw_util::camera_file_type cam_type = mw_util::MW_INTRINSIC_EXTRINSIC;
-  mw_util::camera_file_type cam_type = mw_util::MW_3X4;
+  mw_util::camera_file_type cam_type = mw_util::MW_INTRINSIC_EXTRINSIC;
   unsigned instance_id = 0;
 
   mw_curve_stereo_data_path dpath;
@@ -368,6 +367,162 @@ mw_load_current_working_repository_curve_tracing_tool()
 
   MANAGER->first_frame();
   MANAGER->post_redraw();
+
+  // Prune curves by length;
+  // TODO
+//  for (unsigned v=0; v < views.size(); ++v) {
+//  }
+}
+
+// Loads my working repository and sets visibility and active members so that I
+// can work with the edgel tracing tools immediately.
+void 
+mw_load_current_working_repository_edgel_tracing_tool()
+{
+  // load a working repository
+
+  /*
+  vcl_string data_dir = "./Downtown/video/";
+
+  vcl_string rep_fname
+    = "instance1/rep/current.rep";
+    */
+
+//  vcl_string data_dir = "/home/rfabbri/lib/data/right-dome-subset-local/";
+//  vcl_string data_dir = "/home/rfabbri/lib/data/dino/";
+//  vcl_string data_dir = "/home/rfabbri/lib/data/capitol-mcs-work/";
+
+  vcl_string data_dir = "./";
+
+  vcl_string rep_fname
+    = "rep/current-edgetracing.rep";
+
+  MANAGER->load_repository_from_file(data_dir + rep_fname);
+
+  // Instance-controlled loading not yet used ----------------------
+  mw_util::camera_file_type cam_type = mw_util::MW_INTRINSIC_EXTRINSIC;
+  unsigned instance_id = 0;
+
+  mw_curve_stereo_data_path dpath;
+  bool retval = 
+    mw_data::read_frame_data_list_txt(data_dir, &dpath, cam_type);
+  if (!retval) return;
+  vcl_cout << "Dpath:\n" << dpath << vcl_endl;
+  dbmcs_stereo_instance_views all_instances_;
+
+  retval = dbmcs_view_set::read_txt(
+      data_dir + vcl_string("/mcs_stereo_instances.txt"), 
+      &all_instances_);
+  assert(retval == true);
+  vcl_cout << "Instances:\n" << all_instances_ << vcl_endl;
+
+  dbmcs_stereo_instance_views one_instance_;
+  one_instance_.add_instance(all_instances_.instance(instance_id));
+  vcl_cout << "Loading instance[" <<  instance_id << "]: " 
+    << one_instance_ << vcl_endl;
+  dbmcs_stereo_views_sptr inst = one_instance_.instance(0);
+  
+  // TODO dialog option to not load repos.
+  vgui_dialog io_dialog("initializer options");
+
+  io_dialog.message("select initialization options:");
+
+  // create 3 views
+  int ngrids_wanted = 3;
+
+  io_dialog.field("#views", ngrids_wanted);
+  if (!io_dialog.ask()) {
+    vcl_cout << "Canceled\n";
+    return;
+  }
+  vcl_cout << "Desired #views: " << ngrids_wanted << vcl_endl;
+
+  // add grid if only one present
+  vgui_grid_tableau_sptr pgrid;
+  pgrid.vertical_cast(vgui_find_below_by_type_name(MANAGER,"vgui_grid_tableau"));
+
+  unsigned ngrids = 0;
+  vcl_cout << "Initial ngrids: " << ngrids << vcl_endl;
+  for (int i=0; i+1 < ngrids_wanted; ++i) {
+    ngrids += 1;
+    MANAGER->add_new_view(ngrids, false);
+  }
+
+  MANAGER->display_current_frame();
+
+  vcl_vector< bvis1_view_tableau_sptr > views;
+  views = MANAGER->get_views();
+
+  // make just a certain vsol visible, if any
+  // 
+  // Search for storage named vsols2Di. If any, make it active.
+
+  for (unsigned v=0; v < views.size(); ++v) {
+    vgui_selector_tableau &selector = *(views[v]->selector());
+
+    for (unsigned ii=0; ii < selector.child_names().size(); ++ii)
+      vcl_cout << selector.child_names()[ii] << "|" << vcl_endl;
+
+    // activate broken_vsols[i] with the largest possible i
+
+    vcl_string active_name;
+    for (unsigned i=50; i != static_cast<unsigned>(-1); --i) {
+      vcl_ostringstream s;
+      s << i;
+
+      vcl_string putative_name = vcl_string("vsol2D") + s.str();
+      vgui_tableau_sptr t = selector.get_tableau(putative_name);
+      if (t) {
+        active_name = putative_name;
+        break;
+      }
+    }
+
+    vcl_cout << "Activating : " << "[" << active_name << "]\n";
+    selector.set_active(active_name);
+    selector.active_to_top();
+
+    if (!selector.is_visible("mw_curve_tracer"))
+      selector.toggle("mw_curve_tracer");
+
+    // unset_visible all useless tableaux
+    for (unsigned i=0; i < selector.child_names().size(); ++i) {
+      vcl_string name = selector.child_names()[i];
+//      if (v==0 || v == 1) {
+//        if (name != active_name && name != "mw_curve_tracer" &&
+//            name != "original_image" && 
+// //           selector.get_tableau(name)->type_name() == "bgui_vsol2D_tableau" &&
+//           selector.is_visible(name)) {
+//          selector.toggle(name);
+//        }
+//      } else {
+        if (name != "mw_curve_tracer" 
+            && name != "vsol2D0" 
+            && name != "vsol2D1" 
+            && name != "vsol2D2" 
+            && name != "vsol2D3" 
+            && name != "vsol2D4" 
+            && name != "image0" 
+            && name != "image1" 
+            && name != "image2" 
+            && name != "image3" 
+            && name != "image4" 
+            && name != "image5" 
+            && name != "original_image" 
+            && name != "edgeimage0")
+          selector.toggle(name);
+//      }
+    }
+  }
+  
+
+  MANAGER->first_frame();
+  MANAGER->post_redraw();
+
+  // create empty corresp storage.
+  
+  MANAGER->repository()->new_data("mw_3_pt_corresp","corr3default");
+
 
   // Prune curves by length;
   // TODO

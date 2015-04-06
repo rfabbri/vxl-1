@@ -17,6 +17,7 @@
 void mw_misc();
 void mw_load_current_working_repository();
 void mw_load_current_working_repository_curve_tracing_tool();
+void mw_load_current_working_repository_edgel_tracing_tool();
 void mw_load_mcs_instance();
 void load_ct_spheres_dataset();
 void example_project();
