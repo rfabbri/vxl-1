@@ -31,6 +31,8 @@ public:
   dbbl_subsequence(unsigned ini, unsigned end) { set(ini, end); }
   dbbl_subsequence(unsigned ini, unsigned end, unsigned orig_id) 
   { set(ini, end); set_orig_id(orig_id);}
+  dbbl_subsequence(unsigned ini, unsigned end, unsigned orig_id, unsigned int_id)
+  { set(ini, end); set_orig_id(orig_id); set_int_id(int_id); }
 
   dbbl_subsequence() {}
 
@@ -38,11 +40,13 @@ public:
     {assert (ini < end); ini_ = ini; end_ = end; }
 
   void set_orig_id(unsigned i) { orig_id_ = i; }
+  void set_int_id(unsigned i) { int_id_ = i; }
 
   unsigned size() const { return end_ - ini_; }
   unsigned ini() const { return ini_; } 
   unsigned end() const { return end_; } 
   unsigned orig_id() const { return orig_id_; } 
+  unsigned int_id() const { return int_id_; }
   bool in_range(unsigned i) const { return i >= ini() && i < end(); }
 
 private:
@@ -52,6 +56,8 @@ private:
   unsigned end_;
   //: id of the parent sequence within a random access container of sequences
   unsigned orig_id_;
+  //: Anil: id of an intermediate sequence, to be used when needed
+  unsigned int_id_;
 };
 
 //: Given a sequence of sequences, represent a subsequence of subsequences.
@@ -112,6 +118,7 @@ inline void compose_subsequences(const dbbl_subsequence_set &a, dbbl_subsequence
                       a_subseq.ini() + b_subseq.end());
 
     ss.set_orig_id(a_subseq.orig_id());
+    ss.set_int_id(b_subseq.orig_id());
 
     b->set_subsequence(i, ss);
   }
