@@ -261,8 +261,19 @@ mw_stereo_menu::setup_menu()
 
   vgui_menu apps_menu;
 
+  apps_menu.add("Working State",mw_load_current_working_repository);
+  apps_menu.add("Working State",mw_load_current_working_repository);
+  apps_menu.add("Working State",mw_load_current_working_repository);
+  apps_menu.add("Working State",mw_load_current_working_repository);
+  apps_menu.add("Working State",mw_load_current_working_repository);
+  apps_menu.add("Working State",mw_load_current_working_repository);
+  apps_menu.add("Working State",mw_load_current_working_repository);
+  apps_menu.add("Working State",mw_load_current_working_repository);
+  apps_menu.add("Working State",mw_load_current_working_repository);
+  apps_menu.add("Working State",mw_load_current_working_repository);
   apps_menu.separator();
-  apps_menu.add("Working state",mw_load_current_working_repository);
+  apps_menu.add("Load current rep edgel tracer",mw_load_current_working_repository_edgel_tracing_tool);
+  apps_menu.add("Load current rep curve tracer",mw_load_current_working_repository_curve_tracing_tool);
   apps_menu.add("Load mcs_instance",mw_load_mcs_instance);
   apps_menu.separator();
   MENU_ADD_PROCESS_NAME("Show Contours", apps_menu);
