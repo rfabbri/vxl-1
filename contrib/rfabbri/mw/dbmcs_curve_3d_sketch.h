@@ -11,6 +11,7 @@
 #include <dbdif/dbdif_frenet.h>
 #include <mw/dbmcs_view_set.h>
 #include <mw/dbmcs_curve_3d_attributes.h>
+#include <mw/mw_util.h>
 
 // This class holds 3D curves together with attributes such as pointers to which
 // views were used to reconstruct them, etc. It is used as a basic
@@ -103,6 +104,9 @@ public:
     crv3d_ = crv3d_new;
     attr_ = attr_new;
   }
+
+  unsigned totalMatchCount_;
+  unsigned totalReconCount_;
 
 //private:
   vcl_vector< dbdif_1st_order_curve_3d > crv3d_;
