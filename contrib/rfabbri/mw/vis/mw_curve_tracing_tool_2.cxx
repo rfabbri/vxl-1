@@ -137,7 +137,7 @@ handle( const vgui_event & e,
     return handle_mouse_click(e,view);
   // else nothing selected
 
-  if (e.type == vgui_KEY_PRESS) {
+  if (e.type == vgui_KEY_PRESS && p0_) {
     switch (e.key) {
       case 's': {
           swap_p0_and_pn();
