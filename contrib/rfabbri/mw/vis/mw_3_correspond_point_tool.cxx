@@ -1,5 +1,6 @@
 #include "mw_3_correspond_point_tool.h"
 
+#include <vcl_iomanip.h>
 #include <vsol/vsol_line_2d.h>
 #include <vsol/vsol_line_2d_sptr.h>
 #include <vsol/vsol_polyline_2d.h>
@@ -50,10 +51,12 @@
 
 mw_3_correspond_point_tool::
 mw_3_correspond_point_tool()
+  :
+    mw_correspond_point_tool_basic()
 {
   gesture_query_corresp_= vgui_event_type(vgui_MOUSE_MOTION);
-  corresp_edges_style_  = vgui_style::new_style(0.5, 0.5, 1, 
-                                    5.0f/*ptsize*/, 3.0f/*linesize*/); // light Blue
+  corresp_edges_style_  = vgui_style::new_style(0.5, 1, 0.5, 
+                                    5.0f/*ptsize*/, 3.0f/*linesize*/); // Green
 
   wrongly_matched_edgels_style_ = vgui_style::new_style(1, 0, 1, 
                                     5.0f/*ptsize*/, 3.0f/*linesize*/); // Magenta
@@ -63,39 +66,24 @@ mw_3_correspond_point_tool()
   best_match_style_.push_back(vgui_style::new_style(1, 0, 1, 1.0f, 3.0f));   // Magenta
   best_match_style_.push_back(vgui_style::new_style(0, 1, 1, 1.0f, 3.0f));   // Green blue
 
-  p0_query_style_ = vgui_style::new_style(0, 0, 1, 
-                                    5.0f/*ptsize*/, 8.0f/*linesize*/); // Blue
-
-  p1_query_style_ = vgui_style::new_style(0, 0, 1, 
-                                    5.0f/*ptsize*/, 8.0f/*linesize*/); // Blue
-
-  p1_style_ = vgui_style::new_style(0.6, 1, 0.6, 
-                                    5.0f/*ptsize*/, 8.0f/*linesize*/); // Light Green
-
-  es_style_ = vgui_style::new_style(1, 1, 1, 
-                                    5.0f/*ptsize*/, 2.0f/*linesize*/); // White
-
-  es_style_gt_ = vgui_style::new_style(0.7, 0.7, 0.7, 
-                                    5.0f/*ptsize*/, 2.0f/*linesize*/); // Gray
-
-  srm_allcrvs_style_ = vgui_style::new_style(7, 0, 0, 
-                                    5.0f/*ptsize*/, 1.5f/*linesize*/); // White
-
   //: basic stuff is in layer 50
   //: higher numbers mean higher layers
   best_match_layer_ = "layer91";
   corresp_edges_layer_ = "layer60";
-  p0_query_layer_ = "layer85";
-  p1_query_layer_ = "layer85";
+
+
+  // Extras part of tool -----------------------------
+  es_style_ = vgui_style::new_style(1, 1, 1, 
+                                    5.0f/*ptsize*/, 2.0f/*linesize*/); // White
+  es_style_gt_ = vgui_style::new_style(0.7, 0.7, 0.7, 
+                                    5.0f/*ptsize*/, 2.0f/*linesize*/); // Gray
+  srm_allcrvs_style_ = vgui_style::new_style(7, 0, 0, 
+                                    5.0f/*ptsize*/, 1.5f/*linesize*/); // White
+
   es_layer_ = "layer70";
   es_layer_gt_ = "layer69";
   srm_allcrvs_layer_ = "layer65";
-
   es_gt_ = 0;
-
-
-//  es_.resize(nviews_,0);
-  
 }
 
 vcl_string mw_3_correspond_point_tool::
@@ -104,11 +92,30 @@ name() const
   return "Multiview _3_ point correspond";
 }
 
-void   
-mw_3_correspond_point_tool::
-activate ()
+void mw_3_correspond_point_tool::
+activate()
 {
   mw_correspond_point_tool_basic::activate();
+
+  p_query_style_.resize(nviews_);
+  p_query_soview_.resize(nviews_);
+  p_corresp_soview_.resize(nviews_);
+  p_query_id_.resize(nviews_, (unsigned)-1);
+  correspondents_idx_.resize(nviews_);
+  correspondents_soview_.resize(nviews_);
+  for (unsigned v=0; v < nviews_; ++v)
+    p_query_style_[v] = vgui_style::new_style(0, 0, 1, 
+                                      5.0f/*ptsize*/, 8.0f/*linesize*/); // Blue
+  p_query_layer_.resize(nviews_);
+  for (unsigned v=0; v < nviews_; ++v)
+    p_query_layer_[v] = "layer85";
+
+  lock_corresp_query_ = false;
+  for (unsigned v=0; v < nviews_; ++v) {
+    p_query_soview_[v] = 0;
+    p_corresp_soview_[v].resize(vsols_[v].size(),0);
+  }
+  query_is_corresp_ = false;
 
   //----------
   for (unsigned i=0; i < es_.size(); ++i)  {
@@ -124,131 +131,15 @@ activate ()
     es_gt_=0;
   }
 
-  lock_corresp_query_ = false;
-  p0_query_soview_ = 0;
-  p1_query_soview_ = 0;
-  p1_soview_= 0;
-  p1_query_is_candidate_ = false;
   synthetic_ = false;
-  synthetic_olympus_ = true;
+  synthetic_olympus_ = false;
   srm_display_full_ = false;
   srm_display_es_   = true;
-
   has_sp_ = false;
+  //----------
 
-  p0_corresp_soview_.resize(vsols_[0].size(),0);
-
-
-
-  { // get correspondence storage at view 1
-
-
-    //Prompt the user to select input/output variable
-    vgui_dialog io_dialog("Select Inputs" );
-
-
-    vcl_vector< vcl_string > input_type_list;
-    input_type_list.push_back("mw_3_pt_corresp");
-
-    io_dialog.message("Select Input(s) From Available ones:");
-    vcl_vector<int> input_choices(input_type_list.size());
-    vcl_vector< vcl_vector <vcl_string> > available_storage_classes(input_type_list.size());
-    vcl_vector< vcl_string > input_names(input_type_list.size());
-         
-    for( unsigned int i = 0 ; i < input_type_list.size(); i++ )
-    {
-      //for this input type allow user to select from available storage classes in the repository
-      available_storage_classes[i] = MANAGER->repository()->get_all_storage_class_names(input_type_list[i]);
-      available_storage_classes[i].push_back("(NONE)");
-
-      //Multiple choice - with the list of options.
-      io_dialog.choice(input_type_list[i].c_str(), available_storage_classes[i], input_choices[i]);
-    }
-
-    io_dialog.checkbox("Deal with synthetic data         CTSPHERES", synthetic_);
-    io_dialog.checkbox("Deal with synthetic data DIGICAM TURNTABLE", synthetic_olympus_);
-
-    if (!io_dialog.ask()) {
-      vcl_cout << "Canceled\n";
-      return;
-    } else {
-      vgui_dialog null_inputs("Name Missing Inputs");
-      bool found_missing = false;
-      for ( unsigned int i=0; i < input_choices.size(); i++) {
-        if( input_choices[i]+1 < (int)available_storage_classes[i].size() ) {
-          input_names[i] = available_storage_classes[i][input_choices[i]];
-          null_inputs.message((input_type_list[i]+" : "+input_names[i]).c_str());
-        }
-        else{
-          null_inputs.field(input_type_list[i].c_str(), input_names[i]);
-          found_missing = true;
-        }
-      }
-      if(found_missing)
-        null_inputs.ask();
-    }
-
-    vcl_cout << "Selected input: " << input_names[0] << " ";
-    
-    bpro1_storage_sptr 
-      p = MANAGER->repository()->get_data_by_name_at(input_names[0],frame_v_[0]);
-
-
-    p_sto_3_.vertical_cast(p);
-    if(!p_sto_3_) {
-      vcl_cerr << "Error: tool requires a valid correspondence storage" << vcl_endl;
-      return;
-    }
-    
-    corr_3_ = p_sto_3_->corresp();
-    if(!corr_3_) {
-      vcl_cerr << "Empty storage - allocating data" << vcl_endl;
-      corr_3_ = new mw_discrete_corresp_3(vsols_[0].size(),vsols_[1].size(),vsols_[2].size());
-      p_sto_3_->set_corresp(corr_3_); // storage deletes it
-    } else {
-      if (corr_3_->n0() != vsols_[0].size() || corr_3_->n1() != vsols_[1].size() ||corr_3_->n2() != vsols_[2].size()) {
-        vcl_cerr << "Error: input correspondence is not valid for current edgels\n" 
-          << vcl_endl;
-        vcl_cerr << "corresp size n0: " << corr_3_->n0() << vcl_endl;
-        vcl_cerr << "vsols size 0: " << vsols_[0].size() << vcl_endl;
-        return;
-      }
-    }
-
-    vcl_cout << "Hashing corresp 3...";
-    vcl_cout.flush();
-    corr_3_->hash();
-    vcl_cout << "done\n";
-
-    vcl_cout << "Corresp NAME: " << p_sto_3_->name() << vcl_endl;
-    // vcl_cout << "Corresp: " << " : \n" << *corr_ << vcl_endl;
-  }
-  
-
-  // get image storage at all 3 views
-  for (unsigned i=0; i < nviews_; ++i) {
-    bpro1_storage_sptr 
-      p = MANAGER->repository()->get_data_at("image",frame_v_[i]);
-
-    vidpro1_image_storage_sptr frame_image;
-    frame_image.vertical_cast(p);
-
-    if (!frame_image) {
-      if (!synthetic_ && !synthetic_olympus_) {
-        vcl_cout << "ERROR: no images in view " << i << vcl_endl;
-        return;
-      }
-    } else {
-      images_.push_back(frame_image->get_image());
-      ncols_ = images_[i]->ni();
-      nrows_ = images_[i]->nj();
-
-      vcl_cout << "Image view # " << i << "  ";
-      vcl_cout << "Nrows: " << nrows_;
-      vcl_cout << "  Ncols: " << ncols_ << vcl_endl;
-    }
-  }
-
+  get_corresp(); 
+  get_images();
 
   // Generate synthetic ground-truth for inspection, if requested
   if (synthetic_ || synthetic_olympus_) {
@@ -299,10 +190,123 @@ activate ()
   }
 
   // coloring of points in image 0 having any correspondents
-
   color_pts0_with_correspondents();
-
 }
+
+void mw_3_correspond_point_tool::
+get_corresp()
+{ // get correspondence storage at view 1
+
+
+  //Prompt the user to select input/output variable
+  vgui_dialog io_dialog("Select Inputs" );
+
+
+  vcl_vector< vcl_string > input_type_list;
+  input_type_list.push_back("mw_3_pt_corresp");
+
+  io_dialog.message("Select Input(s) From Available ones:");
+  vcl_vector<int> input_choices(input_type_list.size());
+  vcl_vector< vcl_vector <vcl_string> > available_storage_classes(input_type_list.size());
+  vcl_vector< vcl_string > input_names(input_type_list.size());
+       
+  for( unsigned int i = 0 ; i < input_type_list.size(); i++ )
+  {
+    //for this input type allow user to select from available storage classes in the repository
+    available_storage_classes[i] = MANAGER->repository()->get_all_storage_class_names(input_type_list[i]);
+    available_storage_classes[i].push_back("(NONE)");
+
+    //Multiple choice - with the list of options.
+    io_dialog.choice(input_type_list[i].c_str(), available_storage_classes[i], input_choices[i]);
+  }
+
+  io_dialog.checkbox("Deal with synthetic data         CTSPHERES", synthetic_);
+  io_dialog.checkbox("Deal with synthetic data DIGICAM TURNTABLE", synthetic_olympus_);
+
+  if (!io_dialog.ask()) {
+    vcl_cout << "Canceled\n";
+    return;
+  } else {
+    vgui_dialog null_inputs("Name Missing Inputs");
+    bool found_missing = false;
+    for ( unsigned int i=0; i < input_choices.size(); i++) {
+      if( input_choices[i]+1 < (int)available_storage_classes[i].size() ) {
+        input_names[i] = available_storage_classes[i][input_choices[i]];
+        null_inputs.message((input_type_list[i]+" : "+input_names[i]).c_str());
+      }
+      else{
+        null_inputs.field(input_type_list[i].c_str(), input_names[i]);
+        found_missing = true;
+      }
+    }
+    if(found_missing)
+      null_inputs.ask();
+  }
+
+  vcl_cout << "Selected input: " << input_names[0] << " ";
+  
+  bpro1_storage_sptr 
+    p = MANAGER->repository()->get_data_by_name_at(input_names[0],frame_v_[0]);
+
+
+  p_sto_3_.vertical_cast(p);
+  if(!p_sto_3_) {
+    vcl_cerr << "Error: tool requires a valid correspondence storage" << vcl_endl;
+    return;
+  }
+  
+  corr_3_ = p_sto_3_->corresp();
+  if(!corr_3_) {
+    vcl_cerr << "Empty storage - allocating data" << vcl_endl;
+    corr_3_ = new mw_discrete_corresp_3(vsols_[0].size(),vsols_[1].size(),vsols_[2].size());
+    p_sto_3_->set_corresp(corr_3_); // storage deletes it
+  } else {
+    if (corr_3_->n0() != vsols_[0].size() || corr_3_->n1() != vsols_[1].size() ||corr_3_->n2() != vsols_[2].size()) {
+      vcl_cerr << "Error: input correspondence is not valid for current edgels\n" 
+        << vcl_endl;
+      vcl_cerr << "corresp size n0: " << corr_3_->n0() << vcl_endl;
+      vcl_cerr << "vsols size 0: " << vsols_[0].size() << vcl_endl;
+      return;
+    }
+  }
+
+  vcl_cout << "Hashing corresp 3...";
+  vcl_cout.flush();
+  corr_3_->hash();
+  vcl_cout << "done\n";
+
+  vcl_cout << "Corresp NAME: " << p_sto_3_->name() << vcl_endl;
+  // vcl_cout << "Corresp: " << " : \n" << *corr_ << vcl_endl;
+}
+
+void mw_3_correspond_point_tool::
+get_images()
+{
+  // get image storage at all 3 views
+  for (unsigned i=0; i < nviews_; ++i) {
+    bpro1_storage_sptr 
+      p = MANAGER->repository()->get_data_at("image",frame_v_[i]);
+
+    vidpro1_image_storage_sptr frame_image;
+    frame_image.vertical_cast(p);
+
+    if (!frame_image) {
+      if (!synthetic_ && !synthetic_olympus_) {
+        vcl_cout << "ERROR: no images in view " << i << vcl_endl;
+        return;
+      }
+    } else {
+      images_.push_back(frame_image->get_image());
+      ncols_ = images_[i]->ni();
+      nrows_ = images_[i]->nj();
+
+      vcl_cout << "Image view # " << i << "  ";
+      vcl_cout << "Nrows: " << nrows_;
+      vcl_cout << "  Ncols: " << ncols_ << vcl_endl;
+    }
+  }
+}
+
 
 void   
 mw_3_correspond_point_tool::
@@ -320,7 +324,6 @@ bool mw_3_correspond_point_tool::
 handle( const vgui_event & e, 
         const bvis1_view_tableau_sptr& view )
 {
-
   if (e.type == vgui_KEY_PRESS) {
     vcl_cout << "Frame index: " << view->frame() << vcl_endl;
     return handle_key(e.key);
@@ -340,11 +343,9 @@ handle( const vgui_event & e,
     }
   }
 
-
   if (gesture0_(e)) {
     if ( !handle_mouse_event_whatever_view(e,view) )
       return false;
-
 
     if (view->frame() == frame_v_[0]) {
       handle_mouse_event_at_view_0(e,view);
@@ -352,9 +353,9 @@ handle( const vgui_event & e,
     } else if (view->frame() == frame_v_[1]) {
       handle_mouse_event_at_view_1(e,view);
     } else { // 3rd view
-      vcl_cout << "3rd view...\n";
+      vcl_cout << "3rd view\n";
+      handle_mouse_event_at_view_2(e,view);
     }
-
   }
 
   //  We are not interested in other events,
@@ -368,29 +369,43 @@ handle_key(vgui_key key)
   bool base_stat = mw_correspond_point_tool_basic::handle_key(key);
 
   switch (key) {
-
-#if 0
     case 277: // Del
-      if (p1_query_is_candidate_) {
-        vcl_cout << "Removing " <<  p0_query_idx_ << ",  " << *p1_query_itr_ <<  vcl_endl;
-        corr_->corresp_[p0_query_idx_].erase(p1_query_itr_);
-        p1_query_is_candidate_ = false;
+      if (query_is_corresp_) {
+        vcl_cout << "Removing " 
+          << p_query_id_[0] << " "
+          << p_query_id_[1] << " "
+          << p_query_id_[2]
+          << vcl_endl;
 
-        // - delete this guy from correspondents soview list
+        assert(corr_3_->l_.fullp(p_query_id_[0],p_query_id_[1],p_query_id_[2]));
+        corr_3_->l_.erase(vbl_make_triple(p_query_id_[0],p_query_id_[1],p_query_id_[2]));
+        query_is_corresp_ = false;
 
-        tab_[1]->remove(*(correspondents_idx_[p1_query_idx_]));
+        // - delete this guy from correspondents soview list, if there.
 
-        correspondents_soview_.erase(correspondents_idx_[p1_query_idx_]);
-        correspondents_idx_.erase(p1_query_idx_);
-        tab_[1]->remove(p1_query_soview_);
-        p1_query_soview_ = 0;
-
-        if (corr_->corresp_[p0_query_idx_].empty() && 
-            p0_corresp_soview_[p0_query_idx_] != 0) {
-          tab_[0]->remove(p0_corresp_soview_[p0_query_idx_]);
-          p0_corresp_soview_[p0_query_idx_] = 0;
+        vcl_map<unsigned, vcl_list<bgui_vsol_soview2D_line_seg *>::iterator >::iterator 
+          itr = correspondents_idx_[1].find(p_query_id_[1]);
+        if (itr != correspondents_idx_[1].end() && *((*itr).second) != 0) {
+          tab_[1]->remove(*(correspondents_idx_[1][p_query_id_[1]]));
+          correspondents_soview_[1].erase(correspondents_idx_[1][p_query_id_[1]]);
+          correspondents_idx_[1].erase(p_query_id_[1]);
         }
 
+        itr = correspondents_idx_[2].find(p_query_id_[2]);
+        if (itr != correspondents_idx_[2].end() && *((*itr).second) != 0) {
+          tab_[2]->remove(*(correspondents_idx_[2][p_query_id_[2]]));
+          correspondents_soview_[2].erase(correspondents_idx_[2][p_query_id_[2]]);
+          correspondents_idx_[2].erase(p_query_id_[2]);
+        }
+
+        corr_3_->hash();
+        if (corr_3_->triplets(0, p_query_id_[0]).empty() && 
+            p_corresp_soview_[0][p_query_id_[0]] != 0) {
+          tab_[0]->remove(p_corresp_soview_[0][p_query_id_[0]]);
+          p_corresp_soview_[0][p_query_id_[0]] = 0;
+        }
+
+        tab_[2]->post_redraw();
         tab_[1]->post_redraw();
         tab_[0]->post_redraw();
       } else {
@@ -400,48 +415,66 @@ handle_key(vgui_key key)
       return true;
       break;
 
-    case 278: // Ins
-      if (!p1_query_is_candidate_) {
+    case 275: // Home (think "Ins", but macs don't have ins, so I used home)
+      if (!query_is_corresp_) {
+        bool tuplet_not_selected = false;
+        for (unsigned v=0; v < nviews_; ++v) {
+          if (p_query_id_[v] == (unsigned)-1) {
+            vcl_cout << "Error: edgels must be selected in all views prior to inserting.\n";
+            tuplet_not_selected = true;
+            break;
+          }
+        }
+        if (tuplet_not_selected)
+          break;
 
-        vcl_list<mw_attributed_object>::iterator itr;
         bool  stat = 
-          corr_->add_unique( mw_attributed_object(p1_query_idx_), p0_query_idx_, &itr);
+          corr_3_->l_.put(p_query_id_[0],p_query_id_[1],p_query_id_[2], mw_match_attribute());
 
         if (stat) {
-          vcl_cout << "Inserting " << p0_query_idx_ << ",  " << *itr << vcl_endl;
+          vcl_cout << "Inserting " 
+            << p_query_id_[0] << " "
+            << p_query_id_[1] << " "
+            << p_query_id_[2]
+            << vcl_endl;
 
-          p1_query_is_candidate_ = true;
-
-          p1_query_itr_ = itr;
-          p1_query_idx_ = itr->obj_;
+          query_is_corresp_ = true;
 
           tab_[1]->set_current_grouping( corresp_edges_layer_.c_str() );
           // - add this guy to correspondents soview list; breaking sort order
-          correspondents_soview_.push_back(
-              tab_[1]->add_vsol_line_2d(vsols_orig_cache_[1][itr->obj_]));
-          correspondents_soview_.back()->set_style(corresp_edges_style_);
-          correspondents_idx_[p1_query_idx_] = --correspondents_soview_.end();
+          correspondents_soview_[1].push_back(
+              tab_[1]->add_vsol_line_2d(vsols_orig_cache_[1][p_query_id_[1]]));
+          correspondents_soview_[1].back()->set_style(corresp_edges_style_);
+          correspondents_idx_[1][p_query_id_[1]] = --correspondents_soview_[1].end();
+
+          tab_[2]->set_current_grouping(corresp_edges_layer_.c_str() );
+          correspondents_soview_[2].push_back(
+              tab_[2]->add_vsol_line_2d(vsols_orig_cache_[2][p_query_id_[2]]));
+          correspondents_soview_[2].back()->set_style(corresp_edges_style_);
+          correspondents_idx_[2][p_query_id_[2]] = --correspondents_soview_[2].end();
 
           tab_[0]->set_current_grouping(corresp_edges_layer_.c_str() );
-          //p1_query_soview_  remains the same as before
-          if (p0_corresp_soview_[p0_query_idx_] == 0) {
-            p0_corresp_soview_[p0_query_idx_] = tab_[0]->add_vsol_line_2d(
-                vsols_orig_cache_[0][p0_query_idx_]);
-            p0_corresp_soview_[p0_query_idx_]->set_style(corresp_edges_style_);
+          if (p_corresp_soview_[0][p_query_id_[0]] == 0) {
+            p_corresp_soview_[0][p_query_id_[0]] = tab_[0]->add_vsol_line_2d(
+                vsols_orig_cache_[0][p_query_id_[0]]);
+            p_corresp_soview_[0][p_query_id_[0]]->set_style(corresp_edges_style_);
           }
 
-          tab_[1]->post_redraw();
           tab_[0]->post_redraw();
+          tab_[1]->post_redraw();
+          tab_[2]->post_redraw();
+          corr_3_->hash();
         } else {
-          vcl_cout << "Error/Insert: point is already in corresp datastructure\n";
-          vcl_cout << "p1_query_idx_:" << p1_query_idx_ << "  p0_query_idx_:" 
-            << p0_query_idx_ << vcl_endl;
+          vcl_cout << "Error/Insert: tuplet is already in corresp datastructure\n";
+          vcl_cout << "p_query_id_[0]:" << p_query_id_[0] 
+            << "  p_query_id_[1]:" << p_query_id_[1] 
+            << "  p_query_id_[2]:" << p_query_id_[2] 
+            << vcl_endl;
         }
       } else {
         vcl_cout << "Selected correspondence already inserted\n";
       }
       break;
-#endif
 
     case 'p': // print misc info / debug
       vcl_cout << *corr_3_ << vcl_endl;
@@ -479,6 +512,10 @@ handle_key(vgui_key key)
 
     case 'r': // compute trinocular tangential match for current point
       reproject_from_triplet();
+      break;
+
+    case 's': // compute trinocular tangential match for all correspondences
+      reproject_from_triplet_allcorr();
       break;
 
       /*
@@ -556,19 +593,19 @@ handle_key(vgui_key key)
         dbdif_3rd_order_point_2d p1,p2;
         if (crv2d_gt_.size()) {
           // get hold of p1, theta1, k1, kdot1
-          p1 = crv2d_gt_[0][p0_query_idx_];
+          p1 = crv2d_gt_[0][p_query_id_[0]];
 
           // get hold of p2, theta2, k2, kdot2
-          p2 = crv2d_gt_[1][p1_query_idx_];
+          p2 = crv2d_gt_[1][p_query_id_[1]];
         } else {
           // - get hold of p1, theta1
           // - set k1, kdot1 to zero
 
-          p1.gama[0]  = vsols_[0][p0_query_idx_]->x();
-          p1.gama[1]  = vsols_[0][p0_query_idx_]->y();
+          p1.gama[0]  = vsols_[0][p_query_id_[0]]->x();
+          p1.gama[1]  = vsols_[0][p_query_id_[1]]->y();
           p1.gama[2]  = 0;
           
-          vgl_vector_2d<double> dir = vsols_orig_cache_[0][p0_query_idx_]->direction();
+          vgl_vector_2d<double> dir = vsols_orig_cache_[0][p_query_id_[0]]->direction();
 
           p1.t[0] = dir.x();
           p1.t[1] = dir.y();
@@ -580,11 +617,11 @@ handle_key(vgui_key key)
           p1.kdot = 0;
           p1.valid = true;
 
-          p2.gama[0]  = vsols_[1][p1_query_idx_]->x();
-          p2.gama[1]  = vsols_[1][p1_query_idx_]->y();
+          p2.gama[0]  = vsols_[1][p_query_id_[1]]->x();
+          p2.gama[1]  = vsols_[1][p_query_id_[1]]->y();
           p2.gama[2]  = 0;
           
-          dir = vsols_orig_cache_[1][p1_query_idx_]->direction();
+          dir = vsols_orig_cache_[1][p_query_id_[1]]->direction();
 
           p2.t[0] = dir.x();
           p2.t[1] = dir.y();
@@ -753,51 +790,40 @@ handle_mouse_event_at_view_1(
     const vgui_event & /*e*/, 
     const bvis1_view_tableau_sptr& /*view*/ )
 {
-  
   // identify the index of the selected edgel in our data
   unsigned idx;
-  bool stat  = get_index_of_point( selected_edgel_corresp_, vsols_orig_cache_[1], &idx);
+  bool stat  = get_index_of_point( selected_edgel_in_corresp_, vsols_orig_cache_[1], &idx);
 
   if (stat) {
      vcl_cout << "View #2: mouse click on point number: (" << idx+1 << ") out of " 
                << vsols_[1].size() << vcl_endl;
-     p1_query_idx_ = idx;
+     p_query_id_[1] = idx;
   } else {
      vcl_cout << "View #2: mouse click on mysterious pont\n";
      return false;
   }
 
-  if (p1_query_soview_)
-    tab_[1]->remove(p1_query_soview_);
+  if (p_query_soview_[1])
+    tab_[1]->remove(p_query_soview_[1]);
 
-  tab_[1]->set_current_grouping(p1_query_layer_.c_str());
-  p1_query_soview_ 
+  tab_[1]->set_current_grouping(p_query_layer_[1].c_str());
+  p_query_soview_[1] 
     = tab_[1]->add_vsol_line_2d(vsols_orig_cache_[1][idx]);
 
-  p1_query_soview_->set_style(p1_query_style_);
+  p_query_soview_[1]->set_style(p_query_style_[1]);
   
-  // find clicked point among candidates + print info XXX
+  // find clicked point among candidates + print info
 
-  /*
-  vcl_list<mw_attributed_object>::iterator itr;
+  if (corr_3_->l_.fullp(p_query_id_[0],p_query_id_[1],p_query_id_[2])) {
 
-  itr = corr_->corresp_[p0_query_idx_].begin();  unsigned  ii=0;
-  for (; itr != corr_->corresp_[p0_query_idx_].end(); ++itr, ++ii) {
-    if (itr->obj_ == idx)
-      break;
-  }
-  */
+//    vcl_cout << "Clicked on candidate (" <<  ii+1 << ")"  << " out of " 
+//      << corr_->corresp_[p_query_id_[0]].size() << vcl_endl;
+//    vcl_cout << "    " << *itr << vcl_endl;
+    query_is_corresp_ = true;
 
-  if (false /*XXX && itr != corr_->corresp_[p0_query_idx_].end()*/) {
     /*
-    vcl_cout << "Clicked on candidate (" <<  ii+1 << ")"  << " out of " 
-      << corr_->corresp_[p0_query_idx_].size() << vcl_endl;
-    vcl_cout << "    " << *itr << vcl_endl;
-    p1_query_itr_ = itr;
-    p1_query_is_candidate_ = true;
-
     if (synthetic_ || synthetic_olympus_) {
-      dbdif_3rd_order_point_2d &p1 = crv2d_gt_[0][p0_query_idx_];
+      dbdif_3rd_order_point_2d &p1 = crv2d_gt_[0][p_query_id_[0]];
       dbdif_3rd_order_point_2d &p2 = crv2d_gt_[1][idx];
 
       dbdif_3rd_order_point_2d p1_w, p2_w;
@@ -818,7 +844,7 @@ handle_mouse_event_at_view_1(
       printf("reconstr       --  K: %8g\t(R=%8g),\tKdot :%8g,\tTau:%8g\tSpeed:%8g\tGamma3dot:%8g\n", P_rec.K, 1./P_rec.K, P_rec.Kdot, P_rec.Tau, 1.0/rig.cam[0].speed(P_rec), P_rec.Gamma_3dot_abs());
       double depth_rec = dot_product(P_rec.Gama - cam_[0].c, cam_[0].F);
       vcl_cout << "reconstr       --  Point(world coords): " << P_rec.Gama << "\tnorm: "  << P_rec.Gama.two_norm() << "\tdepth: " << depth_rec << vcl_endl;
-      bool is_the_match = (idx == p0_query_idx_);
+      bool is_the_match = (idx == p_query_id_[0]);
       if (is_the_match) {
         unsigned  i_crv, i_pt;
         bool found = find_crv3d_idx(idx, i_crv, i_pt);
@@ -832,20 +858,20 @@ handle_mouse_event_at_view_1(
           // angle of reprojection with the edgel in 3rd view
           bool valid;
           dbdif_3rd_order_point_2d p3_reproj = cam_[2].project_to_image(P_rec,&valid);
-          vcl_cout << "gnd-truth      --  reproj tangent: " << p3_reproj.t <<"\tview3 tangent: " << crv2d_gt_[2][p0_query_idx_].t 
-            << "\tangle(rad): " << vcl_acos(mw_util::clump_to_acos(p3_reproj.t[0]*(crv2d_gt_[2][p0_query_idx_].t[0]) + p3_reproj.t[1]*(crv2d_gt_[2][p0_query_idx_].t[1]))) << vcl_endl;
-          double dotprod = p3_reproj.t[0]*(crv2d_gt_[2][p0_query_idx_].t[0]) + p3_reproj.t[1]*(crv2d_gt_[2][p0_query_idx_].t[1]);
+          vcl_cout << "gnd-truth      --  reproj tangent: " << p3_reproj.t <<"\tview3 tangent: " << crv2d_gt_[2][p_query_id_[0]].t 
+            << "\tangle(rad): " << vcl_acos(mw_util::clump_to_acos(p3_reproj.t[0]*(crv2d_gt_[2][p_query_id_[0]].t[0]) + p3_reproj.t[1]*(crv2d_gt_[2][p_query_id_[0]].t[1]))) << vcl_endl;
+          double dotprod = p3_reproj.t[0]*(crv2d_gt_[2][p_query_id_[0]].t[0]) + p3_reproj.t[1]*(crv2d_gt_[2][p_query_id_[0]].t[1]);
           vcl_cout << "gnd-truth      --  dotprod tangent clumped: " << mw_util::clump_to_acos(dotprod) << "\t> one?" << ((dotprod > 1)?"yes":"no") << vcl_endl;
           
         } else {
           vcl_cout << "WARNING: Not found among ground-truth!\n";
         }
       }
-    }
+    } // ! synthetic
     */
   } else {
     vcl_cout << "Clicked point NOT found among candidates\n";
-    p1_query_is_candidate_ = false;
+    query_is_corresp_ = false;
   }
 
 
@@ -854,8 +880,108 @@ handle_mouse_event_at_view_1(
   return true;
 }
 
+bool mw_3_correspond_point_tool::
+handle_mouse_event_at_view_2( 
+    const vgui_event & /*e*/, 
+    const bvis1_view_tableau_sptr& /*view*/ )
+{
+  // identify the index of the selected edgel in our data
+  unsigned idx;
+  bool stat  = get_index_of_point( selected_edgel_in_corresp_, vsols_orig_cache_[2], &idx);
 
-//: output: selected_edgel_corresp_
+  if (stat) {
+     vcl_cout << "View #3: mouse click on point number: (" << idx+1 << ") out of " 
+               << vsols_[2].size() << vcl_endl;
+     p_query_id_[2] = idx;
+  } else {
+     vcl_cout << "View #3: mouse click on mysterious pont\n";
+     return false;
+  }
+
+  if (p_query_soview_[2])
+    tab_[2]->remove(p_query_soview_[2]);
+
+  tab_[2]->set_current_grouping(p_query_layer_[2].c_str());
+  p_query_soview_[2] 
+    = tab_[2]->add_vsol_line_2d(vsols_orig_cache_[2][idx]);
+
+  p_query_soview_[2]->set_style(p_query_style_[2]);
+  
+  // find clicked point among candidates + print info XXX
+
+  if (corr_3_->l_.fullp(p_query_id_[0],p_query_id_[1],p_query_id_[2])) {
+
+//    vcl_cout << "Clicked on candidate (" <<  ii+1 << ")"  << " out of " 
+//      << corr_->corresp_[p_query_id_[0]].size() << vcl_endl;
+//    vcl_cout << "    " << *itr << vcl_endl;
+    query_is_corresp_ = true;
+
+    /*
+    vcl_cout << "Clicked on candidate (" <<  ii+1 << ")"  << " out of " 
+      << corr_->corresp_[p_query_id_[0]].size() << vcl_endl;
+    vcl_cout << "    " << *itr << vcl_endl;
+    p1_query_itr_ = itr;
+    query_is_corresp_ = true;
+
+    if (synthetic_ || synthetic_olympus_) {
+      dbdif_3rd_order_point_2d &p1 = crv2d_gt_[0][p_query_id_[0]];
+      dbdif_3rd_order_point_2d &p2 = crv2d_gt_[1][idx];
+
+      dbdif_3rd_order_point_2d p1_w, p2_w;
+      dbdif_3rd_order_point_3d P_rec;
+
+      dbdif_rig rig(cam_[0].Pr_,cam_[1].Pr_);
+
+      rig.cam[0].img_to_world(&p1,&p1_w);
+      rig.cam[1].img_to_world(&p2,&p2_w);
+
+      rig.reconstruct_3rd_order(p1_w, p2_w, &P_rec);
+
+      //: todo: print theta
+      printf("view 1(pixels) -- k1: %8g\t(r=%8g),\tkdot1:%8g\n", p1.k, 1./p1.k, p1.kdot);
+      printf("view 2(pixels) -- k2: %8g\t(r=%8g),\tkdot2:%8g\n", p2.k, 1./p2.k, p2.kdot);
+      printf("view 1(mm)     -- k1: %8g\t(r=%8g),\tkdot1:%8g\n", p1_w.k, 1./p1_w.k, p1_w.kdot);
+      printf("view 2(mm)     -- k2: %8g\t(r=%8g),\tkdot2:%8g\n", p2_w.k, 1./p2_w.k, p2_w.kdot);
+      printf("reconstr       --  K: %8g\t(R=%8g),\tKdot :%8g,\tTau:%8g\tSpeed:%8g\tGamma3dot:%8g\n", P_rec.K, 1./P_rec.K, P_rec.Kdot, P_rec.Tau, 1.0/rig.cam[0].speed(P_rec), P_rec.Gamma_3dot_abs());
+      double depth_rec = dot_product(P_rec.Gama - cam_[0].c, cam_[0].F);
+      vcl_cout << "reconstr       --  Point(world coords): " << P_rec.Gama << "\tnorm: "  << P_rec.Gama.two_norm() << "\tdepth: " << depth_rec << vcl_endl;
+      bool is_the_match = (idx == p_query_id_[0]);
+      if (is_the_match) {
+        unsigned  i_crv, i_pt;
+        bool found = find_crv3d_idx(idx, i_crv, i_pt);
+        if (found) {
+          assert(i_crv < crv3d_gt_.size() && i_pt < crv3d_gt_[i_crv].size());
+          dbdif_3rd_order_point_3d &P = crv3d_gt_[i_crv][i_pt];
+          printf("gnd-truth      --  K: %8g\t(R=%8g),\tKdot:%8g,\tTau:%8g\tSpeed:%8g\tGamma3dot:%8g\n", P.K, 1./P.K, P.Kdot, P.Tau, 1.0/rig.cam[0].speed(P), P.Gamma_3dot_abs());
+          double depth_gnd = dot_product(P.Gama - cam_[0].c, cam_[0].F);
+          vcl_cout << "gnd-truth      --  Point(world coords): " << P.Gama << "\tnorm: "  << P.Gama.two_norm()<< "\tdepth: " << depth_gnd << vcl_endl;
+
+          // angle of reprojection with the edgel in 3rd view
+          bool valid;
+          dbdif_3rd_order_point_2d p3_reproj = cam_[2].project_to_image(P_rec,&valid);
+          vcl_cout << "gnd-truth      --  reproj tangent: " << p3_reproj.t <<"\tview3 tangent: " << crv2d_gt_[2][p_query_id_[0]].t 
+            << "\tangle(rad): " << vcl_acos(mw_util::clump_to_acos(p3_reproj.t[0]*(crv2d_gt_[2][p_query_id_[0]].t[0]) + p3_reproj.t[1]*(crv2d_gt_[2][p_query_id_[0]].t[1]))) << vcl_endl;
+          double dotprod = p3_reproj.t[0]*(crv2d_gt_[2][p_query_id_[0]].t[0]) + p3_reproj.t[1]*(crv2d_gt_[2][p_query_id_[0]].t[1]);
+          vcl_cout << "gnd-truth      --  dotprod tangent clumped: " << mw_util::clump_to_acos(dotprod) << "\t> one?" << ((dotprod > 1)?"yes":"no") << vcl_endl;
+          
+        } else {
+          vcl_cout << "WARNING: Not found among ground-truth!\n";
+        }
+      }
+    } // !synthetic
+    */
+  } else {
+    vcl_cout << "Clicked point NOT found among candidates\n";
+    query_is_corresp_ = false;
+  }
+
+  // reconstruct+reproject + add soview
+  return true;
+}
+
+
+
+//: output: selected_edgel_in_corresp_
 // \return true if selected a valid edgel
 bool mw_3_correspond_point_tool::
 handle_corresp_query_whatever_view
@@ -883,9 +1009,9 @@ handle_corresp_query_whatever_view
     return false;
   }
 
-  selected_edgel_corresp_ = selected_edgel_soview_line->sptr();
+  selected_edgel_in_corresp_ = selected_edgel_soview_line->sptr();
   // vcl_cout << "mouse over - Middle of selected edgel: " << 
-    // *(selected_edgel_corresp_->middle()) << vcl_endl;
+    // *(selected_edgel_in_corresp_->middle()) << vcl_endl;
   return true;
 }
 
@@ -897,19 +1023,20 @@ handle_corresp_query_at_view_0
 {
   // identify the index of the selected edgel in our data
   unsigned idx;
-  bool stat  = get_index_of_point( selected_edgel_corresp_, vsols_orig_cache_[0], &idx);
+  bool stat  = get_index_of_point( selected_edgel_in_corresp_, vsols_orig_cache_[0], &idx);
   if (stat) {
-     vcl_cout << "View #1: mouse over point number: (" << idx+1 << ") out of " 
+     vcl_cout << "mw_3_corr: View[0]: mouse over point number: (" << idx+1 << ") out of " 
                << vsols_[0].size() << vcl_endl;
-     p0_query_idx_ = idx;
+     p_query_id_[0] = idx;
+     query_is_corresp_ = false; // TODO need to properly check if edgels are already in correps datastruct
   } else {
-     vcl_cout << "View #1: mouse over mysterious pont\n";
+     vcl_cout << "mw_3_corr: View[0]: mouse over mysterious point\n";
      return false;
   }
 
   // show epipolar angle
   if (synthetic_ || synthetic_olympus_) {
-    dbdif_3rd_order_point_2d &p1 = crv2d_gt_[0][p0_query_idx_];
+    dbdif_3rd_order_point_2d &p1 = crv2d_gt_[0][p_query_id_[0]];
 
     dbdif_rig rig(cam_[0].Pr_,cam_[1].Pr_);
     double epipolar_angle = dbdif_rig::angle_with_epipolar_line(p1.t,p1.gama,rig.f12);
@@ -919,30 +1046,38 @@ handle_corresp_query_at_view_0
   }
 
   // mark selected edgel
-  if (p0_query_soview_)
-    tab_[0]->remove(p0_query_soview_);
+  if (p_query_soview_[0])
+    tab_[0]->remove(p_query_soview_[0]);
 
-  tab_[0]->set_current_grouping( p0_query_layer_.c_str() );
-  p0_query_soview_ = tab_[0]->add_vsol_line_2d(vsols_orig_cache_[0][idx]);
-  p0_query_soview_->set_style(p0_query_style_);
+  tab_[0]->set_current_grouping( p_query_layer_[0].c_str() );
+  p_query_soview_[0] = tab_[0]->add_vsol_line_2d(vsols_orig_cache_[0][idx]);
+  p_query_soview_[0]->set_style(p_query_style_[0]);
+  p_query_style_[0]->apply_all();
+  p_query_soview_[0]->draw();
       
-  // add the correspondents in 2nd view
+  // add the correspondents in 2nd and 3rd view
   
   for (vcl_list<bgui_vsol_soview2D_line_seg *>::iterator 
-      itr = correspondents_soview_.begin() ; 
-      itr != correspondents_soview_.end(); ++itr) {
+      itr = correspondents_soview_[1].begin() ; 
+      itr != correspondents_soview_[1].end(); ++itr) {
     tab_[1]->remove(*itr);
   }
-  correspondents_soview_.clear();
-  correspondents_idx_.clear();
+  correspondents_soview_[1].clear();
+  correspondents_idx_[1].clear();
+
+  for (vcl_list<bgui_vsol_soview2D_line_seg *>::iterator 
+      itr = correspondents_soview_[2].begin() ; 
+      itr != correspondents_soview_[2].end(); ++itr) {
+    tab_[2]->remove(*itr);
+  }
+  correspondents_soview_[2].clear();
+  correspondents_idx_[2].clear();
 
 
   vcl_list<unsigned> p1_l, p2_l;
 
   //TODO: sort
-  mw_3_correspond_point_tool::get_candidates_from_p0(*corr_3_,idx,p1_l,p2_l);
-
-  p2_l.clear();
+  mw_3_correspond_point_tool::get_candidates_from_p0(*corr_3_, idx, p1_l, p2_l);
 
   vcl_list<unsigned>::const_iterator itr;
 
@@ -954,16 +1089,33 @@ handle_corresp_query_at_view_0
       tab_[1]->set_current_grouping( corresp_edges_layer_.c_str() );
     }
 
-
-    correspondents_soview_.push_back(
+    correspondents_soview_[1].push_back(
         tab_[1]->add_vsol_line_2d(vsols_orig_cache_[1][*itr]));
-    correspondents_idx_[*itr] = --correspondents_soview_.end();
-
+    correspondents_idx_[1][*itr] = --correspondents_soview_[1].end();
 
     if (ii < best_match_style_.size()) { //: display top 5 matches
-      correspondents_soview_.back()->set_style(best_match_style_[ii]);
+      correspondents_soview_[1].back()->set_style(best_match_style_[ii]);
     } else {
-      correspondents_soview_.back()->set_style(corresp_edges_style_);
+      correspondents_soview_[1].back()->set_style(corresp_edges_style_);
+    }
+  }
+
+  itr = p2_l.begin(); ii=0;
+  for (; itr != p2_l.end(); ++itr, ++ii) {
+    if (ii < best_match_style_.size()) { //: display top 5 matches
+      tab_[2]->set_current_grouping( best_match_layer_.c_str() );
+    } else {
+      tab_[2]->set_current_grouping( corresp_edges_layer_.c_str() );
+    }
+
+    correspondents_soview_[2].push_back(
+        tab_[2]->add_vsol_line_2d(vsols_orig_cache_[2][*itr]));
+    correspondents_idx_[2][*itr] = --correspondents_soview_[2].end();
+
+    if (ii < best_match_style_.size()) { //: display top 5 matches
+      correspondents_soview_[2].back()->set_style(best_match_style_[ii]);
+    } else {
+      correspondents_soview_[2].back()->set_style(corresp_edges_style_);
     }
   }
    
@@ -980,12 +1132,12 @@ handle_corresp_inspection_at_view_1
     const bvis1_view_tableau_sptr& /*view*/ )
 {
   // identify the index of the selected edgel in our data
-  unsigned idx;
-  bool stat  = get_index_of_point( selected_edgel_corresp_, vsols_orig_cache_[1], &idx);
+  unsigned idx, p1_idx;
+  bool stat  = get_index_of_point( selected_edgel_in_corresp_, vsols_orig_cache_[1], &idx);
   if (stat) {
      vcl_cout << "View #2: mouse over point number: (" << idx+1 << ") out of " 
                << vsols_[1].size() << vcl_endl;
-     p1_idx_ = idx;
+     p1_idx = idx;
   } else {
      vcl_cout << "View #2: mouse over mysterious pont\n";
      return false;
@@ -993,7 +1145,7 @@ handle_corresp_inspection_at_view_1
 
   // show epipolar angle
   if (synthetic_ || synthetic_olympus_) {
-    dbdif_3rd_order_point_2d &p1 = crv2d_gt_[1][p1_idx_];
+    dbdif_3rd_order_point_2d &p1 = crv2d_gt_[1][p1_idx];
 
     dbdif_rig rig(cam_[1].Pr_,cam_[0].Pr_);
     double epipolar_angle = dbdif_rig::angle_with_epipolar_line(p1.t,p1.gama,rig.f12);
@@ -1002,14 +1154,6 @@ handle_corresp_inspection_at_view_1
     vcl_cout << "epi angle: " << epipolar_angle << "deg" << vcl_endl;
   }
 
-  // mark selected edgel
-  if (p1_soview_)
-    tab_[1]->remove(p1_soview_);
-
-  tab_[1]->set_current_grouping( p1_query_layer_.c_str() );
-  p1_soview_ = tab_[1]->add_vsol_line_2d(vsols_orig_cache_[1][idx]);
-  p1_soview_->set_style(p1_style_);
-      
   // add the correspondents in 3rd view
   
   /*
@@ -1019,12 +1163,12 @@ handle_corresp_inspection_at_view_1
     tab_[2]->remove(*itr);
   }
   correspondents_soview_3_.clear();
-  correspondents_idx_3_.clear();
+  correspondents_idx_[1]3_.clear();
 
 
   vcl_set<triplet_uuu> s3;
 
-  corr_3_->triplets(0,p0_query_idx_, 1,p1_idx_,s3);
+  corr_3_->triplets(0,p_query_id_[0], 1,p1_idx,s3);
 
   vcl_set<triplet_uuu>::const_iterator itr;
 
@@ -1038,7 +1182,7 @@ handle_corresp_inspection_at_view_1
 
     correspondents_soview_3_.push_back(
         tab_[2]->add_vsol_line_2d(vsols_orig_cache_[2][itr->third]));
-    correspondents_idx_3_[itr->third] = --correspondents_soview_3_.end();
+    correspondents_idx_[1]3_[itr->third] = --correspondents_soview_3_.end();
 
     if (ii < best_match_style_.size()) { //: display top 5 matches
       correspondents_soview_3_.back()->set_style(best_match_style_[ii]);
@@ -1170,7 +1314,7 @@ srm_draw_eulerspiral()
         vcl_cout << "SRM: reconstr      -- depth: " << depth_srm << vcl_endl;
 
         unsigned  i_crv, i_pt;
-        bool found = find_crv3d_idx(p0_query_idx_, i_crv, i_pt);
+        bool found = find_crv3d_idx(p_query_id_[0], i_crv, i_pt);
         if (found) {
           assert(i_crv < crv3d_gt_.size() && i_pt < crv3d_gt_[i_crv].size());
           dbdif_3rd_order_point_3d &P = crv3d_gt_[i_crv][i_pt];
@@ -1309,7 +1453,6 @@ trinocular_epipolar_candidates_1pt()
   vcl_cout << "done\n";
 
   color_pts0_with_correspondents();
-
 }
 
 //: Integrated epipolar + tangent constraint - test tangential consistency as ntuplets are being
@@ -1462,6 +1605,12 @@ reproject_from_triplet()
   bool valid;
   valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img2, p_rep3, Prec, cam_[2], rig12);
 
+  // Output reconstruction from views 0,1
+  vcl_cout << vcl_setprecision(20);
+  vcl_cout << "Reconstruction from views 0,1:" << vcl_endl;
+  vcl_cout << "\t Prec.Gama: " << Prec.Gama << vcl_endl;
+  vcl_cout << "\t Prec.Tangent: " << Prec.T << vcl_endl;
+
   // -- 2
 
   dbdif_3rd_order_point_2d p_rep2; 
@@ -1507,29 +1656,226 @@ reproject_from_triplet()
 }
 
 void mw_3_correspond_point_tool::
+reproject_from_triplet_allcorr() 
+{
+  vcl_cout << vcl_setprecision(20);
+
+  // Output cameras
+  for (unsigned v=0; v < nviews_; ++v) {
+    vcl_cout << "Cam from View: " << v << vcl_endl;
+    vcl_cout << "K:\n" << cam_[v].K_ << vcl_endl;
+    vcl_cout << "Rot: " << cam_[v].Rot << vcl_endl;
+    vcl_cout << "C: " << cam_[v].c << vcl_endl;
+  }
+
+  vbl_sparse_array_3d<mw_match_attribute>::const_iterator p;
+  for (p = corr_3_->l_.begin(); p != corr_3_->l_.end(); ++p) {
+      vcl_cout   << '(' << (*p).first.first
+          << ',' << (*p).first.second
+          << ',' << (*p).first.third
+          << "): " << (*p).second << '\n';
+
+      vcl_vector<unsigned> p_id(3);
+      p_id[0] = (*p).first.first;
+      p_id[1] = (*p).first.second;
+      p_id[2] = (*p).first.third;
+
+      
+      // Output image points and tangents
+
+      vcl_vector<dbdif_3rd_order_point_2d> dg_pt(3);
+      for (unsigned iv=0; iv < nviews_; ++iv) {
+        dg_pt[iv].gama[0]  = vsols_[iv][p_id[iv]]->x();
+        dg_pt[iv].gama[1]  = vsols_[iv][p_id[iv]]->y();
+        dg_pt[iv].gama[2]  = 0;
+
+        vcl_cout << "gama_img[" << iv << "]:" << dg_pt[iv].gama << vcl_endl;
+
+        vgl_vector_2d<double> dir = normalized(vsols_orig_cache_[iv][p_id[iv]]->direction());
+
+        dg_pt[iv].t[0] = dir.x();
+        dg_pt[iv].t[1] = dir.y();
+        dg_pt[iv].t[2] = 0;
+        vcl_cout << "tgt_img[" << iv << "]:" << dg_pt[iv].t << vcl_endl;
+
+        dg_pt[iv].n[0] = -dir.y();
+        dg_pt[iv].n[1] = dir.x();
+        dg_pt[iv].n[2] = 0;
+        dg_pt[iv].k = 0; 
+        dg_pt[iv].kdot = 0;
+        dg_pt[iv].valid = true;
+      }
+      const dbdif_3rd_order_point_2d &pt_img1 = dg_pt[0];
+      const dbdif_3rd_order_point_2d &pt_img2 = dg_pt[1];
+      const dbdif_3rd_order_point_2d &pt_img3 = dg_pt[2];
+
+      dbdif_rig rig12(cam_[0].Pr_, cam_[1].Pr_);
+      dbdif_rig rig13(cam_[0].Pr_, cam_[2].Pr_);
+      dbdif_rig rig23(cam_[1].Pr_, cam_[2].Pr_);
+
+      // -- 3
+      
+      dbdif_3rd_order_point_3d Prec;
+      dbdif_3rd_order_point_2d p_rep3; 
+      bool valid;
+      valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img2, p_rep3, Prec, cam_[2], rig12);
+
+      // Output reconstruction from views 0,1
+      vcl_cout << vcl_setprecision(20);
+      vcl_cout << "Reconstruction from views 0,1:" << vcl_endl;
+      vcl_cout << "\t Prec.Gama: " << Prec.Gama << vcl_endl;
+      vcl_cout << "\t Prec.Tangent: " << Prec.T << vcl_endl;
+
+      // -- 2
+
+      dbdif_3rd_order_point_2d p_rep2; 
+      valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img3, p_rep2, Prec, cam_[1], rig13);
+      
+      // -- 1
+
+      dbdif_3rd_order_point_2d p_rep1; 
+      valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img2, pt_img3, p_rep1, Prec, cam_[0], rig23);
+      
+      // compare p_rep and pt_img3
+      double dt3 = vcl_acos(mw_util::clump_to_acos(p_rep3.t[0]*pt_img3.t[0] + p_rep3.t[1]*pt_img3.t[1]));
+      // compare p_rep and pt_img2
+      double dt2 = vcl_acos(mw_util::clump_to_acos(p_rep2.t[0]*pt_img2.t[0] + p_rep2.t[1]*pt_img2.t[1]));
+      // compare p_rep and pt_img1
+      double dt1 = vcl_acos(mw_util::clump_to_acos(p_rep1.t[0]*pt_img1.t[0] + p_rep1.t[1]*pt_img1.t[1]));
+
+      vcl_cout << "dt1, dt2, dt3 = " << dt1*(180./vnl_math::pi) << "\t" << dt2*(180./vnl_math::pi) << "\t" << dt3*(180./vnl_math::pi) << " (deg)" << vcl_endl;
+
+      vcl_cout << "directions: " 
+        << vsols_orig_cache_[0][p_id[0]]->direction() << "; " 
+        << vsols_orig_cache_[1][p_id[1]]->direction() << "; " 
+        << vsols_orig_cache_[2][p_id[2]]->direction() << vcl_endl;
+
+      const double t_thresh=vnl_math::pi/20.0;
+
+      if ( dt1 > t_thresh ||
+           dt2 > t_thresh ||
+           dt3 > t_thresh 
+          ) {
+        vcl_cout << "Triplet FAIL orientation threshold of " 
+          << t_thresh*180.0/vnl_math::pi << "deg" << vcl_endl;
+    //        if (dt1 < t_thresh && dt2 > t_thresh)
+    //          vcl_cout << "dt1 < thresh but symmetrics are not\n";
+    //    if (dt1 < t_thresh)
+    //      vcl_cout << "dt1 < thresh but symmetrics are not\n";
+
+    //    if (dt2 < t_thresh)
+    //      vcl_cout << "dt2 < thresh but symmetrics are not\n";
+
+    //    if (dt3 < t_thresh)
+    //      vcl_cout << "dt3 < thresh but symmetrics are not\n";
+
+      }
+      vcl_cout << "---------" << vcl_endl;
+  }
+
+
+  // Same as above, but now output rows nx3.
+  // -1 separates triplets.
+
+  for (p = corr_3_->l_.begin(); p != corr_3_->l_.end(); ++p) {
+      vcl_cout << "-1 -1 -1\n";    // triplet delimiter
+      vcl_cout << (*p).first.first << ' ' << (*p).first.second
+          << ' ' << (*p).first.third << vcl_endl;
+
+      vcl_vector<unsigned> p_id(3);
+      p_id[0] = (*p).first.first;
+      p_id[1] = (*p).first.second;
+      p_id[2] = (*p).first.third;
+
+      
+      // Output image points and tangents
+
+      vcl_vector<dbdif_3rd_order_point_2d> dg_pt(3);
+      for (unsigned iv=0; iv < nviews_; ++iv) {
+        dg_pt[iv].gama[0]  = vsols_[iv][p_id[iv]]->x();
+        dg_pt[iv].gama[1]  = vsols_[iv][p_id[iv]]->y();
+        dg_pt[iv].gama[2]  = 0;
+
+        vcl_cout << dg_pt[iv].gama << vcl_endl;
+
+        vgl_vector_2d<double> dir = normalized(vsols_orig_cache_[iv][p_id[iv]]->direction());
+
+        dg_pt[iv].t[0] = dir.x();
+        dg_pt[iv].t[1] = dir.y();
+        dg_pt[iv].t[2] = 0;
+        vcl_cout << dg_pt[iv].t << vcl_endl;
+
+        dg_pt[iv].n[0] = -dir.y();
+        dg_pt[iv].n[1] = dir.x();
+        dg_pt[iv].n[2] = 0;
+        dg_pt[iv].k = 0; 
+        dg_pt[iv].kdot = 0;
+        dg_pt[iv].valid = true;
+      }
+      const dbdif_3rd_order_point_2d &pt_img1 = dg_pt[0];
+      const dbdif_3rd_order_point_2d &pt_img2 = dg_pt[1];
+      const dbdif_3rd_order_point_2d &pt_img3 = dg_pt[2];
+
+      dbdif_rig rig12(cam_[0].Pr_, cam_[1].Pr_);
+      dbdif_rig rig13(cam_[0].Pr_, cam_[2].Pr_);
+      dbdif_rig rig23(cam_[1].Pr_, cam_[2].Pr_);
+
+      // -- 3
+      
+      dbdif_3rd_order_point_3d Prec;
+      dbdif_3rd_order_point_2d p_rep3; 
+      bool valid;
+      valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img2, p_rep3, Prec, cam_[2], rig12);
+
+      // Output reconstruction from views 0,1
+      vcl_cout << Prec.Gama << vcl_endl;
+      vcl_cout << Prec.T << vcl_endl;
+
+      // -- 2
+
+      dbdif_3rd_order_point_2d p_rep2; 
+      valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img3, p_rep2, Prec, cam_[1], rig13);
+      
+      // -- 1
+
+      dbdif_3rd_order_point_2d p_rep1; 
+      valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img2, pt_img3, p_rep1, Prec, cam_[0], rig23);
+      
+      // compare p_rep and pt_img3
+      double dt3 = vcl_acos(mw_util::clump_to_acos(p_rep3.t[0]*pt_img3.t[0] + p_rep3.t[1]*pt_img3.t[1]));
+      // compare p_rep and pt_img2
+      double dt2 = vcl_acos(mw_util::clump_to_acos(p_rep2.t[0]*pt_img2.t[0] + p_rep2.t[1]*pt_img2.t[1]));
+      // compare p_rep and pt_img1
+      double dt1 = vcl_acos(mw_util::clump_to_acos(p_rep1.t[0]*pt_img1.t[0] + p_rep1.t[1]*pt_img1.t[1]));
+
+      vcl_cout << dt1*(180./vnl_math::pi) << " " << dt2*(180./vnl_math::pi) << " " << dt3*(180./vnl_math::pi) << vcl_endl;
+  }
+}
+
+void mw_3_correspond_point_tool::
 color_pts0_with_correspondents() 
 {
   tab_[0]->set_current_grouping(corresp_edges_layer_.c_str());
 
   assert (corr_3_->is_hashed());
   for (unsigned i=0; i < corr_3_->n0(); ++i) {
-    if (p0_corresp_soview_[i]) {
-      tab_[0]->remove(p0_corresp_soview_[i]);
-      p0_corresp_soview_[i] = 0;
+    if (p_corresp_soview_[0][i]) {
+      tab_[0]->remove(p_corresp_soview_[0][i]);
+      p_corresp_soview_[0][i] = 0;
     }
       
     if ( !(corr_3_->hash_[0][i].empty()) ) {
-      p0_corresp_soview_[i] = 
+      p_corresp_soview_[0][i] = 
         tab_[0]->add_vsol_line_2d(vsols_orig_cache_[0][i]);
 
-       p0_corresp_soview_[i]->set_style(corresp_edges_style_);
+       p_corresp_soview_[0][i]->set_style(corresp_edges_style_);
 
       /* TODO
       if (!gt_.is_empty()) {
         if (corr_->is_gt_among_top5(i, &gt_)) {
-          p0_corresp_soview_[i]->set_style(corresp_edges_style_);
+          p_corresp_soview_[0][i]->set_style(corresp_edges_style_);
         } else {
-          p0_corresp_soview_[i]->set_style(wrongly_matched_edgels_style_);
+          p_corresp_soview_[0][i]->set_style(wrongly_matched_edgels_style_);
         }
       } 
       */

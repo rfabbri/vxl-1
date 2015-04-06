@@ -82,44 +82,33 @@ public:
 
 protected:
 
+  // Data -----
   mw_discrete_corresp_3 *corr_3_;
   mw_discrete_corresp_storage_3_sptr p_sto_3_;
+  vcl_vector<vil_image_resource_sptr> images_;
 
-  vsol_line_2d_sptr selected_edgel_corresp_;
+  bool lock_corresp_query_;
+  vsol_line_2d_sptr selected_edgel_in_corresp_;
+  vcl_vector<unsigned> p_query_id_;
+  bool query_is_corresp_;
+  vcl_vector<vcl_map<unsigned, vcl_list<bgui_vsol_soview2D_line_seg *>::iterator > > correspondents_idx_;
+
+  // Styles -----
   vgui_style_sptr corresp_edges_style_;
   vgui_style_sptr wrongly_matched_edgels_style_;
   vcl_vector<vgui_style_sptr> best_match_style_; 
   vcl_string best_match_layer_; 
   vcl_string corresp_edges_layer_; 
+  vcl_vector<vgui_style_sptr> p_query_style_;
+  vcl_vector<vcl_string> p_query_layer_; 
 
-  vcl_list<bgui_vsol_soview2D_line_seg *> correspondents_soview_;
-  vcl_list<bgui_vsol_soview2D_line_seg *> correspondents_soview_3_;
-  vcl_map<unsigned, vcl_list<bgui_vsol_soview2D_line_seg *>::iterator > correspondents_idx_;
-  vcl_map<unsigned, vcl_list<bgui_vsol_soview2D_line_seg *>::iterator > correspondents_idx_3_;
-  vcl_vector<vil_image_resource_sptr> images_;
-  bool lock_corresp_query_;
+  // Soviews -----
+  vcl_vector<vcl_list<bgui_vsol_soview2D_line_seg *> > correspondents_soview_;
+  vcl_vector<bgui_vsol_soview2D_line_seg *> p_query_soview_;
+  vcl_vector<vcl_vector<bgui_vsol_soview2D_line_seg *> > p_corresp_soview_;
 
-  unsigned p0_query_idx_;
-  bgui_vsol_soview2D_line_seg *p0_query_soview_; //:< query-selected point in left view
-  vgui_style_sptr p0_query_style_; 
-  vcl_string p0_query_layer_; 
 
-  unsigned p1_query_idx_;
-  unsigned p1_idx_; //:< index of mouse_over in view[1]
-  bgui_vsol_soview2D_line_seg *p1_query_soview_; //:< query-selected point in right view
-  bgui_vsol_soview2D_line_seg *p1_soview_; //:< mouse_over point in right view
-  vgui_style_sptr p1_style_;
-
-  vgui_style_sptr p1_query_style_; 
-  //: if selected point in left view is a candidate, heres an iterator for it in the
-  // correspondences list:
-  vcl_list<mw_attributed_object>::iterator p1_query_itr_; 
-  bool p1_query_is_candidate_;
-  vcl_string p1_query_layer_; 
-
-  vcl_vector<bgui_vsol_soview2D_line_seg *> p0_corresp_soview_;
-
-  // For manipulating ground-truth /  synthetic data
+  // For manipulating ground-truth /  synthetic data ----------------------
   bool synthetic_;
   bool synthetic_olympus_;
   vcl_vector<vcl_vector<dbdif_3rd_order_point_2d> > crv2d_gt_;
@@ -169,6 +158,10 @@ protected:
     const vgui_event & /*e*/, 
     const bvis1_view_tableau_sptr& /*view*/ );
 
+  virtual bool handle_mouse_event_at_view_2( 
+    const vgui_event & /*e*/, 
+    const bvis1_view_tableau_sptr& /*view*/ );
+
   bool handle_corresp_query_whatever_view
       ( const vgui_event & e, 
       const bvis1_view_tableau_sptr& /*view*/ );
@@ -201,6 +194,7 @@ protected:
 
 
   void reproject_from_triplet();
+  void reproject_from_triplet_allcorr();
 
   dbgl_eulerspiral * 
   get_new_eulerspiral(const dbdif_3rd_order_point_2d &p1) const;
@@ -209,6 +203,8 @@ protected:
   void write_energies();
   static void 
   get_candidates_from_p0(const mw_discrete_corresp_3 &c, unsigned idx, vcl_list<unsigned> &p1_l, vcl_list<unsigned> &p2_l);
+  void get_corresp();
+  void get_images();
 };
 
 
