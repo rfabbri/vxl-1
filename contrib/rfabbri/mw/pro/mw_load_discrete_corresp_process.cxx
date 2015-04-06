@@ -14,8 +14,8 @@ mw_load_discrete_corresp_process::mw_load_discrete_corresp_process() : bpro1_pro
 {
   if( 
       !parameters()->add( "Input filename" , "-nameprefix" , bpro1_filepath("","*.*") ) ||
-      !parameters()->add( "Binocular correspondence?" , "-binocular_ftype" , true)  ||
-      !parameters()->add( "Trinocular correspondence?" , "-trinocular_ftype" , false)
+      !parameters()->add( "Binocular correspondence?" , "-binocular_ftype" , false)  ||
+      !parameters()->add( "Trinocular correspondence?" , "-trinocular_ftype" , true)
       )
   {
     vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
