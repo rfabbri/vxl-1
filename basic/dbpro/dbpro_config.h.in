@@ -6,13 +6,13 @@
 // configuration of the library, look at the dbpro_config.h file in
 // the _build_ tree.
 
-// #cmakedefine CMAKE_USE_PTHREADS_INIT
-// #ifdef CMAKE_USE_PTHREADS_INIT
-// #define DBPRO_HAS_PTHREADS 1
-// #else
-// #define DBPRO_HAS_PTHREADS 0
-// #endif
-// #undef CMAKE_USE_PTHREADS_INIT
+#cmakedefine CMAKE_USE_PTHREADS_INIT
+#ifdef CMAKE_USE_PTHREADS_INIT
+#define DBPRO_HAS_PTHREADS 1
+#else
+#define DBPRO_HAS_PTHREADS 0
+#endif
+#undef CMAKE_USE_PTHREADS_INIT
 
 
 
