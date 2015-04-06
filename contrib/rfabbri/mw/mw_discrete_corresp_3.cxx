@@ -258,11 +258,9 @@ void
 mw_discrete_corresp_3::
 hash()
 {
-  if (is_hashed()) {
-    vcl_cerr << "Re-hash operation not yet supported\n";
-    abort();
-  }
-
+  hash_[0].clear();
+  hash_[1].clear();
+  hash_[2].clear();
   hash_[0].resize(n0_);
   hash_[1].resize(n1_);
   hash_[2].resize(n2_);
