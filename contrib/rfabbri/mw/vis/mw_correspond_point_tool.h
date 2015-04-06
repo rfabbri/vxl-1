@@ -15,7 +15,46 @@
 
 class dbgl_eulerspiral;
 
-
+//: Tool for exploring and editing binocular correspondences between edgels
+//
+// It is also a stepping stone towards implementing a gui that is general for 
+// n-views. 
+//
+// \sec Design overview
+//
+// - The base class mw_correspond_point_tool_basic is responsible for displaying
+// epipolar lines in all views, for one or more selected edgels. The base class
+// does not touch the correspondence data; it is only an epipolar visualization
+// tool and a place to store basic data such as the cameras.
+//
+// - The present class pretty much adds a visual layer on top of the base class.
+// The user can click around at will, and the base class will mark the clicked
+// edge with a dot  and show epipolar lines to guide the
+// user. We call such clicked edgel a "selected" edgel. At the same time, this
+// class shows "active" edgels, which are those for which the
+// correspondence datastructure is either being explored or edited. The "active"
+// edge is shown in different color with a thicker line. The user can
+// move the mouse around and the "active" edge will change, but the "selected"
+// edge only changes when a click occurs. In summary, "selected" edges are for
+// exploring epipolar geometry, and "active" edges are for exploring+editing the
+// edge correspondence datastructure. If you want the "active" edge to
+// remain in place, you can press 'l' to lock it. You can now move on to a
+// second view and select active edgels there.
+//
+// - You can actually load and save correspondences. You can also load ground truth
+// correspondence in order to see which matches are wrong.
+//
+// \sec Color coding
+// 
+// We indicate edgels participating in some correspondence in different colors.
+//
+// Sometimes, for a selected n-tuplet (a pair in this tool's case), a key can be
+// pressed in order to print information about that tuplet as stored in the
+// correspondence structure, or as computed on-the-fly. See the function
+// handle_key for the available keypresses.
+//
+// \sec Usage
+//
 class mw_correspond_point_tool : public mw_correspond_point_tool_basic {
 public:
   //: Constructor
