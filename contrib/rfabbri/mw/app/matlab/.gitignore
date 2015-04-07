@@ -1,0 +1,13 @@
+# These files are only in the laptop, not in the desktop:
+Toolbox_Fundamental_matrix.zip
+conic/conic.m~
+contour.tar.gz
+contour_simple.tar.gz
+mycalib/.#show_err.m.1.1
+mycalib/.#showall.m.1.1
+mycalib/.#showpts.m.1.1
+shubao/data
+shubao/occluding/data
+shubao/occluding/hs_err_pid10212.log
+shubao/occluding/result
+slice_reconstruct-multiflash-dan-crispell.zip
