@@ -5,6 +5,7 @@
 #include <vcl_algorithm.h>
 #include <vgl/vgl_intersection.h>
 #include <vil/vil_convert.h>
+#include <dvpgl/io/dvpgl_io_cameras.h>
 #include <mw/algo/mw_algo_util.h>
 
 
@@ -659,7 +660,7 @@ get_cameras()
 
     const vpgl_perspective_camera<double> *pcam;
 
-    pcam = cam_storage->get_camera()->cast_to_perspective_camera();
+    pcam = dvpgl_cast_to_perspective_camera(cam_storage->get_camera());
     if(!pcam) {
       vcl_cerr << "Error: tool requires a perspective camera" << vcl_endl;
       return;
