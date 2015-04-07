@@ -7621,6 +7621,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
     
     vcl_vector<vgl_point_2d<double> > bc_coords;
 
+    vcl_set<vcl_pair<int,int> > out_of_bounds;
+
     // do not include boundary
     vgl_polygon_scan_iterator<double> psi(poly, false);  
     for (psi.reset(); psi.next(); ) 
@@ -7665,6 +7667,10 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
                     temp(x,y)=vil_rgb<vxl_byte>(red,green,blue);
                 }
             }
+            else
+            {
+                out_of_bounds.insert(vcl_make_pair(x,y));
+            }
 
             bc_coords.push_back(model_rt);
         }
@@ -7703,12 +7709,18 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
     double bc_sift_distance=0.0;
 
     unsigned int index=0;
-
+    unsigned int stride=3;
+    
     for (psi.reset(); psi.next(); ) 
     {
         int y = psi.scany();
-        for (int x = psi.startx(); x <= psi.endx(); x=x+3) 
+        for (int x = psi.startx(); x <= psi.endx(); x=x+stride) 
         {
+            if ( out_of_bounds.count(vcl_make_pair(x,y)))
+            {
+                continue;
+            }
+
             vgl_point_2d<double> model_pt(x,y);
             
             if ( width )
@@ -7752,6 +7764,11 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
             //     model_sift_filter);
             
             index=index+1;
+        }
+        
+        for ( unsigned int k=0; k < stride-1 ; ++k)
+        {
+            psi.next();
         }
     }
     
