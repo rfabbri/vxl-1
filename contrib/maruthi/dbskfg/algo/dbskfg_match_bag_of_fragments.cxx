@@ -7548,7 +7548,6 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance(
                 model_sift_filter,
                 model_sift_filter);
 
-            double L=
             index=index+1;
         }
     }
@@ -7659,6 +7658,13 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
     }
 
     vil_image_resource_sptr out_img = vil_new_image_resource_of_view(temp);
+
+    // vcl_stringstream name;
+    // name<<"Model_"<<model_tree->get_id()<<"_vs_Query_"<<query_tree->get_id()
+    //     <<"_warp.png";
+
+    // vil_save_image_resource(out_img, 
+    //                         name.str().c_str()); 
 
     vl_sift_pix* model_red_grad_data(0);
     vl_sift_pix* model_green_grad_data(0);
