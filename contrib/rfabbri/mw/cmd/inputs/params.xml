@@ -1,0 +1,31 @@
+<parameter_root>
+	<params app="vox_mcs_eval_params" >
+		<param attribute_label="web_directive*print_params_file" description="print the xml parameter file" type="string" default="params.xml" value="params.xml" system_info="PARAM_BLOCK"/>
+		<param attribute_label="web_directive*print_params_only" description="print the xml parameter file only" type="flag" default="off" value="off"/>
+		<param attribute_label="web_directive*status_block" description="Status file path" type="string" default="status.xml" value="status.xml" system_info="STATUS_BLOCK"/>
+		<param attribute_label="web_directive*perf_block" description="Performance file path" type="string" default="perf.xml" value="perf.xml" system_info="OUTPUT_PERF"/>
+		<param attribute_label="web_directive*categorization_file" description="Categorization file path" type="string" default="categorization.xml" value="categorization.xml" system_info="OUTPUT_CATEGORIZATION"/>
+		<param attribute_label="web_directive*evaluation_file" description="Evaluation file path" type="string" default="evaluation.xml" value="evaluation.xml" system_info="OUTPUT_EVALUATION"/>
+		<param attribute_label="io*save_to_object_folder" description="-io: save result to object folder ?" type="flag" default="on" value="on"/>
+		<param attribute_label="io*input_folder" description="main input folder containing the data for all views and other inputs" type="string" default="" value="" system_info_index="0" system_info="INPUT_OBJECT_DIR"/>
+		<param attribute_label="io*gt_object_name" description="ground truth correspondence nae" type="string" default="" value="dummy" system_info_index="0" system_info="INPUT_OBJECT_STRING_ID"/>
+		<param attribute_label="io*gt_object_dir" description="ground truth object folder" type="string" default="" value="dummy" system_info_index="0" system_info="INPUT_OBJECT_DIR"/>
+		<param attribute_label="io*output_mcs_eval_extension_" description="-io: output extension of correspondence evaluation results on dataset " type="string" default="_eval_results.xml" value="_eval_results.xml"/>
+		<param attribute_label="io*output_mcs_eval_folder" description="output folder to write evaluation results off experiment" type="fileassoc" default="" value="" system_info_index="0" system_info="OUTPUT_FILE" file_type="mcs_eval"/>
+		<param attribute_label="io*dataset_name" description="String identifying the dataset" type="string" default="" value=""/>
+		<param attribute_label="io*cam_type" description="Input camera type (intrinsic_extrinsic or projcamera)" type="string" default="intrinsic_extrinsic" value="intrinsic_extrinsic"/>
+		<param attribute_label="io*dump_corresps" description="save all correspondences (into output dir)?" type="flag" default="off" value="off"/>
+		<param attribute_label="mcs_reprojection*distance_threshold_list" description="space-separated list of thresholds (in pixels) for an edgel to be an inlier to the reprojected curve in each view" type="string" default="10.0" value="10.0"/>
+		<param attribute_label="mcs_reprojection*dtheta_threshold_list" description="space-separated list of thresholds (in degrees) in orientation difference for an edgel to be an inlier to reprojected curve in each view" type="string" default="10.0" value="10.0"/>
+		<param attribute_label="mcs_basics*prune_by_length" description="prune by length?" type="flag" default="on" value="on"/>
+		<param attribute_label="mcs_basics*min_samples_per_curve_frag_list" description="space-separated list of values used to prune the curves by enforcing a minimum number of samples. If prune_by_length is set, this list is intepreted as lengths (doubles)" type="string" default="40" value="40"/>
+		<param attribute_label="mcs_basics*min_epipolar_overlap_list" description="space-separated list of values; minimum number of intersections a curve has to have with the epiband to be a candidate" type="string" default="5" value="5"/>
+		<param attribute_label="mcs_basics*min_epiangle_list" description="space-separated list of values; (in degrees) minimum angle between an epipolar line and curve samples to consider" type="string" default="30.0" value="30.0"/>
+		<param attribute_label="mcs_reprojection*min_inliers_per_view_list" description="space-separated list of values; if a view has less than this number of inliers, it will not vote at all towards the curve." type="string" default="10" value="10"/>
+		<param attribute_label="mcs_reprojection*min_num_inlier_edgels_per_curvelet_list" description="space-separated list of values; if a curvelet has less than this number of inlier edgels, it will not vote at all towards the curve." type="string" default="3" value="3"/>
+		<param attribute_label="mcs_reprojection*use_curvelets" description="use curvelets?" type="flag" default="off" value="off"/>
+		<param attribute_label="mcs_reprojection*min_total_inliers_list" description="space-separated list of values; if a match has less than this number of inliers, it will be ruled out." type="string" default="5" value="5"/>
+		<param attribute_label="mcs_reprojection*min_first_to_second_best_ratio_list" description="space-separated list of values; minimum ratio of first to second best to consider as reliable unambiguous match. Set to zero if you always want to keep the best match." type="string" default="1.5" value="1.5"/>
+		<param attribute_label="mcs_reprojection*lonely_threshold_list" description="space-separated list of values; minimum #votes of a lonely correspondence = -lonely*-first_to_second_ratio will be considered as reliable match (defaults to mininliers_total)" type="string" default="0.0" value="0.0"/>
+	</params>
+</parameter_root>
