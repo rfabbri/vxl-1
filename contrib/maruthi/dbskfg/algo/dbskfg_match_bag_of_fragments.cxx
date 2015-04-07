@@ -4894,44 +4894,44 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
 
         vcl_vector<double> dart_distances;
         vcl_pair<double,double> app_cost(0.0,0.0);
-        vcl_pair<double,double> sift_rgb_cost=compute_dense_rgb_sift_cost(
-            curve_list1,
-            curve_list2,
-            map_list,
-            path_map,
-            dart_distances,
-            *model_channel1,
-            *model_channel2,
-            *model_channel3,
-            *query_channel1,
-            *query_channel2,
-            *query_channel3,
-            flag,
-            width,
-            model_red_grad_data,
-            query_red_grad_data,
-            model_green_grad_data,
-            query_green_grad_data,
-            model_blue_grad_data,
-            query_blue_grad_data,
-            model_sift_filter,
-            query_sift_filter,
-            model_tree->get_scale_ratio(),
-            query_tree->get_scale_ratio(),
-            model_tree->get_root_node_radius(),
-            query_tree->get_root_node_radius(),
-            title.str());
+        // vcl_pair<double,double> sift_rgb_cost=compute_dense_rgb_sift_cost(
+        //     curve_list1,
+        //     curve_list2,
+        //     map_list,
+        //     path_map,
+        //     dart_distances,
+        //     *model_channel1,
+        //     *model_channel2,
+        //     *model_channel3,
+        //     *query_channel1,
+        //     *query_channel2,
+        //     *query_channel3,
+        //     flag,
+        //     width,
+        //     model_red_grad_data,
+        //     query_red_grad_data,
+        //     model_green_grad_data,
+        //     query_green_grad_data,
+        //     model_blue_grad_data,
+        //     query_blue_grad_data,
+        //     model_sift_filter,
+        //     query_sift_filter,
+        //     model_tree->get_scale_ratio(),
+        //     query_tree->get_scale_ratio(),
+        //     model_tree->get_root_node_radius(),
+        //     query_tree->get_root_node_radius(),
+        //     title.str());
 
 
-        // vcl_pair<double,double> sift_rgb_cost =
-        //     compute_common_frame_distance(
-        //         model_tree,
-        //         query_tree,
-        //         curve_list1,
-        //         curve_list2,
-        //         map_list,
-        //         flag,
-        //         width);
+        vcl_pair<double,double> sift_rgb_cost =
+            compute_common_frame_distance_qm(
+                model_tree,
+                query_tree,
+                curve_list1,
+                curve_list2,
+                map_list,
+                flag,
+                width);
 
         // vcl_pair<double,double> sift_rgb_cost=compute_mi(
         //     curve_list1,
@@ -7727,15 +7727,15 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
                 query_sift_filter);
 
 
-            local_color_distance += LAB_distance(
-                model_pt,
-                model_pt,
-                o1,
-                o2,
-                o3,
-                *query_tree->get_channel1(),
-                *query_tree->get_channel2(),
-                *query_tree->get_channel3());
+            // local_color_distance += LAB_distance(
+            //     model_pt,
+            //     model_pt,
+            //     o1,
+            //     o2,
+            //     o3,
+            //     *query_tree->get_channel1(),
+            //     *query_tree->get_channel2(),
+            //     *query_tree->get_channel3());
             
             index=index+1;
         }
@@ -7747,7 +7747,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
     }
     
     app_distance.first  = trad_sift_distance/index;
-    app_distance.second = local_color_distance/index;
+    app_distance.second = trad_sift_distance;
 
     vl_free(model_red_grad_data);
     vl_free(model_green_grad_data);
