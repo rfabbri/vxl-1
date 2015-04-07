@@ -1,0 +1,18 @@
+High reprojection error for synthetic data
+
+169-309
+
+
+In this case all returned rotations give high reprojection error.
+The one giving lowest reprojection error has low reprojection error for samples
+169-309, but high for all the other ones.
+
+It seems that the method simply failed to find the right rotation.
+
+Looking into the plot, there seems to be one point which should be a root but
+wasn't found. Indeed, the polynomial doesn't cross zero there but nearly touches
+the x axis.
+
+TODO
+  - I'll artificially insert this root into the system to see if I can get the
+    right rotation
