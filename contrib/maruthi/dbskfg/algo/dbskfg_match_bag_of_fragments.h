@@ -711,7 +711,8 @@ private:
         vcl_vector<dbskr_scurve_sptr>& curve_list2,
         vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
         bool flag=false,
-        double width=0.0);
+        double width=0.0,
+        bool debug=false);
 
     vnl_vector<vl_sift_pix> compress_sift(vl_sift_pix* red_sift,
                                           vl_sift_pix* green_sift,

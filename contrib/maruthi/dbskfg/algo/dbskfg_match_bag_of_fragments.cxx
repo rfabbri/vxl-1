@@ -7575,7 +7575,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
     vcl_vector<dbskr_scurve_sptr>& curve_list2,
     vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
     bool flag,
-    double width)
+    double width,
+    bool debug)
 {
     
     vcl_pair<double,double> app_distance(0.0,0.0);
@@ -7659,12 +7660,15 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
 
     vil_image_resource_sptr out_img = vil_new_image_resource_of_view(temp);
 
-    // vcl_stringstream name;
-    // name<<"Model_"<<model_tree->get_id()<<"_vs_Query_"<<query_tree->get_id()
-    //     <<"_warp.png";
+    if ( debug )
+    {
+        vcl_stringstream name;
+        name<<"Model_"<<model_tree->get_id()<<"_vs_Query_"<<query_tree->get_id()
+            <<"_warp.png";
 
-    // vil_save_image_resource(out_img, 
-    //                         name.str().c_str()); 
+        vil_save_image_resource(out_img, 
+                                name.str().c_str()); 
+    }
 
     vl_sift_pix* model_red_grad_data(0);
     vl_sift_pix* model_green_grad_data(0);
@@ -7698,6 +7702,15 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
 
     unsigned int index=0;
     unsigned int stride=3;
+
+    vnl_matrix<double> dist_map;
+
+    if ( debug )
+    {
+        dist_map.set_size(temp.ni(),temp.nj());
+        dist_map.fill(0.0);
+        stride=1;
+    }
     
     for (psi.reset(); psi.next(); ) 
     {
@@ -7716,7 +7729,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
                 model_pt.set(ni-1-x,y);
             }
             
-            trad_sift_distance += descr_cost(
+            double sample_distance = descr_cost(
                 model_pt,
                 fixed_radius,
                 fixed_theta,
@@ -7732,16 +7745,12 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
                 query_sift_filter,
                 query_sift_filter);
 
+            trad_sift_distance += sample_distance;
 
-            // local_color_distance += LAB_distance(
-            //     model_pt,
-            //     model_pt,
-            //     o1,
-            //     o2,
-            //     o3,
-            //     *query_tree->get_channel1(),
-            //     *query_tree->get_channel2(),
-            //     *query_tree->get_channel3());
+            if ( debug )
+            {
+                dist_map(x,y)=sample_distance;
+            }
             
             index=index+1;
         }
@@ -7751,7 +7760,20 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
             psi.next();
         }
     }
-    
+
+    if ( debug )
+    {
+        vcl_stringstream name;
+        name<<"Model_"<<model_tree->get_id()<<"_vs_Query_"<<query_tree->get_id()
+            <<"_dist_map.txt";
+        
+        vcl_ofstream streamer(name.str().c_str());
+        dist_map.print(streamer);
+        streamer.close();
+        
+        dist_map.clear();
+    }
+
     app_distance.first  = trad_sift_distance/index;
     app_distance.second = trad_sift_distance;
 
@@ -7763,7 +7785,10 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
     model_green_grad_data=0;
     model_blue_grad_data=0;
 
-    // vcl_cout<<app_distance.first<<" "<<app_distance.second<<vcl_endl;
+    if ( debug )
+    {
+        vcl_cout<<app_distance.first<<" "<<app_distance.second<<vcl_endl;
+    }
     return app_distance;
 }   
 
