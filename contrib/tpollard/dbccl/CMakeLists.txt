@@ -16,9 +16,11 @@ TARGET_LINK_LIBRARIES( dbccl vcl vgl vnl vil vidl1 vgl_algo vil_algo vpgl )
 SET( DBCCL_INCLUDE_DIR ${dbccl_SOURCE_DIR} )
 
 ADD_EXECUTABLE ( dbccl_manual_app dbccl_manual_app.cxx )
-ADD_EXECUTABLE ( dbccl_manual_app_rewrite dbccl_manual_app_rewrite.cxx )
+#ADD_EXECUTABLE ( dbccl_manual_app_rewrite dbccl_manual_app_rewrite.cxx )
+ADD_EXECUTABLE ( dbccl_refine_pose_app dbccl_refine_pose_app.cxx )
 TARGET_LINK_LIBRARIES( dbccl_manual_app vcl vgl vnl vpgl vpgl_algo vul )
-TARGET_LINK_LIBRARIES( dbccl_manual_app_rewrite vcl vgl vnl vpgl vpgl_algo vul )
+#TARGET_LINK_LIBRARIES( dbccl_manual_app_rewrite vcl vgl vnl vpgl vpgl_algo vul )
+TARGET_LINK_LIBRARIES( dbccl_refine_pose_app vcl vgl vnl vpgl vpgl_algo vul )
 
 SUBDIRS(tests)
 SUBDIRS(pro)

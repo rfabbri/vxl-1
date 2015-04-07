@@ -84,6 +84,11 @@ int main( int argc, char* argv[] )
   // Read the world points.
   vcl_vector<vgl_point_3d<double> > world_points;
   vcl_ifstream wpsifs( world_points_file.c_str() );
+  if (!wpsifs) {
+    vcl_cerr << " Error opening file  " << world_points_file << vcl_endl;
+    return false;
+  }
+
   vul_awk wps( wpsifs );
   while( wps ){
     world_points.push_back( vgl_point_3d<double>(
@@ -124,6 +129,11 @@ int main( int argc, char* argv[] )
   vcl_vector<vgl_point_2d<double> > image_points;
   vcl_vector<vcl_vector<bool> > mask( num_cameras, vcl_vector<bool>(num_world_points,true) );
   vcl_ifstream ipsifs( image_points_file.c_str() );
+  if (!ipsifs) {
+    vcl_cerr << " Error opening file  " << world_points_file << vcl_endl;
+    return false;
+  }
+
   vul_awk ips( ipsifs );
   for( int c = 0; c < num_cameras; c++ ){
     for( int wp = 0; wp < num_world_points; wp++ ){
@@ -175,8 +185,6 @@ int main( int argc, char* argv[] )
       } else
         cameras_persp.push_back(p_camera);
     }
-
-
     
     // Optimize the cameras and world points if needed.
     if( bundle_adjust ){
@@ -194,7 +202,6 @@ int main( int argc, char* argv[] )
       }
     }
   }
-
 
   if (use_normalization) {
     // Unscale the cameras and world_points.
