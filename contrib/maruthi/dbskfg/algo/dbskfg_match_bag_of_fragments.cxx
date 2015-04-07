@@ -7548,25 +7548,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance(
                 model_sift_filter,
                 model_sift_filter);
 
-            // double bc_radius=bc_coords[index].x()/2.0;
-            // double bc_theta =bc_coords[index].y();
-
-            // bc_sift_distance += descr_cost(
-            //     model_pt,
-            //     bc_radius,
-            //     bc_theta,
-            //     model_pt,
-            //     bc_radius,
-            //     bc_theta,
-            //     model_red_grad_data,
-            //     query_red_grad_data,
-            //     model_green_grad_data,
-            //     query_green_grad_data,
-            //     model_blue_grad_data,
-            //     query_blue_grad_data,
-            //     model_sift_filter,
-            //     model_sift_filter);
-            
+            double L=
             index=index+1;
         }
     }
@@ -7706,7 +7688,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
     double fixed_theta=0.0;
 
     double trad_sift_distance=0.0;
-    double bc_sift_distance=0.0;
+    double local_color_distance=0.0;
 
     unsigned int index=0;
     unsigned int stride=3;
@@ -7744,24 +7726,16 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
                 query_sift_filter,
                 query_sift_filter);
 
-            // double bc_radius=bc_coords[index].x()/2.0;
-            // double bc_theta =bc_coords[index].y();
 
-            // bc_sift_distance += descr_cost(
-            //     model_pt,
-            //     bc_radius,
-            //     bc_theta,
-            //     model_pt,
-            //     bc_radius,
-            //     bc_theta,
-            //     model_red_grad_data,
-            //     query_red_grad_data,
-            //     model_green_grad_data,
-            //     query_green_grad_data,
-            //     model_blue_grad_data,
-            //     query_blue_grad_data,
-            //     model_sift_filter,
-            //     model_sift_filter);
+            local_color_distance += LAB_distance(
+                model_pt,
+                model_pt,
+                o1,
+                o2,
+                o3,
+                *query_tree->get_channel1(),
+                *query_tree->get_channel2(),
+                *query_tree->get_channel3());
             
             index=index+1;
         }
@@ -7773,7 +7747,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
     }
     
     app_distance.first  = trad_sift_distance/index;
-    app_distance.second = bc_sift_distance/index;
+    app_distance.second = local_color_distance/index;
 
     vl_free(model_red_grad_data);
     vl_free(model_green_grad_data);
