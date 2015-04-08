@@ -7601,10 +7601,10 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
     vgl_polygon<double> poly=query_fragments_polys_
         [query_tree->get_id()].second;
     
-    vcl_vector<vgl_point_2d<double> > bc_coords;
+    vcl_map<vcl_pair<int,int>, vgl_point_2d<double> > bc_coords;
 
     vcl_set<vcl_pair<int,int> > out_of_bounds;
-
+    
     // do not include boundary
     vgl_polygon_scan_iterator<double> psi(poly, false);  
     for (psi.reset(); psi.next(); ) 
@@ -7648,13 +7648,15 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
                 {
                     temp(x,y)=vil_rgb<vxl_byte>(red,green,blue);
                 }
+
+                vcl_pair<int,int> key(x,y);
+                bc_coords[key]=model_rt;
             }
             else
             {
                 out_of_bounds.insert(vcl_make_pair(x,y));
             }
 
-            bc_coords.push_back(model_rt);
         }
     }
 
@@ -7728,7 +7730,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
             {
                 model_pt.set(ni-1-x,y);
             }
-            
+
             double sample_distance = descr_cost(
                 model_pt,
                 fixed_radius,
@@ -8197,10 +8199,10 @@ find_part_correspondences_qm(
         mapping_pt = query_curve->fragment_pt(s_map,
                                               t_map);
 
-        rt_model.set(int_pt.y(),
+        rt_model.set(t_rad_model-vcl_fabs(int_pt.y()),
                      model_curve->interp_theta(int_pt.x()));
 
-        rt_query.set(t_map,
+        rt_query.set(t_rad_query-vcl_fabs(t_map),
                      query_curve->interp_theta(s_map));
 
         
@@ -8315,10 +8317,10 @@ find_part_correspondences_qm(
         mapping_pt = query_curve->fragment_pt(s_map,
                                               t_map);
 
-        rt_model.set(int_pt.y(),
+        rt_model.set(t_rad_model-vcl_fabs(int_pt.y()),
                      model_curve->interp_theta(int_pt.x()));
 
-        rt_query.set(t_map,
+        rt_query.set(t_rad_query-vcl_fabs(t_map),
                      query_curve->interp_theta(s_map));
 
 
