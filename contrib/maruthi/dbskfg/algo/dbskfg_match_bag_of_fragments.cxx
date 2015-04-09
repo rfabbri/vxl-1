@@ -48,6 +48,7 @@ extern "C" {
 #include <vl/imopv.h>
 #include <vl/generic.h>
 #include <vl/kmeans.h>
+#include <vl/dsift.h>
 }
 
 #include <vgl/vgl_polygon_scan_iterator.h>
@@ -7794,6 +7795,247 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
     return app_distance;
 }   
 
+
+
+void dbskfg_match_bag_of_fragments::compute_dsift_image(
+    vil_image_resource_sptr& input_image,
+    vgl_box_2d<double>& box,
+    vcl_vector<vnl_vector<vl_sift_pix> >& descrs,
+    vcl_vector<vcl_pair<int,int> >& keypoints,
+    int step,
+    int binSize)
+{
+
+    vil_image_view<vxl_byte> image = input_image->get_view();
+
+    vil_image_view<vxl_byte> red   = vil_plane(image,0);
+    vil_image_view<vxl_byte> green = vil_plane(image,1);
+    vil_image_view<vxl_byte> blue  = vil_plane(image,2);
+    
+    vil_image_view<float> chan_1,chan_2,chan_3;
+
+    vil_convert_cast(red,chan_1);
+    vil_convert_cast(green,chan_2);
+    vil_convert_cast(blue,chan_3);
+
+    VlDsiftFilter* filter= vl_dsift_new_basic(image.ni(),
+                                              image.nj(),
+                                              step,
+                                              binSize);
+
+    vl_dsift_set_bounds(filter,
+                        box.min_x(),
+                        box.min_y(),
+                        box.max_x(),
+                        box.max_y());
+
+  
+    // Process channel 1 
+    {
+        vl_dsift_process(filter,
+                         chan_1.top_left_ptr());
+        int numb_descriptors = vl_dsift_get_keypoint_num(filter);        
+        float const* sift = vl_dsift_get_descriptors(filter);
+
+        int offset = 0 ;
+        int ptr_index=0; 
+
+        for ( unsigned int i=0; i < numb_descriptors ; ++i)
+        {
+            vnl_vector<vl_sift_pix> vec(384,0);
+
+            int stop=128*i+128;
+            for ( ; ptr_index < stop ; ++ptr_index)
+            {
+                vec.put(ptr_index+offset,sift[ptr_index]);
+            }
+            descrs.push_back(vec);
+            
+        }
+
+
+        VlDsiftKeypoint const* kps = vl_dsift_get_keypoints(filter);
+        
+        for ( unsigned int i=0; i < numb_descriptors ; ++i)
+        {
+            vcl_pair<int,int> key(kps[i].x,kps[i].y);
+            keypoints.push_back(key);
+        }
+
+    }
+
+    // Process channel 2
+    {
+        // Process channel 2 and get descriptors
+        vl_dsift_process(filter,
+                         chan_2.top_left_ptr());        
+        int numb_descriptors = vl_dsift_get_keypoint_num(filter);
+        float const* sift = vl_dsift_get_descriptors(filter);
+
+        int offset   = 128;
+        int ptr_index= 0; 
+
+        for ( unsigned int i=0; i < numb_descriptors ; ++i)
+        {
+            vnl_vector<vl_sift_pix> vec=descrs[i];
+
+            int stop=128*i+128;
+            for ( ; ptr_index < stop ; ++ptr_index)
+            {
+                vec.put(ptr_index+offset,sift[ptr_index]);
+            }
+            
+        }
+
+    }
+
+
+    // Process channel 3 
+    {
+        // Process and get sift descriptors
+        vl_dsift_process(filter,
+                         chan_3.top_left_ptr());
+        int numb_descriptors = vl_dsift_get_keypoint_num(filter);
+        float const* sift = vl_dsift_get_descriptors(filter);
+
+        int offset    = 256;
+        int ptr_index = 0; 
+
+        for ( unsigned int i=0; i < numb_descriptors ; ++i)
+        {
+            vnl_vector<vl_sift_pix> vec=descrs[i];
+            
+            int stop=128*i+128;
+            for ( ; ptr_index < stop ; ++ptr_index)
+            {
+                vec.put(ptr_index+offset,sift[ptr_index]);
+            }
+            
+        }
+
+    }
+
+    vl_dsift_delete(filter);
+
+}
+
+void dbskfg_match_bag_of_fragments::compute_dsift_image(
+    vil_image_view<double>& channel_1,
+    vil_image_view<double>& channel_2,
+    vil_image_view<double>& channel_3,
+    vgl_box_2d<double>& box,
+    vcl_vector<vnl_vector<vl_sift_pix> >& descrs,
+    vcl_vector<vcl_pair<int,int> >& keypoints,
+    int step,
+    int binSize)
+{
+    
+    vil_image_view<float> chan_1,chan_2,chan_3;
+
+    vil_convert_cast(channel_1,chan_1);
+    vil_convert_cast(channel_2,chan_2);
+    vil_convert_cast(channel_3,chan_3);
+
+    VlDsiftFilter* filter= vl_dsift_new_basic(chan_1.ni(),
+                                              chan_2.nj(),
+                                              step,
+                                              binSize);
+
+    vl_dsift_set_bounds(filter,
+                        box.min_x(),
+                        box.min_y(),
+                        box.max_x(),
+                        box.max_y());
+
+  
+    // Process channel 1 
+    {
+        vl_dsift_process(filter,
+                         chan_1.top_left_ptr());
+        int numb_descriptors = vl_dsift_get_keypoint_num(filter);        
+        float const* sift = vl_dsift_get_descriptors(filter);
+
+        int offset = 0 ;
+        int ptr_index=0; 
+
+        for ( unsigned int i=0; i < numb_descriptors ; ++i)
+        {
+            vnl_vector<vl_sift_pix> vec(384,0);
+
+            int stop=128*i+128;
+            for ( ; ptr_index < stop ; ++ptr_index)
+            {
+                vec.put(ptr_index+offset,sift[ptr_index]);
+            }
+            descrs.push_back(vec);
+            
+        }
+
+
+        VlDsiftKeypoint const* kps = vl_dsift_get_keypoints(filter);
+        
+        for ( unsigned int i=0; i < numb_descriptors ; ++i)
+        {
+            vcl_pair<int,int> key(kps[i].x,kps[i].y);
+            keypoints.push_back(key);
+        }
+
+    }
+
+    // Process channel 2
+    {
+        // Process channel 2 and get descriptors
+        vl_dsift_process(filter,
+                         chan_2.top_left_ptr());        
+        int numb_descriptors = vl_dsift_get_keypoint_num(filter);
+        float const* sift = vl_dsift_get_descriptors(filter);
+
+        int offset   = 128;
+        int ptr_index= 0; 
+
+        for ( unsigned int i=0; i < numb_descriptors ; ++i)
+        {
+            vnl_vector<vl_sift_pix> vec=descrs[i];
+
+            int stop=128*i+128;
+            for ( ; ptr_index < stop ; ++ptr_index)
+            {
+                vec.put(ptr_index+offset,sift[ptr_index]);
+            }
+            
+        }
+
+    }
+
+
+    // Process channel 3 
+    {
+        // Process and get sift descriptors
+        vl_dsift_process(filter,
+                         chan_3.top_left_ptr());
+        int numb_descriptors = vl_dsift_get_keypoint_num(filter);
+        float const* sift = vl_dsift_get_descriptors(filter);
+
+        int offset    = 256;
+        int ptr_index = 0; 
+
+        for ( unsigned int i=0; i < numb_descriptors ; ++i)
+        {
+            vnl_vector<vl_sift_pix> vec=descrs[i];
+            
+            int stop=128*i+128;
+            for ( ; ptr_index < stop ; ++ptr_index)
+            {
+                vec.put(ptr_index+offset,sift[ptr_index]);
+            }
+            
+        }
+
+    }
+
+    vl_dsift_delete(filter);
+
+}
 
 vgl_point_2d<double> dbskfg_match_bag_of_fragments::find_part_correspondences(
     vgl_point_2d<double> query_pt,

@@ -714,6 +714,25 @@ private:
         double width=0.0,
         bool debug=false);
 
+
+    void compute_dsift_image(
+        vil_image_resource_sptr& input_image,
+        vgl_box_2d<double>& box,
+        vcl_vector<vnl_vector<vl_sift_pix> >& descrs,
+        vcl_vector<vcl_pair<int,int> >& keypoints,
+        int step=3,
+        int binSize=8);
+
+    void compute_dsift_image(
+        vil_image_view<double>& channel_1,
+        vil_image_view<double>& channel_2,
+        vil_image_view<double>& channel_3,
+        vgl_box_2d<double>& box,
+        vcl_vector<vnl_vector<vl_sift_pix> >& descrs,
+        vcl_vector<vcl_pair<int,int> >& keypoints,
+        int step=3,
+        int binSize=8);
+
     vnl_vector<vl_sift_pix> compress_sift(vl_sift_pix* red_sift,
                                           vl_sift_pix* green_sift,
                                           vl_sift_pix* blue_sift,
