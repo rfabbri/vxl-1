@@ -8117,7 +8117,7 @@ void dbskfg_match_bag_of_fragments::compute_dsift_image(
             unsigned int v=0;
             for ( ; ptr_index < stop ; ++ptr_index)
             {
-                vec.put(ptr_index+offset,sift[ptr_index]);
+                vec.put(v+offset,sift[ptr_index]);
                 ++v;
             }
             
@@ -8173,9 +8173,11 @@ void dbskfg_match_bag_of_fragments::compute_dsift_image(
             vnl_vector<vl_sift_pix> vec(384,0);
 
             int stop=128*i+128;
+            unsigned int v=0;
             for ( ; ptr_index < stop ; ++ptr_index)
             {
-                vec.put(ptr_index+offset,sift[ptr_index]);
+                vec.put(v+offset,sift[ptr_index]);
+                ++v;
             }
             descrs.push_back(vec);
             
@@ -8208,9 +8210,11 @@ void dbskfg_match_bag_of_fragments::compute_dsift_image(
             vnl_vector<vl_sift_pix> vec=descrs[i];
 
             int stop=128*i+128;
+            unsigned int v=0;
             for ( ; ptr_index < stop ; ++ptr_index)
             {
-                vec.put(ptr_index+offset,sift[ptr_index]);
+                vec.put(v+offset,sift[ptr_index]);
+                ++v;
             }
             
         }
@@ -8234,9 +8238,11 @@ void dbskfg_match_bag_of_fragments::compute_dsift_image(
             vnl_vector<vl_sift_pix> vec=descrs[i];
             
             int stop=128*i+128;
+            unsigned int v=0;
             for ( ; ptr_index < stop ; ++ptr_index)
             {
-                vec.put(ptr_index+offset,sift[ptr_index]);
+                vec.put(v+offset,sift[ptr_index]);
+                ++v;
             }
             
         }
