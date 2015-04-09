@@ -4934,6 +4934,16 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                 flag,
                 width);
 
+        // vcl_pair<double,double> sift_rgb_cost =
+        //     compute_common_frame_distance_dsift_qm(
+        //         model_tree,
+        //         query_tree,
+        //         curve_list1,
+        //         curve_list2,
+        //         map_list,
+        //         flag,
+        //         width);
+
         // vcl_pair<double,double> sift_rgb_cost=compute_mi(
         //     curve_list1,
         //     curve_list2,
@@ -7787,6 +7797,200 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
     model_red_grad_data=0;
     model_green_grad_data=0;
     model_blue_grad_data=0;
+
+    if ( debug )
+    {
+        vcl_cout<<app_distance.first<<" "<<app_distance.second<<vcl_endl;
+    }
+    return app_distance;
+}   
+
+
+vcl_pair<double,double> 
+dbskfg_match_bag_of_fragments::compute_common_frame_distance_dsift_qm(
+    dbskfg_cgraph_directed_tree_sptr& model_tree,
+    dbskfg_cgraph_directed_tree_sptr& query_tree,
+    vcl_vector<dbskr_scurve_sptr>& curve_list1,
+    vcl_vector<dbskr_scurve_sptr>& curve_list2,
+    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    bool flag,
+    double width,
+    bool debug)
+{
+    
+    vcl_pair<double,double> app_distance(0.0,0.0);
+
+
+    vil_image_view<double>* query_channel1=query_tree->get_channel1();
+    vil_image_view<double>* query_channel2=query_tree->get_channel2();
+    vil_image_view<double>* query_channel3=query_tree->get_channel3();
+
+    vil_image_view<double>* model_channel1=model_tree->get_channel1();
+    vil_image_view<double>* model_channel2=model_tree->get_channel2();
+    vil_image_view<double>* model_channel3=model_tree->get_channel3();
+
+    vil_image_view<vil_rgb<float> > temp(query_tree->get_channel1()->ni(),
+                                         query_tree->get_channel1()->nj());
+    vil_rgb<float> bg_col(0,0,0);
+    temp.fill(bg_col);
+
+    int ni=query_tree->get_channel1()->ni();
+
+    vgl_polygon<double> poly=query_fragments_polys_
+        [query_tree->get_id()].second;
+    
+    vcl_map<vcl_pair<int,int>, vgl_point_2d<double> > bc_coords;
+
+    vcl_set<vcl_pair<int,int> > in_bounds;
+
+    vgl_box_2d<double> box;
+
+    // do not include boundary
+    vgl_polygon_scan_iterator<double> psi(poly, false);  
+    for (psi.reset(); psi.next(); ) 
+    {
+        int y = psi.scany();
+        for (int x = psi.startx(); x <= psi.endx(); ++x) 
+        {
+            vgl_point_2d<double> query_pt(x,y);
+
+            vgl_point_2d<double> model_rt(0,0),query_rt(0,0);
+
+            vgl_point_2d<double> mapping_pt=
+                find_part_correspondences_qm(query_pt,
+                                             curve_list1,
+                                             curve_list2,
+                                             map_list,
+                                             model_rt,
+                                             query_rt,
+                                             flag,
+                                             width,
+                                             model_tree
+                                             ->get_scale_ratio(),
+                                             query_tree
+                                             ->get_scale_ratio());
+
+            if ( mapping_pt.x() != -1 )
+            {
+                double xx=mapping_pt.x();
+                double yy=mapping_pt.y();
+                
+                float red   = vil_bilin_interp_safe(*model_channel1,xx,yy);
+                float green = vil_bilin_interp_safe(*model_channel2,xx,yy);
+                float blue  = vil_bilin_interp_safe(*model_channel3,xx,yy);
+                
+
+                if ( width )
+                {
+                    temp(ni-1-x,y)=vil_rgb<float>(red,green,blue);
+                }
+                else
+                {
+                    temp(x,y)=vil_rgb<float>(red,green,blue);
+                }
+
+                in_bounds.insert(vcl_make_pair(x,y));
+
+                vcl_pair<int,int> key(x,y);
+                bc_coords[key]=model_rt;
+
+                box.add(vgl_point_2d<double>(x,y));
+            }
+
+        }
+    }
+
+    vil_image_resource_sptr out_img = vil_new_image_resource_of_view(temp);
+
+
+    int binSize =8;
+    int stride  =3;
+
+    vnl_matrix<double> dist_map;
+
+    if ( debug )
+    {
+        dist_map.set_size(temp.ni(),temp.nj());
+        dist_map.fill(0.0);
+        stride=1;
+    }
+
+    vcl_vector< vnl_vector<vl_sift_pix> > model_descrs;
+    vcl_vector< vcl_pair<int,int> > model_keypoints;
+   
+    compute_dsift_image(
+        out_img,
+        box,
+        model_descrs,
+        model_keypoints,
+        stride,
+        binSize);
+
+
+    vcl_vector< vnl_vector<vl_sift_pix> > query_descrs;
+    vcl_vector< vcl_pair<int,int> > query_keypoints;
+   
+    compute_dsift_image(
+        *query_channel1,
+        *query_channel2,
+        *query_channel3,
+        box,
+        query_descrs,
+        query_keypoints,
+        stride,
+        binSize);
+
+    VlFloatVectorComparisonFunction Chi2_distance =    
+      vl_get_vector_comparison_function_f (VlDistanceChi2) ;
+
+    double trad_sift_distance(0.0);
+    for ( unsigned int k=0; k < model_keypoints.size() ; ++k)
+    {
+
+        vcl_pair<int,int> keypoint=model_keypoints[k];
+
+        if ( in_bounds.count(keypoint) )
+        {
+            vnl_vector<vl_sift_pix> descr1=model_descrs[k];
+            vnl_vector<vl_sift_pix> descr2=query_descrs[k];
+
+
+            vl_sift_pix result_final[1];
+        
+            vl_eval_vector_comparison_on_all_pairs_f(result_final,
+                                                     descr1.size(),
+                                                     descr1.data_block(),
+                                                     1,
+                                                     descr2.data_block(),
+                                                     1,
+                                                     Chi2_distance);
+            double dist=(0.5)*result_final[0];
+            
+            trad_sift_distance += dist;
+
+            if ( debug )
+            {
+                dist_map(keypoint.first,keypoint.second)=dist;
+            }
+
+        }
+    }
+
+    if ( debug )
+    {
+        vcl_stringstream name;
+        name<<"Model_"<<model_tree->get_id()<<"_vs_Query_"<<query_tree->get_id()
+            <<"_dist_map.txt";
+        
+        vcl_ofstream streamer(name.str().c_str());
+        dist_map.print(streamer);
+        streamer.close();
+        
+        dist_map.clear();
+    }
+
+    app_distance.first  = trad_sift_distance/model_keypoints.size();
+    app_distance.second = trad_sift_distance;
 
     if ( debug )
     {
