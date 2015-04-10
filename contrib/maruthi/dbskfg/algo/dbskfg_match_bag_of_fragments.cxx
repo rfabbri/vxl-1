@@ -5912,6 +5912,8 @@ void dbskfg_match_bag_of_fragments::compute_grad_color_maps(
     {
         flipped_image.fill(0.0);
 
+        vcl_set<vcl_pair<int,int> > in_bounds;
+
         // do not include boundary
         vgl_polygon_scan_iterator<double> psi(poly, false);  
         for (psi.reset(); psi.next(); ) 
@@ -5930,8 +5932,26 @@ void dbskfg_match_bag_of_fragments::compute_grad_color_maps(
                 {
                     flipped_image(x,y)=orig_image(x,y);
                 }
+
+                in_bounds.insert(vcl_make_pair(x,y));
+                
             }
         }
+
+
+        for ( int cols=0; cols < orig_image.nj() ; ++cols)
+        {
+            for ( int rows=0; rows < orig_image.ni() ; ++rows)
+            {
+                vcl_pair<int,int> key(rows,cols);
+
+                if ( !in_bounds.count(key) )
+                {
+                    orig_image(rows,cols)=0;
+                }
+            }
+        }
+
     }
     else
     {
@@ -7707,14 +7727,14 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
                             poly,
                             false);
 
-    double fixed_radius=8;
+    double fixed_radius=16;
     double fixed_theta=0.0;
 
     double trad_sift_distance=0.0;
     double local_color_distance=0.0;
 
     unsigned int index=0;
-    unsigned int stride=3;
+    unsigned int stride=8;
 
     vnl_matrix<double> dist_map;
 
