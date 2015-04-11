@@ -8004,8 +8004,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_dsift_qm(
     vil_image_resource_sptr out_img = vil_new_image_resource_of_view(temp);
 
 
-    int binSize =8;
-    int stride  =4;
+    int binSize =16;
+    int stride  =8;
 
     vnl_matrix<double> dist_map;
 
@@ -8044,43 +8044,37 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_dsift_qm(
     VlFloatVectorComparisonFunction Chi2_distance =    
       vl_get_vector_comparison_function_f (VlDistanceChi2) ;
 
-    unsigned int index=0;
-
     double trad_sift_distance(0.0);
     for ( unsigned int k=0; k < model_keypoints.size() ; ++k)
     {
 
         vcl_pair<int,int> keypoint=model_keypoints[k];
 
-
-        if ( in_bounds.count(keypoint))
+        vnl_vector<vl_sift_pix> descr1=model_descrs[k];
+        vnl_vector<vl_sift_pix> descr2=query_descrs[k];
+        
+        
+        vl_sift_pix result_final[1];
+        
+        vl_eval_vector_comparison_on_all_pairs_f(result_final,
+                                                 descr1.size(),
+                                                 descr1.data_block(),
+                                                 1,
+                                                 descr2.data_block(),
+                                                 1,
+                                                 Chi2_distance);
+        double dist=(0.5)*result_final[0];
+        
+        trad_sift_distance += dist;
+        
+        if ( debug )
         {
-            
-            vnl_vector<vl_sift_pix> descr1=model_descrs[k];
-            vnl_vector<vl_sift_pix> descr2=query_descrs[k];
-        
-        
-            vl_sift_pix result_final[1];
-        
-            vl_eval_vector_comparison_on_all_pairs_f(result_final,
-                                                     descr1.size(),
-                                                     descr1.data_block(),
-                                                     1,
-                                                     descr2.data_block(),
-                                                     1,
-                                                     Chi2_distance);
-            double dist=(0.5)*result_final[0];
-        
-            trad_sift_distance += dist;
-        
-            if ( debug )
+            if ( in_bounds.count(keypoint))
             {
                 dist_map(keypoint.first,keypoint.second)=dist;
-            
             }
-        
-            index=index+1;
         }
+        
     
     }
 
@@ -8097,7 +8091,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_dsift_qm(
         dist_map.clear();
     }
 
-    app_distance.first  = trad_sift_distance/index;
+    app_distance.first  = trad_sift_distance/model_keypoints.size();
     app_distance.second = trad_sift_distance;
 
     if ( debug )
