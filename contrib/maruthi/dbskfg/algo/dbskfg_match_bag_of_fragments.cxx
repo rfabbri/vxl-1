@@ -7645,6 +7645,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
 
     vcl_set<vcl_pair<int,int> > out_of_bounds;
     
+    vcl_map<vcl_pair<int,int>, int > point_to_curve_mapping;
+
     vil_image_view<double> o1(query_channel1->ni(),
                               query_channel2->nj());
     o1.fill(0);
@@ -7722,6 +7724,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
 
                 vcl_pair<int,int> key(x,y);
                 bc_coords[key]=model_rt;
+
+                point_to_curve_mapping[key]=curve_list_id;
             }
             else
             {
@@ -7773,6 +7777,10 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
     unsigned int index=0;
     unsigned int stride=8;
 
+    vnl_vector<double> part_distances(curve_list1.size(),0.0);
+
+    vcl_vector<double> norm_factors(curve_list1.size(),0.0);
+
     vnl_matrix<double> dist_map;
 
     if ( debug )
@@ -7791,6 +7799,10 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
             {
                 continue;
             }
+
+            vcl_pair<int,int> key(x,y);
+
+            int curve_list_id=point_to_curve_mapping[key];
 
             vgl_point_2d<double> model_pt(x,y);
             
@@ -7816,6 +7828,12 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
                 query_sift_filter);
 
             trad_sift_distance += sample_distance;
+
+            part_distances[curve_list_id]=part_distances[curve_list_id]+
+                sample_distance;
+
+            norm_factors[curve_list_id]=norm_factors[curve_list_id]+
+                1.0;
 
             vcl_set<vcl_pair<double,double> > sift_samples;
                         
@@ -7876,6 +7894,19 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
         }
     }
 
+    // Normalize part distances
+    for ( unsigned int i=0; i < part_distances.size() ; ++i)
+    {
+        part_distances[i]=part_distances[i]/norm_factors[i];
+
+        if ( debug )
+        {
+            vcl_cout<<"Part "<<i<<" : "<<part_distances[i]<<vcl_endl;
+        }
+    }
+
+    double part_norm_distance=part_distances.mean();
+
     if ( debug )
     {
         vcl_stringstream name;
@@ -7890,7 +7921,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
     }
 
     app_distance.first  = trad_sift_distance/index;
-    app_distance.second = local_color_distance/index;
+    app_distance.second = part_norm_distance;
+    //app_distance.second = local_color_distance/index;
 
     vl_free(model_red_grad_data);
     vl_free(model_green_grad_data);
