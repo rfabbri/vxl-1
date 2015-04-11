@@ -53,7 +53,7 @@
 
 static bool is_edges_covered_in_window (vgl_box_2d<int > window, vcl_vector<dbdet_edgel*> edgels);
 
-static bool b_rank_order_results = true;
+static bool b_rank_order_results = false;
 static bool is_initial = false;
 static bool is_Black = true;
 static double b_ranking_weights[] = {0.0705, 0.0688, 0.2222, 0.1026};
@@ -213,7 +213,7 @@ execute()
 
   	    if(is_initial)
 			prev_dets.clear();
-  	    if(b_rank_order_results)
+  	    //if(b_rank_order_results)
 	  		this->rank_detection_results(actual_edgemap, actual_xgraph, min_accepted_confidence, storage_folder, dets, prev_dets);
 		// save detection to disk
 		dbsks_save_detections_to_folder(dets, object_id, model_category, 
