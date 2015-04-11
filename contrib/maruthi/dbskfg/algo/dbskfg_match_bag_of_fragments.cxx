@@ -7669,6 +7669,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
 
             vgl_point_2d<double> model_rt(0,0),query_rt(0,0);
 
+            int curve_list_id(0);
+
             vgl_point_2d<double> mapping_pt=
                 find_part_correspondences_qm(query_pt,
                                              curve_list1,
@@ -7676,6 +7678,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
                                              map_list,
                                              model_rt,
                                              query_rt,
+                                             curve_list_id,
                                              flag,
                                              width,
                                              model_tree
@@ -7957,6 +7960,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_dsift_qm(
 
             vgl_point_2d<double> model_rt(0,0),query_rt(0,0);
 
+            int curve_list_id(0);
+
             vgl_point_2d<double> mapping_pt=
                 find_part_correspondences_qm(query_pt,
                                              curve_list1,
@@ -7964,6 +7969,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_dsift_qm(
                                              map_list,
                                              model_rt,
                                              query_rt,
+                                             curve_list_id,
                                              flag,
                                              width,
                                              model_tree
@@ -8629,6 +8635,7 @@ find_part_correspondences_qm(
     vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
     vgl_point_2d<double>& rt_model,
     vgl_point_2d<double>& rt_query,
+    int& curve_list_id,
     bool flag,
     double width,
     double model_scale_ratio,
@@ -8675,6 +8682,8 @@ find_part_correspondences_qm(
 
         dbskr_scurve_sptr model_curve=curve_list2[c];
         dbskr_scurve_sptr query_curve=curve_list1[c];
+
+        curve_list_id=c;
 
         // Find point in model curve
         vgl_point_2d<double> int_pt;
@@ -8794,6 +8803,8 @@ find_part_correspondences_qm(
 
         dbskr_scurve_sptr model_curve=curve_list1[c];
         dbskr_scurve_sptr query_curve=curve_list2[c];
+
+        curve_list_id=c;
 
         // Find point in model curve
         vgl_point_2d<double> int_pt;

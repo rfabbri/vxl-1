@@ -669,6 +669,7 @@ private:
         vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
         vgl_point_2d<double>& rt_model,
         vgl_point_2d<double>& rt_query,
+        int& curve_list_id,
         bool flag=false,
         double width=0.0,
         double model_scale_ratio=1.0,
