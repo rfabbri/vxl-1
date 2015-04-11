@@ -8005,7 +8005,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_dsift_qm(
 
 
     int binSize =8;
-    int stride  =3;
+    int stride  =4;
 
     vnl_matrix<double> dist_map;
 
