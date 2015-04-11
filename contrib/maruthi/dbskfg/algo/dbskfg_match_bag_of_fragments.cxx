@@ -8050,31 +8050,32 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_dsift_qm(
 
         vcl_pair<int,int> keypoint=model_keypoints[k];
 
-        if ( in_bounds.count(keypoint) )
-        {
-            vnl_vector<vl_sift_pix> descr1=model_descrs[k];
-            vnl_vector<vl_sift_pix> descr2=query_descrs[k];
-
-
-            vl_sift_pix result_final[1];
+        vnl_vector<vl_sift_pix> descr1=model_descrs[k];
+        vnl_vector<vl_sift_pix> descr2=query_descrs[k];
         
-            vl_eval_vector_comparison_on_all_pairs_f(result_final,
-                                                     descr1.size(),
-                                                     descr1.data_block(),
-                                                     1,
-                                                     descr2.data_block(),
-                                                     1,
-                                                     Chi2_distance);
-            double dist=(0.5)*result_final[0];
-            
-            trad_sift_distance += dist;
-
-            if ( debug )
+        
+        vl_sift_pix result_final[1];
+        
+        vl_eval_vector_comparison_on_all_pairs_f(result_final,
+                                                 descr1.size(),
+                                                 descr1.data_block(),
+                                                 1,
+                                                 descr2.data_block(),
+                                                 1,
+                                                 Chi2_distance);
+        double dist=(0.5)*result_final[0];
+        
+        trad_sift_distance += dist;
+        
+        if ( debug )
+        {
+            if ( in_bounds.count(keypoint))
             {
                 dist_map(keypoint.first,keypoint.second)=dist;
             }
-
         }
+        
+    
     }
 
     if ( debug )
