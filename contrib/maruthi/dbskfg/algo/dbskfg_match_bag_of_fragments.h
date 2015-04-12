@@ -364,6 +364,8 @@ private:
         vcl_vector<vgl_point_2d<double> > > 
         query_dart_curves_;
 
+    vcl_map<int,vcl_vector<double> > part_distances_;
+
     // Keep output file
     vcl_string output_match_file_;
     vcl_string output_html_file_;

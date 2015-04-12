@@ -7963,6 +7963,11 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
     bool debug)
 {
     
+    if ( part_distances_.count(model_tree->get_id()))
+    {
+        part_distances_[model_tree->get_id()].clear();
+    }
+
     vcl_vector<vgl_polygon<double> > scurve_polys;
     query_tree->get_polygon_scurves(scurve_polys);
 
@@ -8244,6 +8249,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
         }
 
         sg_part_distances[d]=temp_distance;
+
+        part_distances_[model_tree->get_id()].push_back(temp_distance);
 
         if ( debug )
         {
@@ -14154,83 +14161,103 @@ void dbskfg_match_bag_of_fragments::write_out_dart_data()
 {
     
     vcl_string dart_file=vul_file::strip_extension(output_binary_file_);
-    dart_file=dart_file+"_dart.txt";
+    dart_file=dart_file+"_part_distances.txt";
 
     vcl_ofstream model_file(dart_file.c_str());
-    model_file<<query_dart_curves_.size()<<vcl_endl;
 
+    vcl_map<int,vcl_vector<double> >::iterator it;
+    for ( it = part_distances_.begin(); it != part_distances_.end() ; ++it)
     {
-        vcl_map<vcl_pair<unsigned int,unsigned int>,
-            vcl_vector<vgl_point_2d<double> > >
-            ::iterator it;
-        
-        
-        for ( it = query_dart_curves_.begin() ; it != query_dart_curves_.end();
-              ++it)
+
+        vcl_vector<double> dd=(*it).second;
+
+        for ( unsigned int v=0; v < dd.size() ; ++v)
         {
-            vcl_pair<int,int> pair=(*it).first;
-            vcl_vector<vgl_point_2d<double> > curve=(*it).second;
-            model_file<<pair.first<<","<<pair.second<<vcl_endl;
-            model_file<<curve.size()<<vcl_endl;
-            for ( unsigned int c=0; c < curve.size() ; ++c)
+            if ( v == dd.size() -1 )
             {
-                model_file<<curve[c].x()<<","<<curve[c].y()<<vcl_endl;
+                model_file<<dd[v]<<vcl_endl;
+            }
+            else
+            {
+                model_file<<dd[v]<<" ";
             }
         }
     }
 
-    // Write out model
-    {
-
-        model_file<<model_dart_distances_.size()<<vcl_endl;
-        vcl_map<unsigned int,
-            vcl_vector< vcl_pair<vcl_pair<unsigned int,unsigned int>,
-            double> > >::
-            iterator it;
-        for ( it = model_dart_distances_.begin() ; it != model_dart_distances_
-                  .end(); ++it)
-        {
-            vcl_vector< vcl_pair<vcl_pair<unsigned int,unsigned 
-                int>,double> > vec=
-                (*it).second;
-            vcl_vector< vcl_pair<vcl_pair<unsigned int,
-                unsigned int>, dbskr_scurve_sptr > > p2 =
-                model_dart_curves_[(*it).first];
-
-            model_file<<vec.size()<<vcl_endl;
-            for ( unsigned int v=0; v < vec.size() ; ++v)
-            {
-                vcl_pair<vcl_pair<unsigned int,unsigned int>,
-                    double> pair=vec[v];
-                model_file<<pair.first.first<<","<<pair.first.second<<vcl_endl;
-                model_file<<pair.second<<vcl_endl;
-
-                
-                dbskr_scurve_sptr curve=p2[v].second;
-                vgl_polygon<double> model_polygon(1);
-                curve->get_polygon(model_polygon);
-                
-                model_file<<model_polygon[0].size()+1<<vcl_endl;
-
-                for (unsigned int s = 0; s < model_polygon.num_sheets(); ++s)
-                {
-                    for (unsigned int p = 0; p < model_polygon[s].size(); ++p)
-                    {
-                        model_file<<model_polygon[s][p].x()<<","
-                                  <<model_polygon[s][p].y()<<vcl_endl;
-                    }
-                }
-
-                model_file<<model_polygon[0][0].x()<<","
-                          <<model_polygon[0][0].y()<<vcl_endl;
-                
-            }
-            
-        }
-        
-        
-    }
     model_file.close();
+
+    // {
+    //     vcl_map<vcl_pair<unsigned int,unsigned int>,
+    //         vcl_vector<vgl_point_2d<double> > >
+    //         ::iterator it;
+        
+        
+    //     for ( it = query_dart_curves_.begin() ; it != query_dart_curves_.end();
+    //           ++it)
+    //     {
+    //         vcl_pair<int,int> pair=(*it).first;
+    //         vcl_vector<vgl_point_2d<double> > curve=(*it).second;
+    //         model_file<<pair.first<<","<<pair.second<<vcl_endl;
+    //         model_file<<curve.size()<<vcl_endl;
+    //         for ( unsigned int c=0; c < curve.size() ; ++c)
+    //         {
+    //             model_file<<curve[c].x()<<","<<curve[c].y()<<vcl_endl;
+    //         }
+    //     }
+    // }
+
+    // // Write out model
+    // {
+
+    //     model_file<<model_dart_distances_.size()<<vcl_endl;
+    //     vcl_map<unsigned int,
+    //         vcl_vector< vcl_pair<vcl_pair<unsigned int,unsigned int>,
+    //         double> > >::
+    //         iterator it;
+    //     for ( it = model_dart_distances_.begin() ; it != model_dart_distances_
+    //               .end(); ++it)
+    //     {
+    //         vcl_vector< vcl_pair<vcl_pair<unsigned int,unsigned 
+    //             int>,double> > vec=
+    //             (*it).second;
+    //         vcl_vector< vcl_pair<vcl_pair<unsigned int,
+    //             unsigned int>, dbskr_scurve_sptr > > p2 =
+    //             model_dart_curves_[(*it).first];
+
+    //         model_file<<vec.size()<<vcl_endl;
+    //         for ( unsigned int v=0; v < vec.size() ; ++v)
+    //         {
+    //             vcl_pair<vcl_pair<unsigned int,unsigned int>,
+    //                 double> pair=vec[v];
+    //             model_file<<pair.first.first<<","<<pair.first.second<<vcl_endl;
+    //             model_file<<pair.second<<vcl_endl;
+
+                
+    //             dbskr_scurve_sptr curve=p2[v].second;
+    //             vgl_polygon<double> model_polygon(1);
+    //             curve->get_polygon(model_polygon);
+                
+    //             model_file<<model_polygon[0].size()+1<<vcl_endl;
+
+    //             for (unsigned int s = 0; s < model_polygon.num_sheets(); ++s)
+    //             {
+    //                 for (unsigned int p = 0; p < model_polygon[s].size(); ++p)
+    //                 {
+    //                     model_file<<model_polygon[s][p].x()<<","
+    //                               <<model_polygon[s][p].y()<<vcl_endl;
+    //                 }
+    //             }
+
+    //             model_file<<model_polygon[0][0].x()<<","
+    //                       <<model_polygon[0][0].y()<<vcl_endl;
+                
+    //         }
+            
+    //     }
+        
+        
+    // }
+    // model_file.close();
 
 
 
