@@ -7971,6 +7971,16 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
     vcl_vector<vgl_polygon<double> > scurve_polys;
     query_tree->get_polygon_scurves(scurve_polys);
 
+    vcl_map<double,unsigned int> area_mapping;
+
+    for ( unsigned int d=0; d < scurve_polys.size() ; ++d)
+    {
+        vgl_polygon<double> query_poly=scurve_polys[d];
+        
+        area_mapping[vgl_area(query_poly)]=d;
+    }
+
+
     if ( debug )
     {
         for ( unsigned int d=0; d < scurve_polys.size() ; ++d)
@@ -8165,11 +8175,15 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
     {
         dist_map.set_size(temp.ni(),temp.nj());
         dist_map.fill(0.0);
-        //stride=1;
+        stride=1;
     }
 
-    for ( unsigned int d=0; d < scurve_polys.size() ; ++d)
+    vcl_map<double,unsigned int>::iterator ait;
+
+    for ( ait=area_mapping.begin() ; ait != area_mapping.end() ; ++ait)
     {
+        unsigned int d = (*ait).second;
+
         vgl_polygon<double> query_poly=scurve_polys[d];
 
         vgl_polygon_scan_iterator<double> q_psi(query_poly, false);  
