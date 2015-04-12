@@ -1666,6 +1666,69 @@ void dbskfg_cgraph_directed_tree::compute_scurve_polygons
 //------------------------------------------------------------------------------
 //: uses the already existing scurves, so if circular_ends = true 
 // while acquiring the tree then the outline will have circular completions
+void dbskfg_cgraph_directed_tree::get_polygon_scurves
+(vcl_vector<vgl_polygon<double> >& polys)
+{
+  //: find the set of darts to use
+  vcl_vector<unsigned> to_use;
+  for (unsigned i = 0; i < dart_cnt_; i++) {
+    if (leaf_[i]) {
+      to_use.push_back(i);
+      continue;
+    }
+
+    if (leaf_[mate_[i]]) 
+      continue;
+    
+    bool contain = false;
+    for (unsigned j = 0; j < to_use.size(); j++) {
+      if (to_use[j] == mate_[i]) {
+        contain = true;
+        break;
+      }
+    }
+
+    if (!contain)
+      to_use.push_back(i);
+  }
+
+  //: now concatanate the scurves  
+  vcl_vector<vsol_point_2d_sptr> points;
+  unsigned j = 0;
+  for (unsigned i = 0; i < dart_cnt_; i++) 
+  { 
+
+    if (i == to_use[j]) 
+    {
+
+      vcl_pair<int, int> p;
+      p.first = i;
+      p.second = i;
+      vcl_map<vcl_pair<int, int>, dbskr_sc_pair_sptr>::iterator iter = 
+          dart_path_scurve_map_.find(p);
+      dbskr_scurve_sptr sc = (iter->second)->coarse;
+
+      double width=0.0;
+      
+      if ( mirror_ )
+      {
+           width = bbox_->width();
+      }
+
+      vgl_polygon<double> poly(1);
+      sc->get_polygon(poly,width);
+
+      polys.push_back(poly);
+      j++;
+    }
+  }
+
+}
+
+
+//------------------------------------------------------------------------------
+//: uses the already existing scurves, so if circular_ends = true 
+// while acquiring the tree then the outline will have circular completions
 void dbskfg_cgraph_directed_tree::compute_sift_tree
 (vcl_vector<vl_sift_pix>& descriptors)
 {

@@ -168,6 +168,10 @@ public:
   void compute_extrinsic_mapping();
 
   //------------------------------------------------------------------------
+  //: get polygons for all scurve ( shock graph parts )
+  void get_polygon_scurves(vcl_vector<vgl_polygon<double> >& polys);
+
+  //------------------------------------------------------------------------
   // verify_mapping
   void verify_mapping();
 
