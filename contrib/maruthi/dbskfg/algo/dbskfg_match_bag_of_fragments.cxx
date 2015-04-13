@@ -8168,6 +8168,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
     vnl_vector<double> middle_part_distances(curve_list1.size(),0.0);
     vcl_vector<double> middle_norm_factors(curve_list1.size(),0.0);
     vnl_vector<double> sg_part_distances(scurve_polys.size(),0.0);
+    vnl_vector<double> sg_part_color_distances(scurve_polys.size(),0.0);
 
     vnl_matrix<double> dist_map;
 
@@ -8191,6 +8192,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
         int norm_index=0;
         double trad_sift_distance=0.0;
 
+        vcl_set< vcl_pair<double,double> > part_samples;
+
         for (q_psi.reset(); q_psi.next(); ) 
         {
             int y = q_psi.scany();
@@ -8203,6 +8206,9 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
                 {
                     model_pt.set(ni-1-x,y);
                 }
+
+                part_samples.insert(vcl_make_pair( (double) x,
+                                                   (double) y));
 
                 double sample_distance = descr_cost(
                     model_pt,
@@ -8266,10 +8272,59 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_part_qm(
 
         part_distances_[model_tree->get_id()].push_back(temp_distance);
 
+        
+        vcl_vector<double> model_descr;
+        vcl_vector<double> query_descr;
+        
+        compute_color_region_hist(
+            part_samples,
+            o1,
+            o2,
+            o3,
+            model_descr,
+            dbskfg_match_bag_of_fragments::DEFAULT);
+
+        compute_color_region_hist(
+            part_samples,
+            *query_channel1,
+            *query_channel2,
+            *query_channel3,
+            query_descr,
+            dbskfg_match_bag_of_fragments::DEFAULT);
+                        
+        vnl_vector<double> vec_model(model_descr.size(),0);
+        vnl_vector<double> vec_query(query_descr.size(),0);
+            
+        for ( unsigned int m=0; m < model_descr.size(); ++m)
+        {
+            vec_model.put(m,model_descr[m]);
+            vec_query.put(m,query_descr[m]);
+        }
+
+        vec_model.normalize(); vec_query.normalize();
+
+        double local_color_distance =
+            chi_squared_distance(vec_model,vec_query);
+        
+        sg_part_color_distances[d]=temp_distance;
+
         if ( debug )
         {
-            vcl_cout<<"SG Part "<<d<<" : "<<sg_part_distances[d]<<" samples: "
+            vcl_set< vcl_pair<double,double> >::iterator it;
+            for ( it = part_samples.begin() ; it != part_samples.end();
+                  ++it)
+            {
+                dist_map((*it).first,(*it).second)=sg_part_distances[d];
+
+            }
+
+            vcl_cout<<"SG Part color grad "<<d
+                    <<" : "<<sg_part_distances[d]<<" samples: "
                     <<norm_index<<vcl_endl;
+            vcl_cout<<"SG Part color "<<d
+                    <<" : "<<sg_part_color_distances[d]<<" samples: "
+                    <<norm_index<<vcl_endl;
+
         }
     }
 
