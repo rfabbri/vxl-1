@@ -4933,8 +4933,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                 curve_list2,
                 map_list,
                 flag,
-                width,
-                true);
+                width);
 
         // vcl_pair<double,double> sift_rgb_cost =
         //     compute_common_frame_distance_part_qm(
