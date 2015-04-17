@@ -7813,6 +7813,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
         //stride=1;
     }
     
+    vcl_map<int,int> scan_line_visit;
+
     for (psi.reset(); psi.next(); ) 
     {
         int y = psi.scany();
@@ -7911,7 +7913,16 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
             index=index+1;
         }
 
-        if ( scan_lines[y] == 1.0 )
+        if ( scan_line_visit.count(y))
+        {
+            scan_line_visit[y]=scan_line_visit[y]+1;
+        }
+        else
+        {
+            scan_line_visit[y]=1;
+        }
+
+        if ( scan_lines[y] == scan_line_visit[y] )
         {
             for ( unsigned int k=0; k < stride-1 ; ++k)
             {
