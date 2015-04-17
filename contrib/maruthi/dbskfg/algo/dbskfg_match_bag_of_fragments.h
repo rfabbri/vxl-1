@@ -373,6 +373,7 @@ private:
     vcl_string output_binary_h_file_;
     vcl_string output_removed_regions_;
     vcl_string output_parts_file_;
+    vcl_string output_dist_file_;
 
     // Amirs elastic splice cost 
     bool elastic_splice_cost_;

@@ -132,6 +132,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
       output_binary_h_file_(output_file),
       output_removed_regions_(output_file),
       output_parts_file_(output_file),
+      output_dist_file_(output_file),
       scale_bbox_(scale_bbox),
       scale_root_(scale_root),
       scale_area_(scale_area),
@@ -4932,7 +4933,8 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                 curve_list2,
                 map_list,
                 flag,
-                width);
+                width,
+                true);
 
         // vcl_pair<double,double> sift_rgb_cost =
         //     compute_common_frame_distance_part_qm(
@@ -7797,7 +7799,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
     {
         dist_map.set_size(temp.ni(),temp.nj());
         dist_map.fill(0.0);
-        stride=1;
+        //stride=1;
     }
     
     for (psi.reset(); psi.next(); ) 
@@ -7919,10 +7921,24 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
 
     if ( debug )
     {
+        unsigned int g=model_tree->get_id();
+
         vcl_stringstream name;
-        name<<"Model_"<<model_tree->get_id()<<"_vs_Query_"<<query_tree->get_id()
-            <<"_dist_map.txt";
-        
+        name<<output_dist_file_;
+        if ( g < 10 )
+        {
+            name<<"_Model_000"<<g<<"_dist_map.txt";
+        }
+        else if ( g >= 10 && g < 100)
+        {
+
+            name<<"_Model_00"<<g<<"_dist_map.txt";
+        }
+        else
+        {
+            name<<"_Model_0"<<g<<"_dist_map.txt";
+        }
+
         vcl_ofstream streamer(name.str().c_str());
         dist_map.print(streamer);
         streamer.close();
