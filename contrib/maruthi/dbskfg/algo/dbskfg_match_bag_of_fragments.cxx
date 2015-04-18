@@ -4936,6 +4936,16 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                 width);
 
         // vcl_pair<double,double> sift_rgb_cost =
+        //     compute_common_frame_distance_bbox_qm(
+        //         model_tree,
+        //         query_tree,
+        //         curve_list1,
+        //         curve_list2,
+        //         map_list,
+        //         flag,
+        //         width);
+
+        // vcl_pair<double,double> sift_rgb_cost =
         //     compute_common_frame_distance_part_qm(
         //         model_tree,
         //         query_tree,
@@ -7902,6 +7912,364 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
         for ( unsigned int k=0; k < stride-1 ; ++k)
         {
             psi.next();
+        }
+    }
+
+    // Normalize part distances
+    for ( unsigned int i=0; i < part_distances.size() ; ++i)
+    {
+        part_distances[i]=part_distances[i]/norm_factors[i];
+
+        if ( debug )
+        {
+            vcl_cout<<"Part "<<i<<" : "<<part_distances[i]<<vcl_endl;
+        }
+    }
+
+    double part_norm_distance=part_distances.mean();
+
+    if ( debug )
+    {
+        unsigned int g=model_tree->get_id();
+
+        vcl_stringstream name;
+        name<<output_dist_file_;
+        if ( g < 10 )
+        {
+            name<<"_Model_000"<<g<<"_dist_map.txt";
+        }
+        else if ( g >= 10 && g < 100)
+        {
+
+            name<<"_Model_00"<<g<<"_dist_map.txt";
+        }
+        else
+        {
+            name<<"_Model_0"<<g<<"_dist_map.txt";
+        }
+
+        vcl_ofstream streamer(name.str().c_str());
+        dist_map.print(streamer);
+        streamer.close();
+        
+        dist_map.clear();
+    }
+
+    app_distance.first  = trad_sift_distance/index;
+    app_distance.second = part_norm_distance;
+    //app_distance.second = local_color_distance/index;
+
+    vl_free(model_red_grad_data);
+    vl_free(model_green_grad_data);
+    vl_free(model_blue_grad_data);
+
+    model_red_grad_data=0;
+    model_green_grad_data=0;
+    model_blue_grad_data=0;
+
+    if ( debug )
+    {
+        vcl_cout<<"Color grad: "<<app_distance.first<<vcl_endl;
+        vcl_cout<<"Color: "<<app_distance.second<<vcl_endl;
+    }
+
+    return app_distance;
+}   
+
+vcl_pair<double,double> 
+dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
+    dbskfg_cgraph_directed_tree_sptr& model_tree,
+    dbskfg_cgraph_directed_tree_sptr& query_tree,
+    vcl_vector<dbskr_scurve_sptr>& curve_list1,
+    vcl_vector<dbskr_scurve_sptr>& curve_list2,
+    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    bool flag,
+    double width,
+    bool debug)
+{
+    
+    vcl_pair<double,double> app_distance(0.0,0.0);
+
+    vl_sift_pix* query_red_grad_data  =query_tree->get_red_grad_data();    
+    vl_sift_pix* query_green_grad_data=query_tree->get_green_grad_data();      
+    vl_sift_pix* query_blue_grad_data =query_tree->get_blue_grad_data();
+
+    VlSiftFilt* query_sift_filter=query_tree->get_sift_filter();
+
+    vil_image_view<double>* model_channel1=model_tree->get_channel1();
+    vil_image_view<double>* model_channel2=model_tree->get_channel2();
+    vil_image_view<double>* model_channel3=model_tree->get_channel3();
+
+    vil_image_view<double>* query_channel1=query_tree->get_channel1();
+    vil_image_view<double>* query_channel2=query_tree->get_channel2();
+    vil_image_view<double>* query_channel3=query_tree->get_channel3();
+
+    vil_image_view<vil_rgb<vxl_byte> > temp;
+
+    if ( debug )
+    {
+        temp.set_size(query_channel1->ni(),
+                      query_channel1->nj());
+        vil_rgb<vxl_byte> bg_col(255,255,255);
+        temp.fill(bg_col);
+    }
+
+    int ni=query_channel1->ni();
+
+    vgl_polygon<double> poly=query_fragments_polys_
+        [query_tree->get_id()].second;
+    
+    vcl_map<vcl_pair<int,int>, vgl_point_2d<double> > bc_coords;
+
+    vcl_set<vcl_pair<int,int> > out_of_bounds;
+    vcl_set<vcl_pair<int,int> > in_bounds;
+    
+    vcl_map<vcl_pair<int,int>, int > point_to_curve_mapping;
+
+    vil_image_view<double> o1(query_channel1->ni(),
+                              query_channel2->nj());
+    o1.fill(0);
+    
+
+    vil_image_view<double> o2(query_channel1->ni(),
+                              query_channel2->nj());
+    o2.fill(0);
+
+    vil_image_view<double> o3(query_channel1->ni(),
+                              query_channel2->nj());
+    o3.fill(0);
+
+    vgl_box_2d<double> bbox;
+
+    // do not include boundary
+    vgl_polygon_scan_iterator<double> psi(poly, false);  
+    for (psi.reset(); psi.next(); ) 
+    {
+        int y = psi.scany();
+        for (int x = psi.startx(); x <= psi.endx(); ++x) 
+        {
+            vgl_point_2d<double> query_pt(x,y);
+
+            bbox.add(query_pt);
+            vcl_pair<int,int> ib(x,y);
+            in_bounds.insert(ib);
+
+            vgl_point_2d<double> model_rt(0,0),query_rt(0,0);
+
+            int curve_list_id(0);
+
+            vgl_point_2d<double> mapping_pt=
+                find_part_correspondences_qm(query_pt,
+                                             curve_list1,
+                                             curve_list2,
+                                             map_list,
+                                             model_rt,
+                                             query_rt,
+                                             curve_list_id,
+                                             flag,
+                                             width,
+                                             model_tree
+                                             ->get_scale_ratio(),
+                                             query_tree
+                                             ->get_scale_ratio());
+
+            if ( mapping_pt.x() != -1 )
+            {
+                double xx=mapping_pt.x();
+                double yy=mapping_pt.y();
+                
+                double red   = vil_bilin_interp_safe(*model_channel1,xx,yy);
+                double green = vil_bilin_interp_safe(*model_channel2,xx,yy);
+                double blue  = vil_bilin_interp_safe(*model_channel3,xx,yy);
+                
+
+                if ( width )
+                {
+                    if ( debug )
+                    {
+                        temp(ni-1-x,y)=vil_rgb<vxl_byte>(red,green,blue);
+                    }
+
+                    o1(ni-1-x,y)=red;
+                    o2(ni-1-x,y)=green;
+                    o3(ni-1-x,y)=blue;
+                }
+                else
+                {
+                    if ( debug )
+                    {
+                        temp(x,y)=vil_rgb<vxl_byte>(red,green,blue);
+                    }
+
+                    o1(x,y)=red;
+                    o2(x,y)=green;
+                    o3(x,y)=blue;
+
+                }
+
+                vcl_pair<int,int> key(x,y);
+                bc_coords[key]=model_rt;
+
+                point_to_curve_mapping[key]=curve_list_id;
+            }
+            else
+            {
+                out_of_bounds.insert(vcl_make_pair(x,y));
+            }
+
+        }
+    }
+
+    
+
+    if ( debug )
+    {
+        vcl_stringstream name;
+        name<<"Model_"<<model_tree->get_id()<<"_vs_Query_"<<query_tree->get_id()
+            <<"_warp.png";
+
+        vil_image_resource_sptr out_img = vil_new_image_resource_of_view(temp);
+
+        vil_save_image_resource(out_img, 
+                                name.str().c_str()); 
+    }
+
+    vl_sift_pix* model_red_grad_data(0);
+    vl_sift_pix* model_green_grad_data(0);
+    vl_sift_pix* model_blue_grad_data(0);
+    
+    compute_grad_color_maps(o1,
+                            &model_red_grad_data,
+                            poly,
+                            false);
+    
+    compute_grad_color_maps(o2,
+                            &model_green_grad_data,
+                            poly,
+                            false);
+    
+    compute_grad_color_maps(o3,
+                            &model_blue_grad_data,
+                            poly,
+                            false);
+
+    double fixed_radius=16;
+    double fixed_theta=0.0;
+
+    double trad_sift_distance=0.0;
+    double local_color_distance=0.0;
+
+    unsigned int index=0;
+    unsigned int stride=8;
+
+    vnl_vector<double> part_distances(curve_list1.size(),0.0);
+
+    vcl_vector<double> norm_factors(curve_list1.size(),0.0);
+
+    vnl_matrix<double> dist_map;
+
+    if ( debug )
+    {
+        dist_map.set_size(temp.ni(),temp.nj());
+        dist_map.fill(0.0);
+        stride=1;
+    }
+    
+    for ( unsigned int y=bbox.min_y(); y <= bbox.max_y(); y=y+stride)
+    {
+        for ( unsigned int x=bbox.min_x(); x <= bbox.max_x() ; x=x+stride) 
+        {
+            if ( !in_bounds.count(vcl_make_pair(x,y)))
+            {
+                continue;
+            }
+
+            vcl_pair<int,int> key(x,y);
+
+            int curve_list_id=point_to_curve_mapping[key];
+
+            vgl_point_2d<double> model_pt(x,y);
+            
+            if ( width )
+            {
+                model_pt.set(ni-1-x,y);
+            }
+
+            double sample_distance = descr_cost(
+                model_pt,
+                fixed_radius,
+                fixed_theta,
+                model_pt,
+                fixed_radius,
+                fixed_theta,
+                model_red_grad_data,
+                query_red_grad_data,
+                model_green_grad_data,
+                query_green_grad_data,
+                model_blue_grad_data,
+                query_blue_grad_data,
+                query_sift_filter,
+                query_sift_filter);
+
+            trad_sift_distance += sample_distance;
+
+            part_distances[curve_list_id]=part_distances[curve_list_id]+
+                sample_distance;
+
+            norm_factors[curve_list_id]=norm_factors[curve_list_id]+
+                1.0;
+
+            vcl_set<vcl_pair<double,double> > sift_samples;
+                        
+            compute_color_over_sift(
+                query_sift_filter,
+                query_sift_filter->width,
+                query_sift_filter->height,
+                model_pt.x(),
+                model_pt.y(),
+                fixed_radius,
+                fixed_theta,
+                sift_samples);
+
+            vcl_vector<double> model_descr;
+            vcl_vector<double> query_descr;
+                        
+            compute_color_region_hist(
+                sift_samples,
+                o1,
+                o2,
+                o3,
+                model_descr,
+                dbskfg_match_bag_of_fragments::DEFAULT);
+
+            compute_color_region_hist(
+                sift_samples,
+                *query_channel1,
+                *query_channel2,
+                *query_channel3,
+                query_descr,
+                dbskfg_match_bag_of_fragments::DEFAULT);
+                        
+            vnl_vector<double> vec_model(model_descr.size(),0);
+            vnl_vector<double> vec_query(query_descr.size(),0);
+
+            for ( unsigned int m=0; m < model_descr.size(); ++m)
+            {
+                vec_model.put(m,model_descr[m]);
+                vec_query.put(m,query_descr[m]);
+            }
+
+            vec_model.normalize(); vec_query.normalize();
+
+            local_color_distance +=
+                chi_squared_distance(vec_model,vec_query);
+
+            if ( debug )
+            {
+                dist_map(x,y)=sample_distance;
+            }
+            
+            index=index+1;
         }
     }
 
