@@ -7671,23 +7671,11 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
                               query_channel2->nj());
     o3.fill(0);
 
-    vcl_map<int,int> scan_lines;
-
     // do not include boundary
     vgl_polygon_scan_iterator<double> psi(poly, false);  
     for (psi.reset(); psi.next(); ) 
     {
         int y = psi.scany();
-        
-        if ( scan_lines.count(y))
-        {
-            scan_lines[y]=scan_lines[y]+1;
-        }
-        else
-        {
-            scan_lines[y]=1;
-        }
-
         for (int x = psi.startx(); x <= psi.endx(); ++x) 
         {
             vgl_point_2d<double> query_pt(x,y);
@@ -7810,11 +7798,9 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
     {
         dist_map.set_size(temp.ni(),temp.nj());
         dist_map.fill(0.0);
-        //stride=1;
+        stride=1;
     }
     
-    vcl_map<int,int> scan_line_visit;
-
     for (psi.reset(); psi.next(); ) 
     {
         int y = psi.scany();
@@ -7912,22 +7898,10 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_qm(
             
             index=index+1;
         }
-
-        if ( scan_line_visit.count(y))
+        
+        for ( unsigned int k=0; k < stride-1 ; ++k)
         {
-            scan_line_visit[y]=scan_line_visit[y]+1;
-        }
-        else
-        {
-            scan_line_visit[y]=1;
-        }
-
-        if ( scan_lines[y] == scan_line_visit[y] )
-        {
-            for ( unsigned int k=0; k < stride-1 ; ++k)
-            {
-                psi.next();
-            }
+            psi.next();
         }
     }
 
