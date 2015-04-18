@@ -8184,6 +8184,11 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
                 continue;
             }
 
+            if ( out_of_bounds.count(vcl_make_pair(x,y)))
+            {
+                continue;
+            }
+
             vcl_pair<int,int> key(x,y);
 
             int curve_list_id=point_to_curve_mapping[key];
