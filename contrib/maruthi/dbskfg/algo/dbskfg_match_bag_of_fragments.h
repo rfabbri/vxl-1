@@ -660,6 +660,7 @@ private:
         vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
         vgl_point_2d<double>& rt_model,
         vgl_point_2d<double>& rt_query,
+        int& curve_list_id,
         bool flag=false,
         double width=0.0,
         double model_scale_ratio=1.0,
@@ -719,6 +720,16 @@ private:
         bool debug=false);
 
     vcl_pair<double,double> compute_common_frame_distance_bbox_qm(
+        dbskfg_cgraph_directed_tree_sptr& model_tree,
+        dbskfg_cgraph_directed_tree_sptr& query_tree,
+        vcl_vector<dbskr_scurve_sptr>& curve_list1,
+        vcl_vector<dbskr_scurve_sptr>& curve_list2,
+        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        bool flag=false,
+        double width=0.0,
+        bool debug=false);
+
+    vcl_pair<double,double> compute_common_frame_distance_bbox_mq(
         dbskfg_cgraph_directed_tree_sptr& model_tree,
         dbskfg_cgraph_directed_tree_sptr& query_tree,
         vcl_vector<dbskr_scurve_sptr>& curve_list1,
