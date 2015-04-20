@@ -8558,11 +8558,6 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_mq(
 
             vgl_point_2d<double> model_pt(x,y);
             
-            if ( width )
-            {
-                model_pt.set(ni-1-x,y);
-            }
-
             double sample_distance = descr_cost(
                 model_pt,
                 fixed_radius,
