@@ -4946,6 +4946,16 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //         width);
 
         // vcl_pair<double,double> sift_rgb_cost =
+        //     compute_common_frame_distance_bbox_mq(
+        //         model_tree,
+        //         query_tree,
+        //         curve_list1,
+        //         curve_list2,
+        //         map_list,
+        //         flag,
+        //         width);
+
+        // vcl_pair<double,double> sift_rgb_cost =
         //     compute_common_frame_distance_part_qm(
         //         model_tree,
         //         query_tree,
@@ -8447,35 +8457,19 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_mq(
                 double xx=mapping_pt.x();
                 double yy=mapping_pt.y();
                 
-                double red   = vil_bilin_interp_safe(*model_channel1,xx,yy);
-                double green = vil_bilin_interp_safe(*model_channel2,xx,yy);
-                double blue  = vil_bilin_interp_safe(*model_channel3,xx,yy);
+                double red   = vil_bilin_interp_safe(*query_channel1,xx,yy);
+                double green = vil_bilin_interp_safe(*query_channel2,xx,yy);
+                double blue  = vil_bilin_interp_safe(*query_channel3,xx,yy);
                 
-
-                if ( width )
+                if ( debug )
                 {
-                    if ( debug )
-                    {
-                        temp(ni-1-x,y)=vil_rgb<vxl_byte>(red,green,blue);
-                    }
-
-                    o1(ni-1-x,y)=red;
-                    o2(ni-1-x,y)=green;
-                    o3(ni-1-x,y)=blue;
+                    temp(x,y)=vil_rgb<vxl_byte>(red,green,blue);
                 }
-                else
-                {
-                    if ( debug )
-                    {
-                        temp(x,y)=vil_rgb<vxl_byte>(red,green,blue);
-                    }
-
-                    o1(x,y)=red;
-                    o2(x,y)=green;
-                    o3(x,y)=blue;
-
-                }
-
+                
+                o1(x,y)=red;
+                o2(x,y)=green;
+                o3(x,y)=blue;
+                
                 vcl_pair<int,int> key(x,y);
                 bc_coords[key]=model_rt;
 
@@ -8613,15 +8607,15 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_mq(
                 o1,
                 o2,
                 o3,
-                model_descr,
+                query_descr,
                 dbskfg_match_bag_of_fragments::DEFAULT);
 
             compute_color_region_hist(
                 sift_samples,
-                *query_channel1,
-                *query_channel2,
-                *query_channel3,
-                query_descr,
+                *model_channel1,
+                *model_channel2,
+                *model_channel3,
+                model_descr,
                 dbskfg_match_bag_of_fragments::DEFAULT);
                         
             vnl_vector<double> vec_model(model_descr.size(),0);
