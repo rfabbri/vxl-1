@@ -4953,18 +4953,8 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //     title.str());
 
 
-        vcl_pair<double,double> sift_rgb_cost =
-            compute_common_frame_distance_qm(
-                model_tree,
-                query_tree,
-                curve_list1,
-                curve_list2,
-                map_list,
-                flag,
-                width);
-
         // vcl_pair<double,double> sift_rgb_cost =
-        //     compute_common_frame_distance_bbox_qm(
+        //     compute_common_frame_distance_qm(
         //         model_tree,
         //         query_tree,
         //         curve_list1,
@@ -4972,6 +4962,16 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //         map_list,
         //         flag,
         //         width);
+
+        vcl_pair<double,double> sift_rgb_cost =
+            compute_common_frame_distance_bbox_qm(
+                model_tree,
+                query_tree,
+                curve_list1,
+                curve_list2,
+                map_list,
+                flag,
+                width);
 
         // vcl_pair<double,double> sift_rgb_cost =
         //     compute_common_frame_distance_bbox_mq(
@@ -8363,8 +8363,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
     }
 
     app_distance.first  = trad_sift_distance/index;
-    app_distance.second = part_norm_distance;
-    //app_distance.second = local_color_distance/index;
+    //app_distance.second = part_norm_distance;
+    app_distance.second = local_color_distance/index;
 
     vl_free(model_red_grad_data);
     vl_free(model_green_grad_data);
@@ -14995,8 +14995,11 @@ void dbskfg_match_bag_of_fragments::convert_to_color_space(
                 o3(c,r) = (red+green+blue)/vcl_sqrt(3);
                 if ( color_space == NOPP )
                 {
-                    o1(c,r)=o1(c,r)/o3(c,r);
-                    o2(c,r)=o2(c,r)/o3(c,r);
+                    if ( o3(c,r) > 0.0 )
+                    {
+                        o1(c,r)=o1(c,r)/o3(c,r);
+                        o2(c,r)=o2(c,r)/o3(c,r);
+                    }
                 }
             }
         }
@@ -15392,9 +15395,22 @@ void dbskfg_match_bag_of_fragments::compute_color_region_hist(
         }
         else if ( raw_color_space_ == dbskfg_match_bag_of_fragments::OPP_2 )
         {
-            min_l=-180; max_l=362;
+            min_l=-180; max_l=180;
             min_a=-208; max_a=208;
             min_b=0; max_b=441;
+
+            bins_l=10;
+            bins_a=10;
+            bins_b=10;
+
+
+        }
+        else
+        {
+            min_b=0; max_b=441;
+            min_l=-180/max_b; max_l=180/max_b;
+            min_a=-208/max_b; max_a=208/max_b;
+            
 
             bins_l=10;
             bins_a=10;

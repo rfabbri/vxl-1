@@ -36,6 +36,7 @@ dbskfg_match_bag_of_fragments_process::dbskfg_match_bag_of_fragments_process()
     raw_color_choices.push_back("HSV");
     raw_color_choices.push_back("RGB");
     raw_color_choices.push_back("OPP");
+    raw_color_choices.push_back("NOPP");
 
     if (!parameters()->add( "Model folder:" , 
                             "-model_folder" , bpro1_filepath("", "")) ||
@@ -299,9 +300,13 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     {
         raw_color_space = dbskfg_match_bag_of_fragments::RGB_2;
     }
-    else
+    else if ( raw_color == 3 )
     {
         raw_color_space = dbskfg_match_bag_of_fragments::OPP_2;
+    }
+    else
+    {
+        raw_color_space = dbskfg_match_bag_of_fragments::NOPP_2;
     }
 
     dbskfg_match_bag_of_fragments match_frags(model_dir,
