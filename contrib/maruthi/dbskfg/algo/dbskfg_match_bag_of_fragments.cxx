@@ -8308,7 +8308,9 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
                 vec_query.put(m,query_descr[m]);
             }
 
-            vec_model.normalize(); vec_query.normalize();
+            vec_model *= 1/vec_model.sum();
+            vec_query *= 1/vec_query.sum();
+
 
             local_color_distance +=
                 chi_squared_distance(vec_model,vec_query);
