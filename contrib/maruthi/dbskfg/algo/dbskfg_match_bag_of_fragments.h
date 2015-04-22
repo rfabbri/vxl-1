@@ -71,7 +71,8 @@ public:
         LAB=0,
         HSV,
         RGB_2,
-        OPP_2
+        OPP_2,
+        NOPP_2
     };
 
     //: Enum
