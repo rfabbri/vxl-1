@@ -8452,13 +8452,6 @@ dbskfg_match_bag_of_fragments::compute_implicit_distance_bbox_qm(
 
     vil_image_view<vil_rgb<vxl_byte> > temp;
 
-    if ( debug )
-    {
-        temp.set_size(query_channel1->ni(),
-                      query_channel1->nj());
-        vil_rgb<vxl_byte> bg_col(255,255,255);
-        temp.fill(bg_col);
-    }
     vgl_polygon<double> poly=query_fragments_polys_
         [query_tree->get_id()].second;
     
@@ -8538,7 +8531,7 @@ dbskfg_match_bag_of_fragments::compute_implicit_distance_bbox_qm(
 
     if ( debug )
     {
-        dist_map.set_size(temp.ni(),temp.nj());
+        dist_map.set_size(query_channel1->ni(),query_channel1->nj());
         dist_map.fill(0.0);
         stride=1;
     }
@@ -8562,8 +8555,9 @@ dbskfg_match_bag_of_fragments::compute_implicit_distance_bbox_qm(
             int curve_list_id=point_to_curve_mapping[key];
 
             vgl_point_2d<double> query_pt(x,y);
+            vgl_point_2d<double> c_pt(x,y);
             vgl_point_2d<double> model_pt = q_to_m_mapping[key];
-
+            
             if ( width )
             {
                 query_pt.set(query_channel1->ni()-1-x,y);
@@ -8600,8 +8594,8 @@ dbskfg_match_bag_of_fragments::compute_implicit_distance_bbox_qm(
                 query_sift_filter,
                 query_sift_filter->width,
                 query_sift_filter->height,
-                query_pt.x(),
-                query_pt.y(),
+                c_pt.x(),
+                c_pt.y(),
                 fixed_radius,
                 fixed_theta,
                 query_sift_samples);
@@ -8703,14 +8697,6 @@ dbskfg_match_bag_of_fragments::compute_implicit_distance_bbox_qm(
     app_distance.first  = trad_sift_distance/index;
     //app_distance.second = part_norm_distance;
     app_distance.second = local_color_distance/index;
-
-    vl_free(model_red_grad_data);
-    vl_free(model_green_grad_data);
-    vl_free(model_blue_grad_data);
-
-    model_red_grad_data=0;
-    model_green_grad_data=0;
-    model_blue_grad_data=0;
 
     if ( debug )
     {
