@@ -8248,7 +8248,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
             int curve_list_id=point_to_curve_mapping[key];
 
             vgl_point_2d<double> model_pt(x,y);
-            
+            vgl_point_2d<double> q_pt(x,y);
+
             if ( width )
             {
                 model_pt.set(ni-1-x,y);
@@ -8278,23 +8279,43 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
             norm_factors[curve_list_id]=norm_factors[curve_list_id]+
                 1.0;
 
-            vcl_set<vcl_pair<double,double> > sift_samples;
+            vcl_set<vcl_pair<double,double> > query_sift_samples;
+            vcl_set<vcl_pair<double,double> > model_sift_samples;
                         
             compute_color_over_sift(
                 query_sift_filter,
                 query_sift_filter->width,
                 query_sift_filter->height,
-                model_pt.x(),
-                model_pt.y(),
+                q_pt.x(),
+                q_pt.y(),
                 fixed_radius,
                 fixed_theta,
-                sift_samples);
+                query_sift_samples);
 
+            model_sift_samples=query_sift_samples;
+
+            if ( width )
+            {
+                
+                model_sift_samples.clear();
+                vcl_set<vcl_pair<double,double> >::iterator it;
+                for ( it = query_sift_samples.begin() ; it != 
+                          query_sift_samples.end() ; ++it)
+                {
+                    
+                    vcl_pair<double,double> point=*it;
+                    vcl_pair<double,double> flipped(ni-1-point.first,
+                                                    point.second);
+                    model_sift_samples.insert(flipped);
+                }
+                
+            }
+ 
             vcl_vector<double> model_descr;
             vcl_vector<double> query_descr;
                         
             compute_color_region_hist(
-                sift_samples,
+                model_sift_samples,
                 o1,
                 o2,
                 o3,
@@ -8302,7 +8323,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
                 dbskfg_match_bag_of_fragments::DEFAULT);
 
             compute_color_region_hist(
-                sift_samples,
+                query_sift_samples,
                 *query_channel1,
                 *query_channel2,
                 *query_channel3,
@@ -8322,8 +8343,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
             vec_query *= 1/vec_query.sum();
 
 
-            local_color_distance +=
-                chi_squared_distance(vec_model,vec_query);
+            double color_distance = chi_squared_distance(vec_model,vec_query); 
+            local_color_distance += color_distance;
 
             if ( debug )
             {
