@@ -8209,6 +8209,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
 
     double fixed_radius=16;
     double fixed_theta=0.0;
+    double color_radius=fixed_radius;
 
     double trad_sift_distance=0.0;
     double local_color_distance=0.0;
@@ -8288,7 +8289,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
                 query_sift_filter->height,
                 q_pt.x(),
                 q_pt.y(),
-                fixed_radius,
+                color_radius,
                 fixed_theta,
                 query_sift_samples);
 
