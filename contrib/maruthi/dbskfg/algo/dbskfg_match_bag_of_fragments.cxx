@@ -15694,60 +15694,62 @@ void dbskfg_match_bag_of_fragments::compute_color_region_hist(
     double min_b(0.0),max_b(0.0);
     unsigned int bins_l(0),bins_a(0),bins_b(0);
 
-    if ( bintype == dbskfg_match_bag_of_fragments::DEFAULT )
+    if ( raw_color_space_ == dbskfg_match_bag_of_fragments::LAB )
     {
-        if ( raw_color_space_ == dbskfg_match_bag_of_fragments::LAB )
-        {
-            min_l=0; max_l=100;
-            min_a=-110; max_a=110;
-            min_b=-110; max_b=110;
-            bins_l=5;
-            bins_a=10;
-            bins_b=10;
-        }
-        else if( raw_color_space_ == dbskfg_match_bag_of_fragments::RGB_2 )
-        {
-            min_l=0; max_l=255;
-            min_a=0; max_a=255;
-            min_b=0; max_b=255;
+        min_l=0; max_l=100;
+        min_a=-110; max_a=110;
+        min_b=-110; max_b=110;
+        bins_l=5;
+        bins_a=10;
+        bins_b=10;
+    }
+    else if( raw_color_space_ == dbskfg_match_bag_of_fragments::RGB_2 )
+    {
+        min_l=0; max_l=255;
+        min_a=0; max_a=255;
+        min_b=0; max_b=255;
 
-            bins_l=8;
-            bins_a=8;
-            bins_b=8;
+        bins_l=8;
+        bins_a=8;
+        bins_b=8;
 
 
-        }
-        else if ( raw_color_space_ == dbskfg_match_bag_of_fragments::OPP_2 )
-        {
-            min_l=-180; max_l=180;
-            min_a=-208; max_a=208;
-            min_b=0; max_b=441;
+    }
+    else if ( raw_color_space_ == dbskfg_match_bag_of_fragments::OPP_2 )
+    {
+        min_l=-180; max_l=180;
+        min_a=-208; max_a=208;
+        min_b=0; max_b=441;
 
-            bins_l=10;
-            bins_a=10;
-            bins_b=10;
+        bins_l=10;
+        bins_a=10;
+        bins_b=10;
 
 
-        }
-        else
-        {
-            min_b=0; max_b=441;
-            min_l=-180/max_b; max_l=180/max_b;
-            min_a=-208/max_b; max_a=208/max_b;
+    }
+    else
+    {
+        min_b=0; max_b=441;
+        min_l=-180/max_b; max_l=180/max_b;
+        min_a=-208/max_b; max_a=208/max_b;
             
 
-            bins_l=10;
-            bins_a=10;
-            bins_b=10;
+        bins_l=10;
+        bins_a=10;
+        bins_b=10;
 
 
-        }
     }
+
    
     bsta_joint_histogram_3d<double> color_hist(
         min_l,max_l,bins_l,
         min_a,max_a,bins_a,
         min_b,max_b,bins_b);
+
+    bsta_histogram<double> l_hist(min_l,max_l,bins_l);
+    bsta_histogram<double> a_hist(min_a,max_a,bins_a);
+    bsta_histogram<double> b_hist(min_b,max_b,bins_b);
 
     vcl_set<vcl_pair<double,double> >::iterator pit;
     for ( pit = samples.begin() ; pit != samples.end() ; ++pit)
@@ -15763,20 +15765,55 @@ void dbskfg_match_bag_of_fragments::compute_color_region_hist(
                                                (*pit).second);
         
         color_hist.upcount(L_value,0,a_value,0,b_value,1);
+
+        l_hist.upcount(L_value,1);
+        a_hist.upcount(a_value,1);
+        b_hist.upcount(b_value,1);
+
     }
 
-    for (unsigned int l = 0; l<bins_l; l++)
+    if ( bintype == dbskfg_match_bag_of_fragments::DEFAULT )
     {
-        for (unsigned int a = 0; a<bins_a; a++)
+        for (unsigned int l = 0; l<bins_l; l++)
         {
-            for (unsigned int b = 0; b<bins_b; b++)
+            for (unsigned int a = 0; a<bins_a; a++)
             {
-                double value=color_hist.get_count(l,a,b);
-                descr.push_back(value);
+                for (unsigned int b = 0; b<bins_b; b++)
+                {
+                    double value=color_hist.get_count(l,a,b);
+                    descr.push_back(value);
+                }
             }
         }
     }
+    else
+    {
+        vcl_vector<double> l_counts=l_hist.count_array();
+        vcl_vector<double> a_counts=a_hist.count_array();
+        vcl_vector<double> b_counts=b_hist.count_array();
 
+        {
+            for ( unsigned int k=0; k < l_counts.size() ; ++k)
+            {
+                descr.push_back(l_counts[k]);
+            }
+        }
+
+        {
+            for ( unsigned int k=0; k < a_counts.size() ; ++k)
+            {
+                descr.push_back(a_counts[k]);
+            }
+        }
+
+        {
+            for ( unsigned int k=0; k < b_counts.size() ; ++k)
+            {
+                descr.push_back(b_counts[k]);
+            }
+        }
+
+    }
     if ( title.size() )
     {
         vcl_string samp_title=title+"_samples.txt";

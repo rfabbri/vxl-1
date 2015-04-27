@@ -79,7 +79,7 @@ public:
     enum LabBinType
     {
         DEFAULT=0,
-        SPHERE
+        ONED
     };
 
     //: Constructor
