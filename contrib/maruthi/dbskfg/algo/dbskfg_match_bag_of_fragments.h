@@ -143,6 +143,9 @@ public:
     void set_bow_train(vcl_string& file_path);
 
     //: upload training
+    void set_gmm_train(vcl_string& file_path);
+
+    //: upload training
     void set_part_file(vcl_string& file_path);
 
     //: binary scale to mean shape 
@@ -447,6 +450,13 @@ private:
 
     // Store searcher
     VlKDForestSearcher* searcher_;
+
+    // GMM parameters
+    float* means_;
+    float* covariances_;
+    float* priors_;
+
+    int keywords_;
 
     void load_model(vcl_string model_dir);
     void load_query(vcl_string query_dir);
@@ -910,6 +920,22 @@ private:
         vsol_box_2d_sptr& bbox);
 
     double descr_cost(
+        vgl_point_2d<double>& model_pt,
+        double& model_radius,
+        double& model_theta,
+        vgl_point_2d<double>& query_pt,
+        double& query_radius,
+        double& query_theta,
+        vl_sift_pix* model_red_grad_data=0,
+        vl_sift_pix* query_red_grad_data=0,
+        vl_sift_pix* model_green_grad_data=0,
+        vl_sift_pix* query_green_grad_data=0,
+        vl_sift_pix* model_blue_grad_data=0,
+        vl_sift_pix* query_blue_grad_data=0,
+        VlSiftFilt* model_sift_filter=0,
+        VlSiftFilt* query_sift_filter=0);
+
+    double descr_cost_fv(
         vgl_point_2d<double>& model_pt,
         double& model_radius,
         double& model_theta,

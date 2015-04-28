@@ -50,6 +50,7 @@ extern "C" {
 #include <vl/kmeans.h>
 #include <vl/dsift.h>
 #include <vl/gmm.h>
+#include <vl/fisher.h>
 }
 
 #include <vgl/vgl_polygon_scan_iterator.h>
@@ -148,6 +149,10 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
       raw_color_space_(raw_color_space),
       forest_(0),
       searcher_(0),
+      means_(0),
+      covariances_(0),
+      priors_(0),
+      keywords_(0),
       model_image_(model_image),
       query_image_(query_image),
       model_grad_data_(0),
@@ -705,6 +710,25 @@ dbskfg_match_bag_of_fragments::~dbskfg_match_bag_of_fragments()
         vl_kdforest_delete(forest_);
     }
     
+
+    if ( means_ )
+    {
+        vl_free(means_);
+        means_=0;
+    }
+
+    if ( covariances_ )
+    {
+        vl_free(covariances_);
+        covariances_=0;
+    }
+
+    if ( priors_ )
+    {
+        vl_free(priors_);
+        priors_=0;
+    }
+
     // if ( searcher_ )
     // {
     //     vl_kdforestsearcher_delete(searcher_);
@@ -2518,6 +2542,62 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
 
 }
 
+
+void dbskfg_match_bag_of_fragments::set_gmm_train(vcl_string& file_path)
+{
+
+    vcl_cout<<"Loading bow training file: "<<file_path<<vcl_endl;
+
+    int dimension  = 384;
+    int numCenters = 0;
+
+    vcl_ifstream myfile (file_path.c_str());
+    if (myfile.is_open())
+    {
+        myfile>>numCenters;
+        myfile>>dimension;
+        
+        keywords_=numCenters;
+
+        vcl_cout<<"Num Centers: "<<keywords_<<vcl_endl;
+        vcl_cout<<"Dimension:   "<<dimension<<vcl_endl;
+
+        means_ = (float*) vl_malloc(
+            sizeof(float)*dimension*numCenters);
+
+        covariances_ = (float*) vl_malloc(
+            sizeof(float)*dimension*numCenters);
+
+        priors_ = (float*) vl_malloc(
+            sizeof(float)*numCenters);
+        
+        for ( unsigned int c=0; c < dimension*numCenters ; ++c)
+        {
+            myfile>>means_[c];
+
+        }
+
+        for ( unsigned int c=0; c < dimension*numCenters ; ++c)
+        {
+            myfile>>covariances_[c];
+
+        }
+
+        for ( unsigned int c=0; c < numCenters ; ++c)
+        {
+            myfile>>priors_[c];
+
+        }
+
+
+    }
+
+    myfile.close();
+
+
+
+}
+
 void dbskfg_match_bag_of_fragments::set_bow_train(vcl_string& file_path)
 {
 
@@ -2535,7 +2615,9 @@ void dbskfg_match_bag_of_fragments::set_bow_train(vcl_string& file_path)
         myfile>>numCenters;
         myfile>>dimension;
         
-        vcl_cout<<"Num Centers: "<<numCenters<<vcl_endl;
+        keywords_=numCenters;
+
+        vcl_cout<<"Num Centers: "<<keywords_<<vcl_endl;
         vcl_cout<<"Dimension:   "<<dimension<<vcl_endl;
 
         data = (vl_sift_pix*) vl_malloc(
@@ -14369,6 +14451,171 @@ double dbskfg_match_bag_of_fragments::descr_cost(
                                              Chi2_distance);
 
     return (0.5)*result_final[0];
+    
+}
+
+double dbskfg_match_bag_of_fragments::descr_cost_fv(
+    vgl_point_2d<double>& model_pt,
+    double& model_radius,
+    double& model_theta,
+    vgl_point_2d<double>& query_pt,
+    double& query_radius,
+    double& query_theta,
+    vl_sift_pix* model_red_grad_data,
+    vl_sift_pix* query_red_grad_data,
+    vl_sift_pix* model_green_grad_data,
+    vl_sift_pix* query_green_grad_data,
+    vl_sift_pix* model_blue_grad_data,
+    vl_sift_pix* query_blue_grad_data,
+    VlSiftFilt* model_sift_filter,
+    VlSiftFilt* query_sift_filter)
+{
+
+    VlFloatVectorComparisonFunction Hell_distance =    
+      vl_get_vector_comparison_function_f (VlDistanceHellinger) ;
+
+    vl_sift_pix descr_ps1_red[128];
+    memset(descr_ps1_red, 0, sizeof(vl_sift_pix)*128);
+    
+    vl_sift_pix descr_ps1_green[128];
+    memset(descr_ps1_green, 0, sizeof(vl_sift_pix)*128);
+    
+    vl_sift_pix descr_ps1_blue[128];
+    memset(descr_ps1_blue, 0, sizeof(vl_sift_pix)*128);
+    
+
+    vl_sift_pix descr_ps2_red[128];
+    memset(descr_ps2_red, 0, sizeof(vl_sift_pix)*128);
+    
+    vl_sift_pix descr_ps2_green[128];
+    memset(descr_ps2_green, 0, sizeof(vl_sift_pix)*128);
+    
+    vl_sift_pix descr_ps2_blue[128];
+    memset(descr_ps2_blue, 0, sizeof(vl_sift_pix)*128);
+    
+
+    vl_sift_calc_raw_descriptor(model_sift_filter,
+                                model_red_grad_data,
+                                descr_ps1_red,
+                                model_sift_filter->width,
+                                model_sift_filter->height,
+                                model_pt.x(),
+                                model_pt.y(),
+                                model_radius,
+                                model_theta);
+
+    vl_sift_calc_raw_descriptor(model_sift_filter,
+                                model_green_grad_data,
+                                descr_ps1_green,
+                                model_sift_filter->width,
+                                model_sift_filter->height,
+                                model_pt.x(),
+                                model_pt.y(),
+                                model_radius,
+                                model_theta);
+
+    vl_sift_calc_raw_descriptor(model_sift_filter,
+                                model_blue_grad_data,
+                                descr_ps1_blue,
+                                model_sift_filter->width,
+                                model_sift_filter->height,
+                                model_pt.x(),
+                                model_pt.y(),
+                                model_radius,
+                                model_theta);
+
+    vl_sift_calc_raw_descriptor(query_sift_filter,
+                                query_red_grad_data,
+                                descr_ps2_red,
+                                query_sift_filter->width,
+                                query_sift_filter->height,
+                                query_pt.x(),
+                                query_pt.y(),
+                                query_radius,
+                                query_theta);
+
+    vl_sift_calc_raw_descriptor(query_sift_filter,
+                                query_green_grad_data,
+                                descr_ps2_green,
+                                query_sift_filter->width,
+                                query_sift_filter->height,
+                                query_pt.x(),
+                                query_pt.y(),
+                                query_radius,
+                                query_theta);
+
+    vl_sift_calc_raw_descriptor(query_sift_filter,
+                                query_blue_grad_data,
+                                descr_ps2_blue,
+                                query_sift_filter->width,
+                                query_sift_filter->height,
+                                query_pt.x(),
+                                query_pt.y(),
+                                query_radius,
+                                query_theta);
+
+
+  
+    double min_radius = vnl_math::min(model_radius*2.0,query_radius*2.0);
+
+    vnl_vector<vl_sift_pix> descr1(384,0.0);
+    vnl_vector<vl_sift_pix> descr2(384,0.0);
+
+    for ( unsigned int d=0; d < 128 ; ++d)
+    {
+        descr1.put(d,descr_ps1_red[d]);
+        descr1.put(d+128,descr_ps1_green[d]);
+        descr1.put(d+256,descr_ps1_blue[d]);
+
+        descr2.put(d,descr_ps2_red[d]);
+        descr2.put(d+128,descr_ps2_green[d]);
+        descr2.put(d+256,descr_ps2_blue[d]);
+
+        
+    }
+
+
+
+    int encoding_size = 2 * descr1.size() * keywords_;
+    
+    // allocate space for the encoding
+    float* model_fv = (float *) vl_malloc(
+        sizeof(float) * encoding_size);
+
+    // allocate space for the encoding
+    float* query_fv = (float *)
+        vl_malloc(sizeof(float) * encoding_size);
+
+
+    // run fisher encoding
+    vl_fisher_encode
+        (model_fv, VL_TYPE_FLOAT,
+         means_, descr1.size(), keywords_,
+         covariances_,
+         priors_,
+         descr1.data_block(), 1,
+         VL_FISHER_FLAG_IMPROVED);
+
+    // run fisher encoding
+    vl_fisher_encode
+        (query_fv, VL_TYPE_FLOAT,
+         means_, descr2.size(), keywords_,
+         covariances_,
+         priors_,
+         descr2.data_block(), 1,
+         VL_FISHER_FLAG_IMPROVED);
+
+    vl_sift_pix result_final[1];
+
+    vl_eval_vector_comparison_on_all_pairs_f(result_final,
+                                             encoding_size,
+                                             model_fv,
+                                             1,
+                                             query_fv,
+                                             1,
+                                             Hell_distance);
+
+    return result_final[0];
     
 }
 
