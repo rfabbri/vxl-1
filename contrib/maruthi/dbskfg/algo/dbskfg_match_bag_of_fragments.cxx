@@ -8491,7 +8491,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
 
     double fixed_radius=16;
     double fixed_theta=0.0;
-    double color_radius=fixed_radius;
+    double color_radius=2.0;
 
     double trad_sift_distance=0.0;
     double local_color_distance=0.0;
@@ -8538,7 +8538,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
                 model_pt.set(ni-1-x,y);
             }
 
-            double sample_distance = descr_cost(
+            double sample_distance = descr_cost_fv(
                 model_pt,
                 fixed_radius,
                 fixed_theta,
@@ -14505,8 +14505,8 @@ double dbskfg_match_bag_of_fragments::descr_cost_fv(
     VlSiftFilt* query_sift_filter)
 {
 
-    VlFloatVectorComparisonFunction Hell_distance =    
-      vl_get_vector_comparison_function_f (VlDistanceHellinger) ;
+    VlFloatVectorComparisonFunction FV_distance =    
+      vl_get_vector_comparison_function_f (VlDistanceChi2) ;
 
     vl_sift_pix descr_ps1_red[128];
     memset(descr_ps1_red, 0, sizeof(vl_sift_pix)*128);
@@ -14647,7 +14647,7 @@ double dbskfg_match_bag_of_fragments::descr_cost_fv(
                                              1,
                                              query_fv,
                                              1,
-                                             Hell_distance);
+                                             FV_distance);
 
 
     vl_free(model_fv);
