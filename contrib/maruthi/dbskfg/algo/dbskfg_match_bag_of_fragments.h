@@ -135,6 +135,9 @@ public:
 
     //: train bag of words computation
     bool train_bag_of_words(int keywords);
+
+    //: train bag of words computation
+    bool train_gmm(int keywords);
  
     //: upload training
     void set_bow_train(vcl_string& file_path);

@@ -49,6 +49,7 @@ extern "C" {
 #include <vl/generic.h>
 #include <vl/kmeans.h>
 #include <vl/dsift.h>
+#include <vl/gmm.h>
 }
 
 #include <vgl/vgl_polygon_scan_iterator.h>
@@ -2347,6 +2348,171 @@ bool dbskfg_match_bag_of_fragments::train_bag_of_words(int keywords)
     vcl_cout<<vcl_endl;
     vcl_cout<<"TrainTime: "
             <<vox_time<<" sec"<<vcl_endl;
+    return true;
+
+
+}
+
+
+bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
+{
+    // Let time how long this takes
+    // Start timer
+    vul_timer t;
+
+    if ( model_fragments_.size() == 0 || query_fragments_.size() == 0 )
+    {
+        vcl_cerr<<"Matching fragments sets have one that is zero"<<vcl_endl;
+        return false;
+    }
+
+    // keep track of sift features in vcl vector
+    vcl_vector<vl_sift_pix> descriptors;
+
+    // Loop over model and query
+    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+        ::iterator m_iterator;
+    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+        ::iterator q_iterator;
+
+    for ( m_iterator = model_fragments_.begin() ; 
+          m_iterator != model_fragments_.end() ; ++m_iterator)
+    {
+        vl_sift_pix* model_images_grad_data=
+            model_images_grad_data_.count((*m_iterator).second.first)?
+            model_images_grad_data_[(*m_iterator).second.first]:
+            0;
+
+        VlSiftFilt*model_images_sift_filter=
+            model_images_sift_filter_.count((*m_iterator).second.first)?
+            model_images_sift_filter_[(*m_iterator).second.first]:
+            0;
+
+        vl_sift_pix* model_images_grad_data_red=
+            model_images_grad_data_red_.count((*m_iterator).second.first)?
+            model_images_grad_data_red_[(*m_iterator).second.first]:
+            0;
+
+        vl_sift_pix* model_images_grad_data_green=
+            model_images_grad_data_green_.count((*m_iterator).second.first)?
+            model_images_grad_data_green_[(*m_iterator).second.first]:
+            0;
+
+        vl_sift_pix* model_images_grad_data_blue=
+            model_images_grad_data_blue_.count((*m_iterator).second.first)?
+            model_images_grad_data_blue_[(*m_iterator).second.first]:
+            0;
+
+        vil_image_view<double> model_channel1(model_images_chan1_data_
+                                               [(*m_iterator).second.first]);
+        
+        vil_image_view<double> model_channel2(model_images_chan2_data_
+                                               [(*m_iterator).second.first]);
+
+        vil_image_view<double> model_channel3(model_images_chan3_data_
+                                               [(*m_iterator).second.first]);
+    
+        //: prepare the trees also
+        dbskfg_cgraph_directed_tree_sptr model_tree = new 
+            dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
+                                        scurve_interpolate_ds_, 
+                                        scurve_matching_R_,
+                                        false,
+                                        area_weight_,
+                                        model_images_grad_data,
+                                        model_images_sift_filter,
+                                        model_images_grad_data_red,
+                                        model_images_grad_data_green,
+                                        model_images_grad_data_blue,
+                                        (*m_iterator).first,
+                                        &model_channel1,
+                                        &model_channel2,
+                                        &model_channel3);
+
+
+        bool f1=model_tree->acquire
+            ((*m_iterator).second.second, elastic_splice_cost_, 
+             circular_ends_, combined_edit_);
+
+        model_tree->compute_sift_tree(descriptors);
+
+    }
+
+    vl_sift_pix* data=descriptors.data();
+    int dimension  = 384;
+    int numData    = descriptors.size()/384;
+    int numCenters = keywords;
+
+    float * means ;
+    float * covariances ;
+    float * priors ;
+    float * posteriors ;
+
+    vcl_cout<<"GMM "<<numData<<" opp sift descriptors "<<vcl_endl;
+
+    // Let time how long this takes
+    // Start timer
+    vul_timer t2;
+
+    // create a new instance of a GMM object for float data
+    VlGMM* gmm = vl_gmm_new (VL_TYPE_FLOAT, dimension, numCenters) ;
+
+    // set verbosity
+    vl_gmm_set_verbosity (gmm, 1);
+
+    // set the maximum number of EM iterations to 100
+    vl_gmm_set_max_num_iterations (gmm, 100) ;
+
+    // set the initialization to random selection
+    vl_gmm_set_initialization (gmm,VlGMMKMeans);
+
+    // cluster the data, i.e. learn the GMM
+    vl_gmm_cluster (gmm, data, numData);
+
+    // get the means, covariances, and priors of the GMM
+    means = (float *)vl_gmm_get_means(gmm);
+    covariances = (float *)vl_gmm_get_covariances(gmm);
+    priors = (float *)vl_gmm_get_priors(gmm);
+
+    double vox_time2 = t2.real()/1000.0;
+    t2.mark();
+    vcl_cout<<vcl_endl;
+    vcl_cout<<"Clustering Time: "
+            <<vox_time2<<" sec"<<vcl_endl;
+
+    
+    // Write out centers
+    vcl_ofstream center_stream("gmm_sift.txt");
+
+    center_stream<<numCenters<<vcl_endl;
+    center_stream<<dimension<<vcl_endl;
+
+    for ( unsigned int c=0; c < numCenters*dimension ; ++c)
+    {
+        center_stream<<means[c]<<vcl_endl;
+
+    }
+
+    for ( unsigned int c=0; c < numCenters*dimension ; ++c)
+    {
+        center_stream<<covariances[c]<<vcl_endl;
+
+    }
+
+    for ( unsigned int c=0; c < numCenters ; ++c)
+    {
+        center_stream<<priors[c]<<vcl_endl;
+
+    }
+
+    center_stream.close();
+
+    double vox_time = t.real()/1000.0;
+    t.mark();
+    vcl_cout<<vcl_endl;
+    vcl_cout<<"TrainTime: "
+            <<vox_time<<" sec"<<vcl_endl;
+
     return true;
 
 
