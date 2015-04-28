@@ -2432,6 +2432,8 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
         
         vgl_box_2d<double> bbox;
 
+        vcl_set<vcl_pair<int,int> > in_bounds;
+
         // do not include boundary
         vgl_polygon_scan_iterator<double> psi(poly, false);  
         for (psi.reset(); psi.next(); ) 
@@ -2440,11 +2442,13 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
             for (int x = psi.startx(); x <= psi.endx(); ++x) 
             {
                 vgl_point_2d<double> query_pt(x,y);
+                
+                vcl_pair<int,int> ib(x,y);
+                in_bounds.insert(ib);
 
                 bbox.add(query_pt);
             }
         }
-
 
         int stride=8;
         double fixed_radius=16;
@@ -2454,10 +2458,16 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
         {
             for ( unsigned int x=bbox.min_x(); x <= bbox.max_x() ; x=x+stride) 
             {
-                
+                vcl_pair<int,int> key(x,y);
+
+                if ( !in_bounds.count(key) )
+                {
+                    continue;
+                }
+
                 vgl_point_2d<double> ps1(x,y);
                 vnl_vector<vl_sift_pix> model_descriptor(384,0.0);
-   
+
                 compute_descr(ps1,
                               fixed_radius,
                               fixed_theta,
@@ -2475,8 +2485,7 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
 
         }
     }
-
-
+    
     // For debugging purposes
     // vcl_ofstream out_stream("sift_points.txt");
 
