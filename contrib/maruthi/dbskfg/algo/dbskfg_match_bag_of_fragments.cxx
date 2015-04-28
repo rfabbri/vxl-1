@@ -14640,6 +14640,10 @@ double dbskfg_match_bag_of_fragments::descr_cost_fv(
                                              1,
                                              Hell_distance);
 
+
+    vl_free(model_fv);
+    vl_free(query_fv);
+
     return result_final[0];
     
 }
