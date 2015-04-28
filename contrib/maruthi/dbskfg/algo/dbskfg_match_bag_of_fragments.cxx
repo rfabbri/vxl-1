@@ -2396,8 +2396,6 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
     // Loop over model and query
     vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
         ::iterator m_iterator;
-    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
-        ::iterator q_iterator;
 
     for ( m_iterator = model_fragments_.begin() ; 
           m_iterator != model_fragments_.end() ; ++m_iterator)
@@ -2425,41 +2423,55 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
         vl_sift_pix* model_images_grad_data_blue=
             model_images_grad_data_blue_.count((*m_iterator).second.first)?
             model_images_grad_data_blue_[(*m_iterator).second.first]:
-            0;
+            0;    
 
-        vil_image_view<double> model_channel1(model_images_chan1_data_
-                                               [(*m_iterator).second.first]);
+        vgl_polygon<double> poly=model_fragments_polys_
+            [(*m_iterator).first].second;
         
-        vil_image_view<double> model_channel2(model_images_chan2_data_
-                                               [(*m_iterator).second.first]);
+        vgl_box_2d<double> bbox;
 
-        vil_image_view<double> model_channel3(model_images_chan3_data_
-                                               [(*m_iterator).second.first]);
-    
-        //: prepare the trees also
-        dbskfg_cgraph_directed_tree_sptr model_tree = new 
-            dbskfg_cgraph_directed_tree(scurve_sample_ds_, 
-                                        scurve_interpolate_ds_, 
-                                        scurve_matching_R_,
-                                        false,
-                                        area_weight_,
-                                        model_images_grad_data,
-                                        model_images_sift_filter,
-                                        model_images_grad_data_red,
-                                        model_images_grad_data_green,
-                                        model_images_grad_data_blue,
-                                        (*m_iterator).first,
-                                        &model_channel1,
-                                        &model_channel2,
-                                        &model_channel3);
+        // do not include boundary
+        vgl_polygon_scan_iterator<double> psi(poly, false);  
+        for (psi.reset(); psi.next(); ) 
+        {
+            int y = psi.scany();
+            for (int x = psi.startx(); x <= psi.endx(); ++x) 
+            {
+                vgl_point_2d<double> query_pt(x,y);
+
+                bbox.add(query_pt);
+            }
+        }
 
 
-        bool f1=model_tree->acquire
-            ((*m_iterator).second.second, elastic_splice_cost_, 
-             circular_ends_, combined_edit_);
+        int stride=8;
+        double fixed_radius=16;
+        double fixed_theta=0.0;
 
-        model_tree->compute_sift_tree(descriptors);
+        for ( unsigned int y=bbox.min_y(); y <= bbox.max_y(); y=y+stride)
+        {
+            for ( unsigned int x=bbox.min_x(); x <= bbox.max_x() ; x=x+stride) 
+            {
+                
+                vgl_point_2d<double> ps1(x,y);
+                vnl_vector<vl_sift_pix> model_descriptor(384,0.0);
+   
+                compute_descr(ps1,
+                              fixed_radius,
+                              fixed_theta,
+                              model_images_grad_data_red,
+                              model_images_grad_data_green,
+                              model_images_grad_data_blue,
+                              model_sift_filter_,
+                              model_descriptor);
 
+                for ( unsigned int c=0; c < model_descriptor.size() ; ++c)
+                {
+                    descriptors.push_back(model_descriptor[c]);
+                }
+            }
+
+        }
     }
 
     vl_sift_pix* data=descriptors.data();
