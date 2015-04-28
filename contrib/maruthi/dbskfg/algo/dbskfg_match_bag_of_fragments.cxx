@@ -2393,7 +2393,7 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
     vcl_cout<<"Training gmm computing sift descriptors"<<vcl_endl;
 
     // keep track of sift features in vcl vector
-    vcl_vector<vl_sift_pix> descriptors;
+    vcl_vector<double> descriptors;
 
     // Loop over model and query
     vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
@@ -2476,15 +2476,26 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
         }
     }
 
-    vl_sift_pix* data=descriptors.data();
+
+    // For debugging purposes
+    // vcl_ofstream out_stream("sift_points.txt");
+
+    // for ( unsigned int ss=0; ss < descriptors.size() ; ++ss)
+    // {
+    //     out_stream<<descriptors[ss]<<vcl_endl;
+    // }
+
+    // out_stream.close();
+
+    double* data=descriptors.data();
     int dimension  = 384;
     int numData    = descriptors.size()/384;
     int numCenters = keywords;
 
-    float * means ;
-    float * covariances ;
-    float * priors ;
-    float * posteriors ;
+    double * means ;
+    double * covariances ;
+    double * priors ;
+    double * posteriors ;
 
     vcl_cout<<"GMM "<<numData<<" opp sift descriptors "<<vcl_endl;
 
@@ -2492,8 +2503,8 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
     // Start timer
     vul_timer t2;
 
-    // create a new instance of a GMM object for float data
-    VlGMM* gmm = vl_gmm_new (VL_TYPE_FLOAT, dimension, numCenters) ;
+    // create a new instance of a GMM object for double data
+    VlGMM* gmm = vl_gmm_new (VL_TYPE_DOUBLE, dimension, numCenters) ;
 
     // set verbosity
     vl_gmm_set_verbosity (gmm, 1);
@@ -2508,9 +2519,9 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
     vl_gmm_cluster (gmm, data, numData);
 
     // get the means, covariances, and priors of the GMM
-    means = (float *)vl_gmm_get_means(gmm);
-    covariances = (float *)vl_gmm_get_covariances(gmm);
-    priors = (float *)vl_gmm_get_priors(gmm);
+    means = (double *)vl_gmm_get_means(gmm);
+    covariances = (double *)vl_gmm_get_covariances(gmm);
+    priors = (double *)vl_gmm_get_priors(gmm);
 
     double vox_time2 = t2.real()/1000.0;
     t2.mark();
