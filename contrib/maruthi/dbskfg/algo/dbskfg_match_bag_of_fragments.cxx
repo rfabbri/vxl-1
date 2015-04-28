@@ -2390,6 +2390,8 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
         return false;
     }
 
+    vcl_cout<<"Training gmm computing sift descriptors"<<vcl_endl;
+
     // keep track of sift features in vcl vector
     vcl_vector<vl_sift_pix> descriptors;
 
@@ -2462,7 +2464,7 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
                               model_images_grad_data_red,
                               model_images_grad_data_green,
                               model_images_grad_data_blue,
-                              model_sift_filter_,
+                              model_images_sift_filter,
                               model_descriptor);
 
                 for ( unsigned int c=0; c < model_descriptor.size() ; ++c)
