@@ -14506,7 +14506,7 @@ double dbskfg_match_bag_of_fragments::descr_cost_fv(
 {
 
     VlFloatVectorComparisonFunction FV_distance =    
-      vl_get_vector_comparison_function_f (VlDistanceChi2) ;
+      vl_get_vector_comparison_function_f (VlDistanceL2) ;
 
     vl_sift_pix descr_ps1_red[128];
     memset(descr_ps1_red, 0, sizeof(vl_sift_pix)*128);
