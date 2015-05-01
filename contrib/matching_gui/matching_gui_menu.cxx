@@ -126,6 +126,7 @@ matching_gui_menu::setup_menu()
     MENU_ADD_PROCESS_NAME( "Mutual Info Matching", curve_group_menu );
     MENU_ADD_PROCESS_NAME( "Compute Region Correspondence", curve_group_menu );
     MENU_ADD_PROCESS_NAME( "Geodesic Active Contour", curve_group_menu );
+    MENU_ADD_PROCESS_NAME( "Curve Matching", curve_group_menu );
     MENU_ADD_PROCESS_NAME( "ROI Image", curve_group_menu );
 
   vgui_menu  other_group_menu; // Other

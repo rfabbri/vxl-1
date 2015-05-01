@@ -57,7 +57,7 @@
 #include <vidpro1/process/vidpro1_smoothcem_process.h>
 
 #include <dbdet/pro/dbdet_contour_tracer_process.h>
-
+#include <dbcvr/pro/dbcvr_curvematch_process.h>
 //#include <dbsk2d/pro/dbsk2d_compute_ishock_process.h>
 //#include <dbsk2d/pro/dbsk2d_prune_ishock_process.h>
 //#include <dbsk2d/pro/dbsk2d_sample_ishock_process.h>
@@ -156,7 +156,7 @@ _setmaxstdio(1500);
   REG_PROCESS( dbbgm_aerial_fg_uncertainity_detect_process);
   REG_PROCESS( dbdet_blob_finder_process );
   REG_PROCESS( dbsol_scan_polygon_process );
-
+  REG_PROCESS( dbcvr_curvematch_process );
 
   // --- other processes ---
   REG_PROCESS( dbdet_contour_tracer_process );

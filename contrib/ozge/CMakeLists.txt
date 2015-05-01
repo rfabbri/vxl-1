@@ -13,7 +13,7 @@ PROJECT( ozge )
 #SUBDIRS ( rec_exe )
 
 # my simple processes
-#SUBDIRS( pro )
+SUBDIRS( pro )
 
 # my command line executables
 SUBDIRS( bin )
