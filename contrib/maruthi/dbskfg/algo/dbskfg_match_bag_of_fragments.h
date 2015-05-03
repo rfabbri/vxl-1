@@ -982,6 +982,16 @@ private:
         vl_sift_pix* blue_grad_data,
         VlSiftFilt* model_filter,
         vnl_vector<vl_sift_pix>& descriptor);
+    
+    void compute_descr_fv(
+        vgl_point_2d<double>& pt,
+        double& radius,
+        double& theta,
+        vl_sift_pix* red_grad_data,
+        vl_sift_pix* green_grad_data,
+        vl_sift_pix* blue_grad_data,
+        VlSiftFilt* model_filter,
+        vnl_vector<vl_sift_pix>& fv_descriptor);
 
     void compute_descr(
         vgl_point_2d<double>& pt,

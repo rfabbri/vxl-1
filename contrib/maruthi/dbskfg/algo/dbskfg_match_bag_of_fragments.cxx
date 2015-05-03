@@ -14937,6 +14937,79 @@ void dbskfg_match_bag_of_fragments::compute_descr(
 
 }
 
+
+void dbskfg_match_bag_of_fragments::compute_descr_fv(
+    vgl_point_2d<double>& pt,
+    double& radius,
+    double& theta,
+    vl_sift_pix* red_grad_data,
+    vl_sift_pix* green_grad_data,
+    vl_sift_pix* blue_grad_data,
+    VlSiftFilt* sift_filter,
+    vnl_vector<vl_sift_pix>& fv_descriptor)
+{
+    
+    double scale_1=16;
+    double scale_2=12;
+    double scale_3=8;
+
+    vnl_vector<vl_sift_pix> scale_1_descriptor;
+    vnl_vector<vl_sift_pix> scale_2_descriptor;
+    vnl_vector<vl_sift_pix> scale_3_descriptor;
+
+    compute_descr(pt,
+                  scale_1,
+                  theta,
+                  red_grad_data,
+                  green_grad_data,
+                  blue_grad_data,
+                  sift_filter,
+                  scale_1_descriptor);
+
+    compute_descr(pt,
+                  scale_2,
+                  theta,
+                  red_grad_data,
+                  green_grad_data,
+                  blue_grad_data,
+                  sift_filter,
+                  scale_2_descriptor);
+
+    compute_descr(pt,
+                  scale_3,
+                  theta,
+                  red_grad_data,
+                  green_grad_data,
+                  blue_grad_data,
+                  sift_filter,
+                  scale_3_descriptor);
+
+    vnl_vector<vl_sift_pix> sift_block(3*scale_1_descriptor.size(),0.0);
+
+    for ( unsigned int s=0; s <scale_1_descriptor.size() ; ++s)
+    {
+        sift_block.put(s,scale_1_descriptor[s]);
+        sift_block.put(s+scale_1_descriptor.size(),scale_2_descriptor[s]);
+        sift_block.put(s+2*scale_1_descriptor.size(),scale_3_descriptor[s]);
+
+    }
+
+    int encoding_size = 2 * scale_1_descriptor.size() * keywords_;
+
+    fv_descriptor.clear();
+    fv_descriptor.set_size(encoding_size);
+
+    // run fisher encoding
+    vl_fisher_encode
+        (fv_descriptor.data_block(), VL_TYPE_FLOAT,
+         means_, scale_1_descriptor.size(), keywords_,
+         covariances_,
+         priors_,
+         sift_block.data_block(), 3,
+         VL_FISHER_FLAG_IMPROVED);
+
+}
+
 vnl_vector<double> dbskfg_match_bag_of_fragments::compute_second_order_pooling(
     vcl_map<int,vcl_vector<dbskfg_sift_data> >& fragments,
     vl_sift_pix* grad_data,
