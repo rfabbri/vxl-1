@@ -15029,9 +15029,9 @@ void dbskfg_match_bag_of_fragments::compute_descr_fv(
     double scale_2=12;
     double scale_3=8;
 
-    vnl_vector<vl_sift_pix> scale_1_descriptor;
-    vnl_vector<vl_sift_pix> scale_2_descriptor;
-    vnl_vector<vl_sift_pix> scale_3_descriptor;
+    vnl_vector<vl_sift_pix> scale_1_descriptor(384,0.0);
+    vnl_vector<vl_sift_pix> scale_2_descriptor(384,0.0);
+    vnl_vector<vl_sift_pix> scale_3_descriptor(384,0.0);
 
     compute_descr(pt,
                   scale_1,
