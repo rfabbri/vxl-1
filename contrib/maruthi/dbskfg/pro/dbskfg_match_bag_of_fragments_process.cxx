@@ -341,13 +341,13 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     
     if ( bow )
     {
-        match_frags.train_bag_of_words(centers);
+        match_frags.train_gmm(centers);
     }
     else
     {
         if ( bow_path.size() )
         {
-            match_frags.set_bow_train(bow_path);
+            match_frags.set_gmm_train(bow_path);
         }
 
         if ( part_path.size() )
