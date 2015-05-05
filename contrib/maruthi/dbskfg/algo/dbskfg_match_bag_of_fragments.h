@@ -455,9 +455,14 @@ private:
     VlKDForestSearcher* searcher_;
 
     // GMM parameters
-    float* means_;
-    float* covariances_;
-    float* priors_;
+    float* means_cg_;
+    float* covariances_cg_;
+    float* priors_cg_;
+
+    // GMM parameters
+    float* means_color_;
+    float* covariances_color_;
+    float* priors_color_;
 
     int keywords_;
 
@@ -1033,6 +1038,15 @@ private:
         vcl_string tile="");
                            
     void compute_color_region_hist(
+        vcl_set<vcl_pair<double,double> >& samples,
+        vil_image_view<double>& o1,
+        vil_image_view<double>& o2,
+        vil_image_view<double>& o3,
+        vcl_vector<double>& descr,
+        LabBinType bin_type,
+        vcl_string title="");
+
+    void compute_color_region_hist_fv(
         vcl_set<vcl_pair<double,double> >& samples,
         vil_image_view<double>& o1,
         vil_image_view<double>& o2,

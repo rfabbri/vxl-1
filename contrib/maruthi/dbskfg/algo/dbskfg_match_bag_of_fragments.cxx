@@ -149,9 +149,12 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
       raw_color_space_(raw_color_space),
       forest_(0),
       searcher_(0),
-      means_(0),
-      covariances_(0),
-      priors_(0),
+      means_cg_(0),
+      covariances_cg_(0),
+      priors_cg_(0),
+      means_color_(0),
+      covariances_color_(0),
+      priors_color_(0),
       keywords_(0),
       model_image_(model_image),
       query_image_(query_image),
@@ -711,22 +714,22 @@ dbskfg_match_bag_of_fragments::~dbskfg_match_bag_of_fragments()
     }
     
 
-    if ( means_ )
+    if ( means_cg_ )
     {
-        vl_free(means_);
-        means_=0;
+        vl_free(means_cg_);
+        means_cg_=0;
     }
 
-    if ( covariances_ )
+    if ( covariances_cg_ )
     {
-        vl_free(covariances_);
-        covariances_=0;
+        vl_free(covariances_cg_);
+        covariances_cg_=0;
     }
 
-    if ( priors_ )
+    if ( priors_cg_ )
     {
-        vl_free(priors_);
-        priors_=0;
+        vl_free(priors_cg_);
+        priors_cg_=0;
     }
 
     // if ( searcher_ )
@@ -2850,30 +2853,30 @@ void dbskfg_match_bag_of_fragments::set_gmm_train(vcl_string& file_path)
         vcl_cout<<"Num Centers: "<<keywords_<<vcl_endl;
         vcl_cout<<"Dimension:   "<<dimension<<vcl_endl;
 
-        means_ = (float*) vl_malloc(
+        means_cg_ = (float*) vl_malloc(
             sizeof(float)*dimension*numCenters);
 
-        covariances_ = (float*) vl_malloc(
+        covariances_cg_ = (float*) vl_malloc(
             sizeof(float)*dimension*numCenters);
 
-        priors_ = (float*) vl_malloc(
+        priors_cg_ = (float*) vl_malloc(
             sizeof(float)*numCenters);
         
         for ( unsigned int c=0; c < dimension*numCenters ; ++c)
         {
-            myfile>>means_[c];
+            myfile>>means_cg_[c];
 
         }
 
         for ( unsigned int c=0; c < dimension*numCenters ; ++c)
         {
-            myfile>>covariances_[c];
+            myfile>>covariances_cg_[c];
 
         }
 
         for ( unsigned int c=0; c < numCenters ; ++c)
         {
-            myfile>>priors_[c];
+            myfile>>priors_cg_[c];
 
         }
 
@@ -14914,18 +14917,18 @@ double dbskfg_match_bag_of_fragments::descr_cost_fv(
     // run fisher encoding
     vl_fisher_encode
         (model_fv, VL_TYPE_FLOAT,
-         means_, descr1.size(), keywords_,
-         covariances_,
-         priors_,
+         means_cg_, descr1.size(), keywords_,
+         covariances_cg_,
+         priors_cg_,
          descr1.data_block(), 1,
          VL_FISHER_FLAG_IMPROVED);
 
     // run fisher encoding
     vl_fisher_encode
         (query_fv, VL_TYPE_FLOAT,
-         means_, descr2.size(), keywords_,
-         covariances_,
-         priors_,
+         means_cg_, descr2.size(), keywords_,
+         covariances_cg_,
+         priors_cg_,
          descr2.data_block(), 1,
          VL_FISHER_FLAG_IMPROVED);
 
@@ -15292,9 +15295,9 @@ void dbskfg_match_bag_of_fragments::compute_descr_fv(
     // run fisher encoding
     vl_fisher_encode
         (fv_descriptor.data_block(), VL_TYPE_FLOAT,
-         means_, scale_1_descriptor.size(), keywords_,
-         covariances_,
-         priors_,
+         means_cg_, scale_1_descriptor.size(), keywords_,
+         covariances_cg_,
+         priors_cg_,
          sift_block.data_block(), 3,
          VL_FISHER_FLAG_IMPROVED);
 
@@ -16642,6 +16645,173 @@ void dbskfg_match_bag_of_fragments::compute_color_region_hist(
         output.close();
         
     }
+
+}
+
+void dbskfg_match_bag_of_fragments::compute_color_region_hist_fv(
+    vcl_set<vcl_pair<double,double> >& samples,
+    vil_image_view<double>& o1,
+    vil_image_view<double>& o2,
+    vil_image_view<double>& o3,
+    vcl_vector<double>& fv_descriptor,
+    LabBinType bintype,
+    vcl_string title)
+{
+
+    double min_l(0.0),max_l(0.0);
+    double min_a(0.0),max_a(0.0);
+    double min_b(0.0),max_b(0.0);
+    unsigned int bins_l(0),bins_a(0),bins_b(0);
+
+    if ( raw_color_space_ == dbskfg_match_bag_of_fragments::LAB )
+    {
+        min_l=0; max_l=100;
+        min_a=-110; max_a=110;
+        min_b=-110; max_b=110;
+        bins_l=5;
+        bins_a=10;
+        bins_b=10;
+    }
+    else if( raw_color_space_ == dbskfg_match_bag_of_fragments::RGB_2 )
+    {
+        min_l=0; max_l=255;
+        min_a=0; max_a=255;
+        min_b=0; max_b=255;
+
+        bins_l=8;
+        bins_a=8;
+        bins_b=8;
+
+
+    }
+    else if ( raw_color_space_ == dbskfg_match_bag_of_fragments::OPP_2 )
+    {
+        min_l=-180; max_l=180;
+        min_a=-208; max_a=208;
+        min_b=0; max_b=441;
+
+        bins_l=10;
+        bins_a=10;
+        bins_b=10;
+
+
+    }
+    else
+    {
+        min_b=0; max_b=441;
+        min_l=-180/max_b; max_l=180/max_b;
+        min_a=-208/max_b; max_a=208/max_b;
+            
+
+        bins_l=10;
+        bins_a=10;
+        bins_b=10;
+
+
+    }
+
+   
+    bsta_joint_histogram_3d<double> color_hist(
+        min_l,max_l,bins_l,
+        min_a,max_a,bins_a,
+        min_b,max_b,bins_b);
+
+    bsta_histogram<double> l_hist(min_l,max_l,bins_l);
+    bsta_histogram<double> a_hist(min_a,max_a,bins_a);
+    bsta_histogram<double> b_hist(min_b,max_b,bins_b);
+
+    vcl_set<vcl_pair<double,double> >::iterator pit;
+    for ( pit = samples.begin() ; pit != samples.end() ; ++pit)
+    {
+        double L_value = vil_bilin_interp_safe(o1,
+                                              (*pit).first,
+                                               (*pit).second);
+        double a_value = vil_bilin_interp_safe(o2,
+                                               (*pit).first,
+                                               (*pit).second);        
+        double b_value = vil_bilin_interp_safe(o3,
+                                               (*pit).first,
+                                               (*pit).second);
+        
+        color_hist.upcount(L_value,0,a_value,0,b_value,1);
+
+        l_hist.upcount(L_value,1);
+        a_hist.upcount(a_value,1);
+        b_hist.upcount(b_value,1);
+
+    }
+
+    vcl_vector<vl_sift_pix> unrolled_hist; 
+    if ( bintype == dbskfg_match_bag_of_fragments::DEFAULT )
+    {
+        for (unsigned int l = 0; l<bins_l; l++)
+        {
+            for (unsigned int a = 0; a<bins_a; a++)
+            {
+                for (unsigned int b = 0; b<bins_b; b++)
+                {
+                    double value=color_hist.get_count(l,a,b);
+                    unrolled_hist.push_back(value);
+                }
+            }
+        }
+    }
+    else
+    {
+        vcl_vector<double> l_counts=l_hist.count_array();
+        vcl_vector<double> a_counts=a_hist.count_array();
+        vcl_vector<double> b_counts=b_hist.count_array();
+
+        {
+            for ( unsigned int k=0; k < l_counts.size() ; ++k)
+            {
+                unrolled_hist.push_back(l_counts[k]);
+            }
+        }
+
+        {
+            for ( unsigned int k=0; k < a_counts.size() ; ++k)
+            {
+                unrolled_hist.push_back(a_counts[k]);
+            }
+        }
+
+        {
+            for ( unsigned int k=0; k < b_counts.size() ; ++k)
+            {
+                unrolled_hist.push_back(b_counts[k]);
+            }
+        }
+
+    }
+    if ( title.size() )
+    {
+        vcl_string samp_title=title+"_samples.txt";
+        vcl_ofstream output(samp_title.c_str());
+        for ( pit = samples.begin() ; pit != samples.end() ; ++pit)
+        {
+            output<<(*pit).first<<" "<<(*pit).second<<vcl_endl;
+
+
+        }
+        output.close();
+        
+    }
+
+
+    int encoding_size = 2 * unrolled_hist.size() * keywords_;
+
+    fv_descriptor.clear();
+    fv_descriptor.resize(encoding_size);
+
+    // run fisher encoding
+    vl_fisher_encode
+        (fv_descriptor.data(), VL_TYPE_FLOAT,
+         means_color_, unrolled_hist.size(), keywords_,
+         covariances_color_,
+         priors_color_,
+         unrolled_hist.data(), 1,
+         VL_FISHER_FLAG_IMPROVED);
 
 }
 
