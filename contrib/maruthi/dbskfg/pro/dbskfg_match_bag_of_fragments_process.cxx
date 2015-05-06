@@ -46,6 +46,8 @@ dbskfg_match_bag_of_fragments_process::dbskfg_match_bag_of_fragments_process()
                             "-model_image_file" , bpro1_filepath("", "")) ||
         !parameters()->add( "Train BOW File:" , 
                             "-bow_file" , bpro1_filepath("", "")) ||
+        !parameters()->add( "Train BOW Color File:" , 
+                            "-bow_color_file" , bpro1_filepath("", "")) ||
         !parameters()->add( "Part File:" , 
                             "-part_file" , bpro1_filepath("", "")) ||
         !parameters()->add( "Output folder:", 
@@ -179,6 +181,10 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     this->parameters()->get_value("-bow_file" , bow_file);
     vcl_string bow_path=bow_file.path;
 
+    bpro1_filepath bow_color_file;
+    this->parameters()->get_value("-bow_color_file", bow_color_file);
+    vcl_string bow_color_path=bow_color_file.path;
+    
     bpro1_filepath part_file;
     this->parameters()->get_value("-part_file" , part_file);
     vcl_string part_path=part_file.path;
@@ -348,6 +354,7 @@ bool dbskfg_match_bag_of_fragments_process::execute()
         if ( bow_path.size() )
         {
             match_frags.set_gmm_train(bow_path);
+            match_frags.set_gmm_color_train(bow_color_path);
         }
 
         if ( part_path.size() )

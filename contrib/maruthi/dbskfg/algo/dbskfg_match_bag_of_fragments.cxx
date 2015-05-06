@@ -2889,6 +2889,61 @@ void dbskfg_match_bag_of_fragments::set_gmm_train(vcl_string& file_path)
 
 }
 
+void dbskfg_match_bag_of_fragments::set_gmm_color_train(vcl_string& file_path)
+{
+
+    vcl_cout<<"Loading bow training file: "<<file_path<<vcl_endl;
+
+    int dimension  = 384;
+    int numCenters = 0;
+
+    vcl_ifstream myfile (file_path.c_str());
+    if (myfile.is_open())
+    {
+        myfile>>numCenters;
+        myfile>>dimension;
+        
+        keywords_=numCenters;
+
+        vcl_cout<<"Num Centers: "<<keywords_<<vcl_endl;
+        vcl_cout<<"Dimension:   "<<dimension<<vcl_endl;
+
+        means_color_ = (float*) vl_malloc(
+            sizeof(float)*dimension*numCenters);
+
+        covariances_color_ = (float*) vl_malloc(
+            sizeof(float)*dimension*numCenters);
+
+        priors_color_ = (float*) vl_malloc(
+            sizeof(float)*numCenters);
+        
+        for ( unsigned int c=0; c < dimension*numCenters ; ++c)
+        {
+            myfile>>means_color_[c];
+
+        }
+
+        for ( unsigned int c=0; c < dimension*numCenters ; ++c)
+        {
+            myfile>>covariances_color_[c];
+
+        }
+
+        for ( unsigned int c=0; c < numCenters ; ++c)
+        {
+            myfile>>priors_color_[c];
+
+        }
+
+
+    }
+
+    myfile.close();
+
+
+
+}
+
 void dbskfg_match_bag_of_fragments::set_bow_train(vcl_string& file_path)
 {
 
@@ -8887,39 +8942,66 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
                 
             }
  
-            vcl_vector<double> model_descr;
-            vcl_vector<double> query_descr;
+            vcl_vector<vl_sift_pix> model_color_fv;
+            vcl_vector<vl_sift_pix> query_color_fv;
                         
-            compute_color_region_hist(
+            // compute_color_region_hist(
+            //     model_sift_samples,
+            //     o1,
+            //     o2,
+            //     o3,
+            //     model_descr,
+            //     dbskfg_match_bag_of_fragments::DEFAULT);
+
+            // compute_color_region_hist(
+            //     query_sift_samples,
+            //     *query_channel1,
+            //     *query_channel2,
+            //     *query_channel3,
+            //     query_descr,
+            //     dbskfg_match_bag_of_fragments::DEFAULT);
+
+            compute_color_region_hist_fv(
                 model_sift_samples,
                 o1,
                 o2,
                 o3,
-                model_descr,
+                model_color_fv,
                 dbskfg_match_bag_of_fragments::DEFAULT);
 
-            compute_color_region_hist(
+            compute_color_region_hist_fv(
                 query_sift_samples,
                 *query_channel1,
                 *query_channel2,
                 *query_channel3,
-                query_descr,
+                query_color_fv,
                 dbskfg_match_bag_of_fragments::DEFAULT);
+
+            vl_sift_pix color_final[1];
+            vl_eval_vector_comparison_on_all_pairs_f(color_final,
+                                                     model_color_fv.size(),
+                                                     model_color_fv.data(),
+                                                     1,
+                                                     query_color_fv.data(),
+                                                     1,
+                                                     FV_distance);
+            
+            double color_distance = color_final[0];
                         
-            vnl_vector<double> vec_model(model_descr.size(),0);
-            vnl_vector<double> vec_query(query_descr.size(),0);
+            // vnl_vector<double> vec_model(model_descr.size(),0);
+            // vnl_vector<double> vec_query(query_descr.size(),0);
 
-            for ( unsigned int m=0; m < model_descr.size(); ++m)
-            {
-                vec_model.put(m,model_descr[m]);
-                vec_query.put(m,query_descr[m]);
-            }
+            // for ( unsigned int m=0; m < model_descr.size(); ++m)
+            // {
+            //     vec_model.put(m,model_descr[m]);
+            //     vec_query.put(m,query_descr[m]);
+            // }
 
-            vec_model *= 1/vec_model.sum();
-            vec_query *= 1/vec_query.sum();
-
-
-            double color_distance = chi_squared_distance(vec_model,vec_query); 
+            // vec_model *= 1/vec_model.sum();
+            // vec_query *= 1/vec_query.sum();
+            // double color_distance = 
+            // chi_squared_distance(vec_model,vec_query); 
+            
             local_color_distance += color_distance;
 
             if ( debug )
@@ -16653,7 +16735,7 @@ void dbskfg_match_bag_of_fragments::compute_color_region_hist_fv(
     vil_image_view<double>& o1,
     vil_image_view<double>& o2,
     vil_image_view<double>& o3,
-    vcl_vector<double>& fv_descriptor,
+    vcl_vector<vl_sift_pix>& fv_descriptor,
     LabBinType bintype,
     vcl_string title)
 {

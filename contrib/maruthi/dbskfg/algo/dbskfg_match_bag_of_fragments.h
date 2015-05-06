@@ -149,6 +149,9 @@ public:
     void set_gmm_train(vcl_string& file_path);
 
     //: upload training
+    void set_gmm_color_train(vcl_string& file_path);
+
+    //: upload training
     void set_part_file(vcl_string& file_path);
 
     //: binary scale to mean shape 
@@ -1051,7 +1054,7 @@ private:
         vil_image_view<double>& o1,
         vil_image_view<double>& o2,
         vil_image_view<double>& o3,
-        vcl_vector<double>& descr,
+        vcl_vector<vl_sift_pix>& descr,
         LabBinType bin_type,
         vcl_string title="");
        
