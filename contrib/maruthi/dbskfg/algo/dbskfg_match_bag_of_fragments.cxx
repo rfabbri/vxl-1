@@ -8807,6 +8807,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
 
     double trad_sift_distance=0.0;
     double local_color_distance=0.0;
+    double combined_distance=0.0;
 
     unsigned int index=0;
     unsigned int stride=8;
@@ -8988,6 +8989,38 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
             
             double color_distance = color_final[0];
                         
+            local_color_distance += color_distance;
+
+            vcl_vector<vl_sift_pix> combined_model_descriptor;
+            vcl_vector<vl_sift_pix> combined_query_descriptor;
+
+            for ( unsigned int cgfv = 0; cgfv < model_fv.size() ; ++cgfv)
+            {
+                combined_model_descriptor.push_back(model_fv[cgfv]);
+                combined_query_descriptor.push_back(query_fv[cgfv]);
+            }
+
+            for ( unsigned int cfv = 0; cfv < model_fv.size() ; ++cfv)
+            {
+                combined_model_descriptor.push_back(model_color_fv[cfv]);
+                combined_query_descriptor.push_back(query_color_fv[cfv]);
+            }
+
+            vl_sift_pix combined_final_result[1];
+            vl_eval_vector_comparison_on_all_pairs_f(
+                combined_final_result,
+                combined_model_descriptor.size(),
+                combined_model_descriptor.data(),
+                1,
+                combined_query_descriptor.data(),
+                1,
+                FV_distance);
+
+            double combined_sampled_distance = combined_final_result[0]; 
+           
+            combined_distance += combined_sampled_distance;
+           
+                        
             // vnl_vector<double> vec_model(model_descr.size(),0);
             // vnl_vector<double> vec_query(query_descr.size(),0);
 
@@ -9002,11 +9035,11 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
             // double color_distance = 
             // chi_squared_distance(vec_model,vec_query); 
             
-            local_color_distance += color_distance;
 
             if ( debug )
             {
-                dist_map(x,y)=sample_distance;
+                //dist_map(x,y)=sample_distance;
+                dist_map(x,y)=combined_sampled_distance;
             }
             
             index=index+1;
@@ -9053,7 +9086,8 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
         dist_map.clear();
     }
 
-    app_distance.first  = trad_sift_distance/index;
+    app_distance.first  = combined_distance/index;
+    //app_distance.first  = trad_sift_distance/index;
     //app_distance.second = part_norm_distance;
     app_distance.second = local_color_distance/index;
 
