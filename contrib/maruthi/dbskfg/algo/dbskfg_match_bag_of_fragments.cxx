@@ -2852,7 +2852,7 @@ bool dbskfg_match_bag_of_fragments::train_gmm_raw_color(int keywords)
     vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
         ::iterator m_iterator;
 
-    int stride=8;
+    int stride=4;
 
     for ( m_iterator = model_fragments_.begin() ; 
           m_iterator != model_fragments_.end() ; ++m_iterator)
