@@ -141,6 +141,9 @@ public:
 
     //: train bag of words computation
     bool train_gmm_color(int keywords);
+
+    //: train bag of words computation
+    bool train_gmm_raw_color(int keywords);
  
     //: upload training
     void set_bow_train(vcl_string& file_path);

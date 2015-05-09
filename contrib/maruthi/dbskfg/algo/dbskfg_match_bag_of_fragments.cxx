@@ -2833,6 +2833,184 @@ bool dbskfg_match_bag_of_fragments::train_gmm_color(int keywords)
 
 }
 
+bool dbskfg_match_bag_of_fragments::train_gmm_raw_color(int keywords)
+{
+    // Let time how long this takes
+    // Start timer
+    vul_timer t;
+
+    if ( model_fragments_.size() == 0 || query_fragments_.size() == 0 )
+    {
+        vcl_cerr<<"Matching fragments sets have one that is zero"<<vcl_endl;
+        return false;
+    }
+
+    vcl_cout<<"Training gmm raw_color descriptors"<<vcl_endl;
+
+    // keep track of sift features in vcl vector
+    vcl_vector<double> descriptors;
+
+    // Loop over model and query
+    vcl_map<unsigned int,vcl_pair<vcl_string,dbskfg_composite_graph_sptr> >
+        ::iterator m_iterator;
+
+    int stride=8;
+
+    for ( m_iterator = model_fragments_.begin() ; 
+          m_iterator != model_fragments_.end() ; ++m_iterator)
+    {
+        VlSiftFilt*model_images_sift_filter=
+            model_images_sift_filter_.count((*m_iterator).second.first)?
+            model_images_sift_filter_[(*m_iterator).second.first]:
+            0;
+
+        vil_image_view<double> model_channel1(model_images_chan1_data_
+                                              [(*m_iterator).second.first]);
+        
+        vil_image_view<double> model_channel2(model_images_chan2_data_
+                                              [(*m_iterator).second.first]);
+
+        vil_image_view<double> model_channel3(model_images_chan3_data_
+                                              [(*m_iterator).second.first]);
+
+        vgl_polygon<double> poly=model_fragments_polys_
+            [(*m_iterator).first].second;
+        
+        vgl_box_2d<double> bbox;
+
+        vcl_set<vcl_pair<int,int> > in_bounds;
+
+        // do not include boundary
+        vgl_polygon_scan_iterator<double> psi(poly, false);  
+        for (psi.reset(); psi.next(); ) 
+        {
+            int y = psi.scany();
+            for (int x = psi.startx(); x <= psi.endx(); ++x) 
+            {
+                vgl_point_2d<double> query_pt(x,y);
+                
+                vcl_pair<int,int> ib(x,y);
+                in_bounds.insert(ib);
+
+                bbox.add(query_pt);
+            }
+        }
+
+        for ( unsigned int y=bbox.min_y(); y <= bbox.max_y(); y=y+stride)
+        {
+            for ( unsigned int x=bbox.min_x(); x <= bbox.max_x() ; x=x+stride) 
+            {
+                vcl_pair<int,int> key(x,y);
+
+                if ( !in_bounds.count(key) )
+                {
+                    continue;
+                }
+
+                double red   = vil_bilin_interp_safe(model_channel1,x,y);
+                double green = vil_bilin_interp_safe(model_channel2,x,y);
+                double blue  = vil_bilin_interp_safe(model_channel3,x,y);
+
+                descriptors.push_back(red);
+                descriptors.push_back(green);
+                descriptors.push_back(blue);
+            }
+        }
+        
+    }
+    
+    
+    // For debugging purposes
+    // vcl_ofstream out_stream("sift_points.txt");
+
+    // for ( unsigned int ss=0; ss < descriptors.size() ; ++ss)
+    // {
+    //     out_stream<<descriptors[ss]<<vcl_endl;
+    // }
+
+    // out_stream.close();
+
+    double* data=descriptors.data();
+    int dimension  = 3;
+    int numData    = descriptors.size()/dimension;
+    int numCenters = keywords;
+
+    double * means ;
+    double * covariances ;
+    double * priors ;
+    double * posteriors ;
+
+    vcl_cout<<"GMM "<<numData<<" color raw 3d values of dimension "<<
+        dimension<<vcl_endl;
+
+    // Let time how long this takes
+    // Start timer
+    vul_timer t2;
+
+    // create a new instance of a GMM object for double data
+    VlGMM* gmm = vl_gmm_new (VL_TYPE_DOUBLE, dimension, numCenters) ;
+
+    // set verbosity
+    vl_gmm_set_verbosity (gmm, 1);
+
+    // set the maximum number of EM iterations to 100
+    vl_gmm_set_max_num_iterations (gmm, 100) ;
+
+    // set the initialization to random selection
+    vl_gmm_set_initialization (gmm,VlGMMKMeans);
+
+    // cluster the data, i.e. learn the GMM
+    vl_gmm_cluster (gmm, data, numData);
+
+    // get the means, covariances, and priors of the GMM
+    means = (double *)vl_gmm_get_means(gmm);
+    covariances = (double *)vl_gmm_get_covariances(gmm);
+    priors = (double *)vl_gmm_get_priors(gmm);
+
+    double vox_time2 = t2.real()/1000.0;
+    t2.mark();
+    vcl_cout<<vcl_endl;
+    vcl_cout<<"Clustering Time: "
+            <<vox_time2<<" sec"<<vcl_endl;
+
+    
+    // Write out centers
+    vcl_ofstream center_stream("gmm_color_3d_hists.txt");
+
+    center_stream<<numCenters<<vcl_endl;
+    center_stream<<dimension<<vcl_endl;
+
+    for ( unsigned int c=0; c < numCenters*dimension ; ++c)
+    {
+        center_stream<<means[c]<<vcl_endl;
+
+    }
+
+    for ( unsigned int c=0; c < numCenters*dimension ; ++c)
+    {
+        center_stream<<covariances[c]<<vcl_endl;
+
+    }
+
+    for ( unsigned int c=0; c < numCenters ; ++c)
+    {
+        center_stream<<priors[c]<<vcl_endl;
+
+    }
+
+    center_stream.close();
+
+    double vox_time = t.real()/1000.0;
+    t.mark();
+    vcl_cout<<vcl_endl;
+    vcl_cout<<"TrainTime: "
+            <<vox_time<<" sec"<<vcl_endl;
+
+    return true;
+
+
+}
+
 
 void dbskfg_match_bag_of_fragments::set_gmm_train(vcl_string& file_path)
 {
