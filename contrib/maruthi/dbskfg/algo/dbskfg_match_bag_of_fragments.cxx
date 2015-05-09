@@ -49,8 +49,6 @@ extern "C" {
 #include <vl/generic.h>
 #include <vl/kmeans.h>
 #include <vl/dsift.h>
-#include <vl/gmm.h>
-#include <vl/fisher.h>
 }
 
 #include <vgl/vgl_polygon_scan_iterator.h>
@@ -2975,7 +2973,7 @@ bool dbskfg_match_bag_of_fragments::train_gmm_raw_color(int keywords)
 
     
     // Write out centers
-    vcl_ofstream center_stream("gmm_color_3d_hists.txt");
+    vcl_ofstream center_stream("gmm_color_raw_3d_values.txt");
 
     center_stream<<numCenters<<vcl_endl;
     center_stream<<dimension<<vcl_endl;
@@ -9065,22 +9063,6 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
             
             double sample_distance = result_final[0];
 
-            // double sample_distance = descr_cost_fv(
-            //     model_pt,
-            //     fixed_radius,
-            //     fixed_theta,
-            //     model_pt,
-            //     fixed_radius,
-            //     fixed_theta,
-            //     model_red_grad_data,
-            //     query_red_grad_data,
-            //     model_green_grad_data,
-            //     query_green_grad_data,
-            //     model_blue_grad_data,
-            //     query_blue_grad_data,
-            //     query_sift_filter,
-            //     query_sift_filter);
-
             trad_sift_distance += sample_distance;
 
             part_distances[curve_list_id]=part_distances[curve_list_id]+
@@ -9089,41 +9071,54 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
             norm_factors[curve_list_id]=norm_factors[curve_list_id]+
                 1.0;
 
-            vcl_set<vcl_pair<double,double> > query_sift_samples;
-            vcl_set<vcl_pair<double,double> > model_sift_samples;
+            // vcl_set<vcl_pair<double,double> > query_sift_samples;
+            // vcl_set<vcl_pair<double,double> > model_sift_samples;
                         
-            compute_color_over_sift(
-                query_sift_filter,
-                query_sift_filter->width,
-                query_sift_filter->height,
-                q_pt.x(),
-                q_pt.y(),
-                color_radius,
-                fixed_theta,
-                query_sift_samples);
+            // compute_color_over_sift(
+            //     query_sift_filter,
+            //     query_sift_filter->width,
+            //     query_sift_filter->height,
+            //     q_pt.x(),
+            //     q_pt.y(),
+            //     color_radius,
+            //     fixed_theta,
+            //     query_sift_samples);
 
-            model_sift_samples=query_sift_samples;
+            // model_sift_samples=query_sift_samples;
 
-            if ( width )
-            {
+            // if ( width )
+            // {
                 
-                model_sift_samples.clear();
-                vcl_set<vcl_pair<double,double> >::iterator it;
-                for ( it = query_sift_samples.begin() ; it != 
-                          query_sift_samples.end() ; ++it)
-                {
+            //     model_sift_samples.clear();
+            //     vcl_set<vcl_pair<double,double> >::iterator it;
+            //     for ( it = query_sift_samples.begin() ; it != 
+            //               query_sift_samples.end() ; ++it)
+            //     {
                     
-                    vcl_pair<double,double> point=*it;
-                    vcl_pair<double,double> flipped(ni-1-point.first,
-                                                    point.second);
-                    model_sift_samples.insert(flipped);
-                }
+            //         vcl_pair<double,double> point=*it;
+            //         vcl_pair<double,double> flipped(ni-1-point.first,
+            //                                         point.second);
+            //         model_sift_samples.insert(flipped);
+            //     }
                 
-            }
- 
+            // }
+
             vcl_vector<vl_sift_pix> model_color_fv;
             vcl_vector<vl_sift_pix> query_color_fv;
-                        
+            
+            vcl_vector<vl_sift_pix> model_color_hist;
+            model_color_hist.push_back(o1(model_pt.x(),model_pt.y()));
+            model_color_hist.push_back(o2(model_pt.x(),model_pt.y()));
+            model_color_hist.push_back(o3(model_pt.x(),model_pt.y()));
+
+            vcl_vector<vl_sift_pix> query_color_hist;
+            query_color_hist.push_back((*query_channel1)(q_pt.x(),q_pt.y()));
+            query_color_hist.push_back((*query_channel2)(q_pt.x(),q_pt.y()));
+            query_color_hist.push_back((*query_channel3)(q_pt.x(),q_pt.y()));
+
+            encode_color_triplet(model_color_hist,model_color_fv);
+            encode_color_triplet(query_color_hist,query_color_fv);
+ 
             // compute_color_region_hist(
             //     model_sift_samples,
             //     o1,
@@ -9140,21 +9135,21 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
             //     query_descr,
             //     dbskfg_match_bag_of_fragments::DEFAULT);
 
-            compute_color_region_hist_fv(
-                model_sift_samples,
-                o1,
-                o2,
-                o3,
-                model_color_fv,
-                dbskfg_match_bag_of_fragments::DEFAULT);
+            // compute_color_region_hist_fv(
+            //     model_sift_samples,
+            //     o1,
+            //     o2,
+            //     o3,
+            //     model_color_fv,
+            //     dbskfg_match_bag_of_fragments::DEFAULT);
 
-            compute_color_region_hist_fv(
-                query_sift_samples,
-                *query_channel1,
-                *query_channel2,
-                *query_channel3,
-                query_color_fv,
-                dbskfg_match_bag_of_fragments::DEFAULT);
+            // compute_color_region_hist_fv(
+            //     query_sift_samples,
+            //     *query_channel1,
+            //     *query_channel2,
+            //     *query_channel3,
+            //     query_color_fv,
+            //     dbskfg_match_bag_of_fragments::DEFAULT);
 
             vl_sift_pix color_final[1];
             vl_eval_vector_comparison_on_all_pairs_f(color_final,

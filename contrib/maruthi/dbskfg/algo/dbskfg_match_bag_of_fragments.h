@@ -29,6 +29,8 @@
 #include <vl/sift.h>
 #include <vl/mathop.h>
 #include <vl/kdtree.h>
+#include <vl/fisher.h>
+#include <vl/gmm.h>
 
 #include <dbskr/dbskr_scurve.h>
 #include <vcl_utility.h>
@@ -1060,7 +1062,27 @@ private:
         vcl_vector<vl_sift_pix>& descr,
         LabBinType bin_type,
         vcl_string title="");
-       
+
+    void encode_color_triplet(
+        vcl_vector<vl_sift_pix>& triplet,
+        vcl_vector<vl_sift_pix>& fv_descriptor)
+    {
+        int encoding_size = 2 * triplet.size() * keywords_;
+
+        fv_descriptor.clear();
+        fv_descriptor.resize(encoding_size);
+
+        // run fisher encoding
+        vl_fisher_encode
+            (fv_descriptor.data(), VL_TYPE_FLOAT,
+             means_color_, triplet.size(), keywords_,
+             covariances_color_,
+             priors_color_,
+             triplet.data(), 1,
+             VL_FISHER_FLAG_IMPROVED);
+        
+    }
+
     void compute_sift_along_curve(dbskr_scurve_sptr scurve,
                                   vnl_matrix<vl_sift_pix>& descriptors,
                                   vl_sift_pix* red_grad_data,
