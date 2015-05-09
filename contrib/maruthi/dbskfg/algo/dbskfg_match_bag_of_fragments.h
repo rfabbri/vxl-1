@@ -1067,7 +1067,11 @@ private:
         vcl_vector<vl_sift_pix>& triplet,
         vcl_vector<vl_sift_pix>& fv_descriptor)
     {
-        int encoding_size = 2 * triplet.size() * keywords_;
+        int dimension=3;
+
+        int numData=triplet.size()/dimension;
+
+        int encoding_size = 2 * dimension * keywords_;
 
         fv_descriptor.clear();
         fv_descriptor.resize(encoding_size);
@@ -1075,10 +1079,10 @@ private:
         // run fisher encoding
         vl_fisher_encode
             (fv_descriptor.data(), VL_TYPE_FLOAT,
-             means_color_, triplet.size(), keywords_,
+             means_color_, dimension, keywords_,
              covariances_color_,
              priors_color_,
-             triplet.data(), 1,
+             triplet.data(), numData,
              VL_FISHER_FLAG_IMPROVED);
         
     }

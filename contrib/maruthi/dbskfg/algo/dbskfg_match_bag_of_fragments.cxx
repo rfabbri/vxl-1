@@ -9071,50 +9071,76 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
             norm_factors[curve_list_id]=norm_factors[curve_list_id]+
                 1.0;
 
-            // vcl_set<vcl_pair<double,double> > query_sift_samples;
-            // vcl_set<vcl_pair<double,double> > model_sift_samples;
+            vcl_set<vcl_pair<double,double> > query_sift_samples;
+            vcl_set<vcl_pair<double,double> > model_sift_samples;
                         
-            // compute_color_over_sift(
-            //     query_sift_filter,
-            //     query_sift_filter->width,
-            //     query_sift_filter->height,
-            //     q_pt.x(),
-            //     q_pt.y(),
-            //     color_radius,
-            //     fixed_theta,
-            //     query_sift_samples);
+            compute_color_over_sift(
+                query_sift_filter,
+                query_sift_filter->width,
+                query_sift_filter->height,
+                q_pt.x(),
+                q_pt.y(),
+                color_radius,
+                fixed_theta,
+                query_sift_samples);
 
-            // model_sift_samples=query_sift_samples;
+            model_sift_samples=query_sift_samples;
 
-            // if ( width )
-            // {
+            if ( width )
+            {
                 
-            //     model_sift_samples.clear();
-            //     vcl_set<vcl_pair<double,double> >::iterator it;
-            //     for ( it = query_sift_samples.begin() ; it != 
-            //               query_sift_samples.end() ; ++it)
-            //     {
+                model_sift_samples.clear();
+                vcl_set<vcl_pair<double,double> >::iterator it;
+                for ( it = query_sift_samples.begin() ; it != 
+                          query_sift_samples.end() ; ++it)
+                {
                     
-            //         vcl_pair<double,double> point=*it;
-            //         vcl_pair<double,double> flipped(ni-1-point.first,
-            //                                         point.second);
-            //         model_sift_samples.insert(flipped);
-            //     }
+                    vcl_pair<double,double> point=*it;
+                    vcl_pair<double,double> flipped(ni-1-point.first,
+                                                    point.second);
+                    model_sift_samples.insert(flipped);
+                }
                 
-            // }
+            }
 
             vcl_vector<vl_sift_pix> model_color_fv;
             vcl_vector<vl_sift_pix> query_color_fv;
             
             vcl_vector<vl_sift_pix> model_color_hist;
-            model_color_hist.push_back(o1(model_pt.x(),model_pt.y()));
-            model_color_hist.push_back(o2(model_pt.x(),model_pt.y()));
-            model_color_hist.push_back(o3(model_pt.x(),model_pt.y()));
+            vcl_set<vcl_pair<double,double> >::iterator mit;
+            for ( mit=model_sift_samples.begin() ; 
+                  mit != model_sift_samples.end(); ++mit)
+            {
+
+                double xx=(*mit).first;
+                double yy=(*mit).second;
+
+                double red   = vil_bilin_interp_safe(o1,xx,yy);
+                double green = vil_bilin_interp_safe(o2,xx,yy);
+                double blue  = vil_bilin_interp_safe(o3,xx,yy);
+ 
+                model_color_hist.push_back(red);
+                model_color_hist.push_back(green);
+                model_color_hist.push_back(blue);
+            }
 
             vcl_vector<vl_sift_pix> query_color_hist;
-            query_color_hist.push_back((*query_channel1)(q_pt.x(),q_pt.y()));
-            query_color_hist.push_back((*query_channel2)(q_pt.x(),q_pt.y()));
-            query_color_hist.push_back((*query_channel3)(q_pt.x(),q_pt.y()));
+            vcl_set<vcl_pair<double,double> >::iterator qit;
+            for ( qit=query_sift_samples.begin() ; 
+                  qit != query_sift_samples.end(); ++qit)
+            {
+                double xx=(*qit).first;
+                double yy=(*qit).second;
+
+                double red   = vil_bilin_interp_safe(*query_channel1,xx,yy);
+                double green = vil_bilin_interp_safe(*query_channel2,xx,yy);
+                double blue  = vil_bilin_interp_safe(*query_channel3,xx,yy);
+ 
+                query_color_hist.push_back(red);
+                query_color_hist.push_back(green);
+                query_color_hist.push_back(blue);
+
+            }
 
             encode_color_triplet(model_color_hist,model_color_fv);
             encode_color_triplet(query_color_hist,query_color_fv);
