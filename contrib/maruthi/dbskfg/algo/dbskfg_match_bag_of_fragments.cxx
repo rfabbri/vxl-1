@@ -9052,7 +9052,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
                              query_fv);
 
             vl_sift_pix result_final[1];
-            
+
             vl_eval_vector_comparison_on_all_pairs_f(result_final,
                                                      model_fv.size(),
                                                      model_fv.data_block(),
@@ -9173,7 +9173,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
                 combined_query_descriptor.push_back(query_fv[cgfv]);
             }
 
-            for ( unsigned int cfv = 0; cfv < model_fv.size() ; ++cfv)
+            for ( unsigned int cfv = 0; cfv < model_color_fv.size() ; ++cfv)
             {
                 combined_model_descriptor.push_back(model_color_fv[cfv]);
                 combined_query_descriptor.push_back(query_color_fv[cfv]);
