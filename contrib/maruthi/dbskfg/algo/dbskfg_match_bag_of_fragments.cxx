@@ -5733,6 +5733,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         //         flag,
         //         width);
 
+        double extra_cost(0.0);
         vcl_pair<double,double> sift_rgb_cost =
             compute_common_frame_distance_bbox_qm(
                 model_tree,
@@ -5740,6 +5741,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
                 curve_list1,
                 curve_list2,
                 map_list,
+                extra_cost,
                 flag,
                 width);
 
@@ -5950,7 +5952,7 @@ void dbskfg_match_bag_of_fragments::match_two_graphs_root_node_orig(
         app_timer.mark();
         
         //vcl_cerr<<"************ App   Time taken: "<<app_time<<" sec"<<vcl_endl;
-        app_diff        = app_cost.first;
+        app_diff        = extra_cost;
         norm_app_cost   = sift_rgb_cost.first;
         rgb_avg_cost    = sift_rgb_cost.second;
 
@@ -8807,6 +8809,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
     vcl_vector<dbskr_scurve_sptr>& curve_list1,
     vcl_vector<dbskr_scurve_sptr>& curve_list2,
     vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    double& extra_cost,
     bool flag,
     double width,
     bool debug)
@@ -9290,6 +9293,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
     //app_distance.second = part_norm_distance;
     app_distance.second = local_color_distance/index;
 
+    extra_cost= trad_sift_distance/index;
     vl_free(model_red_grad_data);
     vl_free(model_green_grad_data);
     vl_free(model_blue_grad_data);
