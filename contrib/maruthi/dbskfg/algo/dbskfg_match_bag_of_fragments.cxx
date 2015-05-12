@@ -17180,3 +17180,85 @@ double dbskfg_match_bag_of_fragments::LAB_distance(
 
 }
 
+
+void dbskfg_match_bag_of_fragments::compute_mean_std_color_descr(
+    vgl_point_2d<double>& center,
+    double& scale,
+    vil_image_view<double>& o1,
+    vil_image_view<double>& o2,
+    vil_image_view<double>& o3,
+    vcl_vector<double>& descr)
+{
+
+    vgl_box_2d<double> bbox(0,scale-1,0,scale-1);
+
+    bbox.set_centroid_x(center.x());
+    bbox.set_centroid_y(center.y());
+
+    unsigned int mini_boxes=1;
+    for ( int y=bbox.min_y(); y <= bbox.max_y(); y=y+16)
+    {
+        for ( int x=bbox.min_x(); x <= bbox.max_x() ; x=x+16) 
+        {
+            vgl_point_2d<double> new_center(x+8,y+8);
+
+            vgl_box_2d<double> mini_box(0,16,0,16);
+            
+            mini_box.set_centroid_x(x);
+            mini_box.set_centroid_y(y);
+
+            vcl_vector<double> chan1, chan2,chan3;
+            for ( int yy=mini_box.min_y(); yy <= mini_box.max_y(); ++yy)
+            {
+                for ( int xx=mini_box.min_x(); xx <= mini_box.max_x(); ++xx) 
+                {
+                    double L_value = vil_bilin_interp_safe(o1,
+                                                           xx,
+                                                           yy);
+                    double a_value = vil_bilin_interp_safe(o2,
+                                                           xx,
+                                                           yy);        
+                    double b_value = vil_bilin_interp_safe(o3,
+                                                           xx,
+                                                           yy);
+
+                    chan1.push_back(L_value);
+                    chan2.push_back(a_value);
+                    chan3.push_back(b_value);
+                }
+            }
+
+            vnl_vector<double> stats_chan1(chan1.data(),chan1.size());
+            vnl_vector<double> stats_chan2(chan2.data(),chan2.size());
+            vnl_vector<double> stats_chan3(chan3.data(),chan3.size());
+            
+            double mean_chan1=stats_chan1.mean();
+            double mean_chan2=stats_chan2.mean();
+            double mean_chan3=stats_chan3.mean();
+
+            stats_chan1 -= mean_chan1;
+            stats_chan2 -= mean_chan2;
+            stats_chan3 -= mean_chan3;
+            
+            double sum_chan1 = dot_product(stats_chan1,stats_chan1);
+            double sum_chan2 = dot_product(stats_chan2,stats_chan2);
+            double sum_chan3 = dot_product(stats_chan3,stats_chan3);
+
+            double std_chan1 = vcl_sqrt(sum_chan1/(stats_chan1.size()-1));
+            double std_chan2 = vcl_sqrt(sum_chan2/(stats_chan2.size()-1));
+            double std_chan3 = vcl_sqrt(sum_chan3/(stats_chan3.size()-1));
+
+            descr.push_back(mean_chan1);
+            descr.push_back(std_chan1);
+
+            descr.push_back(mean_chan2);
+            descr.push_back(std_chan2);
+
+            descr.push_back(mean_chan3);
+            descr.push_back(std_chan3);
+        }
+        
+        
+    }
+
+}

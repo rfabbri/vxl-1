@@ -1055,6 +1055,14 @@ private:
         LabBinType bin_type,
         vcl_string title="");
 
+    void compute_mean_std_color_descr(
+        vgl_point_2d<double>& center,
+        double& scale,
+        vil_image_view<double>& o1,
+        vil_image_view<double>& o2,
+        vil_image_view<double>& o3,
+        vcl_vector<double>& descr);
+
     void compute_color_region_hist_fv(
         vcl_set<vcl_pair<double,double> >& samples,
         vil_image_view<double>& o1,
