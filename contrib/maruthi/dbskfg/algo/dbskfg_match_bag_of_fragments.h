@@ -392,6 +392,7 @@ private:
     vcl_string output_removed_regions_;
     vcl_string output_parts_file_;
     vcl_string output_dist_file_;
+    vcl_string output_dist_to_category_file_;
 
     // Amirs elastic splice cost 
     bool elastic_splice_cost_;
@@ -471,6 +472,10 @@ private:
     float* means_color_;
     float* covariances_color_;
     float* priors_color_;
+
+    vcl_map<unsigned int,vnl_matrix<double> > dist_maps_;
+
+    vcl_map<vcl_pair<int,int>, double> local_dist_map_;
 
     int keywords_;
 

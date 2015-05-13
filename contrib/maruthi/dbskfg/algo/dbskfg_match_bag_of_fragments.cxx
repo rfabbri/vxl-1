@@ -133,6 +133,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
       output_removed_regions_(output_file),
       output_parts_file_(output_file),
       output_dist_file_(output_file),
+      output_dist_to_category_file_(output_file),
       scale_bbox_(scale_bbox),
       scale_root_(scale_root),
       scale_area_(scale_area),
@@ -221,7 +222,8 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
     output_binary_h_file_ = output_binary_h_file_ + "_binary_h_matrix.bin";
     output_parts_file_ = output_parts_file_ + "_parts.txt";
     output_removed_regions_ = output_removed_regions_ + "_removed_regions.txt";
-
+    output_dist_to_category_file_ = output_dist_to_category_file_ + "_d2c.txt";
+ 
     // Load model
     if ( vul_file_extension(model_dir) == ".bin")
     { 
@@ -671,6 +673,38 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                                     true);
             
             vl_sift_set_magnif(query_sift_filter_,1.0);
+
+            // Create query dist maps
+
+            
+            dist_maps_[0]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[30]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[60]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[90]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[120]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[150]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[179]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[209]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[239]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[267]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[297]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[327]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[357]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[387]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
 
         }
 
@@ -2085,6 +2119,44 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             h_matrices.push_back(data[7]);
             h_matrices.push_back(data[8]);
             
+
+            // Determine matrix mat
+            vcl_map<unsigned int,vnl_matrix<double> >::iterator fit;
+            fit=dist_maps_.lower_bound(model_tree->get_id());
+            
+            if ( !dist_maps_.count(model_tree->get_id()))
+            {
+                fit--;
+            }
+
+            vcl_map<vcl_pair<int,int>,double>::iterator lit;
+            for ( lit=local_dist_map_.begin(); lit != local_dist_map_.end(); 
+                  ++lit)
+            {
+                vcl_pair<int,int> key=(*lit).first;
+
+                double sample_distance = (*lit).second;
+                double mat_value       = ((*fit).second)(key.first,key.second);
+
+                if ( mat_value == 0.0 )
+                {
+                    ((*fit).second).put(key.first,key.second,
+                                        sample_distance);
+
+                }
+                else
+                {
+                    
+                    if ( sample_distance < mat_value)
+                    {
+                        ((*fit).second).put(key.first,key.second,
+                                            sample_distance);
+                    }
+                }
+            }
+
+            local_dist_map_.clear();
+
             query_tree=0;
             model_tree=0;
         }
@@ -2182,6 +2254,23 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
 
     parts_file.close();
 
+
+
+    vcl_ofstream d2c_file;
+    d2c_file.open(output_dist_to_category_file_.c_str(),
+                  vcl_ios::out | 
+                  vcl_ios::app ); 
+    
+    vcl_map<unsigned int,vnl_matrix<double> >::iterator mit;
+    for ( mit = dist_maps_.begin() ; mit != dist_maps_.end() ; ++mit)
+    {
+        d2c_file<<(*mit).second.absolute_value_sum()<<vcl_endl;
+    }
+
+    d2c_file.close();
+
+    dist_maps_.clear();
+    
     if ( model_sift_filter_)
     {
         vl_sift_delete(model_sift_filter_);
@@ -9023,7 +9112,7 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
 
     if ( debug )
     {
-        dist_map.set_size(temp.ni(),temp.nj());
+        dist_map.set_size(query_channel1->ni(),query_channel1->nj());
         dist_map.fill(0.0);
         stride=1;
     }
@@ -9037,10 +9126,10 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
                 continue;
             }
 
-            if ( out_of_bounds.count(vcl_make_pair(x,y)))
-            {
-                continue;
-            }
+            // if ( out_of_bounds.count(vcl_make_pair(x,y)))
+            // {
+            //     continue;
+            // }
 
             vcl_pair<int,int> key(x,y);
 
@@ -9258,11 +9347,12 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
             // double color_distance = 
             // chi_squared_distance(vec_model,vec_query); 
             
+            local_dist_map_[key]=sample_distance;
 
             if ( debug )
             {
-                //dist_map(x,y)=sample_distance;
-                dist_map(x,y)=combined_sampled_distance;
+                dist_map(x,y)=sample_distance;
+                //dist_map(x,y)=combined_sampled_distance;
             }
             
             index=index+1;
