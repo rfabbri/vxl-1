@@ -2091,6 +2091,7 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                     rgb_avg_cost = rgb_avg_mirror_cost;
                     norm_app_cost = norm_app_mirror_cost;
                     rgb_avg_cost = rgb_avg_mirror_cost;
+                    app_diff = app_mirror_diff;
                 }
 
                 // rgb_avg_cost = ( rgb_avg_cost < rgb_avg_mirror_cost )
@@ -9104,6 +9105,9 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
     VlFloatVectorComparisonFunction FV_distance =    
       vl_get_vector_comparison_function_f (VlDistanceL2) ;
 
+    VlDoubleVectorComparisonFunction FV_distance_double =    
+      vl_get_vector_comparison_function_d (VlDistanceL2) ;
+
     vnl_vector<double> part_distances(curve_list1.size(),0.0);
 
     vcl_vector<double> norm_factors(curve_list1.size(),0.0);
@@ -9184,120 +9188,34 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
             norm_factors[curve_list_id]=norm_factors[curve_list_id]+
                 1.0;
 
-            vcl_set<vcl_pair<double,double> > query_sift_samples;
-            vcl_set<vcl_pair<double,double> > model_sift_samples;
-                        
-            compute_color_over_sift(
-                query_sift_filter,
-                query_sift_filter->width,
-                query_sift_filter->height,
-                q_pt.x(),
-                q_pt.y(),
-                color_radius,
-                fixed_theta,
-                query_sift_samples);
 
-            model_sift_samples=query_sift_samples;
+            vcl_vector<double> model_color_fv,query_color_fv;
 
-            if ( width )
-            {
-                
-                model_sift_samples.clear();
-                vcl_set<vcl_pair<double,double> >::iterator it;
-                for ( it = query_sift_samples.begin() ; it != 
-                          query_sift_samples.end() ; ++it)
-                {
-                    
-                    vcl_pair<double,double> point=*it;
-                    vcl_pair<double,double> flipped(ni-1-point.first,
-                                                    point.second);
-                    model_sift_samples.insert(flipped);
-                }
-                
-            }
-
-            vcl_vector<vl_sift_pix> model_color_fv;
-            vcl_vector<vl_sift_pix> query_color_fv;
+            double color_scale=64.0;
+            compute_mean_std_color_descr
+                (q_pt,
+                 color_scale,
+                 *query_channel1,
+                 *query_channel2,
+                 *query_channel3,
+                 query_color_fv);
             
-            vcl_vector<vl_sift_pix> model_color_hist;
-            vcl_set<vcl_pair<double,double> >::iterator mit;
-            for ( mit=model_sift_samples.begin() ; 
-                  mit != model_sift_samples.end(); ++mit)
-            {
+            compute_mean_std_color_descr
+                (model_pt,
+                 color_scale,
+                 *model_channel1,
+                 *model_channel2,
+                 *model_channel3,
+                 model_color_fv);
 
-                double xx=(*mit).first;
-                double yy=(*mit).second;
-
-                double red   = vil_bilin_interp_safe(o1,xx,yy);
-                double green = vil_bilin_interp_safe(o2,xx,yy);
-                double blue  = vil_bilin_interp_safe(o3,xx,yy);
- 
-                model_color_hist.push_back(red);
-                model_color_hist.push_back(green);
-                model_color_hist.push_back(blue);
-            }
-
-            vcl_vector<vl_sift_pix> query_color_hist;
-            vcl_set<vcl_pair<double,double> >::iterator qit;
-            for ( qit=query_sift_samples.begin() ; 
-                  qit != query_sift_samples.end(); ++qit)
-            {
-                double xx=(*qit).first;
-                double yy=(*qit).second;
-
-                double red   = vil_bilin_interp_safe(*query_channel1,xx,yy);
-                double green = vil_bilin_interp_safe(*query_channel2,xx,yy);
-                double blue  = vil_bilin_interp_safe(*query_channel3,xx,yy);
- 
-                query_color_hist.push_back(red);
-                query_color_hist.push_back(green);
-                query_color_hist.push_back(blue);
-
-            }
-
-            encode_color_triplet(model_color_hist,model_color_fv);
-            encode_color_triplet(query_color_hist,query_color_fv);
- 
-            // compute_color_region_hist(
-            //     model_sift_samples,
-            //     o1,
-            //     o2,
-            //     o3,
-            //     model_descr,
-            //     dbskfg_match_bag_of_fragments::DEFAULT);
-
-            // compute_color_region_hist(
-            //     query_sift_samples,
-            //     *query_channel1,
-            //     *query_channel2,
-            //     *query_channel3,
-            //     query_descr,
-            //     dbskfg_match_bag_of_fragments::DEFAULT);
-
-            // compute_color_region_hist_fv(
-            //     model_sift_samples,
-            //     o1,
-            //     o2,
-            //     o3,
-            //     model_color_fv,
-            //     dbskfg_match_bag_of_fragments::DEFAULT);
-
-            // compute_color_region_hist_fv(
-            //     query_sift_samples,
-            //     *query_channel1,
-            //     *query_channel2,
-            //     *query_channel3,
-            //     query_color_fv,
-            //     dbskfg_match_bag_of_fragments::DEFAULT);
-
-            vl_sift_pix color_final[1];
-            vl_eval_vector_comparison_on_all_pairs_f(color_final,
+            double color_final[1];
+            vl_eval_vector_comparison_on_all_pairs_d(color_final,
                                                      model_color_fv.size(),
                                                      model_color_fv.data(),
                                                      1,
                                                      query_color_fv.data(),
                                                      1,
-                                                     FV_distance);
+                                                     FV_distance_double);
             
             double color_distance = color_final[0];
                         
@@ -9331,8 +9249,113 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
             double combined_sampled_distance = combined_final_result[0]; 
            
             combined_distance += combined_sampled_distance;
-           
+            
+            // vcl_set<vcl_pair<double,double> > query_sift_samples;
+            // vcl_set<vcl_pair<double,double> > model_sift_samples;
                         
+            // compute_color_over_sift(
+            //     query_sift_filter,
+            //     query_sift_filter->width,
+            //     query_sift_filter->height,
+            //     q_pt.x(),
+            //     q_pt.y(),
+            //     color_radius,
+            //     fixed_theta,
+            //     query_sift_samples);
+
+            // model_sift_samples=query_sift_samples;
+
+            // if ( width )
+            // {
+                
+            //     model_sift_samples.clear();
+            //     vcl_set<vcl_pair<double,double> >::iterator it;
+            //     for ( it = query_sift_samples.begin() ; it != 
+            //               query_sift_samples.end() ; ++it)
+            //     {
+                    
+            //         vcl_pair<double,double> point=*it;
+            //         vcl_pair<double,double> flipped(ni-1-point.first,
+            //                                         point.second);
+            //         model_sift_samples.insert(flipped);
+            //     }
+                
+            // }
+
+            // vcl_vector<vl_sift_pix> model_color_fv;
+            // vcl_vector<vl_sift_pix> query_color_fv;
+            
+            // vcl_vector<vl_sift_pix> model_color_hist;
+            // vcl_set<vcl_pair<double,double> >::iterator mit;
+            // for ( mit=model_sift_samples.begin() ; 
+            //       mit != model_sift_samples.end(); ++mit)
+            // {
+
+            //     double xx=(*mit).first;
+            //     double yy=(*mit).second;
+
+            //     double red   = vil_bilin_interp_safe(o1,xx,yy);
+            //     double green = vil_bilin_interp_safe(o2,xx,yy);
+            //     double blue  = vil_bilin_interp_safe(o3,xx,yy);
+ 
+            //     model_color_hist.push_back(red);
+            //     model_color_hist.push_back(green);
+            //     model_color_hist.push_back(blue);
+            // }
+
+            // vcl_vector<vl_sift_pix> query_color_hist;
+            // vcl_set<vcl_pair<double,double> >::iterator qit;
+            // for ( qit=query_sift_samples.begin() ; 
+            //       qit != query_sift_samples.end(); ++qit)
+            // {
+            //     double xx=(*qit).first;
+            //     double yy=(*qit).second;
+
+            //     double red   = vil_bilin_interp_safe(*query_channel1,xx,yy);
+            //     double green = vil_bilin_interp_safe(*query_channel2,xx,yy);
+            //     double blue  = vil_bilin_interp_safe(*query_channel3,xx,yy);
+ 
+            //     query_color_hist.push_back(red);
+            //     query_color_hist.push_back(green);
+            //     query_color_hist.push_back(blue);
+
+            // }
+
+            // encode_color_triplet(model_color_hist,model_color_fv);
+            // encode_color_triplet(query_color_hist,query_color_fv);
+ 
+            // compute_color_region_hist(
+            //     model_sift_samples,
+            //     o1,
+            //     o2,
+            //     o3,
+            //     model_descr,
+            //     dbskfg_match_bag_of_fragments::DEFAULT);
+
+            // compute_color_region_hist(
+            //     query_sift_samples,
+            //     *query_channel1,
+            //     *query_channel2,
+            //     *query_channel3,
+            //     query_descr,
+            //     dbskfg_match_bag_of_fragments::DEFAULT);
+
+            // compute_color_region_hist_fv(
+            //     model_sift_samples,
+            //     o1,
+            //     o2,
+            //     o3,
+            //     model_color_fv,
+            //     dbskfg_match_bag_of_fragments::DEFAULT);
+
+            // compute_color_region_hist_fv(
+            //     query_sift_samples,
+            //     *query_channel1,
+            //     *query_channel2,
+            //     *query_channel3,
+            //     query_color_fv,
+            //     dbskfg_match_bag_of_fragments::DEFAULT);
+
             // vnl_vector<double> vec_model(model_descr.size(),0);
             // vnl_vector<double> vec_query(query_descr.size(),0);
 
