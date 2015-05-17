@@ -17434,7 +17434,6 @@ void dbskfg_match_bag_of_fragments::compute_mean_std_color_descr(
 
     double l2_distance=vcl_sqrt(l2_sum);
 
-    vcl_cout<<"l2 distance: "<<l2_distance<<vcl_endl;
     for ( unsigned int i=0; i < descr.size() ; ++i)
     {
         descr[i] = descr[i]/l2_distance;
