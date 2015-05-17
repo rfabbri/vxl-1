@@ -17318,6 +17318,8 @@ void dbskfg_match_bag_of_fragments::compute_mean_std_color_descr(
     bbox.set_centroid_x(center.x());
     bbox.set_centroid_y(center.y());
 
+    double l2_sum=0.0;
+
     unsigned int mini_boxes=1;
     for ( int y=bbox.min_y(); y <= bbox.max_y(); y=y+16)
     {
@@ -17371,6 +17373,21 @@ void dbskfg_match_bag_of_fragments::compute_mean_std_color_descr(
             double std_chan2 = vcl_sqrt(sum_chan2/(stats_chan2.size()-1));
             double std_chan3 = vcl_sqrt(sum_chan3/(stats_chan3.size()-1));
 
+            // Power law normalization
+            mean_chan1 = vnl_math::sgn(mean_chan1)*
+                vcl_sqrt(vcl_abs(mean_chan1));
+            mean_chan2 = vnl_math::sgn(mean_chan2)*
+                vcl_sqrt(vcl_abs(mean_chan2));
+            mean_chan3 = vnl_math::sgn(mean_chan3)*
+                vcl_sqrt(vcl_abs(mean_chan3));
+
+            std_chan1 = vnl_math::sgn(std_chan1)*
+                vcl_sqrt(vcl_abs(std_chan1));
+            std_chan2 = vnl_math::sgn(std_chan2)*
+                vcl_sqrt(vcl_abs(std_chan2));
+            std_chan3 = vnl_math::sgn(std_chan3)*
+                vcl_sqrt(vcl_abs(std_chan3));
+
             descr.push_back(mean_chan1);
             descr.push_back(std_chan1);
 
@@ -17379,9 +17396,24 @@ void dbskfg_match_bag_of_fragments::compute_mean_std_color_descr(
 
             descr.push_back(mean_chan3);
             descr.push_back(std_chan3);
+
+            l2_sum += mean_chan1*mean_chan1+
+                      mean_chan2*mean_chan2+
+                      mean_chan3*mean_chan3+
+                      std_chan1*std_chan1+
+                      std_chan2*std_chan2+
+                      std_chan3*std_chan3;
+
         }
         
         
     }
 
+    double l2_distance=vcl_sqrt(l2_sum);
+
+    vcl_cout<<"l2 distance: "<<l2_distance<<vcl_endl;
+    for ( unsigned int i=0; i < descr.size() ; ++i)
+    {
+        descr[i] = descr[i]/l2_distance;
+    }
 }
