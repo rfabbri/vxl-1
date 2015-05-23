@@ -22,6 +22,7 @@
 #include <vbl/vbl_ref_count.h>
 #include <dbdp/dbdp_cost.h>
 #include <vcl_cfloat.h>
+#include <cstddef>
 
 #define DP_VERY_LARGE_COST DBL_MAX
 
