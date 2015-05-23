@@ -9108,10 +9108,6 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
     VlDoubleVectorComparisonFunction FV_distance_double =    
       vl_get_vector_comparison_function_d (VlDistanceL2) ;
 
-    vnl_vector<double> part_distances(curve_list1.size(),0.0);
-
-    vcl_vector<double> norm_factors(curve_list1.size(),0.0);
-
     vnl_matrix<double> dist_map;
 
     if ( debug )
@@ -9181,13 +9177,6 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
             double sample_distance = result_final[0];
 
             trad_sift_distance += sample_distance;
-
-            part_distances[curve_list_id]=part_distances[curve_list_id]+
-                sample_distance;
-
-            norm_factors[curve_list_id]=norm_factors[curve_list_id]+
-                1.0;
-
 
             vcl_vector<double> model_color_fv,query_color_fv;
 
@@ -9381,19 +9370,6 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
             index=index+1;
         }
     }
-
-    // Normalize part distances
-    for ( unsigned int i=0; i < part_distances.size() ; ++i)
-    {
-        part_distances[i]=part_distances[i]/norm_factors[i];
-
-        if ( debug )
-        {
-            vcl_cout<<"Part "<<i<<" : "<<part_distances[i]<<vcl_endl;
-        }
-    }
-
-    double part_norm_distance=part_distances.mean();
 
     if ( debug )
     {
