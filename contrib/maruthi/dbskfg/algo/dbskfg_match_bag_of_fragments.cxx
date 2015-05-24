@@ -676,7 +676,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
 
             // Create query dist maps
 
-            
+            // gt_seg masks
             dist_maps_[0]=
                 vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
             dist_maps_[30]=
@@ -705,6 +705,68 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                 vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
             dist_maps_[387]=
                 vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+
+            // cpmc dist maps
+            dist_maps_[0]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[30]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[60]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[90]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[120]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[150]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[180]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[210]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[240]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[269]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[299]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[329]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[359]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[389]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+
+            // mcg dist maps
+            dist_maps_[0]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[30]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[60]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[90]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[120]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[150]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[180]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[210]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[240]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[269]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[299]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[329]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[359]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+            dist_maps_[388]=
+                vnl_matrix<double>(query_image_->ni(),query_image_->nj(),0.0);
+
+                                                                                                                    
 
         }
 
