@@ -1013,7 +1013,10 @@ private:
         vl_sift_pix* green_grad_data,
         vl_sift_pix* blue_grad_data,
         VlSiftFilt* model_filter,
-        vnl_vector<vl_sift_pix>& fv_descriptor);
+        vnl_vector<vl_sift_pix>& fv_descriptor,
+        double color_1=0.0,
+        double color_2=0.0,
+        double color_3=0.0);
 
     void compute_descr(
         vgl_point_2d<double>& pt,
