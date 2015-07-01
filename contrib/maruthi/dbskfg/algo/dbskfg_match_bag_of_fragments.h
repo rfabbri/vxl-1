@@ -479,6 +479,17 @@ private:
 
     int keywords_;
 
+    vnl_matrix<vl_sift_pix> PCA_M_;
+    vnl_vector<vl_sift_pix> PCA_mean_;
+
+    vnl_vector<vl_sift_pix> linear_embed(vnl_vector<vl_sift_pix>& descr)
+    {
+        vnl_vector<vl_sift_pix> zero_mean=descr-PCA_mean_;
+        
+        return zero_mean*PCA_M_; 
+        
+    }
+
     void load_model(vcl_string model_dir);
     void load_query(vcl_string query_dir);
 
@@ -1013,10 +1024,7 @@ private:
         vl_sift_pix* green_grad_data,
         vl_sift_pix* blue_grad_data,
         VlSiftFilt* model_filter,
-        vnl_vector<vl_sift_pix>& fv_descriptor,
-        double color_1=0.0,
-        double color_2=0.0,
-        double color_3=0.0);
+        vnl_vector<vl_sift_pix>& fv_descriptor);
 
     void compute_descr(
         vgl_point_2d<double>& pt,

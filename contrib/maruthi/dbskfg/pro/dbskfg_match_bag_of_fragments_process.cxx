@@ -348,13 +348,14 @@ bool dbskfg_match_bag_of_fragments_process::execute()
     if ( bow )
     {
         match_frags.train_gmm(centers);
+        //match_frags.train_gmm_raw_color(centers);
     }
     else
     {
         if ( bow_path.size() )
         {
             match_frags.set_gmm_train(bow_path);
-            match_frags.set_gmm_color_train(bow_color_path);
+            //match_frags.set_gmm_color_train(bow_color_path);
         }
 
         if ( part_path.size() )
