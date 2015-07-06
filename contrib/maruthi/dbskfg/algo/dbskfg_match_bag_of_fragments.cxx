@@ -155,7 +155,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
       covariances_color_(0),
       priors_color_(0),
       keywords_(0),
-      PCA_M_(384,96,0.0),
+      PCA_M_(384,128,0.0),
       PCA_mean_(384,0.0),
       model_image_(model_image),
       query_image_(query_image),
@@ -184,15 +184,15 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
     // Read in PCA data
     { 
         vcl_string mean_file=
-       "/users/mnarayan/scratch/match_birds/base/pca_mean.txt";
+       "/users/mnarayan/scratch/match_birds/base/pca_mean_128.txt";
         vcl_string M_file=
-       "/users/mnarayan/scratch/match_birds/base/pca_M.txt";
+       "/users/mnarayan/scratch/match_birds/base/pca_M_128.txt";
         
         vcl_ifstream mean_stream(mean_file.c_str());
         vcl_ifstream M_stream(M_file.c_str());
             
         vl_sift_pix mean_data[384];
-        vl_sift_pix M[384*96];
+        vl_sift_pix M[384*128];
 
         if (mean_stream.is_open())
         {
@@ -206,7 +206,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
         if ( M_stream.is_open() )
         {
 
-            for ( unsigned int c=0 ; c < 384*96 ; ++c)
+            for ( unsigned int c=0 ; c < 384*128 ; ++c)
             {
                 M_stream>>M[c];
             }
@@ -2893,8 +2893,8 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
     // }
 
     double* data=descriptors.data();
-    int dimension  = 96;
-    int numData    = descriptors.size()/96;
+    int dimension  = 128;
+    int numData    = descriptors.size()/128;
     int numCenters = keywords;
 
     double * means ;
@@ -3370,7 +3370,7 @@ void dbskfg_match_bag_of_fragments::set_gmm_train(vcl_string& file_path)
 
     vcl_cout<<"Loading gmm bow training file: "<<file_path<<vcl_endl;
 
-    int dimension  = 96;
+    int dimension  = 128;
     int numCenters = 0;
 
     vcl_ifstream myfile (file_path.c_str());
