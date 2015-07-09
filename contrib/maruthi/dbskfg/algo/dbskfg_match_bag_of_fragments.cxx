@@ -158,6 +158,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
       keywords_(0),
       PCA_M_(396,128,0.0),
       PCA_mean_(396,0.0),
+      skipped_index_(-1),
       model_image_(model_image),
       query_image_(query_image),
       model_grad_data_(0),
@@ -319,7 +320,18 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
                     vil_load_image_resource(line.c_str());
                 vcl_stringstream title_stream;
                 title_stream<<"model_"<<index;
-                
+
+                vcl_string stripped = vul_file::basename(line.c_str());
+                vcl_string final = vul_file::strip_extension(stripped.c_str());
+
+                vcl_size_t found=output_file.find(final);
+
+                if ( found != vcl_string::npos)
+                {
+                    vcl_cout<<"Matching exact image Index: "<<index<<vcl_endl;
+                    skipped_index_=index;
+                }
+
                 vl_sift_pix* grad_data(0);
                 vl_sift_pix* red_data(0);
                 vl_sift_pix* blue_data(0);
@@ -2336,6 +2348,8 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
             h_matrices.push_back(data[8]);
             
 
+            if ( model_tree->get_id() != skipped_index_ )
+            {
             // Determine matrix mat
             vcl_map<unsigned int,vnl_matrix<double> >::iterator fit;
             fit=dist_maps_.lower_bound(model_tree->get_id());
@@ -2371,6 +2385,12 @@ bool dbskfg_match_bag_of_fragments::binary_scale_root_match()
                 }
             }
 
+            }
+            else
+            {
+                vcl_cout<<"Skipping indexing with model id: "<<
+                    model_tree->get_id()<<vcl_endl;
+            }
             local_dist_map_.clear();
 
             query_tree=0;

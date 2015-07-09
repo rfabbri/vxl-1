@@ -490,6 +490,8 @@ private:
         
     }
 
+    int skipped_index_;
+
     void load_model(vcl_string model_dir);
     void load_query(vcl_string query_dir);
 
