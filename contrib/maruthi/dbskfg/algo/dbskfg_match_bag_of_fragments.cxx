@@ -33,6 +33,7 @@
 #include <vil/vil_flip.h>
 #include <vil/vil_save.h>
 #include <vil/vil_new.h>
+#include <vil1/vil1_colour_space.h>
 #include <bsta/bsta_histogram.h>
 #include <bsta/bsta_joint_histogram.h>
 #include <bsta/bsta_joint_histogram_3d.h>
@@ -155,8 +156,8 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
       covariances_color_(0),
       priors_color_(0),
       keywords_(0),
-      PCA_M_(384,128,0.0),
-      PCA_mean_(384,0.0),
+      PCA_M_(396,128,0.0),
+      PCA_mean_(396,0.0),
       model_image_(model_image),
       query_image_(query_image),
       model_grad_data_(0),
@@ -184,19 +185,19 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
     // Read in PCA data
     { 
         vcl_string mean_file=
-       "/users/mnarayan/scratch/match_birds/base/pca_mean_128.txt";
+       "/users/mnarayan/scratch/match_birds/base/pca_lab_color_mean_128.txt";
         vcl_string M_file=
-       "/users/mnarayan/scratch/match_birds/base/pca_M_128.txt";
+       "/users/mnarayan/scratch/match_birds/base/pca_lab_color_M_128.txt";
         
         vcl_ifstream mean_stream(mean_file.c_str());
         vcl_ifstream M_stream(M_file.c_str());
             
-        vl_sift_pix mean_data[384];
-        vl_sift_pix M[384*128];
+        vl_sift_pix mean_data[396];
+        vl_sift_pix M[396*128];
 
         if (mean_stream.is_open())
         {
-            for ( unsigned int c=0; c < 384 ; ++c)
+            for ( unsigned int c=0; c < 396 ; ++c)
             {
                 mean_stream>>mean_data[c];
                 
@@ -206,7 +207,7 @@ dbskfg_match_bag_of_fragments::dbskfg_match_bag_of_fragments
         if ( M_stream.is_open() )
         {
 
-            for ( unsigned int c=0 ; c < 384*128 ; ++c)
+            for ( unsigned int c=0 ; c < 396*128 ; ++c)
             {
                 M_stream>>M[c];
             }
@@ -2734,6 +2735,15 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
             model_images_grad_data_blue_[(*m_iterator).second.first]:
             0;    
 
+        vil_image_view<double> model_channel1(model_images_chan1_data_
+                                               [(*m_iterator).second.first]);
+        
+        vil_image_view<double> model_channel2(model_images_chan2_data_
+                                               [(*m_iterator).second.first]);
+
+        vil_image_view<double> model_channel3(model_images_chan3_data_
+                                               [(*m_iterator).second.first]);
+
         vgl_polygon<double> poly=model_fragments_polys_
             [(*m_iterator).first].second;
         
@@ -2779,10 +2789,27 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
                 double scale_3_radius=8;
                 double scale_4_radius=4;
 
-                vnl_vector<vl_sift_pix> scale_1_descriptor(384,0.0);
-                vnl_vector<vl_sift_pix> scale_2_descriptor(384,0.0);
-                vnl_vector<vl_sift_pix> scale_3_descriptor(384,0.0);
-                vnl_vector<vl_sift_pix> scale_4_descriptor(384,0.0);
+                vnl_vector<vl_sift_pix> scale_1_descriptor(396,0.0);
+                vnl_vector<vl_sift_pix> scale_2_descriptor(396,0.0);
+                vnl_vector<vl_sift_pix> scale_3_descriptor(396,0.0);
+                vnl_vector<vl_sift_pix> scale_4_descriptor(396,0.0);
+
+                double rgb_1 = model_channel1(x,y);
+                double rgb_2 = model_channel2(x,y);
+                double rgb_3 = model_channel3(x,y);
+
+                double lab_1(0),lab_2(0),lab_3(0);
+                rgb2lab(rgb_1,rgb_2,rgb_3,lab_1,lab_2,lab_3);
+
+                double opp_1 = (rgb_1-rgb_2)/vcl_sqrt(2);
+                double opp_2 = (rgb_1+rgb_2-2*rgb_3)/vcl_sqrt(6);
+                double opp_3 = (rgb_1+rgb_2+rgb_3)/vcl_sqrt(3);
+
+                double hsv_1[1];
+                double hsv_2[1];
+                double hsv_3[1];
+                vil1_colour_space_RGB_to_HSV(rgb_1,rgb_2,rgb_3,
+                                            hsv_1,hsv_2,hsv_3);
 
                 compute_descr(ps1,
                               scale_1_radius,
@@ -2793,6 +2820,22 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
                               model_images_sift_filter,
                               scale_1_descriptor);
 
+                scale_1_descriptor.put(384,rgb_1);
+                scale_1_descriptor.put(385,rgb_2);
+                scale_1_descriptor.put(386,rgb_3);
+
+                scale_1_descriptor.put(387,lab_1);
+                scale_1_descriptor.put(388,lab_2);
+                scale_1_descriptor.put(389,lab_3);
+
+                scale_1_descriptor.put(390,opp_1);
+                scale_1_descriptor.put(391,opp_2);
+                scale_1_descriptor.put(392,opp_3);
+
+                scale_1_descriptor.put(393,hsv_1[0]);
+                scale_1_descriptor.put(394,hsv_2[0]);
+                scale_1_descriptor.put(395,hsv_3[0]);
+
                 compute_descr(ps1,
                               scale_2_radius,
                               fixed_theta,
@@ -2801,6 +2844,22 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
                               model_images_grad_data_blue,
                               model_images_sift_filter,
                               scale_2_descriptor);
+
+                scale_2_descriptor.put(384,rgb_1);
+                scale_2_descriptor.put(385,rgb_2);
+                scale_2_descriptor.put(386,rgb_3);
+
+                scale_2_descriptor.put(387,lab_1);
+                scale_2_descriptor.put(388,lab_2);
+                scale_2_descriptor.put(389,lab_3);
+
+                scale_2_descriptor.put(390,opp_1);
+                scale_2_descriptor.put(391,opp_2);
+                scale_2_descriptor.put(392,opp_3);
+
+                scale_2_descriptor.put(393,hsv_1[0]);
+                scale_2_descriptor.put(394,hsv_2[0]);
+                scale_2_descriptor.put(395,hsv_3[0]);
 
                 compute_descr(ps1,
                               scale_3_radius,
@@ -2811,6 +2870,22 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
                               model_images_sift_filter,
                               scale_3_descriptor);
 
+                scale_3_descriptor.put(384,rgb_1);
+                scale_3_descriptor.put(385,rgb_2);
+                scale_3_descriptor.put(386,rgb_3);
+
+                scale_3_descriptor.put(387,lab_1);
+                scale_3_descriptor.put(388,lab_2);
+                scale_3_descriptor.put(389,lab_3);
+
+                scale_3_descriptor.put(390,opp_1);
+                scale_3_descriptor.put(391,opp_2);
+                scale_3_descriptor.put(392,opp_3);
+
+                scale_3_descriptor.put(393,hsv_1[0]);
+                scale_3_descriptor.put(394,hsv_2[0]);
+                scale_3_descriptor.put(395,hsv_3[0]);
+
 
                 compute_descr(ps1,
                               scale_4_radius,
@@ -2820,6 +2895,23 @@ bool dbskfg_match_bag_of_fragments::train_gmm(int keywords)
                               model_images_grad_data_blue,
                               model_images_sift_filter,
                               scale_4_descriptor);
+
+                scale_4_descriptor.put(384,rgb_1);
+                scale_4_descriptor.put(385,rgb_2);
+                scale_4_descriptor.put(386,rgb_3);
+
+                scale_4_descriptor.put(387,lab_1);
+                scale_4_descriptor.put(388,lab_2);
+                scale_4_descriptor.put(389,lab_3);
+
+                scale_4_descriptor.put(390,opp_1);
+                scale_4_descriptor.put(391,opp_2);
+                scale_4_descriptor.put(392,opp_3);
+
+                scale_4_descriptor.put(393,hsv_1[0]);
+                scale_4_descriptor.put(394,hsv_2[0]);
+                scale_4_descriptor.put(395,hsv_3[0]);
+
 
                 vnl_vector<vl_sift_pix> ldr_1_descriptor =
                     linear_embed(scale_1_descriptor);
@@ -9221,6 +9313,19 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
                               query_channel2->nj());
     o3.fill(0);
 
+    vil_image_view<double> red_chan(query_channel1->ni(),
+                                    query_channel2->nj());
+    red_chan.fill(0);
+    
+
+    vil_image_view<double> green_chan(query_channel1->ni(),
+                                      query_channel2->nj());
+    green_chan.fill(0);
+    
+    vil_image_view<double> blue_chan(query_channel1->ni(),
+                                     query_channel2->nj());
+    blue_chan.fill(0);
+
     vgl_box_2d<double> bbox;
 
     // do not include boundary
@@ -9264,6 +9369,53 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
                 double green = vil_bilin_interp_safe(*model_channel2,xx,yy);
                 double blue  = vil_bilin_interp_safe(*model_channel3,xx,yy);
                 
+                double red_orig=red;
+                double green_orig=green;
+                double blue_orig=blue;
+
+                if ( grad_color_space_ == dbskfg_match_bag_of_fragments
+                     ::OPP )
+                {
+                    double o1 = (red-green)/vcl_sqrt(2);
+                    double o2 = (red+green-2*blue)/vcl_sqrt(6);
+                    double o3 = (red+green+blue)/vcl_sqrt(3);
+
+                    red=o1;
+                    green=o2;
+                    blue=o3;
+                } 
+                else if ( grad_color_space_ == dbskfg_match_bag_of_fragments
+                          ::NOPP )
+                {
+                    double o1 = (red-green)/vcl_sqrt(2);
+                    double o2 = (red+green-2*blue)/vcl_sqrt(6);
+                    double o3 = (red+green+blue)/vcl_sqrt(3);
+
+                    if ( o3 > 0.0 )
+                    {
+                        o1=o1/o3;
+                        o2=o2/o3;
+                    }
+
+                    red=o1;
+                    green=o2;
+                    blue=o3;
+                }
+                else if ( grad_color_space_ == dbskfg_match_bag_of_fragments
+                          ::LAB_2 ) 
+                {
+
+                    double lab_1(0),lab_2(0),lab_3(0);
+                    rgb2lab(red,green,blue,lab_1,lab_2,lab_3);
+                    
+                    red=lab_1;
+                    green=lab_2;
+                    blue=lab_3;
+                }
+                else
+                {
+                    //Default RGB case
+                }
 
                 if ( width )
                 {
@@ -9275,6 +9427,11 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
                     o1(ni-1-x,y)=red;
                     o2(ni-1-x,y)=green;
                     o3(ni-1-x,y)=blue;
+
+                    red_chan(ni-1-x,y)=red_orig;
+                    green_chan(ni-1-x,y)=green_orig;
+                    blue_chan(ni-1-x,y)=blue_orig;
+
                 }
                 else
                 {
@@ -9286,6 +9443,10 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
                     o1(x,y)=red;
                     o2(x,y)=green;
                     o3(x,y)=blue;
+
+                    red_chan(x,y)=red_orig;
+                    green_chan(x,y)=green_orig;
+                    blue_chan(x,y)=blue_orig;
 
                 }
 
@@ -9387,6 +9548,48 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
                 model_pt.set(ni-1-x,y);
             }
 
+            double model_rgb_1 = red_chan(model_pt.x(),model_pt.y());
+            double model_rgb_2 = green_chan(model_pt.x(),model_pt.y());
+            double model_rgb_3 = blue_chan(model_pt.x(),model_pt.y());
+
+            double model_lab_1(0),model_lab_2(0),model_lab_3(0);
+            rgb2lab(model_rgb_1,model_rgb_2,model_rgb_3,
+                    model_lab_1,model_lab_2,model_lab_3);
+
+            double model_opp_1 = 
+                (model_rgb_1-model_rgb_2)/vcl_sqrt(2);
+            double model_opp_2 = 
+                (model_rgb_1+model_rgb_2-2*model_rgb_3)/vcl_sqrt(6);
+            double model_opp_3 = 
+                (model_rgb_1+model_rgb_2+model_rgb_3)/vcl_sqrt(3);
+
+            double model_hsv_1[1];
+            double model_hsv_2[1];
+            double model_hsv_3[1];
+            vil1_colour_space_RGB_to_HSV(model_rgb_1,model_rgb_2,model_rgb_3,
+                                         model_hsv_1,model_hsv_2,model_hsv_3);
+
+            double query_rgb_1 = (*query_channel1)(q_pt.x(),q_pt.y());
+            double query_rgb_2 = (*query_channel2)(q_pt.x(),q_pt.y());
+            double query_rgb_3 = (*query_channel3)(q_pt.x(),q_pt.y());
+
+            double query_lab_1(0),query_lab_2(0),query_lab_3(0);
+            rgb2lab(query_rgb_1,query_rgb_2,query_rgb_3,
+                    query_lab_1,query_lab_2,query_lab_3);
+
+            double query_opp_1 = 
+                (query_rgb_1-query_rgb_2)/vcl_sqrt(2);
+            double query_opp_2 = 
+                (query_rgb_1+query_rgb_2-2*query_rgb_3)/vcl_sqrt(6);
+            double query_opp_3 = 
+                (query_rgb_1+query_rgb_2+query_rgb_3)/vcl_sqrt(3);
+
+            double query_hsv_1[1];
+            double query_hsv_2[1];
+            double query_hsv_3[1];
+            vil1_colour_space_RGB_to_HSV(query_rgb_1,query_rgb_2,query_rgb_3,
+                                         query_hsv_1,query_hsv_2,query_hsv_3);
+
             vnl_vector<vl_sift_pix> model_fv;
             vnl_vector<vl_sift_pix> query_fv;
 
@@ -9397,7 +9600,20 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
                              model_green_grad_data,
                              model_blue_grad_data,
                              query_sift_filter,
-                             model_fv);
+                             model_fv,
+                             model_rgb_1,
+                             model_rgb_2,
+                             model_rgb_3,
+                             model_lab_1,
+                             model_lab_2,
+                             model_lab_3,
+                             model_opp_1,
+                             model_opp_2,
+                             model_opp_3,
+                             model_hsv_1[0],
+                             model_hsv_2[0],
+                             model_hsv_3[0]);
+
             
             compute_descr_fv(model_pt,
                              fixed_radius,
@@ -9406,7 +9622,19 @@ dbskfg_match_bag_of_fragments::compute_common_frame_distance_bbox_qm(
                              query_green_grad_data,
                              query_blue_grad_data,
                              query_sift_filter,
-                             query_fv);
+                             query_fv,
+                             query_rgb_1,
+                             query_rgb_2,
+                             query_rgb_3,
+                             query_lab_1,
+                             query_lab_2,
+                             query_lab_3,
+                             query_opp_1,
+                             query_opp_2,
+                             query_opp_3,
+                             query_hsv_1[0],
+                             query_hsv_2[0],
+                             query_hsv_3[0]);
 
             vl_sift_pix result_final[1];
 
@@ -15912,7 +16140,20 @@ void dbskfg_match_bag_of_fragments::compute_descr_fv(
     vl_sift_pix* green_grad_data,
     vl_sift_pix* blue_grad_data,
     VlSiftFilt* sift_filter,
-    vnl_vector<vl_sift_pix>& fv_descriptor)
+    vnl_vector<vl_sift_pix>& fv_descriptor,
+    double rgb_1,
+    double rgb_2,
+    double rgb_3,
+    double lab_1,
+    double lab_2,
+    double lab_3,
+    double opp_1,
+    double opp_2,
+    double opp_3,
+    double hsv_1,
+    double hsv_2,
+    double hsv_3
+)
 {
     
     double scale_1=16;
@@ -15920,10 +16161,10 @@ void dbskfg_match_bag_of_fragments::compute_descr_fv(
     double scale_3=8;
     double scale_4=4;
 
-    vnl_vector<vl_sift_pix> scale_1_descriptor(384,0.0);
-    vnl_vector<vl_sift_pix> scale_2_descriptor(384,0.0);
-    vnl_vector<vl_sift_pix> scale_3_descriptor(384,0.0);
-    vnl_vector<vl_sift_pix> scale_4_descriptor(384,0.0);
+    vnl_vector<vl_sift_pix> scale_1_descriptor(396,0.0);
+    vnl_vector<vl_sift_pix> scale_2_descriptor(396,0.0);
+    vnl_vector<vl_sift_pix> scale_3_descriptor(396,0.0);
+    vnl_vector<vl_sift_pix> scale_4_descriptor(396,0.0);
 
     compute_descr(pt,
                   scale_1,
@@ -15934,6 +16175,22 @@ void dbskfg_match_bag_of_fragments::compute_descr_fv(
                   sift_filter,
                   scale_1_descriptor);
 
+    scale_1_descriptor.put(384,rgb_1);
+    scale_1_descriptor.put(385,rgb_2);
+    scale_1_descriptor.put(386,rgb_3);
+
+    scale_1_descriptor.put(387,lab_1);
+    scale_1_descriptor.put(388,lab_2);
+    scale_1_descriptor.put(389,lab_3);
+
+    scale_1_descriptor.put(390,opp_1);
+    scale_1_descriptor.put(391,opp_2);
+    scale_1_descriptor.put(392,opp_3);
+
+    scale_1_descriptor.put(393,hsv_1);
+    scale_1_descriptor.put(394,hsv_2);
+    scale_1_descriptor.put(395,hsv_3);
+
     compute_descr(pt,
                   scale_2,
                   theta,
@@ -15942,6 +16199,22 @@ void dbskfg_match_bag_of_fragments::compute_descr_fv(
                   blue_grad_data,
                   sift_filter,
                   scale_2_descriptor);
+
+    scale_2_descriptor.put(384,rgb_1);
+    scale_2_descriptor.put(385,rgb_2);
+    scale_2_descriptor.put(386,rgb_3);
+
+    scale_2_descriptor.put(387,lab_1);
+    scale_2_descriptor.put(388,lab_2);
+    scale_2_descriptor.put(389,lab_3);
+
+    scale_2_descriptor.put(390,opp_1);
+    scale_2_descriptor.put(391,opp_2);
+    scale_2_descriptor.put(392,opp_3);
+
+    scale_2_descriptor.put(393,hsv_1);
+    scale_2_descriptor.put(394,hsv_2);
+    scale_2_descriptor.put(395,hsv_3);
 
     compute_descr(pt,
                   scale_3,
@@ -15952,6 +16225,22 @@ void dbskfg_match_bag_of_fragments::compute_descr_fv(
                   sift_filter,
                   scale_3_descriptor);
 
+    scale_3_descriptor.put(384,rgb_1);
+    scale_3_descriptor.put(385,rgb_2);
+    scale_3_descriptor.put(386,rgb_3);
+
+    scale_3_descriptor.put(387,lab_1);
+    scale_3_descriptor.put(388,lab_2);
+    scale_3_descriptor.put(389,lab_3);
+
+    scale_3_descriptor.put(390,opp_1);
+    scale_3_descriptor.put(391,opp_2);
+    scale_3_descriptor.put(392,opp_3);
+
+    scale_3_descriptor.put(393,hsv_1);
+    scale_3_descriptor.put(394,hsv_2);
+    scale_3_descriptor.put(395,hsv_3);
+
     compute_descr(pt,
                   scale_4,
                   theta,
@@ -15960,6 +16249,22 @@ void dbskfg_match_bag_of_fragments::compute_descr_fv(
                   blue_grad_data,
                   sift_filter,
                   scale_4_descriptor);
+
+    scale_4_descriptor.put(384,rgb_1);
+    scale_4_descriptor.put(385,rgb_2);
+    scale_4_descriptor.put(386,rgb_3);
+
+    scale_4_descriptor.put(387,lab_1);
+    scale_4_descriptor.put(388,lab_2);
+    scale_4_descriptor.put(389,lab_3);
+
+    scale_4_descriptor.put(390,opp_1);
+    scale_4_descriptor.put(391,opp_2);
+    scale_4_descriptor.put(392,opp_3);
+
+    scale_4_descriptor.put(393,hsv_1);
+    scale_4_descriptor.put(394,hsv_2);
+    scale_4_descriptor.put(395,hsv_3);
 
     vnl_vector<vl_sift_pix> ldr_1_descriptor =
         linear_embed(scale_1_descriptor);
