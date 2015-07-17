@@ -17900,8 +17900,9 @@ void dbskfg_match_bag_of_fragments::compute_mean_std_color_descr(
     vil_image_view<double>& o3,
     vcl_vector<double>& descr)
 {
+    double width=4*scale;
 
-    vgl_box_2d<double> bbox(0,scale-1,0,scale-1);
+    vgl_box_2d<double> bbox(0,width-1,0,width-1);
 
     bbox.set_centroid_x(center.x());
     bbox.set_centroid_y(center.y());
@@ -17909,16 +17910,16 @@ void dbskfg_match_bag_of_fragments::compute_mean_std_color_descr(
     double l2_sum=0.0;
 
     unsigned int mini_boxes=1;
-    for ( int y=bbox.min_y(); y <= bbox.max_y(); y=y+16)
+    for ( int y=bbox.min_y(); y <= bbox.max_y(); y=y+scale)
     {
-        for ( int x=bbox.min_x(); x <= bbox.max_x() ; x=x+16) 
+        for ( int x=bbox.min_x(); x <= bbox.max_x() ; x=x+scale) 
         {
-            vgl_point_2d<double> new_center(x+8,y+8);
+            vgl_point_2d<double> new_center(x+scale/2,y+scale/2);
 
-            vgl_box_2d<double> mini_box(0,16,0,16);
+            vgl_box_2d<double> mini_box(0,scale,0,scale);
             
-            mini_box.set_centroid_x(x);
-            mini_box.set_centroid_y(y);
+            mini_box.set_centroid_x(new_center.x());
+            mini_box.set_centroid_y(new_center.y());
 
             vcl_vector<double> chan1, chan2,chan3;
             for ( int yy=mini_box.min_y(); yy <= mini_box.max_y(); ++yy)
@@ -17938,6 +17939,8 @@ void dbskfg_match_bag_of_fragments::compute_mean_std_color_descr(
                     chan1.push_back(L_value);
                     chan2.push_back(a_value);
                     chan3.push_back(b_value);
+
+                 
                 }
             }
 
@@ -17961,20 +17964,20 @@ void dbskfg_match_bag_of_fragments::compute_mean_std_color_descr(
             double std_chan2 = vcl_sqrt(sum_chan2/(stats_chan2.size()-1));
             double std_chan3 = vcl_sqrt(sum_chan3/(stats_chan3.size()-1));
 
-            // Power law normalization
-            mean_chan1 = vnl_math::sgn(mean_chan1)*
-                vcl_sqrt(vcl_abs(mean_chan1));
-            mean_chan2 = vnl_math::sgn(mean_chan2)*
-                vcl_sqrt(vcl_abs(mean_chan2));
-            mean_chan3 = vnl_math::sgn(mean_chan3)*
-                vcl_sqrt(vcl_abs(mean_chan3));
+            // // Power law normalization
+            // mean_chan1 = vnl_math::sgn(mean_chan1)*
+            //     vcl_sqrt(vcl_abs(mean_chan1));
+            // mean_chan2 = vnl_math::sgn(mean_chan2)*
+            //     vcl_sqrt(vcl_abs(mean_chan2));
+            // mean_chan3 = vnl_math::sgn(mean_chan3)*
+            //     vcl_sqrt(vcl_abs(mean_chan3));
 
-            std_chan1 = vnl_math::sgn(std_chan1)*
-                vcl_sqrt(vcl_abs(std_chan1));
-            std_chan2 = vnl_math::sgn(std_chan2)*
-                vcl_sqrt(vcl_abs(std_chan2));
-            std_chan3 = vnl_math::sgn(std_chan3)*
-                vcl_sqrt(vcl_abs(std_chan3));
+            // std_chan1 = vnl_math::sgn(std_chan1)*
+            //     vcl_sqrt(vcl_abs(std_chan1));
+            // std_chan2 = vnl_math::sgn(std_chan2)*
+            //     vcl_sqrt(vcl_abs(std_chan2));
+            // std_chan3 = vnl_math::sgn(std_chan3)*
+            //     vcl_sqrt(vcl_abs(std_chan3));
 
             descr.push_back(mean_chan1);
             descr.push_back(std_chan1);
@@ -17997,10 +18000,10 @@ void dbskfg_match_bag_of_fragments::compute_mean_std_color_descr(
         
     }
 
-    double l2_distance=vcl_sqrt(l2_sum);
+    // double l2_distance=vcl_sqrt(l2_sum);
 
-    for ( unsigned int i=0; i < descr.size() ; ++i)
-    {
-        descr[i] = descr[i]/l2_distance;
-    }
+    // for ( unsigned int i=0; i < descr.size() ; ++i)
+    // {
+    //     descr[i] = descr[i]/l2_distance;
+    // }
 }
