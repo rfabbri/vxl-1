@@ -7,6 +7,7 @@
 #include <dbsk2d/dbsk2d_file_io.h>
 // vsol headers
 #include <vsol/vsol_line_2d.h>
+#include <vsol/vsol_polyline_2d.h>
 // vgl headers
 #include <vgl/vgl_distance.h>
 // vul headers
@@ -16,6 +17,8 @@
 #include <vgl/vgl_polygon_scan_iterator.h>
 // vnl random
 #include <vnl/vnl_random.h>
+// save cem
+#include <dbsol/dbsol_file_io.h>
 
 //: constructor
 //: base class for shock transforms
@@ -419,6 +422,215 @@ void dbsk2d_ishock_transform::write_boundary(vcl_string filename)
     }
 
     dbsk2d_file_io::save_bnd_v3_0(filename,line_objects);
+}
+
+
+void dbsk2d_ishock_transform::write_shock_boundary(vcl_string filename)
+{
+
+    vcl_vector<vsol_spatial_object_2d_sptr> vsol_list;
+        
+    //draw the edges first
+    for ( dbsk2d_ishock_graph::edge_iterator curE = 
+              ishock_graph_->all_edges().begin();
+          curE != ishock_graph_->all_edges().end();
+          curE++ ) 
+    {
+        dbsk2d_ishock_edge* selm = (*curE);
+        vcl_vector<vgl_point_2d<double> > ex_pts= selm->ex_pts();
+        
+        if ( selm->is_a_contact() )
+        {
+            continue;
+        }
+        
+        // Add in contours for front 
+        vsol_spatial_object_2d_sptr obj=
+            new vsol_polyline_2d;
+
+        vsol_polyline_2d* curve=obj->cast_to_curve()->cast_to_polyline();
+
+        for ( unsigned int i=0; i < ex_pts.size() ; ++i)
+        {
+            vsol_point_2d_sptr pt=new vsol_point_2d(ex_pts[i]);
+
+            curve->add_vertex(pt);
+        }
+
+        vsol_list.push_back(obj);
+    }
+
+    dbsol_save_cem(vsol_list, filename);
+
+}
+
+
+void dbsk2d_ishock_transform::write_fragments(
+    vcl_string prefix,
+    vcl_vector<vgl_polygon<double> >& polys)
+{
+
+    vcl_string regular_afrags=prefix + "_regular_atomic_fragments.txt";
+    vcl_string degen_afrags=prefix + "_degen_atomic_fragments.txt";
+
+    vcl_ofstream file_stream_regular_afrags(regular_afrags.c_str());
+    vcl_ofstream file_stream_degen_afrags(degen_afrags.c_str());
+
+    //draw the edges first
+    for ( dbsk2d_ishock_graph::edge_iterator curE = 
+              ishock_graph_->all_edges().begin();
+          curE != ishock_graph_->all_edges().end();
+          curE++ ) 
+    {
+        dbsk2d_ishock_edge* edge = (*curE);
+        if ( edge->is_a_contact() )
+        {
+            continue;
+        }
+        
+        dbsk2d_ishock_bpoint* bpoint_left = (edge->lBElement()->is_a_point())
+            ?(dbsk2d_ishock_bpoint*)edge->lBElement():0;
+        dbsk2d_ishock_bpoint* bpoint_right = (edge->rBElement()->is_a_point())
+            ?(dbsk2d_ishock_bpoint*)edge->rBElement():0;
+
+        bool lflag=(bpoint_left)?bpoint_left->is_an_end_point():false;
+        bool rflag=(bpoint_right)?bpoint_right->is_an_end_point():false;
+
+        bool endpoint=lflag|rflag;
+
+        dbsk2d_ishock_node* source_node=edge->pSNode();
+        dbsk2d_ishock_node* target_node=edge->cSNode();
+        
+        // create polygon
+        vcl_vector<vgl_point_2d<double> > temp_poly;
+        
+        //Line/Line
+        if ( edge->lBElement()->is_a_line() && 
+             edge->rBElement()->is_a_line())
+        {
+            
+            temp_poly.push_back(source_node->origin());
+            temp_poly.push_back(edge->getLFootPt(edge->sTau()));
+            temp_poly.push_back(edge->getLFootPt(edge->eTau()));
+            temp_poly.push_back(target_node->origin());
+            temp_poly.push_back(edge->getRFootPt(edge->eTau()));
+            temp_poly.push_back(edge->getRFootPt(edge->sTau()));
+            
+        }
+        //Left line/Right Point
+        else if ( edge->lBElement()->is_a_line() && 
+                  edge->rBElement()->is_a_point())
+        {
+            
+            dbsk2d_ishock_bpoint* right_bpoint= 
+                (dbsk2d_ishock_bpoint*) edge->rBElement();
+            
+            temp_poly.push_back(source_node->origin());
+            temp_poly.push_back(edge->getLFootPt(edge->sTau()));
+            temp_poly.push_back(edge->getLFootPt(edge->eTau()));
+            temp_poly.push_back(target_node->origin());
+            temp_poly.push_back(right_bpoint->pt());
+            
+            
+        }
+        //Right Line/Left Point
+        else if ( edge->lBElement()->is_a_point() && 
+                  edge->rBElement()->is_a_line())
+        {       
+            
+            dbsk2d_ishock_bpoint* left_bpoint = 
+                (dbsk2d_ishock_bpoint*) edge->lBElement();
+            
+            temp_poly.push_back(source_node->origin());
+            temp_poly.push_back(edge->getRFootPt(edge->sTau()));
+            temp_poly.push_back(edge->getRFootPt(edge->eTau()));
+            temp_poly.push_back(target_node->origin());
+            temp_poly.push_back(left_bpoint->pt());
+            
+        }
+        else 
+        {
+            
+            
+            dbsk2d_ishock_bpoint* left_bpoint = 
+                (dbsk2d_ishock_bpoint*) edge->lBElement();
+            dbsk2d_ishock_bpoint* right_bpoint = 
+                (dbsk2d_ishock_bpoint*) edge->rBElement();
+            
+            temp_poly.push_back(source_node->origin());
+            temp_poly.push_back(left_bpoint->pt());
+            temp_poly.push_back(target_node->origin());
+            temp_poly.push_back(right_bpoint->pt());   
+            
+        }
+
+        temp_poly.push_back(temp_poly[0]);
+        
+        if ( endpoint )
+        {
+            file_stream_degen_afrags<<temp_poly.size()<<vcl_endl;
+            for ( unsigned int k=0; k < temp_poly.size() ; ++k)
+            {
+                vgl_point_2d<double> pt=temp_poly[k];
+                if ( k == temp_poly.size() - 1 )
+                {
+                    file_stream_degen_afrags<<pt.x()<<" "<<pt.y()<<vcl_endl;
+                }
+                else
+                {
+                    file_stream_degen_afrags<<pt.x()<<" "<<pt.y()<<" ";
+                }
+            }
+
+
+        }
+        else
+        {
+            file_stream_regular_afrags<<temp_poly.size()<<vcl_endl;
+            for ( unsigned int k=0; k < temp_poly.size() ; ++k)
+            {
+                vgl_point_2d<double> pt=temp_poly[k];
+                if ( k == temp_poly.size() - 1 )
+                {
+                    file_stream_regular_afrags<<pt.x()<<" "<<pt.y()<<vcl_endl;
+                }
+                else
+                {
+                    file_stream_regular_afrags<<pt.x()<<" "<<pt.y()<<" ";
+                }
+            }
+        }
+    }
+
+    file_stream_degen_afrags.close();
+    file_stream_regular_afrags.close();
+
+    // Write out medial visual fragments
+    vcl_string mvf_string=prefix+"_mvf_fragments.txt";
+    vcl_ofstream file_stream_mvf_frags(mvf_string.c_str());
+
+    for ( unsigned int i=0; i < polys.size() ; ++i)
+    {
+
+        vgl_polygon<double> region=polys[i];
+
+        file_stream_mvf_frags<<region.num_vertices()<<vcl_endl;
+        for (unsigned int s = 0; s < region.num_sheets(); ++s)
+        {
+            for (unsigned int p = 0; p < region[s].size(); ++p)
+            { 
+                file_stream_mvf_frags<<
+                    region[s][p].x()<<" "<<region[s][p].y()<<" ";
+                
+            }
+        }
+     
+        file_stream_mvf_frags<<vcl_endl;
+
+    }
+
+    file_stream_mvf_frags.close();
+
 }
 
 void dbsk2d_ishock_transform::write_state(
