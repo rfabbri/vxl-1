@@ -73,6 +73,9 @@ public:
   //: Constructor
   dbskr_tree(float scurve_sample_ds=5.0f, float interpolate_ds=1.0f, float matching_R=6.0f);
 
+  //: Constructor
+  dbskr_tree(dbsk2d_shock_graph_sptr sg,bool mirror=false,float scurve_sample_ds=5.0f, float interpolate_ds=1.0f, float matching_R=6.0f);
+
   //: Destructor;
   virtual ~dbskr_tree() 
   { this->clear(); }
@@ -84,10 +87,17 @@ public:
   //: acquire tree from the given input file
   bool acquire(vcl_string filename);
 
+  //: acquire tree topology assumes sg set
+  bool acquire_tree_topology();
+
   //: acquire tree from the given shock graph and prune the subtrees below the threshold
   bool acquire_and_prune(dbsk2d_shock_graph_sptr sg, double pruning_threshold, 
     bool elastic_splice_cost, bool construct_circular_ends, bool dpmatch_combined);
 
+  //: compute delete contract costs
+  void compute_delete_and_contract_costs(bool elastic_splice_cost,
+                                         bool construct_circular_ends,
+                                         bool dpmatch_combined);
 
   // Data access----------------------------------------------------------------
 
@@ -109,6 +119,9 @@ public:
   bool elastic_splice_cost() const
   { return this->elastic_splice_cost_; }
 
+  //: Returns whether has been mirrored
+  bool mirror() const
+  {return this->mirror_; }
 
   // Graph-related--------------------------------------------------------------
 
@@ -215,6 +228,8 @@ public:
   float interpolate_ds_;  // made this into a parameter as well, default is 0.5
   bool elastic_splice_cost_;
   float scurve_matching_R;
+  bool mirror_;
+  double scale_ratio_;
 
 };
 

@@ -16,7 +16,21 @@
 dbskr_tree::
 dbskr_tree(float scurve_sample_ds, float interpolate_ds, float matching_R):
 scurve_sample_ds_(scurve_sample_ds), interpolate_ds_(interpolate_ds), 
-scurve_matching_R(matching_R)
+scurve_matching_R(matching_R),mirror_(false),scale_ratio_(1.0)
+{
+}
+
+//------------------------------------------------------------------------------
+//: Default constructor
+dbskr_tree::
+dbskr_tree(dbsk2d_shock_graph_sptr sg,bool mirror,float scurve_sample_ds, 
+float interpolate_ds, float matching_R):
+    sg_(sg),
+    scurve_sample_ds_(scurve_sample_ds), 
+    interpolate_ds_(interpolate_ds), 
+    scurve_matching_R(matching_R),
+    mirror_(mirror),
+    scale_ratio_(1.0)
 {
 }
 
@@ -491,6 +505,182 @@ bool dbskr_tree::acquire(dbsk2d_shock_graph_sptr sg, bool elastic_splice_cost,
 
   } else 
     return false;
+}
+
+
+//------------------------------------------------------------------------------
+//: acquire tree from the given shock graph
+bool dbskr_tree::acquire_tree_topology()
+{
+
+
+  vcl_vector<dbsk2d_shock_node_sptr> nodes_to_retain;
+  //: make a map of nodes_to_retain list for fast access
+  vcl_map<int, int> nodes_to_retain_map;
+
+  dbsk2d_shock_graph::vertex_iterator v_it = sg_->vertices_begin();
+  for (; v_it != sg_->vertices_end(); ++v_it )
+  {
+    dbsk2d_shock_node_sptr cur_node = (*v_it);    
+    int numbr_adj = cur_node->in_degree()+cur_node->out_degree();
+    if (numbr_adj == 1 || numbr_adj >= 3) 
+      nodes_to_retain.insert(nodes_to_retain.begin(), cur_node);
+  }
+
+  for (unsigned int i = 0; i<nodes_to_retain.size(); i++) {
+    nodes_to_retain_map[nodes_to_retain[i]->id()] = i;
+  }
+#if 0
+  vcl_cout <<"retained nodes:\n";
+  for (unsigned int i = 0; i<nodes_to_retain.size(); i++) {
+    vcl_cout << "id: " << nodes_to_retain[i]->id() << " ";
+    vcl_cout << "i: " << nodes_to_retain_map[nodes_to_retain[i]->id()] << vcl_endl;
+  }
+#endif
+
+  //: find each retained nodes neighbors and save the edge information
+  vcl_map<vcl_pair<int, int>, vcl_vector<dbsk2d_shock_edge_sptr> > ids_to_edge_vector_map;
+  vcl_vector< vcl_vector<vcl_pair<int, dbskr_edge_info> > > nodes;
+
+  for (unsigned int i = 0; i<nodes_to_retain.size(); i++) {
+    vcl_vector<vcl_pair<int, dbskr_edge_info> > current_node;
+    
+    dbsk2d_shock_node_sptr cur_node = nodes_to_retain[i];
+    //: start with its first adjacent edge (there is an order in esf file!)
+    dbsk2d_shock_edge_sptr e = sg_->first_adj_edge(cur_node);
+    int e_id_saved = e->id();
+
+    do {   // add each of its neighbors
+
+      dbsk2d_shock_node_sptr adj_node = e->opposite(cur_node);
+      vcl_vector<dbsk2d_shock_edge_sptr> tmp;
+      tmp.push_back(e);
+
+      //: see if this node is in "nodes_to_retain" list
+      vcl_map<int, int>::iterator iter;
+      iter = nodes_to_retain_map.find(adj_node->id());
+      int tree_node_id;
+      
+      //: advance until you hit a node which is in nodes_to_retain_map
+      int prev_id = cur_node->id();
+      while (iter == nodes_to_retain_map.end()) {  // starts the chain of edges to the next tree node
+
+        bool still = true;
+        for (dbsk2d_shock_node::edge_iterator e_it2 = adj_node->in_edges_begin();
+         e_it2 != adj_node->in_edges_end(); ++e_it2 )
+        { 
+           dbsk2d_shock_node_sptr adj_adj_node = (*e_it2)->opposite(adj_node);
+           if (prev_id == adj_adj_node->id()) continue;
+           tmp.push_back(*e_it2);
+           iter = nodes_to_retain_map.find(adj_adj_node->id());
+           prev_id = adj_node->id();
+           adj_node = adj_adj_node;
+           still = false;
+           break;
+         }
+         if (still) {
+          for (dbsk2d_shock_node::edge_iterator e_it2 = adj_node->out_edges_begin(); 
+            e_it2 != adj_node->out_edges_end(); ++e_it2 )
+          {
+            dbsk2d_shock_node_sptr adj_adj_node = (*e_it2)->opposite(adj_node);
+            if (prev_id == adj_adj_node->id()) continue;
+            tmp.push_back(*e_it2);
+            iter = nodes_to_retain_map.find(adj_adj_node->id());
+            prev_id = adj_node->id();
+            adj_node = adj_adj_node;
+            break;
+          }
+         }
+      }
+      
+      // we're done this is the neighbor
+      tree_node_id = iter->second;
+      vcl_pair<int, int> ids;
+      ids.first = cur_node->id();
+      ids.second = nodes_to_retain[tree_node_id]->id();
+      ids_to_edge_vector_map[ids] = tmp;
+      
+      vcl_pair<int, dbskr_edge_info> p;
+      p.first = tree_node_id;
+      //: costs are unknown for now
+      (p.second).first = -1.0f;   // contract cost
+      (p.second).second = -1.0f;  // delete cost
+      current_node.push_back(p);
+
+      //: go to next adjacent node
+      e = sg_->cyclic_adj_pred(e, cur_node);
+    } while (e->id() != e_id_saved);
+
+    nodes.push_back(current_node);
+  } 
+
+  bool ok = dbskr_directed_tree::acquire(nodes);
+
+  if (ok) 
+  {  // fill in the shock_edges_ and starting_nodes_ arrays
+      
+      for (unsigned int i = 0; i<dart_cnt_; i++)
+      {
+          int head = head_[i];
+          int tail = tail_[i];
+          vcl_pair<int, int> ids;
+          ids.first = nodes_to_retain[tail]->id();
+          ids.second = nodes_to_retain[head]->id();
+          vcl_vector<dbsk2d_shock_edge_sptr> tmp = ids_to_edge_vector_map[ids];
+          shock_edges_.push_back(tmp);
+          starting_nodes_.push_back(nodes_to_retain[tail]);
+      }
+  }
+
+  return ok;
+
+}
+
+//: compute delete contract costs
+void dbskr_tree::compute_delete_and_contract_costs(bool elastic_splice_cost,
+                                                   bool construct_circular_ends,
+                                                   bool dpmatch_combined)
+{
+
+
+    elastic_splice_cost_=elastic_splice_cost;
+
+    //: find contract and delete costs for each dart
+    for (unsigned int i = 0; i<dart_cnt_; i++) {
+      if (!leaf(i) && !leaf(mate_[i])) {
+        dbskr_scurve_sptr sc = get_curve(i, i, construct_circular_ends);
+        info_[i].first = (float)sc->contract_cost();
+        //: if it is a non-leaf dart compute the splice cost ALWAYS 
+        //  with the circular completions because this is the 
+        // intermediate step of the subtree removal operation
+        info_[i].second = (float)sc->splice_cost(
+            scurve_matching_R, 
+            elastic_splice_cost_, 
+            true, 
+            dpmatch_combined, 
+            false);
+      }
+      else {  // for leaf darts, only compute for one direction
+        //: contract cost 
+        info_[i].first = 1000.0f;  
+        if (parent_dart(i) == static_cast<int>(i)) {
+          dbskr_scurve_sptr sc = get_curve(i, i, construct_circular_ends);
+          //: for leaf darts, compute the splice cost with or 
+          //  without the circular completions depending 
+          // on the construct_circular_ends flag!!
+          info_[i].second = (float)sc->splice_cost(
+              scurve_matching_R, 
+              elastic_splice_cost_, 
+              construct_circular_ends, 
+              dpmatch_combined, 
+              true);
+          info_[mate_[i]].second = info_[i].second;
+        } 
+      }
+    }
+
+ 
+    this->find_subtree_delete_costs();
 }
 
 //: return the total length of the reconstructed boundary with this tree
