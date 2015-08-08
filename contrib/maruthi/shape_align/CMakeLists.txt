@@ -17,4 +17,5 @@ SET(shape_align_sources
 
 ADD_LIBRARY(shape_align ${shape_align_sources})
 
-
+ADD_EXECUTABLE (ed_match_exec ed_match_exec.cxx )
+TARGET_LINK_LIBRARIES ( ed_match_exec shape_align dbskr )

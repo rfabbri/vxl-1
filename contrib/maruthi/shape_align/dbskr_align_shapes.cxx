@@ -19,7 +19,9 @@ dbskr_align_shapes::dbskr_align_shapes(
     tree1_mirror_(false),
     tree2_mirror_(false)
 {
+    vcl_cout<<"Loading Model ESF Files"<<vcl_endl;
     load_esf(model_filename,true);
+    vcl_cout<<"Loading Query ESF Files"<<vcl_endl;
     load_esf(query_filename,false);
 }
 
@@ -82,7 +84,6 @@ void dbskr_align_shapes::load_esf(vcl_string& filename,bool flag)
     vcl_string line;
     while ( vcl_getline (esf_file,line) )
     {
-
 
         dbsk2d_shock_graph_sptr sg = loader.load_xshock_graph(line);
 

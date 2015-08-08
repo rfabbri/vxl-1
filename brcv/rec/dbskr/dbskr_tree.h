@@ -53,6 +53,8 @@
 
 #include <vsol/vsol_polygon_2d_sptr.h>
 
+#include <vgl/vgl_polygon.h>
+
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_array_2d.h>
 #include <vcl_vector.h>
@@ -150,6 +152,9 @@ public:
   //: uses the already existing scurves, so if circular_ends = true while acquiring 
   // the tree then the outline will have circular completions
   vsol_polygon_2d_sptr compute_reconstructed_boundary_polygon(bool construct_circular_ends);
+
+  // another version to compute reconstructed polygon
+  void compute_reconstructed_boundary_polygon(vgl_polygon<double>& poly);
 
 
   // Utilities------------------------------------------------------------------
