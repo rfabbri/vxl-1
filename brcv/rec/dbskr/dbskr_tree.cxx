@@ -804,9 +804,9 @@ dbskr_tree::get_curve(int start_dart, int end_dart, bool construct_circular_ends
     dbskr_scurve_sptr sc;
     if (construct_circular_ends)
       //: note: even if interpolate_ds_ is not properly set by the user vcl_min takes care of it
-      sc = dbskr_compute_scurve(start_node, edges, leaf_[end_dart], true, true, vcl_min((float)scurve_sample_ds_, interpolate_ds_), scurve_sample_ds_);
+        sc = dbskr_compute_scurve(start_node, edges, leaf_[end_dart], true, true, vcl_min((float)scurve_sample_ds_, interpolate_ds_), scurve_sample_ds_,scale_ratio_);
     else
-      sc = dbskr_compute_scurve(start_node, edges, false, true, true, vcl_min((float)scurve_sample_ds_, interpolate_ds_), scurve_sample_ds_);
+        sc = dbskr_compute_scurve(start_node, edges, false, true, true, vcl_min((float)scurve_sample_ds_, interpolate_ds_), scurve_sample_ds_,scale_ratio_);
 
     dbskr_sc_pair_sptr curve_pair = new dbskr_sc_pair();
     curve_pair->coarse = sc;
@@ -839,9 +839,9 @@ get_curve_pair(int start_dart, int end_dart, bool construct_circular_ends) {
     dbskr_scurve_sptr sc;
     if (construct_circular_ends)
       //: note: even if interpolate_ds_ is not properly set by the user vcl_min takes care of it
-      sc = dbskr_compute_scurve(start_node, edges, leaf_[end_dart], true, true, vcl_min((float)scurve_sample_ds_, interpolate_ds_), scurve_sample_ds_);
+        sc = dbskr_compute_scurve(start_node, edges, leaf_[end_dart], true, true, vcl_min((float)scurve_sample_ds_, interpolate_ds_), scurve_sample_ds_,scale_ratio_);
     else
-      sc = dbskr_compute_scurve(start_node, edges, false, true, true, vcl_min((float)scurve_sample_ds_, interpolate_ds_), scurve_sample_ds_);
+        sc = dbskr_compute_scurve(start_node, edges, false, true, true, vcl_min((float)scurve_sample_ds_, interpolate_ds_), scurve_sample_ds_,scale_ratio_);
 
     dbskr_sc_pair_sptr curve_pair = new dbskr_sc_pair();
     curve_pair->coarse = sc;

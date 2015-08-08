@@ -17,7 +17,8 @@ dbskr_scurve_sptr dbskr_compute_scurve(dbsk2d_shock_node_sptr start_node,
                                        vcl_vector<dbsk2d_shock_edge_sptr> path,
                                        bool leaf_edge, 
                                        bool binterpolate, bool bsub_sample,
-                                       double interpolate_ds, double subsample_ds)
+                                       double interpolate_ds, double subsample_ds,
+                                       double scale_ratio)
 {
   vcl_vector< vgl_point_2d<double> > sh_pt;
   vcl_vector<double> time, theta, phi;
@@ -100,7 +101,8 @@ dbskr_scurve_sptr dbskr_compute_scurve(dbsk2d_shock_node_sptr start_node,
   dbskr_scurve_sptr shock_curve = new dbskr_scurve(sh_pt.size(),
                                                    sh_pt, time, theta, phi,
                                                    binterpolate, interpolate_ds,
-                                                   bsub_sample, subsample_ds);
+                                                   bsub_sample, subsample_ds,
+                                                   scale_ratio);
 
   return shock_curve;
 }

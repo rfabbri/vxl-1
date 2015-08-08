@@ -25,7 +25,8 @@ dbskr_scurve_sptr dbskr_compute_scurve(dbsk2d_shock_node_sptr start_node,
                                        vcl_vector<dbsk2d_shock_edge_sptr> path,
                                        bool leaf_edge=false, 
                                        bool binterpolate=true, bool bsub_sample=true, 
-                                       double interpolate_ds=1.0, double subsample_ds=5.0);
+                                       double interpolate_ds=1.0, double subsample_ds=5.0,
+                                       double scale_ratio=1.0);
 
 /*dbskr_scurve_sptr dbskr_compute_scurve_no_A_inf_samples(dbsk2d_shock_node_sptr start_node,
                                        vcl_vector<dbsk2d_shock_edge_sptr> path,
