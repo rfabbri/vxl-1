@@ -115,6 +115,15 @@ vnl_vector<double > dbsks_compute_angle_minmax(const vnl_vector<double >& angles
 bool dbsks_fill_in_silhouette(const dbsksp_xshock_graph_sptr& xgraph, const vil_image_view<vxl_byte >& image, vcl_vector<vgl_point_2d<int > >& points, vil_image_view<vxl_byte >& screenshot_image);
 
 vcl_vector<vnl_matrix<double> > dbsks_compute_appearance_id_matrix(vcl_vector<vgl_point_2d<int > >& points, const vil_image_view<vxl_byte >& source_image);
+
+
+double dbsks_shape_inconsistency(const dbsksp_xshock_graph_sptr& xgraph1, const dbsksp_xshock_graph_sptr& xgraph2);
+
+
+
+
+
+
 #endif // shp/dbsks/dbsks_xshock_utils.h
 
 

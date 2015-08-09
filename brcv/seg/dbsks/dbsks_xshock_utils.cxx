@@ -5,6 +5,7 @@
 
 #include "dbsks_xshock_utils.h"
 #include <dbsksp/dbsksp_xshock_graph.h>
+#include <dbsksp/dbsksp_xshock_fragment.h>
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_point_2d.h>
 #include <dbnl/dbnl_angle.h>
@@ -12,6 +13,7 @@
 #include <vcl_utility.h>
 #include <vcl_algorithm.h>
 #include <vgl/vgl_distance.h>
+#include <vnl/vnl_hungarian_algorithm.h>
 //// -----------------------------------------------------------------------------
 ////: Update descriptors around a degree-2 node, given the descriptor of the child edge
 //void dbsks_update_degree2_node(const dbsksp_xshock_node_sptr& xv, 
@@ -479,7 +481,97 @@ vcl_vector<vnl_matrix<double> > dbsks_compute_appearance_id_matrix(vcl_vector<vg
 }
 
 
+//  Compute the shape distance from shape 1 to shape 2.  Translat shape 1. No rotation. No change of scale
+double dbsks_shape_inconsistency(const dbsksp_xshock_graph_sptr& xgraph1, const dbsksp_xshock_graph_sptr& xgraph2, vcl_vector<vgl_point_2d<int > >& mask_points1, vcl_vector<vgl_point_2d<int > >& mask_points2)
+{
 
+// save the points from silhouettes boundary
+	vcl_vector<vgl_point_2d<int > > points_1; // compute later using translated values
+
+	vcl_vector<vgl_point_2d<int > > points_2;
+
+	for (dbsksp_xshock_graph::edge_iterator eit = xgraph2->edges_begin(); eit !=xgraph2->edges_end(); ++eit)
+	{
+		dbsksp_xshock_edge_sptr xe = *eit;
+		dbsksp_xshock_node_descriptor start = *xe->source()->descriptor(xe);
+		dbsksp_xshock_node_descriptor end = xe->target()->descriptor(xe)->opposite_xnode();
+		dbsksp_xshock_fragment xfrag(start, end);
+
+		dbgl_biarc bnd[] = {xfrag.bnd_left_as_biarc(), xfrag.bnd_right_as_biarc()};
+		for (int i=0; i < 2; ++i)
+		{
+		  dbgl_biarc biarc = bnd[i];
+		  double len = biarc.len();
+		  for (double s = 0; s <= len; s = s+1)
+		  {
+		    vgl_point_2d<double > pt = biarc.point_at(s);
+            vgl_point_2d<int > pi( int(pt.x()), int(pt.y()));
+			points_2.push_back(pi);
+		  }
+		}
+	}
+
+// Compute the translation vector from density center 1 to density center 2
+	double sum_x1 = 0, sum_y1 = 0, sum_x2 = 0, sum_y2 = 0;
+	for (int i = 0; i< mask_points1.size(); i++)
+	{
+		sum_x1 += mask_points1[i].x();
+		sum_y1 += mask_points1[i].y();
+	}
+	for (int i = 0; i< mask_points2.size(); i++)
+	{
+		sum_x2 += mask_points2[i].x();
+		sum_y2 += mask_points2[i].y();
+	}
+	double mean_x1 = sum_x1/mask_points1.size();
+	double mean_y1 = sum_y1/mask_points1.size();
+	double mean_x2 = sum_x2/mask_points2.size();
+	double mean_y2 = sum_y2/mask_points2.size();
+
+	int trans_x = int(mean_x2 - mean_x1);
+	int trans_y = int(mean_y2 - mean_y1);
+
+// save silouettes points from shape 1 in translated positions
+	for (dbsksp_xshock_graph::edge_iterator eit = xgraph1->edges_begin(); eit !=xgraph1->edges_end(); ++eit)
+	{
+		dbsksp_xshock_edge_sptr xe = *eit;
+		dbsksp_xshock_node_descriptor start = *xe->source()->descriptor(xe);
+		dbsksp_xshock_node_descriptor end = xe->target()->descriptor(xe)->opposite_xnode();
+		dbsksp_xshock_fragment xfrag(start, end);
+
+		dbgl_biarc bnd[] = {xfrag.bnd_left_as_biarc(), xfrag.bnd_right_as_biarc()};
+		for (int i=0; i < 2; ++i)
+		{
+		  dbgl_biarc biarc = bnd[i];
+		  double len = biarc.len();
+		  for (double s = 0; s <= len; s = s+1)
+		  {
+		    vgl_point_2d<double > pt = biarc.point_at(s);
+            vgl_point_2d<int > pi( int(pt.x()) + trans_x, int(pt.y())+trans_y);
+			points_1.push_back(pi);
+		  }
+		}
+	}
+	
+// compute the alignments between two sets of points
+	// Create the cost matrix
+	vnl_matrix< double> costs( points_1.size(), points_2.size(), 0);
+	for (int i = 0; i< points_1.size(); i++)
+	{
+		for (int j = 0; i< points_2.size(); j++)
+		{
+			costs[i][j] = vgl_distance(points_1[i], points_2[i]);
+		}
+	}
+
+	vnl_hungarian_algorithm< double > HungarianClassTest;
+	HungarianClassTest.SetCostMatrix( costs );
+	HungarianClassTest.StartAssignment();
+	double dist = HungarianClassTest.GetTotalCost();
+
+// normalize by the number of matched points
+	return dist/vcl_min(points_1.size(), points_2.size());
+}
 
 
 
