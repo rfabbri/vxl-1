@@ -61,6 +61,9 @@ private:
     //: Map points from curve list 1 to curve list 2
     vcl_vector< vcl_vector < vcl_pair <int,int> > > map_list_;
 
+    //: keep track of query polygons
+    vcl_vector<vgl_polygon<double> > query_polygons_;
+
     // Keep track of whethe query is tree1 or tree 2
     // switch = true, means query is tree2
     bool switched_;
@@ -73,6 +76,10 @@ private:
     
     // Load model
     void load_esf(vcl_string& filename,bool flag);
+
+    // Compute area/boundary
+    double compute_boundary(dbsk2d_shock_graph_sptr& sg,
+                            vgl_polygon<double>& final_poly);
 
     // Private matching
     double edit_distance(dbskr_tree_sptr& tree1,dbskr_tree_sptr& tree2,

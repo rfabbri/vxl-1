@@ -16,7 +16,7 @@
 dbskr_tree::
 dbskr_tree(float scurve_sample_ds, float interpolate_ds, float matching_R):
 scurve_sample_ds_(scurve_sample_ds), interpolate_ds_(interpolate_ds), 
-scurve_matching_R(matching_R),mirror_(false),scale_ratio_(1.0)
+scurve_matching_R(matching_R),mirror_(false),scale_ratio_(1.0),area_(1.0)
 {
 }
 
@@ -30,7 +30,8 @@ float interpolate_ds, float matching_R):
     interpolate_ds_(interpolate_ds), 
     scurve_matching_R(matching_R),
     mirror_(mirror),
-    scale_ratio_(1.0)
+    scale_ratio_(1.0),
+    area_(1.0)
 {
 }
 
@@ -783,126 +784,6 @@ compute_reconstructed_boundary_polygon(bool construct_circular_ends)
   return poly;
 }
 
-
-//------------------------------------------------------------------------------
-//: uses the already existing scurves, so if circular_ends = true while acquiring the tree then the outline will have circular completions
-void dbskr_tree::
-compute_reconstructed_boundary_polygon(vgl_polygon<double>& poly)
-{
-  //: find the set of darts to use
-  vcl_vector<unsigned> to_use;
-  for (unsigned i = 0; i < dart_cnt_; i++) {
-    if (leaf_[i]) {
-      to_use.push_back(i);
-      continue;
-    }
-
-    if (leaf_[mate_[i]]) 
-      continue;
-    
-    bool contain = false;
-    for (unsigned j = 0; j < to_use.size(); j++) {
-      if (to_use[j] == mate_[i]) {
-        contain = true;
-        break;
-      }
-    }
-
-    if (!contain)
-      to_use.push_back(i);
-  }
-
-  unsigned j = 0;
-  for (unsigned i = 0; i < dart_cnt_; i++)
-  {  
-      vcl_vector<dbsk2d_shock_edge_sptr> path=get_shock_edges(i);
-      dbsk2d_shock_node_sptr cur_start_node=starting_nodes_[i];
-
-      bool flag=true;
-      // push the minus boundary for each dart
-      if (i == to_use[j]) 
-      {
-          j++;
-      } 
-      else 
-      {  
-          // then mate of i is in to_use
-          flag=false;
-      }
-
-      //traverse through the path, interpolating where necessary
-      for (vcl_vector<dbsk2d_shock_edge_sptr>::iterator e_it = path.begin();
-           e_it != path.end(); e_it++)
-      {
-          dbsk2d_xshock_edge* cur_edge = 
-              dynamic_cast<dbsk2d_xshock_edge*>(e_it->ptr());
-
-          if (cur_start_node == cur_edge->source())
-          {
-              // this edge is to be reconstructed the right way
-              // go through the edge samples and append it to the shock 
-              // curve
-              for (int i=0; i< cur_edge->num_samples(); i++)
-              {
-                  dbsk2d_xshock_sample_sptr sample = cur_edge->sample(i);
-                  sample->reconstruct_boundary();
-
-                  if ( flag )
-                  {
-                      poly.push_back(sample->left_bnd_pt);
-                  }
-                  else
-                  {
-                      poly.push_back(sample->right_bnd_pt);
-                  }
-
-              }
-          }
-          else 
-          {
-              // this edge is to be flipped
-
-              // go through the edge samples in the reverse order
-              // and append it to the shock curve
-              for (int i=cur_edge->num_samples()-1; i>=0 ; i--)
-              {
-                  dbsk2d_xshock_sample_sptr sample = cur_edge->sample(i);
-                  sample->reconstruct_boundary();
-
-                  if ( flag )
-                  {
-                      poly.push_back(sample->left_bnd_pt);
-                  }
-                  else
-                  {
-                      poly.push_back(sample->right_bnd_pt);
-                  }
-
-              }
-              
-          }
-
-          //update the cur_start_node to the opposite node
-          cur_start_node = cur_edge->opposite(cur_start_node);
-              
-      }
-
-      if ( flag )
-      {
-          dbsk2d_xshock_node* cur_node = 
-              dynamic_cast<dbsk2d_xshock_node*>(cur_start_node.ptr());
-          
-          for (int i=0; i< cur_node->num_samples(); i++)
-          {
-              dbsk2d_xshock_sample_sptr sample = cur_node->sample(i);
-              sample->reconstruct_boundary();
-              
-              poly.push_back(sample->left_bnd_pt);
-          }
-      }
-
-  }
-}    
  
 //: find and cache the shock curve for this pair of darts, if not already cached
 dbskr_scurve_sptr 

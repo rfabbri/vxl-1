@@ -125,6 +125,12 @@ public:
   bool mirror() const
   {return this->mirror_; }
 
+  //: set area
+  void set_area(double area){area_=area;}
+
+  // get area
+  double get_area(){return area_;}
+
   // Graph-related--------------------------------------------------------------
 
   
@@ -152,9 +158,6 @@ public:
   //: uses the already existing scurves, so if circular_ends = true while acquiring 
   // the tree then the outline will have circular completions
   vsol_polygon_2d_sptr compute_reconstructed_boundary_polygon(bool construct_circular_ends);
-
-  // another version to compute reconstructed polygon
-  void compute_reconstructed_boundary_polygon(vgl_polygon<double>& poly);
 
 
   // Utilities------------------------------------------------------------------
@@ -235,7 +238,7 @@ public:
   float scurve_matching_R;
   bool mirror_;
   double scale_ratio_;
-
+  double area_;
 };
 
 #endif // dbskr_tree_h_

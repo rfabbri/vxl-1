@@ -97,26 +97,9 @@ void dbskr_align_shapes::load_esf(vcl_string& filename,bool flag)
 
         dbsk2d_shock_graph_sptr sg = loader.load_xshock_graph(line);
 
-        vgl_polygon<double> model_poly(1);
+        vgl_polygon<double> polygon(1);
 
-        compute_boundary(sg,model_poly);
-        {
-            vcl_stringstream stream;
-            stream<<"model_"<<line_number<<".txt";
-
-            vcl_ofstream model_file(stream.str().c_str());
-            for (unsigned int s = 0; s < model_poly.num_sheets(); ++s)
-            {
-                for (unsigned int p = 0; p < model_poly[s].size(); ++p)
-                {
-                    model_file<<model_poly[s][p].x()
-                              <<","<<model_poly[s][p].y()<<vcl_endl;
-                }
-            }
-            model_file.close();
-        }
-
-
+        double area=compute_boundary(sg,polygon);
 
         //: prepare the trees 
         dbskr_tree_sptr tree = new dbskr_tree(sg);
@@ -126,6 +109,10 @@ void dbskr_align_shapes::load_esf(vcl_string& filename,bool flag)
         {
             vcl_cerr<<"This is very bad"<<vcl_endl;
         }
+
+        // cache area for later on
+        tree->set_area(area);
+
         //: prepare mirror tree
         //dbsk2d_hor_flip_shock_graph(sg);
         dbskr_tree_sptr tree_mirror = new dbskr_tree(sg,true);
@@ -140,6 +127,7 @@ void dbskr_align_shapes::load_esf(vcl_string& filename,bool flag)
         else
         {
             query_trees_.push_back(pair);
+            query_polygons_.push_back(polygon);
         }
 
         ++line_number;
@@ -147,24 +135,10 @@ void dbskr_align_shapes::load_esf(vcl_string& filename,bool flag)
     }
     
     esf_file.close();
-    // vcl_cout<<"Finished loading all model trees"<<vcl_endl;
-    // for ( unsigned int k=0; k < model_trees_.size() ; ++k)
-    // {
-    //     vgl_polygon<double> model_poly(1);
 
-    //     dbskr_tree_sptr mtree=model_trees_[k].first;
-        
-    //     vcl_stringstream stream;
-    //     stream<<"model_"<<k<<".txt";
-
-    //     mtree->compute_reconstructed_boundary_polygon(model_poly);
-
-
-    // }
-    exit(0);
 }
 
-void dbskr_align_shapes::compute_boundary(dbsk2d_shock_graph_sptr& sg,
+double dbskr_align_shapes::compute_boundary(dbsk2d_shock_graph_sptr& sg,
                                           vgl_polygon<double>& final_poly)
 {
 
@@ -302,16 +276,154 @@ void dbskr_align_shapes::compute_boundary(dbsk2d_shock_graph_sptr& sg,
         else 
         {
             
-            // if ( vertex->degree() == 2 )
-            // {
-            //     if ( vertex->out_degree() )
-            //     {
-            //         dbsk2d_shock_edge_sptr link = (*vertex->out_edges_begin());
-            //         dbsk2d_xshock_edge* edge = dynamic_cast<dbsk2d_xshock_edge*>
-            //             (link.ptr());
+            if ( vertex->degree() == 2 )
+            {
+                dbsk2d_xshock_edge* link1(0);
+                dbsk2d_xshock_edge* link2(0);
+                
+
+                vgl_point_2d<double> sh_pt;
+                double time(0);                
+
+                double cur_tan(0),end_tan(0);
+
+                if ( vertex->type() == dbsk2d_shock_node::SOURCE )
+                {
+                    dbsk2d_shock_node::edge_iterator eit= (
+                        vertex->out_edges_begin());
+
+                    link1 = 
+                        dynamic_cast<dbsk2d_xshock_edge*>
+                        ((*eit).ptr());
+                    ++eit;
+                    link2 = 
+                        dynamic_cast<dbsk2d_xshock_edge*>
+                        ((*eit).ptr());
+                    
+                    dbsk2d_xshock_sample_sptr link1_sample=link1
+                        ->first_sample();
+                    dbsk2d_xshock_sample_sptr link2_sample=link2
+                        ->first_sample();
+                    
+                    if ( link1_sample->left_bnd_pt != 
+                         link2_sample->right_bnd_pt )
+                    {
+                    }
 
 
-            // }
+                    if ( link1_sample->right_bnd_pt != 
+                         link2_sample->left_bnd_pt )
+                    {
+                    }
+
+                }
+                else if ( vertex->type() == dbsk2d_shock_node::SINK )
+                {
+                    dbsk2d_shock_node::edge_iterator eit= (
+                        vertex->in_edges_begin());
+
+                    link1 = 
+                        dynamic_cast<dbsk2d_xshock_edge*>
+                        ((*eit).ptr());
+                    ++eit;
+                    link2 = 
+                        dynamic_cast<dbsk2d_xshock_edge*>
+                        ((*eit).ptr());
+
+                    dbsk2d_xshock_sample_sptr link1_sample=link1
+                        ->last_sample();
+                    dbsk2d_xshock_sample_sptr link2_sample=link2
+                        ->last_sample();
+                    
+                    vgl_point_2d<double> footpt1;
+                    vgl_point_2d<double> footpt2;
+
+                    double speed_link1=link1_sample->speed;
+                    double theta_link1=link1_sample->theta;
+                    double phi_link1(0);
+                    vgl_point_2d<double> sh_pt = link1_sample->pt;
+                    double time = link1_sample->radius;
+
+                    if (speed_link1 != 0 && speed_link1 < 99990)
+                    {
+                        phi_link1 = vcl_acos(-1/speed_link1);
+                    }
+                    else
+                    {
+                        phi_link1 = vnl_math::pi/2;
+                    }
+
+
+                    double speed_link2=link2_sample->speed;
+                    double theta_link2=link2_sample->theta;
+                    double phi_link2(0);
+
+                    if (speed_link2 != 0 && speed_link2 < 99990)
+                    {
+                        phi_link2 = vcl_acos(-1/speed_link2);
+                    }
+                    else
+                    {
+                        phi_link2 = vnl_math::pi/2;
+                    }
+                    
+
+                    if ( link1_sample->left_bnd_pt != 
+                         link2_sample->right_bnd_pt )
+                    {
+                        end_tan=theta_link1-phi_link1;
+                        cur_tan=theta_link2+phi_link2;
+
+                        footpt1=link2_sample->right_bnd_pt;
+                        footpt2=link1_sample->left_bnd_pt;
+
+                    }
+
+                    if ( link1_sample->right_bnd_pt != 
+                         link2_sample->left_bnd_pt )
+                    {
+                        cur_tan=theta_link1+phi_link1;
+                        end_tan=theta_link2-phi_link2;
+
+                        footpt1=link1_sample->right_bnd_pt;
+                        footpt2=link2_sample->left_bnd_pt;
+
+                    }
+
+                    if (end_tan < cur_tan)
+                    {
+                        end_tan += 2*vnl_math::pi;
+                    }
+
+                    pts.push_back(sh_pt);
+                    pts.push_back(footpt1);
+
+                    cur_tan +=0.02;
+                    while (cur_tan <= end_tan)
+                    {
+                        pts.push_back(_translatePoint(sh_pt, cur_tan, time));
+                        cur_tan += 0.02;
+                    }
+
+
+                    pts.push_back(footpt2);
+                    pts.push_back(sh_pt);
+
+                }
+                else
+                {
+
+                    link1 = 
+                        dynamic_cast<dbsk2d_xshock_edge*>
+                        ((*(vertex->in_edges_begin())).ptr());
+                    link2 = 
+                        dynamic_cast<dbsk2d_xshock_edge*>
+                        ((*(vertex->out_edges_begin())).ptr());
+
+
+                }
+
+            }
 
         }
 
@@ -379,6 +491,8 @@ void dbskr_align_shapes::compute_boundary(dbsk2d_shock_graph_sptr& sg,
     }
     
     final_poly.push_back(start_poly[f_index]); 
+
+    return area;
 
 }
 //: Match
