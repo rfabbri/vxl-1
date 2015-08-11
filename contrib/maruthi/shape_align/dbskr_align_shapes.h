@@ -31,7 +31,15 @@ public:
     //: Constructor
     dbskr_align_shapes(vcl_string model_filename,
                        vcl_string query_filename,
-                       double lambda_area=10000);
+                       bool elastic_splice_cost    = false, 
+                       float scurve_sample_ds      = 5.0f, 
+                       float scurve_interpolate_ds = 1.0f, 
+                       bool localized_edit         = false,
+                       double scurve_matching_R    = 6.0f, 
+                       bool circular_ends          = true, 
+                       bool combined_edit          = false, 
+                       bool use_approx             = true,
+                       double lambda_area          = 10000);
 
     //: Destructor
     ~dbskr_align_shapes();
@@ -41,7 +49,14 @@ public:
 
 private:
 
-    // Keep track of lambda area
+    bool elastic_splice_cost_;
+    float scurve_sample_ds_;
+    float scurve_interpolate_ds_; 
+    bool localized_edit_;
+    double scurve_matching_R_; 
+    bool circular_ends_; 
+    bool combined_edit_;
+    bool use_approx_;
     double lambda_area_;
 
     // Loop all model shock files and keeps a mirrored version also
@@ -83,6 +98,7 @@ private:
 
     // Private matching
     double edit_distance(dbskr_tree_sptr& tree1,dbskr_tree_sptr& tree2,
+                         float test_curve_matching_R,
                          bool switched=false,
                          double prev_distance=1.0e6);
 

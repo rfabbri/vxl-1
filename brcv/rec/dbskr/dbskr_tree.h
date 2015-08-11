@@ -131,6 +131,11 @@ public:
   // get area
   double get_area(){return area_;}
 
+
+  void set_R(double R){scurve_matching_R=R;}
+
+  void set_scale_ratio(double scale_ratio){scale_ratio_=scale_ratio;}
+
   // Graph-related--------------------------------------------------------------
 
   
