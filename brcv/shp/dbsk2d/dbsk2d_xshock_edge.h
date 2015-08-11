@@ -70,6 +70,9 @@ public:
   //: form shock fragment from this edge
   virtual void form_shock_fragment();
 
+  //: get fragment boundary
+  void get_fragment_boundary(vcl_vector<vgl_point_2d<double> >& pts );
+
   //: return the maximum intrinsic parameter
   virtual double psi_max() { return (double)(samples_.size()-1); }
 

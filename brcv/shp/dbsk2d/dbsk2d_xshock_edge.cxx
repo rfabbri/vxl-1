@@ -75,6 +75,36 @@ void dbsk2d_xshock_edge::form_shock_fragment()
   }
 }
 
+//: form shock fragment from this edge
+void dbsk2d_xshock_edge::get_fragment_boundary(
+    vcl_vector<vgl_point_2d<double> >& pts) 
+{
+    //2) Compile the polygon that represents this visual fragment
+
+    //2.1) add the first extrinsic point along the shock edge
+    pts.push_back(ex_pts_.front());
+
+    //2.2) go along left contour
+    vcl_vector<dbsk2d_xshock_sample_sptr>::iterator s_itr = samples_.begin();
+    for( ; s_itr != samples_.end(); ++s_itr)
+    {
+        dbsk2d_xshock_sample_sptr cur_sample = (*s_itr);
+        pts.push_back(cur_sample->left_bnd_pt);
+    }
+    
+    //2.3) add the last extrinsic point along the shock edge
+    pts.push_back(ex_pts_.back());
+    
+    //2.4) Go along the right contour
+    vcl_vector<dbsk2d_xshock_sample_sptr>::reverse_iterator rs_itr = 
+        samples_.rbegin();
+    for( ; rs_itr != samples_.rend(); ++rs_itr)
+    {
+        dbsk2d_xshock_sample_sptr cur_sample = (*rs_itr);
+        pts.push_back(cur_sample->right_bnd_pt);
+    }
+}
+
 //: return the extrinsic point on the shock
 vgl_point_2d<double> dbsk2d_xshock_edge::pt(double psi)
 {
