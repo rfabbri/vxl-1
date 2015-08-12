@@ -76,7 +76,12 @@ public:
   dbskr_tree(float scurve_sample_ds=5.0f, float interpolate_ds=1.0f, float matching_R=6.0f);
 
   //: Constructor
-  dbskr_tree(dbsk2d_shock_graph_sptr sg,bool mirror=false,float scurve_sample_ds=5.0f, float interpolate_ds=1.0f, float matching_R=6.0f);
+  dbskr_tree(dbsk2d_shock_graph_sptr sg,
+             bool mirror=false,
+             double width=0.0,
+             float scurve_sample_ds=5.0f, 
+             float interpolate_ds=1.0f, 
+             float matching_R=6.0f);
 
   //: Destructor;
   virtual ~dbskr_tree() 
@@ -135,6 +140,10 @@ public:
   void set_R(double R){scurve_matching_R=R;}
 
   void set_scale_ratio(double scale_ratio){scale_ratio_=scale_ratio;}
+
+  double get_scale_ratio(){return scale_ratio_;}
+
+  double get_width(){return width_;}
 
   // Graph-related--------------------------------------------------------------
 
@@ -244,6 +253,7 @@ public:
   bool mirror_;
   double scale_ratio_;
   double area_;
+  double width_;
 };
 
 #endif // dbskr_tree_h_

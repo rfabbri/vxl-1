@@ -81,6 +81,12 @@ private:
     //: keep track of query polygons
     vcl_vector<vgl_polygon<double> > query_polygons_;
 
+    //: Keep track of width of shock graph for computing DC
+    vcl_vector<double> model_sg_bbox_width_;
+
+    // Keep track of query
+    vcl_vector<double> query_sg_bbox_width_;
+
     // Keep track of whethe query is tree1 or tree 2
     // switch = true, means query is tree2
     bool switched_;
@@ -106,12 +112,19 @@ private:
 
     // Get dense correspondence between two shapes
     void shape_alignment(
-        dbskr_tree_sptr query_tree,
+        vgl_polygon<double>& query_poly,
+        dbskr_tree_sptr& model_tree,
+        dbskr_tree_sptr& query_tree);
+
+    vgl_point_2d<double> find_part_correspondences_qm(
+        vgl_point_2d<double> query_pt,
         vcl_vector<dbskr_scurve_sptr>& curve_list1,
         vcl_vector<dbskr_scurve_sptr>& curve_list2,
         vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-        bool query_mirror=false,
-        bool switched=false);
+        bool flag,
+        double width,
+        double model_scale_ratio,
+        double query_scale_ratio);
 
     // Make copy ctor private
     dbskr_align_shapes(const dbskr_align_shapes&);

@@ -7,13 +7,16 @@
 
 #include <vgl/vgl_clip.h>
 #include <vgl/vgl_area.h>
+#include <vgl/vgl_polygon_scan_iterator.h>
 
+#include <dbsk2d/algo/dbsk2d_compute_bounding_box.h>
 #include <dbsk2d/algo/dbsk2d_hor_flip_shock_graph.h>
 #include <dbsk2d/algo/dbsk2d_xshock_graph_fileio.h>
 #include <dbsk2d/dbsk2d_xshock_node.h>
 #include <dbsk2d/dbsk2d_xshock_edge.h>
 
 #include <dbskr/dbskr_tree_edit.h>
+#include <dbskr/dbskr_scurve.h>
 
 #include <vcl_sstream.h>
 
@@ -65,13 +68,14 @@ void dbskr_align_shapes::match()
 
     for ( unsigned int m=0; m < model_trees_.size() ; ++m)
     {
+
+        // Compute all pairs of edit distance
+        dbskr_tree_sptr model_tree=model_trees_[m].first;
+        dbskr_tree_sptr model_mirror_tree=model_trees_[m].second;
+
         for ( unsigned int q=0; q < query_trees_.size() ; ++q)
         {
             vcl_cout<<"Matching "<<m<<" to "<<q<<vcl_endl;
-
-            // Compute all pairs of edit distance
-            dbskr_tree_sptr model_tree=model_trees_[m].first;
-            dbskr_tree_sptr model_mirror_tree=model_trees_[m].second;
 
             dbskr_tree_sptr query_tree=query_trees_[q].first;
             dbskr_tree_sptr query_mirror_tree=query_trees_[q].second;
@@ -140,6 +144,51 @@ void dbskr_align_shapes::match()
                                     test_R,true,c5);
 
             vcl_cout<<"C5: "<<c5<<" versus C6: "<<c6<<vcl_endl;
+
+
+            // Perform shape alignment
+            vgl_polygon<double> poly=query_polygons_[q];
+
+
+            if ( tree1_mirror_ )
+            {
+                if ( switched_ )
+                {
+                    shape_alignment(poly,
+                                    model_tree,
+                                    query_mirror_tree);
+                }
+                else
+                {
+                    shape_alignment(poly,
+                                    model_mirror_tree,
+                                    query_tree);
+                
+                }
+            }
+            else if ( tree2_mirror_ )
+            {
+                
+                if ( switched_ )
+                {
+                    shape_alignment(poly,
+                                    model_mirror_tree,
+                                    query_tree);
+                }
+                else
+                {
+                    shape_alignment(poly,
+                                    model_tree,
+                                    query_mirror_tree);
+                
+                }
+            
+            }
+            else
+            {
+                shape_alignment(poly,model_tree,query_tree);
+            }
+            
         }
 
     }
@@ -173,6 +222,15 @@ void dbskr_align_shapes::load_esf(vcl_string& filename,bool flag)
         dbsk2d_shock_graph_sptr sg = loader.load_xshock_graph(line);
         dbsk2d_shock_graph_sptr hor_sg = loader.load_xshock_graph(line);
 
+        // compute bounding box
+        dbsk2d_compute_bounding_box(sg);
+
+        // Get the bounding box for the shock graph
+        vsol_box_2d_sptr bbox = sg->get_bounding_box();
+
+        // Get the width for the bounding box
+        double width = bbox->width();
+
         // Compute area, and figure out new sample ds
         vgl_polygon<double> polygon(1);
         double area=compute_boundary(sg,polygon);
@@ -185,7 +243,8 @@ void dbskr_align_shapes::load_esf(vcl_string& filename,bool flag)
         }
 
         //: prepare the trees 
-        dbskr_tree_sptr tree = new dbskr_tree(sg,false,lambda_ds,
+        dbskr_tree_sptr tree = new dbskr_tree(sg,false,0,
+                                              lambda_ds,
                                               scurve_interpolate_ds_,
                                               scurve_matching_R_);
         tree->acquire_tree_topology();
@@ -193,7 +252,8 @@ void dbskr_align_shapes::load_esf(vcl_string& filename,bool flag)
 
         //: prepare mirror tree
         dbsk2d_hor_flip_shock_graph(hor_sg);
-        dbskr_tree_sptr tree_mirror = new dbskr_tree(hor_sg,true,lambda_ds,
+        dbskr_tree_sptr tree_mirror = new dbskr_tree(hor_sg,true,width,
+                                                     lambda_ds,
                                                      scurve_interpolate_ds_,
                                                      scurve_matching_R_);
         tree_mirror->acquire_tree_topology();
@@ -637,14 +697,318 @@ double dbskr_align_shapes::edit_distance(dbskr_tree_sptr& tree1,
 
 // Get dense correspondence between two shapes
 void dbskr_align_shapes::shape_alignment(
-    dbskr_tree_sptr query_tree,
+    vgl_polygon<double>& poly,
+    dbskr_tree_sptr& model_tree,
+    dbskr_tree_sptr& query_tree)
+{
+    vcl_ofstream stream("mapping.txt");
+
+    // do not include boundary
+    vgl_polygon_scan_iterator<double> psi(poly, false);  
+    for (psi.reset(); psi.next(); ) 
+    {
+        int y = psi.scany();
+        for (int x = psi.startx(); x <= psi.endx(); ++x) 
+        {
+            vgl_point_2d<double> query_pt(x,y);
+
+            vgl_point_2d<double> model_rt(0,0),query_rt(0,0);
+
+            int curve_list_id(0);
+
+            double query_width=query_tree->get_width();
+            double model_width=model_tree->get_width();
+
+            vgl_point_2d<double> mapping_pt=
+                find_part_correspondences_qm(query_pt,
+                                             curve_list1_,
+                                             curve_list2_,
+                                             map_list_,
+                                             switched_,
+                                             query_width,
+                                             model_tree
+                                             ->get_scale_ratio(),
+                                             query_tree
+                                             ->get_scale_ratio());
+            if ( mapping_pt.x() != -1 )
+            {
+                
+                if ( model_tree->mirror() )
+                {
+                    mapping_pt.set((model_width-mapping_pt.x()),
+                                   mapping_pt.y());
+                    
+                }
+
+                stream<<query_pt.x()<<" "<<query_pt.y()<<" "<<
+                    mapping_pt.x()<<" "<<mapping_pt.y()<<vcl_endl;
+
+            }
+
+        }
+    }
+
+    stream.close();
+    
+
+}
+
+
+
+vgl_point_2d<double> dbskr_align_shapes::
+find_part_correspondences_qm(
+    vgl_point_2d<double> query_pt,
     vcl_vector<dbskr_scurve_sptr>& curve_list1,
     vcl_vector<dbskr_scurve_sptr>& curve_list2,
     vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
-    bool query_mirror,
-    bool switched)
+    bool flag,
+    double width,
+    double model_scale_ratio,
+    double query_scale_ratio)
 {
 
-    
+    vgl_point_2d<double> mapping_pt;
 
+    vgl_point_2d<double> ps1(query_pt);
+    
+    if ( width > 0 )
+    {
+        ps1.set((width-ps1.x())*query_scale_ratio,
+                ps1.y()*query_scale_ratio);
+    }
+    else
+    {
+        ps1.set(ps1.x()*query_scale_ratio,ps1.y()*query_scale_ratio);
+    }
+
+    if ( !flag )
+    {
+        bool in_part=false;
+        unsigned int c=0;
+        for ( ; c < curve_list2.size() ; ++c)
+        {
+            vgl_polygon<double> poly(1);
+            dbskr_scurve_sptr sc1=curve_list2[c];
+            sc1->get_polygon(poly,width);
+
+            if ( poly.contains(query_pt.x(),query_pt.y()))
+            {
+                in_part=true;
+                break;
+            }
+            
+        }
+        
+        if ( !in_part)
+        {
+            mapping_pt.set(-1.0,-1.0);
+            return mapping_pt;
+        }
+
+        dbskr_scurve_sptr model_curve=curve_list2[c];
+        dbskr_scurve_sptr query_curve=curve_list1[c];
+
+        // Find point in model curve
+        vgl_point_2d<double> int_pt;
+        bool found=model_curve->intrinsinc_pt(ps1,int_pt);
+
+        if ( !found )
+        {
+
+            mapping_pt.set(-1.0,-1.0);
+            return mapping_pt;
+        }
+
+        vcl_vector<vcl_pair<int,int> > curve_map=map_list[c];
+
+        double index=int_pt.x();
+
+        double index_ratio=0.0;
+
+        unsigned int v=0; 
+
+        int model_int_diff(0);
+        double int_diff(0.0);
+
+        for ( ; v < curve_map.size()-1 ; ++v)
+        {
+
+            int lower=curve_map[v].second;
+            int upper=curve_map[v+1].second;
+
+            if ( upper < lower )
+            {
+                int temp=upper;
+                upper=lower;
+                lower=temp;
+            }
+            
+            if ( index >= lower &&
+                 index < upper )
+            {
+                model_int_diff=upper-lower;
+                int_diff=index-lower;
+                break;
+                
+            }
+
+            
+        }
+
+        
+        // Find mapping point
+        int start_index=curve_map[v].first;
+        int stop_index=curve_map[v+1].first;
+
+        if ( stop_index < start_index)
+        {
+            int temp=stop_index;
+            stop_index=start_index;
+            start_index=temp;
+        }
+
+        int query_int_diff=stop_index-start_index;
+
+        double s_map(0.0);
+
+        if ( query_int_diff == 0 )
+        {
+            s_map=start_index;
+
+        }
+        else
+        {
+            double ratio=((double) query_int_diff)/((double) model_int_diff);
+            s_map = start_index+int_diff*ratio;
+
+        }
+
+        double t_rad_model = model_curve->interp_radius(int_pt.x());
+        double t_rad_query = query_curve->interp_radius(s_map);
+
+        double t_map = int_pt.y()*(t_rad_query/t_rad_model);
+
+        mapping_pt = query_curve->fragment_pt(s_map,
+                                              t_map);
+
+        
+    }
+    else
+    {
+        bool in_part=false;
+        unsigned int c=0;
+        for ( ; c < curve_list1.size() ; ++c)
+        {
+            vgl_polygon<double> poly(1);
+            dbskr_scurve_sptr sc1=curve_list1[c];
+            sc1->get_polygon(poly,width);
+
+            if ( poly.contains(query_pt.x(),query_pt.y()))
+            {
+                in_part=true;
+                break;
+            }
+            
+        }
+
+        if ( !in_part )
+        {
+
+            mapping_pt.set(-1.0,-1.0);
+            return mapping_pt;
+        }
+
+        dbskr_scurve_sptr model_curve=curve_list1[c];
+        dbskr_scurve_sptr query_curve=curve_list2[c];
+
+        // Find point in model curve
+        vgl_point_2d<double> int_pt;
+        bool found = model_curve->intrinsinc_pt(ps1,int_pt);
+
+        if ( !found )
+        {
+            mapping_pt.set(-1.0,-1.0);
+            return mapping_pt;
+        }
+
+        vcl_vector<vcl_pair<int,int> > curve_map=map_list[c];
+
+        double index=int_pt.x();
+
+        double index_ratio=0.0;
+
+        unsigned int v=0; 
+
+        int model_int_diff(0);
+        double int_diff(0.0);
+
+        for ( ; v < curve_map.size()-1 ; ++v)
+        {
+
+            int lower=curve_map[v].first;
+            int upper=curve_map[v+1].first;
+
+            if ( upper < lower )
+            {
+                int temp=upper;
+                upper=lower;
+                lower=temp;
+            }
+            
+            if ( index >= lower &&
+                 index < upper )
+            {
+                model_int_diff=upper-lower;
+                int_diff=index-lower;
+                break;
+                
+            }
+
+            
+        }
+
+        
+        // Find mapping point
+        int start_index=curve_map[v].second;
+        int stop_index=curve_map[v+1].second;
+
+        if ( stop_index < start_index)
+        {
+            int temp=stop_index;
+            stop_index=start_index;
+            start_index=temp;
+        }
+
+        int query_int_diff=stop_index-start_index;
+
+        double s_map(0.0);
+
+        if ( query_int_diff == 0 )
+        {
+            s_map=start_index;
+
+        }
+        else
+        {
+            double ratio=((double) query_int_diff)/((double) model_int_diff);
+            s_map = start_index+int_diff*ratio;
+
+        }
+
+        double t_rad_model = model_curve->interp_radius(int_pt.x());
+        double t_rad_query = query_curve->interp_radius(s_map);
+
+        double t_map = int_pt.y()*(t_rad_query/t_rad_model);
+
+        mapping_pt = query_curve->fragment_pt(s_map,
+                                              t_map);
+
+
+    }
+
+
+    mapping_pt.set(mapping_pt.x()/model_scale_ratio,
+                   mapping_pt.y()/model_scale_ratio);
+
+    return mapping_pt;
 }

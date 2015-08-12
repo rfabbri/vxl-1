@@ -16,22 +16,24 @@
 dbskr_tree::
 dbskr_tree(float scurve_sample_ds, float interpolate_ds, float matching_R):
 scurve_sample_ds_(scurve_sample_ds), interpolate_ds_(interpolate_ds), 
-scurve_matching_R(matching_R),mirror_(false),scale_ratio_(1.0),area_(1.0)
+scurve_matching_R(matching_R),mirror_(false),scale_ratio_(1.0),area_(1.0),
+width_(0.0)
 {
 }
 
 //------------------------------------------------------------------------------
 //: Default constructor
 dbskr_tree::
-dbskr_tree(dbsk2d_shock_graph_sptr sg,bool mirror,float scurve_sample_ds, 
-float interpolate_ds, float matching_R):
+dbskr_tree(dbsk2d_shock_graph_sptr sg,bool mirror,double width,
+float scurve_sample_ds, float interpolate_ds, float matching_R):
     sg_(sg),
     scurve_sample_ds_(scurve_sample_ds), 
     interpolate_ds_(interpolate_ds), 
     scurve_matching_R(matching_R),
     mirror_(mirror),
     scale_ratio_(1.0),
-    area_(1.0)
+    area_(1.0),
+    width_(width)
 {
 }
 

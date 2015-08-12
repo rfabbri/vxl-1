@@ -19,5 +19,8 @@ int main( int argc, char *argv[] )
 
     dbskr_align_shapes matcher(input_model_file,
                                input_query_file);
+
+    matcher.match();
+
     return 0;
 }
