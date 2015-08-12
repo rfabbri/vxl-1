@@ -29,6 +29,7 @@ dbskr_align_shapes::dbskr_align_shapes(
     bool circular_ends,
     bool combined_edit,
     bool use_approx,
+    bool lambda_scaling,
     double lambda_area
 ):elastic_splice_cost_(elastic_splice_cost),
   scurve_sample_ds_(scurve_sample_ds),
@@ -38,6 +39,7 @@ dbskr_align_shapes::dbskr_align_shapes(
   circular_ends_(circular_ends),
   combined_edit_(combined_edit),
   use_approx_(use_approx),
+  lambda_scaling_(lambda_scaling),
   lambda_area_(lambda_area),
   switched_(false),
   tree1_mirror_(false),
@@ -65,7 +67,8 @@ void dbskr_align_shapes::match()
     {
         for ( unsigned int q=0; q < query_trees_.size() ; ++q)
         {
-            
+            vcl_cout<<"Matching "<<m<<" to "<<q<<vcl_endl;
+
             // Compute all pairs of edit distance
             dbskr_tree_sptr model_tree=model_trees_[m].first;
             dbskr_tree_sptr model_mirror_tree=model_trees_[m].second;
@@ -78,13 +81,21 @@ void dbskr_align_shapes::match()
 
             double mean_area=(model_area + 
                               query_area)/2;
+                        
+            double model_scale_ratio=1.0;
+            double query_scale_ratio=1.0;
+            double test_R=scurve_matching_R_;
             
-            double model_scale_ratio = vcl_sqrt(mean_area/model_area);
-            double query_scale_ratio = vcl_sqrt(mean_area/query_area);
-            
-            double test_R=scurve_matching_R_*
-                vcl_sqrt(mean_area/lambda_area_);
+            if ( lambda_scaling_ )
+            {
+                test_R=scurve_matching_R_*
+                    vcl_sqrt(mean_area/lambda_area_);
+                model_scale_ratio = vcl_sqrt(mean_area/model_area);
+                query_scale_ratio = vcl_sqrt(mean_area/query_area);
 
+            }
+
+            
             // Do orig tree
 
             model_tree->set_R(test_R);
@@ -114,16 +125,21 @@ void dbskr_align_shapes::match()
             double c1=edit_distance(model_tree,query_tree,test_R,false);
             double c2=edit_distance(query_tree,model_tree,test_R,true,c1);
 
+            vcl_cout<<"C1: "<<c1<<" versus C2: "<<c2<<vcl_endl;
+
             double c3=edit_distance(model_tree,query_mirror_tree,
                                     test_R,false,c2);
             double c4=edit_distance(query_mirror_tree,model_tree,
                                     test_R,true,c3);
+
+            vcl_cout<<"C3: "<<c3<<" versus C4: "<<c4<<vcl_endl;
 
             double c5=edit_distance(model_mirror_tree,query_tree,
                                     test_R,false,c4);
             double c6=edit_distance(query_tree,model_mirror_tree,
                                     test_R,true,c5);
 
+            vcl_cout<<"C5: "<<c5<<" versus C6: "<<c6<<vcl_endl;
         }
 
     }
@@ -160,9 +176,14 @@ void dbskr_align_shapes::load_esf(vcl_string& filename,bool flag)
         // Compute area, and figure out new sample ds
         vgl_polygon<double> polygon(1);
         double area=compute_boundary(sg,polygon);
-        double lambda_ds=scurve_sample_ds_*vcl_sqrt(area
-                                                    /lambda_area_);
-        
+        double lambda_ds=scurve_sample_ds_;
+
+        if ( lambda_scaling_ )
+        {
+            lambda_ds=scurve_sample_ds_*vcl_sqrt(area
+                                                 /lambda_area_);
+        }
+
         //: prepare the trees 
         dbskr_tree_sptr tree = new dbskr_tree(sg,false,lambda_ds,
                                               scurve_interpolate_ds_,
@@ -172,7 +193,7 @@ void dbskr_align_shapes::load_esf(vcl_string& filename,bool flag)
 
         //: prepare mirror tree
         dbsk2d_hor_flip_shock_graph(hor_sg);
-        dbskr_tree_sptr tree_mirror = new dbskr_tree(sg,true,lambda_ds,
+        dbskr_tree_sptr tree_mirror = new dbskr_tree(hor_sg,true,lambda_ds,
                                                      scurve_interpolate_ds_,
                                                      scurve_matching_R_);
         tree_mirror->acquire_tree_topology();
@@ -562,8 +583,6 @@ double dbskr_align_shapes::edit_distance(dbskr_tree_sptr& tree1,
                                          bool switched,
                                          double prev_distance)
 {
-
-
     //instantiate the edit distance algorithms
     dbskr_tree_edit edit(tree1, tree2,circular_ends_,localized_edit_);
     
@@ -582,6 +601,10 @@ double dbskr_align_shapes::edit_distance(dbskr_tree_sptr& tree1,
     double norm_val = val/(tree1->total_splice_cost()+
                            tree2->total_splice_cost());
     
+    vcl_cout << "final cost: " << val << " final norm cost: " 
+             << norm_val << "( tree1 tot splice: " 
+             << tree1->total_splice_cost() << ", tree2: " 
+             << tree2->total_splice_cost() << ")" << vcl_endl;
 
     if ( norm_val < prev_distance)
     {

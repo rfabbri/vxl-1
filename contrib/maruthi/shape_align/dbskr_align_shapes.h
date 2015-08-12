@@ -39,6 +39,7 @@ public:
                        bool circular_ends          = true, 
                        bool combined_edit          = false, 
                        bool use_approx             = true,
+                       bool lambda_scaling         = false,
                        double lambda_area          = 10000);
 
     //: Destructor
@@ -57,6 +58,7 @@ private:
     bool circular_ends_; 
     bool combined_edit_;
     bool use_approx_;
+    bool lambda_scaling_;
     double lambda_area_;
 
     // Loop all model shock files and keeps a mirrored version also
