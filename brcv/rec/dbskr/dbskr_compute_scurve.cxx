@@ -102,6 +102,7 @@ dbskr_scurve_sptr dbskr_compute_scurve(dbsk2d_shock_node_sptr start_node,
                                                    sh_pt, time, theta, phi,
                                                    binterpolate, interpolate_ds,
                                                    bsub_sample, subsample_ds,
+                                                   leaf_edge,
                                                    scale_ratio);
 
   return shock_curve;

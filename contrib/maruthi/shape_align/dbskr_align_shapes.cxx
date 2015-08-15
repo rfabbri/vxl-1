@@ -257,7 +257,7 @@ void dbskr_align_shapes::load_esf(vcl_string& filename,bool flag)
                                                      scurve_interpolate_ds_,
                                                      scurve_matching_R_);
         tree_mirror->acquire_tree_topology();
-        tree->set_area(area);
+        tree_mirror->set_area(area);
 
         // store away tree
         vcl_pair<dbskr_tree_sptr,dbskr_tree_sptr> pair(tree,tree_mirror);
