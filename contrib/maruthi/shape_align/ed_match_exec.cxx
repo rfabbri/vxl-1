@@ -3,6 +3,8 @@
 // dbgl headers
 #include <shape_align/dbskr_align_shapes.h>
 
+#include <vul/vul_timer.h>
+
 #include <unistd.h>
 #include <vcl_sstream.h>
 
@@ -93,6 +95,8 @@ int main( int argc, char *argv[] )
 
     vcl_cout<<vcl_endl;
 
+    vul_timer t;
+
     //: Constructor
     dbskr_align_shapes matcher(mfile,
                                qfile,
@@ -109,6 +113,12 @@ int main( int argc, char *argv[] )
 
 
     matcher.match();
+
+
+    double vox_time = t.real()/1000.0;
+    t.mark();
+    vcl_cout<<vcl_endl;
+    vcl_cout<<"************ Time taken: "<<vox_time<<" sec"<<vcl_endl;
 
     return 0;
 }
