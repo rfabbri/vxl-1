@@ -5,6 +5,10 @@
 
 #include <shape_align/dbskr_align_shapes.h>
 
+#include <vul/vul_file.h>
+
+#include <vnl/vnl_matrix.h>
+
 #include <vgl/vgl_clip.h>
 #include <vgl/vgl_area.h>
 #include <vgl/vgl_polygon_scan_iterator.h>
@@ -19,6 +23,7 @@
 #include <dbskr/dbskr_scurve.h>
 
 #include <vcl_sstream.h>
+#include <vcl_set.h>
 
 //: Constructor
 dbskr_align_shapes::dbskr_align_shapes(
@@ -46,28 +51,125 @@ dbskr_align_shapes::dbskr_align_shapes(
   lambda_area_(lambda_area),
   switched_(false),
   tree1_mirror_(false),
-  tree2_mirror_(false)
+  tree2_mirror_(false),
+  shape_matrix_file_(),
+  dc_file_()
 {
     vcl_cout<<"Loading Model ESF Files"<<vcl_endl;
     load_esf(model_filename,true);
     vcl_cout<<"Loading Query ESF Files"<<vcl_endl;
     load_esf(query_filename,false);
+
+    vcl_string model_basename=vul_file::basename(model_filename);
+    vcl_string query_basename=vul_file::basename(query_filename);
+
+    model_basename=vul_file::strip_extension(model_basename);
+    query_basename=vul_file::strip_extension(query_basename);
+    
+    shape_matrix_file_ = model_basename + "_vs_" + query_basename + 
+        "_dist_matrix.txt";
+
+    dc_file_ = model_basename + "_vs_" + query_basename + 
+        "_shape_align.bin";
+    
+    vcl_cout<<"Writing out shape matrix to "<<shape_matrix_file_<<vcl_endl;
+    vcl_cout<<"Writing out shape alignment to "<<dc_file_<<vcl_endl;
+
+    set_up_dc_file();
+    
 }
 
 //: Destructor
 dbskr_align_shapes::~dbskr_align_shapes() 
 {
- 
 }
 
+
+//: Set up bin file
+void dbskr_align_shapes::set_up_dc_file()
+{
+
+    vcl_ofstream output_binary_file;
+    output_binary_file.open(dc_file_.c_str(),
+                            vcl_ios::out | 
+                            vcl_ios::binary);
+    
+    double m = model_trees_.size();
+    double q = query_trees_.size();
+    
+    // Write out number of model trees vs query trees
+    // we are comparing
+    output_binary_file.write(reinterpret_cast<char *>(&m),
+                             sizeof(double));
+    output_binary_file.write(reinterpret_cast<char *>(&q),
+                             sizeof(double));
+
+    for (unsigned int p=0; p < query_polygons_.size() ; ++p)
+    {
+
+        // get polygon
+        vgl_polygon<double> poly=query_polygons_[p];
+
+        // save off points
+        vcl_vector<vcl_pair<int,int> > points;
+
+        // do not include boundary
+        vgl_polygon_scan_iterator<double> psi(poly, false);  
+        for (psi.reset(); psi.next(); ) 
+        {
+            int y = psi.scany();
+            for (int x = psi.startx(); x <= psi.endx(); ++x) 
+            {
+                vcl_pair<int,int> coords(x,y);
+                points.push_back(coords);
+            }
+        }
+
+        double size=points.size();
+
+        output_binary_file.write(reinterpret_cast<char *>(&size),
+                                 sizeof(double));
+
+        // write out points
+        for ( unsigned int v=0; v < points.size() ; ++v)
+        {
+            double x=points[v].first;
+            double y=points[v].second;
+            
+            output_binary_file.write(reinterpret_cast<char *>(&x),
+                                     sizeof(double));
+            output_binary_file.write(reinterpret_cast<char *>(&y),
+                                     sizeof(double));
+            
+        }
+
+    }
+
+    output_binary_file.close();
+}
 
 //: Match
 void dbskr_align_shapes::match()
 {
     // Match
+    vcl_ofstream output_binary_file;
+    output_binary_file.open(dc_file_.c_str(),
+                            vcl_ios::out |
+                            vcl_ios::app |
+                            vcl_ios::binary);
+
+    // Lets keep output in a matrix
+    vnl_matrix<double> ed_matrix(model_trees_.size(),
+                                 query_trees_.size(),
+                                 0.0);
 
     for ( unsigned int m=0; m < model_trees_.size() ; ++m)
     {
+        
+        // Clear out before we redo
+        curve_list1_.clear();
+        curve_list2_.clear();
+        map_list_.clear();
 
         // Compute all pairs of edit distance
         dbskr_tree_sptr model_tree=model_trees_[m].first;
@@ -126,25 +228,32 @@ void dbskr_align_shapes::match()
             query_mirror_tree->compute_delete_and_contract_costs(
                 elastic_splice_cost_,circular_ends_,combined_edit_);
 
+            vcl_set<double> dists;
+
+            // No mirroring
             double c1=edit_distance(model_tree,query_tree,test_R,false);
             double c2=edit_distance(query_tree,model_tree,test_R,true,c1);
 
-            vcl_cout<<"C1: "<<c1<<" versus C2: "<<c2<<vcl_endl;
-
+            // Query mirror
             double c3=edit_distance(model_tree,query_mirror_tree,
                                     test_R,false,c2);
             double c4=edit_distance(query_mirror_tree,model_tree,
                                     test_R,true,c3);
 
-            vcl_cout<<"C3: "<<c3<<" versus C4: "<<c4<<vcl_endl;
-
+            // Model mirror
             double c5=edit_distance(model_mirror_tree,query_tree,
                                     test_R,false,c4);
             double c6=edit_distance(query_tree,model_mirror_tree,
                                     test_R,true,c5);
 
-            vcl_cout<<"C5: "<<c5<<" versus C6: "<<c6<<vcl_endl;
+            dists.insert(c1);
+            dists.insert(c2);
+            dists.insert(c3);
+            dists.insert(c4);
+            dists.insert(c5);
+            dists.insert(c6);
 
+            ed_matrix(m,q)=(*dists.begin());
 
             // Perform shape alignment
             vgl_polygon<double> poly=query_polygons_[q];
@@ -156,13 +265,15 @@ void dbskr_align_shapes::match()
                 {
                     shape_alignment(poly,
                                     model_tree,
-                                    query_mirror_tree);
+                                    query_mirror_tree,
+                                    output_binary_file);
                 }
                 else
                 {
                     shape_alignment(poly,
                                     model_mirror_tree,
-                                    query_tree);
+                                    query_tree,
+                                    output_binary_file);
                 
                 }
             }
@@ -173,26 +284,36 @@ void dbskr_align_shapes::match()
                 {
                     shape_alignment(poly,
                                     model_mirror_tree,
-                                    query_tree);
+                                    query_tree,
+                                    output_binary_file);
                 }
                 else
                 {
                     shape_alignment(poly,
                                     model_tree,
-                                    query_mirror_tree);
+                                    query_mirror_tree,
+                                    output_binary_file);
                 
                 }
             
             }
             else
             {
-                shape_alignment(poly,model_tree,query_tree);
+                shape_alignment(poly,model_tree,query_tree,output_binary_file);
             }
             
         }
 
     }
- 
+
+    // close dc file
+    output_binary_file.close();
+
+    // Write out shape matrix
+    vcl_ofstream file(shape_matrix_file_);
+    ed_matrix.print(file);
+    file.close();
+    
 
 }
 
@@ -661,10 +782,10 @@ double dbskr_align_shapes::edit_distance(dbskr_tree_sptr& tree1,
     double norm_val = val/(tree1->total_splice_cost()+
                            tree2->total_splice_cost());
     
-    vcl_cout << "final cost: " << val << " final norm cost: " 
-             << norm_val << "( tree1 tot splice: " 
-             << tree1->total_splice_cost() << ", tree2: " 
-             << tree2->total_splice_cost() << ")" << vcl_endl;
+    // vcl_cout << "final cost: " << val << " final norm cost: " 
+    //          << norm_val << "( tree1 tot splice: " 
+    //          << tree1->total_splice_cost() << ", tree2: " 
+    //          << tree2->total_splice_cost() << ")" << vcl_endl;
 
     if ( norm_val < prev_distance)
     {
@@ -699,9 +820,11 @@ double dbskr_align_shapes::edit_distance(dbskr_tree_sptr& tree1,
 void dbskr_align_shapes::shape_alignment(
     vgl_polygon<double>& poly,
     dbskr_tree_sptr& model_tree,
-    dbskr_tree_sptr& query_tree)
+    dbskr_tree_sptr& query_tree,
+    vcl_ofstream& output_binary_file)
 {
-    vcl_ofstream stream("mapping.txt");
+
+    // write out results to binary file
 
     // do not include boundary
     vgl_polygon_scan_iterator<double> psi(poly, false);  
@@ -739,17 +862,17 @@ void dbskr_align_shapes::shape_alignment(
                                    mapping_pt.y());
                     
                 }
-
-                stream<<query_pt.x()<<" "<<query_pt.y()<<" "<<
-                    mapping_pt.x()<<" "<<mapping_pt.y()<<vcl_endl;
-
+               
             }
+
+            output_binary_file.write(reinterpret_cast<char *>(&mapping_pt.x()),
+                                     sizeof(double));
+            output_binary_file.write(reinterpret_cast<char *>(&mapping_pt.y()),
+                                     sizeof(double));
+
 
         }
     }
-
-    stream.close();
-    
 
 }
 

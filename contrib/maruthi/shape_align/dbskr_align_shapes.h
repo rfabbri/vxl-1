@@ -96,7 +96,16 @@ private:
 
     // Keep track if tree 2 has been mirrored
     bool tree2_mirror_;
-    
+
+    // Shape matrix output
+    vcl_string shape_matrix_file_;
+
+    // Dc correspondence file
+    vcl_string dc_file_;
+
+    // Set up dc fil
+    void set_up_dc_file();
+
     // Load model
     void load_esf(vcl_string& filename,bool flag);
 
@@ -114,7 +123,8 @@ private:
     void shape_alignment(
         vgl_polygon<double>& query_poly,
         dbskr_tree_sptr& model_tree,
-        dbskr_tree_sptr& query_tree);
+        dbskr_tree_sptr& query_tree,
+        vcl_ofstream& output_binary_file);
 
     vgl_point_2d<double> find_part_correspondences_qm(
         vgl_point_2d<double> query_pt,
