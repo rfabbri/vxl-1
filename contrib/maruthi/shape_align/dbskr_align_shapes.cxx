@@ -82,6 +82,11 @@ dbskr_align_shapes::dbskr_align_shapes(
 //: Destructor
 dbskr_align_shapes::~dbskr_align_shapes() 
 {
+    for (unsigned int m=0; m < model_trees_.size() ; ++m)
+    {
+        model_trees_[m].first=0;
+        model_trees_[m].second=0;
+    }
 }
 
 
@@ -303,6 +308,9 @@ void dbskr_align_shapes::match()
             }
             
         }
+
+        model_tree->unref();
+        model_mirror_tree->unref();
 
     }
 
