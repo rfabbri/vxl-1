@@ -253,28 +253,36 @@ void dbskr_align_shapes::match()
 
             vcl_set<double> dists;
 
-            // No mirroring
-            double c1=edit_distance(model_tree,query_tree,test_R,false);
-            double c2=edit_distance(query_tree,model_tree,test_R,true,c1);
+            dists.insert(1.0e6);
 
+            // No mirroring
+            double c1=edit_distance(model_tree,query_tree,test_R,false,
+                                    (*dists.begin()));
+            dists.insert(c1);
+            double c2=edit_distance(query_tree,model_tree,test_R,true,
+                                    (*dists.begin()));
+            dists.insert(c2);
+            
             // Query mirror
             double c3=edit_distance(model_tree,query_mirror_tree,
-                                    test_R,false,c2);
+                                    test_R,false,
+                                    (*dists.begin()));
+            dists.insert(c3);
             double c4=edit_distance(query_mirror_tree,model_tree,
-                                    test_R,true,c3);
+                                    test_R,true,
+                                    (*dists.begin()));
+            dists.insert(c4);
 
             // Model mirror
             double c5=edit_distance(model_mirror_tree,query_tree,
-                                    test_R,false,c4);
-            double c6=edit_distance(query_tree,model_mirror_tree,
-                                    test_R,true,c5);
-
-            dists.insert(c1);
-            dists.insert(c2);
-            dists.insert(c3);
-            dists.insert(c4);
+                                    test_R,false,
+                                    (*dists.begin()));
             dists.insert(c5);
+            double c6=edit_distance(query_tree,model_mirror_tree,
+                                    test_R,true,
+                                    (*dists.begin()));
             dists.insert(c6);
+
 
             ed_matrix(m,q)=(*dists.begin());
 
