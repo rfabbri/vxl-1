@@ -196,14 +196,26 @@ void dbskr_align_shapes::match()
             double model_scale_ratio=1.0;
             double query_scale_ratio=1.0;
             double test_R=scurve_matching_R_;
+
+            double model_sample_ds=scurve_sample_ds_;
+            double query_sample_ds=scurve_sample_ds_;
             
             if ( lambda_scaling_ )
             {
+                query_tree->clear_scurve_cache();
+                query_mirror_tree->clear_scurve_cache();
+
                 test_R=scurve_matching_R_*
                     vcl_sqrt(mean_area/lambda_area_);
                 model_scale_ratio = vcl_sqrt(mean_area/model_area);
                 query_scale_ratio = vcl_sqrt(mean_area/query_area);
 
+            
+                model_sample_ds=scurve_sample_ds_*vcl_sqrt(model_area
+                                                           /lambda_area_);
+                query_sample_ds=scurve_sample_ds_*vcl_sqrt(query_area
+                                                         /lambda_area_);
+                
             }
 
             
@@ -211,6 +223,9 @@ void dbskr_align_shapes::match()
 
             model_tree->set_R(test_R);
             query_tree->set_R(test_R);
+
+            model_tree->set_ds(model_sample_ds);
+            query_tree->set_ds(query_sample_ds);
 
             model_tree->set_scale_ratio(model_scale_ratio);
             query_tree->set_scale_ratio(query_scale_ratio);
@@ -224,6 +239,9 @@ void dbskr_align_shapes::match()
             
             model_mirror_tree->set_R(test_R);
             query_mirror_tree->set_R(test_R);
+
+            model_mirror_tree->set_ds(model_sample_ds);
+            query_mirror_tree->set_ds(query_sample_ds);
 
             model_mirror_tree->set_scale_ratio(model_scale_ratio);
             query_mirror_tree->set_scale_ratio(query_scale_ratio);

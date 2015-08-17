@@ -139,7 +139,11 @@ public:
 
   void set_R(double R){scurve_matching_R=R;}
 
+  void set_ds(float scurve_sample_ds){scurve_sample_ds_=scurve_sample_ds;}
+
   void set_scale_ratio(double scale_ratio){scale_ratio_=scale_ratio;}
+
+  void clear_scurve_cache(){  dart_path_scurve_map_.clear();};
 
   double get_scale_ratio(){return scale_ratio_;}
 
