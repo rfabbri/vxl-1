@@ -31,4 +31,5 @@ SUBDIRS( dbskfg )
 
 SUBDIRS( con_graph )
 
+SUBDIRS( shape_align )
 #SUBDIRS(lbnn)
