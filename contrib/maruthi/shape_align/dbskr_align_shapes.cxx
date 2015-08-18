@@ -82,11 +82,11 @@ dbskr_align_shapes::dbskr_align_shapes(
 //: Destructor
 dbskr_align_shapes::~dbskr_align_shapes() 
 {
-    for (unsigned int m=0; m < model_trees_.size() ; ++m)
-    {
-        model_trees_[m].first=0;
-        model_trees_[m].second=0;
-    }
+    // for (unsigned int m=0; m < model_trees_.size() ; ++m)
+    // {
+    //     model_trees_[m].first=0;
+    //     model_trees_[m].second=0;
+    // }
 }
 
 
@@ -168,11 +168,16 @@ void dbskr_align_shapes::match()
                                  query_trees_.size(),
                                  0.0);
 
-    for ( unsigned int m=0; m < model_trees_.size() ; ++m)
+    vcl_cout<<"Matching "<<model_trees_.size()<<" vs "<<
+            query_trees_.size()<<vcl_endl;
+
+    unsigned int m=0;
+    while (model_trees_.size())
     {
+        
         // Compute all pairs of edit distance
-        dbskr_tree_sptr model_tree=model_trees_[m].first;
-        dbskr_tree_sptr model_mirror_tree=model_trees_[m].second;
+        dbskr_tree_sptr model_tree=(*model_trees_.begin()).first;
+        dbskr_tree_sptr model_mirror_tree=(*model_trees_.begin()).second;
 
         for ( unsigned int q=0; q < query_trees_.size() ; ++q)
         {
@@ -372,8 +377,9 @@ void dbskr_align_shapes::match()
             map_list.clear();
         }
 
-        model_tree->unref();
-        model_mirror_tree->unref();
+        model_trees_.erase(model_trees_.begin());
+
+        ++m;
 
     }
 
