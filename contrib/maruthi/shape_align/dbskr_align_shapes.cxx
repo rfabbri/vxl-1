@@ -170,12 +170,6 @@ void dbskr_align_shapes::match()
 
     for ( unsigned int m=0; m < model_trees_.size() ; ++m)
     {
-        
-        // Clear out before we redo
-        curve_list1_.clear();
-        curve_list2_.clear();
-        map_list_.clear();
-
         // Compute all pairs of edit distance
         dbskr_tree_sptr model_tree=model_trees_[m].first;
         dbskr_tree_sptr model_mirror_tree=model_trees_[m].second;
@@ -183,6 +177,10 @@ void dbskr_align_shapes::match()
         for ( unsigned int q=0; q < query_trees_.size() ; ++q)
         {
             vcl_cout<<"Matching "<<m<<" to "<<q<<vcl_endl;
+
+            vcl_vector<dbskr_scurve_sptr> curve_list1;
+            vcl_vector<dbskr_scurve_sptr> curve_list2;
+            vcl_vector< vcl_vector < vcl_pair <int,int> > > map_list;
 
             dbskr_tree_sptr query_tree=query_trees_[q].first;
             dbskr_tree_sptr query_mirror_tree=query_trees_[q].second;
@@ -256,30 +254,50 @@ void dbskr_align_shapes::match()
             dists.insert(1.0e6);
 
             // No mirroring
-            double c1=edit_distance(model_tree,query_tree,test_R,false,
+            double c1=edit_distance(model_tree,query_tree,test_R,
+                                    curve_list1,
+                                    curve_list2,
+                                    map_list,
+                                    false,
                                     (*dists.begin()));
             dists.insert(c1);
-            double c2=edit_distance(query_tree,model_tree,test_R,true,
+            double c2=edit_distance(query_tree,model_tree,test_R,
+                                    curve_list1,
+                                    curve_list2,
+                                    map_list,
+                                    true,
                                     (*dists.begin()));
             dists.insert(c2);
             
             // Query mirror
-            double c3=edit_distance(model_tree,query_mirror_tree,
-                                    test_R,false,
+            double c3=edit_distance(model_tree,query_mirror_tree,test_R,
+                                    curve_list1,
+                                    curve_list2,
+                                    map_list,
+                                    false,
                                     (*dists.begin()));
             dists.insert(c3);
-            double c4=edit_distance(query_mirror_tree,model_tree,
-                                    test_R,true,
+            double c4=edit_distance(query_mirror_tree,model_tree,test_R,
+                                    curve_list1,
+                                    curve_list2,
+                                    map_list,
+                                    true,
                                     (*dists.begin()));
             dists.insert(c4);
 
             // Model mirror
-            double c5=edit_distance(model_mirror_tree,query_tree,
-                                    test_R,false,
+            double c5=edit_distance(model_mirror_tree,query_tree,test_R,
+                                    curve_list1,
+                                    curve_list2,
+                                    map_list,
+                                    false,
                                     (*dists.begin()));
             dists.insert(c5);
-            double c6=edit_distance(query_tree,model_mirror_tree,
-                                    test_R,true,
+            double c6=edit_distance(query_tree,model_mirror_tree,test_R,
+                                    curve_list1,
+                                    curve_list2,
+                                    map_list,
+                                    true,
                                     (*dists.begin()));
             dists.insert(c6);
 
@@ -297,6 +315,9 @@ void dbskr_align_shapes::match()
                     shape_alignment(poly,
                                     model_tree,
                                     query_mirror_tree,
+                                    curve_list1,
+                                    curve_list2,
+                                    map_list,
                                     output_binary_file);
                 }
                 else
@@ -304,6 +325,9 @@ void dbskr_align_shapes::match()
                     shape_alignment(poly,
                                     model_mirror_tree,
                                     query_tree,
+                                    curve_list1,
+                                    curve_list2,
+                                    map_list,
                                     output_binary_file);
                 
                 }
@@ -316,6 +340,9 @@ void dbskr_align_shapes::match()
                     shape_alignment(poly,
                                     model_mirror_tree,
                                     query_tree,
+                                    curve_list1,
+                                    curve_list2,
+                                    map_list,
                                     output_binary_file);
                 }
                 else
@@ -323,6 +350,9 @@ void dbskr_align_shapes::match()
                     shape_alignment(poly,
                                     model_tree,
                                     query_mirror_tree,
+                                    curve_list1,
+                                    curve_list2,
+                                    map_list,
                                     output_binary_file);
                 
                 }
@@ -330,9 +360,16 @@ void dbskr_align_shapes::match()
             }
             else
             {
-                shape_alignment(poly,model_tree,query_tree,output_binary_file);
+                shape_alignment(poly,model_tree,query_tree,
+                                curve_list1,
+                                curve_list2,
+                                map_list,
+                                output_binary_file);
             }
             
+            curve_list1.clear();
+            curve_list2.clear();
+            map_list.clear();
         }
 
         model_tree->unref();
@@ -792,11 +829,15 @@ double dbskr_align_shapes::compute_boundary(dbsk2d_shock_graph_sptr& sg,
 
 }
 //: Match
-double dbskr_align_shapes::edit_distance(dbskr_tree_sptr& tree1,
-                                         dbskr_tree_sptr& tree2,
-                                         float test_curve_matching_R,
-                                         bool switched,
-                                         double prev_distance)
+double dbskr_align_shapes::edit_distance(
+    dbskr_tree_sptr& tree1,
+    dbskr_tree_sptr& tree2,
+    float test_curve_matching_R,
+    vcl_vector<dbskr_scurve_sptr>& curve_list1,
+    vcl_vector<dbskr_scurve_sptr>& curve_list2,
+    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    bool switched,
+    double prev_distance)
 {
     //instantiate the edit distance algorithms
     dbskr_tree_edit edit(tree1, tree2,circular_ends_,localized_edit_);
@@ -829,14 +870,12 @@ double dbskr_align_shapes::edit_distance(dbskr_tree_sptr& tree1,
         //: Get path key
         vcl_vector< pathtable_key > path_map;
 
-        // First clear out what we have
-        curve_list1_.clear();
-        curve_list2_.clear();
-        map_list_.clear();
-
-        edit.get_correspondence(curve_list1_,
-                                curve_list2_,
-                                map_list_,
+        curve_list1.clear();
+        curve_list2.clear();
+        map_list.clear();
+        edit.get_correspondence(curve_list1,
+                                curve_list2,
+                                map_list,
                                 path_map);
         
         switched_=switched;
@@ -855,6 +894,9 @@ void dbskr_align_shapes::shape_alignment(
     vgl_polygon<double>& poly,
     dbskr_tree_sptr& model_tree,
     dbskr_tree_sptr& query_tree,
+    vcl_vector<dbskr_scurve_sptr>& curve_list1,
+    vcl_vector<dbskr_scurve_sptr>& curve_list2,
+    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
     vcl_ofstream& output_binary_file)
 {
 
@@ -878,9 +920,9 @@ void dbskr_align_shapes::shape_alignment(
 
             vgl_point_2d<double> mapping_pt=
                 find_part_correspondences_qm(query_pt,
-                                             curve_list1_,
-                                             curve_list2_,
-                                             map_list_,
+                                             curve_list1,
+                                             curve_list2,
+                                             map_list,
                                              switched_,
                                              query_width,
                                              model_tree

@@ -67,17 +67,6 @@ private:
     // Load all query shock files and keeps a mirrored version also
     vcl_vector< vcl_pair<dbskr_tree_sptr,dbskr_tree_sptr> > query_trees_;
 
-    // Keep track of correspondence
-
-    //: Curve list 1
-    vcl_vector<dbskr_scurve_sptr> curve_list1_;
-    
-    //: Curve list 2
-    vcl_vector<dbskr_scurve_sptr> curve_list2_;
-
-    //: Map points from curve list 1 to curve list 2
-    vcl_vector< vcl_vector < vcl_pair <int,int> > > map_list_;
-
     //: keep track of query polygons
     vcl_vector<vgl_polygon<double> > query_polygons_;
 
@@ -114,16 +103,23 @@ private:
                             vgl_polygon<double>& final_poly);
 
     // Private matching
-    double edit_distance(dbskr_tree_sptr& tree1,dbskr_tree_sptr& tree2,
-                         float test_curve_matching_R,
-                         bool switched=false,
-                         double prev_distance=1.0e6);
+    double edit_distance(
+        dbskr_tree_sptr& tree1,dbskr_tree_sptr& tree2,
+        float test_curve_matching_R,
+        vcl_vector<dbskr_scurve_sptr>& curve_list1,
+        vcl_vector<dbskr_scurve_sptr>& curve_list2,
+        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+        bool switched=false,
+        double prev_distance=1.0e6);
 
     // Get dense correspondence between two shapes
     void shape_alignment(
         vgl_polygon<double>& query_poly,
         dbskr_tree_sptr& model_tree,
         dbskr_tree_sptr& query_tree,
+        vcl_vector<dbskr_scurve_sptr>& curve_list1,
+        vcl_vector<dbskr_scurve_sptr>& curve_list2,
+        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list, 
         vcl_ofstream& output_binary_file);
 
     vgl_point_2d<double> find_part_correspondences_qm(
