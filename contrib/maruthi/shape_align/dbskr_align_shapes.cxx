@@ -387,7 +387,7 @@ void dbskr_align_shapes::match()
     output_binary_file.close();
 
     // Write out shape matrix
-    vcl_ofstream file(shape_matrix_file_);
+    vcl_ofstream file(shape_matrix_file_.c_str());
     ed_matrix.print(file);
     file.close();
     
