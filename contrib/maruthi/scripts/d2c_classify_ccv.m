@@ -6,7 +6,7 @@ run /users/mnarayan/vlfeat-0.9.20/toolbox/vl_setup
 
 colorspace=1;
 scales=[4 8 12 16];
-
+alpha=0.5;
 
 load /users/mnarayan/scratch/fgc_shape_align/train_data/training_pca_128_gmm_512.mat
 
@@ -26,7 +26,7 @@ orig_image(:,:,1)=orig_image(:,:,1).*mask+mask_complement;
 orig_image(:,:,2)=orig_image(:,:,2).*mask+mask_complement;
 orig_image(:,:,3)=orig_image(:,:,3).*mask+mask_complement;
    
-query_fvs=compute_color_sift_pca_fv(orig_image,data.sampled_points,colorspace,scales,means,covariances,priors,mapping);
+query_fvs=compute_color_sift_pca_fv(orig_image,data.sampled_points,colorspace,scales,means,covariances,priors,mapping,alpha);
 
 fields=fieldnames(data.output);
 d2c=zeros(length(fields),1);
@@ -38,7 +38,7 @@ for f=1:length(fields)
     
     for s=1:size(values,2)
         orig_image=uint8(values{s});
-        test_fvs=compute_color_sift_pca_fv(orig_image,data.sampled_points,colorspace,scales,means,covariances,priors,mapping);
+        test_fvs=compute_color_sift_pca_fv(orig_image,data.sampled_points,colorspace,scales,means,covariances,priors,mapping,alpha);
         l2dist=sum((query_fvs-test_fvs).^2,1);
         temp_data(s,:)=l2dist;
         
@@ -53,7 +53,7 @@ save([name '_d2c.mat'],'d2c');
 
 
 
-function fvs=compute_color_sift_pca_fv(orig_image,sampled_points,colorspace,scales,means,covariances,priors,mapping)
+function fvs=compute_color_sift_pca_fv(orig_image,sampled_points,colorspace,scales,means,covariances,priors,mapping,alpha)
 
 
 [L,a,b] = RGB2Lab(orig_image(:,:,1),orig_image(:,:,2),orig_image(:,:,3));
@@ -131,5 +131,7 @@ fvs=zeros(2*numel(covariances),size(sampled_points,1));
 for b=1:size(sampled_points,1)
     
     set=color_sifts(:,b:size(sampled_points,1):end); 
-    fvs(:,b)=vl_fisher(set,means,covariances,priors,'Improved');
+    raw=vl_fisher(set,means,covariances,priors);
+    pln=sign(raw).*(abs(raw).^alpha);
+    fvs(:,b)=pln./norm(pln);
 end
