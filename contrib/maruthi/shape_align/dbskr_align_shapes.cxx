@@ -193,6 +193,10 @@ void dbskr_align_shapes::match()
         {
             vcl_cout<<"Matching "<<m<<" to "<<q<<vcl_endl;
 
+            // To clear out for next query to compare to
+            model_tree->clear_scurve_cache();
+            model_mirror_tree->clear_scurve_cache();
+
             vcl_vector<dbskr_scurve_sptr> curve_list1;
             vcl_vector<dbskr_scurve_sptr> curve_list2;
             vcl_vector< vcl_vector < vcl_pair <int,int> > > map_list;
