@@ -6,7 +6,10 @@ run /users/mnarayan/vlfeat-0.9.20/toolbox/vl_setup
 
 colorspace=1;
 scales=[4 8 12 16];
-alpha=0.5;
+alpha=0.1;
+
+data_color=load('/users/mnarayan/scratch/fgc_shape_align/train_data/training_color_norm_pca_48_gmm_512.mat');
+color_scale=8;
 
 load /users/mnarayan/scratch/fgc_shape_align/train_data/training_pca_128_gmm_512.mat
 
@@ -27,29 +30,41 @@ orig_image(:,:,2)=orig_image(:,:,2).*mask+mask_complement;
 orig_image(:,:,3)=orig_image(:,:,3).*mask+mask_complement;
    
 query_fvs=compute_color_sift_pca_fv(orig_image,data.sampled_points,colorspace,scales,means,covariances,priors,mapping,alpha);
-
+query_color_fvs=compute_color_descrs(orig_image,data.sampled_points,colorspace,color_scale,data_color.means,...
+       data_color.covariances,data_color.priors,data_color.mapping,alpha);
+   
 fields=fieldnames(data.output);
 d2c=zeros(length(fields),1);
+
+d2c_mats=cell(length(fields),2);
 
 for f=1:length(fields)
     values=getfield(data.output,fields{f});
     
-    temp_data=zeros(size(values,2),size(data.sampled_points,1));
+    temp_data_grad=zeros(size(values,2),size(data.sampled_points,1));
+    temp_data_color=zeros(size(values,2),size(data.sampled_points,1));
     
     for s=1:size(values,2)
         orig_image=uint8(values{s});
         test_fvs=compute_color_sift_pca_fv(orig_image,data.sampled_points,colorspace,scales,means,covariances,priors,mapping,alpha);
+        test_color_fvs=compute_color_descrs(orig_image,data.sampled_points,colorspace,color_scale,data_color.means,...
+            data_color.covariances,data_color.priors,data_color.mapping,alpha);
         l2dist=sum((query_fvs-test_fvs).^2,1);
-        temp_data(s,:)=l2dist;
+        l2color_dist=sum((query_color_fvs-test_color_fvs).^2,1);
+        temp_data_grad(s,:)=l2dist;
+        temp_data_color(s,:)=l2color_dist;
+        
         
     end
     
+    d2c_mats{f,1}=temp_data_grad;
+    d2c_mats{f,2}=temp_data_color;
     
-    d2c(f,1)=sum(min(temp_data,[],1));
+    %d2c(f,1)=sum(min(temp_data,[],1));
     
 end
 
-save([name '_d2c.mat'],'d2c');
+save([name '_d2c.mat'],'d2c_mats');
 
 
 
@@ -134,4 +149,41 @@ for b=1:size(sampled_points,1)
     raw=vl_fisher(set,means,covariances,priors);
     pln=sign(raw).*(abs(raw).^alpha);
     fvs(:,b)=pln./norm(pln);
+end
+
+
+function [fvs]=compute_color_descrs(orig_image,sampled_points,colorspace,scales,means,covariances,priors,mapping,alpha)
+
+
+%[L,a,b] = RGB2Lab(orig_image(:,:,1),orig_image(:,:,2),orig_image(:,:,3));
+
+L=orig_image(:,:,1);
+a=orig_image(:,:,2);
+b=orig_image(:,:,3);
+
+fvs=zeros(2*numel(covariances),size(sampled_points,1));
+
+
+index=1;
+
+for s=1:length(scales)
+    
+    for d=1:size(sampled_points(:,1))
+        
+        keypoint=[sampled_points(d,2) sampled_points(d,1)];
+        cv=sample_keypoint(keypoint,scales(s),L,a,b);
+        
+        
+        color_cvs=cv-repmat(mapping.mean',[1 size(cv,2)]);
+        color_cvs=mapping.M.'*color_cvs;
+        
+        
+        raw=vl_fisher(color_cvs,means,covariances,priors);
+        pln=sign(raw).*(abs(raw).^alpha);
+    
+        fvs(:,index)=pln./norm(pln);
+        
+        index=index+1;
+    end
+    
 end
