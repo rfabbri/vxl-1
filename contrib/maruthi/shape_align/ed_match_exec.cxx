@@ -18,6 +18,7 @@ void print_usage()
     vcl_cout<<" -r: R weights the bending and stretching costs"<<vcl_endl;
     vcl_cout<<" -l: Perform lambda scaling (1,0)"<<vcl_endl;
     vcl_cout<<" -a: Area in units of pixesl to scale all shapes to will do if -l equals 1"<<vcl_endl;
+    vcl_cout<<" -d: Whether to save out dense correspondence , default is true"<<vcl_endl;
     vcl_cout<<" -h: Help,prints out usage"<<vcl_endl;
 
 }
@@ -34,7 +35,7 @@ int main( int argc, char *argv[] )
 
     vcl_string mfile,qfile;
 
-    vcl_stringstream ds_stream,r_stream,l_stream,a_stream;
+    vcl_stringstream ds_stream,r_stream,l_stream,a_stream,d_stream;
 
     bool elastic_splice_cost    = false; 
     float scurve_sample_ds      = 5.0f; 
@@ -46,8 +47,9 @@ int main( int argc, char *argv[] )
     bool use_approx             = true;
     bool lambda_scaling         = false;
     double lambda_area          = 10000;
+    bool save_dc                = true;
 
-    while ((c = getopt(argc, argv, "m:q:s:r:l:a:h")) != -1)
+    while ((c = getopt(argc, argv, "m:q:s:r:l:a:d:h")) != -1)
     {
         switch (c) 
         {
@@ -73,6 +75,10 @@ int main( int argc, char *argv[] )
             a_stream<<optarg;
             a_stream>>lambda_area;
             break;
+        case 'd':
+            d_stream<<optarg;
+            d_stream>>save_dc;
+            break;
         case 'h':
             print_usage();
             exit(0);
@@ -93,6 +99,11 @@ int main( int argc, char *argv[] )
                 <<" pixels"<<vcl_endl;
     }
 
+    if ( save_dc )
+    {
+        vcl_cout<<"Also saving out Dense Correspondence"<<vcl_endl;
+    }
+    
     vcl_cout<<vcl_endl;
 
     vul_timer t;
@@ -101,13 +112,14 @@ int main( int argc, char *argv[] )
     dbskr_align_shapes matcher(mfile,
                                qfile,
                                elastic_splice_cost    ,
-                               scurve_sample_ds      ,
-                               scurve_interpolate_ds ,
+                               scurve_sample_ds       ,
+                               scurve_interpolate_ds  ,
                                localized_edit         ,
-                               scurve_matching_R    ,
+                               scurve_matching_R      ,
                                circular_ends          ,
                                combined_edit          ,
                                use_approx             ,
+                               save_dc                ,
                                lambda_scaling         ,
                                lambda_area);
 

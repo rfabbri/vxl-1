@@ -37,6 +37,7 @@ dbskr_align_shapes::dbskr_align_shapes(
     bool circular_ends,
     bool combined_edit,
     bool use_approx,
+    bool save_dc,
     bool lambda_scaling,
     double lambda_area
 ):elastic_splice_cost_(elastic_splice_cost),
@@ -47,6 +48,7 @@ dbskr_align_shapes::dbskr_align_shapes(
   circular_ends_(circular_ends),
   combined_edit_(combined_edit),
   use_approx_(use_approx),
+  save_dc_(save_dc),
   lambda_scaling_(lambda_scaling),
   lambda_area_(lambda_area),
   switched_(false),
@@ -73,10 +75,12 @@ dbskr_align_shapes::dbskr_align_shapes(
         "_shape_align.bin";
     
     vcl_cout<<"Writing out shape matrix to "<<shape_matrix_file_<<vcl_endl;
-    vcl_cout<<"Writing out shape alignment to "<<dc_file_<<vcl_endl;
 
-    set_up_dc_file();
-    
+    if ( save_dc_ )
+    {
+        vcl_cout<<"Writing out shape alignment to "<<dc_file_<<vcl_endl;
+        set_up_dc_file();
+    }
 }
 
 //: Destructor
@@ -157,11 +161,17 @@ void dbskr_align_shapes::set_up_dc_file()
 void dbskr_align_shapes::match()
 {
     // Match
+    
     vcl_ofstream output_binary_file;
-    output_binary_file.open(dc_file_.c_str(),
-                            vcl_ios::out |
-                            vcl_ios::app |
-                            vcl_ios::binary);
+
+    if ( save_dc_ )
+    {
+
+        output_binary_file.open(dc_file_.c_str(),
+                                vcl_ios::out |
+                                vcl_ios::app |
+                                vcl_ios::binary);
+    }
 
     // Lets keep output in a matrix
     vnl_matrix<double> ed_matrix(model_trees_.size(),
@@ -312,66 +322,67 @@ void dbskr_align_shapes::match()
             // Perform shape alignment
             vgl_polygon<double> poly=query_polygons_[q];
 
-
-            if ( tree1_mirror_ )
+            if ( save_dc_ )
             {
-                if ( switched_ )
+                if ( tree1_mirror_ )
                 {
-                    shape_alignment(poly,
-                                    model_tree,
-                                    query_mirror_tree,
-                                    curve_list1,
-                                    curve_list2,
-                                    map_list,
-                                    output_binary_file);
+                    if ( switched_ )
+                    {
+                        shape_alignment(poly,
+                                        model_tree,
+                                        query_mirror_tree,
+                                        curve_list1,
+                                        curve_list2,
+                                        map_list,
+                                        output_binary_file);
+                    }
+                    else
+                    {
+                        shape_alignment(poly,
+                                        model_mirror_tree,
+                                        query_tree,
+                                        curve_list1,
+                                        curve_list2,
+                                        map_list,
+                                        output_binary_file);
+                
+                    }
+                }
+                else if ( tree2_mirror_ )
+                {
+                
+                    if ( switched_ )
+                    {
+                        shape_alignment(poly,
+                                        model_mirror_tree,
+                                        query_tree,
+                                        curve_list1,
+                                        curve_list2,
+                                        map_list,
+                                        output_binary_file);
+                    }
+                    else
+                    {
+                        shape_alignment(poly,
+                                        model_tree,
+                                        query_mirror_tree,
+                                        curve_list1,
+                                        curve_list2,
+                                        map_list,
+                                        output_binary_file);
+                
+                    }
+            
                 }
                 else
                 {
-                    shape_alignment(poly,
-                                    model_mirror_tree,
-                                    query_tree,
-                                    curve_list1,
-                                    curve_list2,
-                                    map_list,
-                                    output_binary_file);
-                
-                }
-            }
-            else if ( tree2_mirror_ )
-            {
-                
-                if ( switched_ )
-                {
-                    shape_alignment(poly,
-                                    model_mirror_tree,
-                                    query_tree,
+                    shape_alignment(poly,model_tree,query_tree,
                                     curve_list1,
                                     curve_list2,
                                     map_list,
                                     output_binary_file);
                 }
-                else
-                {
-                    shape_alignment(poly,
-                                    model_tree,
-                                    query_mirror_tree,
-                                    curve_list1,
-                                    curve_list2,
-                                    map_list,
-                                    output_binary_file);
-                
-                }
-            
             }
-            else
-            {
-                shape_alignment(poly,model_tree,query_tree,
-                                curve_list1,
-                                curve_list2,
-                                map_list,
-                                output_binary_file);
-            }
-            
             curve_list1.clear();
             curve_list2.clear();
             map_list.clear();
@@ -384,7 +395,10 @@ void dbskr_align_shapes::match()
     }
 
     // close dc file
-    output_binary_file.close();
+    if ( save_dc_ )
+    {
+        output_binary_file.close();
+    }
 
     // Write out shape matrix
     vcl_ofstream file(shape_matrix_file_.c_str());
