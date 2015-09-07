@@ -130,7 +130,11 @@ private:
     void expand_node(
         dbsk2d_containment_node_sptr& node,
         vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_node*> >
-                     & outer_shock_nodes);
+        & outer_shock_nodes,
+        vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >
+        & degree_three_nodes,
+        vcl_map<int,vcl_vector<dbsk2d_ishock_belm*> >
+        & degree_three_links);
 
     // find node at this depth in graph
     bool find_node_in_cgraph(unsigned int current_depth,

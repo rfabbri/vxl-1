@@ -226,7 +226,8 @@ public:
                                      region_contour_ids.end(),
                                      con_insert);
                 
-                if ( cont.size() >= compare )
+                int cont_size=cont.size();
+                if ( cont_size >= compare )
                 {
                     rag_nodes_matched.insert((*it).first);
                 }

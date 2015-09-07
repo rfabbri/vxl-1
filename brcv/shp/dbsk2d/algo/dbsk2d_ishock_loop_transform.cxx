@@ -328,6 +328,15 @@ void dbsk2d_ishock_loop_transform::detect_contour(
             break;
         }
     }
+
+    if ( first_link )
+    {
+        if ( contour_pair_.second->nLinkedElms()< 6 )
+        {
+            valid_transform_=false;
+        }
+    }
+
 }
 
 //: remove boundary element
@@ -749,26 +758,41 @@ bool dbsk2d_ishock_loop_transform::reinsert_contour()
         if ( (*it).second->is_a_line())
         {
             dbsk2d_ishock_bline* bline = (dbsk2d_ishock_bline*)((*it).second);
-            dbsk2d_ishock_belm* bpoint=0;
+            dbsk2d_ishock_belm* bpoint_spt=0;
+            dbsk2d_ishock_belm* bpoint_ept=0;
+
             if ( higher_degree_nodes_.count(bline->s_pt()->id()))
             {
-                bpoint=higher_degree_nodes_[bline->s_pt()->id()];
-            }
-            else if ( higher_degree_nodes_.count(bline->e_pt()->id()))
-            {
-                bpoint=higher_degree_nodes_[bline->e_pt()->id()];
+                bpoint_spt=higher_degree_nodes_[bline->s_pt()->id()];
             }
 
-            if ( bpoint)
+            if ( higher_degree_nodes_.count(bline->e_pt()->id()))
+            {
+                bpoint_ept=higher_degree_nodes_[bline->e_pt()->id()];
+            }
+
+            if ( bpoint_spt )
             {
                 dbsk2d_ishock_bpoint* degree_three=
-                    (dbsk2d_ishock_bpoint*)bpoint;
+                    (dbsk2d_ishock_bpoint*)bpoint_spt;
                 degree_three->connectTo((*it).second);
                 vcl_pair<dbsk2d_ishock_belm*,dbsk2d_ishock_bpoint*>
                     pair(bline,degree_three);
                 junction_contacts.push_back(pair);
 
             }
+
+            if ( bpoint_ept )
+            {
+                dbsk2d_ishock_bpoint* degree_three=
+                    (dbsk2d_ishock_bpoint*)bpoint_ept;
+                degree_three->connectTo((*it).second);
+                vcl_pair<dbsk2d_ishock_belm*,dbsk2d_ishock_bpoint*>
+                    pair(bline,degree_three);
+                junction_contacts.push_back(pair);
+
+            }
+
         }
     }
     
