@@ -68,8 +68,6 @@ void dbsk2d_containment_graph::construct_graph()
         region_belms_ids=grouper.get_region_belms_ids();
     vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >
         degree_three_nodes = grouper.get_degree_three_nodes();
-    vcl_map<int,vcl_vector<dbsk2d_ishock_belm*> >
-        degree_three_links;
 
     vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >::iterator it;
     for ( it = frag_edges.begin() ; it != frag_edges.end() ; ++it)
@@ -104,9 +102,11 @@ void dbsk2d_containment_graph::construct_graph()
                 local_map[0].push_back(nodes[j]);
             }
 
+            vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >
+                degree_three_links;
+
             // Find links to consider for degree three
             {
-            
                 vcl_vector<dbsk2d_ishock_belm*> d3_nodes=
                     degree_three_nodes[(*it).first];
                 vcl_set<int> id_set=region_belms_ids[(*it).first];
@@ -122,7 +122,7 @@ void dbsk2d_containment_graph::construct_graph()
                         int id=(*curB)->id();
                         if ( id_set.count(id))
                         {
-                            degree_three_links[node->id()].push_back(*curB);
+                            degree_three_links[(*it).first].push_back(*curB);
                         }
                         
                     }
@@ -252,7 +252,6 @@ void dbsk2d_containment_graph::construct_graph()
                 
 
             }
- 
         }
     }
 
@@ -389,7 +388,7 @@ void dbsk2d_containment_graph::construct_graph()
             frag_extra_belms = grouper.get_region_belms();
         vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >
             degree_three_nodes = grouper.get_degree_three_nodes();
-        vcl_map<int,vcl_vector<dbsk2d_ishock_belm*> >
+        vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >
             degree_three_links;
        
         vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >::iterator it;
@@ -431,7 +430,7 @@ void dbsk2d_containment_graph::construct_graph()
                         int id=(*curB)->id();
                         if ( id_set.count(id))
                         {
-                            degree_three_links[node->id()].push_back(*curB);
+                            degree_three_links[(*it).first].push_back(*curB);
                         }
                         
                     }
@@ -653,7 +652,7 @@ void dbsk2d_containment_graph::expand_node(
     dbsk2d_containment_node_sptr& node,
     vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_node*> >& outer_shock_nodes,
     vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >& degree_three_nodes,
-    vcl_map<int,vcl_vector<dbsk2d_ishock_belm*> >& degree_three_links
+    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >& degree_three_links
 )
 {
 
@@ -916,6 +915,8 @@ void dbsk2d_containment_graph::expand_node(
         }
     }       
 
+    vcl_map<vcl_set<int>,int> deg_three_loops;
+
     vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >::iterator dit;
     for ( dit = degree_three_nodes.begin() ; dit != degree_three_nodes.end();
           ++dit)
@@ -927,44 +928,42 @@ void dbsk2d_containment_graph::expand_node(
             dbsk2d_ishock_bpoint* junction_node = 
                 dynamic_cast<dbsk2d_ishock_bpoint*>(d3_nodes[d]);
 
-            if ( degree_three_links.count(junction_node->id()))
+            if ( degree_three_links.count((*dit).first))
             {
                 vcl_vector<dbsk2d_ishock_belm*> links=
-                    degree_three_links[junction_node->id()];
+                    degree_three_links[(*dit).first];
 
                 for ( unsigned int l=0; l < links.size() ; ++l)
                 {
+                    dbsk2d_ishock_belm* test = junction_node
+                        ->getElmToTheRightOf(links[l]);
+                    
+                    if ( !test )
+                    {
+                        continue;
+                    }
+                    
                     vcl_set<int> local_copy(belms_key);
-
+                    
                     dbsk2d_ishock_transform_sptr trans_loop1 = new 
                         dbsk2d_ishock_loop_transform(ishock_graph_,
                                                      junction_node,
                                                      links[l]);
+           
+                    trans_loop1->get_belms(local_copy);
 
-                    vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*>
-                        contour_pair=trans_loop1->get_contour_pair();
-                    
-                    vcl_pair<int,int> lp1(contour_pair.first->id(),
-                                          contour_pair.second->id());
-                    
-                    vcl_pair<int,int> lp2(contour_pair.second->id(),
-                                          contour_pair.first->id());
-                    
-                    if ( loop_pairs.count(lp1) || loop_pairs.count(lp2))
+                    if ( deg_three_loops.count(local_copy) )
                     {
                         trans_loop1=0;
                         continue;
                     }
                     
-                    loop_pairs.insert(lp1);
-                    loop_pairs.insert(lp2); 
+                    deg_three_loops[local_copy]=1;
                     
-                    trans_loop1->get_belms(local_copy);
-
                     bool flag=find_node_in_cgraph(current_depth,
                                                   node,
                                                   local_copy);
-                    
+
                     if ( !flag && trans_loop1->valid_transform() )
                     {
 

@@ -133,7 +133,7 @@ private:
         & outer_shock_nodes,
         vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >
         & degree_three_nodes,
-        vcl_map<int,vcl_vector<dbsk2d_ishock_belm*> >
+        vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_belm*> >
         & degree_three_links);
 
     // find node at this depth in graph
