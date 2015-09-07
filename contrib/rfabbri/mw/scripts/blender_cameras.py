@@ -12,6 +12,22 @@
 
 import bpy
 
+
+#------------------------------------------------------------------------
+# 3x4 P matrix to Blender camera
+#
+#
+# See libmv/src/ui/tvr/tvr_document.h for the inverse,
+# sfm2blender_camera
+# 
+# Relevant branches: blender:multiview, libmv_prediction, 
+#
+#
+
+def blender2sfm_camera(camd):
+
+#------------------------------------------------------------------------
+
 s = "2- time: sunset"
 
 def view_plane(camd, winx, winy, xasp, yasp):    
@@ -114,7 +130,8 @@ def projection_matrix(camd):
     mat[2][3] = -1
     mat[3][2] = (-2 * nearClip * farClip) / Zdelta
 
-    return sum([c for c in mat], [])
+    return mat
+#    return sum([c for c in mat], [])
 
 def next_frame():
     bpy.data.scenes[s].frame_set(bpy.data.scenes[s].frame_current+1)
@@ -123,14 +140,14 @@ def set_frame(i):
     bpy.data.scenes[s].frame_set(i)
 
 def get_cam():
-    return projection_matrix(bpy.data.objects['Camera.004'].matrix_world)
+    return projection_matrix(bpy.data.objects['Camera.004'].data)
 
 if __name__ == "__main__":
     set_frame(1)
-
-# for i in range(1,101)
-    # Extrinsic transform matrix
 #    pm = get_cam()
+#     for i in range(1,101)
+        # Extrinsic transform matrix
+#         pm = get_cam()
 
     # Advance animation frame
 ##    next_frame()
