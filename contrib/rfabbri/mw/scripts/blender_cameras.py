@@ -9,6 +9,11 @@
 #
 # Then run this script. It will play frame by frame and export the 3x4 camera
 # matrix for that frame, among other things.
+#
+# Run with:
+#
+#filename = "/Users/rfabbri/cprg/vxlprg/lemsvxl/contrib/rfabbri/mw/scripts/blender_cameras.py"
+#exec(compile(open(filename).read(), filename, 'exec'))
 
 import bpy
 import bpy_extras
@@ -76,10 +81,12 @@ def get_3x4_RT_matrix_from_blender(cam):
 
     # Transpose since the rotation is object rotation, and we want coordinate
     # rotation
-    R_world2bcam = cam.rotation_euler.to_matrix().transposed()
+    # R_world2bcam = cam.rotation_euler.to_matrix().transposed()
+    location, rotation = cam.matrix_world.decompose()[0:2]
+    R_world2bcam = rotation.to_matrix().transposed()
 
     # Convert camera location to translation vector used in coordinate changes
-    T_world2bcam = -1*R_world2bcam*cam.location
+    T_world2bcam = -1*R_world2bcam * location
 
     # Build the coordinate transform matrix from world to computer vision camera
     R_world2cv = R_bcam2cv*R_world2bcam
@@ -229,13 +236,16 @@ def projection_matrix(camd):
 #    return sum([c for c in mat], [])
 
 def next_frame():
-    bpy.data.scenes[s].frame_set(bpy.data.scenes[s].frame_current+1)
+#    bpy.data.scenes[s].frame_set(bpy.data.scenes[s].frame_current+1)
+     bpy.context.scene.frame_set(bpy.context.scene.frame_current + 1)
 
 def set_frame(i):
-    bpy.data.scenes[s].frame_set(i)
+#     bpy.data.scenes[s].frame_set(i)
+     bpy.context.scene.frame_set(i)
 
 def get_cam():
-    return projection_matrix(bpy.data.objects['Camera.004'].data)
+    return get_3x4_P_matrix_from_blender(bpy.context.object)[0]
+#    return get_3x4_P_matrix_from_blender(bpy.data.objects['Camera.004'])[0]
 
 # ----------------------------------------------------------------------------
 def test():
@@ -289,6 +299,7 @@ def test():
     
 if __name__ == "__main__":
     set_frame(1)
+#    test()
     for i in range(1,101):
         # Extrinsic transform matrix
         pm = get_cam()
