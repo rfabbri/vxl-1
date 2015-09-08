@@ -11,9 +11,8 @@
 # matrix for that frame, among other things.
 
 import bpy
-
+import bpy_extras
 import numpy
-
 from mathutils import Matrix
 
 #------------------------------------------------------------------------
@@ -83,6 +82,28 @@ def get_3x4_P_matrix_from_blender(cam):
     K = get_calibration_matrix_K_from_blender(cam.data)
     RT = get_3x4_RT_matrix_from_blender(cam)
     return K*RT, K, RT
+
+
+#------------------------------------------------------------------------
+# From http://blender.stackexchange.com/questions/882/how-to-find-image-coordinates-of-the-rendered-vertex?lq=1
+def project_by_object_utils(cam, point):
+    scene = bpy.context.scene
+    # obj = bpy.context.object
+    # co = bpy.context.scene.cursor_location
+    co_2d = bpy_extras.object_utils.world_to_camera_view(scene, cam, point)
+    # print("2D Coords:", co_2d)
+
+    # If you want pixel coords
+    render_scale = scene.render.resolution_percentage / 100
+    render_size = (
+            int(scene.render.resolution_x * render_scale),
+            int(scene.render.resolution_y * render_scale),
+            )
+    return Vector((co_2d.x * render_size[0], render_size[1] - co_2d.y * render_size[1]))
+#     print("Pixel Coords:", (
+#           round(co_2d.x * render_size[0]),
+#           round(co_2d.y * render_size[1]),
+#           ))
 
 
 #------------------------------------------------------------------------
@@ -233,21 +254,29 @@ if __name__ == "__main__":
     p1 /= p1[2]
     print("Projected e1")
     print(p1)
+    print("proj by object_utils")
+    print(project_by_object_utils(cam, Vector(e1[0:3])))
 
     p2 = P * e2
     p2 /= p2[2]
     print("Projected e2")
     print(p2)
+    print("proj by object_utils")
+    print(project_by_object_utils(cam, Vector(e2[0:3])))
 
     p3 = P * e3
     p3 /= p3[2]
     print("Projected e3")
     print(p3)
+    print("proj by object_utils")
+    print(project_by_object_utils(cam, Vector(e3[0:3])))
 
     pO = P * O
     pO /= pO[2]
     print("Projected world origin")
     print(pO)
+    print("proj by object_utils")
+    print(project_by_object_utils(cam, Vector(O[0:3])))
 
     nP = numpy.matrix(P)
 
