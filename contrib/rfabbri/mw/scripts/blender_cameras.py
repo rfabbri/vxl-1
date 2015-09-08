@@ -17,16 +17,16 @@ from mathutils import Matrix
 
 #------------------------------------------------------------------------
 # 3x4 P matrix to Blender camera
-#
-#
-# See libmv/src/ui/tvr/tvr_document.h for the inverse,
-# sfm2blender_camera
-# 
-# Relevant branches: blender:multiview, libmv_prediction, 
-#
-#
 
 
+# Build intrinsic camera parameters from Blender camera data
+#
+# See notes on this in 
+# blender.stackexchange.com/questions/15102/what-is-blenders-camera-projection-matrix-model
+#
+# Minor notes:
+#   See also libmv/src/ui/tvr/tvr_document.h for the inverse
+#   Some relevant blender branches: blender:multiview, libmv_prediction
 def get_calibration_matrix_K_from_blender(camd):
     f_in_mm = camd.lens
     scene = bpy.context.scene
@@ -54,6 +54,19 @@ def get_calibration_matrix_K_from_blender(camd):
         (    0  , 0,        1 )))
     return K
 
+# Returns camera rotation and translation matrices from Blender.
+# 
+# There are 3 coordinate systems involved:
+#    * The World coordinates: "world"
+#       - right-handed
+#    * The Blender camera coordinates: "bcam"
+#       - x is horizontal
+#       - y is up
+#       - right-handed: negative z look-at direction
+#    * The desired computer vision camera coordinates: "cv"
+#       - x is horizontal
+#       - y is down (to align to the actual pixel coordinates used in digital images)
+#       - right-handed: positive z look-at direction
 def get_3x4_RT_matrix_from_blender(cam):
     # bcam stands for blender camera
     R_bcam2cv = Matrix(
@@ -61,12 +74,14 @@ def get_3x4_RT_matrix_from_blender(cam):
          (0, -1, 0),
          (0, 0, -1)))
 
+    # Transpose since the rotation is object rotation, and we want coordinate
+    # rotation
     R_world2bcam = cam.rotation_euler.to_matrix().transposed()
 
-    # location.to_translation() ?
-
+    # Convert camera location to translation vector used in coordinate changes
     T_world2bcam = -1*R_world2bcam*cam.location
 
+    # Build the coordinate transform matrix from world to computer vision camera
     R_world2cv = R_bcam2cv*R_world2bcam
     T_world2cv = R_bcam2cv*T_world2bcam
 
@@ -222,20 +237,8 @@ def set_frame(i):
 def get_cam():
     return projection_matrix(bpy.data.objects['Camera.004'].data)
 
+# ----------------------------------------------------------------------------
 if __name__ == "__main__":
-#    set_frame(1)
-#    pm = get_cam()
-#     for i in range(1,101)
-        # Extrinsic transform matrix
-#         pm = get_cam()
-
-    # Advance animation frame
-##    next_frame()
-
-    #K = get_K(bpy.data.objects['Camera.001'].data)
-
-    #print(K[:])
-    
     cam = bpy.data.objects['Camera.001']
     P, K, RT = get_3x4_P_matrix_from_blender(cam)
     print("K")
@@ -245,6 +248,7 @@ if __name__ == "__main__":
     print("P")
     print(P)
 
+    print("==== Tests ====")
     e1 = Vector((1, 0,    0, 1))
     e2 = Vector((0, 1,    0, 1))
     e3 = Vector((0, 0,    1, 1))
@@ -278,6 +282,21 @@ if __name__ == "__main__":
     print("proj by object_utils")
     print(project_by_object_utils(cam, Vector(O[0:3])))
 
-    nP = numpy.matrix(P)
 
-    numpy.savetxt("/tmp/bla2", nP) #, fmt='%.2f')
+    # save the 3x4 P matrix into a plain text file
+    nP = numpy.matrix(P)
+    numpy.savetxt("/tmp/P3x4.txt", nP)  # to select precision, use e.g. fmt='%.2f'
+
+#    set_frame(1)
+#    pm = get_cam()
+#     for i in range(1,101)
+        # Extrinsic transform matrix
+#         pm = get_cam()
+
+    # Advance animation frame
+##    next_frame()
+
+    #K = get_K(bpy.data.objects['Camera.001'].data)
+
+    #print(K[:])
+    
