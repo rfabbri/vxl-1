@@ -238,7 +238,7 @@ def get_cam():
     return projection_matrix(bpy.data.objects['Camera.004'].data)
 
 # ----------------------------------------------------------------------------
-if __name__ == "__main__":
+def test():
     cam = bpy.data.objects['Camera.001']
     P, K, RT = get_3x4_P_matrix_from_blender(cam)
     print("K")
@@ -286,17 +286,15 @@ if __name__ == "__main__":
     # save the 3x4 P matrix into a plain text file
     nP = numpy.matrix(P)
     numpy.savetxt("/tmp/P3x4.txt", nP)  # to select precision, use e.g. fmt='%.2f'
-
-#    set_frame(1)
-#    pm = get_cam()
-#     for i in range(1,101)
-        # Extrinsic transform matrix
-#         pm = get_cam()
-
-    # Advance animation frame
-##    next_frame()
-
-    #K = get_K(bpy.data.objects['Camera.001'].data)
-
-    #print(K[:])
     
+if __name__ == "__main__":
+    set_frame(1)
+    for i in range(1,101):
+        # Extrinsic transform matrix
+        pm = get_cam()
+        nP = numpy.matrix(pm)
+        fname = "/tmp/%03d.projmatrix" %  i
+        print("writing " + fname)
+        numpy.savetxt(fname, nP)  # to select precision, use e.g. fmt='%.2f'
+        # Advance animation frame
+        next_frame()
