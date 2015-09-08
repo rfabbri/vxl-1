@@ -12,6 +12,9 @@
 
 import bpy
 
+import numpy
+
+from mathutils import Matrix
 
 #------------------------------------------------------------------------
 # 3x4 P matrix to Blender camera
@@ -24,7 +27,63 @@ import bpy
 #
 #
 
-def blender2sfm_camera(camd):
+
+def get_calibration_matrix_K_from_blender(camd):
+    f_in_mm = camd.lens
+    scene = bpy.context.scene
+    resolution_x_in_px = scene.render.resolution_x
+    resolution_y_in_px = scene.render.resolution_y
+    scale = scene.render.resolution_percentage / 100
+    sensor_width_in_mm = camd.sensor_width
+    sensor_height_in_mm = camd.sensor_height
+    aspect_ratio = scene.render.pixel_aspect_x / scene.render.pixel_aspect_y
+    # the sensor width is fixed, the sensor height is effectively changed with the
+    # aspect ratio
+    s_u = resolution_x_in_px * scale / sensor_width_in_mm
+    s_v = resolution_y_in_px * scale * aspect_ratio / sensor_height_in_mm
+
+    # Parameters of intrinsic calibration matrix K
+    alpha_u = f_in_mm * s_u
+    alpha_v = f_in_mm * s_v
+    u_0 = resolution_x_in_px * scale / 2
+    v_0 = resolution_y_in_px * scale / 2
+    skew = 0 # only use rectangular pixels
+
+    K = Matrix(
+        ((alpha_u, skew,    u_0),
+        (    0  , alpha_v, v_0),
+        (    0  , 0,        1 )))
+    return K
+
+def get_3x4_RT_matrix_from_blender(cam):
+    # bcam stands for blender camera
+    R_bcam2cv = Matrix(
+        ((1, 0,  0),
+         (0, -1, 0),
+         (0, 0, -1)))
+
+    R_world2bcam = cam.rotation_euler.to_matrix()
+
+    # location.to_translation() ?
+
+    T_world2bcam = cam.location
+
+    R_world2cv = R_bcam2cv*R_world2bcam
+    T_world2cv = R_bcam2cv*T_world2bcam
+
+    # put into 3x4 matrix
+    RT = Matrix((
+        R_world2cv[0][:] + (T_world2cv[0],),
+        R_world2cv[1][:] + (T_world2cv[1],),
+        R_world2cv[2][:] + (T_world2cv[2],)
+         ))
+    return RT
+
+def get_3x4_P_matrix_from_blender(cam):
+    K = get_calibration_matrix_K_from_blender(cam.data)
+    RT = get_3x4_RT_matrix_from_blender(cam)
+    return K*RT, K, RT
+
 
 #------------------------------------------------------------------------
 
@@ -143,7 +202,7 @@ def get_cam():
     return projection_matrix(bpy.data.objects['Camera.004'].data)
 
 if __name__ == "__main__":
-    set_frame(1)
+#    set_frame(1)
 #    pm = get_cam()
 #     for i in range(1,101)
         # Extrinsic transform matrix
@@ -151,3 +210,41 @@ if __name__ == "__main__":
 
     # Advance animation frame
 ##    next_frame()
+
+    #K = get_K(bpy.data.objects['Camera.001'].data)
+
+    #print(K[:])
+    
+    cam = bpy.data.objects['Camera.001']
+    P, K, RT = get_3x4_P_matrix_from_blender(cam)
+    print("K")
+    print(K)
+    print("RT")
+    print(RT)
+    print("P")
+    print(P)
+
+    e1 = Vector((1, 0,    0, 1))
+    e2 = Vector((0, 1,    0, 1))
+    e3 = Vector((0, 0,    1, 1))
+    O  = Vector((0, 0,    0, 1))
+
+    p1 = P * e1
+    p1 /= p1[2]
+    print(p1)
+
+    p2 = P * e2
+    p2 /= p2[2]
+    print(p2)
+
+    p3 = P * e3
+    p3 /= p3[2]
+    print(p3)
+
+    pO = P * O
+    pO /= pO[2]
+    print(pO)
+
+    nP = numpy.matrix(P)
+
+    numpy.savetxt("/tmp/bla2", nP) #, fmt='%.2f')
