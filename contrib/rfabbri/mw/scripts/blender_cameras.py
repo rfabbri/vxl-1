@@ -62,11 +62,11 @@ def get_3x4_RT_matrix_from_blender(cam):
          (0, -1, 0),
          (0, 0, -1)))
 
-    R_world2bcam = cam.rotation_euler.to_matrix()
+    R_world2bcam = cam.rotation_euler.to_matrix().transposed()
 
     # location.to_translation() ?
 
-    T_world2bcam = cam.location
+    T_world2bcam = -1*R_world2bcam*cam.location
 
     R_world2cv = R_bcam2cv*R_world2bcam
     T_world2cv = R_bcam2cv*T_world2bcam
@@ -231,18 +231,22 @@ if __name__ == "__main__":
 
     p1 = P * e1
     p1 /= p1[2]
+    print("Projected e1")
     print(p1)
 
     p2 = P * e2
     p2 /= p2[2]
+    print("Projected e2")
     print(p2)
 
     p3 = P * e3
     p3 /= p3[2]
+    print("Projected e3")
     print(p3)
 
     pO = P * O
     pO /= pO[2]
+    print("Projected world origin")
     print(pO)
 
     nP = numpy.matrix(P)
