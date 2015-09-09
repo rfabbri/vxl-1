@@ -25,12 +25,22 @@ function mat = eul_to_mat3(eul)
 	mat(3)(3) = (cj * ci);
 endfunction
 
-// Cube_057 object
-loc = [0.9911641 -1.213026 1.66694]'
-Rz = [0 0 1 -46.30167]
-Ry = [0 1 0 7.07923e-7]
-Rx = [1 0 0 -4.68709e-7]
-scale = diag([0.01600483 0.01510128 0.01510128])
+// Cube_057 object (chair rim)
+//loc = [0.9911641 -1.213026 1.66694]'
+//Rz = [0 0 1 -46.30167]
+//Ry = [0 1 0 7.07923e-7]
+//Rx = [1 0 0 -4.68709e-7]
+//scale = diag([0.01600483 0.01510128 0.01510128])
+
+// Plane.008 (chair leather seat)
+
+// XXX
+loc = [0.5259647 -1.101067 1.94671]'
+// <rotate sid="rotationZ">0 0 1 -46.6002</rotate>
+// <rotate sid="rotationY">0 1 0 14.5235</rotate>
+// <rotate sid="rotationX">1 0 0 -3.17702e-6</rotate>
+// <scale sid="scale">0.07752522 0.08356105 0.07752521</scale>
+
 
 // proj matrix for frame 58
 //P = [2.100000000000000000e+03 8.392586460104212165e-05 9.600000000000000000e+02 3.840000000000000000e+03
@@ -45,7 +55,7 @@ P = [6.419722290039062500e+02 -4.240860290527343750e+02 -2.055912590026855469e+0
 exec('chair-rim-points.txt');
 po=matrix(chair_points,3,-1);
 
-R = eul_to_mat3([Rx(4), Ry(4), Rz(4)]*%pi/180)
+R = eul_to_mat3([Rx(4), Ry(4), Rz(4)]*%pi/180)'
 
 // object-to-world transform
 //p = R*scale*po + loc*ones(1,size(po,2)) 
