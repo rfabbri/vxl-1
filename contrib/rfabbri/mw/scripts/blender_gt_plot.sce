@@ -36,10 +36,10 @@ endfunction
 
 // XXX
 loc = [0.5259647 -1.101067 1.94671]'
-// <rotate sid="rotationZ">0 0 1 -46.6002</rotate>
-// <rotate sid="rotationY">0 1 0 14.5235</rotate>
-// <rotate sid="rotationX">1 0 0 -3.17702e-6</rotate>
-// <scale sid="scale">0.07752522 0.08356105 0.07752521</scale>
+Rz = [0 0 1 -46.6002];
+Ry = [0 1 0 14.5235];
+Rx = [1 0 0 -3.17702e-6];
+scale = diag(0.07752522 0.08356105 0.07752521)
 
 
 // proj matrix for frame 58
@@ -52,8 +52,9 @@ P = [6.419722290039062500e+02 -4.240860290527343750e+02 -2.055912590026855469e+0
      1.141579437255859375e+02 7.141400146484375000e+01 -7.101184082031250000e+02 2.459689941406250000e+03
      8.460292220115661621e-01 5.292513966560363770e-01 -6.424716114997863770e-02 5.219823837280273438e+00];
 
-exec('chair-rim-points.txt');
-po=matrix(chair_points,3,-1);
+//exec('/Users/rfabbri/3d-curve-drawing/ground-truth/models/pabellon_barcelona_v1/3d/obj-transform-test/chair-rim-points.sce');
+exec('/Users/rfabbri/3d-curve-drawing/ground-truth/models/pabellon_barcelona_v1/3d/obj-transform-test/plane_009.sce');
+po=matrix(points,3,-1);
 
 R = eul_to_mat3([Rx(4), Ry(4), Rz(4)]*%pi/180)'
 

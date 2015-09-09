@@ -1,7 +1,10 @@
 clf
 t=[0:0.1:5*%pi]';
 v = [cos(t) sin(t) sin(0.1*t).*t]
-cplot(v,-2)
+cplot(v)
+h=gca()
+h.isoview = 'on';
+// cplot(v,-2) changes to mark -2; positive to a color
 
 // To set style:
 //h=gca()
