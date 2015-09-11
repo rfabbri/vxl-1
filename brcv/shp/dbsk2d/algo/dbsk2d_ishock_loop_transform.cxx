@@ -189,7 +189,8 @@ void dbsk2d_ishock_loop_transform::detect_contour(
       if ( stack.size() == 0 )
       {
           vcl_cout<<"We have reached a loop"<<vcl_endl;
-          break;
+          valid_transform_=false;
+          return;
       }
 
       if ( stack.back()->is_an_end_point() == 1 )
