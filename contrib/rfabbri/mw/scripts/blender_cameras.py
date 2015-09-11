@@ -283,10 +283,10 @@ def get_cam():
 def test():
 
 # For simple tests:
-#    cam = bpy.data.objects['Camera.001']
+    cam = bpy.data.objects['Camera.001']
 
 # For the sunset set
-    cam = bpy.data.objects['Camera.004']
+#     cam = bpy.data.objects['Camera.004']
     P, K, RT = get_3x4_P_matrix_from_blender(cam)
     print("K")
     print(K)
@@ -334,19 +334,26 @@ def test():
     nP = numpy.matrix(P)
     numpy.savetxt("/tmp/P3x4.txt", nP)  # to select precision, use e.g. fmt='%.2f'
     
+# ----------------------------------------------------------------------------
+#def test2():
+    # get vertices of selected object
+    # get object ransforms
+    # project
+    # plot
+
 if __name__ == "__main__":
     set_frame(1)
-#    test()
+    test()
     
 #    pm = get_cam()
 
-    for i in range(1,101):
-        # Extrinsic transform matrix
-        pm = get_cam()
-        nP = numpy.matrix(pm)
-        fname = "/tmp/%03d.projmatrix" %  i
-        print("writing " + fname)
-        numpy.savetxt(fname, nP)  # to select precision, use e.g. fmt='%.2f'
-        # Advance animation frame
-        test()
-        next_frame()
+#    for i in range(1,101):
+#        # Extrinsic transform matrix
+#        pm = get_cam()
+#        nP = numpy.matrix(pm)
+#        fname = "/tmp/%03d.projmatrix" %  i
+#        print("writing " + fname)
+#        numpy.savetxt(fname, nP)  # to select precision, use e.g. fmt='%.2f'
+#        # Advance animation frame
+#        test()
+#        next_frame()

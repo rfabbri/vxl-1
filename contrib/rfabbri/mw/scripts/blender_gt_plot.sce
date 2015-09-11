@@ -1,4 +1,4 @@
-// mat 3x3
+// mat 3x3 as matrix of change of basis - rotation of coordinate systems
 // euler 1x3
 function mat = eul_to_mat3(eul)
 	// double ci, cj, ch, si, sj, sh, cc, cs, sc, ss;
@@ -37,7 +37,7 @@ loc = [0.5259647 -1.101067 1.94671]'
 Rz = [0 0 1 -46.6002];
 Ry = [0 1 0 14.5235];
 Rx = [1 0 0 -3.17702e-6];
-scale = diag(0.07752522 0.08356105 0.07752521);
+scale = diag([0.07752522 0.08356105 0.07752521]);
 
 
 // proj matrix for frame 58
@@ -55,14 +55,22 @@ P = [-4.434745788574218750e+02 6.290440673828125000e+02 -5.841709136962890625e+0
 //     1.141579437255859375e+02 7.141400146484375000e+01 -7.101184082031250000e+02 2.459689941406250000e+03
 //     8.460292220115661621e-01 5.292513966560363770e-01 -6.424716114997863770e-02 5.219823837280273438e+00];
 
+// proj matrix for frame 22
+//P = [-9.469497680664062500e+01 -7.373432006835937500e+02 -1.993945465087890625e+02 1.548648803710937500e+03
+//-2.632128295898437500e+02 1.340713195800781250e+02 -6.596545410156250000e+02 2.303698730468750000e+03
+//6.969335675239562988e-01 -3.549930155277252197e-01 -6.231080889701843262e-01 4.801393508911132812e+00];
+
+// from: ground-truth-pavillion-sunset/pavillon_barcelone_v1.2-009-ground_truth-sunset.dae
 //exec('/Users/rfabbri/3d-curve-drawing/ground-truth/models/pabellon_barcelona_v1/3d/obj-transform-test/chair-rim-points.sce');
 exec('/Users/rfabbri/3d-curve-drawing/ground-truth/models/pabellon_barcelona_v1/3d/obj-transform-test/plane_009.sce');
 po=matrix(points,3,-1);
 
+//R = eul_to_mat3([Rx(4), Ry(4), Rz(4)]*%pi/180)'
 R = eul_to_mat3([Rx(4), Ry(4), Rz(4)]*%pi/180)'
 
 // object-to-world transform
-//p = R*scale*po + loc*ones(1,size(po,2)) 
+// tested formula against corresponding object's matrix_world and it matches
+// perfectly
 p = R*scale*po + loc*ones(1,size(po,2)) 
 
 // transform by the projmatrix
@@ -70,10 +78,10 @@ p = [p; ones(1,size(p,2))]
 px = P*p;
 w = px(3,:)
 w = [w; w; w]
-prj = px./w
+rprj = px./w
 clear w px
+prj = rprj(1:2,:)
 rprj = round(prj)
-rprj = rprj(1:2,:)
 
 img = zeros(360,640);
 for i = 1:size(p,2); 
@@ -86,3 +94,8 @@ end
 
 SIPVIEWER = 'display'
 imshow(img,[])
+//im = gray_imread('/Users/rfabbri/lib/models/pabellon_barcelona_v1/3d/ground-truth-pavillion-sunset/sunset-640x-0022.png');
+im = gray_imread('/Users/rfabbri/lib/models/pabellon_barcelona_v1/3d/ground-truth-pavillion-sunset/sunset-640x-0058.png');
+
+imshow(im + 0.5*edilate(img,1),[])
+
