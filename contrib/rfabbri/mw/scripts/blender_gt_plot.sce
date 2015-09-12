@@ -33,12 +33,18 @@ endfunction
 //scale = diag([0.01600483 0.01510128 0.01510128]);
 
 // Plane.008 (chair leather seat)
-loc = [0.5259647 -1.101067 1.94671]'
-Rz = [0 0 1 -46.6002];
-Ry = [0 1 0 14.5235];
-Rx = [1 0 0 -3.17702e-6];
-scale = diag([0.07752522 0.08356105 0.07752521]);
+//loc = [0.5259647 -1.101067 1.94671]'
+//Rz = [0 0 1 -46.6002];
+//Ry = [0 1 0 14.5235];
+//Rx = [1 0 0 -3.17702e-6];
+//scale = diag([0.07752522 0.08356105 0.07752521]);
 
+// Default cube
+loc = [0 0 0]'
+Rz = [0 0 1 0];
+Ry = [0 1 0 0];
+Rx = [1 0 0 0];
+scale = diag([1 1 1]);
 
 // proj matrix for frame 58
 // WTF: P = [2.100000000000000000e+03 8.392586460104212165e-05 9.600000000000000000e+02 3.840000000000000000e+03
@@ -46,9 +52,9 @@ scale = diag([0.07752522 0.08356105 0.07752521]);
 //0.000000000000000000e+00 8.742277657347585773e-08 1.000000000000000000e+00 4.000000000000000000e+00]
 
 // fixed for frame 58
-P = [-4.434745788574218750e+02 6.290440673828125000e+02 -5.841709136962890625e+00 1.551619628906250000e+03
--1.643272552490234375e+02 -3.081280517578125000e+01 -7.031693725585937500e+02 2.237722412109375000e+03
--9.827068448066711426e-01 -1.842668652534484863e-01 -1.825542002916336060e-02 4.085147857666015625e+00]
+//P = [-4.434745788574218750e+02 6.290440673828125000e+02 -5.841709136962890625e+00 1.551619628906250000e+03
+//-1.643272552490234375e+02 -3.081280517578125000e+01 -7.031693725585937500e+02 2.237722412109375000e+03
+//-9.827068448066711426e-01 -1.842668652534484863e-01 -1.825542002916336060e-02 4.085147857666015625e+00]
 
 // proj matrix for frame 1
 //P = [6.419722290039062500e+02 -4.240860290527343750e+02 -2.055912590026855469e+01 1.319760253906250000e+03
@@ -60,9 +66,16 @@ P = [-4.434745788574218750e+02 6.290440673828125000e+02 -5.841709136962890625e+0
 //-2.632128295898437500e+02 1.340713195800781250e+02 -6.596545410156250000e+02 2.303698730468750000e+03
 //6.969335675239562988e-01 -3.549930155277252197e-01 -6.231080889701843262e-01 4.801393508911132812e+00];
 
+// cube - default scene
+P = [405.8409, 1057.1350,  -225.0754, 5046.0317
+     156.4260, -163.2123, -1060.3268, 3433.6606
+     -0.6549,    0.6107,    -0.4452,   11.2523];
+
 // from: ground-truth-pavillion-sunset/pavillon_barcelone_v1.2-009-ground_truth-sunset.dae
 //exec('/Users/rfabbri/3d-curve-drawing/ground-truth/models/pabellon_barcelona_v1/3d/obj-transform-test/chair-rim-points.sce');
-exec('/Users/rfabbri/3d-curve-drawing/ground-truth/models/pabellon_barcelona_v1/3d/obj-transform-test/plane_009.sce');
+//exec('/Users/rfabbri/3d-curve-drawing/ground-truth/models/pabellon_barcelona_v1/3d/obj-transform-test/plane_009.sce');
+//exec('/Users/rfabbri/3d-curve-drawing/ground-truth/models/pabellon_barcelona_v1/3d/obj-transform-test/plane_009-ungrouped_curves-010-ground_truth-sunset.sce');
+exec('/Users/rfabbri/lib/data/models/pabellon_barcelona_v1/3d/obj-transform-test/cube/default-scene-cube.sce');
 po=matrix(points,3,-1);
 
 //R = eul_to_mat3([Rx(4), Ry(4), Rz(4)]*%pi/180)'
@@ -83,11 +96,12 @@ clear w px
 prj = rprj(1:2,:)
 rprj = round(prj)
 
-img = zeros(360,640);
-for i = 1:size(p,2); 
+//img = zeros(360,640);
+img = zeros(540,960);
+for i = 1:size(rprj,2); 
   r = rprj(2,i) + 1;
   c = rprj(1,i) + 1;
-  if r >= 1 & c >= 1 & r <= 360 & c <= 640
+  if r >= 1 & c >= 1 & r <= size(img,1) & c <= size(img,2)
     img(r,c) = 1; 
   end
 end
@@ -95,7 +109,8 @@ end
 SIPVIEWER = 'display'
 imshow(img,[])
 //im = gray_imread('/Users/rfabbri/lib/models/pabellon_barcelona_v1/3d/ground-truth-pavillion-sunset/sunset-640x-0022.png');
-im = gray_imread('/Users/rfabbri/lib/models/pabellon_barcelona_v1/3d/ground-truth-pavillion-sunset/sunset-640x-0058.png');
+//im = gray_imread('/Users/rfabbri/lib/models/pabellon_barcelona_v1/3d/ground-truth-pavillion-night/night-640x-0058-opengl.png');
+im = gray_imread('/Users/rfabbri/lib/data/models/pabellon_barcelona_v1/3d/obj-transform-test/cube/default_scene.png');
 
-imshow(im + 0.5*edilate(img,1),[])
+imshow(im + 0.5*edilate(img,3),[])
 

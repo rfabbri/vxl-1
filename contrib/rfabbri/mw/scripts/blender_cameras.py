@@ -112,13 +112,13 @@ def get_3x4_RT_matrix_from_blender_without_matrix_world(cam):
 
     # Transpose since the rotation is object rotation, and we want coordinate
     # rotation
-    R_world2bcam = cam.rotation_euler.to_matrix().transposed()
-#     location, rotation = cam.matrix_world.decompose()[0:2]
-#     R_world2bcam = rotation.to_matrix().transposed()
+#     R_world2bcam = cam.rotation_euler.to_matrix().transposed()
+    location, rotation = cam.matrix_world.decompose()[0:2]
+    R_world2bcam = rotation.to_matrix().transposed()
 
     # Convert camera location to translation vector used in coordinate changes
-#     T_world2bcam = -1*R_world2bcam * location
-    T_world2bcam = -1*R_world2bcam * cam.location
+    T_world2bcam = -1*R_world2bcam * location
+#     T_world2bcam = -1*R_world2bcam * cam.location
 
     # Build the coordinate transform matrix from world to computer vision camera
     R_world2cv = R_bcam2cv*R_world2bcam
@@ -283,10 +283,13 @@ def get_cam():
 def test():
 
 # For simple tests:
-    cam = bpy.data.objects['Camera.001']
+#     cam = bpy.data.objects['Camera.001']
 
 # For the sunset set
 #     cam = bpy.data.objects['Camera.004']
+
+# For the cube set
+    cam = bpy.data.objects['Camera']
     P, K, RT = get_3x4_P_matrix_from_blender(cam)
     print("K")
     print(K)
@@ -342,18 +345,18 @@ def test():
     # plot
 
 if __name__ == "__main__":
-    set_frame(1)
-    test()
+   set_frame(1)
+   test()
     
 #    pm = get_cam()
 
-#    for i in range(1,101):
-#        # Extrinsic transform matrix
-#        pm = get_cam()
-#        nP = numpy.matrix(pm)
-#        fname = "/tmp/%03d.projmatrix" %  i
-#        print("writing " + fname)
-#        numpy.savetxt(fname, nP)  # to select precision, use e.g. fmt='%.2f'
-#        # Advance animation frame
-#        test()
-#        next_frame()
+#   for i in range(1,101):
+#       # Extrinsic transform matrix
+#       pm = get_cam()
+#       nP = numpy.matrix(pm)
+#       fname = "/tmp/%03d.projmatrix" %  i
+#       print("writing " + fname)
+#       numpy.savetxt(fname, nP)  # to select precision, use e.g. fmt='%.2f'
+#       # Advance animation frame
+#       test()
+#       next_frame()
