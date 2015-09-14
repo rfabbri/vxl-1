@@ -33,28 +33,75 @@ endfunction
 //scale = diag([0.01600483 0.01510128 0.01510128]);
 
 // Plane.008 (chair leather seat)
-//loc = [0.5259647 -1.101067 1.94671]'
+//loc= [0.5259647 -1.101067 1.94671]'
 //Rz = [0 0 1 -46.6002];
 //Ry = [0 1 0 14.5235];
 //Rx = [1 0 0 -3.17702e-6];
 //scale = diag([0.07752522 0.08356105 0.07752521]);
 
+// Cube_030 2nd chair rim NEW
+
+//loc=[2.031433 0.7551729 1.699775]';
+//Rz =[0 0 1 -0.7568514]
+//Ry =[0 1 0 7.07923e-7]
+//Rx =[1 0 0 -4.68709e-7]
+//scale = diag([0.01600483 0.01510128 0.01510128]);
+
+// Plane_002 1st chair leather seat NEW
+//loc=[0.5476981 -1.041966 1.979541]';
+//Rz =[0 0 1 -46.6002];
+//Ry =[0 1 0 14.5235];
+//Rx =[1 0 0 -3.17702e-6];
+//scale =diag([0.07752522 0.08356105 0.07752521]);
+
+
+//loc =[1.012898 -1.153925 1.699771]'
+//Rz=[0 0 1 -46.30167]
+//Ry=[0 1 0 7.07923e-7]
+//Rx=[1 0 0 -4.68709e-7]
+//scale =diag([0.01600483 0.01510128 0.01510128]);
+
+
+loc = [1.166548 -1.320713 2.108471]'
+Rz=[0 0 1 -46.07418]
+Ry=[0 1 0 -67.88113]
+Rx=[1 0 0 -0.7029412]
+scale=diag([0.136427 0.1467155 0.1364271])
+
+
+//  Curve_000 (2nd chair seat
+
+//loc = [2.258096 0.7480382 2.108476]'
+//Rz = [0 0 1 -0.5293615];
+//Ry = [0 1 0 -67.88113];
+//Rx = [1 0 0 -0.7029421];
+//scale = diag([0.136427 0.1467155 0.1364271]);
+
+
 // Default cube
-loc = [0 0 0]'
-Rz = [0 0 1 0];
-Ry = [0 1 0 0];
-Rx = [1 0 0 0];
-scale = diag([1 1 1]);
+//loc = [0 0 0]'
+//Rz = [0 0 1 0];
+//Ry = [0 1 0 0];
+//Rx = [1 0 0 0];
+//scale = diag([1 1 1]);
+
+// Default cube translated 1 on x
+//loc = [0.9 -1.2 1.66]'
+//Rz = [0 0 1 -46.3];
+//Ry = [0 1 0 10];
+//Rx = [1 0 0 30];
+//scale = diag([.2 .7 1.5]);
 
 // proj matrix for frame 58
-// WTF: P = [2.100000000000000000e+03 8.392586460104212165e-05 9.600000000000000000e+02 3.840000000000000000e+03
-//0.000000000000000000e+00 2.100000000000000000e+03 5.399998168945312500e+02 2.160000000000000000e+03
-//0.000000000000000000e+00 8.742277657347585773e-08 1.000000000000000000e+00 4.000000000000000000e+00]
+P = [-4.434745788574218750e+02 6.290440673828125000e+02 -5.841709136962890625e+00 1.551619628906250000e+03
+-1.643272552490234375e+02 -3.081280517578125000e+01 -7.031693725585937500e+02 2.237722412109375000e+03
+-9.827068448066711426e-01 -1.842668652534484863e-01 -1.825542002916336060e-02 4.085147857666015625e+00]
 
-// fixed for frame 58
-//P = [-4.434745788574218750e+02 6.290440673828125000e+02 -5.841709136962890625e+00 1.551619628906250000e+03
-//-1.643272552490234375e+02 -3.081280517578125000e+01 -7.031693725585937500e+02 2.237722412109375000e+03
-//-9.827068448066711426e-01 -1.842668652534484863e-01 -1.825542002916336060e-02 4.085147857666015625e+00]
+// proj matrix for frame 1 pavi*ungrouped_curves-010.blend sunset scene
+
+//P = [658.3120, -398.6819,   -8.8371, 1112.2412
+//     132.7705,   90.3777, -704.7013, 2478.2195
+//     0.8264,    0.5625,   -0.0276,    5.0823]
 
 // proj matrix for frame 1
 //P = [6.419722290039062500e+02 -4.240860290527343750e+02 -2.055912590026855469e+01 1.319760253906250000e+03
@@ -67,18 +114,21 @@ scale = diag([1 1 1]);
 //6.969335675239562988e-01 -3.549930155277252197e-01 -6.231080889701843262e-01 4.801393508911132812e+00];
 
 // cube - default scene
-P = [405.8409, 1057.1350,  -225.0754, 5046.0317
-     156.4260, -163.2123, -1060.3268, 3433.6606
-     -0.6549,    0.6107,    -0.4452,   11.2523];
+//P = [405.8409, 1057.1350,  -225.0754, 5046.0317
+//     156.4260, -163.2123, -1060.3268, 3433.6606
+//     -0.6549,    0.6107,    -0.4452,   11.2523];
 
 // from: ground-truth-pavillion-sunset/pavillon_barcelone_v1.2-009-ground_truth-sunset.dae
 //exec('/Users/rfabbri/3d-curve-drawing/ground-truth/models/pabellon_barcelona_v1/3d/obj-transform-test/chair-rim-points.sce');
 //exec('/Users/rfabbri/3d-curve-drawing/ground-truth/models/pabellon_barcelona_v1/3d/obj-transform-test/plane_009.sce');
 //exec('/Users/rfabbri/3d-curve-drawing/ground-truth/models/pabellon_barcelona_v1/3d/obj-transform-test/plane_009-ungrouped_curves-010-ground_truth-sunset.sce');
-exec('/Users/rfabbri/lib/data/models/pabellon_barcelona_v1/3d/obj-transform-test/cube/default-scene-cube.sce');
+//points = fscanfMat('/Users/rfabbri/3d-curve-drawing/ground-truth/models/pabellon_barcelona_v1/3d/obj-transform-test/pavillon_barcelone_v1.2-ungrouped02-separate_datablocks-no_modifiers-fixed-010-cube030.txt');
+//points = fscanfMat('/Users/rfabbri/3d-curve-drawing/ground-truth/models/pabellon_barcelona_v1/3d/obj-transform-test/pavillon_barcelone_v1.2-ungrouped02-separate_datablocks-no_modifiers-fixed-010-plane_013-mesh.txt');
+//exec('/Users/rfabbri/lib/data/models/pabellon_barcelona_v1/3d/obj-transform-test/cube/default-scene-cube.sce');
+//points = fscanfMat('/Users/rfabbri/a.sce');
+points = fscanfMat('/Users/rfabbri/lib/models/pabellon_barcelona_v1/3d/obj-transform-test/pavillon_barcelone_v1.2-ungrouped02-separate_datablocks-no_modifiers-fixed-010-cube_20102-mesh.txt');
 po=matrix(points,3,-1);
 
-//R = eul_to_mat3([Rx(4), Ry(4), Rz(4)]*%pi/180)'
 R = eul_to_mat3([Rx(4), Ry(4), Rz(4)]*%pi/180)'
 
 // object-to-world transform
@@ -87,17 +137,17 @@ R = eul_to_mat3([Rx(4), Ry(4), Rz(4)]*%pi/180)'
 p = R*scale*po + loc*ones(1,size(po,2)) 
 
 // transform by the projmatrix
-p = [p; ones(1,size(p,2))]
+p = [p; ones(1,size(p,2))];
 px = P*p;
-w = px(3,:)
-w = [w; w; w]
-rprj = px./w
+w = px(3,:);
+w = [w; w; w];
+rprj = px./w;
 clear w px
-prj = rprj(1:2,:)
-rprj = round(prj)
+prj = rprj(1:2,:);
+rprj = round(prj);
 
-//img = zeros(360,640);
-img = zeros(540,960);
+img = zeros(360,640);
+//img = zeros(540,960);
 for i = 1:size(rprj,2); 
   r = rprj(2,i) + 1;
   c = rprj(1,i) + 1;
@@ -109,8 +159,11 @@ end
 SIPVIEWER = 'display'
 imshow(img,[])
 //im = gray_imread('/Users/rfabbri/lib/models/pabellon_barcelona_v1/3d/ground-truth-pavillion-sunset/sunset-640x-0022.png');
-//im = gray_imread('/Users/rfabbri/lib/models/pabellon_barcelona_v1/3d/ground-truth-pavillion-night/night-640x-0058-opengl.png');
-im = gray_imread('/Users/rfabbri/lib/data/models/pabellon_barcelona_v1/3d/obj-transform-test/cube/default_scene.png');
+//im = gray_imread('/Users/rfabbri/lib/models/pabellon_barcelona_v1/3d/ground-truth-pavillion-sunset/sunset-640x-0001.png');
+im = gray_imread('/Users/rfabbri/lib/models/pabellon_barcelona_v1/3d/ground-truth-pavillion-sunset/sunset-640x-0058-opengl3.png');
+//im = gray_imread('/Users/rfabbri/lib/data/models/pabellon_barcelona_v1/3d/obj-transform-test/cube/default_scene-mod.png');
 
-imshow(im + 0.5*edilate(img,3),[])
+//im = gray_imread('/Users/rfabbri/lib/models/pabellon_barcelona_v1/3d/obj-transform-test/sunset-640x-0001-ungrouped_curves-010-opengl.jpg');
+
+imshow(im + 0.3*edilate(img,1),[])
 

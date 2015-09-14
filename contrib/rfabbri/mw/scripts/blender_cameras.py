@@ -289,7 +289,8 @@ def test():
 #     cam = bpy.data.objects['Camera.004']
 
 # For the cube set
-    cam = bpy.data.objects['Camera']
+#     cam = bpy.data.objects['Camera']
+    cam = bpy.data.objects['Camera.010']
     P, K, RT = get_3x4_P_matrix_from_blender(cam)
     print("K")
     print(K)
