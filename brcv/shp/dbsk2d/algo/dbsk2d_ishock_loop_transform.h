@@ -85,6 +85,10 @@ private:
     // Remove interacinting bnd elements shocks
     bool reinsert_contour();
 
+    // Sample points
+    void sample_contour(vcl_vector<vgl_point_2d<double> >& foreground_grid,
+                        vcl_vector<vgl_point_2d<double> >& background_grid);
+
     // Keep initial start of contour
     dbsk2d_ishock_bpoint* contour_point_;
 

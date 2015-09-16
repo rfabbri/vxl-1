@@ -11,6 +11,7 @@
 #include <dbsk2d/dbsk2d_file_io.h>
 #include <dbsk2d/dbsk2d_transform_manager.h>
 #include <dbsk2d/algo/dbsk2d_lagrangian_ishock_detector.h>
+#include <dbsk2d/algo/dbsk2d_sample_ishock.h>
 // vsol headers
 #include <vsol/vsol_line_2d.h>
 #include <vsol/vsol_spatial_object_2d_sptr.h>
@@ -53,6 +54,317 @@ bool dbsk2d_ishock_loop_transform::execute_transform()
 
     return flag;
 
+}
+
+
+void dbsk2d_ishock_loop_transform::sample_contour(
+    vcl_vector<vgl_point_2d<double> >& foreground_grid,
+    vcl_vector<vgl_point_2d<double> >& background_grid)
+{
+
+
+    // Determine elements on each side 
+    vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
+    vcl_map<int,dbsk2d_ishock_edge*> side1_contour;
+    vcl_map<int,dbsk2d_ishock_edge*> side2_contour;
+
+    for ( it = removal_bnd_elements_.begin(); 
+          it != removal_bnd_elements_.end(); ++it)
+    {
+        dbsk2d_ishock_belm* belm = (*it).second;
+    
+        if ( belm->is_a_line())
+        {
+            dbsk2d_ishock_bline* bl1=dynamic_cast<dbsk2d_ishock_bline*>
+                (belm);            
+            dbsk2d_ishock_bline* bl2=bl1->twinLine();
+
+
+
+            // Get forward shocks
+            {
+                bnd_ishock_map_iter curS = bl1->shock_map().begin();
+                for ( ; curS != bl1->shock_map().end() ; ++curS) 
+                {
+                    dbsk2d_ishock_elm* selm = curS->second;
+                    dbsk2d_ishock_edge* cur_edge = (dbsk2d_ishock_edge*)selm; 
+
+                    side1_contour[cur_edge->id()]=cur_edge;
+                }
+
+            }
+            
+            // Get other side shocks
+            {
+                bnd_ishock_map_iter curS = bl2->shock_map().begin();
+                for ( ; curS != bl2->shock_map().end() ; ++curS) 
+                {
+                    dbsk2d_ishock_elm* selm = curS->second;
+                    dbsk2d_ishock_edge* cur_edge = (dbsk2d_ishock_edge*)selm; 
+
+                    side2_contour[cur_edge->id()]=cur_edge;
+                }
+
+            }
+
+            // Now look at points
+            dbsk2d_ishock_bpoint* s_pt=bl1->s_pt();
+            dbsk2d_ishock_bpoint* e_pt=bl1->e_pt();
+            
+            if ( s_pt->nLinkedElms() == 4 )
+            {
+                bnd_ishock_map_iter curS = s_pt->shock_map().begin();
+
+                dbsk2d_ishock_elm* selm = curS->second;
+                dbsk2d_ishock_edge* cur_edge = (dbsk2d_ishock_edge*)selm; 
+
+                bool side1=true;
+                if ( cur_edge->is_a_contact() )
+                {
+                    dbsk2d_ishock_belm* lbe=cur_edge->lBElement();
+                    dbsk2d_ishock_belm* rbe=cur_edge->rBElement();
+
+                    if ( lbe->id() == bl1->id() )
+                    {
+                        side1=true;
+                    }
+                    else
+                    {
+                        side1=false;
+                    }
+                }
+             
+                
+                for ( ; curS != bl2->shock_map().end() ; ++curS) 
+                {
+                    dbsk2d_ishock_elm* selm = curS->second;
+                    dbsk2d_ishock_edge* cur_edge = (dbsk2d_ishock_edge*)selm; 
+
+                    if ( side1 )
+                    {
+                        side1_contour[cur_edge->id()]=cur_edge;
+                    }
+                    else
+                    {
+                        side2_contour[cur_edge->id()]=cur_edge;
+                    }
+                }
+                
+            }
+
+
+
+            if ( e_pt->nLinkedElms() == 4 )
+            {
+                bnd_ishock_map_iter curS = e_pt->shock_map().begin();
+
+                dbsk2d_ishock_elm* selm = curS->second;
+                dbsk2d_ishock_edge* cur_edge = (dbsk2d_ishock_edge*)selm; 
+
+                bool side1=true;
+                if ( cur_edge->is_a_contact() )
+                {
+                    dbsk2d_ishock_belm* lbe=cur_edge->lBElement();
+                    dbsk2d_ishock_belm* rbe=cur_edge->rBElement();
+
+                    if ( lbe->id() == bl1->id() )
+                    {
+                        side1=true;
+                    }
+                    else
+                    {
+                        side1=false;
+                    }
+                }
+             
+                
+                for ( ; curS != bl2->shock_map().end() ; ++curS) 
+                {
+                    dbsk2d_ishock_elm* selm = curS->second;
+                    dbsk2d_ishock_edge* cur_edge = (dbsk2d_ishock_edge*)selm; 
+
+                    if ( side1 )
+                    {
+                        side1_contour[cur_edge->id()]=cur_edge;
+                    }
+                    else
+                    {
+                        side2_contour[cur_edge->id()]=cur_edge;
+                    }
+                }
+                
+            }
+        }
+    }
+
+
+    // Make a dummy coarse shock graph
+    dbsk2d_shock_graph_sptr coarse_graph;
+    dbsk2d_sample_ishock sampler(coarse_graph);
+    sampler.set_sample_resolution(0.5);
+    double step_size=1.0;
+
+    vcl_map<int,dbsk2d_ishock_edge*>::iterator sit;
+    for ( sit = side1_contour.begin() ; sit != side1_contour.end() ; ++sit)
+    {
+        dbsk2d_ishock_edge* cur_iedge=(*sit).second;
+
+        if ( cur_iedge->is_a_contact())
+        {
+            continue;
+        }
+        
+        // Create a dummy xshock edge
+        dbsk2d_shock_node_sptr parent_node = new dbsk2d_shock_node();
+        dbsk2d_shock_node_sptr child_node  = new dbsk2d_shock_node();
+        dbsk2d_xshock_edge cur_edge(1,parent_node,child_node);
+        
+        switch (cur_iedge->type())
+        {
+        case dbsk2d_ishock_elm::POINTPOINT:
+            sampler.sample_ishock_edge((dbsk2d_ishock_pointpoint*)
+                                       cur_iedge, 
+                                       &cur_edge);
+            break;
+        case dbsk2d_ishock_elm::POINTLINE:
+            sampler.sample_ishock_edge((dbsk2d_ishock_pointline*)
+                                       cur_iedge, 
+                                       &cur_edge);
+            break;
+        case dbsk2d_ishock_elm::LINELINE:
+            sampler.sample_ishock_edge((dbsk2d_ishock_lineline*)
+                                       cur_iedge, 
+                                       &cur_edge);
+            break;
+        default:
+            break;
+        }
+
+        for ( unsigned int s=0; s < cur_edge.num_samples() ; ++s)
+        {
+            dbsk2d_xshock_sample_sptr sample=cur_edge.sample(s);
+
+            double R1=sample->radius;
+            vgl_point_2d<double> pt =sample->pt;
+            double theta=sample->theta;
+            double phi=0.0;
+            double r=step_size;
+            
+
+            if (sample->speed != 0 && sample->speed < 99990)
+            {
+                phi=vcl_acos(-1.0/sample->speed);
+            }
+            else
+            {
+                phi=vnl_math::pi/2;
+            }
+
+            double vec1=theta+phi;
+            double vec2=theta-phi;
+
+            while ( r < R1)
+            {
+
+                vgl_point_2d<double> plus_pt=_translatePoint(pt,vec1,r);
+                vgl_point_2d<double> minus_pt=_translatePoint(pt,vec2,r);
+                
+
+
+                foreground_grid.push_back(plus_pt);
+                foreground_grid.push_back(minus_pt);
+
+
+
+                r+=step_size;
+            }
+            
+            foreground_grid.push_back(pt);
+
+        }
+
+    }
+
+    for ( sit = side2_contour.begin() ; sit != side2_contour.end() ; ++sit)
+    {
+        dbsk2d_ishock_edge* cur_iedge=(*sit).second;
+
+        if ( cur_iedge->is_a_contact())
+        {
+            continue;
+        }
+        
+        // Create a dummy xshock edge
+        dbsk2d_shock_node_sptr parent_node = new dbsk2d_shock_node();
+        dbsk2d_shock_node_sptr child_node  = new dbsk2d_shock_node();
+        dbsk2d_xshock_edge cur_edge(1,parent_node,child_node);
+        
+        switch (cur_iedge->type())
+        {
+        case dbsk2d_ishock_elm::POINTPOINT:
+            sampler.sample_ishock_edge((dbsk2d_ishock_pointpoint*)
+                                       cur_iedge, 
+                                       &cur_edge);
+            break;
+        case dbsk2d_ishock_elm::POINTLINE:
+            sampler.sample_ishock_edge((dbsk2d_ishock_pointline*)
+                                       cur_iedge, 
+                                       &cur_edge);
+            break;
+        case dbsk2d_ishock_elm::LINELINE:
+            sampler.sample_ishock_edge((dbsk2d_ishock_lineline*)
+                                       cur_iedge, 
+                                       &cur_edge);
+            break;
+        default:
+            break;
+        }
+
+        for ( unsigned int s=0; s < cur_edge.num_samples() ; ++s)
+        {
+            dbsk2d_xshock_sample_sptr sample=cur_edge.sample(s);
+
+            double R1=sample->radius;
+            vgl_point_2d<double> pt =sample->pt;
+            double theta=sample->theta;
+            double phi=0.0;
+            double r=step_size;
+            
+
+            if (sample->speed != 0 && sample->speed < 99990)
+            {
+                phi=vcl_acos(-1.0/sample->speed);
+            }
+            else
+            {
+                phi=vnl_math::pi/2;
+            }
+
+            double vec1=theta+phi;
+            double vec2=theta-phi;
+
+            while ( r < R1)
+            {
+
+                vgl_point_2d<double> plus_pt=_translatePoint(pt,vec1,r);
+                vgl_point_2d<double> minus_pt=_translatePoint(pt,vec2,r);
+                
+
+
+                background_grid.push_back(plus_pt);
+                background_grid.push_back(minus_pt);
+
+
+
+                r+=step_size;
+            }
+            
+            background_grid.push_back(pt);
+
+        }
+
+    }
+    
 }
 
 double dbsk2d_ishock_loop_transform::likelihood()
