@@ -109,7 +109,18 @@ void dbdet_nms::apply(bool collect_tokens,
         continue;
 
       //now compute the values orthogonal to the edge and fit a parabola
-      int face_num = intersected_face_number(direction); assert(face_num != -1);
+      int face_num = intersected_face_number(direction); 
+      if (face_num == -1) {
+#ifndef NDEBUG
+        vcl_cout << "Ignoring bad gradient direction: " <<  direction <<  vcl_endl
+          << " gx: " << gx << " gy: " << gy << vcl_endl
+          << " x: " << x << "y: " << y;
+        // TODO: investigate the bad gradient directions when they happen
+        // and perhaps make sure it can't be fixed instead of ignored
+#endif
+        continue;
+      }
+      
       double s = intersection_parameter(direction, face_num); assert(s != -1000);
       f_values(x, y, direction, s, face_num, f);
       s_list[0] = -s; s_list[1] = 0.0; s_list[2] = s;
