@@ -496,7 +496,7 @@ vcl_vector<dbsk2d_ishock_edge*>& shocks)
 
 }
 
-bool dbsk2d_ishock_graph::valid_shock_graph()
+bool dbsk2d_ishock_graph::valid_shock_graph(bool ignore_ob_shocks)
 {
 
     bool shocks_valid = true;
@@ -517,15 +517,32 @@ bool dbsk2d_ishock_graph::valid_shock_graph()
         //     #endif
         //     break;
         // }
-
-        //make sure that the edges terminate at an intersection
-        //either at the cell boundary or another edge
-        if (!(sedge->cSNode() || sedge->cell_bnd()))
+        
+        if ( !ignore_ob_shocks )
         {
-            shocks_valid = false;
-            #ifdef DEBUG_SHOCK_VERBOSE
-            vcl_cout << "S:" << sedge->id() << "did not intersect. \n";
-            #endif
+            //make sure that the edges terminate at an intersection
+            //either at the cell boundary or another edge
+            if (!(sedge->cSNode() || sedge->cell_bnd()))
+            {
+                shocks_valid = false;
+                #ifdef DEBUG_SHOCK_VERBOSE
+                vcl_cout << "S:" << sedge->id() << "did not intersect. \n";
+                #endif
+            }
+        }
+        else
+        {
+            if ( !ob_edges_.count(sedge->id()))
+            {
+                if (!(sedge->cSNode()))
+                {
+                    shocks_valid = false;
+                    #ifdef DEBUG_SHOCK_VERBOSE
+                    vcl_cout << "S:" << sedge->id() << "did not intersect. \n";
+                    #endif
+                }
+            }
+
         }
     }
 

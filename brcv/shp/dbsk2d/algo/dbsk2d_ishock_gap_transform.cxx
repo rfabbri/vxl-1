@@ -175,7 +175,7 @@ bool dbsk2d_ishock_gap_transform::execute_transform()
     }
 
     local_shock_compute();
-    bool shock_computation_valid = ishock_graph_->valid_shock_graph();
+    bool shock_computation_valid = ishock_graph_->valid_shock_graph(true);
     ishock_graph_->update_shocks();
 
     if ( shock_computation_valid == false )
@@ -314,7 +314,7 @@ bool dbsk2d_ishock_gap_transform::execute_transform()
     }
 
     dbsk2d_ishock_belm::throw_exception=true;
-    shock_computation_valid = ishock_graph_->valid_shock_graph();
+    shock_computation_valid = ishock_graph_->valid_shock_graph(true);
     return shock_computation_valid;
 
 }

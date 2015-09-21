@@ -824,7 +824,7 @@ bool dbsk2d_ishock_loop_transform::remove_contour()
 
     // 4 Kick of shock
     local_shock_compute();
-    bool shock_computation_valid = ishock_graph_->valid_shock_graph();
+    bool shock_computation_valid = ishock_graph_->valid_shock_graph(true);
     ishock_graph_->update_shocks();
 
     if ( shock_computation_valid == false )
@@ -931,7 +931,7 @@ bool dbsk2d_ishock_loop_transform::remove_contour()
     }
 
     dbsk2d_ishock_belm::throw_exception=true;
-    shock_computation_valid = ishock_graph_->valid_shock_graph();
+    shock_computation_valid = ishock_graph_->valid_shock_graph(true);
     return shock_computation_valid;
 
 }
@@ -1168,7 +1168,7 @@ bool dbsk2d_ishock_loop_transform::reinsert_contour()
 
     // 4. Kick of shock
     local_shock_compute();
-    bool shock_computation_valid = ishock_graph_->valid_shock_graph();
+    bool shock_computation_valid = ishock_graph_->valid_shock_graph(true);
     ishock_graph_->update_shocks();
 
     if ( shock_computation_valid == false )
@@ -1254,7 +1254,7 @@ bool dbsk2d_ishock_loop_transform::reinsert_contour()
     }
 
     dbsk2d_ishock_belm::throw_exception=true;
-    shock_computation_valid = ishock_graph_->valid_shock_graph();
+    shock_computation_valid = ishock_graph_->valid_shock_graph(true);
     return shock_computation_valid;
 
 

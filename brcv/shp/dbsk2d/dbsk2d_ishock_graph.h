@@ -145,7 +145,7 @@ public:
   void invalid_shocks(vcl_vector<dbsk2d_ishock_edge*>& shocks);
  
   //: Checks whether shock is valid
-  bool valid_shock_graph();
+  bool valid_shock_graph(bool ignore_ob_shocks=false);
 
   //: recompute the extrinsic points of each shock edge if they have changed
   void update_shocks();
