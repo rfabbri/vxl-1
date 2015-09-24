@@ -62,24 +62,31 @@ void dbsk2d_ishock_loop_transform::sample_contour(
     vcl_vector<vgl_point_2d<double> >& background_grid)
 {
 
-
     // Determine elements on each side 
     vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
     vcl_map<int,dbsk2d_ishock_edge*> side1_contour;
     vcl_map<int,dbsk2d_ishock_edge*> side2_contour;
+    vcl_set<int> visited_belms;
+    vcl_set<int> pts_visited;
 
     for ( it = removal_bnd_elements_.begin(); 
           it != removal_bnd_elements_.end(); ++it)
     {
         dbsk2d_ishock_belm* belm = (*it).second;
-    
+
         if ( belm->is_a_line())
         {
             dbsk2d_ishock_bline* bl1=dynamic_cast<dbsk2d_ishock_bline*>
                 (belm);            
             dbsk2d_ishock_bline* bl2=bl1->twinLine();
 
+            if ( visited_belms.count(bl1->id()) || visited_belms
+                 .count(bl2->id()))
+            {
+                continue;
+            }
 
+            visited_belms.insert(bl1->id());
 
             // Get forward shocks
             {
@@ -88,12 +95,12 @@ void dbsk2d_ishock_loop_transform::sample_contour(
                 {
                     dbsk2d_ishock_elm* selm = curS->second;
                     dbsk2d_ishock_edge* cur_edge = (dbsk2d_ishock_edge*)selm; 
-
+                    
                     side1_contour[cur_edge->id()]=cur_edge;
                 }
 
             }
-            
+
             // Get other side shocks
             {
                 bnd_ishock_map_iter curS = bl2->shock_map().begin();
@@ -111,92 +118,101 @@ void dbsk2d_ishock_loop_transform::sample_contour(
             dbsk2d_ishock_bpoint* s_pt=bl1->s_pt();
             dbsk2d_ishock_bpoint* e_pt=bl1->e_pt();
             
-            if ( s_pt->nLinkedElms() == 4 )
+            if ( !pts_visited.count(s_pt->id()))
             {
-                bnd_ishock_map_iter curS = s_pt->shock_map().begin();
-
-                dbsk2d_ishock_elm* selm = curS->second;
-                dbsk2d_ishock_edge* cur_edge = (dbsk2d_ishock_edge*)selm; 
-
-                bool side1=true;
-                if ( cur_edge->is_a_contact() )
+            
+                if ( s_pt->nLinkedElms() == 4 )
                 {
-                    dbsk2d_ishock_belm* lbe=cur_edge->lBElement();
-                    dbsk2d_ishock_belm* rbe=cur_edge->rBElement();
+                    pts_visited.insert(s_pt->id());
 
-                    if ( lbe->id() == bl1->id() )
-                    {
-                        side1=true;
-                    }
-                    else
-                    {
-                        side1=false;
-                    }
-                }
-             
-                
-                for ( ; curS != bl2->shock_map().end() ; ++curS) 
-                {
+                    bnd_ishock_map_iter curS = s_pt->shock_map().begin();
+                    
                     dbsk2d_ishock_elm* selm = curS->second;
                     dbsk2d_ishock_edge* cur_edge = (dbsk2d_ishock_edge*)selm; 
-
-                    if ( side1 )
+                    
+                    bool side1=true;
+                    if ( cur_edge->is_a_contact() )
                     {
-                        side1_contour[cur_edge->id()]=cur_edge;
+                        dbsk2d_ishock_belm* lbe=cur_edge->lBElement();
+                        dbsk2d_ishock_belm* rbe=cur_edge->rBElement();
+                        
+                        if ( lbe->id() == bl1->id() )
+                        {
+                            side1=true;
+                        }
+                        else
+                        {
+                            side1=false;
+                        }
                     }
-                    else
+                    
+                    
+                    for ( ; curS != s_pt->shock_map().end() ; ++curS) 
                     {
+                        dbsk2d_ishock_elm* selm = curS->second;
+                        dbsk2d_ishock_edge* cur_edge = 
+                            (dbsk2d_ishock_edge*)selm; 
+                        
+                        if ( side1 )
+                        {
+                            side1_contour[cur_edge->id()]=cur_edge;
+                        }
+                        else
+                        {
                         side2_contour[cur_edge->id()]=cur_edge;
+                        }
                     }
+                    
                 }
-                
             }
 
-
-
-            if ( e_pt->nLinkedElms() == 4 )
+            if ( !pts_visited.count(e_pt->id()))
             {
-                bnd_ishock_map_iter curS = e_pt->shock_map().begin();
-
-                dbsk2d_ishock_elm* selm = curS->second;
-                dbsk2d_ishock_edge* cur_edge = (dbsk2d_ishock_edge*)selm; 
-
-                bool side1=true;
-                if ( cur_edge->is_a_contact() )
+                if ( e_pt->nLinkedElms() == 4 )
                 {
-                    dbsk2d_ishock_belm* lbe=cur_edge->lBElement();
-                    dbsk2d_ishock_belm* rbe=cur_edge->rBElement();
+                    pts_visited.insert(e_pt->id());
+                    bnd_ishock_map_iter curS = e_pt->shock_map().begin();
 
-                    if ( lbe->id() == bl1->id() )
-                    {
-                        side1=true;
-                    }
-                    else
-                    {
-                        side1=false;
-                    }
-                }
-             
-                
-                for ( ; curS != bl2->shock_map().end() ; ++curS) 
-                {
                     dbsk2d_ishock_elm* selm = curS->second;
                     dbsk2d_ishock_edge* cur_edge = (dbsk2d_ishock_edge*)selm; 
 
-                    if ( side1 )
+                    bool side1=true;
+                    if ( cur_edge->is_a_contact() )
                     {
-                        side1_contour[cur_edge->id()]=cur_edge;
+                        dbsk2d_ishock_belm* lbe=cur_edge->lBElement();
+                        dbsk2d_ishock_belm* rbe=cur_edge->rBElement();
+
+                        if ( lbe->id() == bl1->id() )
+                        {
+                            side1=true;
+                        }
+                        else
+                        {
+                            side1=false;
+                        }
                     }
-                    else
-                    {
-                        side2_contour[cur_edge->id()]=cur_edge;
-                    }
-                }
+             
                 
+                    for ( ; curS != e_pt->shock_map().end() ; ++curS) 
+                    {
+                        dbsk2d_ishock_elm* selm = curS->second;
+                        dbsk2d_ishock_edge* cur_edge = 
+                            (dbsk2d_ishock_edge*)selm; 
+
+                        if ( side1 )
+                        {
+                            side1_contour[cur_edge->id()]=cur_edge;
+                        }
+                        else
+                        {
+                            side2_contour[cur_edge->id()]=cur_edge;
+                        }
+                    }
+                    
+                }
             }
         }
     }
-
 
     // Make a dummy coarse shock graph
     dbsk2d_shock_graph_sptr coarse_graph;
