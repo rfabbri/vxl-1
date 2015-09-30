@@ -62,6 +62,12 @@ void dbsk2d_ishock_loop_transform::sample_contour(
     vcl_vector<vgl_point_2d<double> >& background_grid)
 {
 
+    // Get image coordinates to check out of bounds
+    vil_image_resource_sptr image=dbsk2d_transform_manager::Instance()
+        .get_image();
+
+    
+
     // Determine elements on each side 
     vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
     vcl_map<int,dbsk2d_ishock_edge*> side1_contour;
@@ -286,17 +292,33 @@ void dbsk2d_ishock_loop_transform::sample_contour(
                 vgl_point_2d<double> minus_pt=_translatePoint(pt,vec2,r);
                 
 
+                if ( plus_pt.x() >= 0 && 
+                     plus_pt.y() >= 0 &&
+                     plus_pt.x() <= (image->ni()-1) && 
+                     plus_pt.y() <= (image->nj()-1))
+                {
+                    foreground_grid.push_back(plus_pt);
+                }
 
-                foreground_grid.push_back(plus_pt);
-                foreground_grid.push_back(minus_pt);
-
+                if ( minus_pt.x() >= 0 && 
+                     minus_pt.y() >= 0 &&
+                     minus_pt.x() <= (image->ni()-1) && 
+                     minus_pt.y() <= (image->nj()-1))
+                {
+                    foreground_grid.push_back(minus_pt);
+                }
 
 
                 r+=step_size;
             }
             
-            foreground_grid.push_back(pt);
-
+            if ( pt.x() >= 0 && 
+                 pt.y() >= 0 &&
+                 pt.x() <= (image->ni()-1) && 
+                 pt.y() <= (image->nj()-1))
+            {
+                foreground_grid.push_back(pt);
+            }
         }
 
     }
@@ -365,18 +387,34 @@ void dbsk2d_ishock_loop_transform::sample_contour(
                 vgl_point_2d<double> plus_pt=_translatePoint(pt,vec1,r);
                 vgl_point_2d<double> minus_pt=_translatePoint(pt,vec2,r);
                 
-
-
-                background_grid.push_back(plus_pt);
-                background_grid.push_back(minus_pt);
-
+                if ( plus_pt.x() >= 0 && 
+                     plus_pt.y() >= 0 &&
+                     plus_pt.x() <= (image->ni()-1) && 
+                     plus_pt.y() <= (image->nj()-1))
+                {
+                    background_grid.push_back(plus_pt);
+                }
+                
+                if ( minus_pt.x() >= 0 && 
+                     minus_pt.y() >= 0 &&
+                     minus_pt.x() <= (image->ni()-1) && 
+                     minus_pt.y() <= (image->nj()-1))
+                {
+                
+                    background_grid.push_back(minus_pt);
+                }
 
 
                 r+=step_size;
             }
-            
-            background_grid.push_back(pt);
 
+            if ( pt.x() >= 0 && 
+                 pt.y() >= 0 &&
+                 pt.x() <= (image->ni()-1) && 
+                 pt.y() <= (image->nj()-1))
+            {
+                background_grid.push_back(pt);
+            }
         }
 
     }
