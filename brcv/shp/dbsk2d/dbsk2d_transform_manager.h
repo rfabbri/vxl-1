@@ -162,6 +162,12 @@ public:
     // Determine gap cost
     double transform_probability( vsol_polyline_2d_sptr& curve);
 
+    // Determine loop cost
+    double transform_probability( vcl_vector<vgl_point_2d<double> >& 
+                                  foreground_grid,
+                                  vcl_vector<vgl_point_2d<double> >&
+                                  background_grid);
+                                  
     //: increment the id counter and return new id
     unsigned int nextAvailableID() { id_++; return id_; }
 
