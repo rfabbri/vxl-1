@@ -1285,6 +1285,59 @@ void dbsk2d_transform_manager::grid_points(
 }
 
 double dbsk2d_transform_manager::transform_probability(
+    vcl_vector<vgl_point_2d<double> >& 
+    foreground_grid,
+    vcl_vector<vgl_point_2d<double> >&
+    background_grid)
+{
+
+    // 1) Get L difference in a LAB color space
+    double L_chi2 = chi_squared_color_distance(foreground_grid,
+                                               background_grid,
+                                               L_img_,
+                                               0.0,
+                                               100.0,
+                                               50);
+
+    // 2) Get a difference in a LAB color space
+    double a_chi2 = chi_squared_color_distance(foreground_grid,
+                                               background_grid,
+                                               a_img_,
+                                               -110.0,
+                                               110.0,
+                                               100);
+    
+    // 3) Get b difference in a LAB color space
+    double b_chi2 = chi_squared_color_distance(foreground_grid,
+                                               background_grid,
+                                               b_img_,
+                                               -110.0,
+                                               110.0,
+                                               100);
+
+    // 4) Get b difference in a LAB color space
+    double texton_chi2 = chi_squared_color_distance(foreground_grid,
+                                                    background_grid,
+                                                    texton_image_,
+                                                    1.0,
+                                                    64.0,
+                                                    64);
+
+
+    double weight1(-4.5016);
+    double weight2(1.6921);
+    double weight3(0.9562);
+    double weight4(1.0045);
+    double weight5(2.8116);
+
+    double modulus=1*weight1+L_chi2*weight2+a_chi2*weight3+b_chi2*weight4+
+        texton_chi2*weight5;
+
+    double sigmoid=1/(1+vcl_exp(-1.0*modulus));
+
+    return sigmoid;
+}
+double dbsk2d_transform_manager::transform_probability(
     double gamma_norm, double k0_norm,double length)
 {
 
