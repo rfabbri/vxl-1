@@ -25,6 +25,9 @@
 #include <vcl_sstream.h>
 #include <vcl_set.h>
 
+#include <sys/resource.h>
+
+
 //: Constructor
 dbskr_align_shapes::dbskr_align_shapes(
     vcl_string model_filename,
@@ -103,15 +106,15 @@ void dbskr_align_shapes::set_up_dc_file()
                             vcl_ios::out | 
                             vcl_ios::binary);
     
-    double m = model_trees_.size();
-    double q = query_trees_.size();
+    float m = model_trees_.size();
+    float q = query_trees_.size();
     
     // Write out number of model trees vs query trees
     // we are comparing
     output_binary_file.write(reinterpret_cast<char *>(&m),
-                             sizeof(double));
+                             sizeof(float));
     output_binary_file.write(reinterpret_cast<char *>(&q),
-                             sizeof(double));
+                             sizeof(float));
 
     for (unsigned int p=0; p < query_polygons_.size() ; ++p)
     {
@@ -134,21 +137,21 @@ void dbskr_align_shapes::set_up_dc_file()
             }
         }
 
-        double size=points.size();
+        float size=points.size();
 
         output_binary_file.write(reinterpret_cast<char *>(&size),
-                                 sizeof(double));
+                                 sizeof(float));
 
         // write out points
         for ( unsigned int v=0; v < points.size() ; ++v)
         {
-            double x=points[v].first;
-            double y=points[v].second;
+            float x=points[v].first;
+            float y=points[v].second;
             
             output_binary_file.write(reinterpret_cast<char *>(&x),
-                                     sizeof(double));
+                                     sizeof(float));
             output_binary_file.write(reinterpret_cast<char *>(&y),
-                                     sizeof(double));
+                                     sizeof(float));
             
         }
 
@@ -390,6 +393,13 @@ void dbskr_align_shapes::match()
             curve_list1.clear();
             curve_list2.clear();
             map_list.clear();
+
+            // Memory usage GB
+            // struct rusage r_usage;
+            // getrusage(RUSAGE_SELF,&r_usage);
+            // vcl_cout<<"Memory Usage in GB: "<<r_usage.ru_maxrss*1.0e-9
+            //         <<vcl_endl;
+
         }
 
         model_trees_.erase(model_trees_.begin());
@@ -965,10 +975,12 @@ void dbskr_align_shapes::shape_alignment(
                
             }
 
-            output_binary_file.write(reinterpret_cast<char *>(&mapping_pt.x()),
-                                     sizeof(double));
-            output_binary_file.write(reinterpret_cast<char *>(&mapping_pt.y()),
-                                     sizeof(double));
+            float map_x=mapping_pt.x();
+            float map_y=mapping_pt.y();
+            output_binary_file.write(reinterpret_cast<char *>(&map_x),
+                                     sizeof(float));
+            output_binary_file.write(reinterpret_cast<char *>(&map_y),
+                                     sizeof(float));
 
 
         }
