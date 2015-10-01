@@ -793,11 +793,13 @@ dbsk2d_ishock_bpoint* dbsk2d_transform_manager::get_anchor_pt(
             _isPointAboveLine((*source_node.begin()).second->origin(),
                               lstart,lend);
         
-        if ( source_pt_above == s_pt_above )
+        if ( source_pt_above == s_pt_above &&
+             source_pt_above != e_pt_above )
         {
             anchor_pt=bl1->s_pt();
         }
-        else if ( source_pt_above == e_pt_above )
+        else if ( source_pt_above == e_pt_above &&
+                  source_pt_above != s_pt_above )
         {
             anchor_pt=bl1->e_pt();
         }
