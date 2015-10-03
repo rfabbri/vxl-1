@@ -423,43 +423,43 @@ void dbsk2d_ishock_loop_transform::sample_contour(
 
 double dbsk2d_ishock_loop_transform::likelihood()
 {
-    vcl_vector<vgl_point_2d<double> > fg_samples;
-    vcl_vector<vgl_point_2d<double> > bg_samples;
-    this->sample_contour(fg_samples,bg_samples);
-    return 1.0-dbsk2d_transform_manager::Instance().transform_probability
-        (fg_samples,bg_samples);
+    // vcl_vector<vgl_point_2d<double> > fg_samples;
+    // vcl_vector<vgl_point_2d<double> > bg_samples;
+    // this->sample_contour(fg_samples,bg_samples);
+    // return 1.0-dbsk2d_transform_manager::Instance().transform_probability
+    //     (fg_samples,bg_samples);
 
-    // vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
-    // vcl_map<int,dbsk2d_ishock_bpoint*> curve_map;
-    // for ( it = removal_bnd_elements_.begin(); 
-    //       it != removal_bnd_elements_.end(); ++it)
-    // {
-    //     dbsk2d_ishock_belm* belm = (*it).second;
+    vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
+    vcl_map<int,dbsk2d_ishock_bpoint*> curve_map;
+    for ( it = removal_bnd_elements_.begin(); 
+          it != removal_bnd_elements_.end(); ++it)
+    {
+        dbsk2d_ishock_belm* belm = (*it).second;
     
-    //     if ( belm->is_a_line())
-    //     {
-    //         dbsk2d_ishock_bline* bline=dynamic_cast<dbsk2d_ishock_bline*>
-    //             (belm);
-    //             curve_map[bline->s_pt()->id()]=bline->s_pt();
-    //             curve_map[bline->e_pt()->id()]=bline->e_pt();
-    //     }
-    //     else
-    //     {
-    //         dbsk2d_ishock_bpoint* bpoint=
-    //             dynamic_cast<dbsk2d_ishock_bpoint*>(belm);
-    //         curve_map[bpoint->id()]=bpoint;
-    //     } 
-    // }
+        if ( belm->is_a_line())
+        {
+            dbsk2d_ishock_bline* bline=dynamic_cast<dbsk2d_ishock_bline*>
+                (belm);
+                curve_map[bline->s_pt()->id()]=bline->s_pt();
+                curve_map[bline->e_pt()->id()]=bline->e_pt();
+        }
+        else
+        {
+            dbsk2d_ishock_bpoint* bpoint=
+                dynamic_cast<dbsk2d_ishock_bpoint*>(belm);
+            curve_map[bpoint->id()]=bpoint;
+        } 
+    }
 
-    // vcl_vector<vgl_point_2d<double> > curve;
-    // vcl_map<int,dbsk2d_ishock_bpoint*>::iterator mit;
-    // for ( mit = curve_map.begin() ; mit != curve_map.end() ; ++mit)
-    // {
-    //     curve.push_back((*mit).second->pt());
-    // }
+    vcl_vector<vgl_point_2d<double> > curve;
+    vcl_map<int,dbsk2d_ishock_bpoint*>::iterator mit;
+    for ( mit = curve_map.begin() ; mit != curve_map.end() ; ++mit)
+    {
+        curve.push_back((*mit).second->pt());
+    }
 
-    // return 
-    //     1.0-dbsk2d_transform_manager::Instance().transform_probability(curve);
+    return 
+        1.0-dbsk2d_transform_manager::Instance().transform_probability(curve);
 }
 
 //: remove boundary element
