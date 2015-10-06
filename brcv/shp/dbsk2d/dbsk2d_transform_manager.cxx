@@ -1326,17 +1326,32 @@ double dbsk2d_transform_manager::transform_probability(
                                                     64);
 
 
-    double weight1(-4.5016);
-    double weight2(1.6921);
-    double weight3(0.9562);
-    double weight4(1.0045);
-    double weight5(2.8116);
+
+    double weight1(-0.9521);
+    double weight2(-0.6998);
+    double weight3(2.7862);
+    double weight4(0.6521);
+    double weight5(-0.8183);
+
+    // double weight1(-1.6117);
+    // double weight2(-0.0637);
+    // double weight3(1.9599);
+    // double weight4(2.3581);
+    // double weight5(-1.9080);
+
+    // double weight1(-4.5016);
+    // double weight2(1.6921);
+    // double weight3(0.9562);
+    // double weight4(1.0045);
+    // double weight5(2.8116);
 
     double modulus=1*weight1+L_chi2*weight2+a_chi2*weight3+b_chi2*weight4+
         texton_chi2*weight5;
 
     double sigmoid=1/(1+vcl_exp(-1.0*modulus));
 
+    // vcl_cout<<L_chi2<<" "<<a_chi2<<" "<<b_chi2<<" "<<texton_chi2<<" "<<
+    //     sigmoid<<vcl_endl;
     return sigmoid;
 }
 double dbsk2d_transform_manager::transform_probability(
