@@ -750,6 +750,11 @@ void dbsk2d_containment_graph::expand_node(
         dbsk2d_ishock_bpoint* anchor_pt = dbsk2d_transform_manager::Instance()
             .get_anchor_pt(gap4_pairs[i]);
 
+        if ( anchor_pt->is_an_end_point())
+        {
+            continue;
+        }
+
         belms_key.insert(gap4.first->id());
         belms_key.insert(anchor_pt->id());
 
