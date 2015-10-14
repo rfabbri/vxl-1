@@ -957,7 +957,8 @@ void dbsk2d_containment_graph::expand_node(
            
                     trans_loop1->get_belms(local_copy);
 
-                    if ( deg_three_loops.count(local_copy) )
+                    if ( deg_three_loops.count(local_copy)  || 
+                         !trans_loop1->valid_transform() )
                     {
                         trans_loop1=0;
                         continue;
@@ -969,7 +970,11 @@ void dbsk2d_containment_graph::expand_node(
                                                   node,
                                                   local_copy);
 
-                    if ( !flag && trans_loop1->valid_transform() )
+                    double prob = trans_loop1->likelihood();
+
+                    if ( !flag && trans_loop1->valid_transform() && 
+                         prob > dbsk2d_transform_manager::
+                         Instance().get_threshold() )
                     {
 
                         dbsk2d_containment_node_sptr child = 
@@ -979,7 +984,7 @@ void dbsk2d_containment_graph::expand_node(
                         child->set_key(local_copy);
                         stack_.push(child);
                         node->set_child_node(child);
-                        child->set_prob(node->get_prob()*1.0);
+                        child->set_prob(node->get_prob()*prob);
                         cgraph_nodes_[child->get_depth()].push_back(child);
                         
                     }
