@@ -13,8 +13,7 @@
 # Run with:
 #
 #filename = "/Users/rfabbri/cprg/vxlprg/lemsvxl/contrib/rfabbri/mw/scripts/blender_cameras.py"
-#exec(compile(open(filename).read(), filename, 'exec'))
-
+# exec(compile(open(filename).read(), filename, 'exec'))
 import bpy
 import bpy_extras
 import numpy
@@ -26,7 +25,7 @@ from mathutils import Matrix
 
 # Build intrinsic camera parameters from Blender camera data
 #
-# See notes on this in 
+# See notes on this in
 # blender.stackexchange.com/questions/15102/what-is-blenders-camera-projection-matrix-model
 #
 # Minor notes:
@@ -40,11 +39,18 @@ def get_calibration_matrix_K_from_blender(camd):
     scale = scene.render.resolution_percentage / 100
     sensor_width_in_mm = camd.sensor_width
     sensor_height_in_mm = camd.sensor_height
-    aspect_ratio = scene.render.pixel_aspect_x / scene.render.pixel_aspect_y
-    # the sensor width is fixed, the sensor height is effectively changed with the
-    # aspect ratio
-    s_u = resolution_x_in_px * scale / sensor_width_in_mm
-    s_v = resolution_y_in_px * scale * aspect_ratio / sensor_height_in_mm
+    pixel_aspect_ratio = scene.render.pixel_aspect_x / scene.render.pixel_aspect_y
+    if (camd.sensor_fit == 'VERTICAL'):
+        # the sensor height is fixed (sensor fit is horizontal), 
+        # the sensor width is effectively changed with the pixel aspect ratio
+        s_u = resolution_x_in_px * scale / sensor_width_in_mm / pixel_aspect_ratio 
+        s_v = resolution_y_in_px * scale / sensor_height_in_mm
+    else: # 'HORIZONTAL' and 'AUTO'
+        # the sensor width is fixed (sensor fit is horizontal), 
+        # the sensor height is effectively changed with the pixel aspect ratio
+        pixel_aspect_ratio = scene.render.pixel_aspect_x / scene.render.pixel_aspect_y
+        s_u = resolution_x_in_px * scale / sensor_width_in_mm
+        s_v = resolution_y_in_px * scale * pixel_aspect_ratio / sensor_height_in_mm
 
     # Parameters of intrinsic calibration matrix K
     alpha_u = f_in_mm * s_u
@@ -136,6 +142,41 @@ def get_3x4_P_matrix_from_blender(cam):
     K = get_calibration_matrix_K_from_blender(cam.data)
     RT = get_3x4_RT_matrix_from_blender(cam)
     return K*RT, K, RT
+
+# scale: resolution scale percentage as in GUI, known a priori
+def get_blender_camera_from_3x4_P(P, scale):
+    # get krt
+    K, R_world2cv, T_world2cv = KRT(P)
+
+
+    sensor_width_in_mm = K[1][1]*K[0][2] / (K[0][0]*K[1][2])
+    sensor_height_in_mm = 1  # doesn't matter
+    resolution_x_in_px = K[0][2]*2  # principal point assumed at the center
+    resolution_y_in_px = K[1][2]*2  # principal point assumed at the center
+    resolution_y_in_px = scene.render.resolution_y
+
+    s_u = resolution_x_in_px / sensor_width_in_mm
+    s_v = resolution_y_in_px / sensor_height_in_mm
+    # TODO include aspect ratio
+
+    f_in_mm = K[0][0] / s_u
+    # recover original resolution
+    scene.render.resolution_x = resolution_x_in_px / scale
+    scene.render.resolution_y = resolution_y_in_px / scale
+    scene.render.resolution_percentage = scale * 100
+
+    camd.lens =   f_in_mm 
+    camd.sensor_width  = sensor_width_in_mm
+
+    R_bcam2cv = Matrix(
+        ((1, 0,  0),
+         (0, -1, 0),
+         (0, 0, -1)))
+
+    R_cv2world = R_world2cv.transposed()
+    rotation =  R_cv2world * R_bcam2cv
+    location = -R_cv2world * T_world2cv
+    
 
 
 #------------------------------------------------------------------------
@@ -283,14 +324,14 @@ def get_cam():
 def test():
 
 # For simple tests:
-#     cam = bpy.data.objects['Camera.001']
+    cam = bpy.data.objects['Camera.001']
 
 # For the sunset set
 #     cam = bpy.data.objects['Camera.004']
 
 # For the cube set
 #     cam = bpy.data.objects['Camera']
-    cam = bpy.data.objects['Camera.010']
+#    cam = bpy.data.objects['Camera.010']
     P, K, RT = get_3x4_P_matrix_from_blender(cam)
     print("K")
     print(K)

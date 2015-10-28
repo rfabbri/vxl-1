@@ -114,9 +114,11 @@ void dbdet_nms::apply(bool collect_tokens,
 #ifndef NDEBUG
         vcl_cout << "Ignoring bad gradient direction: " <<  direction <<  vcl_endl
           << " gx: " << gx << " gy: " << gy << vcl_endl
-          << " x: " << x << "y: " << y;
+          << " x: " << x << " y: " << y << " margin: " << margin_ 
+          << "grad_mag_.ni: " << grad_mag_.ni() << " grad_mag_.nj: " << grad_mag_.nj() << vcl_endl;
         // TODO: investigate the bad gradient directions when they happen
         // and perhaps make sure it can't be fixed instead of ignored
+
 #endif
         continue;
       }
