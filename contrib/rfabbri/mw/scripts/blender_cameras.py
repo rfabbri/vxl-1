@@ -143,11 +143,49 @@ def get_3x4_P_matrix_from_blender(cam):
     RT = get_3x4_RT_matrix_from_blender(cam)
     return K*RT, K, RT
 
+# def qr( self, ROnly=0 ):
+#     'QR decomposition using Householder reflections: Q*R==self, Q.tr()*Q==I(n), R upper triangular'
+#     R = self
+#     m, n = R.size
+#     for i in range(min(m,n)):
+#         v, beta = R.tr()[i].house(i)
+#         R -= v.outer( R.tr().mmul(v)*beta )
+#     for i in range(1,min(n,m)): R[i][:i] = [0] * i
+#     R = Mat(R[:n])
+#     if ROnly: return R
+#     Q = R.tr().solve(self.tr()).tr()       # Rt Qt = At    nn  nm  = nm
+#     self.qr = lambda r=0, c=self: not r and c==self and (Q,R) or Matrix.qr(self,r) #Cache result
+#     assert NPOST or m>=n and Q.size==(m,n) and isinstance(R,UpperTri) or m<n and Q.size==(m,m) and R.size==(m,n)
+#     assert NPOST or Q.mmul(R)==self and Q.tr().mmul(Q)==eye(min(m,n))
+#     return Q, R
+
+# P 3x4
+# def KRT_from_P(P):
+#     return
+
+# rq decomposition acting on blender matrix, using only libs that already come with
+# blender by default
+#
+# Author: Ricardo Fabbri
+# Reference implementation: Oxford's visual geometry group matlab toolbox
+def rq(P):
+    P = numpy.matrix(P).T
+    # numpy only provides qr. Scipy has rq but doesn't ship with blender
+    q, r = numpy.linalg.qr(P[ ::-1, ::-1], 'complete')
+    q = q.T
+    q = q[ ::-1, ::-1]
+    r = r.T
+    r = r[ ::-1, ::-1]
+
+    if (numpy.linalg.det(q) < 0):
+        r[:,0] *= -1
+        q[0,:] *= -1
+    return r, q
+
 # scale: resolution scale percentage as in GUI, known a priori
 def get_blender_camera_from_3x4_P(P, scale):
     # get krt
     K, R_world2cv, T_world2cv = KRT(P)
-
 
     sensor_width_in_mm = K[1][1]*K[0][2] / (K[0][0]*K[1][2])
     sensor_height_in_mm = 1  # doesn't matter
@@ -176,6 +214,10 @@ def get_blender_camera_from_3x4_P(P, scale):
     R_cv2world = R_world2cv.transposed()
     rotation =  R_cv2world * R_bcam2cv
     location = -R_cv2world * T_world2cv
+    bpy.context.object
+
+    cam.matrix_world = Matrix.Translation(location)*rotation.to_4x4()
+    bpy.context.scene.update()
     
 
 
@@ -386,10 +428,24 @@ def test():
     # project
     # plot
 
+def test2():
+    P = Matrix([
+    [2. ,  0. , - 10. ,   282.  ],
+    [0. ,- 3. , - 14. ,   417.  ],
+    [0. ,  0. , - 1.  , - 18.   ]
+    ])
+    r, q = rq(P)
+    print(r)
+    print(q)
+
 if __name__ == "__main__":
-   set_frame(1)
-   test()
-    
+#   set_frame(1)
+#   test()
+   test2()
+   
+
+
+
 #    pm = get_cam()
 
 #   for i in range(1,101):
@@ -402,3 +458,6 @@ if __name__ == "__main__":
 #       # Advance animation frame
 #       test()
 #       next_frame()
+
+
+
