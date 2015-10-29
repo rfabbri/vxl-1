@@ -160,15 +160,54 @@ def get_3x4_P_matrix_from_blender(cam):
 #     return Q, R
 
 # P 3x4
-# def KRT_from_P(P):
-#     return
+# Reference implementations: 
+#   Oxford's visual geometry group matlab toolbox 
+#   Scilab Image Processing toolbox
+# XXX
+def KRT_from_P(P):
+    N = 3
+    H = P(:,1:N);
+    H = P.to_3x3()
+
+    [K,R] = rf_rq(H);
+      
+    if argn(2) < 2
+      K = K / K(N,N);
+    //  if K(1,1) < 0
+    //    D = diag([-1 -1 ones(1,N-2)]);
+    //    K = K * D;
+    //    R = D * R;
+        
+    //    test = K*R; 
+    //    vgg_assert0(test/test(1,1) - H/H(1,1), 1e-07)
+    //  end
+      // from http://ksimek.github.io/2012/08/14/decompose/
+      // make diagonal of K positive
+      sg = diag(sign(diag(K)));
+
+      K = K * sg;
+      R = sg * R; 
+      // det(R) negative, just invert - the proj equation remains same:
+      R = -R
+    end
+
+
+
+    if argn(1) > 2
+      C = -P(:,1:N)\P(:,$);
+    end
+    
+    
+    return
 
 # rq decomposition acting on blender matrix, using only libs that already come with
 # blender by default
 #
 # Author: Ricardo Fabbri
-# Reference implementation: Oxford's visual geometry group matlab toolbox
-def rq(P):
+# Reference implementations: 
+#   Oxford's visual geometry group matlab toolbox 
+#   Scilab Image Processing toolbox
+def rf_rq(P):
     P = numpy.matrix(P).T
     # numpy only provides qr. Scipy has rq but doesn't ship with blender
     q, r = numpy.linalg.qr(P[ ::-1, ::-1], 'complete')
@@ -434,7 +473,7 @@ def test2():
     [0. ,- 3. , - 14. ,   417.  ],
     [0. ,  0. , - 1.  , - 18.   ]
     ])
-    r, q = rq(P)
+    r, q = rf_rq(P)
     print(r)
     print(q)
 
