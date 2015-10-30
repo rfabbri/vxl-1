@@ -164,7 +164,7 @@ def get_3x4_P_matrix_from_blender(cam):
 # Reference implementations: 
 #   Oxford's visual geometry group matlab toolbox 
 #   Scilab Image Processing toolbox
-def KRC_from_P(P):
+def KRT_from_P(P):
     N = 3
     H = P[:,0:N]
     # if not numpy H = P.to_3x3()
@@ -188,7 +188,8 @@ def KRC_from_P(P):
     R = -R
     #C = -H\P[:,-1]
     C = numpy.linalg.lstsq(-H, P[:,-1])[0]
-    return K, R, C
+    T = -R*C
+    return K, R, T
 
 # rq decomposition acting on blender matrix, using only libs that already come with
 # blender by default
@@ -215,40 +216,68 @@ def rf_rq(P):
     return r, q
 
 # scale: resolution scale percentage as in GUI, known a priori
+# P: numpy 3x4
 def get_blender_camera_from_3x4_P(P, scale):
     # get krt
-    K, R_world2cv, T_world2cv = KRT(P)
+    K, R_world2cv, T_world2cv = KRT_from_P(numpy.matrix(P))
 
-    sensor_width_in_mm = K[1][1]*K[0][2] / (K[0][0]*K[1][2])
+    scene = bpy.context.scene
+    sensor_width_in_mm = K[1,1]*K[0,2] / (K[0,0]*K[1,2])
     sensor_height_in_mm = 1  # doesn't matter
-    resolution_x_in_px = K[0][2]*2  # principal point assumed at the center
-    resolution_y_in_px = K[1][2]*2  # principal point assumed at the center
+    resolution_x_in_px = K[0,2]*2  # principal point assumed at the center
+    resolution_y_in_px = K[1,2]*2  # principal point assumed at the center
     resolution_y_in_px = scene.render.resolution_y
 
     s_u = resolution_x_in_px / sensor_width_in_mm
     s_v = resolution_y_in_px / sensor_height_in_mm
     # TODO include aspect ratio
 
-    f_in_mm = K[0][0] / s_u
+    f_in_mm = K[0,0] / s_u
     # recover original resolution
     scene.render.resolution_x = resolution_x_in_px / scale
     scene.render.resolution_y = resolution_y_in_px / scale
     scene.render.resolution_percentage = scale * 100
-
-    camd.lens =   f_in_mm 
-    camd.sensor_width  = sensor_width_in_mm
 
     R_bcam2cv = Matrix(
         ((1, 0,  0),
          (0, -1, 0),
          (0, 0, -1)))
 
-    R_cv2world = R_world2cv.transposed()
-    rotation =  R_cv2world * R_bcam2cv
+    R_cv2world = R_world2cv.T
+    rotation =  Matrix(R_cv2world.tolist()) * R_bcam2cv
     location = -R_cv2world * T_world2cv
-    bpy.context.object
 
-    cam.matrix_world = Matrix.Translation(location)*rotation.to_4x4()
+    # create a new camera
+    bpy.ops.object.add(
+        type='CAMERA',
+        location=location)
+    ob = bpy.context.object
+    ob.name = 'CamFrom3x4POb'
+    cam = ob.data
+    cam.name = 'CamFrom3x4P'
+ 
+    # Lens
+    cam.type = 'PERSP'
+    cam.lens = f_in_mm 
+    cam.lens_unit = 'MILLIMETERS'
+    cam.sensor_width  = sensor_width_in_mm
+    ob.matrix_world = Matrix.Translation(location)*rotation.to_4x4()
+
+#     cam.shift_x = -0.05
+#     cam.shift_y = 0.1
+#     cam.clip_start = 10.0
+#     cam.clip_end = 250.0
+ 
+#     empty = bpy.data.objects.new('DofEmpty', None)
+#     empty.location = origin+Vector((0,10,0))
+#     cam.dof_object = empty
+ 
+    # Display
+    cam.show_name = True
+ 
+    # Make this the current camera
+    scene.camera = ob
+
     bpy.context.scene.update()
     
 
@@ -474,12 +503,11 @@ def test2():
 # r = [1 0 0; 0 -1 0; 0 0 -1
 # ]
 # t = [231 223 -18]
-    k, r, c = KRC_from_P(numpy.matrix(P))
-    t = -r*c
+    k, r, t = KRT_from_P(numpy.matrix(P))
     print('k',k)
     print(r)
     print(t)
-
+    get_blender_camera_from_3x4_P(P, 1)
 
 
 if __name__ == "__main__":
