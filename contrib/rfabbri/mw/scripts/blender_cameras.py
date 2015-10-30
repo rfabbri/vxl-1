@@ -226,7 +226,6 @@ def get_blender_camera_from_3x4_P(P, scale):
     sensor_height_in_mm = 1  # doesn't matter
     resolution_x_in_px = K[0,2]*2  # principal point assumed at the center
     resolution_y_in_px = K[1,2]*2  # principal point assumed at the center
-    resolution_y_in_px = scene.render.resolution_y
 
     s_u = resolution_x_in_px / sensor_width_in_mm
     s_v = resolution_y_in_px / sensor_height_in_mm
