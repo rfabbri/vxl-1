@@ -235,16 +235,16 @@ def get_blender_camera_from_3x4_P(P, scale):
 
     # Use this if the projection matrix follows the convention listed in my answer to
     # http://blender.stackexchange.com/questions/38009/3x4-camera-matrix-from-blender-camera
-    R_bcam2cv = Matrix(
-        ((1, 0,  0),
-         (0, -1, 0),
-         (0, 0, -1)))
+#     R_bcam2cv = Matrix(
+#         ((1, 0,  0),
+#          (0, -1, 0),
+#          (0, 0, -1)))
 
-    # Use this if the projection matrix follows the convention from e.g. the matlab calibration toolbox:
-    # R_bcam2cv = Matrix(
-    #     ((-1, 0,  0),
-    #      (0, 1, 0),
-    #      (0, 0, 1)))
+#    Use this if the projection matrix follows the convention from e.g. the matlab calibration toolbox:
+    R_bcam2cv = Matrix(
+        ((-1, 0,  0),
+         (0, 1, 0),
+         (0, 0, 1)))
 
     R_cv2world = R_world2cv.T
     rotation =  Matrix(R_cv2world.tolist()) * R_bcam2cv
@@ -553,11 +553,13 @@ def test():
     # plot
 
 def test2():
-    P = Matrix([
-    [2789.977470, 34.945628, -928.653184, 93.386696  ],
-    [0.831300, -2824.052194, -636.441117, 578.409788 ],
-    [-0.044857, 0.006928,    -0.998969,   0.542557   ]
-    ])
+#     P = Matrix([
+#     [2789.977470, 34.945628, -928.653184, 93.386696  ],
+#     [0.831300, -2824.052194, -636.441117, 578.409788 ],
+#     [-0.044857, 0.006928,    -0.998969,   0.542557   ]
+#     ])
+#     P = numpy.loadtxt("/Users/rfabbri/3d-curve-drawing/ground-truth/models/pabellon_barcelona_v1/3d/ground-truth-pavillion/ground-truth-pavillion-cameras/078.projmatrix")
+     P = numpy.loadtxt("/Users/rfabbri/3d-curve-drawing/ground-truth/models/pabellon_barcelona_v1/3d/ground-truth-pavillion/ground-truth-pavillion-cameras/078.projmatrix")
 #     P = Matrix([
 #     [2. ,  0. , - 10. ,   282.  ],
 #     [0. ,- 3. , - 14. ,   417.  ],
@@ -566,11 +568,10 @@ def test2():
     r, q = rf_rq(numpy.matrix(P))
     print(r)
     print(q)
-# should get out
-# k = [2 0 10; 0 3 14; 0 0 1]
-# r = [1 0 0; 0 -1 0; 0 0 -1
-# ]
-# t = [231 223 -18]
+    # This test P was constructed as k*[r | t] where
+    #     k = [2 0 10; 0 3 14; 0 0 1]
+    #     r = [1 0 0; 0 -1 0; 0 0 -1]
+    #     t = [231 223 -18]
     k, r, t = KRT_from_P(numpy.matrix(P))
     print('k',k)
     print(r)
