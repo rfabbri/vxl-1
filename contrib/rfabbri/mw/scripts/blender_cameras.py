@@ -159,46 +159,36 @@ def get_3x4_P_matrix_from_blender(cam):
 #     assert NPOST or Q.mmul(R)==self and Q.tr().mmul(Q)==eye(min(m,n))
 #     return Q, R
 
-# P 3x4
+# P 3x4 numpy matrix
+#    To use w blender matrix P = numpy.matrix(P).T
 # Reference implementations: 
 #   Oxford's visual geometry group matlab toolbox 
 #   Scilab Image Processing toolbox
-# XXX
-def KRT_from_P(P):
+def KRC_from_P(P):
     N = 3
-    H = P(:,1:N);
-    H = P.to_3x3()
+    H = P[:,0:N]
+    # if not numpy H = P.to_3x3()
 
-    [K,R] = rf_rq(H);
+    [K,R] = rf_rq(H)
       
-    if argn(2) < 2
-      K = K / K(N,N);
-    //  if K(1,1) < 0
-    //    D = diag([-1 -1 ones(1,N-2)]);
-    //    K = K * D;
-    //    R = D * R;
-        
-    //    test = K*R; 
-    //    vgg_assert0(test/test(1,1) - H/H(1,1), 1e-07)
-    //  end
-      // from http://ksimek.github.io/2012/08/14/decompose/
-      // make diagonal of K positive
-      sg = diag(sign(diag(K)));
-
-      K = K * sg;
-      R = sg * R; 
-      // det(R) negative, just invert - the proj equation remains same:
-      R = -R
-    end
-
-
-
-    if argn(1) > 2
-      C = -P(:,1:N)\P(:,$);
-    end
+    K /= K[-1,-1]
     
-    
-    return
+#     D = numpy.diag([-1, -1, numpy.ones((1,N-2))])
+#     K = K * D
+#     R = D * R
+#     test = K*R;
+
+    # from http://ksimek.github.io/2012/08/14/decompose/
+    # make the diagonal of K positive
+    sg = numpy.diag(numpy.sign(numpy.diag(K)))
+
+    K = K * sg
+    R = sg * R
+    # det(R) negative, just invert - the proj equation remains same:
+    R = -R
+    #C = -H\P[:,-1]
+    C = numpy.linalg.lstsq(-H, P[:,-1])[0]
+    return K, R, C
 
 # rq decomposition acting on blender matrix, using only libs that already come with
 # blender by default
@@ -207,8 +197,11 @@ def KRT_from_P(P):
 # Reference implementations: 
 #   Oxford's visual geometry group matlab toolbox 
 #   Scilab Image Processing toolbox
+#
+# Input 3x4 numpy matrix P
+# Returns numpy matrices r,q
 def rf_rq(P):
-    P = numpy.matrix(P).T
+    P = P.T
     # numpy only provides qr. Scipy has rq but doesn't ship with blender
     q, r = numpy.linalg.qr(P[ ::-1, ::-1], 'complete')
     q = q.T
@@ -473,15 +466,26 @@ def test2():
     [0. ,- 3. , - 14. ,   417.  ],
     [0. ,  0. , - 1.  , - 18.   ]
     ])
-    r, q = rf_rq(P)
+    r, q = rf_rq(numpy.matrix(P))
     print(r)
     print(q)
+# should get out
+# k = [2 0 10; 0 3 14; 0 0 1]
+# r = [1 0 0; 0 -1 0; 0 0 -1
+# ]
+# t = [231 223 -18]
+    k, r, c = KRC_from_P(numpy.matrix(P))
+    t = -r*c
+    print('k',k)
+    print(r)
+    print(t)
+
+
 
 if __name__ == "__main__":
 #   set_frame(1)
 #   test()
    test2()
-   
 
 
 
