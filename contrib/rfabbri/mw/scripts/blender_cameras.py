@@ -12,9 +12,8 @@
 #
 # Run with:
 #
-#filename = "/Users/rfabbri/cprg/vxlprg/lemsvxl/contrib/rfabbri/mw/scripts/blender_cameras.py"
-#exec(compile(open(filename).read(), filename, 'exec'))
-import bpy
+# filename = "/Users/rfabbri/cprg/vxlprg/lemsvxl/contrib/rfabbri/mw/scripts/blender_cameras.py"
+# exec(compile(open(filename).read(), filename, 'exec'))
 import bpy_extras
 import numpy
 from mathutils import Matrix
@@ -180,7 +179,8 @@ def KRT_from_P(P):
     K = K * sg
     R = sg * R
     # det(R) negative, just invert - the proj equation remains same:
-    R = -R
+    if (numpy.linalg.det(R) < 0):
+        R = -R
     # C = -H\P[:,-1]
     C = numpy.linalg.lstsq(-H, P[:,-1])[0]
     T = -R*C
@@ -214,7 +214,7 @@ def rf_rq(P):
 # Run this in Object Mode
 # scale: resolution scale percentage as in GUI, known a priori
 # P: numpy 3x4
-def get_blender_camera_from_3x4_P(P, scale):
+def get_blender_camera_from_3x4_P(P, scale, suff=''):
     # get krt
     K, R_world2cv, T_world2cv = KRT_from_P(numpy.matrix(P))
 
@@ -235,16 +235,16 @@ def get_blender_camera_from_3x4_P(P, scale):
 
     # Use this if the projection matrix follows the convention listed in my answer to
     # http://blender.stackexchange.com/questions/38009/3x4-camera-matrix-from-blender-camera
-#     R_bcam2cv = Matrix(
-#         ((1, 0,  0),
-#          (0, -1, 0),
-#          (0, 0, -1)))
+    R_bcam2cv = Matrix(
+        ((1, 0,  0),
+         (0, -1, 0),
+         (0, 0, -1)))
 
 #    Use this if the projection matrix follows the convention from e.g. the matlab calibration toolbox:
-    R_bcam2cv = Matrix(
-        ((-1, 0,  0),
-         (0, 1, 0),
-         (0, 0, 1)))
+#     R_bcam2cv = Matrix(
+#         ((-1, 0,  0),
+#          (0, 1, 0),
+#          (0, 0, 1)))
 
     R_cv2world = R_world2cv.T
     rotation =  Matrix(R_cv2world.tolist()) * R_bcam2cv
@@ -255,15 +255,16 @@ def get_blender_camera_from_3x4_P(P, scale):
         type='CAMERA',
         location=location)
     ob = bpy.context.object
-    ob.name = 'CamFrom3x4PObj'
+    ob.name = 'CamFrom3x4PObj' + suff
     cam = ob.data
-    cam.name = 'CamFrom3x4P'
+    cam.name = 'CamFrom3x4P' + suff
  
     # Lens
     cam.type = 'PERSP'
     cam.lens = f_in_mm 
     cam.lens_unit = 'MILLIMETERS'
     cam.sensor_width  = sensor_width_in_mm
+    cam.draw_size = 0.02 # XXX only for robot data
     ob.matrix_world = Matrix.Translation(location)*rotation.to_4x4()
 
     #     cam.shift_x = -0.05
@@ -277,7 +278,7 @@ def get_blender_camera_from_3x4_P(P, scale):
     # Display
     cam.show_name = True
     # Make this the current camera
-    scene.camera = ob
+    #scene.camera = ob
     bpy.context.scene.update()
     
 # scale: resolution scale percentage as in GUI, known a priori
@@ -559,24 +560,35 @@ def test2():
 #     [-0.044857, 0.006928,    -0.998969,   0.542557   ]
 #     ])
 #     P = numpy.loadtxt("/Users/rfabbri/3d-curve-drawing/ground-truth/models/pabellon_barcelona_v1/3d/ground-truth-pavillion/ground-truth-pavillion-cameras/078.projmatrix")
-     P = numpy.loadtxt("/Users/rfabbri/3d-curve-drawing/ground-truth/models/pabellon_barcelona_v1/3d/ground-truth-pavillion/ground-truth-pavillion-cameras/078.projmatrix")
+#     path = "/Users/rfabbri/3d-curve-drawing/ground-truth/models/pabellon_barcelona_v1/3d/ground-truth-pavillion/ground-truth-pavillion-cameras/"
+#     name = path + "078"
+    path = "/Users/rfabbri/3d-curve-drawing/ground-truth/robot/feature/vase/vase-mcs-work/"
+
+
+#     suf = "Img026_06"
+#     sufs = ["Img066_14", "Img091_19", "Img106_03"]
+#    sufs = ["Img041_09"]# , "Img066_14", "Img091_19", "Img106_03"]
+    sufs = ["Img001_01"]# , "Img066_14", "Img091_19", "Img106_03"]
+    for suf in sufs :
+        name = path + suf
+        P = numpy.loadtxt(name+".projmatrix")
 #     P = Matrix([
 #     [2. ,  0. , - 10. ,   282.  ],
 #     [0. ,- 3. , - 14. ,   417.  ],
 #     [0. ,  0. , - 1.  , - 18.   ]
 #     ])
-    r, q = rf_rq(numpy.matrix(P))
-    print(r)
-    print(q)
-    # This test P was constructed as k*[r | t] where
-    #     k = [2 0 10; 0 3 14; 0 0 1]
-    #     r = [1 0 0; 0 -1 0; 0 0 -1]
-    #     t = [231 223 -18]
-    k, r, t = KRT_from_P(numpy.matrix(P))
-    print('k',k)
-    print(r)
-    print(t)
-    get_blender_camera_from_3x4_P(P, 1)
+        r, q = rf_rq(numpy.matrix(P))
+        print(r)
+        print(q)
+        # This test P was constructed as k*[r | t] where
+        #     k = [2 0 10; 0 3 14; 0 0 1]
+        #     r = [1 0 0; 0 -1 0; 0 0 -1]
+        #     t = [231 223 -18]
+        k, r, t = KRT_from_P(numpy.matrix(P))
+        print('k',k)
+        print(r)
+        print(t)
+        get_blender_camera_from_3x4_P(P, 1, "-" + suf)
 
 
 if __name__ == "__main__":
