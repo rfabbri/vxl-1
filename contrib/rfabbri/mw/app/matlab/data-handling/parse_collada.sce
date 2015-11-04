@@ -122,8 +122,11 @@ for i=1:v.children.size
   // --- Get the lines (see plot below for how to use this info)
   ltag = child_by_name(meshtag, 'lines');
   ids = child_by_name(ltag, 'p');
-  edge_ids(i) = eval(strsplit(ids.content,' '));
-  edge_ids(i) = edge_ids(i) + total_npts-eval(npts)+1;
+  edge_ids(i) = eval(strsplit(ids.content,' ')) + 1;
+  if max(edge_ids(i)) > size(allobjs(i),1)
+    error('dimension problem')
+  end
+  //edge_ids(i) = edge_ids(i) + total_npts-eval(npts)+1;
 end
 
 // stack em 
@@ -135,8 +138,8 @@ if length(edge_ids) ~= num_objs
 end
 
 for i=2:num_objs
+  alledg = [alledg; edge_ids(i) + size(allpts,1)];
   allpts = [allpts; allobjs(i)];
-  alledg = [alledg; edge_ids(i)];
 end
 
 // plot
