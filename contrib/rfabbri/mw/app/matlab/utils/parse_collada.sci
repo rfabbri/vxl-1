@@ -54,6 +54,8 @@ v = child_by_att(v, 'id', '_-_time__night');
 
 // v is visual_scene for night scene
 
+total_npts = 0;
+allcrvs = list();
 // for each node, get the object matrix and the points
 for i=1:v.children.size
   node = v.children(i);
@@ -78,7 +80,7 @@ for i=1:v.children.size
         execstr('Rx = [' + nc.content + ']');
       end
     elseif nc.name == 'scale'
-      execstr('scale = [' + nc.content + ']');
+      execstr('scale = diag([' + nc.content + '])');
     elseif nc.name == 'instance_geometry'
       mname = nc.attributes('url');
       mname = strsubst(mname,'#','');
@@ -103,11 +105,22 @@ for i=1:v.children.size
     error('assumed ordering inside geometry tag is broken')
   end
   npts = arr.attributes('count')
+  total_npts = total_npts + eval(npts);
   disp('npts: ' + npts);
-  
-  //po=matrix(points,3,-1);
+  // stack overflow: execstr('pts = [' + arr.content + ']')
+  po = eval(strsplit(arr.content,' '));
+  po=matrix(po,3,-1);
   // object-to-world transform
   // tested formula against corresponding object's matrix_world and it matches
   // perfectly
-  //p = R*scale*po + loc*ones(1,size(po,2)) 
+  transl = transl';
+  p = R*scale*po + transl*ones(1,size(po,2)) 
+  allcrvs(i) = p';
+end
+
+// stack em 
+allpts = allcrvs(1)
+num_curves = length(allcrvs)
+for i=2:num_curves
+  allpts = [allpts; allcrvs(i)];
 end
