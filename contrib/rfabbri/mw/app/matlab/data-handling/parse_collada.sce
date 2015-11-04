@@ -48,7 +48,8 @@ function res = child_by_att(node, att, val)
   end
 endfunction
 
-d=xmlRead('chair-test2.dae')
+//d=xmlRead('chair-test2.dae')
+d=xmlRead('/Users/rfabbri/3d-curve-drawing/ground-truth/models/pabellon_barcelona_v1/3d/ground-truth-pavillion/ground-truth-3D/pavillon_barcelone_v1.2-ungrouped02-separate_datablocks-no_modifiers-fixed-bounding_box-no_edges-010-002.dae')
 v = child_by_name(d.root, 'library_visual_scenes');
 v = child_by_att(v, 'id', '_-_time__night');
 
@@ -116,7 +117,7 @@ for i=1:v.children.size
   // tested formula against corresponding object's matrix_world and it matches
   // perfectly
   transl = transl';
-  p = R*scale*po + transl*ones(1,size(po,2)) 
+  p = R*scale*po + transl*ones(1,size(po,2));
   allobjs(i) = p';
 
   // --- Get the lines (see plot below for how to use this info)
@@ -130,8 +131,8 @@ for i=1:v.children.size
 end
 
 // stack em 
-allpts = allobjs(1)
-alledg = edge_ids(1)
+allpts = allobjs(1);
+alledg = edge_ids(1);
 num_objs = length(allobjs)
 if length(edge_ids) ~= num_objs
   error('inconsitent edge to curve number')
@@ -141,6 +142,11 @@ for i=2:num_objs
   alledg = [alledg; edge_ids(i) + size(allpts,1)];
   allpts = [allpts; allobjs(i)];
 end
+clear allobjs edge_ids
+
+disp('saving')
+savematfile('/tmp/gt-points.txt', 'allpts', '-ascii');
+savematfile('/tmp/gt-edges.txt', 'alledg', '-ascii');
 
 // plot
 cplot(allpts);
