@@ -55,7 +55,8 @@ v = child_by_att(v, 'id', '_-_time__night');
 // v is visual_scene for night scene
 
 total_npts = 0;
-allcrvs = list();
+allobjs = list();
+edge_ids = list();
 // for each node, get the object matrix and the points
 for i=1:v.children.size
   node = v.children(i);
@@ -100,7 +101,8 @@ for i=1:v.children.size
 
   l=child_by_name(d.root, 'library_geometries'); 
   g = child_by_att(l, 'id', mname); 
-  arr = g.children(1).children(1).children(1);
+  meshtag = g.children(1)
+  arr = meshtag.children(1).children(1);
   if arr.attributes('id') ~= aname
     error('assumed ordering inside geometry tag is broken')
   end
@@ -115,12 +117,30 @@ for i=1:v.children.size
   // perfectly
   transl = transl';
   p = R*scale*po + transl*ones(1,size(po,2)) 
-  allcrvs(i) = p';
+  allobjs(i) = p';
+
+  // --- Get the lines (see plot below for how to use this info)
+  ltag = child_by_name(meshtag, 'lines');
+  ids = child_by_name(ltag, 'p');
+  edge_ids(i) = eval(strsplit(ids.content,' '));
+  edge_ids(i) = edge_ids(i) + total_npts-eval(npts)+1;
 end
 
 // stack em 
-allpts = allcrvs(1)
-num_curves = length(allcrvs)
-for i=2:num_curves
-  allpts = [allpts; allcrvs(i)];
+allpts = allobjs(1)
+alledg = edge_ids(1)
+num_objs = length(allobjs)
+if length(edge_ids) ~= num_objs
+  error('inconsitent edge to curve number')
+end
+
+for i=2:num_objs
+  allpts = [allpts; allobjs(i)];
+  alledg = [alledg; edge_ids(i)];
+end
+
+// plot
+cplot(allpts);
+for i=2:2:length(alledg)
+  cplot( allpts( alledg(i-1:i) , :), 2)
 end
