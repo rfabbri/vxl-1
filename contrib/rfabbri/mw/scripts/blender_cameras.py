@@ -264,7 +264,8 @@ def get_blender_camera_from_3x4_P(P, scale, suff=''):
     cam.lens = f_in_mm 
     cam.lens_unit = 'MILLIMETERS'
     cam.sensor_width  = sensor_width_in_mm
-    cam.draw_size = 0.02 # XXX only for robot data
+#     cam.draw_size = 0.02 # XXX only for robot data
+    cam.draw_size = 0.1 #helix 
     ob.matrix_world = Matrix.Translation(location)*rotation.to_4x4()
 
     #     cam.shift_x = -0.05
@@ -562,33 +563,47 @@ def test2():
 #     P = numpy.loadtxt("/Users/rfabbri/3d-curve-drawing/ground-truth/models/pabellon_barcelona_v1/3d/ground-truth-pavillion/ground-truth-pavillion-cameras/078.projmatrix")
 #     path = "/Users/rfabbri/3d-curve-drawing/ground-truth/models/pabellon_barcelona_v1/3d/ground-truth-pavillion/ground-truth-pavillion-cameras/"
 #     name = path + "078"
-    path = "/Users/rfabbri/3d-curve-drawing/ground-truth/robot/feature/vase/vase-mcs-work/"
+#     path = "/Users/rfabbri/3d-curve-drawing/ground-truth/robot/feature/vase/vase-mcs-work/"
+    P = Matrix([
+    [-10, -100, 0, 200],
+    [0, -100, -10, 200],
+    [0, -1, 0, 2]
+    ])
+    suf = 'helixcam'
+    get_blender_camera_from_3x4_P(P, 1, "-" + suf)
+    r, q = rf_rq(numpy.matrix(P))
+    print(r)
+    print(q)
+    k, r, t = KRT_from_P(numpy.matrix(P))
+    print('k',k)
+    print(r)
+    print(t)
 
 
-#     suf = "Img026_06"
-#     sufs = ["Img066_14", "Img091_19", "Img106_03"]
-#    sufs = ["Img041_09"]# , "Img066_14", "Img091_19", "Img106_03"]
-    sufs = ["Img001_01"]# , "Img066_14", "Img091_19", "Img106_03"]
-    for suf in sufs :
-        name = path + suf
-        P = numpy.loadtxt(name+".projmatrix")
-#     P = Matrix([
-#     [2. ,  0. , - 10. ,   282.  ],
-#     [0. ,- 3. , - 14. ,   417.  ],
-#     [0. ,  0. , - 1.  , - 18.   ]
-#     ])
-        r, q = rf_rq(numpy.matrix(P))
-        print(r)
-        print(q)
-        # This test P was constructed as k*[r | t] where
-        #     k = [2 0 10; 0 3 14; 0 0 1]
-        #     r = [1 0 0; 0 -1 0; 0 0 -1]
-        #     t = [231 223 -18]
-        k, r, t = KRT_from_P(numpy.matrix(P))
-        print('k',k)
-        print(r)
-        print(t)
-        get_blender_camera_from_3x4_P(P, 1, "-" + suf)
+##  #     suf = "Img026_06"
+##  #     sufs = ["Img066_14", "Img091_19", "Img106_03"]
+##  #    sufs = ["Img041_09"]# , "Img066_14", "Img091_19", "Img106_03"]
+##      sufs = ["Img001_01"]# , "Img066_14", "Img091_19", "Img106_03"]
+##      for suf in sufs :
+##          name = path + suf
+##          P = numpy.loadtxt(name+".projmatrix")
+##  #     P = Matrix([
+##  #     [2. ,  0. , - 10. ,   282.  ],
+##  #     [0. ,- 3. , - 14. ,   417.  ],
+##  #     [0. ,  0. , - 1.  , - 18.   ]
+##  #     ])
+##          r, q = rf_rq(numpy.matrix(P))
+##          print(r)
+##          print(q)
+##          # This test P was constructed as k*[r | t] where
+##          #     k = [2 0 10; 0 3 14; 0 0 1]
+##          #     r = [1 0 0; 0 -1 0; 0 0 -1]
+##          #     t = [231 223 -18]
+##          k, r, t = KRT_from_P(numpy.matrix(P))
+##          print('k',k)
+##          print(r)
+##          print(t)
+##          get_blender_camera_from_3x4_P(P, 1, "-" + suf)
 
 
 if __name__ == "__main__":
