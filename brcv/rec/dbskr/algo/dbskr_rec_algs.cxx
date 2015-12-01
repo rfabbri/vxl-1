@@ -928,18 +928,29 @@ vsol_polygon_2d_sptr trace_boundary_from_graph(dbsk2d_shock_graph_sptr sg,
   }
   
   dbsk2d_shock_edge_sptr start_edge = 0;  // start with zero for the root to find depth
-  if (sg->has_cycle()) {
-    vcl_cout << "This graph contains a loop!! Cannot save the image\n";
-    return 0;
-  }
+  // if (sg->has_cycle()) {
+  //   vcl_cout << "This graph contains a loop!! Cannot save the image\n";
+  //   return 0;
+  // }
 
   //vcl_cout << "finding depth of the following graph: " << vcl_endl;
   //print_shock_graph(sg);
   int depth = depth_no_loop(sg, start_edge, start_node);
-  //vcl_cout << "depth found to be: " << depth << vcl_endl;
+  // //vcl_cout << "depth found to be: " << depth << vcl_endl;
 
-  if (depth <= 0)
-    return 0;
+  // if (depth <= 0)
+  //   return 0;
+
+  
+  return trace_boundary_from_subgraph(sg, 
+                                      start_node,
+                                      depth,
+                                      true,
+                                      binterpolate, 
+                                      subsample, 
+                                      interpolate_ds, 
+                                      subsample_ds,
+                                      0);
 
 }
 

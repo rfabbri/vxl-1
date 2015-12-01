@@ -21,9 +21,13 @@
 
 #include <dbskr/dbskr_tree_edit.h>
 #include <dbskr/dbskr_scurve.h>
+#include <dbskr/algo/dbskr_rec_algs.h>
 
 #include <vcl_sstream.h>
 #include <vcl_set.h>
+#include <vcl_algorithm.h>
+
+#include <bbas/bsol/bsol_algs.h>
 
 #include <sys/resource.h>
 
@@ -458,8 +462,8 @@ void dbskr_align_shapes::load_esf(vcl_string& filename,bool flag)
         double width = bbox->width();
 
         // Compute area, and figure out new sample ds
-        vgl_polygon<double> polygon(1);
-        double area=compute_boundary(sg,polygon);
+        vgl_polygon<double> polygon=compute_boundary(sg);
+        double area=vgl_area(polygon);
         double lambda_ds=scurve_sample_ds_;
 
         if ( lambda_scaling_ )
@@ -505,363 +509,23 @@ void dbskr_align_shapes::load_esf(vcl_string& filename,bool flag)
     esf_file.close();
 }
 
-double dbskr_align_shapes::compute_boundary(dbsk2d_shock_graph_sptr& sg,
-                                          vgl_polygon<double>& final_poly)
+vgl_polygon<double> dbskr_align_shapes::compute_boundary(
+    dbsk2d_shock_graph_sptr& sg)
 {
 
+    //: required for visualization purposes
+    vsol_polygon_2d_sptr poly_temp=trace_boundary_from_graph(
+        sg,
+        true,
+        true,
+        vcl_min((float)scurve_sample_ds_, scurve_interpolate_ds_),
+        scurve_sample_ds_,
+        0);
 
-    double G = vcl_pow(2.0,-25.0);
-    vcl_vector<vgl_polygon<double> > fragments;
-
-    //1) Initialize labels and connected components
-    dbsk2d_shock_graph::edge_iterator eit = sg->edges_begin();
-    for (; eit != sg->edges_end(); eit++)
-    {
-        dbsk2d_xshock_edge* edge = dynamic_cast<dbsk2d_xshock_edge*>
-            (eit->ptr());
-
-        vcl_vector<vgl_point_2d<double> > pts;
-
-        edge->get_fragment_boundary(pts);
-
-        vgl_polygon<double> mvf(pts,1);
-
-        for (unsigned int s = 0; s < mvf.num_sheets(); ++s)
-        {
-            for (unsigned int p = 0; p < mvf[s].size(); ++p)
-            { 
-                mvf[s][p].x()=
-                    (vcl_floor((mvf[s][p].x()/G)+0.5))*G;
-                mvf[s][p].y()=
-                    (vcl_floor((mvf[s][p].y()/G)+0.5))*G;
-            }
-        }
-
-        fragments.push_back(mvf);
-    }
-
-    dbsk2d_shock_graph::vertex_iterator vit = sg->vertices_begin();
-    for (; vit != sg->vertices_end(); vit++)
-    {
-        dbsk2d_shock_node* vertex=(vit->ptr());
-
-        vcl_vector<vgl_point_2d<double> > pts;
-
-        if ( vertex->type() == dbsk2d_shock_node::A3 )
-        {
-            dbsk2d_shock_edge_sptr link = (*vertex->out_edges_begin());
-            dbsk2d_xshock_edge* edge = dynamic_cast<dbsk2d_xshock_edge*>
-                (link.ptr());
-            
-            dbsk2d_xshock_sample_sptr first_sample=edge->first_sample();
-
-            double speed               = first_sample->speed;
-            vgl_point_2d<double> sh_pt = first_sample->pt;
-            double time                = first_sample->radius;
-            double theta               = first_sample->theta;
-
-            double phi(0);
-            if (speed != 0 && speed < 99990) //100000 signals infinity
-            {
-                phi = vcl_acos(-1/speed);
-            }
-            else
-            {
-                phi = vnl_math::pi/2;
-            }
-
-            double cur_tan=phi+theta;
-            double end_tan=theta-phi;
-
-            if (end_tan < cur_tan)
-            {
-                end_tan += 2*vnl_math::pi;
-            }
-
-            pts.push_back(sh_pt);
-            pts.push_back(first_sample->left_bnd_pt);
-
-            cur_tan +=0.02;
-            while (cur_tan <= end_tan)
-            {
-                pts.push_back(_translatePoint(sh_pt, cur_tan, time));
-                cur_tan += 0.02; //increment the tangent angle (going CCW)
-            }
-
-
-            pts.push_back(first_sample->right_bnd_pt);
-            pts.push_back(sh_pt);
-        }
-        else if ( vertex->type() == dbsk2d_shock_node::TERMINAL )
-        {
-            dbsk2d_shock_edge_sptr link = (*vertex->in_edges_begin());
-            dbsk2d_xshock_edge* edge = dynamic_cast<dbsk2d_xshock_edge*>
-                (link.ptr());
-            
-            dbsk2d_xshock_sample_sptr last_sample=edge->last_sample();
-
-            double speed               = last_sample->speed;
-            vgl_point_2d<double> sh_pt = last_sample->pt;
-            double time                = last_sample->radius;
-            double theta               = last_sample->theta;
-
-            double phi(0);
-            if (speed != 0 && speed < 99990) //100000 signals infinity
-            {
-                phi = vcl_acos(-1/speed);
-            }
-            else
-            {
-                phi = vnl_math::pi/2;
-            }
-
-            double end_tan=phi+theta;
-            double cur_tan=theta-phi;
-
-            if (end_tan < cur_tan)
-            {
-                end_tan += 2*vnl_math::pi;
-            }
-
-            pts.push_back(sh_pt);
-            pts.push_back(last_sample->right_bnd_pt);
-
-            cur_tan +=0.02;
-            while (cur_tan <= end_tan)
-            {
-                pts.push_back(_translatePoint(sh_pt, cur_tan, time));
-                cur_tan += 0.02; //increment the tangent angle (going CCW)
-            }
-
-
-            pts.push_back(last_sample->left_bnd_pt);
-            pts.push_back(sh_pt);
-
-
-
-        }
-        else 
-        {
-            
-            if ( vertex->degree() == 2 )
-            {
-                dbsk2d_xshock_edge* link1(0);
-                dbsk2d_xshock_edge* link2(0);
-                
-
-                vgl_point_2d<double> sh_pt;
-                double time(0);                
-
-                double cur_tan(0),end_tan(0);
-
-                if ( vertex->type() == dbsk2d_shock_node::SOURCE )
-                {
-                    dbsk2d_shock_node::edge_iterator eit= (
-                        vertex->out_edges_begin());
-
-                    link1 = 
-                        dynamic_cast<dbsk2d_xshock_edge*>
-                        ((*eit).ptr());
-                    ++eit;
-                    link2 = 
-                        dynamic_cast<dbsk2d_xshock_edge*>
-                        ((*eit).ptr());
-                    
-                    dbsk2d_xshock_sample_sptr link1_sample=link1
-                        ->first_sample();
-                    dbsk2d_xshock_sample_sptr link2_sample=link2
-                        ->first_sample();
-                    
-                    if ( link1_sample->left_bnd_pt != 
-                         link2_sample->right_bnd_pt )
-                    {
-                    }
-
-
-                    if ( link1_sample->right_bnd_pt != 
-                         link2_sample->left_bnd_pt )
-                    {
-                    }
-
-                }
-                else if ( vertex->type() == dbsk2d_shock_node::SINK )
-                {
-                    dbsk2d_shock_node::edge_iterator eit= (
-                        vertex->in_edges_begin());
-
-                    link1 = 
-                        dynamic_cast<dbsk2d_xshock_edge*>
-                        ((*eit).ptr());
-                    ++eit;
-                    link2 = 
-                        dynamic_cast<dbsk2d_xshock_edge*>
-                        ((*eit).ptr());
-
-                    dbsk2d_xshock_sample_sptr link1_sample=link1
-                        ->last_sample();
-                    dbsk2d_xshock_sample_sptr link2_sample=link2
-                        ->last_sample();
-                    
-                    vgl_point_2d<double> footpt1;
-                    vgl_point_2d<double> footpt2;
-
-                    double speed_link1=link1_sample->speed;
-                    double theta_link1=link1_sample->theta;
-                    double phi_link1(0);
-                    vgl_point_2d<double> sh_pt = link1_sample->pt;
-                    double time = link1_sample->radius;
-
-                    if (speed_link1 != 0 && speed_link1 < 99990)
-                    {
-                        phi_link1 = vcl_acos(-1/speed_link1);
-                    }
-                    else
-                    {
-                        phi_link1 = vnl_math::pi/2;
-                    }
-
-
-                    double speed_link2=link2_sample->speed;
-                    double theta_link2=link2_sample->theta;
-                    double phi_link2(0);
-
-                    if (speed_link2 != 0 && speed_link2 < 99990)
-                    {
-                        phi_link2 = vcl_acos(-1/speed_link2);
-                    }
-                    else
-                    {
-                        phi_link2 = vnl_math::pi/2;
-                    }
-                    
-
-                    if ( link1_sample->left_bnd_pt != 
-                         link2_sample->right_bnd_pt )
-                    {
-                        end_tan=theta_link1-phi_link1;
-                        cur_tan=theta_link2+phi_link2;
-
-                        footpt1=link2_sample->right_bnd_pt;
-                        footpt2=link1_sample->left_bnd_pt;
-
-                    }
-
-                    if ( link1_sample->right_bnd_pt != 
-                         link2_sample->left_bnd_pt )
-                    {
-                        cur_tan=theta_link1+phi_link1;
-                        end_tan=theta_link2-phi_link2;
-
-                        footpt1=link1_sample->right_bnd_pt;
-                        footpt2=link2_sample->left_bnd_pt;
-
-                    }
-
-                    if (end_tan < cur_tan)
-                    {
-                        end_tan += 2*vnl_math::pi;
-                    }
-
-                    pts.push_back(sh_pt);
-                    pts.push_back(footpt1);
-
-                    cur_tan +=0.02;
-                    while (cur_tan <= end_tan)
-                    {
-                        pts.push_back(_translatePoint(sh_pt, cur_tan, time));
-                        cur_tan += 0.02;
-                    }
-
-
-                    pts.push_back(footpt2);
-                    pts.push_back(sh_pt);
-
-                }
-                else
-                {
-
-                    link1 = 
-                        dynamic_cast<dbsk2d_xshock_edge*>
-                        ((*(vertex->in_edges_begin())).ptr());
-                    link2 = 
-                        dynamic_cast<dbsk2d_xshock_edge*>
-                        ((*(vertex->out_edges_begin())).ptr());
-
-
-                }
-
-            }
-
-        }
-
+    return bsol_algs::vgl_from_poly(poly_temp);
  
-        if ( pts.size() )
-        {
-            vgl_polygon<double> mvf(pts,1);
-            
-            for (unsigned int s = 0; s < mvf.num_sheets(); ++s)
-            {
-                for (unsigned int p = 0; p < mvf[s].size(); ++p)
-                { 
-                    mvf[s][p].x()=
-                        (vcl_floor((mvf[s][p].x()/G)+0.5))*G;
-                    mvf[s][p].y()=
-                        (vcl_floor((mvf[s][p].y()/G)+0.5))*G;
-                }
-            }
-
-            fragments.push_back(mvf);
-        }
-    
-    }
-
-    // Start polygon
-    vgl_polygon<double> start_poly=fragments[0];
-
-    unsigned int s=1;
-    for ( ; s < fragments.size() ; ++s)
-    {
-
-        
-        //Take temp
-        vgl_polygon<double> temp=fragments[s];
-
-        //Keep a flag for status
-        int value;
-
-        //Take union of two polygons
-        start_poly = vgl_clip(start_poly,             // p1
-                              temp,                   // p2
-                              vgl_clip_type_union,    // p1 U p2
-                              &value);                // test if success
-
-        assert(value==1);
-
-
-    }
- 
-    // Keep largest area polygon
-    double area=0;
-    unsigned int f_index=0;
-
-    for (unsigned int s = 0; s < start_poly.num_sheets(); ++s)
-    { 
-        vgl_polygon<double> tempy(start_poly[s]);
-        double area_temp = vgl_area(tempy);
-        if ( area_temp > area )
-        {
-            area = area_temp;
-            f_index=s;
-
-        }
-        
-    }
-    
-    final_poly.push_back(start_poly[f_index]); 
-
-    return area;
-
 }
+
 //: Match
 double dbskr_align_shapes::edit_distance(
     dbskr_tree_sptr& tree1,

@@ -101,8 +101,7 @@ private:
     void load_esf(vcl_string& filename,bool flag);
 
     // Compute area/boundary
-    double compute_boundary(dbsk2d_shock_graph_sptr& sg,
-                            vgl_polygon<double>& final_poly);
+    vgl_polygon<double> compute_boundary(dbsk2d_shock_graph_sptr& sg);
 
     // Private matching
     double edit_distance(
