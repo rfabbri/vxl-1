@@ -1,11 +1,13 @@
 # This is brcv/shp/dbskfg/pro/CMakeLists.txt
 
 INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR})
 
 INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
 INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/maruthi )
 INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
 INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
 
 
 SET(shape_align_sources
@@ -18,4 +20,4 @@ SET(shape_align_sources
 ADD_LIBRARY(shape_align ${shape_align_sources})
 
 ADD_EXECUTABLE (ed_match_exec ed_match_exec.cxx )
-TARGET_LINK_LIBRARIES ( ed_match_exec shape_align dbskr )
+TARGET_LINK_LIBRARIES ( ed_match_exec shape_align dbskr dbskr_algo)
