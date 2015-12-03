@@ -47,6 +47,19 @@ def test():
     p1.append([0, 0, 1])
     loft(p0,p1)
 
+def read_files():
+    p0_fname = '/home/rfabbri/tmp/p0.txt'
+    p1_fname = '/home/rfabbri/tmp/p1.txt'
+    p0 = numpy.loadtxt(p0_fname)
+    p0.tolist()
+    p1 = numpy.loadtxt(p1_fname)
+    p1.tolist()
+    return p0, p1
+
+def test1():
+    p0, p1 = read_files()
+    loft(p0, p1)
+
 def loft(p0, p1):
     c0, o0, s0 = new_curve_from_points(p0,'first')
     c1, o1, s1 = new_curve_from_points(p1,'second')
@@ -73,7 +86,7 @@ def loft(p0, p1):
     bpy.ops.mesh.select_all(action='SELECT')
 
     # execute any editmode tool
-#     bpy.ops.gpencil.surfsk_add_surface()
+    bpy.ops.gpencil.surfsk_add_surface()
 
 if __name__ == "__main__":
-    test()
+    test1()
