@@ -46,5 +46,29 @@ if __name__ == "__main__":
     p1.append([0, 1, 0])
     p1.append([0, 1, 0])
 
-    new_curve_from_points(p0,'first')
-    new_curve_from_points(p1,'second')
+    c0, o0, s0 = new_curve_from_points(p0,'first')
+    c1, o1, s1 = new_curve_from_points(p1,'second')
+
+    # join curves into a group
+    bpy.data.objects[o0.name].select = True
+    bpy.data.objects[o1.name].select = True
+    bpy.context.scene.objects.active = bpy.data.objects[o1.name]
+    bpy.ops.object.join('INVOKE_REGION_WIN') # not sure why invoke_region_win
+
+    # create a mesh to store the final surface
+    me = bpy.data.meshes.new("outputLoft")
+    ob = bpy.data.objects.new("outputLoft", me)
+    scn = bpy.context.scene
+    scn.objects.link(ob)
+    scn.objects.active = ob
+    ob.select = True
+
+    # curves + object should be selected
+    # call lofting
+    bpy.ops.object.mode_set(mode='EDIT', toggle=False)
+
+    bpy.ops.mesh.reveal()
+    bpy.ops.mesh.select_all(action='SELECT')
+
+    # execute any editmode tool
+    bpy.ops.gpencil.surfsk_add_surface()
