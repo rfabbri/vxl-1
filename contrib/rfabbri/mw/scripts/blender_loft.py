@@ -59,6 +59,7 @@ def read_files():
 def test1():
     p0, p1 = read_files()
     loft(p0, p1)
+    bpy.ops.export_mesh.ply(filepath='/home/rfabbri/tmp/loftsurf.txt')
 
 def loft(p0, p1):
     c0, o0, s0 = new_curve_from_points(p0,'first')
