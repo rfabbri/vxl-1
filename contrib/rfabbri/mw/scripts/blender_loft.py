@@ -19,25 +19,32 @@ import bpy_extras
 import numpy
 from mathutils import Matrix
 
-if __name__ == "__main__":
-    print('hello')
-    # Create a spline
-
-    
-    c0 = bpy.data.curves.new('firstCurveToLoft', 'CURVE')
-    o0 = bpy.data.objects.new('firstCurveToLoft', c0)
+# Create a spline/bezier from a list of points
+def new_curve_from_points(p0,name_prefix):
+    npts = len(p0)
+    c0 = bpy.data.curves.new(name_prefix + 'CurveToLoft', 'CURVE')
+    o0 = bpy.data.objects.new(name_prefix + 'CurveToLoft', c0)
     bpy.context.scene.objects.link(o0)
     c0.dimensions = "3D"
-
-    p0 = []
-    p0.append([0, 0, 0])
-    p0.append([1, 0, 0])
-    p0.append([0, 1, 0])
-
-    npts = len(p0)
 
     spline = o0.data.splines.new('BEZIER')
     spline.bezier_points.add(npts - 1) # less one because one point is added when the spline is created.
     for p in range(0, npts):
         # spline.bezier_points[p].co = [p0[p][0], p0[p][1], p0[p][2]]
         spline.bezier_points[p].co = p0[p]
+    return c0, o0, spline 
+
+if __name__ == "__main__":
+    print('hello')
+    p0 = []
+    p0.append([1, 0, 0])
+    p0.append([0, 0, 0])
+    p0.append([0, 1, 0])
+
+    p1 = []
+    p1.append([1, 1, 0])
+    p1.append([0, 1, 0])
+    p1.append([0, 1, 0])
+
+    new_curve_from_points(p0,'first')
+    new_curve_from_points(p1,'second')
