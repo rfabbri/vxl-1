@@ -59,7 +59,12 @@ def read_files():
 def test1():
     p0, p1 = read_files()
     loft(p0, p1)
-    bpy.ops.export_mesh.ply(filepath='/home/rfabbri/tmp/loftsurf.txt')
+    bpy.ops.export_mesh.ply(filepath='/home/rfabbri/tmp/loftsurf.ply')
+
+def cleanup():
+    bpy.ops.object.mode_set(mode='OBJECT', toggle=True)
+#     bpy.ops.mesh.select_all(action='SELECT')
+    bpy.ops.object.delete(use_global=False)
 
 def loft(p0, p1):
     c0, o0, s0 = new_curve_from_points(p0,'first')
@@ -81,10 +86,10 @@ def loft(p0, p1):
 
     # curves + object should be selected
     # call lofting
-    bpy.ops.object.mode_set(mode='EDIT', toggle=False)
+    bpy.ops.object.mode_set(mode='EDIT', toggle=True)
 
     bpy.ops.mesh.reveal()
-    bpy.ops.mesh.select_all(action='SELECT')
+#     bpy.ops.mesh.select_all(action='SELECT')
 
     # execute any editmode tool
     bpy.ops.gpencil.surfsk_add_surface()
