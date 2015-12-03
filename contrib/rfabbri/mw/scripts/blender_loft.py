@@ -34,7 +34,7 @@ def new_curve_from_points(p0,name_prefix):
         spline.bezier_points[p].co = p0[p]
     return c0, o0, spline 
 
-if __name__ == "__main__":
+def test():
     print('hello')
     p0 = []
     p0.append([1, 0, 0])
@@ -45,7 +45,9 @@ if __name__ == "__main__":
     p1.append([1, 1, 0])
     p1.append([0, 1, 0])
     p1.append([0, 0, 1])
+    loft(p0,p1)
 
+def loft(p0, p1):
     c0, o0, s0 = new_curve_from_points(p0,'first')
     c1, o1, s1 = new_curve_from_points(p1,'second')
 
@@ -58,18 +60,18 @@ if __name__ == "__main__":
     # create a mesh to store the final surface
 
     # dummy initial surface mesh coords
-    coord1 = (-1.0, 1.0, 0.0)  
-    coord2 = (-1.0, -1.0, 0.0)  
-    coord3 = (1.0, -1.0, 0.0)  
-    coord4 = (1.0, 1.0, 0.0)  
-      
-    Verts = [coord1, coord2, coord3, coord4]  
-    Edges = [[0,1],[1,2],[2,3],[3,0]]  
-    Faces = [[0, 1, 2, 3]]
-  
+#     coord1 = (-1.0, 1.0, 0.0)  
+#     coord2 = (-1.0, -1.0, 0.0)  
+#     coord3 = (1.0, -1.0, 0.0)  
+#     coord4 = (1.0, 1.0, 0.0)  
+#       
+#     Verts = [coord1, coord2, coord3, coord4]  
+#     Edges = [[0,1],[1,2],[2,3],[3,0]]  
+#     Faces = [[0, 1, 2, 3]]
+#   
     me = bpy.data.meshes.new("outputLoft")
-    me.from_pydata(Verts, Edges, Faces)
-    me.update()
+#     me.from_pydata(Verts, Edges, Faces)
+#     me.update()
     ob = bpy.data.objects.new("outputLoft", me)
     scn = bpy.context.scene
     scn.objects.link(ob)
@@ -85,3 +87,6 @@ if __name__ == "__main__":
 
     # execute any editmode tool
 #     bpy.ops.gpencil.surfsk_add_surface()
+
+if __name__ == "__main__":
+    test()
