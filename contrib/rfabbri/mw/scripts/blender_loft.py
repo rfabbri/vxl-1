@@ -58,20 +58,7 @@ def loft(p0, p1):
     bpy.ops.object.join('INVOKE_REGION_WIN') # not sure why invoke_region_win
 
     # create a mesh to store the final surface
-
-    # dummy initial surface mesh coords
-#     coord1 = (-1.0, 1.0, 0.0)  
-#     coord2 = (-1.0, -1.0, 0.0)  
-#     coord3 = (1.0, -1.0, 0.0)  
-#     coord4 = (1.0, 1.0, 0.0)  
-#       
-#     Verts = [coord1, coord2, coord3, coord4]  
-#     Edges = [[0,1],[1,2],[2,3],[3,0]]  
-#     Faces = [[0, 1, 2, 3]]
-#   
     me = bpy.data.meshes.new("outputLoft")
-#     me.from_pydata(Verts, Edges, Faces)
-#     me.update()
     ob = bpy.data.objects.new("outputLoft", me)
     scn = bpy.context.scene
     scn.objects.link(ob)
