@@ -56,15 +56,16 @@ def read_files():
     p1.tolist()
     return p0, p1
 
-def test1():
-    p0, p1 = read_files()
-    loft(p0, p1)
-    bpy.ops.export_mesh.ply(filepath='/home/rfabbri/tmp/loftsurf.ply')
-
 def cleanup():
     bpy.ops.object.mode_set(mode='OBJECT', toggle=True)
 #     bpy.ops.mesh.select_all(action='SELECT')
     bpy.ops.object.delete(use_global=False)
+
+def test1():
+    cleanup()
+    p0, p1 = read_files()
+    loft(p0, p1)
+    bpy.ops.export_mesh.ply(filepath='/home/rfabbri/tmp/loftsurf.ply')
 
 def loft(p0, p1):
     c0, o0, s0 = new_curve_from_points(p0,'first')
@@ -74,7 +75,7 @@ def loft(p0, p1):
     bpy.data.objects[o0.name].select = True
     bpy.data.objects[o1.name].select = True
     bpy.context.scene.objects.active = bpy.data.objects[o1.name]
-    bpy.ops.object.join('INVOKE_REGION_WIN') # not sure why invoke_region_win
+    bpy.ops.object.join('INVOKE_REGION_WIN')
 
     # create a mesh to store the final surface
     me = bpy.data.meshes.new("outputLoft")
@@ -86,7 +87,7 @@ def loft(p0, p1):
 
     # curves + object should be selected
     # call lofting
-    bpy.ops.object.mode_set(mode='EDIT', toggle=True)
+    bpy.ops.object.mode_set('INVOKE_REGION_WIN', mode='EDIT', toggle=True)
 
     bpy.ops.mesh.reveal()
 #     bpy.ops.mesh.select_all(action='SELECT')
