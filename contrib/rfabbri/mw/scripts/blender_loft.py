@@ -9,7 +9,7 @@
 # USAGE
 #
 #   Commandline
-#       
+#      blender -b -nosound -P blender_loft.py
 #       
 #   Inside blender console
 #
@@ -99,3 +99,5 @@ def loft(p0, p1):
 
 if __name__ == "__main__":
     test1()
+    bpy.ops.wm.quit_blender()
+
