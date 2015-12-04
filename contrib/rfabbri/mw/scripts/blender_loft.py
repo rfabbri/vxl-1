@@ -62,7 +62,7 @@ def cleanup():
     bpy.ops.object.delete(use_global=False)
 
 def test1():
-    cleanup()
+#     cleanup()
     p0, p1 = read_files()
     loft(p0, p1)
     bpy.ops.export_mesh.ply(filepath='/home/rfabbri/tmp/loftsurf.ply')
@@ -93,7 +93,8 @@ def loft(p0, p1):
 #     bpy.ops.mesh.select_all(action='SELECT')
 
     # execute any editmode tool
-    bpy.ops.gpencil.surfsk_add_surface()
+    # context_py = bpy.context.copy()
+    bpy.ops.gpencil.surfsk_add_surface('INVOKE_DEFAULT')
 
 if __name__ == "__main__":
     test1()
