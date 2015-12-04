@@ -1,19 +1,24 @@
+# Loft curves given by files into surface
 #
-# Generate ground truth data from ground truth blender file
+# INPUT
+#    p0.txt, p1.txt
 #
-# For instance, open the project
+# OUTPUT
+#    loftsurf.ply
 #
-# /Users/rfabbri/3d-curve-drawing/ground-truth/models/pabellon_barcelona_v1/pavillon_barcelone_v1.2-cam-002.blend
+# USAGE
 #
-# Then select the desired animated camera and set as active camera
+#   Commandline
+#       
 #
-# Then run this script. It will play frame by frame and export the 3x4 camera
-# matrix for that frame, among other things.
+#   Inside blender console
 #
-# Run with:
+#      filename = "PWD/blender_loft.py"
+#      exec(compile(open(filename).read(), filename, 'exec'))
 #
-# filename = "/Users/rfabbri/cprg/vxlprg/lemsvxl/contrib/rfabbri/mw/scripts/blender_loft.py"
-# exec(compile(open(filename).read(), filename, 'exec'))
+# AUTHOR
+#   Ricardo Fabbri <rfabbri@gmail.com>, 3 Dec 2015
+#
 import bpy
 import bpy_extras
 import numpy
@@ -48,8 +53,8 @@ def test():
     loft(p0,p1)
 
 def read_files():
-    p0_fname = '/home/rfabbri/tmp/p0.txt'
-    p1_fname = '/home/rfabbri/tmp/p1.txt'
+    p0_fname = 'p0.txt'
+    p1_fname = 'p1.txt'
     p0 = numpy.loadtxt(p0_fname)
     p0.tolist()
     p1 = numpy.loadtxt(p1_fname)
@@ -65,7 +70,7 @@ def test1():
 #     cleanup()
     p0, p1 = read_files()
     loft(p0, p1)
-    bpy.ops.export_mesh.ply(filepath='/home/rfabbri/tmp/loftsurf.ply')
+    bpy.ops.export_mesh.ply(filepath='loftsurf.ply')
 
 def loft(p0, p1):
     c0, o0, s0 = new_curve_from_points(p0,'first')
