@@ -10,7 +10,7 @@
 #
 #   Commandline
 #       
-#
+#       
 #   Inside blender console
 #
 #      filename = "PWD/blender_loft.py"
@@ -33,11 +33,26 @@ def new_curve_from_points(p0,name_prefix):
     c0.dimensions = "3D"
 
     spline = o0.data.splines.new('BEZIER')
-    spline.bezier_points.add(npts - 1) # less one because one point is added when the spline is created.
+    spline.bezier_points.add(npts - 1) 
+    # ^-- less one because one point is added when the spline is created.
     for p in range(0, npts):
-        # spline.bezier_points[p].co = [p0[p][0], p0[p][1], p0[p][2]]
         spline.bezier_points[p].co = p0[p]
+        # spline.bezier_points[p].co = [p0[p][0], p0[p][1], p0[p][2]]
     return c0, o0, spline 
+
+def read_files():
+    p0_fname = 'p0.txt'
+    p1_fname = 'p1.txt'
+    p0 = numpy.loadtxt(p0_fname)
+    p0.tolist()
+    p1 = numpy.loadtxt(p1_fname)
+    p1.tolist()
+    return p0, p1
+
+# to be called inside console after testing
+def cleanup():
+    bpy.ops.object.mode_set(mode='OBJECT', toggle=True)
+    bpy.ops.object.delete(use_global=False)
 
 def test():
     print('hello')
@@ -52,22 +67,8 @@ def test():
     p1.append([0, 0, 1])
     loft(p0,p1)
 
-def read_files():
-    p0_fname = 'p0.txt'
-    p1_fname = 'p1.txt'
-    p0 = numpy.loadtxt(p0_fname)
-    p0.tolist()
-    p1 = numpy.loadtxt(p1_fname)
-    p1.tolist()
-    return p0, p1
-
-def cleanup():
-    bpy.ops.object.mode_set(mode='OBJECT', toggle=True)
-#     bpy.ops.mesh.select_all(action='SELECT')
-    bpy.ops.object.delete(use_global=False)
-
 def test1():
-#     cleanup()
+    # cleanup()
     p0, p1 = read_files()
     loft(p0, p1)
     bpy.ops.export_mesh.ply(filepath='loftsurf.ply')
@@ -93,12 +94,7 @@ def loft(p0, p1):
     # curves + object should be selected
     # call lofting
     bpy.ops.object.mode_set('INVOKE_REGION_WIN', mode='EDIT', toggle=True)
-
     bpy.ops.mesh.reveal()
-#     bpy.ops.mesh.select_all(action='SELECT')
-
-    # execute any editmode tool
-    # context_py = bpy.context.copy()
     bpy.ops.gpencil.surfsk_add_surface('INVOKE_DEFAULT')
 
 if __name__ == "__main__":
