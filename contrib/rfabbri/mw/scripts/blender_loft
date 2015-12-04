@@ -1,0 +1,7 @@
+#!/bin/sh
+
+myblender="blender -noaudio blank.blend"
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# from http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
+$myblender -P $DIR/blender_loft.py
