@@ -71,7 +71,7 @@ dbdet_sel_process::dbdet_sel_process()
       //grouping parameters
       !parameters()->add( "Radius of Neighborhood" , "-nrad" , 3.5 ) ||
       //By Naman Kumar
-      !parameters()->add( "Maximum Pixel Distance to complete" , "-gap" , 2.0 ) ||
+      !parameters()->add( "Maximum Pixel Distance to complete" , "-gap" , 3.0 ) ||
       !parameters()->add( "Get Uncertainty from edges" , "-badap_uncer" , true ) ||
       !parameters()->add( "  - Position uncertainty" , "-dx" , 0.4 ) ||
       !parameters()->add( "  - Orientation uncertainty(Deg)" , "-dt" , 15.0 ) ||
