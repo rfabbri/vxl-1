@@ -188,7 +188,10 @@ void dbsk2d_ishock_gap_detector::detect_gap1(
             edge_list::iterator it;
             if ( edges.size() == 2)
             {
-                edges.erase(edges.begin());
+                if ( edges[1]->superiors_list()->size() )
+                {
+                    edges.erase(edges.begin());
+                }
             }
             it=edges.begin();
             
@@ -209,7 +212,10 @@ void dbsk2d_ishock_gap_detector::detect_gap1(
             edge_list::iterator it;
             if ( edges.size() == 2)
             {
-                edges.erase(edges.begin());
+                if ( edges[1]->superiors_list()->size() )
+                {
+                    edges.erase(edges.begin());
+                }
             }
             it=edges.begin();
             
@@ -337,10 +343,13 @@ void dbsk2d_ishock_gap_detector::detect_all_gaps(
             edge_list::iterator it;
             if ( edges.size() == 2)
             {
-                edges.erase(edges.begin());
+                if ( edges[1]->superiors_list()->size() )
+                {
+                    edges.erase(edges.begin());
+                }
             }
             it=edges.begin();
-            
+           
             const vcl_list< vtol_topology_object * > * 
                 superiors  = (*it)->superiors_list();
             vcl_list<vtol_topology_object*>::const_iterator tit;
@@ -358,7 +367,10 @@ void dbsk2d_ishock_gap_detector::detect_all_gaps(
             edge_list::iterator it;
             if ( edges.size() == 2)
             {
-                edges.erase(edges.begin());
+                if ( edges[1]->superiors_list()->size() )
+                {
+                    edges.erase(edges.begin());
+                }
             }
             it=edges.begin();
             
