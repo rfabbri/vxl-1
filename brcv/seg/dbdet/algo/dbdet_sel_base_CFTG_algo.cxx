@@ -764,7 +764,7 @@ void dbdet_sel_base::correct_CFG_topology()
       }
      }
   }
-
+/*
   // deal with junction with another loop after dealing with deg 2
 
   for (unsigned i=0; i<edgemap_->edgels.size(); i++)
@@ -837,6 +837,7 @@ void dbdet_sel_base::correct_CFG_topology()
         }
     }
   }
+*/
     // use the filter to prun out local problems again
     regular_contour_filter();
     vcl_cout<<"Finish correcting the CFG topology"<<vcl_endl;

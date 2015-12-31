@@ -112,7 +112,7 @@ dbdet_sel_process::dbdet_sel_process()
       !parameters()->add( "Proceed with Hypothesis Graph", "-bGetfinalcontours", true ) ||
 
 	  //merge frag candidates after hypothesis
-      !parameters()->add( "Merge curve fragments candidates", "-bmergefrags", false )
+      !parameters()->add( "Merge curve fragments candidates", "-bmergefrags", true )
 	)
   {
     vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
@@ -316,7 +316,7 @@ bool dbdet_sel_process::execute()
       edge_linker->Disambiguation();
       if(bmergefrags){
 		  edge_linker->correct_CFG_topology(); 
-		  edge_linker->Post_Process();
+		  //edge_linker->Post_Process();
 	  }
 	  else
 	  {
