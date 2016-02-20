@@ -1117,7 +1117,10 @@ void dbsk2d_containment_graph::determine_endpoints(
 
                         if ( elist.size() == 2 )
                         {
-                            elist.erase(elist.begin());
+                            if ( elist[1]->superiors_list()->size() )
+                            {
+                                elist.erase(elist.begin());
+                            }
                         }
 
                         dbsk2d_bnd_edge* edge=(dbsk2d_bnd_edge*)elist[0].ptr();
