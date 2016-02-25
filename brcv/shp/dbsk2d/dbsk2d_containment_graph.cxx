@@ -31,7 +31,8 @@ dbsk2d_containment_graph::dbsk2d_containment_graph
     bool expand_outside,
     bool train,
     bool debug,
-    bool show_shock
+    bool show_shock,
+    int quad
 ):ishock_graph_(ishock_graph),
   path_threshold_(path_threshold),
   loop_type_(loop_type),
@@ -40,7 +41,8 @@ dbsk2d_containment_graph::dbsk2d_containment_graph
   expand_outside_(expand_outside),
   train_(train),
   debug_(debug),
-  show_shock_(show_shock)
+  show_shock_(show_shock),
+  quad_(quad)
 {
 }
 
@@ -83,7 +85,7 @@ void dbsk2d_containment_graph::construct_graph()
         double con_ratio= grouper.contour_ratio((*it).first);
         if ( con_ratio >= 0.4 &&
              frag_edges[(*it).first].size() > 1  &&
-             grouper.region_within_image((*it).first))
+             grouper.region_within_image((*it).first,quad_))
         {
             // Create  a new root node
             dbsk2d_containment_node_sptr root_node = new 
@@ -167,7 +169,7 @@ void dbsk2d_containment_graph::construct_graph()
         if ( con_ratio >= 0.4 &&
              frag_edges[(*it).first].size() > 1  &&
              (expand_outside_
-	      || grouper.region_within_image((*it).first)))  
+	      || grouper.region_within_image((*it).first,quad_)))  
         {
             vcl_map<int,dbsk2d_ishock_bline*> extra_belms;
             vcl_set<int> key;
@@ -205,7 +207,8 @@ void dbsk2d_containment_graph::construct_graph()
                 all_region_polys_[key]=poly;
 
 
-                if ( closed_region && grouper.region_within_image((*it).first))
+                if ( closed_region && grouper.region_within_image
+                     ((*it).first,quad_))
                 {
                     vcl_vector<dbsk2d_ishock_belm*> belms=
                         frag_belms[(*it).first];
@@ -401,7 +404,7 @@ void dbsk2d_containment_graph::construct_graph()
             bool closed_region=(region_outer_nodes[(*it).first].size()==0)?
                 true:false;
 
-            if ( !grouper.region_within_image((*it).first) || 
+            if ( !grouper.region_within_image((*it).first,quad_) || 
                  !frag_edges[(*it).first].size() || 
                  !rag_matched_nodes.count((*it).first) )
             {
@@ -444,7 +447,8 @@ void dbsk2d_containment_graph::construct_graph()
             if ( contour_ratio >= 0.4 &&
                  rag_matched_nodes.count((*it).first) &&
                  frag_edges[(*it).first].size() &&
-                 (expand_outside_ || grouper.region_within_image((*it).first)))
+                 (expand_outside_ || grouper.region_within_image((*it).first
+                                                                 ,quad_)))
             {
                 // vcl_stringstream filename;
                 // filename<<"Depth_"<<depth<<"_id_"<<
@@ -491,7 +495,7 @@ void dbsk2d_containment_graph::construct_graph()
                     all_region_polys_[key]=poly;
 
                     if ( closed_region && grouper.region_within_image
-                         ((*it).first))
+                         ((*it).first,quad_))
                     {
 
                         vcl_vector<dbsk2d_ishock_belm*> belms=
@@ -614,38 +618,38 @@ void dbsk2d_containment_graph::construct_graph()
     }
 }
 
-bool dbsk2d_containment_graph::
-is_rag_node_within_image(vgl_polygon<double>& polygon)
-{
-    bool flag=true; 
+// bool dbsk2d_containment_graph::
+// is_rag_node_within_image(vgl_polygon<double>& polygon)
+// {
+//     bool flag=true; 
 
-    unsigned int ni=dbsk2d_transform_manager::Instance().get_image()->ni();
-    unsigned int nj=dbsk2d_transform_manager::Instance().get_image()->nj();
+//     unsigned int ni=dbsk2d_transform_manager::Instance().get_image()->ni();
+//     unsigned int nj=dbsk2d_transform_manager::Instance().get_image()->nj();
 
-    for (unsigned int s = 0; s < polygon.num_sheets(); ++s)
-    { 
-        for (unsigned int p = 0; p < polygon[s].size(); ++p)
-        { 
-            bool xflag = ( polygon[s][p].x() < 0 || polygon[s][p].x() > ni )
-                ? false : true;
-            bool yflag = ( polygon[s][p].y() < 0 || polygon[s][p].y() > nj )
-                ? false : true;
+//     for (unsigned int s = 0; s < polygon.num_sheets(); ++s)
+//     { 
+//         for (unsigned int p = 0; p < polygon[s].size(); ++p)
+//         { 
+//             bool xflag = ( polygon[s][p].x() < 0 || polygon[s][p].x() > ni )
+//                 ? false : true;
+//             bool yflag = ( polygon[s][p].y() < 0 || polygon[s][p].y() > nj )
+//                 ? false : true;
 
-            if (xflag == false || yflag == false )
-            {
-                flag=false;
-                break;
-            }
-        }
-        if (flag==false)
-        {
-            break;
-        }
-    }
+//             if (xflag == false || yflag == false )
+//             {
+//                 flag=false;
+//                 break;
+//             }
+//         }
+//         if (flag==false)
+//         {
+//             break;
+//         }
+//     }
 
-    return flag;
+//     return flag;
 
-}
+// }
 
 //:construct graph
 void dbsk2d_containment_graph::expand_node(

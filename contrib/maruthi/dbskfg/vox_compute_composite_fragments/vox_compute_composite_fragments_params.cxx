@@ -6,7 +6,7 @@
 #include "vox_compute_composite_fragments_params.h"
 #include <dborl/algo/dborl_algo_params.h>
 #include <dborl/algo/dborl_utilities.h>
-#include <con_graph/pro/dbskfg_form_containment_graph_region_process.h>
+#include <dbsk2d/pro/dbsk2d_compute_containment_graph_process.cxx>
 
 //: Constructor
 vox_compute_composite_fragments_params::
@@ -107,7 +107,7 @@ vox_compute_composite_fragments_params(vcl_string algo_name) :
        0.0263, 0.0263);
 
   // add the parameters of the extract shock patches process
-  dbskfg_form_containment_graph_region_process pro1;
+  dbsk2d_compute_containment_graph_process pro1;
   vcl_vector<bpro1_param*> pars = pro1.parameters()->get_param_list();
   for (unsigned i = 0; i < pars.size(); i++) 
   {

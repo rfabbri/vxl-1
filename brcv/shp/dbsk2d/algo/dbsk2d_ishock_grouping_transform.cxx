@@ -741,7 +741,8 @@ double dbsk2d_ishock_grouping_transform::real_contour_length(unsigned int index)
 }
 
 bool dbsk2d_ishock_grouping_transform::region_within_image(
-    unsigned int index)
+    unsigned int index,
+    int quad)
 {
 
     vil_image_resource_sptr img=dbsk2d_transform_manager::Instance().
@@ -774,16 +775,65 @@ bool dbsk2d_ishock_grouping_transform::region_within_image(
             pt2=bpoint->pt();
         }
 
-        if ( pt1.x() < 0 || pt1.y() < 0 ||
-             pt1.x() >= img->ni() || pt1.y() >= img->nj() || 
-             pt2.x() < 0 || pt2.y() < 0 ||
-             pt2.x() >= img->ni() || pt2.y() >= img->nj())
-        
+        if ( quad < 0 )
         {
-            return false;
+            if ( pt1.x() < 0 || pt1.y() < 0 ||
+                 pt1.x() >= img->ni() || pt1.y() >= img->nj() || 
+                 pt2.x() < 0 || pt2.y() < 0 ||
+                 pt2.x() >= img->ni() || pt2.y() >= img->nj())
         
+            {
+                return false;
+                
+            }
         }
+        else
+        {
+            double xmin,ymin,xmax,ymax;
+            if ( quad == 1 )
+            {
+                xmin=0;
+                ymin=0;
 
+                xmax=img->ni()/2;
+                ymax=img->nj()/2;
+            }
+            else if ( quad == 2 )
+            {
+                xmin=img->ni()/2;
+                ymin=0;
+
+                xmax=img->ni();
+                ymax=img->nj()/2;
+            }
+            else if ( quad == 3 )
+            {
+                xmin=0;
+                ymin=img->nj()/2;
+
+                xmax=img->ni()/2;
+                ymax=img->nj();
+            }
+            else
+            {
+                xmin=img->ni()/2;
+                ymin=img->nj()/2;
+
+                xmax=img->ni();
+                ymax=img->nj();
+            }
+
+            if ( pt1.x() < xmin || pt1.y() < ymin ||
+                 pt1.x() >= xmax || pt1.y() >= ymax || 
+                 pt2.x() < xmin || pt2.y() < ymin ||
+                 pt2.x() >= xmax || pt2.y() >= ymax)
+                
+            {
+                return false;
+                
+            }
+
+        }
     }
 
     return true;

@@ -415,7 +415,7 @@ void dbsk2d_transform_manager::write_stats_closed(
         bool closed_region=(fragments[(*it).first].size()==0)?
             true:false;
 
-        if ( closed_region && grouper.region_within_image((*it).first))
+        if ( closed_region && grouper.region_within_image((*it).first,-1))
         {
             break;
         }
@@ -590,7 +590,7 @@ void dbsk2d_transform_manager::write_stats_closed(
         bool closed_region=(fragments[(*it).first].size()==0)?
             true:false;
 
-        if ( closed_region && grouper.region_within_image((*it).first))
+        if ( closed_region && grouper.region_within_image((*it).first,-1))
         {
             // Grab polygon fragment
             grouper.polygon_fragment((*it).first,model_poly);

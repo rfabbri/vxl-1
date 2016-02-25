@@ -80,7 +80,8 @@ public:
     double real_contour_length(unsigned int index);
 
     // See if region is within class
-    bool region_within_image(unsigned int index);
+    bool region_within_image(unsigned int index,
+                             int quad);
 
     //: extract poly for fragment
     void polygon_fragment(unsigned int,vgl_polygon<double>& poly);

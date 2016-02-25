@@ -40,7 +40,8 @@ public:
                              bool expand_outside=false,
                              bool train=false,
 			     bool debug=false,
-			     bool show_shock=false);
+			     bool show_shock=false,
+                             int quad=-1);
 
     //:Destructor
     ~dbsk2d_containment_graph();
@@ -105,6 +106,8 @@ private:
     //: show shock
     bool show_shock_;
 
+    //: quad
+    int quad_; // Which quadrant to process
     
     //: get next available id 
     unsigned int next_available_id()
@@ -124,7 +127,7 @@ private:
     }
 
     // test whether fragment is within image
-    bool is_rag_node_within_image(vgl_polygon<double>& polygon);
+    // bool is_rag_node_within_image(vgl_polygon<double>& polygon);
 
     // expand root node
     void expand_node(

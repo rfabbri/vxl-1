@@ -64,6 +64,8 @@ dbsk2d_compute_containment_graph_process()
                             (double)0.25) ||
         !parameters()->add( "Remove closed contours" , "-closed" , 
                             (bool)false) ||
+        !parameters()->add( "Quad" , "-quad" , 
+                            (int) -1) ||
         !parameters()->add( "Loop cost type (0,1)" , "-loop_cost" , 
                             (unsigned int) 1) ||
         !parameters()->add( "Expand Outside" , "-outside" , 
@@ -148,6 +150,7 @@ bool dbsk2d_compute_containment_graph_process::execute()
     double gap_distance(2.0);
     bool outside(false);
     bool train(false);
+    int quad(-1);
     bool debug(false);
     bool show_shock(false);
 
@@ -169,7 +172,8 @@ bool dbsk2d_compute_containment_graph_process::execute()
     parameters()->get_value( "-train" , train );
     parameters()->get_value( "-debug" , debug );
     parameters()->get_value( "-show_shock" , show_shock );
-    
+    parameters()->get_value( "-quad" , quad );
+
 
     bool status = true;
     
@@ -450,7 +454,8 @@ bool dbsk2d_compute_containment_graph_process::execute()
                                     outside,
                                     train,
 				    debug,
-				    show_shock);
+				    show_shock,
+                                    quad);
 
     cgraph.construct_graph();
     cgraph.write_stats(stats_filestream);
