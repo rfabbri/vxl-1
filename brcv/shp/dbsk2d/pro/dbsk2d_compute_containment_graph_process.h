@@ -55,6 +55,8 @@ private:
                             bool remove_closed,
                             bool train);
   
+  void pre_process_gap4(dbsk2d_ishock_graph_sptr ishock_graph);
+
   dbsk2d_bnd_contour_sptr get_contour(dbsk2d_ishock_bpoint* bp);
 
   void region_stats(vgl_polygon<double>& poly,vcl_vector<double>& stats,
