@@ -5,16 +5,18 @@
 
 #include <dbsk2d/pro/dbsk2d_compute_containment_graph_process.h>
 #include <dbsk2d/pro/dbsk2d_shock_storage.h>
-#include <dbsk2d/pro/dbsk2d_shock_storage_sptr.h>
 #include <dbsk2d/pro/dbsk2d_compute_ishock_process.h>
 #include <dbsk2d/dbsk2d_containment_graph.h>
 #include <dbsk2d/dbsk2d_transform_manager.h>
+#include <dbsk2d/algo/dbsk2d_compute_shocks.h>
 #include <dbsk2d/algo/dbsk2d_ishock_gap_detector.h>
 #include <dbsk2d/algo/dbsk2d_ishock_transform_sptr.h>
 #include <dbsk2d/algo/dbsk2d_ishock_gap_transform.h>
 #include <dbsk2d/algo/dbsk2d_ishock_loop_transform.h>
 #include <dbsk2d/algo/dbsk2d_ishock_gap4_transform.h>
+#include <dbsk2d/algo/dbsk2d_ishock_detector.h>
 #include <dbsk2d/algo/dbsk2d_ishock_grouping_transform.h>
+#include <dbsk2d/algo/dbsk2d_bnd_preprocess.h>
 #include <dbsk2d/dbsk2d_bnd_utils.h>
 #include <vgl/vgl_area.h>
 
@@ -446,6 +448,9 @@ bool dbsk2d_compute_containment_graph_process::execute()
     dbsk2d_shock_storage_sptr shock_storage;
     shock_storage.vertical_cast(shock_results[0]);
 
+    pre_process_gap4(shock_storage);
+
+    // Out of here
     shock_storage->get_ishock_graph()->ob_shocks();
 
     pre_process_contours(shock_storage->get_ishock_graph(),
@@ -1004,13 +1009,24 @@ get_contour(dbsk2d_ishock_bpoint* bp)
 
 
 void dbsk2d_compute_containment_graph_process::pre_process_gap4(
-    dbsk2d_ishock_graph_sptr ishock_graph)
+    dbsk2d_shock_storage_sptr output_shock)
 {
-    dbsk2d_ishock_gap_detector detector(ishock_graph);
+
+    dbsk2d_ishock_graph_sptr ishock_graph=output_shock->get_ishock_graph();
+    dbsk2d_boundary_sptr boundary=ishock_graph->boundary();
 
     vcl_vector<
         vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> > gap4_pairs;
-    detector.detect_gap4(gap4_pairs);
+    {
+        dbsk2d_ishock_gap_detector detector(ishock_graph);
+        detector.detect_gap4(gap4_pairs);
+    }
+
+    output_shock->set_ishock_graph(0);
+    ishock_graph->remove_boundary();
+    boundary->set_ishock_graph(0);
+    ishock_graph->clear();
+    ishock_graph=0;
 
     vil_image_resource_sptr img=dbsk2d_transform_manager::Instance().
         get_image();
@@ -1018,12 +1034,12 @@ void dbsk2d_compute_containment_graph_process::pre_process_gap4(
     vcl_cout<<"Stats before splitting"<<vcl_endl;
 
     vcl_cout<<"Numb contours: "<<
-        ishock_graph->boundary()->preproc_contours().size()+
-        ishock_graph->boundary()->scratch_contours().size()
+        boundary->preproc_contours().size()+
+        boundary->scratch_contours().size()
             <<vcl_endl;
-    vcl_cout<<"Numb edges: "<<ishock_graph->boundary()->all_edges().size()
+    vcl_cout<<"Numb edges: "<<boundary->all_edges().size()
             <<vcl_endl;
-    vcl_cout<<"Numb belms: "<<ishock_graph->boundary()->belm_list().size()
+    vcl_cout<<"Numb belms: "<<boundary->belm_list().size()
             <<vcl_endl;
 
     vcl_map<int, vcl_vector<dbsk2d_bnd_edge_sptr> > hash_map;
@@ -1092,8 +1108,7 @@ void dbsk2d_compute_containment_graph_process::pre_process_gap4(
 
 
         dbsk2d_bnd_vertex_sptr anchor_pt=dbsk2d_bnd_utils::new_vertex(
-            closest_pt,ishock_graph->boundary());
-        anchor_pt->bpoint()->set_visibility(false);
+            closest_pt,boundary);
     
         const vcl_list< vtol_topology_object * > * 
             superiors  = edge->superiors_list();
@@ -1113,20 +1128,18 @@ void dbsk2d_compute_containment_graph_process::pre_process_gap4(
         bnd_edges.push_back(dbsk2d_bnd_utils::new_line_between(
                                 edge->bnd_v1(), 
                                 anchor_pt, 
-                                ishock_graph->boundary()));
-
+                                boundary));
 
         bnd_edges.push_back(dbsk2d_bnd_utils::new_line_between(
                                 anchor_pt,
                                 edge->bnd_v2(),  
-                                ishock_graph->boundary()));
+                                boundary));
 
         vcl_vector<signed char > directions(bnd_edges.size(), 1);
 
         bool output=contour->replace_edges(bnd_edges,
                                directions,
                                edge);
-
 
         bnd_edges[0]->left_bcurve()->set_GUIelm(true);
         bnd_edges[0]->right_bcurve()->set_GUIelm(true);
@@ -1143,41 +1156,86 @@ void dbsk2d_compute_containment_graph_process::pre_process_gap4(
         }
     }
 
-    ishock_graph->boundary()->update_belm_list();
+    boundary->update_belm_list();
 
     vcl_cout<<"Stats after splitting"<<vcl_endl;
 
     vcl_cout<<"Numb contours: "<<
-        ishock_graph->boundary()->preproc_contours().size()+
-        ishock_graph->boundary()->scratch_contours().size()
+        boundary->preproc_contours().size()+
+        boundary->scratch_contours().size()
             <<vcl_endl;
-    vcl_cout<<"Numb edges: "<<ishock_graph->boundary()->all_edges().size()
+    vcl_cout<<"Numb edges: "<<boundary->all_edges().size()
             <<vcl_endl;
-    vcl_cout<<"Numb belms: "<<ishock_graph->boundary()->belm_list().size()
+    vcl_cout<<"Numb belms: "<<boundary->belm_list().size()
             <<vcl_endl;
 
-    // Turn on all lines before recomputing
-    vcl_vector<dbsk2d_ishock_belm*> belm_list=ishock_graph
-        ->boundary()->belm_list();
-
-    vcl_vector<dbsk2d_ishock_belm*>::iterator bit;
-    for ( bit = belm_list.begin(); bit != belm_list.end(); ++bit)
+    vcl_vector<dbsk2d_ishock_belm*> belm_list=boundary->belm_list();
+    vcl_map<unsigned int,vcl_string> lines_visited;
+    vcl_vector<vsol_spatial_object_2d_sptr> line_objects;
+    for ( unsigned int i=0; i < belm_list.size() ; ++i)
     {
-        if ( (*bit)->is_a_line() )
+        if ( belm_list[i]->is_a_line() )
         {
-                
-            (*bit)->set_GUIelm(true);
+            dbsk2d_ishock_bline* line_element = 
+                dynamic_cast<dbsk2d_ishock_bline*>(belm_list[i]);
+            unsigned int line_id      = line_element->id();
+            unsigned int twin_line_id = line_element->twinLine()->id();
+
+            if ( lines_visited.count(line_id)==0 &&
+                 lines_visited.count(twin_line_id)==0 && 
+                 line_element->is_a_GUIelm())
+            {
+                // Add in contours for front 
+                vsol_spatial_object_2d_sptr obj=
+                    new vsol_line_2d(line_element->s_pt()->pt(),
+                                     line_element->e_pt()->pt());
+                line_objects.push_back(obj);
+                lines_visited[line_id]="temp";
+                lines_visited[twin_line_id]="temp";
+            }
+
         }
     }
+    
+    // Now destroy boundary
+    output_shock->set_boundary(0);
+    output_shock->set_image(0);
+    boundary=0;
 
-    dbsk2d_ishock_transform transform(ishock_graph,
-                                      dbsk2d_ishock_transform::LOOP);
+    //1) get input storage classes
+    vidpro1_image_storage_sptr frame_image=new vidpro1_image_storage();
+
+    // 1) get input storage class
+    vidpro1_vsol2D_storage_sptr input_vsol=new vidpro1_vsol2D_storage();
+    input_vsol->add_objects(line_objects);
+
+    /*********************** Shock Compute **********************************/
+    // Grab output from shock computation
+    dbsk2d_ishock_graph_sptr ishock_new_graph(0);
 
     {
-        transform.write_boundary("inserted_gap4s.bnd");
+        dbsk2d_boundary_sptr new_boundary=
+            dbsk2d_create_boundary (
+                line_objects,   // vsol objects
+                false,          // bool override_default_partitioning,
+                0,0,            // xmin,ymin
+                1,1,            // int num_rows, int num_cols, 
+                1000.0f,1000.0f,// float cell_width, float cell_height,
+                true,    //bool preprocess_boundary,
+                true);    //bool break_long_lines,
+        
+        ishock_new_graph=dbsk2d_compute_ishocks(new_boundary);
+         
     }
+    
+    output_shock->set_ishock_graph(ishock_new_graph);
 
-    transform.recompute_full_shock_graph();
-
+    // dbsk2d_ishock_transform transform(output_shock->get_ishock_graph(),
+    //                                   dbsk2d_ishock_transform::LOOP);
+    // 
+    // {
+    //     transform.write_shock_boundary("inserted_gap4s_shocks.cem");
+    //     transform.write_boundary("inserted_gap4s_contours.bnd");
+    // }
 
 }

@@ -19,6 +19,7 @@
 #include <bpro1/bpro1_parameters.h>
 #include <dbsk2d/dbsk2d_ishock_graph_sptr.h>
 #include <dbsk2d/dbsk2d_bnd_contour_sptr.h>
+#include <dbsk2d/pro/dbsk2d_shock_storage_sptr.h>
 #include <vgl/vgl_polygon.h>
 
 class dbsk2d_ishock_bpoint;
@@ -55,7 +56,7 @@ private:
                             bool remove_closed,
                             bool train);
   
-  void pre_process_gap4(dbsk2d_ishock_graph_sptr ishock_graph);
+  void pre_process_gap4(dbsk2d_shock_storage_sptr output_shock);
 
   dbsk2d_bnd_contour_sptr get_contour(dbsk2d_ishock_bpoint* bp);
 
