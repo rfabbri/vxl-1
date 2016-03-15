@@ -1169,45 +1169,38 @@ void dbsk2d_compute_containment_graph_process::pre_process_gap4(
     vcl_cout<<"Numb belms: "<<boundary->belm_list().size()
             <<vcl_endl;
 
-    vcl_vector<dbsk2d_ishock_belm*> belm_list=boundary->belm_list();
-    vcl_map<unsigned int,vcl_string> lines_visited;
-    vcl_vector<vsol_spatial_object_2d_sptr> line_objects;
-    for ( unsigned int i=0; i < belm_list.size() ; ++i)
+    vcl_vector<vsol_spatial_object_2d_sptr> vsol_list;
+
+    bnd_contour_list all_contours;
+    boundary->all_contours(all_contours);
+    unsigned int id=1;
+    for (bnd_contour_list::iterator cit =
+             all_contours.begin(); cit != all_contours.end(); ++cit)
     {
-        if ( belm_list[i]->is_a_line() )
+
+        // Add in contours for front 
+        vsol_spatial_object_2d_sptr obj=
+            new vsol_polyline_2d;
+
+        vsol_polyline_2d* curve=obj->cast_to_curve()->cast_to_polyline();
+
+        dbsk2d_bnd_contour_sptr con=(*cit);
+        for ( int e=0; e <= con->num_edges() ; ++e)
         {
-            dbsk2d_ishock_bline* line_element = 
-                dynamic_cast<dbsk2d_ishock_bline*>(belm_list[i]);
-            unsigned int line_id      = line_element->id();
-            unsigned int twin_line_id = line_element->twinLine()->id();
-
-            if ( lines_visited.count(line_id)==0 &&
-                 lines_visited.count(twin_line_id)==0 && 
-                 line_element->is_a_GUIelm())
-            {
-                // Add in contours for front 
-                vsol_spatial_object_2d_sptr obj=
-                    new vsol_line_2d(line_element->s_pt()->pt(),
-                                     line_element->e_pt()->pt());
-                line_objects.push_back(obj);
-                lines_visited[line_id]="temp";
-                lines_visited[twin_line_id]="temp";
-            }
-
+            vsol_point_2d_sptr pt=new vsol_point_2d(
+                con->bnd_vertex(e)->bpoint()->pt());
+            curve->add_vertex(pt);
         }
+
+        curve->set_id(id);
+        vsol_list.push_back(curve);
+        ++id;
     }
     
     // Now destroy boundary
     output_shock->set_boundary(0);
     output_shock->set_image(0);
     boundary=0;
-
-    //1) get input storage classes
-    vidpro1_image_storage_sptr frame_image=new vidpro1_image_storage();
-
-    // 1) get input storage class
-    vidpro1_vsol2D_storage_sptr input_vsol=new vidpro1_vsol2D_storage();
-    input_vsol->add_objects(line_objects);
 
     /*********************** Shock Compute **********************************/
     // Grab output from shock computation
@@ -1216,7 +1209,7 @@ void dbsk2d_compute_containment_graph_process::pre_process_gap4(
     {
         dbsk2d_boundary_sptr new_boundary=
             dbsk2d_create_boundary (
-                line_objects,   // vsol objects
+                vsol_list,      // vsol objects
                 false,          // bool override_default_partitioning,
                 0,0,            // xmin,ymin
                 1,1,            // int num_rows, int num_cols, 
