@@ -1093,14 +1093,43 @@ void dbsk2d_compute_containment_graph_process::pre_process_gap4(
             }
 
         }
+        else if ( hash_map.count(bline->twinLine()->id()))
+        {
+            vcl_vector<dbsk2d_bnd_edge_sptr> edges=hash_map[
+                bline->twinLine()->id()];
+            for ( int i=0; i < edges.size() ; ++i)
+            {
+         
+                if ( edges[i]->superiors_list()->size())
+                {
+                    vgl_line_segment_2d<double> test_line(
+                        edges[i]->bnd_v1()->bpoint()->pt(),
+                        edges[i]->bnd_v2()->bpoint()->pt());
+
+                    if ( vgl_lineseg_test_point(closest_pt,
+                                                test_line))
+                    {
+                        edge=edges[i];
+                        break;
+                    }
+                }
+            }
+
+        }
         else
         {
             edge=bline->bnd_edge();
         }
         
-        if ( vgl_distance(closest_pt,bline->s_pt()->pt()) < 0.1 
+
+        if ( edge == 0 )
+        {
+            continue;
+        }
+
+        if ( vgl_distance(closest_pt,edge->bnd_v1()->bpoint()->pt()) < 0.1 
              ||
-             vgl_distance(closest_pt,bline->e_pt()->pt()) < 0.1
+             vgl_distance(closest_pt,edge->bnd_v2()->bpoint()->pt()) < 0.1
             )
         {
             continue;
@@ -1225,7 +1254,6 @@ void dbsk2d_compute_containment_graph_process::pre_process_gap4(
 
     // dbsk2d_ishock_transform transform(output_shock->get_ishock_graph(),
     //                                   dbsk2d_ishock_transform::LOOP);
-    // 
     // {
     //     transform.write_shock_boundary("inserted_gap4s_shocks.cem");
     //     transform.write_boundary("inserted_gap4s_contours.bnd");
