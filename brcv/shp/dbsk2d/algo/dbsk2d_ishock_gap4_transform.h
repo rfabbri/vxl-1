@@ -90,6 +90,9 @@ private:
     // Holds id of connecting line
     int euler_spiral_id_;
 
+    // Hold visibility of original point
+    bool anchor_pt_visible_;
+
     // Make copy ctor private
     dbsk2d_ishock_gap4_transform(const dbsk2d_ishock_gap4_transform&);
 

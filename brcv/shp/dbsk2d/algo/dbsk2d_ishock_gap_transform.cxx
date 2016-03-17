@@ -339,7 +339,7 @@ void dbsk2d_ishock_gap_transform::add_euler_spiral(dbsk2d_ishock_bpoint* bp1,
     int min_fit_length = 2;
     vgl_fit_lines_2d<double> fitter;
     fitter.set_min_fit_length(min_fit_length);
-    fitter.set_rms_error_tol(0.05f);
+    fitter.set_rms_error_tol(0.5f);
     fitter.add_curve(init_samples_);
 
     vcl_vector<vgl_line_segment_2d<double> > segs;
@@ -482,19 +482,19 @@ void dbsk2d_ishock_gap_transform::determine_likelihood()
     mz_random.reseed((unsigned long)time(NULL));
     float noise_radius=0.002f;
     
-    for ( unsigned int i=1; i < init_samples_.size()-1 ; ++i)
-    {
-        vgl_point_2d<double> point=init_samples_[i];
-        double x=point.x();
-        double y=point.y();
-        double rand_x = mz_random.drand32(1.0);
-        x += 2.0*noise_radius*(rand_x-0.5);
-        double rand_y = mz_random.drand32(1.0);
-        y += 2.0*noise_radius*(rand_y-0.5);
-        init_samples_[i].set(x,y);
+    // for ( unsigned int i=1; i < init_samples_.size()-1 ; ++i)
+    // {
+    //     vgl_point_2d<double> point=init_samples_[i];
+    //     double x=point.x();
+    //     double y=point.y();
+    //     double rand_x = mz_random.drand32(1.0);
+    //     x += 2.0*noise_radius*(rand_x-0.5);
+    //     double rand_y = mz_random.drand32(1.0);
+    //     y += 2.0*noise_radius*(rand_y-0.5);
+    //     init_samples_[i].set(x,y);
 
 
-    }
+    // }
  
     double length_of_gap=vgl_distance(bp1->pt(),
                                       bp2->pt());

@@ -32,6 +32,8 @@ dbsk2d_ishock_gap4_transform::dbsk2d_ishock_gap4_transform(
     // convert the pts into bnd_vertex and put into a list
     vcl_vector<vgl_point_2d<double> > bv_list;
 
+    anchor_pt_visible_=anchor_pt_->is_visible();
+    
     
 }
 
@@ -63,7 +65,6 @@ bool dbsk2d_ishock_gap4_transform::execute_transform()
 {
     
     this->clear();
-    bool orig_visibility=anchor_pt_->is_visible();
 
     dbsk2d_ishock_bpoint* bp1 = gap_line_pair_.first;
     dbsk2d_ishock_bline*  bl2 = gap_line_pair_.second;
@@ -113,7 +114,7 @@ bool dbsk2d_ishock_gap4_transform::execute_transform()
         bp1->set_visibility(true);
         form_contact_shocks(left,right,bp1);
         
-        bp2->set_visibility(true);
+        bp2->set_visibility(anchor_pt_visible_);
         form_contact_shocks(contour_pair_.first,
                             contour_pair_.second,bp2);
         bp1->set_max_eta(vnl_math::pi);
@@ -181,7 +182,7 @@ bool dbsk2d_ishock_gap4_transform::execute_transform()
                 right_line->set_GUIelm(false);
 
                 bp1->set_visibility(true);
-                bp2->set_visibility(orig_visibility);            
+                bp2->set_visibility(anchor_pt_visible_);            
                 bp1->set_max_eta(2.0*vnl_math::pi);
                 bp2->set_max_eta(2.0*vnl_math::pi);
                 bp1->set_vref(-1);
