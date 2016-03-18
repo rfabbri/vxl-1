@@ -1233,24 +1233,22 @@ void dbsk2d_compute_containment_graph_process::pre_process_gap4(
 
     /*********************** Shock Compute **********************************/
     // Grab output from shock computation
-    dbsk2d_ishock_graph_sptr ishock_new_graph(0);
 
-    {
-        dbsk2d_boundary_sptr new_boundary=
-            dbsk2d_create_boundary (
-                vsol_list,      // vsol objects
-                false,          // bool override_default_partitioning,
-                0,0,            // xmin,ymin
-                1,1,            // int num_rows, int num_cols, 
-                1000.0f,1000.0f,// float cell_width, float cell_height,
-                true,    //bool preprocess_boundary,
-                true);    //bool break_long_lines,
+    dbsk2d_boundary_sptr new_boundary=
+        dbsk2d_create_boundary (
+            vsol_list,      // vsol objects
+            false,          // bool override_default_partitioning,
+            0,0,            // xmin,ymin
+            1,1,            // int num_rows, int num_cols, 
+            1000.0f,1000.0f,// float cell_width, float cell_height,
+            true,    //bool preprocess_boundary,
+            true);    //bool break_long_lines,
         
-        ishock_new_graph=dbsk2d_compute_ishocks(new_boundary);
-         
-    }
-    
+    dbsk2d_ishock_graph_sptr ishock_new_graph
+        =dbsk2d_compute_ishocks(new_boundary);
+
     output_shock->set_ishock_graph(ishock_new_graph);
+    output_shock->set_boundary(new_boundary);
 
     // dbsk2d_ishock_transform transform(output_shock->get_ishock_graph(),
     //                                   dbsk2d_ishock_transform::LOOP);
