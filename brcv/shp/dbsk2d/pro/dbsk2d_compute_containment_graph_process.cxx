@@ -26,6 +26,8 @@
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
 #include <vil/vil_image_resource.h>
 
+
+#include <vnl/vnl_random.h>
 #include <vgl/vgl_lineseg_test.txx>
 #include <vgl/vgl_closest_point.h>
 #include <vgl/vgl_box_2d.h>
@@ -831,18 +833,18 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
 
                     if ( flag )
                     {
-                        dbsk2d_ishock_bpoint* point=
-                            (*it).second->endpoint_in_elms(
-                                gap4_con_ids[(*it).first]);
+                        // dbsk2d_ishock_bpoint* point=
+                        //     (*it).second->endpoint_in_elms(
+                        //         gap4_con_ids[(*it).first]);
 
-                        if ( point && (point->id() != pair.second->id()) )
-                        {
-                            dbsk2d_ishock_loop_transform loop_trans(
-                                ishock_graph,
-                                point);
-                            loop_trans.execute_transform();
+                        // if ( point && (point->id() != pair.second->id()) )
+                        // {
+                        //     dbsk2d_ishock_loop_transform loop_trans(
+                        //         ishock_graph,
+                        //         point);
+                        //     loop_trans.execute_transform();
 
-                        }
+                        // }
                     }
                     else
                     {
@@ -1234,22 +1236,63 @@ void dbsk2d_compute_containment_graph_process::pre_process_gap4(
     /*********************** Shock Compute **********************************/
     // Grab output from shock computation
 
-    dbsk2d_boundary_sptr new_boundary=
-        dbsk2d_create_boundary (
-            vsol_list,      // vsol objects
-            false,          // bool override_default_partitioning,
-            0,0,            // xmin,ymin
-            1,1,            // int num_rows, int num_cols, 
-            1000.0f,1000.0f,// float cell_width, float cell_height,
-            true,    //bool preprocess_boundary,
-            true);    //bool break_long_lines,
+    while ( true )
+    {
+        dbsk2d_boundary_sptr new_boundary=
+            dbsk2d_create_boundary (
+                vsol_list,      // vsol objects
+                false,          // bool override_default_partitioning,
+                0,0,            // xmin,ymin
+                1,1,            // int num_rows, int num_cols, 
+                1000.0f,1000.0f,// float cell_width, float cell_height,
+                true,    //bool preprocess_boundary,
+                true);    //bool break_long_lines,
         
-    dbsk2d_ishock_graph_sptr ishock_new_graph
-        =dbsk2d_compute_ishocks(new_boundary);
+        dbsk2d_ishock_graph_sptr ishock_new_graph
+            =dbsk2d_compute_ishocks(new_boundary);
+     
+        if ( ishock_new_graph )
+        {
+            output_shock->set_ishock_graph(ishock_new_graph);
+            output_shock->set_boundary(new_boundary);
 
-    output_shock->set_ishock_graph(ishock_new_graph);
-    output_shock->set_boundary(new_boundary);
+            break;
+        }
+        else
+        {
+            // add noise to vsol list
+            
+            vcl_cout<<"After preprocessing adding noise"<<vcl_endl;
 
+            for (unsigned int v=0; v < vsol_list.size() ; ++v)
+            {
+                vsol_polyline_2d_sptr curve=vsol_list[v]->cast_to_curve()->
+                    cast_to_polyline();
+                
+
+                vnl_random mz_random;
+                mz_random.reseed((unsigned long)time(NULL));
+                float noise_radius=0.002f;
+     
+                for ( int c=0; c < curve->size() ; ++c)
+                {
+                    vsol_point_2d_sptr vertex=curve->vertex(c);
+                    
+                    vgl_point_2d<double> point=vertex->get_p();          
+                    
+                    double x=point.x();
+                    double y=point.y();
+                    double rand_x = mz_random.drand32(1.0);
+                    x += 2.0*noise_radius*(rand_x-0.5);
+                    double rand_y = mz_random.drand32(1.0);
+                    y += 2.0*noise_radius*(rand_y-0.5);
+                    vertex->set_x(x);
+                    vertex->set_y(y);
+                }
+            }
+
+        }
+    }
     // dbsk2d_ishock_transform transform(output_shock->get_ishock_graph(),
     //                                   dbsk2d_ishock_transform::LOOP);
     // {
