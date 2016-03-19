@@ -1262,6 +1262,9 @@ void dbsk2d_compute_containment_graph_process::pre_process_gap4(
         {
             // add noise to vsol list
             
+            output_shock->set_boundary(0);
+            output_shock->set_ishock_graph(0);
+
             vcl_cout<<"After preprocessing adding noise"<<vcl_endl;
 
             for (unsigned int v=0; v < vsol_list.size() ; ++v)
@@ -1273,7 +1276,14 @@ void dbsk2d_compute_containment_graph_process::pre_process_gap4(
                 vnl_random mz_random;
                 mz_random.reseed((unsigned long)time(NULL));
                 float noise_radius=0.002f;
-     
+
+                if ( curve->vertex(0)->get_p() == curve->vertex(
+                         curve->size()-1)->get_p())
+                {
+                    // closed curve ignore
+                    continue;
+                }
+                  
                 for ( int c=0; c < curve->size() ; ++c)
                 {
                     vsol_point_2d_sptr vertex=curve->vertex(c);
