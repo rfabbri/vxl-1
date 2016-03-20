@@ -17,11 +17,13 @@
 
 #include <dbsk2d/dbsk2d_shock_graph_sptr.h>
 
+#include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_image_view.h>
 #include <vgl/vgl_polygon.h>
 
 #include <vl/sift.h>
 
+#include <vnl/vnl_matrix.h>
 #include <vnl/vnl_vector.h>
 
 #include <vcl_string.h>
@@ -34,24 +36,48 @@ class dbskr_train_routines
 
 public:
 
+    //: Enum
+    enum DescriptorType
+    {
+        GRADIENT=0,
+        COLOR
+    };
+
+    //: Enum
+    enum ColorSpace
+    {
+        RGB=0,
+        OPP,
+        NOPP,
+        LAB
+    };
+
     //: Constructor
     dbskr_train_routines(vcl_string model_filename,
-                         int bag_of_words_sift=1024,
-                         int bag_of_words_color=1024);
+                         DescriptorType descr_type,
+                         ColorSpace color_space,
+                         int keywords=1024,
+                         int pca=128);
 
     //: Destructor
     ~dbskr_train_routines();
 
-    //: Match
-    void train();
+    //: Write out data
+    void write_out();
 
 private:
 
-    // bag of words grad
-    int sift_words_;
+    // Descritor type
+    DescriptorType descr_type_;
 
-    // bag of words color
-    int color_words_;
+    // Color space
+    ColorSpace color_space_;
+
+    // keywords for gmm
+    int keywords_;
+
+    // int pca dimensitoinaly reduction
+    int pca_;
 
     // Keep track of masks per image
     vcl_vector<vgl_polygon<double> > masks_;
@@ -66,18 +92,45 @@ private:
     vcl_vector<vl_sift_pix* > grad_chan_2_;
     vcl_vector<vl_sift_pix* > grad_chan_3_;
 
+    // Keep all descriptors
+    vnl_matrix<vl_sift_pix> descriptor_matrix_;
+
+    // Keep pca data
+    vnl_matrix<vl_sift_pix> PCA_M_;
+    vnl_vector<vl_sift_pix> PCA_mean_;
+
+    //: Match
+    void train(vcl_string& gmm_filename);
+
     // Load model file
     void load_model_file(vcl_string& filename);
+
+    vnl_vector<vl_sift_pix> linear_embed(vnl_vector<vl_sift_pix>& descr)
+    {
+        vnl_vector<vl_sift_pix> zero_mean=descr-PCA_mean_;
+        
+        return zero_mean*PCA_M_; 
+        
+    }
+
+    void convert_to_color_space(
+        vil_image_resource_sptr& input_image,
+        vil_image_view<double>& o1,
+        vil_image_view<double>& o2,
+        vil_image_view<double>& o3,
+        ColorSpace color_space);
 
     // Compute boundary 
     vgl_polygon<double> compute_boundary(
         dbsk2d_shock_graph_sptr& sg);
 
-    void compute_descriptors();
+    void compute_grad_descriptors();
     
     void compute_gradients();
 
-    void compute_descr(
+    void compute_pca(vcl_string& M_filename,vcl_string& mean_filename);
+
+    void compute_sift_descr(
         vgl_point_2d<double>& pt,
         double& radius,
         double& theta,
