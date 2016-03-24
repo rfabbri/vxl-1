@@ -8,7 +8,7 @@
 #include <dbsk2d/algo/dbsk2d_ishock_gap4_transform.h>
 #include <dbsk2d/dbsk2d_bnd_utils.h>
 #include <dbsk2d/dbsk2d_transform_manager.h>
-
+#include <vgl/vgl_closest_point.h>
 
 //: constructor
 //: compute the salency of this shock element (edge/node)
@@ -134,7 +134,7 @@ bool dbsk2d_ishock_gap4_transform::execute_transform()
         delete_shock_vertices();
         add_connecting_line(bp1,
                             bl2);
-
+        delete_shock_vertices();
     }
 
     local_shock_compute();
@@ -263,6 +263,12 @@ void dbsk2d_ishock_gap4_transform::add_connecting_line(
     dbsk2d_ishock_bpoint* bp1,
     dbsk2d_ishock_bline* bl1)
 {
+    // Determine eta , of where endpoint and line meet
+
+    vgl_line_segment_2d<double> line(bl1->s_pt()->pt(),
+                                     bl1->e_pt()->pt());
+    
+    vgl_point_2d<double> closest_pt = vgl_closest_point(line,bp1->pt());
 
     double d1=vgl_distance(bp1->pt(),bl1->s_pt()->pt());
     double d2=vgl_distance(bp1->pt(),bl1->e_pt()->pt());
@@ -285,17 +291,25 @@ void dbsk2d_ishock_gap4_transform::add_connecting_line(
 
     dbsk2d_ishock_bpoint* bp2(0);
 
+    double min_eta,max_eta;
+
     // Add in first two points of line segment
     bv_list.push_back(bp1->bnd_vertex());   
     if ( bl1->s_pt() == anchor_pt_ )
     {
         bp2=bl1->s_pt();
         bv_list.push_back(bl1->s_pt()->bnd_vertex());
+
+        min_eta=bl1->min_eta();
+        max_eta=vgl_distance(closest_pt,bl1->s_pt()->pt());
     }
     else
     {
         bp2=bl1->e_pt();
         bv_list.push_back(bl1->e_pt()->bnd_vertex());
+
+        min_eta=vgl_distance(closest_pt,bl1->s_pt()->pt());
+        max_eta=bl1->max_eta();
     }
 
     dbsk2d_ishock_bline* bl2(0);
@@ -324,11 +338,41 @@ void dbsk2d_ishock_gap4_transform::add_connecting_line(
         // return;
     }
 
+    vcl_vector<dbsk2d_ishock_edge*> shocks_to_delete;
+
     bnd_ishock_map_iter curS = bl1->shock_map().begin();
     for ( ; curS != bl1->shock_map().end() ; ++curS)
     {
         dbsk2d_ishock_elm* selm = curS->second;
         
+        if ( selm->is_a_link() ) 
+        {
+            if ( curS->first.s_eta >= min_eta && curS->first.s_eta <= max_eta)
+            {
+                dbsk2d_ishock_edge* iedge = (dbsk2d_ishock_edge*)(curS->second);
+                if ( !iedge->is_a_contact())
+                {
+                    shocks_to_delete.push_back(iedge);
+                }
+            }
+        }
+    }
+
+    while ( shocks_to_delete.size())
+    {
+        dbsk2d_ishock_edge* cur_edge=shocks_to_delete.back();
+        shocks_to_delete.pop_back();
+        delete_shock_and_update(cur_edge);
+
+    }
+
+
+    curS = bl1->shock_map().begin();
+    for ( ; curS != bl1->shock_map().end() ; ++curS)
+    {
+        dbsk2d_ishock_elm* selm = curS->second;
+        
+
         if ( selm->is_a_link())
         {
             dbsk2d_ishock_edge* iedge = (dbsk2d_ishock_edge*)(curS->second);
@@ -476,6 +520,34 @@ void dbsk2d_ishock_gap4_transform::add_connecting_line(
         bp2->set_visibility(false);
     }
  
+
+    vcl_vector<dbsk2d_ishock_edge*> pt_shocks_to_delete;
+
+    bnd_ishock_map_iter it = bp2->shock_map().begin();
+    for ( ; it != bp2->shock_map().end() ; ++it)
+    {
+        dbsk2d_ishock_elm* selm = it->second;
+        
+        if ( selm->is_a_link() )
+        {
+            if ( it->first.s_eta > bp2->max_eta() )
+            {
+                dbsk2d_ishock_edge* iedge = (dbsk2d_ishock_edge*)(it->second);
+                pt_shocks_to_delete.push_back(iedge);
+            }
+        }
+
+    }
+
+    while ( pt_shocks_to_delete.size())
+    {
+        dbsk2d_ishock_edge* cur_edge=pt_shocks_to_delete.back();
+        pt_shocks_to_delete.pop_back();
+        delete_shock_and_update(cur_edge);
+
+    }
+
+
 }
 
 bool dbsk2d_ishock_gap4_transform::valid_transform()
