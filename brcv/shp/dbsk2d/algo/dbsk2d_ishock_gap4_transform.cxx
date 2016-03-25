@@ -134,7 +134,6 @@ bool dbsk2d_ishock_gap4_transform::execute_transform()
         delete_shock_vertices();
         add_connecting_line(bp1,
                             bl2);
-        delete_shock_vertices();
     }
 
     local_shock_compute();
@@ -391,7 +390,6 @@ void dbsk2d_ishock_gap4_transform::add_connecting_line(
     }
 
     bool flag=false;
-    vcl_vector<dbsk2d_ishock_edge*> edges_to_delete;
     curS = bp2->shock_map().begin();
     for ( ; curS != bp2->shock_map().end() ; ++curS)
     {
@@ -404,14 +402,14 @@ void dbsk2d_ishock_gap4_transform::add_connecting_line(
                  iedge->lBElement()->id() == bl1->id() )
             {
                 flag=true;
-                edges_to_delete.push_back(iedge);
+                break;
 
             }
             else if (iedge->rBElement()->id() == bl2->id() ||
                      iedge->rBElement()->id() == bl1->id() )
             {
                 flag=true;
-                edges_to_delete.push_back(iedge);
+                break;
                 
             }
         }
@@ -419,14 +417,10 @@ void dbsk2d_ishock_gap4_transform::add_connecting_line(
 
     if ( flag )
     {
-        while(edges_to_delete.size() > 0 )
-        {
-            dbsk2d_ishock_edge* cur_edge=edges_to_delete.back();
-            edges_to_delete.pop_back();
-            delete_shock_and_update(cur_edge);
-        }
-        
+        delete_belm_shocks(bp2);
     }
+
+    delete_shock_vertices();
 
     vcl_vector<dbsk2d_bnd_edge_sptr> bnd_edges;
     bnd_edges.push_back(dbsk2d_bnd_utils::new_line_between(
@@ -439,7 +433,6 @@ void dbsk2d_ishock_gap4_transform::add_connecting_line(
         bnd_edges, 
         directions, 
         euler_spiral_id_);
-
 
     boundary_->update_belm_list(contour_,local_belm_list_);
 
@@ -520,34 +513,6 @@ void dbsk2d_ishock_gap4_transform::add_connecting_line(
         bp2->set_visibility(false);
     }
  
-
-    vcl_vector<dbsk2d_ishock_edge*> pt_shocks_to_delete;
-
-    bnd_ishock_map_iter it = bp2->shock_map().begin();
-    for ( ; it != bp2->shock_map().end() ; ++it)
-    {
-        dbsk2d_ishock_elm* selm = it->second;
-        
-        if ( selm->is_a_link() )
-        {
-            if ( it->first.s_eta > bp2->max_eta() )
-            {
-                dbsk2d_ishock_edge* iedge = (dbsk2d_ishock_edge*)(it->second);
-                pt_shocks_to_delete.push_back(iedge);
-            }
-        }
-
-    }
-
-    while ( pt_shocks_to_delete.size())
-    {
-        dbsk2d_ishock_edge* cur_edge=pt_shocks_to_delete.back();
-        pt_shocks_to_delete.pop_back();
-        delete_shock_and_update(cur_edge);
-
-    }
-
-
 }
 
 bool dbsk2d_ishock_gap4_transform::valid_transform()
