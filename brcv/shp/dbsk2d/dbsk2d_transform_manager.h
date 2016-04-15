@@ -156,8 +156,11 @@ public:
     double transform_probability(double gamma_norm,double k0_norm, 
                                  double length);
 
-    // Determin cost
+    // Determine cost
     double likelihood(vcl_vector<vgl_point_2d<double> >& curve);
+
+    // Determin cost
+    double likelihood(vsol_polyline_2d_sptr& curve);
 
     // Determine gap cost
     double transform_probability(vcl_vector<vgl_point_2d<double> >& curve);

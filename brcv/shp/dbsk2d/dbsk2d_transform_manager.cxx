@@ -1372,6 +1372,89 @@ double dbsk2d_transform_manager::likelihood(
 
 }
 
+double dbsk2d_transform_manager::likelihood(
+    vsol_polyline_2d_sptr& curve)
+{
+
+    vcl_vector<vsol_point_2d_sptr> pts;
+
+    for ( int i=0; i < curve->size() ; ++i)
+    {
+        pts.push_back(curve->vertex(i));
+    }
+
+    vcl_vector<vsol_point_2d_sptr > region_pts;                 
+    dbsol_interp_curve_2d_sptr c = new dbsol_interp_curve_2d();
+    dbsol_curve_algs::interpolate_linear(c.ptr(), pts, false);
+    dbsol_curve_algs::sample_region_along_curve(*c, 
+                                                region_pts, 
+                                                0.3f, 
+                                                c->length(), 
+                                                5.0, 
+                                                false);
+
+    vcl_vector<vgl_point_2d<double> > foreground_grid;
+    vcl_vector<vgl_point_2d<double> > background_grid;
+
+    for(unsigned i = 0; i < region_pts.size()/2; ++i)
+    {
+        foreground_grid.push_back(region_pts[i]->get_p());
+    }
+
+    for(unsigned i = region_pts.size()/2; i < region_pts.size(); ++i)
+    {
+        background_grid.push_back(region_pts[i]->get_p());
+    }
+    
+
+    // 1) Get L difference in a LAB color space
+    double L_chi2 = chi_squared_color_distance(foreground_grid,
+                                               background_grid,
+                                               L_img_,
+                                               0.0,
+                                               100.0,
+                                               50);
+
+    // 2) Get a difference in a LAB color space
+    double a_chi2 = chi_squared_color_distance(foreground_grid,
+                                               background_grid,
+                                               a_img_,
+                                               -110.0,
+                                               110.0,
+                                               100);
+    
+    // 3) Get b difference in a LAB color space
+    double b_chi2 = chi_squared_color_distance(foreground_grid,
+                                               background_grid,
+                                               b_img_,
+                                               -110.0,
+                                               110.0,
+                                               100);
+
+    // 4) Get b difference in a LAB color space
+    double texton_chi2 = chi_squared_color_distance(foreground_grid,
+                                                    background_grid,
+                                                    texton_image_,
+                                                    1.0,
+                                                    64.0,
+                                                    64);
+
+
+    double weight1(-0.9521);
+    double weight2(-0.6998);
+    double weight3(2.7862);
+    double weight4(0.6521);
+    double weight5(-0.8183);
+
+    double modulus=1*weight1+L_chi2*weight2+a_chi2*weight3+b_chi2*weight4+
+        texton_chi2*weight5;
+
+    double sigmoid=1/(1+vcl_exp(-1.0*modulus));
+
+    return sigmoid;
+
+}
+
 double dbsk2d_transform_manager::transform_probability(
     vcl_vector<vgl_point_2d<double> >& 
     foreground_grid,
