@@ -1555,19 +1555,33 @@ double dbsk2d_transform_manager::transform_probability(
 }
 
 double dbsk2d_transform_manager::transform_probability(
-    vcl_vector<vgl_point_2d<double> >& curve)
+    vcl_vector<vgl_point_2d<double> >& input)
 {
 
-    if ( gPb_image_ == 0 || curve.size() == 0 )
+    // resample curve to always 100 samples
+
+    vcl_vector<vsol_point_2d_sptr> pts;
+
+    for ( int i=0; i < input.size() ; ++i)
+    {
+        vsol_point_2d_sptr pt=new vsol_point_2d(input[i]);
+        pts.push_back(pt );
+    }
+
+    dbsol_interp_curve_2d_sptr c = new dbsol_interp_curve_2d();
+    dbsol_curve_algs::interpolate_linear(c.ptr(), pts, false);
+    dbsol_curve_algs::sample(*c,100,pts);
+
+    if ( gPb_image_ == 0 || c->size() == 0 )
     {
         return 0.0;
     }
 
     double summation=0.0;
-    for ( unsigned int c=0; c < curve.size() ; ++c)
+    for ( unsigned int c=0; c < pts.size() ; ++c)
     {
-        double x=curve[c].x();
-        double y=curve[c].y();
+        double x=pts[c]->get_p().x();
+        double y=pts[c]->get_p().y();
 
         double gPb = vil_bilin_interp_safe_extend(gPb_image_,
                                                   x,
@@ -1577,41 +1591,57 @@ double dbsk2d_transform_manager::transform_probability(
     }
     
 
-    double average_gPb = summation/curve.size();
-    if ( average_gPb > normalization_ )
-    {
-        average_gPb = normalization_;
-    }
-    return average_gPb/normalization_;
+    double average_gPb = vcl_min(summation/pts.size(),1.0);
+    double weight1(-3.0470);
+    double weight2(10.5959);
+    double modulus=1*weight1+average_gPb*weight2;
+    double sigmoid=1/(1+vcl_exp(-1.0*modulus));
+
+    return sigmoid;
 
 }
 
 double dbsk2d_transform_manager::transform_probability(
-    vsol_polyline_2d_sptr& curve)
+    vsol_polyline_2d_sptr& input)
 {
+    // resample curve to always 100 samples
 
-    if ( gPb_image_ == 0 || curve->size() == 0 )
+    vcl_vector<vsol_point_2d_sptr> pts;
+
+    for ( int i=0; i < input->size() ; ++i)
+    {
+        pts.push_back(input->vertex(i) );
+    }
+
+    dbsol_interp_curve_2d_sptr c = new dbsol_interp_curve_2d();
+    dbsol_curve_algs::interpolate_linear(c.ptr(), pts, false);
+    dbsol_curve_algs::sample(*c,100,pts);
+
+    if ( gPb_image_ == 0 || c->size() == 0 )
     {
         return 0.0;
     }
 
     double summation=0.0;
-    for ( unsigned int c=0; c < curve->size() ; ++c)
+    for ( unsigned int c=0; c < pts.size() ; ++c)
     {
-        double x=curve->vertex(c)->get_p().x();
-        double y=curve->vertex(c)->get_p().y();
+        double x=pts[c]->get_p().x();
+        double y=pts[c]->get_p().y();
 
-        double gPb = vil_bilin_interp_safe(gPb_image_,
-                                           x,
-                                           y);
+        double gPb = vil_bilin_interp_safe_extend(gPb_image_,
+                                                  x,
+                                                  y);
 
         summation = summation + gPb;
     }
     
+    double average_gPb = vcl_min(summation/pts.size(),1.0);
+    double weight1(-3.0470);
+    double weight2(10.5959);
+    double modulus=1*weight1+average_gPb*weight2;
+    double sigmoid=1/(1+vcl_exp(-1.0*modulus));
 
-    double average_gPb = summation/curve->size();
-
-    return average_gPb/normalization_;
+    return sigmoid;
 
 }
 
