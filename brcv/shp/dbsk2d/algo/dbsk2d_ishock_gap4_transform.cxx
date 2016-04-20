@@ -43,15 +43,9 @@ double dbsk2d_ishock_gap4_transform::likelihood()
  
     dbsk2d_ishock_bpoint* bp1=gap_line_pair_.first;
 
-    vgl_line_segment_2d<double> line_segment(bp1->pt(),
-                                             anchor_pt_->pt());
-
     vcl_vector<vgl_point_2d<double> > bv_list;
-    for ( unsigned int i=0; i <= 10 ; ++i)
-    {
-        double sample = i/10;
-        bv_list.push_back(line_segment.point_t(sample));
-    }
+    bv_list.push_back(bp1->pt());
+    bv_list.push_back(anchor_pt_->pt());
 
     double likelihood = 
         dbsk2d_transform_manager::Instance().transform_probability(

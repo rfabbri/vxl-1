@@ -429,48 +429,49 @@ double dbsk2d_ishock_loop_transform::likelihood()
     // return 1.0-dbsk2d_transform_manager::Instance().transform_probability
     //     (fg_samples,bg_samples);
 
-    vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
-    vcl_map<int,dbsk2d_ishock_bpoint*> curve_map;
-    for ( it = removal_bnd_elements_.begin(); 
-          it != removal_bnd_elements_.end(); ++it)
-    {
-        dbsk2d_ishock_belm* belm = (*it).second;
+    // vcl_map<unsigned int,dbsk2d_ishock_belm*>::iterator it;
+    // vcl_map<int,dbsk2d_ishock_bpoint*> curve_map;
+    // for ( it = removal_bnd_elements_.begin(); 
+    //       it != removal_bnd_elements_.end(); ++it)
+    // {
+    //     dbsk2d_ishock_belm* belm = (*it).second;
     
-        if ( belm->is_a_line())
-        {
-            dbsk2d_ishock_bline* bline=dynamic_cast<dbsk2d_ishock_bline*>
-                (belm);
-                curve_map[bline->s_pt()->id()]=bline->s_pt();
-                curve_map[bline->e_pt()->id()]=bline->e_pt();
-        }
-        else
-        {
-            dbsk2d_ishock_bpoint* bpoint=
-                dynamic_cast<dbsk2d_ishock_bpoint*>(belm);
-            curve_map[bpoint->id()]=bpoint;
-        } 
-    }
+    //     if ( belm->is_a_line())
+    //     {
+    //         dbsk2d_ishock_bline* bline=dynamic_cast<dbsk2d_ishock_bline*>
+    //             (belm);
+    //             curve_map[bline->s_pt()->id()]=bline->s_pt();
+    //             curve_map[bline->e_pt()->id()]=bline->e_pt();
+    //     }
+    //     else
+    //     {
+    //         dbsk2d_ishock_bpoint* bpoint=
+    //             dynamic_cast<dbsk2d_ishock_bpoint*>(belm);
+    //         curve_map[bpoint->id()]=bpoint;
+    //     } 
+    // }
 
-    vcl_vector<vgl_point_2d<double> > curve;
+    // vcl_vector<vgl_point_2d<double> > curve;
 
-    if ( contour_pair_.first->nLinkedElms()>= 6 )
-    {
-        curve.push_back(contour_pair_.first->pt());
-    }
+    // if ( contour_pair_.first->nLinkedElms()>= 6 )
+    // {
+    //     curve.push_back(contour_pair_.first->pt());
+    // }
 
-    vcl_map<int,dbsk2d_ishock_bpoint*>::iterator mit;
-    for ( mit = curve_map.begin() ; mit != curve_map.end() ; ++mit)
-    {
-        curve.push_back((*mit).second->pt());
-    }
+    // vcl_map<int,dbsk2d_ishock_bpoint*>::iterator mit;
+    // for ( mit = curve_map.begin() ; mit != curve_map.end() ; ++mit)
+    // {
+    //     curve.push_back((*mit).second->pt());
+    // }
 
-    if ( contour_pair_.second->nLinkedElms()>= 6 )
-    {
-        curve.push_back(contour_pair_.second->pt());
-    }
+    // if ( contour_pair_.second->nLinkedElms()>= 6 )
+    // {
+    //     curve.push_back(contour_pair_.second->pt());
+    // }
 
     return 
-        1.0-dbsk2d_transform_manager::Instance().transform_probability(curve);
+        1.0-dbsk2d_transform_manager::Instance().transform_probability(
+            ordered_contour_);
 }
 
 //: remove boundary element
@@ -489,7 +490,7 @@ void dbsk2d_ishock_loop_transform::detect_contour(
     {
         removal_bnd_elements_[contour_point_->id()]=contour_point_;
     }
-    ordered_contour_.push_back(contour_point_);
+    ordered_contour_.push_back(contour_point_->pt());
 
     // Since this a degree three put something back on right away
     dbsk2d_ishock_belm* first_belm = (first_link)?first_link:
@@ -503,14 +504,14 @@ void dbsk2d_ishock_loop_transform::detect_contour(
     if ( bline->s_pt()->id()==contour_point_->id())
     {
         stack.push_back(bline->e_pt());
-        ordered_contour_.push_back(stack.back());
+        ordered_contour_.push_back(stack.back()->pt());
         removal_bnd_elements_[stack.back()->id()]=stack.back();
 
     }
     else
     {
         stack.push_back(bline->s_pt());
-        ordered_contour_.push_back(stack.back());
+        ordered_contour_.push_back(stack.back()->pt());
         removal_bnd_elements_[stack.back()->id()]=stack.back();
     }
 
@@ -552,7 +553,7 @@ void dbsk2d_ishock_loop_transform::detect_contour(
                   {
                       removal_bnd_elements_[bline->s_pt()->id()]=bline->s_pt();
                       stack.push_back(bline->s_pt());
-                      ordered_contour_.push_back(stack.back());
+                      ordered_contour_.push_back(stack.back()->pt());
                   }
                   else if ( removal_bnd_elements_.count(bline->e_pt()->id())==0
                             && 
@@ -560,7 +561,7 @@ void dbsk2d_ishock_loop_transform::detect_contour(
                   {
                       removal_bnd_elements_[bline->e_pt()->id()]=bline->e_pt();
                       stack.push_back(bline->e_pt());
-                      ordered_contour_.push_back(stack.back());
+                      ordered_contour_.push_back(stack.back()->pt());
                   }
               }
               
