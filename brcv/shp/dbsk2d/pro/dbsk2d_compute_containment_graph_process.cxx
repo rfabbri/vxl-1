@@ -450,7 +450,11 @@ bool dbsk2d_compute_containment_graph_process::execute()
     dbsk2d_shock_storage_sptr shock_storage;
     shock_storage.vertical_cast(shock_results[0]);
 
-    pre_process_gap4(shock_storage);
+    // Debug cost
+    // debug_cost(shock_storage->get_ishock_graph(),
+    //            output_prefix);
+    
+    // pre_process_gap4(shock_storage);
 
     // Out of here
     shock_storage->get_ishock_graph()->ob_shocks();
@@ -507,6 +511,129 @@ bool dbsk2d_compute_containment_graph_process::execute()
 bool dbsk2d_compute_containment_graph_process::finish()
 {
     return true;
+}
+
+void dbsk2d_compute_containment_graph_process::
+debug_cost(dbsk2d_ishock_graph_sptr ishock_graph,
+           vcl_string filename)
+{
+
+    // Write out boundary
+    {
+        vcl_string bnd_file=filename +"_pre_process.bnd";
+        dbsk2d_ishock_transform temp_trans(ishock_graph,
+                                           dbsk2d_ishock_transform::LOOP);
+        temp_trans.write_boundary(bnd_file);
+    }
+
+    // Lets do loops first
+    {
+        vcl_string loop_filename = filename + "_loops.txt";
+        vcl_ofstream loop_stream(loop_filename.c_str());
+
+        vcl_vector<dbsk2d_ishock_belm*> belm_list = ishock_graph->
+            boundary()->belm_list();
+        for (unsigned int i=0;i < belm_list.size() ; ++i)
+        {
+            if ( belm_list[i]->is_a_point() )
+            {
+                dbsk2d_ishock_bpoint* bpoint = 
+                    dynamic_cast<dbsk2d_ishock_bpoint*>
+                    (belm_list[i]);
+
+                if ( bpoint->is_an_end_point() && bpoint->is_a_GUIelm())
+                {
+
+                    dbsk2d_ishock_loop_transform transformer(ishock_graph,
+                                                             bpoint);
+
+                    loop_stream<<bpoint->pt().x()<<" "
+                               <<bpoint->pt().y()<<" "
+                               <<transformer.likelihood()
+                               <<vcl_endl;
+                }
+            }
+
+        }
+
+        loop_stream.close();
+    }
+
+
+    // Lets do gaps first
+    {
+
+        vcl_string gap_filename = filename + "_gaps.txt";
+        vcl_ofstream gap_stream(gap_filename.c_str());
+
+        dbsk2d_ishock_gap_detector detector(ishock_graph);
+        vcl_vector<
+            vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bpoint*> > gap_pairs;
+    
+        detector.detect_gap1(gap_pairs);
+
+        for ( unsigned int i=0; i < gap_pairs.size(); ++i)
+        {
+            int contour_id=vcl_min(gap_pairs[i].first->get_contour_id(),
+                                   gap_pairs[i].second->get_contour_id());
+
+            dbsk2d_ishock_gap_transform trans(ishock_graph,gap_pairs[i],
+                                              contour_id);
+            vcl_vector<vgl_point_2d<double> > samples=
+                trans.get_es_samples();
+            gap_stream<<samples.size()<<" "<<trans.likelihood()<<vcl_endl;
+            
+            for ( int i=0; i < samples.size() ; ++i)
+            {
+                gap_stream<<samples[i].x()<<" "<<samples[i].y()<<vcl_endl;
+
+            }
+
+        }
+
+        gap_stream.close();
+    }
+
+    {
+
+        vcl_string gap_filename = filename + "_gap4s.txt";
+        vcl_ofstream gap_stream(gap_filename.c_str());
+
+        dbsk2d_ishock_gap_detector detector(ishock_graph);
+        vcl_vector<  
+            vcl_pair<dbsk2d_ishock_bpoint*,dbsk2d_ishock_bline*> > gap4_pairs;
+        detector.detect_gap4(gap4_pairs);
+        vcl_map<double,int> gap4_con_ids;
+
+        for ( unsigned int i=0; i < gap4_pairs.size(); ++i)
+        {
+            int contour_id=this->get_contour(gap4_pairs[i].first)->get_id();
+            dbsk2d_ishock_bpoint* anchor_pt = 
+                dbsk2d_transform_manager::Instance()
+                .get_anchor_pt(gap4_pairs[i]);
+
+            if ( anchor_pt->is_an_end_point())
+            {
+                continue;
+            }
+            
+            dbsk2d_ishock_gap4_transform trans
+                (ishock_graph,gap4_pairs[i],anchor_pt,
+                 contour_id);
+
+            gap_stream<<gap4_pairs[i].first->pt().x()<<" "
+                      <<gap4_pairs[i].first->pt().y()<<" "
+                      <<anchor_pt->pt().x()<<" "
+                      <<anchor_pt->pt().y()<<" "
+                      <<trans.likelihood()<<vcl_endl;
+        }
+
+        gap_stream.close();
+    }
+
+
+
+    
 }
 
 void dbsk2d_compute_containment_graph_process::
@@ -615,11 +742,11 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
                 dbsk2d_ishock_loop_transform loop_trans(
                     ishock_graph,
                     pair.first);
-                vcl_vector<dbsk2d_ishock_bpoint*> ordered_contour=
+                vcl_vector<vgl_point_2d<double> > ordered_contour=
                     loop_trans.get_ordered_contour();
 
                 vcl_vector<vgl_point_2d<double> > final_contour;
-                if ( gap_filler[0] == ordered_contour[0]->pt())
+                if ( gap_filler[0] == ordered_contour[0])
                 {
                     vcl_vector<vgl_point_2d<double> >::reverse_iterator rit;
                     for ( rit = gap_filler.rbegin(); rit != gap_filler.rend();
@@ -640,7 +767,7 @@ pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
 
                 for ( unsigned int s=0; s < ordered_contour.size() ; ++s)
                 {
-                    final_contour.push_back(ordered_contour[s]->pt());
+                    final_contour.push_back(ordered_contour[s]);
                     
                 }
 
