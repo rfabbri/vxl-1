@@ -59,7 +59,8 @@ dbsk2d_transform_manager::dbsk2d_transform_manager()
      logistic_beta0_(1.0),
      logistic_beta1_(0.0),
      id_(0),
-     normalization_(1.0)
+     normalization_(1.0),
+     diag_(1.0)
 
 {
 
@@ -1555,7 +1556,8 @@ double dbsk2d_transform_manager::transform_probability(
 }
 
 double dbsk2d_transform_manager::transform_probability(
-    vcl_vector<vgl_point_2d<double> >& input)
+    vcl_vector<vgl_point_2d<double> >& input,
+    bool use_length)
 {
 
     // resample curve to always 100 samples
@@ -1590,19 +1592,34 @@ double dbsk2d_transform_manager::transform_probability(
         summation = summation + gPb;
     }
     
-
     double average_gPb = vcl_min(summation/pts.size(),1.0);
-    double weight1(-3.0470);
-    double weight2(10.5959);
-    double modulus=1*weight1+average_gPb*weight2;
-    double sigmoid=1/(1+vcl_exp(-1.0*modulus));
+    double length = c->length()/diag_;
+    double sigmoid=0.0;
+
+    if ( use_length )
+    {
+        double weight1(-3.0310);
+        double weight2(10.2010);
+        double weight3(0.6022);
+        double modulus=1*weight1+average_gPb*weight2+length*weight3;
+        sigmoid=1/(1+vcl_exp(-1.0*modulus));
+
+    }
+    else
+    {
+        double weight1(-3.0470);
+        double weight2(10.5959);
+        double modulus=1*weight1+average_gPb*weight2;
+        sigmoid=1/(1+vcl_exp(-1.0*modulus));
+
+    }
 
     return sigmoid;
-
 }
 
 double dbsk2d_transform_manager::transform_probability(
-    vsol_polyline_2d_sptr& input)
+    vsol_polyline_2d_sptr& input,
+    bool use_length)
 {
     // resample curve to always 100 samples
 
@@ -1636,11 +1653,26 @@ double dbsk2d_transform_manager::transform_probability(
     }
     
     double average_gPb = vcl_min(summation/pts.size(),1.0);
-    double weight1(-3.0470);
-    double weight2(10.5959);
-    double modulus=1*weight1+average_gPb*weight2;
-    double sigmoid=1/(1+vcl_exp(-1.0*modulus));
+    double length = c->length()/diag_;
+    double sigmoid=0.0;
 
+    if ( use_length )
+    {
+        double weight1(-3.0310);
+        double weight2(10.2010);
+        double weight3(0.6022);
+        double modulus=1*weight1+average_gPb*weight2+length*weight3;
+        sigmoid=1/(1+vcl_exp(-1.0*modulus));
+
+    }
+    else
+    {
+        double weight1(-3.0470);
+        double weight2(10.5959);
+        double modulus=1*weight1+average_gPb*weight2;
+        sigmoid=1/(1+vcl_exp(-1.0*modulus));
+
+    }
     return sigmoid;
 
 }

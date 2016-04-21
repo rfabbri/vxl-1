@@ -62,6 +62,7 @@ public:
                            a_img_,
                            b_img_);
 
+        diag_=vcl_sqrt(vcl_pow(image_->ni(),2)+vcl_pow(image_->nj(),2));
     }
 
     // Set threshold cost
@@ -163,10 +164,12 @@ public:
     double likelihood(vsol_polyline_2d_sptr& curve);
 
     // Determine gap cost
-    double transform_probability(vcl_vector<vgl_point_2d<double> >& curve);
+    double transform_probability(vcl_vector<vgl_point_2d<double> >& curve,
+                                 bool use_length=true);
 
     // Determine gap cost
-    double transform_probability( vsol_polyline_2d_sptr& curve);
+    double transform_probability( vsol_polyline_2d_sptr& curve, 
+                                  bool use_length=true);
 
     // Determine loop cost
     double transform_probability( vcl_vector<vgl_point_2d<double> >& 
@@ -245,6 +248,9 @@ private:
     //: Keep track of normalization
     double normalization_;
     
+    // : Keep track of diag
+    double diag_;
+
     // Keep track of a LAB channels
     vil_image_view<double> L_img_;
 
