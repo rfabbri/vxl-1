@@ -19,6 +19,7 @@
 #include <vil/vil_image_resource.h>
 #include <vil/vil_image_resource_sptr.h>
 #include <vil3d/vil3d_image_view.h>
+#include <vil1/vil1_colour_space.h>
 #include <vcl_string.h>
 #include <vgl/vgl_polygon.h>
 #include <dbsk2d/dbsk2d_bnd_contour_sptr.h>
@@ -55,6 +56,10 @@ public:
         L_img_.set_size(image_->ni(),image_->nj());
         a_img_.set_size(image_->ni(),image_->nj());
         b_img_.set_size(image_->ni(),image_->nj());
+
+        h_img_.set_size(image_->ni(),image_->nj());
+        s_img_.set_size(image_->ni(),image_->nj());
+        v_img_.set_size(image_->ni(),image_->nj());
         
 
         convert_RGB_to_Lab(image_->get_view(),
@@ -63,6 +68,34 @@ public:
                            b_img_);
 
         diag_=vcl_sqrt(vcl_pow(image_->ni(),2)+vcl_pow(image_->nj(),2));
+
+
+        vil_image_view<vxl_byte> vv=image_->get_view();
+        for (unsigned j=0;j<image_->nj();++j)
+        {
+            for (unsigned i=0;i<image_->ni();++i)
+            {
+                double r = static_cast<double>(vv(i,j,0));
+                double g = static_cast<double>(vv(i,j,1));
+                double b = static_cast<double>(vv(i,j,2));
+
+                double h=0;
+                double s=0;
+                double v=0;
+
+                vil1_colour_space_RGB_to_HSV(r,
+                                             g,
+                                             b,
+                                             &h,
+                                             &s,
+                                             &v);
+                
+                h_img_(i,j)=h/360.0;
+                s_img_(i,j)=s;
+                v_img_(i,j)=v/255.0;
+            }
+
+        }
     }
 
     // Set threshold cost
@@ -259,6 +292,15 @@ private:
 
     // B channel
     vil_image_view<double> b_img_;
+
+    // Keep track of a HSV channels
+    vil_image_view<double> h_img_;
+
+    // A channel
+    vil_image_view<double> s_img_;
+
+    // B channel
+    vil_image_view<double> v_img_;
 
     // get internal grid points
     void grid_points(vcl_vector<dbsk2d_ishock_edge*>& region,
