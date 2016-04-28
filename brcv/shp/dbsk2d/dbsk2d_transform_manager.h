@@ -29,6 +29,7 @@
 #include <vgl/vgl_distance.h>
 #include <vcl_set.h>
 #include <bbas/bil/algo/bil_color_conversions.h>
+#include <vil/vil_math.h>
 
 class dbsk2d_ishock_belm;
 
@@ -66,6 +67,34 @@ public:
                            L_img_,
                            a_img_,
                            b_img_);
+
+        // Scale L img
+        vil_math_scale_values(L_img_,1.0/100.0);
+
+        double abmin=-73.0;
+        double abmax=95.0;
+        
+        vil_math_scale_and_offset_values(a_img_,1.0,-abmin);
+        vil_math_scale_and_offset_values(b_img_,1.0,-abmin);
+        vil_math_scale_values(a_img_,1.0/(abmax-abmin));
+        vil_math_scale_values(b_img_,1.0/(abmax-abmin));
+
+        double lo=0;
+        double hi=1;
+
+        for (unsigned j=0;j<a_img_.nj();++j)
+        {
+            for (unsigned i=0;i<a_img_.ni();++i)
+            {
+                double v=a_img_(i,j);
+                a_img_(i,j) = v<lo?lo:(v>hi?hi:v);
+
+                v=b_img_(i,j);
+                b_img_(i,j) = v<lo?lo:(v>hi?hi:v);
+
+
+            }
+        }
 
         diag_=vcl_sqrt(vcl_pow(image_->ni(),2)+vcl_pow(image_->nj(),2));
 
