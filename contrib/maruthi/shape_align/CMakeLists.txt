@@ -10,6 +10,8 @@ INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
 INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
 INCLUDE_DIRECTORIES( ${CMAKE_VLFEAT_INCLUDES} )
 
+LINK_DIRECTORIES(${CMAKE_VLFEAT_LIBS})
+
 SET(shape_align_sources
 
   #algos
@@ -22,8 +24,12 @@ SET(train_sources
   #algos
   dbskr_train_routines.h dbskr_train_routines.cxx 
 )
+
 ADD_LIBRARY(shape_align ${shape_align_sources})
 ADD_LIBRARY(train_routines ${train_sources})
 
 ADD_EXECUTABLE (ed_match_exec ed_match_exec.cxx )
 TARGET_LINK_LIBRARIES ( ed_match_exec shape_align dbskr dbskr_algo)
+
+ADD_EXECUTABLE (train_exec train_exec.cxx )
+TARGET_LINK_LIBRARIES ( train_exec train_routines dbskr dbskr_algo vl)

@@ -27,7 +27,9 @@
 
 #include <vcl_sstream.h>
 
+extern "C" {
 #include <vl/gmm.h>
+}
 
 //: Constructor
 dbskr_train_routines::dbskr_train_routines(

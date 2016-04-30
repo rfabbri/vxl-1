@@ -21,7 +21,9 @@
 #include <vil/vil_image_view.h>
 #include <vgl/vgl_polygon.h>
 
+extern "C" {
 #include <vl/sift.h>
+}
 
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_vector.h>
