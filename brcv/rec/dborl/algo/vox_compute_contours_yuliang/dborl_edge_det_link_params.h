@@ -85,6 +85,9 @@ public:
   //: Trace contours , edge detection and linking ignored
   dborl_parameter<bool> trace_contours_;  
 
+  //: Edge Detect Method to use
+  dborl_parameter<vcl_string> edge_detect_method_;
+
   //: Edge Linking Method to use
   dborl_parameter<vcl_string> edge_linking_method_;
 
@@ -99,6 +102,9 @@ public:
 
   //: Tag for edge_detection
   vcl_string tag_color_edge_detection_;
+
+  //: Tag for generic edge_detection
+  vcl_string tag_generic_edge_detection_;
 
   //: Tag for symbolic edge_linking
   vcl_string tag_edge_linking_;

@@ -35,6 +35,7 @@
 
 #include <dbdet/pro/dbdet_third_order_edge_detector_process.h>
 #include <dbdet/pro/dbdet_third_order_color_edge_detector_process.h>
+#include <dbdet/pro/dbdet_generic_color_edge_detector_process.h>
 #include <dbdet/pro/dbdet_sel_process.h>
 #include <dbdet/pro/dbdet_generic_linker_process.h>
 #include <dbdet/pro/dbdet_sel_extract_contours_process.h>
@@ -195,7 +196,77 @@ int main(int argc, char *argv[]) {
     {
         vcl_cout<<"************ Edge Detection   ************"<<vcl_endl;
         
-        if (img_sptr->nplanes() != 3)
+
+        // Perform color third order edge detection
+        if (img_sptr->nplanes() == 3 && params->edge_detect_method_() == "gTO")
+        {
+ 
+            dbdet_third_order_color_edge_detector_process pro_color_edg;
+            set_process_parameters_of_bpro1(*params, 
+                                            pro_color_edg, 
+                                            params->
+                                            tag_color_edge_detection_);  
+
+            vcl_vector<bpro1_param*> pars  = pro_color_edg.parameters()->get_param_list();
+			for (unsigned i = 0; i < pars.size(); i++) 
+			{
+		        	if(pars[i]->name()=="-thresh")
+				color_thresh_ = pars[i]->value_str();	
+			}
+            // Before we start the process lets clean input output
+            pro_color_edg.clear_input();
+            pro_color_edg.clear_output();
+
+            pro_color_edg.add_input(inp);
+            bool to_c_status = pro_color_edg.execute();
+            pro_color_edg.finish();
+
+            // Grab output from color third order edge detection
+            // if process did not fail
+            if ( to_c_status )
+            {
+                edge_det_results = pro_color_edg.get_output();
+            }
+
+            //Clean up after ourselves
+            pro_color_edg.clear_input();
+            pro_color_edg.clear_output();
+
+        }
+		else if (img_sptr->nplanes() == 3 && params->edge_detect_method_() == "generic")
+        {
+			dbdet_generic_color_edge_detector_process pro_generic_edg;
+            set_process_parameters_of_bpro1(*params, 
+                                            pro_generic_edg, 
+                                            params->
+                                            tag_generic_edge_detection_);  
+
+            vcl_vector<bpro1_param*> pars  = pro_generic_edg.parameters()->get_param_list();
+			for (unsigned i = 0; i < pars.size(); i++) 
+			{
+		        	if(pars[i]->name()=="-thresh")
+				color_thresh_ = pars[i]->value_str();	
+			}
+            // Before we start the process lets clean input output
+            pro_generic_edg.clear_input();
+            pro_generic_edg.clear_output();
+
+            pro_generic_edg.add_input(inp);
+            bool to_c_status = pro_generic_edg.execute();
+            pro_generic_edg.finish();
+
+            // Grab output from color generic edge detection
+            // if process did not fail
+            if ( to_c_status )
+            {
+                edge_det_results = pro_generic_edg.get_output();
+            }
+
+            //Clean up after ourselves
+            pro_generic_edg.clear_input();
+            pro_generic_edg.clear_output();			
+		}
+        else //(img_sptr->nplanes() != 3)
         {
         
         
@@ -225,45 +296,9 @@ int main(int argc, char *argv[]) {
             pro_gray_edg.clear_output();
 
  
-        } 
-        // Perform color third order edge detection
-        else 
-        {
- 
-            dbdet_third_order_color_edge_detector_process pro_color_edg;
-            set_process_parameters_of_bpro1(*params, 
-                                            pro_color_edg, 
-                                            params->
-                                            tag_color_edge_detection_);  
-
-            vcl_vector<bpro1_param*> pars  = pro_color_edg.parameters()->get_param_list();
-	    for (unsigned i = 0; i < pars.size(); i++) 
-	    {
-            	if(pars[i]->name()=="-thresh")
-			color_thresh_ = pars[i]->value_str();	
-	    }
-            // Before we start the process lets clean input output
-            pro_color_edg.clear_input();
-            pro_color_edg.clear_output();
-
-            pro_color_edg.add_input(inp);
-            bool to_c_status = pro_color_edg.execute();
-            pro_color_edg.finish();
-
-            // Grab output from color third order edge detection
-            // if process did not fail
-            if ( to_c_status )
-            {
-                edge_det_results = pro_color_edg.get_output();
-            }
-
-            //Clean up after ourselves
-            pro_color_edg.clear_input();
-            pro_color_edg.clear_output();
-
         }
-        
- 
+
+  
         if (edge_det_results.size() != 1 )
         {
             vcl_cerr<< "Process output does not contain an edge map"<<vcl_endl;

@@ -9,6 +9,7 @@
 
 #include <dbdet/pro/dbdet_third_order_edge_detector_process.h>
 #include <dbdet/pro/dbdet_third_order_color_edge_detector_process.h>
+#include <dbdet/pro/dbdet_generic_color_edge_detector_process.h>
 #include <dbdet/pro/dbdet_sel_process.h>
 #include <dbdet/pro/dbdet_sel_extract_contours_process.h>
 #include <dbdet/pro/dbdet_prune_curves_process.h>
@@ -20,8 +21,9 @@
 dborl_edge_det_link_params::
 dborl_edge_det_link_params(vcl_string algo_name) : 
     dborl_algo_params(algo_name),
-    tag_gray_edge_detection_("Edge_Detection_Gray"),
-    tag_color_edge_detection_("Edge_Detection_Color"),
+    tag_gray_edge_detection_("Edge_Detection_GrayTO"),
+    tag_color_edge_detection_("Edge_Detection_ColorTO"),
+	tag_generic_edge_detection_("Edge_Detection_generic"),
     tag_edge_linking_("Edge_Linking"),
     tag_gen_linking_("GEN_Linking"),
     tag_extract_contours_("Extract_Contours"),
@@ -127,6 +129,12 @@ dborl_edge_det_link_params(vcl_string algo_name) :
                  "-io: trace contours (should be a black/white image) ?", 
                  false, false);
 
+  this->edge_detect_method_.
+      set_values(this->param_list_, "io", 
+                 "edge_detect_method", 
+                 "-io: edge_linking_method (should be gTO/generic) ?", 
+                 "gTO", "gTO");
+
   // perform contour tracing
   this->edge_linking_method_.
       set_values(this->param_list_, "io", 
@@ -169,6 +177,16 @@ dborl_edge_det_link_params(vcl_string algo_name) :
                                        pars[i]));
   }
 
+  //: add the parameters for the dbdet_generic_color_edge_detector_process
+  dbdet_generic_color_edge_detector_process pro2_2;
+  pars = pro2_2.parameters()->get_param_list();
+  for (unsigned i = 0; i < pars.size(); i++) 
+  {
+      param_list_.push_back(
+          convert_parameter_from_bpro1(tag_generic_edge_detection_, 
+                                       "[" + tag_generic_edge_detection_+ "] ",
+                                       pars[i]));
+  }
   //: add the parameters for symbolic edge linking
   dbdet_sel_process pro3;
   pars = pro3.parameters()->get_param_list();

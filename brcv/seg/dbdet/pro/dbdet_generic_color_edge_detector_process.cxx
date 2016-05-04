@@ -41,6 +41,8 @@
 #include <dbdet/algo/dbdet_subpix_convolution.h>
 #include <dbdet/edge/dbdet_edgemap_sptr.h>
 #include <dbdet/sel/dbdet_sel_utils.h>
+#include <vil/vil_fill.h>
+#include <vil/vil_border.h>
 
 //: Constructor
 dbdet_generic_color_edge_detector_process::dbdet_generic_color_edge_detector_process()
@@ -212,6 +214,33 @@ dbdet_generic_color_edge_detector_process::execute()
     }
   }
 
+  int padding=10;
+  vil_image_view<vxl_byte> padded_img;
+  padded_img.set_size(
+      col_image.ni()+2*padding,col_image.nj()+2*padding,
+      col_image.nplanes());
+  vil_fill(padded_img, vxl_byte(0));
+
+  vil_border_accessor<vil_image_view<vxl_byte> >
+    accessor = vil_border_create_accessor(
+        col_image,
+        vil_border_create_geodesic(col_image));
+
+  int j_max = (int)(padded_img.nj())-padding;
+  int i_max = (int)(padded_img.ni())-padding;
+
+  for (int p=0;p<padded_img.nplanes();++p)
+  {
+      for (int j = -padding ; j < j_max;++j)
+      {
+          for (int i=-padding;i < i_max;++i)
+          {                          
+              padded_img(i+padding,j+padding,p)=accessor(i,j,p);
+          }
+      }
+  }
+
+
   //3) convert to the desired color space (component images)
   vil_image_view<float> comp1, comp2, comp3;  
 
@@ -223,18 +252,18 @@ dbdet_generic_color_edge_detector_process::execute()
   else {
     switch(col_conv_opt){
       case 0: //RGB color space
-        vil_convert_cast(vil_plane(col_image, 0), comp1);
-        vil_convert_cast(vil_plane(col_image, 1), comp2);
-        vil_convert_cast(vil_plane(col_image, 2), comp3);
+        vil_convert_cast(vil_plane(padded_img, 0), comp1);
+        vil_convert_cast(vil_plane(padded_img, 1), comp2);
+        vil_convert_cast(vil_plane(padded_img, 2), comp3);
         break;
       case 1: //IHS color space
-        brip_vil_float_ops::convert_to_IHS(col_image, comp1, comp2, comp3);
+        brip_vil_float_ops::convert_to_IHS(padded_img, comp1, comp2, comp3);
         break;
       case 2: //Lab color space
-        convert_RGB_to_Lab(col_image, comp1, comp2, comp3);
+        convert_RGB_to_Lab(padded_img, comp1, comp2, comp3);
         break;
       case 3: //Luv color space
-        convert_RGB_to_Luv(col_image, comp1, comp2, comp3);
+        convert_RGB_to_Luv(padded_img, comp1, comp2, comp3);
         break;
     }
   }
@@ -354,15 +383,46 @@ dbdet_generic_color_edge_detector_process::execute()
     edge_map->insert(new dbdet_edgel(pt, orientation[i], mag[i]));
   }
 
+  // convert back to unpad edges
+//create a new edgemap from the tokens collected from NMS
+  dbdet_edgemap_sptr padded_edge_map = new dbdet_edgemap(col_image.ni(), 
+                                                  col_image.nj());
+
+  vcl_vector<dbdet_edgel*> padded_edges=edge_map->edgels;
+  for ( unsigned int i=0; i < padded_edges.size() ; ++i)
+  {
+
+      vgl_point_2d<double> new_location;
+      new_location.set(padded_edges[i]->pt.x()-(double)padding,
+                       padded_edges[i]->pt.y()-(double)padding);
+      padded_edges[i]->pt.set(new_location.x(),new_location.y());
+
+      if ( (new_location.x() >= 0) && 
+           (new_location.x() <= (double)col_image.ni()-1) && 
+           (new_location.y() >= 0) &&
+           (new_location.y() <= (double)col_image.nj()-1))
+      {
+          
+          padded_edge_map->
+              insert(new dbdet_edgel(padded_edges[i]->pt,
+                                     padded_edges[i]->tangent,
+                                     padded_edges[i]->strength,
+                                     padded_edges[i]->deriv));
+          
+      } 
+  }
+//  edge_map->unref();
+  edge_map=0;
+  //double third_order_time = t.real();
   vcl_cout << "done!" << vcl_endl;
   
   vcl_cout << "time taken for conv: " << conv_time << " msec" << vcl_endl;
   vcl_cout << "time taken for nms: " << nms_time << " msec" << vcl_endl;
-  vcl_cout << "#edgels = " << edge_map->num_edgels();
+  vcl_cout << "#edgels = " << padded_edge_map->num_edgels();
 
   // create the output storage class
   dbdet_edgemap_storage_sptr output_edgemap = dbdet_edgemap_storage_new();
-  output_edgemap->set_edgemap(edge_map);
+  output_edgemap->set_edgemap(padded_edge_map);
   output_data_[0].push_back(output_edgemap);
 
   return true;

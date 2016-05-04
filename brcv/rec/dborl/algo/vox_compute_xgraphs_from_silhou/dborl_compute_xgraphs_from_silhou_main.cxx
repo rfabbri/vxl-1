@@ -312,11 +312,9 @@ int main(int argc, char *argv[]) {
                                         ps_pro, 
                                         params->tag_prune_ishock_);
 
-
         // Before we start the process lets clean input output
         ps_pro.clear_input();
         ps_pro.clear_output();
-
         // Grab the underlying contours
 //        dbsk2d_shock_storage_sptr output_shock = dbsk2d_shock_storage_new();
 //        output_shock.vertical_cast(shock_results[0]);
@@ -328,22 +326,20 @@ int main(int argc, char *argv[]) {
         bool ps_status = ps_pro.execute();
         ps_pro.finish();
         // Grab output from symbolic edge linking
-        if ( ps_status )
-        {
-            shock_ps_results = ps_pro.get_output();
-        }
+        //if ( ps_status )
+        //{
+        //    shock_ps_results = ps_pro.get_output();
+        //}
 
         //Clean up after ourselves
         ps_pro.clear_input();
         ps_pro.clear_output();
-
         // It has two outputs
-        if (shock_ps_results.size() != 1) 
-        {
-            vcl_cerr << "Shock after prune shock is Invalid!"
-                     << vcl_endl;
-            return 1;
-        }
+        //if (shock_ps_results.size() != 1) 
+        //{
+        //    vcl_cerr << "Shock after prune shock is Invalid!" << vcl_endl;
+        //    return 1;
+        //}
 
     }
 
@@ -440,14 +436,14 @@ int main(int argc, char *argv[]) {
     sample_sg_pro.clear_output();
 
     // Use input from either ishock computation or gap_transform
-    if ( params->prune_ishock_())
-    {
-        sample_sg_pro.add_input(shock_ps_results[0]);
-    }
-    else
-    {
+    //if ( params->prune_ishock_())
+    //{
+    //    sample_sg_pro.add_input(shock_ps_results[0]);
+    //}
+    //else
+    //{
         sample_sg_pro.add_input(shock_results[0]);
-    }
+    //}
 
     // Kick of process
     bool sample_status = sample_sg_pro.execute();
