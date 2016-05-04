@@ -26,6 +26,8 @@
 
 #include <dbdet/edge/dbdet_edgemap_sptr.h>
 #include <dbdet/algo/dbdet_third_order_edge_det.h>
+#include <vil/vil_fill.h>
+#include <vil/vil_border.h>
 
 //: Constructor
 dbdet_third_order_edge_detector_process::dbdet_third_order_edge_detector_process()
@@ -132,6 +134,29 @@ dbdet_third_order_edge_detector_process::execute()
   vil_image_resource_sptr image_sptr = frame_image->get_image();
   vil_image_view<vxl_byte> image_view = image_sptr->get_view(0, image_sptr->ni(), 0, image_sptr->nj() );
 
+  int padding=10;
+  vil_image_view<vxl_byte> padded_img;
+  padded_img.set_size(
+      image_view.ni()+2*padding,image_view.nj()+2*padding);
+  vil_fill(padded_img, vxl_byte(0));
+
+  vil_border_accessor<vil_image_view<vxl_byte> >
+    accessor = vil_border_create_accessor(
+        image_view,
+        vil_border_create_geodesic(image_view));
+
+  int j_max = (int)(padded_img.nj())-padding;
+  int i_max = (int)(padded_img.ni())-padding;
+
+
+  for (int j = -padding ; j < j_max;++j)
+  {
+      for (int i=-padding;i < i_max;++i)
+      {                          
+          padded_img(i+padding,j+padding)=accessor(i,j);
+      }
+  }
+
   //get the parameters
   unsigned grad_op, conv_algo, parabola_fit;
   double sigma, thresh;
@@ -149,15 +174,47 @@ dbdet_third_order_edge_detector_process::execute()
   parameters()->get_value( "-parabola_fit", parabola_fit );
 
   // perfrom third-order edge detection with these parameters
-  dbdet_edgemap_sptr edge_map = dbdet_detect_third_order_edges(image_view, sigma, thresh, N, parabola_fit, grad_op, conv_algo, badap_thresh, binterp_grid, reduce_tokens);
+  dbdet_edgemap_sptr edge_map = dbdet_detect_third_order_edges(padded_img, sigma, thresh, N, parabola_fit, grad_op, conv_algo, badap_thresh, binterp_grid, reduce_tokens);
+
+
+  // convert back to unpad edges
+//create a new edgemap from the tokens collected from NMS
+  dbdet_edgemap_sptr padded_edge_map = new dbdet_edgemap(image_view.ni(), 
+                                                  image_view.nj());
+
+  vcl_vector<dbdet_edgel*> padded_edges=edge_map->edgels;
+  for ( unsigned int i=0; i < padded_edges.size() ; ++i)
+  {
+
+      vgl_point_2d<double> new_location;
+      new_location.set(padded_edges[i]->pt.x()-(double)padding,
+                       padded_edges[i]->pt.y()-(double)padding);
+      padded_edges[i]->pt.set(new_location.x(),new_location.y());
+
+      if ( (new_location.x() >= 0) && 
+           (new_location.x() <= (double)image_view.ni()-1) && 
+           (new_location.y() >= 0) &&
+           (new_location.y() <= (double)image_view.nj()-1))
+      {
+          
+          padded_edge_map->
+              insert(new dbdet_edgel(padded_edges[i]->pt,
+                                     padded_edges[i]->tangent,
+                                     padded_edges[i]->strength,
+                                     padded_edges[i]->deriv));
+          
+      } 
+  }
+//  edge_map->unref();
+  edge_map=0;
 
   // create the output storage class
   dbdet_edgemap_storage_sptr output_edgemap = dbdet_edgemap_storage_new();
-  output_edgemap->set_edgemap(edge_map);
+  output_edgemap->set_edgemap(padded_edge_map);
   output_data_[0].push_back(output_edgemap);
 
   vcl_cout << "done!" << vcl_endl;
-  vcl_cout << "#edgels = " << edge_map->num_edgels() << vcl_endl;
+  vcl_cout << "#edgels = " << padded_edge_map->num_edgels() << vcl_endl;
 
   vcl_cout.flush();
 

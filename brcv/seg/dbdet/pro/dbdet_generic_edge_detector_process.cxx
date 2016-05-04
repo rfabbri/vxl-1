@@ -40,6 +40,8 @@
 #include <dbdet/algo/dbdet_subpix_convolution.h>
 #include <dbdet/edge/dbdet_edgemap_sptr.h>
 #include <dbdet/sel/dbdet_sel_utils.h>
+#include <vil/vil_fill.h>
+#include <vil/vil_border.h>
 
 //: Constructor
 dbdet_generic_edge_detector_process::dbdet_generic_edge_detector_process()
@@ -160,6 +162,31 @@ dbdet_generic_edge_detector_process::execute()
     greyscale_view = image_view;
   }
 
+
+int padding=10;
+  vil_image_view<vxl_byte> padded_img;
+  padded_img.set_size(
+      greyscale_view.ni()+2*padding,greyscale_view.nj()+2*padding);
+  vil_fill(padded_img, vxl_byte(0));
+
+  vil_border_accessor<vil_image_view<vxl_byte> >
+    accessor = vil_border_create_accessor(
+        greyscale_view,
+        vil_border_create_geodesic(greyscale_view));
+
+  int j_max = (int)(padded_img.nj())-padding;
+  int i_max = (int)(padded_img.ni())-padding;
+
+
+  for (int j = -padding ; j < j_max;++j)
+  {
+      for (int i=-padding;i < i_max;++i)
+      {                          
+          padded_img(i+padding,j+padding)=accessor(i,j);
+      }
+  }
+
+
   //get the parameters
   unsigned grad_op, conv_algo, parabola_fit;
   double sigma, thresh;
@@ -184,10 +211,10 @@ dbdet_generic_edge_detector_process::execute()
   {
     case 0: // Sobel 1x3
     {
-      vil_sobel_1x3 <vxl_byte, double> (greyscale_view, grad_x, grad_y);
+      vil_sobel_1x3 <vxl_byte, double> (padded_img, grad_x, grad_y);
 
       //set the sizes to be the same as the image
-      grad_mag.set_size(greyscale_view.ni(), greyscale_view.nj());
+      grad_mag.set_size(padded_img.ni(), padded_img.nj());
 
       //get the pointers to the memory chunks
       double *gx  =  grad_x.top_left_ptr();
@@ -202,10 +229,10 @@ dbdet_generic_edge_detector_process::execute()
     }
     case 1: // Sobel 3x3
     {
-      vil_sobel_3x3 <vxl_byte, double> (greyscale_view, grad_x, grad_y);
+      vil_sobel_3x3 <vxl_byte, double> (padded_img, grad_x, grad_y);
 
       //set the sizes to be the same as the image
-      grad_mag.set_size(greyscale_view.ni(), greyscale_view.nj());
+      grad_mag.set_size(padded_img.ni(), padded_img.nj());
 
       //get the pointers to the memory chunks
       double *gx  =  grad_x.top_left_ptr();
@@ -224,12 +251,12 @@ dbdet_generic_edge_detector_process::execute()
 
       //compute gradients
       if (conv_algo==0){ //2-d convolutions
-        dbdet_subpix_convolve_2d(greyscale_view, grad_x, dbdet_Gx_kernel(sigma), double(), N);
-        dbdet_subpix_convolve_2d(greyscale_view, grad_y, dbdet_Gy_kernel(sigma), double(), N);
+        dbdet_subpix_convolve_2d(padded_img, grad_x, dbdet_Gx_kernel(sigma), double(), N);
+        dbdet_subpix_convolve_2d(padded_img, grad_y, dbdet_Gy_kernel(sigma), double(), N);
       }
       else {
-        dbdet_subpix_convolve_2d_sep(greyscale_view, grad_x, dbdet_Gx_kernel(sigma), double(), N);
-        dbdet_subpix_convolve_2d_sep(greyscale_view, grad_y, dbdet_Gy_kernel(sigma), double(), N);
+        dbdet_subpix_convolve_2d_sep(padded_img, grad_x, dbdet_Gx_kernel(sigma), double(), N);
+        dbdet_subpix_convolve_2d_sep(padded_img, grad_y, dbdet_Gy_kernel(sigma), double(), N);
       }
 
       //compute gradient magnitude
@@ -252,12 +279,12 @@ dbdet_generic_edge_detector_process::execute()
 
       //compute gradients
       if (conv_algo==0){ //2-d convolutions
-        dbdet_subpix_convolve_2d(greyscale_view, grad_x, dbdet_h0_Gx_kernel(sigma), double(), N);
-        dbdet_subpix_convolve_2d(greyscale_view, grad_y, dbdet_h0_Gy_kernel(sigma), double(), N);
+        dbdet_subpix_convolve_2d(padded_img, grad_x, dbdet_h0_Gx_kernel(sigma), double(), N);
+        dbdet_subpix_convolve_2d(padded_img, grad_y, dbdet_h0_Gy_kernel(sigma), double(), N);
       }
       else {
-        dbdet_subpix_convolve_2d_sep(greyscale_view, grad_x, dbdet_h0_Gx_kernel(sigma), double(), N);
-        dbdet_subpix_convolve_2d_sep(greyscale_view, grad_y, dbdet_h0_Gy_kernel(sigma), double(), N);
+        dbdet_subpix_convolve_2d_sep(padded_img, grad_x, dbdet_h0_Gx_kernel(sigma), double(), N);
+        dbdet_subpix_convolve_2d_sep(padded_img, grad_y, dbdet_h0_Gy_kernel(sigma), double(), N);
       }
 
       //compute gradient magnitude
@@ -280,12 +307,12 @@ dbdet_generic_edge_detector_process::execute()
 
       //compute gradients
       if (conv_algo==0){ //2-d convolutions
-        dbdet_subpix_convolve_2d(greyscale_view, grad_x, dbdet_h1_Gx_kernel(sigma), double(), N);
-        dbdet_subpix_convolve_2d(greyscale_view, grad_y, dbdet_h1_Gy_kernel(sigma), double(), N);
+        dbdet_subpix_convolve_2d(padded_img, grad_x, dbdet_h1_Gx_kernel(sigma), double(), N);
+        dbdet_subpix_convolve_2d(padded_img, grad_y, dbdet_h1_Gy_kernel(sigma), double(), N);
       }
       else {
-        dbdet_subpix_convolve_2d_sep(greyscale_view, grad_x, dbdet_h1_Gx_kernel(sigma), double(), N);
-        dbdet_subpix_convolve_2d_sep(greyscale_view, grad_y, dbdet_h1_Gy_kernel(sigma), double(), N);
+        dbdet_subpix_convolve_2d_sep(padded_img, grad_x, dbdet_h1_Gx_kernel(sigma), double(), N);
+        dbdet_subpix_convolve_2d_sep(padded_img, grad_y, dbdet_h1_Gy_kernel(sigma), double(), N);
       }
 
       //compute gradient magnitude
@@ -308,15 +335,15 @@ dbdet_generic_edge_detector_process::execute()
 
       //compute gradients
       vil_image_view<double> Ix, Iy, Ixx, Ixy, Iyy, Ixxx, Ixxy, Ixyy, Iyyy;
-      dbdet_subpix_convolve_2d(greyscale_view, Ix,   dbdet_Gx_kernel(sigma),   double(), N);
-      dbdet_subpix_convolve_2d(greyscale_view, Iy,   dbdet_Gy_kernel(sigma),   double(), N);
-      dbdet_subpix_convolve_2d(greyscale_view, Ixx,  dbdet_Gxx_kernel(sigma),  double(), N);
-      dbdet_subpix_convolve_2d(greyscale_view, Ixy,  dbdet_Gxy_kernel(sigma),  double(), N);
-      dbdet_subpix_convolve_2d(greyscale_view, Iyy,  dbdet_Gyy_kernel(sigma),  double(), N);
-      dbdet_subpix_convolve_2d(greyscale_view, Ixxx, dbdet_Gxxx_kernel(sigma), double(), N);
-      dbdet_subpix_convolve_2d(greyscale_view, Ixxy, dbdet_Gxxy_kernel(sigma), double(), N);
-      dbdet_subpix_convolve_2d(greyscale_view, Ixyy, dbdet_Gxyy_kernel(sigma), double(), N);
-      dbdet_subpix_convolve_2d(greyscale_view, Iyyy, dbdet_Gyyy_kernel(sigma), double(), N);
+      dbdet_subpix_convolve_2d(padded_img, Ix,   dbdet_Gx_kernel(sigma),   double(), N);
+      dbdet_subpix_convolve_2d(padded_img, Iy,   dbdet_Gy_kernel(sigma),   double(), N);
+      dbdet_subpix_convolve_2d(padded_img, Ixx,  dbdet_Gxx_kernel(sigma),  double(), N);
+      dbdet_subpix_convolve_2d(padded_img, Ixy,  dbdet_Gxy_kernel(sigma),  double(), N);
+      dbdet_subpix_convolve_2d(padded_img, Iyy,  dbdet_Gyy_kernel(sigma),  double(), N);
+      dbdet_subpix_convolve_2d(padded_img, Ixxx, dbdet_Gxxx_kernel(sigma), double(), N);
+      dbdet_subpix_convolve_2d(padded_img, Ixxy, dbdet_Gxxy_kernel(sigma), double(), N);
+      dbdet_subpix_convolve_2d(padded_img, Ixyy, dbdet_Gxyy_kernel(sigma), double(), N);
+      dbdet_subpix_convolve_2d(padded_img, Iyyy, dbdet_Gyyy_kernel(sigma), double(), N);
 
       grad_x.set_size(Ix.ni(), Ix.nj());
       grad_y.set_size(Ix.ni(), Ix.nj());
@@ -357,20 +384,20 @@ dbdet_generic_edge_detector_process::execute()
     {
       scale = (int) vcl_pow(2.0, N);
 
-      dbdet_subpix_convolve_2d(greyscale_view, grad_mag,   dbdet_G_kernel(sigma),   double(), N);
+      dbdet_subpix_convolve_2d(padded_img, grad_mag,   dbdet_G_kernel(sigma),   double(), N);
 
       //compute gradients
       vil_image_view<double> Ix, Iy, Ixx, Ixy, Iyy, Ixxx, Ixxy, Ixyy, Iyyy;
            
-      dbdet_subpix_convolve_2d(greyscale_view, Ix,   dbdet_Gx_kernel(sigma),   double(), N);
-      dbdet_subpix_convolve_2d(greyscale_view, Iy,   dbdet_Gy_kernel(sigma),   double(), N);
-      dbdet_subpix_convolve_2d(greyscale_view, Ixx,  dbdet_Gxx_kernel(sigma),  double(), N);
-      dbdet_subpix_convolve_2d(greyscale_view, Ixy,  dbdet_Gxy_kernel(sigma),  double(), N);
-      dbdet_subpix_convolve_2d(greyscale_view, Iyy,  dbdet_Gyy_kernel(sigma),  double(), N);
-      dbdet_subpix_convolve_2d(greyscale_view, Ixxx, dbdet_Gxxx_kernel(sigma), double(), N);
-      dbdet_subpix_convolve_2d(greyscale_view, Ixxy, dbdet_Gxxy_kernel(sigma), double(), N);
-      dbdet_subpix_convolve_2d(greyscale_view, Ixyy, dbdet_Gxyy_kernel(sigma), double(), N);
-      dbdet_subpix_convolve_2d(greyscale_view, Iyyy, dbdet_Gyyy_kernel(sigma), double(), N);
+      dbdet_subpix_convolve_2d(padded_img, Ix,   dbdet_Gx_kernel(sigma),   double(), N);
+      dbdet_subpix_convolve_2d(padded_img, Iy,   dbdet_Gy_kernel(sigma),   double(), N);
+      dbdet_subpix_convolve_2d(padded_img, Ixx,  dbdet_Gxx_kernel(sigma),  double(), N);
+      dbdet_subpix_convolve_2d(padded_img, Ixy,  dbdet_Gxy_kernel(sigma),  double(), N);
+      dbdet_subpix_convolve_2d(padded_img, Iyy,  dbdet_Gyy_kernel(sigma),  double(), N);
+      dbdet_subpix_convolve_2d(padded_img, Ixxx, dbdet_Gxxx_kernel(sigma), double(), N);
+      dbdet_subpix_convolve_2d(padded_img, Ixxy, dbdet_Gxxy_kernel(sigma), double(), N);
+      dbdet_subpix_convolve_2d(padded_img, Ixyy, dbdet_Gxyy_kernel(sigma), double(), N);
+      dbdet_subpix_convolve_2d(padded_img, Iyyy, dbdet_Gyyy_kernel(sigma), double(), N);
 
       grad_x.set_size(Ix.ni(), Ix.nj());
       grad_y.set_size(Ix.ni(), Ix.nj());
@@ -422,12 +449,12 @@ dbdet_generic_edge_detector_process::execute()
   //compute a Gaussian smoothed image from which to compute the intensities
   vil_image_view<double> sm_img;
   if (conv_algo==0) //2-d convolutions
-    dbdet_subpix_convolve_2d(greyscale_view, sm_img, dbdet_G_kernel(sigma), double(), 0);
+    dbdet_subpix_convolve_2d(padded_img, sm_img, dbdet_G_kernel(sigma), double(), 0);
   else 
-    dbdet_subpix_convolve_2d_sep(greyscale_view, sm_img, dbdet_G_kernel(sigma), double(), 0);
+    dbdet_subpix_convolve_2d_sep(padded_img, sm_img, dbdet_G_kernel(sigma), double(), 0);
 
   //create a new edgemap from the tokens collected from NMS
-  dbdet_edgemap_sptr edge_map = new dbdet_edgemap(greyscale_view.ni(), greyscale_view.nj());
+  dbdet_edgemap_sptr edge_map = new dbdet_edgemap(padded_img.ni(), padded_img.nj());
 
   for (unsigned i=0; i<loc.size(); i++){
     if (!bsubpix_edges){
@@ -446,8 +473,8 @@ dbdet_generic_edge_detector_process::execute()
       
       //we could get these values from
       ////(a)from the original image or
-      //dbdet_appearance* lapp = new dbdet_intensity(vil_bilin_interp(greyscale_view, ptL.x(), ptL.y()));
-      //dbdet_appearance* rapp = new dbdet_intensity(vil_bilin_interp(greyscale_view, ptR.x(), ptR.y()));
+      //dbdet_appearance* lapp = new dbdet_intensity(vil_bilin_interp(padded_img, ptL.x(), ptL.y()));
+      //dbdet_appearance* rapp = new dbdet_intensity(vil_bilin_interp(padded_img, ptR.x(), ptR.y()));
 
       //(b) from the smoothed image
       dbdet_appearance* lapp = new dbdet_intensity(vil_bilin_interp(sm_img, ptL.x(), ptL.y()));
@@ -458,15 +485,47 @@ dbdet_generic_edge_detector_process::execute()
     }
   }
 
+  // convert back to unpad edges
+//create a new edgemap from the tokens collected from NMS
+  dbdet_edgemap_sptr padded_edge_map = new dbdet_edgemap(greyscale_view.ni(), 
+                                                  greyscale_view.nj());
+
+  vcl_vector<dbdet_edgel*> padded_edges=edge_map->edgels;
+  for ( unsigned int i=0; i < padded_edges.size() ; ++i)
+  {
+
+      vgl_point_2d<double> new_location;
+      new_location.set(padded_edges[i]->pt.x()-(double)padding,
+                       padded_edges[i]->pt.y()-(double)padding);
+      padded_edges[i]->pt.set(new_location.x(),new_location.y());
+
+      if ( (new_location.x() >= 0) && 
+           (new_location.x() <= (double)greyscale_view.ni()-1) && 
+           (new_location.y() >= 0) &&
+           (new_location.y() <= (double)greyscale_view.nj()-1))
+      {
+          
+          padded_edge_map->
+              insert(new dbdet_edgel(padded_edges[i]->pt,
+                                     padded_edges[i]->tangent,
+                                     padded_edges[i]->strength,
+                                     padded_edges[i]->deriv));
+          
+      } 
+  }
+//  edge_map->unref();
+  edge_map=0;
+
+
   vcl_cout << "done!" << vcl_endl;
   
   vcl_cout << "time taken for conv: " << conv_time << " msec" << vcl_endl;
   vcl_cout << "time taken for nms: " << nms_time << " msec" << vcl_endl;
-  vcl_cout << "#edgels = " << edge_map->num_edgels();
+  vcl_cout << "#edgels = " << padded_edge_map->num_edgels();
 
   // create the output storage class
   dbdet_edgemap_storage_sptr output_edgemap = dbdet_edgemap_storage_new();
-  output_edgemap->set_edgemap(edge_map);
+  output_edgemap->set_edgemap(padded_edge_map);
   output_data_[0].push_back(output_edgemap);
 
   return true;
