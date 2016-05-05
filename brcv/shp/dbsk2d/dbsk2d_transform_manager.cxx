@@ -854,7 +854,7 @@ double dbsk2d_transform_manager::chi_squared_color_distance(
             foreground_pdf.upcount(value,1.0);
         }
     }
-
+   
     {
         for ( unsigned int f=0; f < background.size() ; ++f)
         {
@@ -1413,24 +1413,24 @@ double dbsk2d_transform_manager::likelihood(
                                                background_grid,
                                                L_img_,
                                                0.0,
-                                               100.0,
-                                               50);
+                                               1.0,
+                                               32);
 
     // 2) Get a difference in a LAB color space
     double a_chi2 = chi_squared_color_distance(foreground_grid,
                                                background_grid,
                                                a_img_,
-                                               -110.0,
-                                               110.0,
-                                               100);
+                                               0.0,
+                                               1.0,
+                                               32);
     
     // 3) Get b difference in a LAB color space
     double b_chi2 = chi_squared_color_distance(foreground_grid,
                                                background_grid,
                                                b_img_,
-                                               -110.0,
-                                               110.0,
-                                               100);
+                                               0.0,
+                                               1.0,
+                                               32);
 
     // 4) Get b difference in a LAB color space
     double texton_chi2 = chi_squared_color_distance(foreground_grid,
@@ -1439,6 +1439,7 @@ double dbsk2d_transform_manager::likelihood(
                                                     1.0,
                                                     64.0,
                                                     64);
+
 
 
     double weight1(-0.9521);

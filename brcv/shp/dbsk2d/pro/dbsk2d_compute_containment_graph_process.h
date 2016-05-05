@@ -53,6 +53,9 @@ private:
   void debug_cost(dbsk2d_ishock_graph_sptr ishock_graph,
                   vcl_string filename);
 
+  void debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
+                   vcl_string filename);
+
   void pre_process_contours(dbsk2d_ishock_graph_sptr ishock_graph,
                             double preprocess_threshold,
                             double gap_distance,

@@ -453,7 +453,11 @@ bool dbsk2d_compute_containment_graph_process::execute()
     // Debug cost
     // debug_cost(shock_storage->get_ishock_graph(),
     //            output_prefix);
-    
+
+    // Debug frags
+    // debug_frags(shock_storage->get_ishock_graph(),
+    //            output_prefix);
+
     // pre_process_gap4(shock_storage);
 
     // Out of here
@@ -633,6 +637,40 @@ debug_cost(dbsk2d_ishock_graph_sptr ishock_graph,
 
 
 
+    
+}
+
+void dbsk2d_compute_containment_graph_process::
+debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
+           vcl_string filename)
+{
+
+    // Write out boundary
+   
+    vcl_string bnd_file=filename +"_shock.cem";
+    dbsk2d_ishock_transform temp_trans(ishock_graph,
+                                       dbsk2d_ishock_transform::LOOP);
+    temp_trans.write_shock_boundary(bnd_file);
+    
+
+    dbsk2d_ishock_grouping_transform grouper(ishock_graph);
+    grouper.grow_regions();
+
+    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >
+        frag_edges = grouper.get_region_nodes();
+
+    vcl_vector<vgl_polygon<double> > polygons;
+    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >::iterator it;
+    for ( it = frag_edges.begin() ; it != frag_edges.end() ; ++it)
+    {
+        // Grab polygon fragment
+        vgl_polygon<double> poly;
+        grouper.polygon_fragment((*it).first,poly);
+        
+        polygons.push_back(poly);
+    }
+
+    temp_trans.write_fragments(filename,polygons);
     
 }
 
