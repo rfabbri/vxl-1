@@ -647,10 +647,12 @@ debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
 
     // Write out boundary
    
-    vcl_string bnd_file=filename +"_shock.cem";
+    vcl_string shock_file=filename +"_shock.cem";
+    vcl_string cem_file=filename + "_con.bnd";
     dbsk2d_ishock_transform temp_trans(ishock_graph,
                                        dbsk2d_ishock_transform::LOOP);
-    temp_trans.write_shock_boundary(bnd_file);
+    temp_trans.write_shock_boundary(shock_file);
+    temp_trans.write_boundary(cem_file);
     
 
     dbsk2d_ishock_grouping_transform grouper(ishock_graph);
