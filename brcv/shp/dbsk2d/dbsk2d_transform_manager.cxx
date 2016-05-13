@@ -1289,6 +1289,65 @@ void dbsk2d_transform_manager::grid_points(
 
 }
 
+double dbsk2d_transform_manager::color_gradient(dbsol_interp_curve_2d_sptr c,
+                                                int region_width)
+{
+    double distance=0.0;
+    double delta=0.3;
+    double length_threshold=c->length();
+    vcl_vector<double> tangents;
+    vcl_vector<vsol_point_2d_sptr> curve_pts;
+    dbsol_curve_algs::sample(*c, delta, curve_pts, tangents, 
+                             length_threshold);  
+
+    for (unsigned j = 0; j < curve_pts.size(); j++) 
+    {  
+        vgl_point_2d<double> pt = curve_pts[j]->get_p();
+        
+        //double normal = angle0To2Pi(tangents[j]+vnl_math::pi/2.0f);
+        double normal = tangents[j]+vnl_math::pi/2.0f;
+        double sum = region_width;
+
+        vgl_point_2d<double> plus_pt(pt.x() + sum*cos(normal), 
+                                     pt.y() + sum*sin(normal));
+        vgl_point_2d<double> minus_pt(pt.x() - sum*cos(normal), 
+                                      pt.y() - sum*sin(normal));
+
+        vnl_vector_fixed<double,3> plus;
+        plus[0] = vil_bilin_interp_safe_extend(L_img_,
+                                               plus_pt.x(),
+                                               plus_pt.y());
+        plus[1] = vil_bilin_interp_safe_extend(a_img_,
+                                               plus_pt.x(),
+                                               plus_pt.y());
+        plus[2] = vil_bilin_interp_safe_extend(b_img_,
+                                               plus_pt.x(),
+                                               plus_pt.y());
+
+
+        vnl_vector_fixed<double,3> minus;
+        minus[0] = vil_bilin_interp_safe_extend(L_img_,
+                                                minus_pt.x(),
+                                                minus_pt.y());
+        minus[1] = vil_bilin_interp_safe_extend(a_img_,
+                                                minus_pt.x(),
+                                                minus_pt.y());
+        minus[2] = vil_bilin_interp_safe_extend(b_img_,
+                                                minus_pt.x(),
+                                                minus_pt.y());
+        
+        
+       
+        vnl_vector_fixed<double, 3> sub = plus-minus;
+        double E = sub.two_norm();
+        
+        distance+=E;
+    }
+
+    return distance/c->length();
+
+}
+
 double dbsk2d_transform_manager::likelihood(
     vcl_vector<vgl_point_2d<double> >& curve)
 {
