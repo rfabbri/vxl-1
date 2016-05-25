@@ -5,6 +5,11 @@
 
 void test_curvature() {
   std::cout << "hello";
+  // dbgl_compute_curvature(vertices, &k)
+}
+
+void test_normals() {
+  // dbgl_compute_normals(vertices, &n)
 }
 
 //: Test differential geometry estimation functions

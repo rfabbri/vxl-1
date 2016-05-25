@@ -3,7 +3,7 @@
 #define dbgl_diffgeom_h_
 //:
 //\file
-//\brief Differential geometry estimation of digital curves
+//\brief Differential geometry estimation for curves
 //\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
 //\date Wed May 25 15:53:23 BRT 2016
 //
@@ -37,13 +37,30 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 //
-void dbgl_compute_curvature(
+void 
+dbgl_compute_curvature(
     const std::vector< vgl_point_2d<double> > &vertices, 
     vnl_vector<double> *k
     ) 
 {
     std::cout << "stub" << std::endl;
 }
+
+// This function calculates the normals, of the line points
+// using the neighbouring points of each contour point, and 
+// forward an backward differences on the end points
+//
+// Originally written by  D.Kroon University of Twente (August 2011)
+//
+void 
+dbgl_compute_normals(
+    const std::vector< vgl_point_2d<double> > &vertices, 
+    vcl_vector<vnl_vector_fixed<double, 2> > *n
+    )
+{
+    std::cout << "stub" << std::endl;
+}
+
 
 #endif // dbgl_diffgeom_h
 
