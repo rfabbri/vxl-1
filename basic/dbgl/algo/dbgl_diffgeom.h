@@ -8,7 +8,9 @@
 //\date Wed May 25 15:53:23 BRT 2016
 //
 
-#include <vector>
+#include <vcl_vector.h>
+#include <vgl/vgl_point_2d.h>
+#include <vnl/vnl_vector_fixed.h>
 
 // Curvature estimation by D. Kroons's approach
 //
@@ -39,12 +41,9 @@
 //
 void 
 dbgl_compute_curvature(
-    const std::vector< vgl_point_2d<double> > &vertices, 
-    vnl_vector<double> *k
-    ) 
-{
-    std::cout << "stub" << std::endl;
-}
+    const vcl_vector< vgl_point_2d<double> > &vertices, 
+    vcl_vector<double> *k
+    );
 
 // This function calculates the normals, of the line points
 // using the neighbouring points of each contour point, and 
@@ -52,15 +51,14 @@ dbgl_compute_curvature(
 //
 // Originally written by  D.Kroon University of Twente (August 2011)
 //
+
 void 
 dbgl_compute_normals(
-    const std::vector< vgl_point_2d<double> > &vertices, 
-    vcl_vector<vnl_vector_fixed<double, 2> > *n
-    )
-{
-    std::cout << "stub" << std::endl;
-}
+    const vcl_vector< vgl_point_2d<double> > &vertices, 
+    vcl_vector< vnl_vector_fixed<double, 2> > *n
+    );
 
+#define DIFFGEOM_EPS 2.2204e-16
 
 #endif // dbgl_diffgeom_h
 

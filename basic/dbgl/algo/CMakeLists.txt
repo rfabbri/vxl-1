@@ -45,6 +45,9 @@ SET( dbgl_algo_sources
   
   # find symmetry point
   dbgl_compute_symmetry_point.h   dbgl_compute_symmetry_point.cxx
+
+  #differential Geometry
+  dbgl_diffgeom.h               dbgl_diffgeom.cxx
 )
 
 ADD_LIBRARY( dbgl_algo ${dbgl_algo_sources} )
