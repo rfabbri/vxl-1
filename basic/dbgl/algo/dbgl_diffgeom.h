@@ -1,28 +1,14 @@
-// This is dbgl_curvature.h
-#ifndef dbgl_curvature_h_
-#define dbgl_curvature_h_
+// This is dbgl_diffgeom.h
+#ifndef dbgl_diffgeom_h_
+#define dbgl_diffgeom_h_
 //:
 //\file
-//\brief Curvature estimation of digital curves
+//\brief Differential geometry estimation of digital curves
 //\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
-//\date 02/05/07 14:52:58 EST
+//\date Wed May 25 15:53:23 BRT 2016
 //
 
-#include <vcl_vector.h>
-
-//: A simple discrete curvature smoothing technique. Simply move each sample point according to a
-// roughly normal direction (bisector at each sample point) and strength.
-//
-// \param[in,out] c: digital curve (sequence of points). Endpoints remain fixed.
-// \param[in] psi: how much to evolve at each step. If in interval [0,1], then it is guaranteed that
-// the smoothed curve will not cross itself.
-// \param[in] nsteps : number of smoothing iterations
-//
-// \remarks The algorithm may generate cusps. For example, if the input shape is the cursive "l"
-// letter, with one self-intersection, then after some steps a cusp is formed, before desintangling
-// the curve. Prof. Ben Kimia called this method "discrete curve shortening".
-//
-
+#include <vector>
 
 // Curvature estimation by D. Kroons's approach
 //
@@ -54,12 +40,10 @@
 void dbgl_compute_curvature(
     const std::vector< vgl_point_2d<double> > &vertices, 
     vnl_vector<double> *k
-    ) {
-
-  std::cout << "stub" << std::endl;
+    ) 
+{
+    std::cout << "stub" << std::endl;
 }
 
-
-
-#endif // dbgl_curvature_h
+#endif // dbgl_diffgeom_h
 
