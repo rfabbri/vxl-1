@@ -51,7 +51,6 @@ dbgl_compute_curvature(
 //
 // Originally written by  D.Kroon University of Twente (August 2011)
 //
-
 void 
 dbgl_compute_normals(
     const vcl_vector< vgl_point_2d<double> > &vertices, 
