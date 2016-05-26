@@ -15,11 +15,15 @@ enum yuliang_features {
   Y_BG_GRAD, Y_SAT_GRAD, Y_HUE_GRAD, Y_ABS_K, Y_EDGE_SPARSITY, Y_WIGG, Y_LEN
 };
 
+#define Y_NUM_FEATURES 6
+
+typedef vnl_vector_fixed<double, NUM_FEATURES> y_feature_vector;
+
 void
 dbdet_curve_fragment_cues(
     const dbdet_edgel_chain &c,
     const vil_image_view<rgbP >&hsv,
-    vnl_vector<double> *features //< indexed by the enum
+    y_feature_vector *features //< indexed by the enum
     )
 {
   std::cout << "cues stub" << std::endl;

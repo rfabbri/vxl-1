@@ -8,6 +8,7 @@
 // Original author: Yuliang Guo (matlab)
 //\date 05/26/2016 10:51:10 BRT
 //
+#include <dbdet_curve_fragment_cues.h>
 
 //class dbdet_curve_fragment_ranker {
 //public:
@@ -34,8 +35,8 @@ void
 dbdet_curve_fragment_ranker(
     const dbdet_edgel_chain_list &frags,
     const vil_image_view<rgb> &img
-    beta,
-    textons_params,
+    const y_trained_parameters &beta,
+//    const texton_data &txdata,
     vnl_vector<double> *rank
     )
 {
