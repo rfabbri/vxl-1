@@ -31,6 +31,9 @@
 //  bool param_set;
 //};
 
+//
+// Rank curve fragments using trained logistic regression classifier.
+//
 void
 dbdet_curve_fragment_ranker(
     const dbdet_edgel_chain_list &frags,
@@ -40,6 +43,13 @@ dbdet_curve_fragment_ranker(
     vnl_vector<double> *rank
     )
 {
+
+  // rgb2hsv
+
+  // for each curve fragment i
+  //    dbdet_curve_fragment_cues
+  //        rank[i] = 1 / (1 + exp(-([1, bg_grad, sat_grad, hue_grad, abs_k, edge_sparsity, wigg, len]-fmean_2)*beta_2'));
+
 }
 
 #endif // dbdet_curve_fragment_ranker_h
