@@ -45,6 +45,11 @@ double compute_k(double xa, double x, double xb,
     return 2.0 * (a2 * b3 - a3 * b2 ) / vcl_pow((a2 * a2 + b2 * b2), 3.0/2.0);
 }
 
+double compute_dist(double x1, double x2, double y1, double y2)
+{
+    return vcl_sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+}
+
 void 
 dbgl_compute_curvature(
     const vcl_vector< vgl_point_2d<double> > &vertices, 
@@ -56,57 +61,41 @@ dbgl_compute_curvature(
 
     k->set_size(size);
 
-    vcl_vector<double> Ta(size);
-    vcl_vector<double> Tb(size);
-
-    double x = vertices[1].x();
-    double y = vertices[1].y();
-    double da = vcl_sqrt( (vertices[0].x() - x) * (vertices[0].x() - x) +
-                          (vertices[0].y() - y) * (vertices[0].y() - y) );
-    
-
-    for (int i = 2; i < size; ++i)
-    {
-        double xb = vertices[i].x();
-        double yb = vertices[i].y();
-        Ta[i - 1] = -da;
-        
-        //use x and y as temp for xb^2 and yb^2
-        x = xb - x;
-        x *= x;
-
-        y = yb - y;
-        y *= y;
-        
-        double db = vcl_sqrt(y + x);
-        Tb[i - 1] = db;
-        da = db;
-    }
-
-    Ta[0] = vcl_sqrt( (vertices[0].x() - vertices[size - 1].x()) * (vertices[0].x() - vertices[size - 1].x()) +
-                      (vertices[0].y() - vertices[size - 1].y()) * (vertices[0].y() - vertices[size - 1].y()) );
-    Tb[size - 1] = Ta[0];
-    Tb[0] = Ta[1];
-    Ta[size - 1] = Tb[size - 2];
-   
     double inv[3][3];
-    inverse3(Ta[0], Tb[0], inv);
-    (*k)[0] = compute_k(vertices[size-1].x(), vertices[0].x(), vertices[1].x(),
-                        vertices[size-1].y(), vertices[0].y(), vertices[1].y(),
+    double xa, x, xb, ya, y, yb, ta, tb;
+
+    xb = vertices[0].x(); x = vertices[1].x(); xa = vertices[2].x();
+    yb = vertices[0].y(); y = vertices[1].y(); ya = vertices[2].y();
+    
+    ta = compute_dist(xb, x, yb, y);
+    tb = compute_dist(xa, xb, ya, yb);
+
+    inverse3(-ta, -tb, inv);
+    (*k)[0] = compute_k(vertices[1].x(), vertices[0].x(), vertices[2].x(),
+                        vertices[1].y(), vertices[0].y(), vertices[2].y(),
                         inv);
 
-    //can be merged with first for later
     for (int i = 1; i < size - 1; ++i)
     {
-        inverse3(Ta[i], Tb[i], inv);
-        (*k)[i] = compute_k(vertices[i-1].x(), vertices[i].x(), vertices[i+1].x(),
-                            vertices[i-1].y(), vertices[i].y(), vertices[i+1].y(),
-                            inv);
-    }
+        xa = vertices[i+1].x();
+        ya = vertices[i+1].y();
+        
+        tb = ta;
+        ta = compute_dist(xa, x, ya, y);
 
-    inverse3(Ta[size - 1], Tb[size - 1], inv);
-    (*k)[size-1] = compute_k(vertices[size-2].x(), vertices[size-1].x(), vertices[0].x(),
-                        vertices[size-2].y(), vertices[size-1].y(), vertices[0].y(),
+        inverse3(-ta, tb, inv);
+        (*k)[i] = compute_k(vertices[i+1].x(), vertices[i].x(), vertices[i-1].x(),
+                            vertices[i+1].y(), vertices[i].y(), vertices[i-1].y(),
+                            inv);
+        x = xa; y = ya;
+    }
+    
+    tb = ta;
+    ta = compute_dist(x, vertices[size-3].x(), y, vertices[size-3].y());
+
+    inverse3(ta, tb, inv);
+    (*k)[size-1] = compute_k(vertices[size-3].x(), vertices[size-1].x(), vertices[size-2].x(),
+                        vertices[size-3].y(), vertices[size-1].y(), vertices[size-2].y(),
                         inv);
 }
 
