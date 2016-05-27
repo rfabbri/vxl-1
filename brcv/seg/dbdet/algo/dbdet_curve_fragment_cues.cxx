@@ -11,30 +11,34 @@ dbdet_curve_fragment_cues(
 {
   static unsigned const local_dist = 1; // distance used for local sampling
   static unsigned const nbr_width = 3;  // distance used for lateral edge sparsity
+  unsigned const npts = c.edgels.size();
+  const dbdet_edgel_list e = &c.edgels;
+
   y_feature_vector &features = *features_ptr;
 
   // curvature
   vnl_vector<double> k;
   dbgl_compute_curvature(c, &k);
+  assert(k.size() == npts);
 
-  for (unsigned i=0; i < k.size(); ++i)
+  for (unsigned i=0; i < npts; ++i)
     if (vnl_math::isnan(k[i]))
       k[i] = 0;
 
   { // wiggliness is the number of times curvature changes sign
     features[Y_WIGG] = 0;
-    for (unsigned i=0; i + 1 < k.size(); ++i) {
+    for (unsigned i=0; i + 1 < npts; ++i) {
       features[Y_WIGG] += ( (k[i+1] >= 0) == (k[i] >= 0) );
     }
-    features[Y_WIGG] /= k.size();
+    features[Y_WIGG] /= npts;
   }
 
-  features[Y_ABS_K] = k.one_norm() / k.size();
+  features[Y_ABS_K] = k.one_norm() / npts;
 
   { // HSV gradients
     // examine local_dist neighborhood around curve along normals
     vcl_vector< vnl_vector_fixed<double, 2> > n;
-    n.reserve(k.size());
+    n.reserve(npts);
     dbgl_compute_normals(c, &n);
 
     // get neighborhood points to be examined
@@ -44,7 +48,7 @@ dbdet_curve_fragment_cues(
     features[Y_SAT_GRAD] = 0;
     features[Y_BG_GRAD]  = 0;
 
-    for (unsigned i=0; i < c.size(); ++i) {
+    for (unsigned i=0; i < size; ++i) {
       left_x  = c[i].x() - local_dist * n[i][0];
       left_y  = c[i].y() - local_dist * n[i][1];
       right_x = c[i].x() + local_dist * n[i][0];
@@ -59,14 +63,31 @@ dbdet_curve_fragment_cues(
       features[Y_SAT_GRAD] += vnl::abs(hsv_clamped(left_x,left_y) - hsv_clamped(right_x,right_y));
       features[Y_BG_GRAD] += vnl::abs(hsv_clamped(left_x,left_y) - hsv_clamped(right_x,right_y));
     }
-    features[Y_HUE_GRAD] /= c.size();
-    features[Y_SAT_GRAD] = c.size();
-    features[Y_BG_GRAD]  = c.size();
+    features[Y_HUE_GRAD] /= npts;
+    features[Y_SAT_GRAD] /= npts;
+    features[Y_BG_GRAD]  /= npts;
   }
 
   { // lateral edge sparsity
+    unsigned total_edges = 0;
 
-    for (unsigned i=0; i < c.size() ++i) {
+    for (unsigned i=0; i < npts; ++i) {
+      // locate bucket
+      unsigned p_i = static_cast<unsigned>(e[i]->pt.x()+0.5);
+      unsigned p_j = static_cast<unsigned>(e[i]->pt.y()+0.5);
+      
+      if (dt(p_i, p_j) > nbr_width)
+        continue;
+
+      // visit all nearby edgels and count the number within a distance
+      // mark already visited edgels
+
+      for () {
+        if (unvisited(nx,ny)) {
+          total_edges += em.edge_cells.begin()[l].size();
+          mark_visited(nx,ny)
+        }
+      }
     }
   }
 }
