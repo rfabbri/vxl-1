@@ -19,6 +19,8 @@
 #include <vgl/vgl_point_2d.h>
 #include <dbdet/sel/dbdet_edgel.h>
 #include <dbdet/sel/dbdet_sel_utils.h>
+#include <vnl/vnl_math.h>
+#include <vcl_cmath.h>
 
 //: very light class to store edgels
 class dbdet_edge
@@ -116,6 +118,44 @@ public:
     if(yy>=height())
 	yy=height()-1;
     insert(e, xx, yy);
+  }
+
+  bool AlmostEqual(dbdet_edgemap & map, double angle_thresh, double strength_thresh) {
+
+    bool ret = true;
+    if (this==&map) {
+      return true;
+    }
+    ret &= (this->num_edgels() == map.num_edgels());
+    ret &= (this->width() == map.width());
+    ret &= (this->height() == map.height());
+
+    if (ret) {
+      for (unsigned int xx=0; xx<width(); xx++) {
+        for (unsigned int yy=0; yy<height(); yy++) {
+          vcl_vector<dbdet_edgel*> cellA = this->cell(xx,yy);
+          vcl_vector<dbdet_edgel*> cellB = map.cell(xx,yy);
+          if (cellA.size() == cellB.size()) {
+            for (unsigned int i=0; i<cellA.size(); i++) {
+	      if(cellA[i]->pt != cellB[i]->pt) {
+		return false;
+	      }
+	      if(vnl_math::abs(cellA[i]->tangent - cellB[i]->tangent) > angle_thresh) {
+		return false;
+	      }
+              if(vnl_math::abs(cellA[i]->strength - cellB[i]->strength) > strength_thresh) {
+		return false;
+	      }
+            }
+          } else {
+            return false;
+          }
+        }
+      }
+    } else {
+	return false;
+    }
+    return true;
   }
 
   bool operator ==(dbdet_edgemap & map) {

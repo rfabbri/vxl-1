@@ -4,7 +4,7 @@
 
 
 vorlexecname=dborl_compute_contours
-vorldirname=$HOME/src/vxlprg/lemsvxl-bin/brcv/rec/dborl/algo/vox_compute_contours/dborl_compute_contours
+vorldirname=$HOME/vxlprg/lemsvxl-bin/brcv/rec/dborl/algo/vox_compute_contours/dborl_compute_contours
 
 # set -x
 case $# in
@@ -22,7 +22,7 @@ xmlorig="$HOME/.$vorlexecname-input.xml"
 tmpfile=/tmp/$$-tmp-$vorlexecname-input.xml
 
 sed "s/@IMGEXT@/$img_ext/g
-s/@IMGBASENAME@/$img_base$img_ext/g
+s/@IMGBASENAME@/$img_base/g
 s/@INPUTDIR@/$img_dir/g
 s/@OUTPUTDIR@/$img_dir/g" $xmlorig  > $tmpfile
 
