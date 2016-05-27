@@ -170,7 +170,7 @@ void test_closest_point_to_circular_arc()
     1e-12);
 
   query_pt.set(6, 0);
-  real_d = vcl_sqrt(1+vnl_math_sqr(vcl_sqrt(3.0)-1));
+  real_d = vcl_sqrt(1+vnl_math::sqr(vcl_sqrt(3.0)-1));
   real_ratio = 1;
   ret_d = dbgl_closest_point::point_to_circular_arc(query_pt, arc_p1,
     arc_p2, arc_k, ret_ratio);
@@ -265,8 +265,8 @@ void test_closest_point_lineseg_to_circular_arc()
   bool check_ratios = true;
   for (unsigned int i=0; i<line_ratios.size(); ++i)
   {
-    check_ratios = check_ratios && (vnl_math_abs(line_ratios[i]-real_line_ratios[i]) < 1e-12);
-    check_ratios = check_ratios && (vnl_math_abs(arc_ratios[i]-real_arc_ratios[i]) < 1e-12);
+    check_ratios = check_ratios && (vnl_math::abs(line_ratios[i]-real_line_ratios[i]) < 1e-12);
+    check_ratios = check_ratios && (vnl_math::abs(arc_ratios[i]-real_arc_ratios[i]) < 1e-12);
   }
   TEST("lineseg to arc (2 intersections) - ratios", check_ratios, true);
 
@@ -288,8 +288,8 @@ void test_closest_point_lineseg_to_circular_arc()
   check_ratios = true;
   for (unsigned int i=0; i<line_ratios.size(); ++i)
   {
-    check_ratios = check_ratios && (vnl_math_abs(line_ratios[i]-real_line_ratios[i]) < 1e-12);
-    check_ratios = check_ratios && (vnl_math_abs(arc_ratios[i]-real_arc_ratios[i]) < 1e-12);
+    check_ratios = check_ratios && (vnl_math::abs(line_ratios[i]-real_line_ratios[i]) < 1e-12);
+    check_ratios = check_ratios && (vnl_math::abs(arc_ratios[i]-real_arc_ratios[i]) < 1e-12);
   }
   TEST("lineseg to arc (1 intersections) - ratios", check_ratios, true);
 
@@ -303,14 +303,14 @@ void test_closest_point_lineseg_to_circular_arc()
   real_arc_ratios[0] = 0.75;
   d = dbgl_closest_point::lineseg_to_circular_arc(line_p1, line_p2, 
     arc_p1, arc_p2, arc_k, line_ratios, arc_ratios);
-  TEST("lineseg to arc (0 intersections, local minimum) - distance", vnl_math_abs(d-real_d)<1e-12, true);
+  TEST("lineseg to arc (0 intersections, local minimum) - distance", vnl_math::abs(d-real_d)<1e-12, true);
   TEST("lineseg to arc (0 intersections, local minimum) - num. ratios returned", line_ratios.size(), 1 );
 
   check_ratios = true;
   for (unsigned int i=0; i<line_ratios.size(); ++i)
   {
-    check_ratios = check_ratios && (vnl_math_abs(line_ratios[i]-real_line_ratios[i]) < 1e-12);
-    check_ratios = check_ratios && (vnl_math_abs(arc_ratios[i]-real_arc_ratios[i]) < 1e-12);
+    check_ratios = check_ratios && (vnl_math::abs(line_ratios[i]-real_line_ratios[i]) < 1e-12);
+    check_ratios = check_ratios && (vnl_math::abs(arc_ratios[i]-real_arc_ratios[i]) < 1e-12);
   }
   TEST("lineseg to arc (0 intersections, local minimum) - ratios", check_ratios, true);
 
@@ -324,11 +324,11 @@ void test_closest_point_lineseg_to_circular_arc()
   real_arc_ratios[0] = 0.75;
   d = dbgl_closest_point::lineseg_to_circular_arc(line_p1, line_p2, 
     arc_p1, arc_p2, arc_k, line_ratios, arc_ratios);
-  TEST("lineseg to arc (0 intersect, line_p1 and arc) - distance", vnl_math_abs(d-real_d)<1e-12, true);
+  TEST("lineseg to arc (0 intersect, line_p1 and arc) - distance", vnl_math::abs(d-real_d)<1e-12, true);
   TEST("lineseg to arc (0 intersect, line_p1 and arc) - num. ratios returned", line_ratios.size(), 1 );
 
   check_ratios = (line_ratios[0] == 0) &&
-    (vnl_math_abs(arc_ratios[0]-real_arc_ratios[0]) < 1e-12);
+    (vnl_math::abs(arc_ratios[0]-real_arc_ratios[0]) < 1e-12);
   TEST("lineseg to arc (0 intersect, line_p1 and arc) - ratios", check_ratios, true);
 
   // Case 4: No intesection, arc_p1 and line
@@ -341,11 +341,11 @@ void test_closest_point_lineseg_to_circular_arc()
   real_arc_ratios[0] = 1;
   d = dbgl_closest_point::lineseg_to_circular_arc(line_p1, line_p2, 
     arc_p1, arc_p2, arc_k, line_ratios, arc_ratios);
-  TEST("lineseg to arc (0 intersect, arc_p2 and line) - distance", vnl_math_abs(d-real_d)<1e-12, true);
+  TEST("lineseg to arc (0 intersect, arc_p2 and line) - distance", vnl_math::abs(d-real_d)<1e-12, true);
   TEST("lineseg to arc (0 intersect, arc_p2 and line) - num. ratios returned", line_ratios.size(), 1 );
 
   check_ratios = (arc_ratios[0] == 1) &&
-    (vnl_math_abs(line_ratios[0]-real_line_ratios[0]) < 1e-12);
+    (vnl_math::abs(line_ratios[0]-real_line_ratios[0]) < 1e-12);
   TEST("lineseg to arc (0 intersect, arc_p2 and line) - ratios", check_ratios, true);
 
 }
@@ -420,8 +420,8 @@ void test_closest_point_circular_arc_to_circular_arc()
   bool check_ratios = true;
   for (unsigned int i=0; i<arc1_ratios.size(); ++i)
   {
-    check_ratios = check_ratios && (vnl_math_abs(arc1_ratios[i]-real_arc1_ratios[i]) < 1e-12);
-    check_ratios = check_ratios && (vnl_math_abs(arc2_ratios[i]-real_arc2_ratios[i]) < 1e-12);
+    check_ratios = check_ratios && (vnl_math::abs(arc1_ratios[i]-real_arc1_ratios[i]) < 1e-12);
+    check_ratios = check_ratios && (vnl_math::abs(arc2_ratios[i]-real_arc2_ratios[i]) < 1e-12);
   }
   TEST("arc to arc (2 intersections) - ratios", check_ratios, true);
 
@@ -449,8 +449,8 @@ void test_closest_point_circular_arc_to_circular_arc()
   check_ratios = true;
   for (unsigned int i=0; i<arc1_ratios.size(); ++i)
   {
-    check_ratios = check_ratios && (vnl_math_abs(arc1_ratios[i]-real_arc1_ratios[i]) < 1e-12);
-    check_ratios = check_ratios && (vnl_math_abs(arc2_ratios[i]-real_arc2_ratios[i]) < 1e-12);
+    check_ratios = check_ratios && (vnl_math::abs(arc1_ratios[i]-real_arc1_ratios[i]) < 1e-12);
+    check_ratios = check_ratios && (vnl_math::abs(arc2_ratios[i]-real_arc2_ratios[i]) < 1e-12);
   }
   TEST("arc to arc (1 intersections) - ratios", check_ratios, true);
 
@@ -478,8 +478,8 @@ void test_closest_point_circular_arc_to_circular_arc()
   check_ratios = true;
   for (unsigned int i=0; i<arc1_ratios.size(); ++i)
   {
-    check_ratios = check_ratios && (vnl_math_abs(arc1_ratios[i]-real_arc1_ratios[i]) < 1e-12);
-    check_ratios = check_ratios && (vnl_math_abs(arc2_ratios[i]-real_arc2_ratios[i]) < 1e-12);
+    check_ratios = check_ratios && (vnl_math::abs(arc1_ratios[i]-real_arc1_ratios[i]) < 1e-12);
+    check_ratios = check_ratios && (vnl_math::abs(arc2_ratios[i]-real_arc2_ratios[i]) < 1e-12);
   }
   TEST("arc to arc (0 intersect-local minimum) - ratios", check_ratios, true);
 
@@ -505,8 +505,8 @@ void test_closest_point_circular_arc_to_circular_arc()
   check_ratios = true;
   for (unsigned int i=0; i<arc1_ratios.size(); ++i)
   {
-    check_ratios = check_ratios && (vnl_math_abs(arc1_ratios[i]-real_arc1_ratios[i]) < 1e-12);
-    check_ratios = check_ratios && (vnl_math_abs(arc2_ratios[i]-real_arc2_ratios[i]) < 1e-12);
+    check_ratios = check_ratios && (vnl_math::abs(arc1_ratios[i]-real_arc1_ratios[i]) < 1e-12);
+    check_ratios = check_ratios && (vnl_math::abs(arc2_ratios[i]-real_arc2_ratios[i]) < 1e-12);
   }
   TEST("arc to arc (0 intersect-arc2_p1 and arc1) - ratios", check_ratios, true);
 
@@ -535,8 +535,8 @@ void test_closest_point_circular_arc_to_circular_arc()
   check_ratios = true;
   for (unsigned int i=0; i<arc1_ratios.size(); ++i)
   {
-    check_ratios = check_ratios && (vnl_math_abs(arc1_ratios[i]-real_arc1_ratios[i]) < 1e-12);
-    check_ratios = check_ratios && (vnl_math_abs(arc2_ratios[i]-real_arc2_ratios[i]) < 1e-12);
+    check_ratios = check_ratios && (vnl_math::abs(arc1_ratios[i]-real_arc1_ratios[i]) < 1e-12);
+    check_ratios = check_ratios && (vnl_math::abs(arc2_ratios[i]-real_arc2_ratios[i]) < 1e-12);
   }
   TEST("arc to arc (2 arcs on same circle, no overlapping) - ratios", check_ratios, true);
 

@@ -37,8 +37,8 @@ MAIN( test_arc_intersect )
                                 "(" << i2.x() << ", "<< i2.y()<<")" << vcl_endl;
       TEST_NEAR("Intersection1.x",i1.x(),0,tolerance);
       TEST_NEAR("Intersection2.x",i2.x(),0,tolerance);
-      TEST_NEAR("Intersection1.y",vnl_math_max(i1.y(),i2.y()), 3,tolerance);
-      TEST_NEAR("Intersection2.y",vnl_math_min(i1.y(),i2.y()),-3,tolerance);
+      TEST_NEAR("Intersection1.y",vnl_math::max(i1.y(),i2.y()), 3,tolerance);
+      TEST_NEAR("Intersection2.y",vnl_math::min(i1.y(),i2.y()),-3,tolerance);
    }
 
    {
@@ -199,9 +199,9 @@ MAIN( test_arc_intersect )
    vcl_cout << "Intesections: (" << i1.x() << ", "<< i1.y()<<")  "  <<
                              "(" << i2.x() << ", "<< i2.y()<<")" << vcl_endl;
    TEST_NEAR("Intersection1.x",i1.x(),0-10,tolerance);
-   TEST_NEAR("Intersection1.y",vnl_math_max(i1.y(),i2.y()),3+200,tolerance);
+   TEST_NEAR("Intersection1.y",vnl_math::max(i1.y(),i2.y()),3+200,tolerance);
    TEST_NEAR("Intersection2.x",i2.x(),0-10,tolerance);
-   TEST_NEAR("Intersection2.y",vnl_math_min(i1.y(),i2.y()),-3+200,tolerance);
+   TEST_NEAR("Intersection2.y",vnl_math::min(i1.y(),i2.y()),-3+200,tolerance);
    }
 
    {

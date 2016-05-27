@@ -14,6 +14,7 @@ DECLARE( test_pt_tri_dist_3d );
 DECLARE( test_similarity_3d );
 DECLARE( test_fit_circ_arc_spline );
 DECLARE( test_compute_symmetry_point );
+DECLARE( test_diffgeom );
 
 
 void
@@ -31,6 +32,7 @@ register_tests()
   REGISTER( test_similarity_3d );
   REGISTER( test_fit_circ_arc_spline );
   REGISTER( test_compute_symmetry_point );
+  REGISTER( test_diffgeom );
 }
 
 DEFINE_MAIN;
