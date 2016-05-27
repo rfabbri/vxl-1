@@ -46,12 +46,17 @@ public:
           vil_border_create_constant(visited_img_, dbdet_curve_fragment_cues_unvisited));
   }
 
-  // to speedup lateral edge sparsity with distance transform
-  void set_dt(const vil_image_view<vxl_uint_32> &dt)
+  // Try to speedup lateral edge sparsity computation for many fragments,
+  // using with distance transform.
+  //
+  // Pass in the curve fragment list which will be queried.
+  void use_dt(const dbdet_edgel_chain_list &frags)
   {
+    // remove edgels of curves from curve maps
+    // perform DT of the remaining map
+    // const vil_image_view<vxl_uint_32> &dt
     dt_ = &dt;
   }
-
 
   void
   compute_cues(
