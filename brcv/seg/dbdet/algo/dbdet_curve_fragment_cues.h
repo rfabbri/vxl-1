@@ -70,7 +70,6 @@ public:
         const dbdet_edgel_chain &c, 
         y_feature_vector *features_ptr // indexed by the enum
       );
-
   double lateral_edge_sparsity_cues(const dbdet_edgel_chain &c
         y_feature_vector *features_ptr // indexed by the enum
       );
