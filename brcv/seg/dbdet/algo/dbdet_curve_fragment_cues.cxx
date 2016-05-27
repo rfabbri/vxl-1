@@ -70,7 +70,14 @@ dbdet_curve_fragment_cues(
 
   { // lateral edge sparsity
     unsigned total_edges = 0;
+    vil_image_view <bool> unvisited_img(hsv.ni(), hsv.nj(), 1);
+    unvisited_img.fill(true);
 
+    // outside indices return false (visited)
+    vil_border_accessor<vil_image_view<bool> >
+      unvisited = vil_border_create_accessor(unvisited_img,
+                                             vil_border_create_constant(unvisited_img, false));
+    
     for (unsigned i=0; i < npts; ++i) {
       // locate bucket
       unsigned p_i = static_cast<unsigned>(e[i]->pt.x()+0.5);
@@ -82,9 +89,6 @@ dbdet_curve_fragment_cues(
       // visit all nearby edgels and count the number within a distance
       // mark already visited edgels
 
-      // outside indices return false (visited)
-      vil_border_accessor<vil_image_view<bool> >
-        unvisited = vil_border_create_accessor(unvisited_img,vil_border_create_constant(unvisited_img, false));
 
       // TODO:optimize access to be row-first
       for (int d_i = -nbr_width; di < nbr_width; ++d_i) {
@@ -94,7 +98,7 @@ dbdet_curve_fragment_cues(
             unsigned nh_y = static_cast<unsigned>(p_j + d_j);
 //            total_edges += em.edge_cells.begin()[l].size();
             total_edges += em.cell(nh_x,nh_y).size();
-            mark_visited(nh_x,nh_y)
+            unvisited(nh_x,nh_y) = false;
           }
         }
       }
