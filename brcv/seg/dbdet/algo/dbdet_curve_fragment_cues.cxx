@@ -83,12 +83,12 @@ compute_cues(
       // TODO:optimize access to be row-first
       for (int d_i = -nbr_width_; di < nbr_width_; ++d_i) {
         for (int d_j = -nbr_width_; dj < nbr_width_; ++d_j) {
-          if (visited(p_i + d_i, p_j + d_j) == ) {
+          if (not_visited(p_i + d_i, p_j + d_j)) {
             unsigned nh_x = static_cast<unsigned>(p_i + d_i);
             unsigned nh_y = static_cast<unsigned>(p_j + d_j);
 //            total_edges += em.edge_cells.begin()[l].size();
             total_edges += em.cell(nh_x,nh_y).size();
-            unvisited(nh_x,nh_y) = false;
+            mark_visited(nh_x,nh_y);
           }
         }
       }

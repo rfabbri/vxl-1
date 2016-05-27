@@ -52,6 +52,7 @@ public:
     dt_ = &dt;
   }
 
+
   void
   compute_cues(
       const dbdet_edgel_chain &c, 
@@ -59,7 +60,10 @@ public:
       );
 
 private:
-  bool use_dt() { return dt_ != NULL; }
+  bool use_dt() const { return dt_ != NULL; }
+  bool visited(int i, int j) const { visited_(i,j) == visited_id_; }
+  bool not_visited(int i, int j) const { visited_(i,j) != visited_id_; }
+  void mark_visited(int i, int j) { visited_(i,j) = visited_id_; }
   const vil_image_view<rgbP >&hsv_;
   vil_image_view<vxl_uint_32> *dt_;
   // visited(i,j) = c marks pixels(i,j) as visited by curve c's nhood tube
