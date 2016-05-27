@@ -1,19 +1,15 @@
 #include <dbdet_curve_fragment_cues.h>
 
-void
-dbdet_curve_fragment_cues(
-    const dbdet_edgel_chain &c,
-    const vil_image_view<rgbP >&hsv,
-    const vil_image_view<vxl_uint_32> &dt,
-    const dbdet_edgemap &em,
-    y_feature_vector *features_ptr // indexed by the enum
-    )
+void dbdet_curve_fragment_cues::
+compute_cues(
+      const dbdet_edgel_chain &c, 
+      y_feature_vector *features_ptr // indexed by the enum
+      )
 {
-  static unsigned const local_dist = 1; // distance used for local sampling
-  static unsigned const nbr_width = 3;  // distance used for lateral edge sparsity
+  assert(use_dt()); // no algorithm without dt yet
   unsigned const npts = c.edgels.size();
   const dbdet_edgel_list e = &c.edgels;
-
+  const vil_image_view<vxl_uint_32> dt = *dt_;
   y_feature_vector &features = *features_ptr;
 
   // curvature
@@ -35,7 +31,7 @@ dbdet_curve_fragment_cues(
 
   features[Y_ABS_K] = k.one_norm() / npts;
 
-  { // HSV gradients
+  { // hsv_ gradients
     // examine local_dist neighborhood around curve along normals
     vcl_vector< vnl_vector_fixed<double, 2> > n;
     n.reserve(npts);
@@ -49,14 +45,14 @@ dbdet_curve_fragment_cues(
     features[Y_BG_GRAD]  = 0;
 
     for (unsigned i=0; i < size; ++i) {
-      left_x  = c[i].x() - local_dist * n[i][0];
-      left_y  = c[i].y() - local_dist * n[i][1];
-      right_x = c[i].x() + local_dist * n[i][0];
-      right_y = c[i].y() + local_dist * n[i][1];
+      left_x  = c[i].x() - local_dist_ * n[i][0];
+      left_y  = c[i].y() - local_dist_ * n[i][1];
+      right_x = c[i].x() + local_dist_ * n[i][0];
+      right_y = c[i].y() + local_dist_ * n[i][1];
 
       // make sure image clamps to within bounds
       vil_border_accessor<vil_image_view<rgbP> >
-        hsv_clamped = vil_border_create_accessor(hsv,vil_border_create_geodesic(hsv));
+        hsv_clamped = vil_border_create_accessor(hsv_,vil_border_create_geodesic(hsv_));
 
       // TODO test if imae indexing is (x,y) or (y,x)
       features[Y_HUE_GRAD] += vnl::abs(hsv_clamped(left_x,left_y) - hsv_clamped(right_x,right_y));
@@ -70,20 +66,14 @@ dbdet_curve_fragment_cues(
 
   { // lateral edge sparsity
     unsigned total_edges = 0;
-    vil_image_view <unsigned> unvisited_img(hsv.ni(), hsv.nj(), 1);
-    unvisited_img.fill(0);
 
-    // outside indices return false (visited)
-    vil_border_accessor<vil_image_view<unsigned> >
-      unvisited = vil_border_create_accessor(unvisited_img,
-                                             vil_border_create_constant(unvisited_img, false));
     
     for (unsigned i=0; i < npts; ++i) {
       // locate bucket
       unsigned p_i = static_cast<unsigned>(e[i]->pt.x()+0.5);
       unsigned p_j = static_cast<unsigned>(e[i]->pt.y()+0.5);
       
-      if (dt(p_i, p_j) > nbr_width)
+      if (dt(p_i, p_j) > nbr_width_)
         continue;
 
       // visit all nearby edgels and count the number within a distance
@@ -91,8 +81,8 @@ dbdet_curve_fragment_cues(
 
 
       // TODO:optimize access to be row-first
-      for (int d_i = -nbr_width; di < nbr_width; ++d_i) {
-        for (int d_j = -nbr_width; dj < nbr_width; ++d_j) {
+      for (int d_i = -nbr_width_; di < nbr_width_; ++d_i) {
+        for (int d_j = -nbr_width_; dj < nbr_width_; ++d_j) {
           if (visited(p_i + d_i, p_j + d_j) == ) {
             unsigned nh_x = static_cast<unsigned>(p_i + d_i);
             unsigned nh_y = static_cast<unsigned>(p_j + d_j);
@@ -104,4 +94,5 @@ dbdet_curve_fragment_cues(
       }
     }
   }
+  visited_id_++;
 }

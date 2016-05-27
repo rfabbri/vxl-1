@@ -19,13 +19,6 @@ enum yuliang_features {
 
 typedef vnl_vector_fixed<double, NUM_FEATURES> y_feature_vector;
 
-void
-dbdet_curve_fragment_cues(
-    const dbdet_edgel_chain &c,
-    const vil_image_view<rgbP >&hsv,
-    y_feature_vector *features_ptr // indexed by the enum
-    );
-
 static const vxl_uint_32 dbdet_curve_fragment_cues_unvisited vcl_numeric_limits<vxl_uint_32>::max()
 //: Compute curve fragment cues for many curves.
 // Holds state information such as distance transform and auxiliary buffers,
@@ -37,16 +30,26 @@ public:
   // while this class is in use.
   void dbdet_curve_fragment_cues(
     const vil_image_view<rgbP >&hsv,
-    const vil_image_view<vxl_uint_32> &dt,
     const dbdet_edgemap &em
     )
     :
-    visited_(hsv.ni(), hsv.nj(), 1)
-    hsv_ = hsv,
-    dt_ = dt
-    em_ = em
+    visited_img_(hsv.ni(), hsv.nj(), 1),
+    visited_id_(0),
+    hsv_(hsv),
+    dt_(dt),
+    em_(em),
+    dt_(NULL)
   {
-    visited_.fill(dbdet_curve_fragment_cues_unvisited);
+    visited_img_.fill(dbdet_curve_fragment_cues_unvisited);
+    // outside indices return false (visited)
+      visited_ = vil_border_create_accessor( visited_img_,
+          vil_border_create_constant(visited_img_, dbdet_curve_fragment_cues_unvisited));
+  }
+
+  // to speedup lateral edge sparsity with distance transform
+  void set_dt(const vil_image_view<vxl_uint_32> &dt)
+  {
+    dt_ = &dt;
   }
 
   void
@@ -56,12 +59,19 @@ public:
       );
 
 private:
-    const vil_image_view<rgbP >&hsv_;
-    const vil_image_view<vxl_uint_32> &dt_;
-    // visited(i,j) = c marks pixels(i,j) as visited by curve c's nhood tube
-    // visited(i,j) = UIHNT_MAX marks pixels(i,j) as not visited
-    vil_image_view<vxl_uint_32> visited_;
-    const dbdet_edgemap &em_;
+  bool use_dt() { return dt_ != NULL; }
+  const vil_image_view<rgbP >&hsv_;
+  vil_image_view<vxl_uint_32> *dt_;
+  // visited(i,j) = c marks pixels(i,j) as visited by curve c's nhood tube
+  // visited(i,j) = UIHNT_MAX marks pixels(i,j) as not visited
+  vil_image_view<vxl_uint_32> visited_img_;
+  vil_border_accessor<vil_image_view<unsigned> > visited_;
+  // each compute_cues() run increments the id to mark traversals in scrap buffer visited_
+  // that way we reuse the buffer without clearing it
+  vxl_uint_32 visited_id_;
+  const dbdet_edgemap &em_;
+  static unsigned const local_dist_ = 1; // distance used for local sampling
+  static unsigned const nbr_width_ = 3;  // distance used for lateral edge sparsity
 };
 
 
