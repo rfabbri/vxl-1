@@ -2,13 +2,13 @@
 
 #include <testlib/testlib_register.h>
 
-//DECLARE( );
+DECLARE( test_texton_classify );
 
 
 void
 register_tests()
 {
-  //REGISTER( );
+  REGISTER( test_texton_classify );
 }
 
 DEFINE_MAIN;

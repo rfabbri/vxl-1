@@ -56,6 +56,9 @@ SET(dbdet_sources
    sel/dbdet_hyp_tree_graph.h
    sel/dbdet_EHT.h
    sel/dbdet_CFTG.h
+
+   filter/dbdet_texton_classifier.h  filter/dbdet_texton_classifier.cxx
+   filter/dbdet_filter_bank.h        filter/dbdet_filter_bank.cxx
    
    #bel/Point.h               
    #bel/Curve.cxx               bel/Curve.h
