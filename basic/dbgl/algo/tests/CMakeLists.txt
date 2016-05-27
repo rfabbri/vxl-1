@@ -17,6 +17,7 @@ ADD_EXECUTABLE( dbgl_algo_test_all
   test_similarity_3d.cxx
   test_fit_circ_arc_spline.cxx
   test_compute_symmetry_point.cxx
+  test_diffgeom.cxx
 )
 
 TARGET_LINK_LIBRARIES( dbgl_algo_test_all vsl vnl_algo dbgl_algo dbgl dbnl testlib )
@@ -33,6 +34,7 @@ ADD_TEST( dbgl_algo_test_pt_tri_dist_3d  dbgl_algo_test_all test_pt_tri_dist_3d 
 ADD_TEST( dbgl_algo_test_similarity_3d   dbgl_algo_test_all test_similarity_3d )
 ADD_TEST( dbgl_algo_test_fit_circ_arc_spline  dbgl_algo_test_all test_fit_circ_arc_spline )
 ADD_TEST( dbgl_algo_test_compute_symmetry_point dbgl_algo_test_all test_compute_symmetry_point )
+ADD_TEST( dbgl_algo_test_diffgeom dbgl_algo_test_all test_diffgeom )
 
 ADD_EXECUTABLE( dbgl_algo_test_include test_include.cxx )
 
