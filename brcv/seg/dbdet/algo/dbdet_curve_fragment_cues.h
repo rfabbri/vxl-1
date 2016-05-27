@@ -11,13 +11,14 @@
 
 // just to make it easier and more descriptive to index the feature vector
 // rarely used since we just process the feature vec. generically
+// Y_ONE is just always 1
 enum yuliang_features {
-  Y_BG_GRAD, Y_SAT_GRAD, Y_HUE_GRAD, Y_ABS_K, Y_EDGE_SPARSITY, Y_WIGG, Y_LEN, Y_MEAN_CONF
+  Y_ONE, Y_BG_GRAD, Y_SAT_GRAD, Y_HUE_GRAD, Y_ABS_K, Y_EDGE_SPARSITY, Y_WIGG, Y_LEN, Y_MEAN_CONF
 };
 
 #define Y_NUM_FEATURES 8
 
-typedef vnl_vector_fixed<double, NUM_FEATURES> y_feature_vector;
+typedef vnl_vector_fixed<double, Y_NUM_FEATURES> y_feature_vector;
 
 static const vxl_uint_32 dbdet_curve_fragment_cues_unvisited vcl_numeric_limits<vxl_uint_32>::max()
 //: Compute curve fragment cues for many curves.
@@ -58,7 +59,7 @@ public:
   //    dt_ = &dt;
   //  }
 
-  void compute_cues(
+  void compute_all_cues(
       const dbdet_edgel_chain &c, 
       y_feature_vector *features_ptr // indexed by the enum
       );

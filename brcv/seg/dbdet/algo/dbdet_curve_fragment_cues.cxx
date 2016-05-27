@@ -1,7 +1,7 @@
 #include <dbdet_curve_fragment_cues.h>
 
 void dbdet_curve_fragment_cues::
-compute_cues(
+compute_all_cues(
       const dbdet_edgel_chain &c, 
       y_feature_vector *features_ptr // indexed by the enum
       )
@@ -10,6 +10,7 @@ compute_cues(
   const dbdet_edgel_list e = &c.edgels;
   const vil_image_view<vxl_uint_32> dt = *dt_;
   y_feature_vector &features = *features_ptr;
+  features[Y_ONE] = 1;
 
   cuvature_cues(c, features_ptr);
   hsv_gradient_cues(c, features_ptr):

@@ -10,6 +10,7 @@
 //
 #include <dbdet_curve_fragment_cues.h>
 
+// TODO Possibly class it
 //class dbdet_curve_fragment_ranker {
 //public:
 //  dbdet_curve_fragment_ranker():
@@ -40,16 +41,26 @@ dbdet_curve_fragment_ranker(
     const vil_image_view<rgb> &img
     const y_trained_parameters &beta,
 //    const texton_data &txdata,
-    vnl_vector<double> *rank
+    vnl_vector<double> *rank_ptr;
     )
 {
+  vnl_vector<double> &rank = *rank_ptr;
+  y_feature_vector fv;
 
-  // rgb2hsv
+  // TODO rgb2hsv
 
-  // for each curve fragment i
-  //    dbdet_curve_fragment_cues
-  //        rank[i] = 1 / (1 + exp(-([1, bg_grad, sat_grad, hue_grad, abs_k, edge_sparsity, wigg, len]-fmean_2)*beta_2'));
+  dbdet_curve_fragment_cues cues(hsv, edgemap);
 
+  nfrags = frags.size(); // list: expensive
+  rank.reserve(nfrags);
+  for (dbdet_edgel_chain_list_iter it=frags.begin(), unsigned i=0; it != frags.end(); it++) {
+    cues.compute_all_cues(*it, &fv);
+    // rank[i] =  1 / (1 + exp(-([1, bg_grad, sat_grad, hue_grad, abs_k, edge_sparsity, wigg, len]-fmean_2)*beta_2'));
+    rank[i] = 0;
+    for (unsigned f=0; f < Y_NUM_FEATURES; ++f)
+      rank[i] += (fmean2[f]-fv[f])*beta_2[f];
+    rank[i] = 1.0 / (1.0 + exp(rank[i]));
+  }
 }
 
 #endif // dbdet_curve_fragment_ranker_h
