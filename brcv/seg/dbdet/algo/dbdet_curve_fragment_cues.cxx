@@ -14,8 +14,17 @@ compute_cues(
   cuvature_cues(c, features_ptr);
   hsv_gradient_cues(c, features_ptr):
   features[Y_EDGE_SPARSITY] = lateral_edge_sparsity(c);
+
+
   //mean_conf = mean(cfrag(:,4));
-  //area = (max(cfrag(:,1))-min(cfrag(:,1))) * (max(cfrag(:,2))-min(cfrag(:,2)));
+
+  // compute average edge strength (mean_conf)
+
+  double conf=0;
+  for (dbdet_edgel_list_cosnt_iter eit=c.edgels.begin(); eit != c.edgels.end(); eit++) {
+    conf += eit->strength;
+  }
+  features_ptr[Y_MEAN_CONF] = conf / npts;
 }
 
 void
@@ -89,7 +98,7 @@ lateral_edge_sparsity(const dbdet_edgel_chain &c)
 {
   unsigned const npts = c.edgels.size();
   unsigned total_edges = 0;
-  if (use_dt()) {
+  /*if (use_dt()) {
     for (unsigned i=0; i < npts; ++i) {
       // locate bucket
       unsigned p_i = static_cast<unsigned>(e[i]->pt.x()+0.5);
@@ -114,23 +123,30 @@ lateral_edge_sparsity(const dbdet_edgel_chain &c)
       }
     }
   } else { // no dt
-    for (unsigned i=0; i < npts; ++i) {
-      // locate bucket
-      unsigned p_i = static_cast<unsigned>(e[i]->pt.x()+0.5);
-      unsigned p_j = static_cast<unsigned>(e[i]->pt.y()+0.5);
-      
-      // visit all nearby edgels and count the number within a distance
-      // mark already visited edgels
+  */
+  assert(!use_dt());
+  for (unsigned i=0; i < npts; ++i) {
+    unsigned p_i = static_cast<unsigned>(e[i]->pt.x()+0.5);
+    unsigned p_j = static_cast<unsigned>(e[i]->pt.y()+0.5);
+    mark_visited(p_i, p_j);
+  }
 
-      // TODO:optimize access to be row-first
-      for (int d_i = -nbr_width_; di < nbr_width_; ++d_i) {
-        for (int d_j = -nbr_width_; dj < nbr_width_; ++d_j) {
-          if (not_visited(p_i + d_i, p_j + d_j)) {
-            unsigned nh_x = static_cast<unsigned>(p_i + d_i);
-            unsigned nh_y = static_cast<unsigned>(p_j + d_j);
-            total_edges += em.cell(nh_x,nh_y).size();
-            mark_visited(nh_x,nh_y);
-          }
+  for (unsigned i=0; i < npts; ++i) {
+    // locate bucket
+    unsigned p_i = static_cast<unsigned>(e[i]->pt.x()+0.5);
+    unsigned p_j = static_cast<unsigned>(e[i]->pt.y()+0.5);
+    
+    // visit all nearby edgels and count the number within a distance
+    // mark already visited edgels
+
+    // TODO:optimize access to be row-first
+    for (int d_i = -nbr_width_; di < nbr_width_; ++d_i) {
+      for (int d_j = -nbr_width_; dj < nbr_width_; ++d_j) {
+        if (not_visited(p_i + d_i, p_j + d_j)) {
+          unsigned nh_x = static_cast<unsigned>(p_i + d_i);
+          unsigned nh_y = static_cast<unsigned>(p_j + d_j);
+          total_edges += em.cell(nh_x,nh_y).size();
+          mark_visited(nh_x,nh_y);
         }
       }
     }

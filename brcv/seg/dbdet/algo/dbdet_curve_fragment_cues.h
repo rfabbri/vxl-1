@@ -12,10 +12,10 @@
 // just to make it easier and more descriptive to index the feature vector
 // rarely used since we just process the feature vec. generically
 enum yuliang_features {
-  Y_BG_GRAD, Y_SAT_GRAD, Y_HUE_GRAD, Y_ABS_K, Y_EDGE_SPARSITY, Y_WIGG, Y_LEN
+  Y_BG_GRAD, Y_SAT_GRAD, Y_HUE_GRAD, Y_ABS_K, Y_EDGE_SPARSITY, Y_WIGG, Y_LEN, Y_MEAN_CONF
 };
 
-#define Y_NUM_FEATURES 6
+#define Y_NUM_FEATURES 8
 
 typedef vnl_vector_fixed<double, NUM_FEATURES> y_feature_vector;
 
@@ -50,13 +50,13 @@ public:
   // using with distance transform.
   //
   // Pass in the curve fragment list which will be queried.
-  void use_dt(const dbdet_edgel_chain_list &frags)
-  {
+  //  void use_dt(const dbdet_edgel_chain_list &frags)
+  //  {
     // remove edgels of curves from curve maps
     // perform DT of the remaining map
     // const vil_image_view<vxl_uint_32> &dt
-    dt_ = &dt;
-  }
+  //    dt_ = &dt;
+  //  }
 
   void compute_cues(
       const dbdet_edgel_chain &c, 
@@ -74,12 +74,12 @@ public:
   double lateral_edge_sparsity(const dbdet_edgel_chain &c);
 
 private:
-  bool use_dt() const { return dt_ != NULL; }
+//  bool use_dt() const { return dt_ != NULL; }
   bool visited(int i, int j) const { visited_(i,j) == visited_id_; }
   bool not_visited(int i, int j) const { visited_(i,j) != visited_id_; }
   void mark_visited(int i, int j) { visited_(i,j) = visited_id_; }
   const vil_image_view<rgbP >&hsv_;
-  vil_image_view<vxl_uint_32> *dt_;
+  //  vil_image_view<vxl_uint_32> *dt_;
   // visited(i,j) = c marks pixels(i,j) as visited by curve c's nhood tube
   // visited(i,j) = UIHNT_MAX marks pixels(i,j) as not visited
   vil_image_view<vxl_uint_32> visited_img_;
