@@ -82,10 +82,20 @@ dbdet_curve_fragment_cues(
       // visit all nearby edgels and count the number within a distance
       // mark already visited edgels
 
-      for () {
-        if (unvisited(nx,ny)) {
-          total_edges += em.edge_cells.begin()[l].size();
-          mark_visited(nx,ny)
+      // outside indices return false (visited)
+      vil_border_accessor<vil_image_view<bool> >
+        unvisited = vil_border_create_accessor(unvisited_img,vil_border_create_constant(unvisited_img, false));
+
+      // TODO:optimize access to be row-first
+      for (int d_i = -nbr_width; di < nbr_width; ++d_i) {
+        for (int d_j = -nbr_width; dj < nbr_width; ++d_j) {
+          if (unvisited(p_i + d_i, p_j + d_j)) {
+            unsigned nh_x = static_cast<unsigned>(p_i + d_i);
+            unsigned nh_y = static_cast<unsigned>(p_j + d_j);
+//            total_edges += em.edge_cells.begin()[l].size();
+            total_edges += em.cell(nh_x,nh_y).size();
+            mark_visited(nh_x,nh_y)
+          }
         }
       }
     }
