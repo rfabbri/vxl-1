@@ -42,7 +42,7 @@
 void 
 dbgl_compute_curvature(
     const vcl_vector< vgl_point_2d<double> > &vertices, 
-    vcl_vector<double> *k
+    vnl_vector<double> *k
     );
 
 // This function calculates the normals, of the line points

@@ -48,13 +48,13 @@ double compute_k(double xa, double x, double xb,
 void 
 dbgl_compute_curvature(
     const vcl_vector< vgl_point_2d<double> > &vertices, 
-    vcl_vector<double> *k
+    vnl_vector<double> *k
     )
 {
     int size = vertices.size();
     assert(size >= 2);
 
-    k->resize(size);
+    k->set_size(size);
 
     vcl_vector<double> Ta(size);
     vcl_vector<double> Tb(size);
