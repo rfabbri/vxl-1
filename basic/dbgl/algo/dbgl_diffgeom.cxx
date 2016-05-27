@@ -106,32 +106,42 @@ void dbgl_compute_normals(
 {
     int size = vertices.size();
     n->resize(size);
-    for (int i = 0; i < size - 1; ++i)
-    {
-        double x = vertices[i].x() - vertices[i+1].x();
-        double y = vertices[i].y() - vertices[i+1].y();
-        double norm2 = (x * x + y * y);
-        norm2 = (norm2 > DIFFGEOM_EPS) ? norm2 : DIFFGEOM_EPS;
-        (*n)[i][0] = x / norm2;
-        (*n)[i][1] = y / norm2;
-    }
-    (*n)[size - 1][0] = 0.0;
-    (*n)[size - 1][1] = 0.0;
 
-    //can be merged with first for later
     double lastx = 0.0;
     double lasty = 0.0;
-    for (int i = 0; i < size; ++i)
-    {
-        double x = lastx;
-        double y = lasty;
-        lastx = (*n)[i][0];
-        lasty = (*n)[i][1];
+    double vx = vertices[0].x();
+    double vy = vertices[0].y();
 
-        x += lastx;
-        y += lasty;
-        double norm = vcl_sqrt(x * x + y * y);
-        (*n)[i][0] = -y / norm;
-        (*n)[i][1] = x / norm;
+    for (int i = 0; i < size - 1; ++i)
+    {
+        double vxp1 = vertices[i+1].x();
+        double vyp1 = vertices[i+1].y();
+
+        double x = vx - vxp1;
+        double y = vy - vyp1;
+
+        vx = vxp1;
+        vy = vyp1;
+
+        double norm2 = (x * x + y * y);
+        norm2 = (norm2 > DIFFGEOM_EPS) ? norm2 : DIFFGEOM_EPS;
+        
+        double xx = lastx;
+        double yy = lasty;
+
+        lastx = x / norm2;
+        lasty = y / norm2;
+
+        xx += lastx;
+        yy += lasty;
+  
+        double norm = vcl_sqrt(xx * xx + yy * yy);
+        (*n)[i][0] = -yy / norm;
+        (*n)[i][1] = xx / norm;
     }
+
+    double norm = vcl_sqrt(lastx * lastx + lasty * lasty);
+    (*n)[size - 1][0] = -lasty / norm;
+    (*n)[size - 1][1] = lastx / norm;
+
 }
