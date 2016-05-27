@@ -4,10 +4,13 @@ void
 dbdet_curve_fragment_cues(
     const dbdet_edgel_chain &c,
     const vil_image_view<rgbP >&hsv,
+    const vil_image_view<vxl_uint_32> &dt,
+    const dbdet_edgemap &em,
     y_feature_vector *features_ptr // indexed by the enum
     )
 {
-  static unsigned local_dist = 1; // distance used for local sampling
+  static unsigned const local_dist = 1; // distance used for local sampling
+  static unsigned const nbr_width = 3;  // distance used for lateral edge sparsity
   y_feature_vector &features = *features_ptr;
 
   // curvature
@@ -63,5 +66,7 @@ dbdet_curve_fragment_cues(
 
   { // lateral edge sparsity
 
+    for (unsigned i=0; i < c.size() ++i) {
+    }
   }
 }
