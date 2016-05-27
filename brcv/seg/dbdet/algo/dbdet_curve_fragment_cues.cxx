@@ -13,9 +13,7 @@ compute_cues(
 
   cuvature_cues(c, features_ptr);
   hsv_gradient_cues(c, features_ptr):
-  features[Y_EDGE_SPARSITY] = lateral_edge_sparsity(c);
-
-
+  features[Y_EDGE_SPARSITY] = lateral_edge_sparsity_cue(c);
   //mean_conf = mean(cfrag(:,4));
 
   // compute average edge strength (mean_conf)
@@ -94,7 +92,10 @@ hsv_gradient_cues(
 }
 
 double dbdet_curve_fragment_cues::
-lateral_edge_sparsity(const dbdet_edgel_chain &c)
+lateral_edge_sparsity_cue(
+    const dbdet_edgel_chain &c
+    y_feature_vector *features_ptr // indexed by the enum
+    )
 {
   unsigned const npts = c.edgels.size();
   unsigned total_edges = 0;
@@ -123,8 +124,9 @@ lateral_edge_sparsity(const dbdet_edgel_chain &c)
       }
     }
   } else { // no dt
+  }
   */
-  assert(!use_dt());
+  // assert(!use_dt());
   for (unsigned i=0; i < npts; ++i) {
     unsigned p_i = static_cast<unsigned>(e[i]->pt.x()+0.5);
     unsigned p_j = static_cast<unsigned>(e[i]->pt.y()+0.5);
@@ -152,6 +154,6 @@ lateral_edge_sparsity(const dbdet_edgel_chain &c)
     }
   }
   visited_id_++;
-  // c_len = contour_length_mex(cfrag');
-  return total_edges/c_len;
+  
+  return total_edges/(features[Y_LEN] = euclidean_length(c));
 }

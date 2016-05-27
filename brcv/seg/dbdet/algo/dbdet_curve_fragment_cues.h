@@ -36,14 +36,14 @@ public:
     visited_img_(hsv.ni(), hsv.nj(), 1),
     visited_id_(0),
     hsv_(hsv),
-    dt_(dt),
+    //    dt_(dt),
     em_(em),
     dt_(NULL)
   {
     visited_img_.fill(dbdet_curve_fragment_cues_unvisited);
     // outside indices return false (visited)
-      visited_ = vil_border_create_accessor( visited_img_,
-          vil_border_create_constant(visited_img_, dbdet_curve_fragment_cues_unvisited));
+    visited_ = vil_border_create_accessor(visited_img_,
+        vil_border_create_constant(visited_img_, dbdet_curve_fragment_cues_unvisited));
   }
 
   // Try to speedup lateral edge sparsity computation for many fragments,
@@ -71,8 +71,16 @@ public:
         y_feature_vector *features_ptr // indexed by the enum
       );
 
-  double lateral_edge_sparsity(const dbdet_edgel_chain &c);
+  double lateral_edge_sparsity_cues(const dbdet_edgel_chain &c
+        y_feature_vector *features_ptr // indexed by the enum
+      );
 
+  static double euclidean_length(const dbdet_edgel_chain &c) {
+    double len=0;
+    for (unsigned i=0; i+1 < c.edgels.size(); ++i)
+      len += vgl_distance(c.edgels[i]->pt, c.edgels[i+1]->pt);
+    return len;
+  }
 private:
 //  bool use_dt() const { return dt_ != NULL; }
   bool visited(int i, int j) const { visited_(i,j) == visited_id_; }
