@@ -58,11 +58,20 @@ public:
     dt_ = &dt;
   }
 
-  void
-  compute_cues(
+  void compute_cues(
       const dbdet_edgel_chain &c, 
       y_feature_vector *features_ptr // indexed by the enum
       );
+  void cuvature_cues(
+        const dbdet_edgel_chain &c, 
+        y_feature_vector *features_ptr // indexed by the enum
+        );
+  void hsv_gradient_cues(
+        const dbdet_edgel_chain &c, 
+        y_feature_vector *features_ptr // indexed by the enum
+      );
+
+  double lateral_edge_sparsity(const dbdet_edgel_chain &c);
 
 private:
   bool use_dt() const { return dt_ != NULL; }
