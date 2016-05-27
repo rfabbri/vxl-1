@@ -26,5 +26,43 @@ dbdet_curve_fragment_cues(
     y_feature_vector *features_ptr // indexed by the enum
     );
 
+static const vxl_uint_32 dbdet_curve_fragment_cues_unvisited vcl_numeric_limits<vxl_uint_32>::max()
+//: Compute curve fragment cues for many curves.
+// Holds state information such as distance transform and auxiliary buffers,
+// so that computation os fast for many curve fragments in the same image.
+class dbdet_curve_fragment_cues {
+public:
+
+  // Make sure the input parameters stay valid
+  // while this class is in use.
+  void dbdet_curve_fragment_cues(
+    const vil_image_view<rgbP >&hsv,
+    const vil_image_view<vxl_uint_32> &dt,
+    const dbdet_edgemap &em
+    )
+    :
+    visited_(hsv.ni(), hsv.nj(), 1)
+    hsv_ = hsv,
+    dt_ = dt
+    em_ = em
+  {
+    visited_.fill(dbdet_curve_fragment_cues_unvisited);
+  }
+
+  void
+  compute_cues(
+      const dbdet_edgel_chain &c, 
+      y_feature_vector *features_ptr // indexed by the enum
+      );
+
+private:
+    const vil_image_view<rgbP >&hsv_;
+    const vil_image_view<vxl_uint_32> &dt_;
+    // visited(i,j) = c marks pixels(i,j) as visited by curve c's nhood tube
+    // visited(i,j) = UIHNT_MAX marks pixels(i,j) as not visited
+    vil_image_view<vxl_uint_32> visited_;
+    const dbdet_edgemap &em_;
+};
+
 
 #endif // dbdet_curve_fragment_cues_h
