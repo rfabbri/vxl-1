@@ -38,7 +38,7 @@
 void
 dbdet_curve_fragment_ranker(
     const dbdet_edgel_chain_list &frags,
-    const vil_image_view<rgb> &img
+    const vil_image_view<vxl_byte> &img
     const y_trained_parameters &beta,
 //    const texton_data &txdata,
     vnl_vector<double> *rank_ptr;
