@@ -30,17 +30,22 @@ public:
   // Make sure the input parameters stay valid
   // while this class is in use.
   void dbdet_curve_fragment_cues(
-    const vil_image_view<rgbP >&hsv,
+    const vil_image_view<rgbP >&img,
     const dbdet_edgemap &em
     )
     :
     visited_img_(hsv.ni(), hsv.nj(), 1),
     visited_id_(0),
-    hsv_(hsv),
+    img_(img),
     //    dt_(dt),
     em_(em),
     dt_(NULL)
   {
+    if (col_image.nplanes() != 3){
+      std::cerr << "Input must be 3-plane RGB images!" << std::endl;
+      abort();
+    }
+
     visited_img_.fill(dbdet_curve_fragment_cues_unvisited);
     // outside indices return false (visited)
     visited_ = vil_border_create_accessor(visited_img_,
@@ -86,7 +91,7 @@ private:
   bool visited(int i, int j) const { visited_(i,j) == visited_id_; }
   bool not_visited(int i, int j) const { visited_(i,j) != visited_id_; }
   void mark_visited(int i, int j) { visited_(i,j) = visited_id_; }
-  const vil_image_view<rgbP >&hsv_;
+  const vil_image_view<vxl_byte> &img_; // color RGB image
   //  vil_image_view<vxl_uint_32> *dt_;
   // visited(i,j) = c marks pixels(i,j) as visited by curve c's nhood tube
   // visited(i,j) = UIHNT_MAX marks pixels(i,j) as not visited

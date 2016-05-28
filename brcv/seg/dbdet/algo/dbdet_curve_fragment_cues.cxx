@@ -79,13 +79,23 @@ hsv_gradient_cues(
     right_y = c[i].y() + local_dist_ * n[i][1];
 
     // make sure image clamps to within bounds
-    vil_border_accessor<vil_image_view<rgbP> >
-      hsv_clamped = vil_border_create_accessor(hsv_,vil_border_create_geodesic(hsv_));
+    vil_border_accessor<vil_image_view<vxl_byte> >
+      im = vil_border_create_accessor(img_,vil_border_create_geodesic(img_));
+
+    double hue_left, hue_right,
+           sat_left, sat_right,
+           bg_left, bg_right;
+
+    vil_colour_space_RGB_to_HSV<double>(im(left_x,left_y,0), im(left_x,left_y,1), im(left_x,left_y,1), 
+        &hue_left, &sat_left, &bg_left);
+    vil_colour_space_RGB_to_HSV<double>(im(right_x,right_y,0), im(right_x,right_y,1), im(right_x,right_y,1), 
+        &hue_right, &sat_right, &bg_right);
 
     // TODO test if imae indexing is (x,y) or (y,x)
-    features[Y_HUE_GRAD] += vnl::abs(hsv_clamped(left_x,left_y) - hsv_clamped(right_x,right_y));
-    features[Y_SAT_GRAD] += vnl::abs(hsv_clamped(left_x,left_y) - hsv_clamped(right_x,right_y));
-    features[Y_BG_GRAD]  += vnl::abs(hsv_clamped(left_x,left_y) - hsv_clamped(right_x,right_y));
+    features[Y_SAT_GRAD] += vnl::abs(sat_left - sat_right);
+    features[Y_BG_GRAD]  += vnl::abs(bg_left - bg_right) / 255.;
+    // TODO need to make angle difference to make sense
+    features[Y_HUE_GRAD] += vnl::abs(hsv_left - hsv_right)/360.;
   }
   features[Y_HUE_GRAD] /= npts;
   features[Y_SAT_GRAD] /= npts;
