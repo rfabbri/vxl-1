@@ -3,21 +3,33 @@
 #include <vcl_cassert.h>
 #include "dbgl_diffgeom.h"
 
+/**
+ * Compute the inverse matrix of | 1.0, -Ta, Ta^2 |
+ *                               | 1.0, 0.0, 0.0  |
+ *                               | 1.0, -Tb, Tb^2 |
+ */
 void inverse3(double Ta, double Tb, double (&inv)[3][3])
 {
-    //Should remove operations taking 1.0s and 0.0s later
-    double m[9] = {1.0, -Ta, Ta * Ta, 1.0, 0.0, 0.0, 1.0, -Tb, Tb * Tb};
-    inv[0][0] = m[4] * m[8] - m[7] * m[5];
-    inv[0][1] = -(m[3] * m[8] - m[6]* m[5]);
-    inv[0][2] = m[3] * m[7] - m[6] * m[4];
-    inv[1][0] = -(m[1] * m[8] - m[7] * m[2]);
-    inv[1][1] = m[0] * m[8] - m[6] *m[2];
-    inv[1][2] = -(m[0] * m[7] - m[6] * m[1]);
-    inv[2][0] = m[1] * m[5] - m[4] * m[2];
-    inv[2][1] = -(m[0] * m[5] - m[3] * m[2]);
-    inv[2][2] = m[0] * m[4] - m[3] * m[1];
+    //Compiler should remove operations with const
+    const double m0 = 1.0, m3 = 1.0, m6 = 1.0;
+    const double m4 = 0.0, m5 = 0.0;
 
-    double invDet = m[0] * m[4] * m[8] - m[0] * m[7] * m[5] - m[3] * m[1] * m[8] + m[3] * m[7] * m[2] + m[6] * m[1] * m[5] - m[6] * m[4] * m[2];
+    double m1 = -Ta;
+    double m2 = Ta * Ta;
+    double m7 = -Tb;
+    double m8 = Tb * Tb;
+
+    inv[0][0] = m4 * m8 - m7 * m5;
+    inv[0][1] = -(m3 * m8 - m6 * m5);
+    inv[0][2] = m3 * m7 - m6 * m4;
+    inv[1][0] = -(m1 * m8 - m7 * m2);
+    inv[1][1] = m0 * m8 - m6 * m2;
+    inv[1][2] = -(m0 * m7 - m6 * m1);
+    inv[2][0] = m1 * m5 - m4 * m2;
+    inv[2][1] = -(m0 * m5 - m3 * m2);
+    inv[2][2] = m0 * m4 - m3 * m1;
+
+    double invDet = m0 * m4 * m8 - m0 * m7 * m5 - m3 * m1 * m8 + m3 * m7 * m2 + m6 * m1 * m5 - m6 * m4 * m2;
     invDet = 1.0 / invDet;
    
     inv[0][0] *= invDet;
