@@ -1,24 +1,143 @@
 // This is brcv/seg/dbdet/tests/test_curve_fragment_postprocess.cxx
-
 #include <testlib/testlib_test.h>
 
-#include <dbdet/sel/dbdet_curve_model.h>
+#include <vil/vil_image_view.h>
 #include <dbdet/algo/dbdet_sel.h>
-#include <vcl_iostream.h>
-#include <vcl_cmath.h>
-#include <vnl/vnl_math.h>
-#include <vcl_vector.h>
-#include <vcl_cstdlib.h>
-#include <vcl_string.h>
+#include <dbdet/algo/dbdet_curve_fragment_cues.h>
+#include <dbdet/algo/dbdet_curve_fragment_ranker.h>
 
-//: Test the symbolic edge linker methods
+#define DATA(I) (I).top_left_ptr()
+
+//: Test the dbdet_curve_fragment_* functions
 MAIN( test_curve_fragment_postprocess )
 { 
-  //*******************************************************
   START (" Test dbdet curve framgment post-processing");
 
-  // test dbdet_curve_fragment_cues
-  std::cout << "stub" << std::endl;
+  // Generate a small image
+
+  unsigned r=5,c=7;
+
+  vil_image_view < float > image(r,c,1);
+
+  image.fill(1);
+
+  image(3,2)=0;
+  image(0,2)=0;
+  image(0,0)=0;
+  image(4,4)=0;
+  DATA(image)[34]=0;
+
+  // Compute the descriptor for a curve
+  mw_sift_curve_algo computor(image);
+
+  dbdet_edgel_chain crv;
+  mw_sift_curve sc;
+
+  // corner case: empty curve -- should work
+  vcl_cout << "\n--- Testing empty curve case ---\n";
+  computor.compute(crv, &sc);
+
+  print_all(computor, sc);
+
+  TEST("Sanity check - number of samples", sc.num_samples(), crv.edgels.size());
+
+  vcl_cout << "\n--- Testing 3-edgel curve case ---\n";
+
+  dbdet_edgel e1;
+  e1.pt.set(3.,3.);
+  e1.tangent = 0;
+  crv.push_back(&e1);
+
+  dbdet_edgel e2;
+  e2.pt.set(4.,2.);
+  e2.tangent = vnl_math::pi/2.;
+  crv.push_back(&e2);
+
+  dbdet_edgel e3;
+  e3.pt.set(5.5,0.8); //< out of bounds
+  e3.tangent = vnl_math::pi/4.;
+  crv.push_back(&e3);
+
+  computor.compute(crv, &sc);
+
+  print_all(computor, sc);
+
+  TEST("Sample 1 non-empty? ", sc.is_valid(0, 0), true);
+  TEST("Sample 2 non-empty? ", sc.is_valid(0, 1), true);
+  TEST("Sample 3 empty? ", sc.is_valid(0, 2), false);
+
+  // the same compute object can be used to compute descriptors for other curves
+  // within the same image
+
+  dbdet_edgel_chain crv2;
+  mw_sift_curve sc2;
+
+  computor.compute(crv2, &sc2);
+
+  // Unambigous nearest-neighbor matching
+
+  for (unsigned s=0; s < sc.num_scales(); ++s) {
+    for (unsigned i=0; i < sc.num_samples(); ++i) {
+      mw_sift_curve_algo::t_descriptor_float
+        d = mw_sift_curve_algo::unambigous_nneighbor(sc, sc.descriptor(s,i));
+      if (i == 2) {
+        TEST("Sanity check - nn on itself w/invalid gives inf", d, vcl_numeric_limits<mw_sift_curve_algo::t_descriptor_float>::infinity());
+        vcl_cout << "   d = " << d << vcl_endl;
+      } else {
+        TEST_NEAR("Sanity check - nn on itself gives 0 distance", d, 0, 1e-8);
+      }
+    }
+  }
+
+  // Compute all curves at the same time. Should save speed by processing in scale-order first,
+  // reusing the gradient computed at each octave
+
+  vcl_cout << "\n--- Testing compute_many ---\n";
+  vcl_vector<dbdet_edgel_chain> ec_v;
+  ec_v.push_back(crv);
+  ec_v.push_back(crv2);
+
+  vcl_vector<mw_sift_curve> sc_v;
+  sc_v.push_back(sc);
+  sc_v.push_back(sc2);
+
+  computor.compute_many(ec_v, &sc_v);
+
+  for (unsigned i=0; i < ec_v.size(); ++i) {
+    TEST("Sanity check - number of samples", sc_v[i].num_samples(), ec_v[i].edgels.size());
+  }
+
+  TEST("Sample 1 non-empty? ", sc_v[0].is_valid(0, 0), true);
+  TEST("Sample 2 non-empty? ", sc_v[0].is_valid(0, 1), true);
+  TEST("Sample 3 empty? ", sc_v[0].is_valid(0, 2), false);
+
+
+  // repeat the tests
+
+  // Match all descriptors to all the others.
+  // Best match for each descriptor should be itself,
+  // with zero distance
+//  for (unsigned i=0; i < descriptors.size(); ++i) {
+//    for (unsigned k=0; k < descriptors.size(); ++k) {
+//    }
+//  }
+
+  // Removing ambiguous matches
+  //
+  // A little test - match each hog to all the others within the same
+  // curve, finding the nearest neighbor (different than itself) and second
+  // nearest neighbor. If the ratio is larger than some threshold, such as used
+  // in sift matching, then keep the feature.
+  //
+  // Alternatively, a simpler test:  keep only the features whose cost of
+  // matching with any other feature withing the curve is larger than some
+  // threshold. This should give corner points and the like.
+
+
+  // Translation invariance
+
+  // Given a query curve, find it in a set of curves detected on a slightly
+  // different viewpoint.
 
   SUMMARY();
 }

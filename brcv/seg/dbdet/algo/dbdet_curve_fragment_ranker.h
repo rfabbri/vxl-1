@@ -47,9 +47,7 @@ dbdet_curve_fragment_ranker(
   vnl_vector<double> &rank = *rank_ptr;
   y_feature_vector fv;
 
-  // TODO rgb2hsv
-
-  dbdet_curve_fragment_cues cues(hsv, edgemap);
+  dbdet_curve_fragment_cues cues(img, edgemap);
 
   nfrags = frags.size(); // list: expensive
   rank.reserve(nfrags);
