@@ -1,3 +1,13 @@
+#include <vnl/vnl_vector_fixed.h>
+#include <vxl_config.h>
+#include <vcl_limits.h>
+#include <vil/vil_image_view.h>
+#include <vil/vil_rgb.h>
+#include <vil/vil_border.h>
+#include <sel/dbdet_edgel.h>
+#include <edge/dbdet_edgemap.h>
+
+
 // This is dbdet_curve_fragment_cues.h
 #ifndef dbdet_curve_fragment_cues_h
 #define dbdet_curve_fragment_cues_h
@@ -20,7 +30,8 @@ enum yuliang_features {
 
 typedef vnl_vector_fixed<double, Y_NUM_FEATURES> y_feature_vector;
 
-static const vxl_uint_32 dbdet_curve_fragment_cues_unvisited vcl_numeric_limits<vxl_uint_32>::max()
+static const vxl_uint_32 dbdet_curve_fragment_cues_unvisited = vcl_numeric_limits<vxl_uint_32>::max();
+
 //: Compute curve fragment cues for many curves.
 // Holds state information such as distance transform and auxiliary buffers,
 // so that computation os fast for many curve fragments in the same image.
@@ -29,27 +40,27 @@ public:
 
   // Make sure the input parameters stay valid
   // while this class is in use.
-  void dbdet_curve_fragment_cues(
-    const vil_image_view<rgbP >&img,
+  dbdet_curve_fragment_cues(
+    const vil_image_view<vil_rgb<vxl_byte> > &img,
     const dbdet_edgemap &em
     )
     :
-    visited_img_(hsv.ni(), hsv.nj(), 1),
+    visited_img_(img.ni(), img.nj()),
     visited_id_(0),
+    visited_(vil_border_create_accessor(visited_img_, vil_border_create_constant(visited_img_, dbdet_curve_fragment_cues_unvisited))),
     img_(img),
     //    dt_(dt),
-    em_(em),
-    dt_(NULL)
+    em_(em)
+    //dt_(NULL)
   {
-    if (col_image.nplanes() != 3){
+    /*if (img.nplanes() != 3){
       std::cerr << "Input must be 3-plane RGB images!" << std::endl;
       abort();
-    }
+    }*/
 
     visited_img_.fill(dbdet_curve_fragment_cues_unvisited);
     // outside indices return false (visited)
-    visited_ = vil_border_create_accessor(visited_img_,
-        vil_border_create_constant(visited_img_, dbdet_curve_fragment_cues_unvisited));
+    //visited_ = vil_border_create_accessor(visited_img_, vil_border_create_constant(visited_img_, dbdet_curve_fragment_cues_unvisited));
   }
 
   // Try to speedup lateral edge sparsity computation for many fragments,
@@ -76,9 +87,10 @@ public:
         const dbdet_edgel_chain &c, 
         y_feature_vector *features_ptr // indexed by the enum
       );
-  double lateral_edge_sparsity_cues(const dbdet_edgel_chain &c
-        y_feature_vector *features_ptr // indexed by the enum
-      );
+double lateral_edge_sparsity_cue(
+      const dbdet_edgel_chain &c,
+      y_feature_vector *features_ptr // indexed by the enum
+    );
 
   static double euclidean_length(const dbdet_edgel_chain &c) {
     double len=0;
@@ -88,15 +100,15 @@ public:
   }
 private:
 //  bool use_dt() const { return dt_ != NULL; }
-  bool visited(int i, int j) const { visited_(i,j) == visited_id_; }
-  bool not_visited(int i, int j) const { visited_(i,j) != visited_id_; }
-  void mark_visited(int i, int j) { visited_(i,j) = visited_id_; }
-  const vil_image_view<vxl_byte> &img_; // color RGB image
+  bool visited(int i, int j) const { return visited_(i,j) == visited_id_; }
+  bool not_visited(int i, int j) const { return visited_(i,j) != visited_id_; }
+  void mark_visited(int i, int j) { visited_img_(i,j) = visited_id_; }
+  const vil_image_view<vil_rgb<vxl_byte> > &img_; // color RGB image
   //  vil_image_view<vxl_uint_32> *dt_;
   // visited(i,j) = c marks pixels(i,j) as visited by curve c's nhood tube
   // visited(i,j) = UIHNT_MAX marks pixels(i,j) as not visited
   vil_image_view<vxl_uint_32> visited_img_;
-  vil_border_accessor<vil_image_view<unsigned> > visited_;
+  vil_border_accessor<vil_image_view<vxl_uint_32> > visited_;
   // each compute_cues() run increments the id to mark traversals in scrap buffer visited_
   // that way we reuse the buffer without clearing it
   vxl_uint_32 visited_id_;

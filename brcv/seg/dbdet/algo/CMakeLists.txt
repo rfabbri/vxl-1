@@ -1,6 +1,8 @@
 # brcv/seg/dbdet/algo/CMakeLists.txt
 # Algorithms for Brown Detection Libraries
 
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg/dbdet )
+INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
 
 SET( dbdet_algo_sources
 
@@ -53,6 +55,8 @@ SET( dbdet_algo_sources
   
 # Utilities
   dbdet_resize_edgemap.h      dbdet_resize_edgemap.cxx
+# Curve Cues
+  dbdet_curve_fragment_cues.h dbdet_curve_fragment_cues.cxx
 )
 
 IF(OCTAVE_FOUND)
