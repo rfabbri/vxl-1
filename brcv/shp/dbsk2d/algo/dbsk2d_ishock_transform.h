@@ -76,6 +76,9 @@ public:
     void write_shock_boundary(vcl_string filename);
 
     //: write boundary
+    void write_shock_classification(vcl_string filename);
+
+    //: write boundary
     void write_fragments(vcl_string prefix,
                          vcl_vector<vgl_polygon<double> >& polys);
 
