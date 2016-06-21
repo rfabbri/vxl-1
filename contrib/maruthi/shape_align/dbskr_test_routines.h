@@ -71,7 +71,9 @@ public:
         vcl_string pca_M_file,
         vcl_string pca_mean_file,
         DescriptorType descr_type,
-        ColorSpace color_space);
+        ColorSpace color_space,
+        int stride,
+        double powernorm);
     
     //: Destructor
     ~dbskr_test_routines();
@@ -96,9 +98,6 @@ private:
     // keywords for gmm
     int keywords_;
 
-    // int pca dimensitoinaly reduction
-    int pca_;
-
     // Keep track of masks per image
     vcl_vector<vgl_polygon<double> > model_masks_;
 
@@ -115,10 +114,10 @@ private:
     vcl_vector<vil_image_view<double> > query_chan_2_;
     vcl_vector<vil_image_view<double> > query_chan_3_;
     
-    // Keep track of gradients
-    vcl_vector<vl_sift_pix* > model_grad_chan_1_;
-    vcl_vector<vl_sift_pix* > model_grad_chan_2_;
-    vcl_vector<vl_sift_pix* > model_grad_chan_3_;
+    /* // Keep track of gradients */
+    /* vcl_vector<vl_sift_pix* > model_grad_chan_1_; */
+    /* vcl_vector<vl_sift_pix* > model_grad_chan_2_; */
+    /* vcl_vector<vl_sift_pix* > model_grad_chan_3_; */
 
     // Keep track of gradients
     vcl_vector<vl_sift_pix* > query_grad_chan_1_;
@@ -139,9 +138,19 @@ private:
 
     // Keep track of dense correspondence
     vcl_vector<vcl_vector<vcl_pair<float,float> > > query_points_;
-    
+   
+    // Keep track of query test points
+    vcl_vector<vcl_vector<vgl_point_2d<double> > > query_test_points_;
+
     // Keep track of model points
-    vcl_vector<vcl_vector<vcl_pair<float,float> > > model_points_;
+    vcl_vector< vcl_vector< vcl_vector<vcl_pair<float,float> > > >
+        model_points_;
+
+    // Keep track of stride
+    int stride_;
+
+    // Keep track of powernorm
+    double powernorm_;
 
     // Load model file and train data
     void load_dc_file(vcl_string& filename);
@@ -178,6 +187,8 @@ private:
         dbsk2d_shock_graph_sptr& sg);
 
     void compute_query_gradients();
+
+    void compute_query_test_points();
 
     void compute_fvs(
         vcl_vector<vgl_point_2d<double> >& stride_points,

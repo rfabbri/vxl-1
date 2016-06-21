@@ -42,10 +42,12 @@ dbskr_test_routines::dbskr_test_routines(
     vcl_string pca_M_file,
     vcl_string pca_mean_file,
     DescriptorType descr_type,
-    ColorSpace color_space
+    ColorSpace color_space,
+    int stride,
+    double powernorm
         ):query_ni_(0),query_nj_(0),descr_type_(descr_type),
           color_space_(color_space),means_cg_(0),covariances_cg_(0),
-          priors_cg_(0)
+          priors_cg_(0), stride_(stride),powernorm_(powernorm)
 {
 
     // Write out centers
@@ -98,11 +100,11 @@ dbskr_test_routines::dbskr_test_routines(
     load_pca_data(pca_M_file,
                   pca_mean_file);
 
-
-    // Compute query gradients
-
     // Computing gradienets of query 
     compute_query_gradients();
+
+    //Test
+    test();
 }
 
 //: Destructor
@@ -115,36 +117,60 @@ dbskr_test_routines::~dbskr_test_routines()
 //: Compute appearance difference
 void dbskr_test_routines::test()
 {
-    for ( int q=0; q < query_points_.size() ; ++q)
+
+    vcl_cout<<"Computing distances between "<<
+        query_test_points_.size()<<" Querys and "<<
+        model_points_.size()<<" Models"<<vcl_endl;
+
+    // Create sift filter object
+    VlSiftFilt* filter = vl_sift_new(query_ni_,
+                                     query_nj_,
+                                     3,3,0);
+    vl_sift_set_magnif(filter,1.0);
+
+    int encoding_size = 2 * PCA_M_.cols() * keywords_;
+
+    vcl_vector<vnl_matrix<vl_sift_pix> > output;
+
+    for ( int q=0; q < query_test_points_.size() ; ++q)
     {
+
         vcl_vector<vcl_pair<float,float> > q_pts=query_points_[q];
-        for ( int m =0 ; m < model_points_.size() ; ++m)
+        vcl_vector<vgl_point_2d<double> > test_points=query_test_points_[q];
+
+        vnl_matrix<vl_sift_pix> dist_matrix(model_points_.size(),
+                                            test_points.size(),
+                                            0.0);
+
+        for ( int m=0; m < model_points_.size() ; ++m)
         {
-            vcl_vector<vcl_pair<float,float> > m_pts=model_points_[m];
+            
+            vcl_vector<vcl_pair<float,float> > m_pts=model_points_[m][q];
+
             
             vil_image_view<vil_rgb<double> > temp(query_ni_,
                                                   query_nj_);
-            vil_rgb<vxl_byte>  bg(0.0,0.0,0.0);
+            vil_rgb<vxl_byte> bg(0.0,0.0,0.0);
             temp.fill(bg);
-
+            
             explicit_alignment(q_pts,
                                m_pts,
                                model_chan_1_[m],
                                model_chan_2_[m],
                                model_chan_3_[m],
                                temp);
-
+        
             vil_image_view<double> chan1   = vil_plane(temp,0);
             vil_image_view<double> chan2   = vil_plane(temp,1);
             vil_image_view<double> chan3   = vil_plane(temp,2);
-
+            
             // Compute gradients of channels
             vl_sift_pix* model_chan1_grad_data(0);
             vl_sift_pix* model_chan2_grad_data(0);
             vl_sift_pix* model_chan3_grad_data(0);
             
             vgl_polygon<double> poly=model_masks_[m];
-        
+            
             compute_grad_color_maps(chan1,
                                     &model_chan1_grad_data,
                                     poly);
@@ -152,14 +178,100 @@ void dbskr_test_routines::test()
             compute_grad_color_maps(chan2,
                                     &model_chan2_grad_data,
                                     poly);
-        
+            
             compute_grad_color_maps(chan3,
                                     &model_chan3_grad_data,
                                     poly);
+            
+            
+            vnl_matrix<vl_sift_pix> query_fvs(encoding_size,
+                                              test_points.size(),0);
+            vnl_matrix<vl_sift_pix> model_fvs(encoding_size,
+                                              test_points.size(),0);
 
+            // Compute query_fvs
+            compute_fvs(test_points,
+                        query_grad_chan_1_[q],
+                        query_grad_chan_2_[q],
+                        query_grad_chan_3_[q],
+                        filter,
+                        query_fvs);
+
+            // Compute model_fvs
+            compute_fvs(test_points,
+                        model_chan1_grad_data,
+                        model_chan2_grad_data,
+                        model_chan3_grad_data,
+                        filter,
+                        model_fvs);
+
+            vnl_matrix<vl_sift_pix> result_final=query_fvs-model_fvs;
+
+            for ( int c=0; c < result_final.cols() ; ++c)
+            {
+                vl_sift_pix d=result_final.get_column(c).magnitude();
+                dist_matrix[m][c]=d;
+            }
+           
+        }
+
+
+    }
+ 
+    vl_sift_delete(filter);
+    filter=0;
+    
+
+    // Write out output
+    vcl_ofstream output_binary_file;
+    output_binary_file.open("foobar.bin",
+                            vcl_ios::out | 
+                            vcl_ios::binary);
+    
+    float q = output.size();
+    float m = model_points_.size();
+    
+    // Write out number of model trees vs query trees
+    // we are comparing
+    output_binary_file.write(reinterpret_cast<char *>(&q),
+                             sizeof(float));
+    output_binary_file.write(reinterpret_cast<char *>(&m),
+                             sizeof(float));
+
+
+
+    for ( int q=0; q < query_test_points_.size() ; ++q)
+    {
+
+        vcl_vector<vgl_point_2d<double> > test_points=query_test_points_[q];
+
+        float size=test_points.size();
+
+        output_binary_file.write(reinterpret_cast<char *>(&size),
+                                 sizeof(float));
+        
+        vnl_matrix<vl_sift_pix> dist_matrix=output[q];
+
+        for (unsigned int p=0; p < dist_matrix.rows() ; ++p)
+        {
+            vnl_vector<vl_sift_pix> row=dist_matrix.get_row(p);
+        
+            for ( unsigned int v=0; v < row.size() ; ++v)
+            {
+
+                vl_sift_pix dist=row[v];
+
+                output_binary_file.write(reinterpret_cast<char *>(&dist),
+                                         sizeof(float));
+            
+            }            
         }
 
     }
+
+    output_binary_file.close();
+
+
 }
 
 
@@ -306,19 +418,25 @@ void dbskr_test_routines::load_dc_file(vcl_string& filename)
 
     for ( int i=0; i < model_points_.size() ; ++i)
     {
-        vcl_vector<vcl_pair<float,float> > model_xy;
-        for ( int s=0; s < numb_xys ; ++s)
-        {
-            float x(0),y(0);
-            
-            fstream>>x;
-            fstream>>y;
-            
-            vcl_pair<float,float> coord(x,y);
-            model_xy.push_back(coord);
-        }
+        model_points_[i].resize(query_points_.size());
 
-        model_points_[i]=model_xy;
+        for ( int q=0 ; q < query_points_.size() ; ++q)
+        {
+            vcl_vector<vcl_pair<float,float> > model_xy;
+            for ( int s=0; s < numb_xys ; ++s)
+            {
+                float x(0),y(0);
+                
+                fstream>>x;
+                fstream>>y;
+                
+                vcl_pair<float,float> coord(x,y);
+                model_xy.push_back(coord);
+            }
+
+            model_points_[i][q]=model_xy;
+
+        }
     }
 
     fstream.close();
@@ -457,7 +575,6 @@ void dbskr_test_routines::compute_fvs(
     double scale_3_radius=8;
     double scale_4_radius=4;
 
-    int stride=8;
     double fixed_theta=0.0;
 
     vcl_vector<vl_sift_pix> descriptors;
@@ -542,7 +659,15 @@ void dbskr_test_routines::compute_fvs(
              covariances_cg_,
              priors_cg_,
              sift_block.data_block(), 4,0);
-        
+     
+        // Apply power normalization
+        for ( int i=0; i < fv_descriptor.size() ; ++i)
+        {
+
+            fv_descriptor[i]=signbit(fv_descriptor[i])*(
+                vcl_pow(vcl_fabs(fv_descriptor[i]),powernorm_));
+        }
+        descriptor_matrix.set_column(i,fv_descriptor);
     }
     
 }
@@ -608,6 +733,56 @@ void dbskr_test_routines::compute_query_gradients()
         query_grad_chan_2_.push_back(query_chan2_grad_data);
         query_grad_chan_3_.push_back(query_chan3_grad_data);
         
+    }
+    
+}
+
+void dbskr_test_routines::compute_query_test_points()
+{
+    
+    query_test_points_.resize(query_masks_.size());
+
+    for ( unsigned int i=0; i < query_masks_.size() ; ++i)
+    {
+        vgl_box_2d<double> bbox;
+        vcl_set<vcl_pair<int,int> > in_bounds;
+
+        // do not include boundary
+        vgl_polygon_scan_iterator<double> psi(query_masks_[i], false);  
+        for (psi.reset(); psi.next(); ) 
+        {
+            int y = psi.scany();
+            for (int x = psi.startx(); x <= psi.endx(); ++x) 
+            {
+                vgl_point_2d<double> query_pt(x,y);
+                
+                vcl_pair<int,int> ib(x,y);
+                in_bounds.insert(ib);
+
+                bbox.add(query_pt);
+            }
+        }
+
+
+        vcl_vector<vgl_point_2d<double> > points;
+        for ( unsigned int y=bbox.min_y(); y <= bbox.max_y(); y=y+stride_)
+        {
+            for ( unsigned int x=bbox.min_x(); x <= bbox.max_x() ; x=x+stride_) 
+            {
+                vcl_pair<int,int> key(x,y);
+
+                if ( !in_bounds.count(key) )
+                {
+                    continue;
+                }
+
+                vgl_point_2d<double> ps1(x,y);
+    
+                points.push_back(ps1);
+            }
+        }
+
+        query_test_points_[i]=points;
     }
     
 }
