@@ -40,3 +40,6 @@ TARGET_LINK_LIBRARIES ( ed_match_exec shape_align dbskr dbskr_algo)
 
 ADD_EXECUTABLE (train_exec train_exec.cxx )
 TARGET_LINK_LIBRARIES ( train_exec train_routines dbskr dbskr_algo vl)
+
+ADD_EXECUTABLE (test_exec test_exec.cxx )
+TARGET_LINK_LIBRARIES ( test_exec test_routines dbskr dbskr_algo vl)
