@@ -37,9 +37,10 @@ dbskr_train_routines::dbskr_train_routines(
     DescriptorType descr_type,
     ColorSpace color_space,
     int keywords,
-    int pca
+    int pca,
+    int stride
     ):descr_type_(descr_type),color_space_(color_space),keywords_(keywords),
-    pca_(pca)
+      pca_(pca),stride_(stride)
 {
 
     // Write out centers
@@ -291,7 +292,6 @@ void dbskr_train_routines::compute_grad_descriptors()
     double scale_3_radius=8;
     double scale_4_radius=4;
 
-    int stride=8;
     double fixed_theta=0.0;
 
     vcl_vector<vl_sift_pix> descriptors;
@@ -331,9 +331,9 @@ void dbskr_train_routines::compute_grad_descriptors()
         }
 
 
-        for ( unsigned int y=bbox.min_y(); y <= bbox.max_y(); y=y+stride)
+        for ( unsigned int y=bbox.min_y(); y <= bbox.max_y(); y=y+stride_)
         {
-            for ( unsigned int x=bbox.min_x(); x <= bbox.max_x() ; x=x+stride) 
+            for ( unsigned int x=bbox.min_x(); x <= bbox.max_x() ; x=x+stride_) 
             {
                 vcl_pair<int,int> key(x,y);
 

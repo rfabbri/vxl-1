@@ -59,7 +59,8 @@ public:
                          DescriptorType descr_type,
                          ColorSpace color_space,
                          int keywords=1024,
-                         int pca=128);
+                         int pca=128,
+                         int stride=8);
 
     //: Destructor
     ~dbskr_train_routines();
@@ -80,6 +81,9 @@ private:
 
     // int pca dimensitoinaly reduction
     int pca_;
+
+    // int stride
+    int stride_;
 
     // Keep track of masks per image
     vcl_vector<vgl_polygon<double> > masks_;
