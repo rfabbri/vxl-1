@@ -18,6 +18,8 @@
 #include <vil/vil_convert.h>
 #include <vil/vil_load.h>
 
+#include <vnl/vnl_matlab_print.h>
+
 #include <vgl/vgl_polygon_scan_iterator.h>
 
 #include <vul/vul_timer.h>
@@ -73,7 +75,7 @@ dbskr_train_routines::dbskr_train_routines(
     }
 
     vcl_stringstream gmm_filename_stream;
-    gmm_filename_stream<<"gmm_"<<d_type<<"_"<<c_type<<"_"<<keywords<<"_.txt";
+    gmm_filename_stream<<"gmm_"<<d_type<<"_"<<c_type<<"_"<<keywords<<".txt";
 
     vcl_stringstream pca_filename_stream;
     pca_filename_stream<<"pca_"<<d_type<<"_"<<c_type<<"_dim_"<<pca_;
@@ -147,7 +149,7 @@ void dbskr_train_routines::load_model_file(vcl_string& filename)
         model_imagename=model_imagename+".jpg";
 
         vil_image_resource_sptr model_img_sptr = 
-            vil_load_image_resource(line.c_str());
+            vil_load_image_resource(model_imagename.c_str());
 
         vil_image_view<double> chan_1,chan_2,chan_3;
         
@@ -300,6 +302,8 @@ void dbskr_train_routines::compute_grad_descriptors()
 
     for ( unsigned int i=0; i < masks_.size() ; ++i)
     {
+        vcl_cout<<"Working on mask: "<<i<<vcl_endl;
+
         // Get grad data
         vl_sift_pix* model_chan1_grad_data = grad_chan_1_[i];
         vl_sift_pix* model_chan2_grad_data = grad_chan_2_[i];
@@ -436,16 +440,21 @@ void dbskr_train_routines::compute_pca(vcl_string& M_filename,
 
     PCA_mean_/=descriptor_matrix_.rows();
 
-    // Comptue M
-    descriptor_matrix_.set_size(descriptor_matrix_.cols(),pca_);
-    descriptor_matrix_.fill(0.0);
+    // Subtract pca_mean from descriptor matrix
+    for ( int i=0; i < descriptor_matrix_.rows() ; ++i)
+    {
+        vnl_vector<vl_sift_pix> row=descriptor_matrix_.get_row(i);
+        vnl_vector<vl_sift_pix> zero_mean=row-PCA_mean_;
+        descriptor_matrix_.set_row(i,zero_mean);
+    }
 
     vnl_matrix<vl_sift_pix> descriptor_matrix_transpose=
         descriptor_matrix_.transpose();
 
     vnl_matrix<vl_sift_pix> symmetric_matrix = 
         (descriptor_matrix_transpose*descriptor_matrix_)
-        /(descriptor_matrix_.rows());
+        /(descriptor_matrix_.rows()-1);
+
 
     // Numeric scaling
     vnl_diag_matrix<vl_sift_pix> small_scaling(symmetric_matrix.rows(),0.001);
