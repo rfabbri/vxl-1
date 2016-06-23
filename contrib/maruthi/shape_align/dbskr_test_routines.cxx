@@ -13,6 +13,9 @@
 #include <vnl/vnl_diag_matrix.h>
 
 #include <bbas/bil/algo/bil_color_conversions.h>
+#include <vil/vil_load.h>
+#include <vil/vil_save.h>
+#include <vil/vil_new.h>
 #include <vil/vil_bilin_interp.h>
 #include <vil/algo/vil_orientations.h>
 #include <vil/vil_plane.h>
@@ -44,10 +47,12 @@ dbskr_test_routines::dbskr_test_routines(
     DescriptorType descr_type,
     ColorSpace color_space,
     int stride,
-    double powernorm
+    double powernorm,
+    bool write_out
         ):query_ni_(0),query_nj_(0),descr_type_(descr_type),
           color_space_(color_space),means_cg_(0),covariances_cg_(0),
-          priors_cg_(0), stride_(stride),powernorm_(powernorm)
+          priors_cg_(0), stride_(stride),powernorm_(powernorm),
+          write_out_(write_out)
 {
 
     // Write out centers
@@ -103,6 +108,9 @@ dbskr_test_routines::dbskr_test_routines(
     // Computing gradienets of query 
     compute_query_gradients();
 
+    // Compute query test points
+    compute_query_test_points();
+
     //Test
     test();
 }
@@ -144,22 +152,35 @@ void dbskr_test_routines::test()
 
         for ( int m=0; m < model_points_.size() ; ++m)
         {
-            
+            vcl_cout<<"Computing Distance between Query "<<q<<" and Model "<<m
+                    <<vcl_endl;
+
             vcl_vector<vcl_pair<float,float> > m_pts=model_points_[m][q];
 
             
-            vil_image_view<vil_rgb<double> > temp(query_ni_,
-                                                  query_nj_);
-            vil_rgb<vxl_byte> bg(0.0,0.0,0.0);
-            temp.fill(bg);
+            vil_image_view<double> temp(query_ni_,
+                                        query_nj_,
+                                        3);
             
+            temp.fill(255.0);
+
             explicit_alignment(q_pts,
                                m_pts,
                                model_chan_1_[m],
                                model_chan_2_[m],
                                model_chan_3_[m],
                                temp);
-        
+
+            if ( write_out_)
+            {
+                vcl_stringstream name;
+                name<<"Model_"<<m<<"_vs_Query_"<<q<<"_warp.png";
+
+                vil_image_view<vxl_byte > map_image;
+                vil_convert_cast(temp,map_image);
+                vil_save(map_image,name.str().c_str());
+            } 
+
             vil_image_view<double> chan1   = vil_plane(temp,0);
             vil_image_view<double> chan2   = vil_plane(temp,1);
             vil_image_view<double> chan3   = vil_plane(temp,2);
@@ -314,14 +335,14 @@ void dbskr_test_routines::load_pca_data(vcl_string& M_filename,
 
         int dim=0;
         mean_stream>>dim;
+        PCA_mean_.set_size(dim);
+
         vcl_cout<<"Mean file is length "<<dim<<vcl_endl;
-        vl_sift_pix mean_data[dim];
 
         for ( int i =0; i < dim ; ++i)
         {
-            mean_stream>>mean_data[i];
+            mean_stream>>PCA_mean_[i];
         }
-
         mean_stream.close();
     }
 
@@ -384,29 +405,41 @@ void dbskr_test_routines::load_gmm_data(vcl_string& filename)
 //: Load model files and convert to color space if appropriate
 void dbskr_test_routines::load_dc_file(vcl_string& filename)
 {
-    vcl_ifstream fstream(filename.c_str());
+    vcl_ifstream fstream(filename.c_str(), 
+                         vcl_ios::in|vcl_ios::binary|vcl_ios::ate);
+    float* memblock(0);
+    if (fstream.is_open())
+    {
+        vcl_ifstream::pos_type size = fstream.tellg();
+        memblock = new float[size/sizeof(float)];
+        fstream.seekg (0, vcl_ios::beg);
+        fstream.read ((char *) memblock, size);
+        fstream.close();
+    }
 
-    float models=0;
-    float query=0;
 
-    fstream>>models;
-    fstream>>query;
+    float models=memblock[0];
+    float query=memblock[1];
 
     query_points_.resize(query);
     model_points_.resize(models);
 
+    int index=2;
     for ( int i=0; i < query_points_.size() ; ++i)
     {
         vcl_vector<vcl_pair<float,float> > query_xy;
-        float points=0;
-        fstream>>points;
+        float points=memblock[index];
+        ++index;
+
         for ( int s=0; s < points ; ++s)
         {
             float x(0),y(0);
             
-            fstream>>x;
-            fstream>>y;
-            
+            x=memblock[index];
+            ++index;
+            y=memblock[index];
+            ++index;
+
             vcl_pair<float,float> coord(x,y);
             query_xy.push_back(coord);
         }
@@ -427,8 +460,10 @@ void dbskr_test_routines::load_dc_file(vcl_string& filename)
             {
                 float x(0),y(0);
                 
-                fstream>>x;
-                fstream>>y;
+                x=memblock[index];
+                ++index;
+                y=memblock[index];
+                ++index;
                 
                 vcl_pair<float,float> coord(x,y);
                 model_xy.push_back(coord);
@@ -439,8 +474,8 @@ void dbskr_test_routines::load_dc_file(vcl_string& filename)
         }
     }
 
-    fstream.close();
-
+    delete memblock;
+    memblock=0;
 }
 
 //: Load query files and convert to color space if appropriate
@@ -474,10 +509,13 @@ void dbskr_test_routines::load_query_file(vcl_string& filename)
         query_imagename=query_imagename+".jpg";
 
         vil_image_resource_sptr query_img_sptr = 
-            vil_load_image_resource(line.c_str());
+            vil_load_image_resource(query_imagename.c_str());
 
         vil_image_view<double> chan_1,chan_2,chan_3;
-        
+
+        query_ni_=query_img_sptr->ni();
+        query_nj_=query_img_sptr->nj();
+
         convert_to_color_space(query_img_sptr,
                                chan_1,
                                chan_2,
@@ -523,7 +561,7 @@ void dbskr_test_routines::load_model_file(vcl_string& filename)
         model_imagename=model_imagename+".jpg";
 
         vil_image_resource_sptr model_img_sptr = 
-            vil_load_image_resource(line.c_str());
+            vil_load_image_resource(model_imagename.c_str());
 
         vil_image_view<double> chan_1,chan_2,chan_3;
         
@@ -681,7 +719,7 @@ void dbskr_test_routines::explicit_alignment(
     vil_image_view<double>& model_chan_1,
     vil_image_view<double>& model_chan_2,
     vil_image_view<double>& model_chan_3,
-    vil_image_view<vil_rgb<double> >& mapped_img)
+    vil_image_view<double >& mapped_img)
 {
 
     for ( int i=0; i < q_pts.size() ; ++i)
@@ -690,16 +728,21 @@ void dbskr_test_routines::explicit_alignment(
         vcl_pair<float,float> m_coords=m_pts[i];
         
         double xx=m_coords.first;
-        double yy=m_coords.first;
+        double yy=m_coords.second;
 
-        double red   = vil_bilin_interp(model_chan_1,xx,yy);
-        double green = vil_bilin_interp(model_chan_2,xx,yy);
-        double blue  = vil_bilin_interp(model_chan_3,xx,yy);
-
-        int x=static_cast<int>(q_coords.first);
-        int y=static_cast<int>(q_coords.second);
-        
-        mapped_img(x,y)=vil_rgb<double>(red,green,blue);
+        if ( xx>= 0 && yy >= 0 )
+        {
+            double red   = vil_bilin_interp(model_chan_1,xx,yy);
+            double green = vil_bilin_interp(model_chan_2,xx,yy);
+            double blue  = vil_bilin_interp(model_chan_3,xx,yy);
+            
+            int x=static_cast<int>(q_coords.first);
+            int y=static_cast<int>(q_coords.second);
+            
+            mapped_img(x,y,0)=red;
+            mapped_img(x,y,1)=green;
+            mapped_img(x,y,2)=blue;
+        }
     }
     
 

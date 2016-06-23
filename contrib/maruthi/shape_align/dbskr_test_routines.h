@@ -73,13 +73,11 @@ public:
         DescriptorType descr_type,
         ColorSpace color_space,
         int stride,
-        double powernorm);
+        double powernorm,
+        bool write_out);
     
     //: Destructor
     ~dbskr_test_routines();
-
-    //: Write out data
-    void write_out();
     
     //: perform test
     void test();
@@ -97,6 +95,9 @@ private:
 
     // keywords for gmm
     int keywords_;
+
+    // Bool writeout
+    bool write_out_;
 
     // Keep track of masks per image
     vcl_vector<vgl_polygon<double> > model_masks_;
@@ -162,7 +163,7 @@ private:
     vnl_vector<vl_sift_pix> linear_embed(vnl_vector<vl_sift_pix>& descr)
     {
         vnl_vector<vl_sift_pix> zero_mean=descr-PCA_mean_;
-        
+
         return zero_mean*PCA_M_; 
         
     }
@@ -173,7 +174,7 @@ private:
         vil_image_view<double>& model_chan_1,
         vil_image_view<double>& model_chan_2,
         vil_image_view<double>& model_chan_3,
-        vil_image_view<vil_rgb<double> >& mapped_img);
+        vil_image_view<double>& mapped_img);
 
     void convert_to_color_space(
         vil_image_resource_sptr& input_image,
