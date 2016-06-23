@@ -36,6 +36,7 @@ int main( int argc, char *argv[] )
     vul_arg<int> color_space("-c","Color Space: RGB=0,OPP=1,NOPP=2,LAB=3",3);
     vul_arg<int> stride("-s","Stride for dense sampling",8);
     vul_arg<double> alpha("-a","Normalization of FVS",0.5);
+    vul_arg<bool> write_out("-w","Write out DC mapping to image",false);
 
     vul_arg_parse(argc, argv);
 
@@ -79,7 +80,8 @@ int main( int argc, char *argv[] )
                                descriptor,
                                color,
                                stride(),
-                               alpha());
+                               alpha(),
+                               write_out());
     
     
     double vox_time = t.real()/1000.0;

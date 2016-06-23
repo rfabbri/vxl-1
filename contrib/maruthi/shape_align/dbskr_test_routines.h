@@ -99,6 +99,8 @@ private:
     // Bool writeout
     bool write_out_;
 
+    vcl_string output_filename_;
+
     // Keep track of masks per image
     vcl_vector<vgl_polygon<double> > model_masks_;
 

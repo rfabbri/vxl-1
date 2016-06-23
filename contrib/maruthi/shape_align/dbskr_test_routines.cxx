@@ -118,6 +118,14 @@ dbskr_test_routines::dbskr_test_routines(
 //: Destructor
 dbskr_test_routines::~dbskr_test_routines() 
 {
+    vl_free(means_cg_);
+    means_cg_=0;
+
+    vl_free(covariances_cg_);
+    covariances_cg_=0;
+
+    vl_free(priors_cg_);
+    priors_cg_=0;
 }
 
 
@@ -152,7 +160,7 @@ void dbskr_test_routines::test()
 
         for ( int m=0; m < model_points_.size() ; ++m)
         {
-            vcl_cout<<"Computing Distance between Query "<<q<<" and Model "<<m
+            vcl_cout<<"Distance: Query "<<q<<" vs Model "<<m
                     <<vcl_endl;
 
             vcl_vector<vcl_pair<float,float> > m_pts=model_points_[m][q];
@@ -233,19 +241,37 @@ void dbskr_test_routines::test()
                 vl_sift_pix d=result_final.get_column(c).magnitude();
                 dist_matrix[m][c]=d;
             }
-           
+    
+            output.push_back(dist_matrix);
+
+            vl_free(model_chan1_grad_data);
+            vl_free(model_chan2_grad_data);
+            vl_free(model_chan3_grad_data);
+
+            model_chan1_grad_data=0;
+            model_chan2_grad_data=0;
+            model_chan3_grad_data=0;
+
+                       
         }
 
-
+        vl_free(query_grad_chan_1_[q]);
+        vl_free(query_grad_chan_2_[q]);
+        vl_free(query_grad_chan_3_[q]);
+        
+        query_grad_chan_1_[q]=0;
+        query_grad_chan_2_[q]=0;
+        query_grad_chan_3_[q]=0;
     }
  
     vl_sift_delete(filter);
     filter=0;
     
+    vcl_cout<<"Writing out Results"<<vcl_endl;
 
     // Write out output
     vcl_ofstream output_binary_file;
-    output_binary_file.open("foobar.bin",
+    output_binary_file.open(output_filename_.c_str(),
                             vcl_ios::out | 
                             vcl_ios::binary);
     
@@ -505,7 +531,10 @@ void dbskr_test_routines::load_query_file(vcl_string& filename)
 
         // Read in image file
         vcl_string query_imagename=vul_file::strip_extension(line);
+        vcl_string filename=vul_file::strip_directory(query_imagename);
         
+        output_filename_=filename+"_dist_matrix.bin";
+
         query_imagename=query_imagename+".jpg";
 
         vil_image_resource_sptr query_img_sptr = 
