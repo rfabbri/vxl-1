@@ -110,6 +110,19 @@ dbskr_train_routines::dbskr_train_routines(
 //: Destructor
 dbskr_train_routines::~dbskr_train_routines() 
 {
+    for ( unsigned int i=0; i < grad_chan_1_.size() ; ++i)
+    {
+        vl_free(grad_chan_1_[i]);
+        grad_chan_1_[i]=0;
+
+        vl_free(grad_chan_2_[i]);
+        grad_chan_2_[i]=0;
+
+        vl_free(grad_chan_3_[i]);
+        grad_chan_3_[i]=0;
+        
+    }
+
 }
 
 //: Write out files
@@ -256,6 +269,8 @@ void dbskr_train_routines::train(vcl_string& gmm_filename)
     }
 
     gmm_stream.close();
+
+    vl_gmm_delete(gmm);
 
     double vox_time = t.real()/1000.0;
     t.mark();
