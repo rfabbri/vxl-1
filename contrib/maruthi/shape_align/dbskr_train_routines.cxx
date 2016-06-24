@@ -183,7 +183,7 @@ void dbskr_train_routines::train(vcl_string& gmm_filename)
     for ( int i =0; i < descriptor_matrix_.rows() ; ++i)
     { 
         vnl_vector<vl_sift_pix> vec = descriptor_matrix_.get_row(i);
-        vnl_vector<vl_sift_pix> pca_vec = linear_embed(vec);
+        vnl_vector<vl_sift_pix> pca_vec = vec*PCA_M_;
 
         for ( int p=0; p < pca_vec.size() ; ++p)
         {

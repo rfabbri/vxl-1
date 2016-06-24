@@ -111,14 +111,6 @@ private:
     // Load model file
     void load_model_file(vcl_string& filename);
 
-    vnl_vector<vl_sift_pix> linear_embed(vnl_vector<vl_sift_pix>& descr)
-    {
-        vnl_vector<vl_sift_pix> zero_mean=descr-PCA_mean_;
-        
-        return zero_mean*PCA_M_; 
-        
-    }
-
     void convert_to_color_space(
         vil_image_resource_sptr& input_image,
         vil_image_view<double>& o1,
