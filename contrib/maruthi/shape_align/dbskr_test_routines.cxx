@@ -198,19 +198,22 @@ void dbskr_test_routines::test()
             vl_sift_pix* model_chan2_grad_data(0);
             vl_sift_pix* model_chan3_grad_data(0);
             
-            vgl_polygon<double> poly=model_masks_[m];
+            vgl_polygon<double> poly;
             
             compute_grad_color_maps(chan1,
                                     &model_chan1_grad_data,
-                                    poly);
+                                    poly,
+                                    false);
         
             compute_grad_color_maps(chan2,
                                     &model_chan2_grad_data,
-                                    poly);
+                                    poly,
+                                    false);
             
             compute_grad_color_maps(chan3,
                                     &model_chan3_grad_data,
-                                    poly);
+                                    poly,
+                                    false);
             
             
             vnl_matrix<vl_sift_pix> query_fvs(encoding_size,
@@ -731,21 +734,7 @@ void dbskr_test_routines::compute_fvs(
         for ( int f=0; f < fv_descriptor.size() ; ++f)
         {
 
-            float sign=1;
-            if ( fv_descriptor[f]==0)
-            {
-                sign=0;
-            }
-            else if ( fv_descriptor[f] < 0 )
-            {
-                sign=-1;
-            }
-            else
-            {
-                sign=1;
-            }
-
-            fv_descriptor[f]=sign*(
+            fv_descriptor[f]= vnl_math::sgn0(fv_descriptor[f])*(
                 vcl_pow(vcl_fabs(fv_descriptor[f]),powernorm_));
         }
         descriptor_matrix.set_column(g,fv_descriptor);
