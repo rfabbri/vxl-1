@@ -245,7 +245,7 @@ void dbskr_train_routines::train(vcl_string& gmm_filename)
     vcl_cout<<vcl_endl;
     vcl_cout<<"Clustering Time: "<<vox_time2<<" sec"<<vcl_endl;
      
-    vcl_ofstream gmm_stream(gmm_filename);
+    vcl_ofstream gmm_stream(gmm_filename.c_str());
 
     gmm_stream<<numCenters<<vcl_endl;
     gmm_stream<<dimension<<vcl_endl;

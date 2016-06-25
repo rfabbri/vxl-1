@@ -646,9 +646,9 @@ void dbskr_test_routines::compute_fvs(
 
     vcl_vector<vl_sift_pix> descriptors;
 
-    for ( int i=0; i < stride_points.size() ; ++i)
+    for ( int g=0; g < stride_points.size() ; ++g)
     {
-        vgl_point_2d<double> ps1=stride_points[i];
+        vgl_point_2d<double> ps1=stride_points[g];
         
         vnl_vector<vl_sift_pix> scale_1_descriptor(PCA_M_.rows(),0.0);
         vnl_vector<vl_sift_pix> scale_2_descriptor(PCA_M_.rows(),0.0);
@@ -728,13 +728,27 @@ void dbskr_test_routines::compute_fvs(
              sift_block.data_block(), 4,0);
      
         // Apply power normalization
-        for ( int i=0; i < fv_descriptor.size() ; ++i)
+        for ( int f=0; f < fv_descriptor.size() ; ++f)
         {
 
-            fv_descriptor[i]=signbit(fv_descriptor[i])*(
-                vcl_pow(vcl_fabs(fv_descriptor[i]),powernorm_));
+            float sign=1;
+            if ( fv_descriptor[f]==0)
+            {
+                sign=0;
+            }
+            else if ( fv_descriptor[f] < 0 )
+            {
+                sign=-1;
+            }
+            else
+            {
+                sign=1;
+            }
+
+            fv_descriptor[f]=sign*(
+                vcl_pow(vcl_fabs(fv_descriptor[f]),powernorm_));
         }
-        descriptor_matrix.set_column(i,fv_descriptor);
+        descriptor_matrix.set_column(g,fv_descriptor);
     }
     
 }
