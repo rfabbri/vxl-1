@@ -1,16 +1,18 @@
 // This is brcv/seg/dbdet/tests/test_curve_fragment_postprocess.cxx
 #include <testlib/testlib_test.h>
 
+#include <vcl_iostream.h>
+#include <vcl_string.h>
 #include <vil/vil_convert.h>
 #include <vil/vil_image_view.h>
 #include <vil/vil_load.h>
 #include <vil/vil_rgb.h>
 #include <vnl/vnl_matrix.h>
+#include <vnl/vnl_file_matrix.h>
 #include <dbdet/algo/dbdet_sel.h>
 #include <dbdet/algo/dbdet_curve_fragment_cues.h>
 #include <dbdet/algo/dbdet_curve_fragment_ranker.h>
 #include <dbdet/algo/dbdet_cem_file_io.h>
-#include <dbdet/filter/dbdet_filter_util.h>
 #include <dbdet/sel/dbdet_curve_fragment_graph.h>
 #include <dbdet/edge/dbdet_edgemap.h>
 #include <dbdet/algo/dbdet_load_edg.h>
@@ -63,8 +65,7 @@ load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img, dbdet_curve_fragment_graph
   img = vil_convert_to_component_order(vil_convert_to_n_planes(3, vil_convert_stretch_range (vxl_byte(), vil_load(image_path.c_str()))));
   dbdet_load_cem(frags_path, frags);
   dbdet_load_edg(edge_path, true, 1.0, edgemap);
-  vnl_matrix<double> tmp_beta;
-  loadFromTabSpaced(beta_path.c_str(), tmp_beta);
+  vnl_matrix<double> tmp_beta = (vnl_matrix<double>)vnl_file_matrix<double>(beta_path.c_str());
   beta = y_trained_parameters(tmp_beta.data_block());
 }
 
