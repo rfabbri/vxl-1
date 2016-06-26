@@ -1,16 +1,27 @@
 // This is brcv/seg/dbdet/tests/test_curve_fragment_postprocess.cxx
 #include <testlib/testlib_test.h>
 
+#include <vil/vil_convert.h>
 #include <vil/vil_image_view.h>
+#include <vil/vil_load.h>
+#include <vil/vil_rgb.h>
+#include <vnl/vnl_matrix.h>
 #include <dbdet/algo/dbdet_sel.h>
 #include <dbdet/algo/dbdet_curve_fragment_cues.h>
 #include <dbdet/algo/dbdet_curve_fragment_ranker.h>
+#include <dbdet/algo/dbdet_cem_file_io.h>
+#include <dbdet/filter/dbdet_filter_util.h>
+#include <dbdet/sel/dbdet_curve_fragment_graph.h>
+#include <dbdet/edge/dbdet_edgemap.h>
+#include <dbdet/algo/dbdet_load_edg.h>
+#include <dbtest_root_dir.h>
+
 
 #define DATA(I) (I).top_left_ptr()
 static const double tolerance=1e-3;
 
 void
-load_dataset(&img, &frags, &edgemap, &beta)
+load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img, dbdet_curve_fragment_graph &frags, dbdet_edgemap_sptr edgemap, y_trained_parameters &beta)
 {
   // Perform all operations Yuliang does:
   //
@@ -40,12 +51,27 @@ load_dataset(&img, &frags, &edgemap, &beta)
   // beta_2 = input_beta_2(3,:);
   // beta_2 = beta_2./fstd_2;
   //
+  
+  vcl_string root = dbtest_root_dir();
+  vcl_string base_path = root + "/brcv/seg/dbdet/algo/tests/";
+
+  vcl_string image_path = base_path + "2018.jpg";
+  vcl_string frags_path = base_path + "2018.cem";
+  vcl_string edge_path = base_path + "2018.edg";
+  vcl_string beta_path = base_path + "gPb_SEL_beta_of_cues_for_seletion.txt";
+
+  img = vil_convert_to_component_order(vil_convert_to_n_planes(3, vil_convert_stretch_range (vxl_byte(), vil_load(image_path.c_str()))));
+  dbdet_load_cem(frags_path, frags);
+  dbdet_load_edg(edge_path, true, 1.0, edgemap);
+  vnl_matrix<double> tmp_beta;
+  loadFromTabSpaced(beta_path.c_str(), tmp_beta);
+  beta = y_trained_parameters(tmp_beta.data_block());
 }
 
 void
-detailed_tests()
+detailed_test()
 {
-  // Generate a small image
+  /*// Generate a small image
   unsigned r=5,c=7;
 
   vil_image_view < float > image(r,c,1);
@@ -104,7 +130,7 @@ detailed_tests()
 
   //--------------------------------------------------------------
   vnl_vector<double> rank;
-  dbdet_curve_fragment_ranker(frags, img, beta, &rank);
+  dbdet_curve_fragment_ranker(frags, img, beta, &rank);*/
 }
 
 //--------------------------------------------------------------
@@ -112,22 +138,25 @@ detailed_tests()
 void
 realistic_test()
 {
-  vil_image_view<vxl_byte> img;
-  load_dataset(&img, &frags, &edgemap, &beta);
+  vil_image_view<vil_rgb<vxl_byte> > img;
+  dbdet_curve_fragment_graph frags;
+  dbdet_edgemap_sptr edgemap = new dbdet_edgemap(1, 1);
+  y_trained_parameters beta;
+  load_dataset(img, frags, edgemap, beta);
 
-  vnl_vector<double> rank;
-  dbdet_curve_fragment_ranker(frags, img, beta, &rank);
+  //vnl_vector<double> rank;
+  //dbdet_curve_fragment_ranker(frags, img, beta, &rank);
 
   // ground truth rank
-  double gt_rank_arr [] = { /* put comma separated ground truth rank from matlab for this dataset */ } 
-  unsigned n_gt = /* number of data points */
-  vnl_vector<double> gt_rank(gt_rank_arr, n_gt);
+  //double gt_rank_arr [] = { /* put comma separated ground truth rank from matlab for this dataset */ }; 
+  //unsigned n_gt = /* number of data points */;
+  //vnl_vector<double> gt_rank(gt_rank_arr, n_gt);
 
-  TEST("rank size match", rank.size(), n_gt);
+  //TEST("rank size match", rank.size(), n_gt);
   
-  for (unsigned i=0; i < n_gt; ++i) {
-    TEST_NEAR(rank[i], gt_rank[i], tolerance);
-  }
+  //for (unsigned i=0; i < n_gt; ++i) {
+    //TEST_NEAR(rank[i], gt_rank[i], tolerance);
+  //}
 }
 
 //: Test the dbdet_curve_fragment_* functions

@@ -148,5 +148,6 @@ public:
 
 typedef vcl_list<dbdet_edgel_chain*> dbdet_edgel_chain_list;
 typedef vcl_list<dbdet_edgel_chain*>::iterator dbdet_edgel_chain_list_iter;
+typedef vcl_list<dbdet_edgel_chain*>::const_iterator dbdet_edgel_chain_list_const_iter;
 
 #endif // dbdet_edgel_h
