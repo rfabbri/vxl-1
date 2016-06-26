@@ -140,13 +140,13 @@ void
 realistic_test()
 {
   vil_image_view<vil_rgb<vxl_byte> > img;
-  dbdet_curve_fragment_graph frags;
-  dbdet_edgemap_sptr edgemap = new dbdet_edgemap(1, 1);
+  dbdet_curve_fragment_graph curve_fragment_graph;
+  dbdet_edgemap_sptr edgemap_sptr = new dbdet_edgemap(1, 1);
   y_trained_parameters beta;
-  load_dataset(img, frags, edgemap, beta);
+  load_dataset(img, curve_fragment_graph, edgemap_sptr, beta);
 
-  //vnl_vector<double> rank;
-  //dbdet_curve_fragment_ranker(frags, img, beta, &rank);
+  vnl_vector<double> rank;
+  dbdet_curve_fragment_ranker(curve_fragment_graph.frags, edgemap_sptr, img, beta, &rank);
 
   // ground truth rank
   //double gt_rank_arr [] = { /* put comma separated ground truth rank from matlab for this dataset */ }; 
