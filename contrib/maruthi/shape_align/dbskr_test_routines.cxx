@@ -84,6 +84,9 @@ dbskr_test_routines::dbskr_test_routines(
         c_type="nopp";
     }
     
+    vcl_cout<<"Using "<<d_type<<" descriptors in "<<c_type<<" color space"
+            <<vcl_endl;
+
     // Load query data
     vcl_cout<<"Loading query files"<<vcl_endl;
     load_query_file(query_list);
@@ -146,7 +149,8 @@ void dbskr_test_routines::test()
 
     int encoding_size = 2 * PCA_M_.cols() * keywords_;
 
-    vcl_vector<vnl_matrix<vl_sift_pix> > output;
+    vcl_vector<vcl_vector<vnl_matrix<vl_sift_pix> > > output(
+        query_test_points_.size());
 
     for ( int q=0; q < query_test_points_.size() ; ++q)
     {
@@ -214,8 +218,7 @@ void dbskr_test_routines::test()
                                     &model_chan3_grad_data,
                                     poly,
                                     false);
-            
-            
+
             vnl_matrix<vl_sift_pix> query_fvs(encoding_size,
                                               test_points.size(),0);
             vnl_matrix<vl_sift_pix> model_fvs(encoding_size,
@@ -244,8 +247,6 @@ void dbskr_test_routines::test()
                 vl_sift_pix d=result_final.get_column(c).magnitude();
                 dist_matrix[m][c]=d;
             }
-    
-            output.push_back(dist_matrix);
 
             vl_free(model_chan1_grad_data);
             vl_free(model_chan2_grad_data);
@@ -257,6 +258,8 @@ void dbskr_test_routines::test()
 
                        
         }
+
+        output[q].push_back(dist_matrix);
 
         vl_free(query_grad_chan_1_[q]);
         vl_free(query_grad_chan_2_[q]);
@@ -288,7 +291,12 @@ void dbskr_test_routines::test()
     output_binary_file.write(reinterpret_cast<char *>(&m),
                              sizeof(float));
 
-
+    float ni=query_ni_;
+    float nj=query_nj_;
+    output_binary_file.write(reinterpret_cast<char *>(&ni),
+                             sizeof(float));
+    output_binary_file.write(reinterpret_cast<char *>(&nj),
+                             sizeof(float));
 
     for ( int q=0; q < query_test_points_.size() ; ++q)
     {
@@ -300,21 +308,38 @@ void dbskr_test_routines::test()
         output_binary_file.write(reinterpret_cast<char *>(&size),
                                  sizeof(float));
         
-        vnl_matrix<vl_sift_pix> dist_matrix=output[q];
-
-        for (unsigned int p=0; p < dist_matrix.rows() ; ++p)
+        for ( int b=0; b < test_points.size() ; ++b)
         {
-            vnl_vector<vl_sift_pix> row=dist_matrix.get_row(p);
-        
-            for ( unsigned int v=0; v < row.size() ; ++v)
-            {
+            float x = test_points[b].x();
+            float y = test_points[b].y();
 
-                vl_sift_pix dist=row[v];
-
-                output_binary_file.write(reinterpret_cast<char *>(&dist),
-                                         sizeof(float));
+            output_binary_file.write(reinterpret_cast<char *>(&x),
+                                     sizeof(float));
+            output_binary_file.write(reinterpret_cast<char *>(&y),
+                                     sizeof(float));
             
-            }            
+        }
+
+        vcl_vector< vnl_matrix<vl_sift_pix> > dist_matrices=output[q];
+
+        for ( int k=0; k < dist_matrices.size() ; ++k)
+        {
+            vnl_matrix<vl_sift_pix> dist_matrix=dist_matrices[k];
+
+            for (unsigned int p=0; p < dist_matrix.rows() ; ++p)
+            {
+                vnl_vector<vl_sift_pix> row=dist_matrix.get_row(p);
+                
+                for ( unsigned int v=0; v < row.size() ; ++v)
+                {
+                    
+                    vl_sift_pix dist=row[v];
+
+                    output_binary_file.write(reinterpret_cast<char *>(&dist),
+                                         sizeof(float));
+                    
+                }            
+            }
         }
 
     }
