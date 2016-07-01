@@ -327,7 +327,7 @@ void dbskr_train_routines::compute_grad_descriptors()
         // Create sift filter object
         filter = vl_sift_new(model_chan_1_[i].ni(),
                              model_chan_1_[i].nj(),
-                             3,3,0);
+                             -1,-1,0);
         vl_sift_set_magnif(filter,1.0);
 
         vgl_box_2d<double> bbox;

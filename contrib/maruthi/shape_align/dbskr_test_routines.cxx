@@ -144,7 +144,7 @@ void dbskr_test_routines::test()
     // Create sift filter object
     VlSiftFilt* filter = vl_sift_new(query_ni_,
                                      query_nj_,
-                                     3,3,0);
+                                     -1,-1,0);
     vl_sift_set_magnif(filter,1.0);
 
     int encoding_size = 2 * PCA_M_.cols() * keywords_;
@@ -762,6 +762,8 @@ void dbskr_test_routines::compute_fvs(
             fv_descriptor[f]= vnl_math::sgn0(fv_descriptor[f])*(
                 vcl_pow(vcl_fabs(fv_descriptor[f]),powernorm_));
         }
+
+        fv_descriptor.normalize();
         descriptor_matrix.set_column(g,fv_descriptor);
     }
     
