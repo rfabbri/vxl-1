@@ -162,6 +162,20 @@ void dbskr_test_routines::test()
                                             test_points.size(),
                                             0.0);
 
+        vnl_matrix<vl_sift_pix> query_fvs(encoding_size,
+                                          test_points.size(),0);
+
+        // Compute query_fvs
+        compute_fvs(test_points,
+                    query_grad_chan_1_[q],
+                    query_grad_chan_2_[q],
+                    query_grad_chan_3_[q],
+                    filter,
+                    query_fvs);
+
+        vnl_matrix<vl_sift_pix> model_fvs(encoding_size,
+                                          test_points.size(),0);
+
         for ( int m=0; m < model_points_.size() ; ++m)
         {
             vcl_cout<<"Distance: Query "<<q<<" vs Model "<<m
@@ -218,19 +232,6 @@ void dbskr_test_routines::test()
                                     &model_chan3_grad_data,
                                     poly,
                                     false);
-
-            vnl_matrix<vl_sift_pix> query_fvs(encoding_size,
-                                              test_points.size(),0);
-            vnl_matrix<vl_sift_pix> model_fvs(encoding_size,
-                                              test_points.size(),0);
-
-            // Compute query_fvs
-            compute_fvs(test_points,
-                        query_grad_chan_1_[q],
-                        query_grad_chan_2_[q],
-                        query_grad_chan_3_[q],
-                        filter,
-                        query_fvs);
 
             // Compute model_fvs
             compute_fvs(test_points,
