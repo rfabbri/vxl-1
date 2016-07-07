@@ -301,6 +301,26 @@ vgl_polygon<double> dbskr_train_routines::compute_boundary(
  
 }
 
+void dbskr_train_routines::mask_image(vil_image_resource_sptr& input_image,
+                                      vgl_polygon<double>& poly)
+{
+    vil_image_view<vxl_byte> image = input_image->get_view();
+    for (unsigned j=0; j<image.nj() ;++j)
+    {
+        for (unsigned i=0;i< image.ni() ;++i)
+        {
+            vgl_point_2d<double> coord(i,j);
+            if (!poly.contains(coord))
+            {
+                image(i,j,0)=vxl_byte(255);
+                image(i,j,1)=vxl_byte(255);
+                image(i,j,2)=vxl_byte(255);
+            }
+        }
+        
+    }
+}
+
 void dbskr_train_routines::compute_grad_descriptors()
 {
 

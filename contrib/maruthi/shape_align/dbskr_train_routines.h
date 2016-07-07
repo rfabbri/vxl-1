@@ -122,6 +122,9 @@ private:
     vgl_polygon<double> compute_boundary(
         dbsk2d_shock_graph_sptr& sg);
 
+    void mask_image(vil_image_resource_sptr& input_image,
+                    vgl_polygon<double>& poly);
+
     void compute_grad_descriptors();
     
     void compute_gradients();
