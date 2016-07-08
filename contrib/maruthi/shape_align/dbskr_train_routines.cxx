@@ -74,6 +74,9 @@ dbskr_train_routines::dbskr_train_routines(
         c_type="nopp";
     }
 
+    vcl_cout<<"Using "<<d_type<<" descriptors in "<<c_type<<" color space"
+            <<vcl_endl;
+
     vcl_stringstream gmm_filename_stream;
     gmm_filename_stream<<"gmm_"<<d_type<<"_"<<c_type<<"_"<<keywords<<".txt";
 
@@ -164,9 +167,14 @@ void dbskr_train_routines::load_model_file(vcl_string& filename)
         vil_image_resource_sptr model_img_sptr = 
             vil_load_image_resource(model_imagename.c_str());
 
+        vil_image_view<vxl_byte> image=model_img_sptr->get_view();
+
+        // Mask image and convert to color space
+        mask_image(image,polygon);
+        
         vil_image_view<double> chan_1,chan_2,chan_3;
         
-        convert_to_color_space(model_img_sptr,
+        convert_to_color_space(image,
                                chan_1,
                                chan_2,
                                chan_3,
@@ -301,10 +309,9 @@ vgl_polygon<double> dbskr_train_routines::compute_boundary(
  
 }
 
-void dbskr_train_routines::mask_image(vil_image_resource_sptr& input_image,
+void dbskr_train_routines::mask_image(vil_image_view<vxl_byte>& image,
                                       vgl_polygon<double>& poly)
 {
-    vil_image_view<vxl_byte> image = input_image->get_view();
     for (unsigned j=0; j<image.nj() ;++j)
     {
         for (unsigned i=0;i< image.ni() ;++i)
@@ -319,6 +326,7 @@ void dbskr_train_routines::mask_image(vil_image_resource_sptr& input_image,
         }
         
     }
+
 }
 
 void dbskr_train_routines::compute_grad_descriptors()
@@ -550,24 +558,19 @@ void dbskr_train_routines::compute_gradients()
         vl_sift_pix* model_chan2_grad_data(0);
         vl_sift_pix* model_chan3_grad_data(0);
         
-        vgl_polygon<double> poly=masks_[i];
-
         compute_grad_color_maps(model_chan_1_[i],
-                                &model_chan1_grad_data,
-                                poly);
+                                &model_chan1_grad_data);
         
         compute_grad_color_maps(model_chan_2_[i],
-                                &model_chan2_grad_data,
-                                poly);
+                                &model_chan2_grad_data);
         
         compute_grad_color_maps(model_chan_3_[i],
-                                &model_chan3_grad_data,
-                                poly);
+                                &model_chan3_grad_data);
         
         grad_chan_1_.push_back(model_chan1_grad_data);
         grad_chan_2_.push_back(model_chan2_grad_data);
         grad_chan_3_.push_back(model_chan3_grad_data);
-           
+
     }
 
 
@@ -575,87 +578,15 @@ void dbskr_train_routines::compute_gradients()
 
 void dbskr_train_routines::compute_grad_color_maps(
     vil_image_view<double>& orig_image,
-    vl_sift_pix** grad_data,
-    vgl_polygon<double>& poly,
-    bool mask_grad,
-    bool fliplr)
+    vl_sift_pix** grad_data)
 {
-
-    vil_image_view<double> flipped_image(orig_image.ni(),
-                                         orig_image.nj());
-    if ( mask_grad )
-    {
-        flipped_image.fill(0.0);
-
-        vcl_set<vcl_pair<int,int> > in_bounds;
-
-        // do not include boundary
-        vgl_polygon_scan_iterator<double> psi(poly, false);  
-        for (psi.reset(); psi.next(); ) 
-        {
-            int y = psi.scany();
-            for (int x = psi.startx(); x <= psi.endx(); ++x) 
-            {
-                if ( fliplr )
-                {
-                    flipped_image(flipped_image.ni()-1-x,y)=
-                        orig_image(
-                            x,
-                            y);
-                }
-                else
-                {
-                    flipped_image(x,y)=orig_image(x,y);
-                }
-
-                in_bounds.insert(vcl_make_pair(x,y));
-                
-            }
-        }
-
-
-        for ( int cols=0; cols < orig_image.nj() ; ++cols)
-        {
-            for ( int rows=0; rows < orig_image.ni() ; ++rows)
-            {
-                vcl_pair<int,int> key(rows,cols);
-
-                if ( !in_bounds.count(key) )
-                {
-                    orig_image(rows,cols)=0;
-                }
-            }
-        }
-
-    }
-    else
-    {
-        if ( fliplr )
-        {
-            for ( unsigned int cols=0; cols < flipped_image.nj() ; ++cols)
-            {
-                for ( unsigned int rows=0; rows < flipped_image.ni() ; ++rows)
-                {
-                    flipped_image(rows,cols)=orig_image(
-                        flipped_image.ni()-1-rows,
-                        cols);
-
-                }
-            }
-        }
-        else
-        {
-            flipped_image=orig_image;
-        }
-    }
-
-    unsigned int width  = flipped_image.ni();
-    unsigned int height = flipped_image.nj();
+    unsigned int width  = orig_image.ni();
+    unsigned int height = orig_image.nj();
 
     vil_image_view<vl_sift_pix> grad_mag;
     vil_image_view<vl_sift_pix> grad_angle;
     
-    vil_orientations_from_sobel(flipped_image,grad_angle,grad_mag);
+    vil_orientations_from_sobel(orig_image,grad_angle,grad_mag);
 
     *grad_data=(vl_sift_pix*) vl_malloc(sizeof(vl_sift_pix)*width*height*2);
     
@@ -746,13 +677,12 @@ void dbskr_train_routines::compute_sift_descr(
 
 
 void dbskr_train_routines::convert_to_color_space(
-    vil_image_resource_sptr& input_image,
+    vil_image_view<vxl_byte>& image,
     vil_image_view<double>& o1,
     vil_image_view<double>& o2,
     vil_image_view<double>& o3,
     ColorSpace color_space)
 {
-    vil_image_view<vxl_byte> image = input_image->get_view();
     unsigned int w = image.ni(); 
     unsigned int h = image.nj();
     o1.set_size(w,h);

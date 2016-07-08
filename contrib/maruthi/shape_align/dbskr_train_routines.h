@@ -112,7 +112,7 @@ private:
     void load_model_file(vcl_string& filename);
 
     void convert_to_color_space(
-        vil_image_resource_sptr& input_image,
+        vil_image_view<vxl_byte>& image,
         vil_image_view<double>& o1,
         vil_image_view<double>& o2,
         vil_image_view<double>& o3,
@@ -122,7 +122,7 @@ private:
     vgl_polygon<double> compute_boundary(
         dbsk2d_shock_graph_sptr& sg);
 
-    void mask_image(vil_image_resource_sptr& input_image,
+    void mask_image(vil_image_view<vxl_byte>& image,
                     vgl_polygon<double>& poly);
 
     void compute_grad_descriptors();
@@ -142,10 +142,7 @@ private:
         vnl_vector<vl_sift_pix>& descriptor);
 
     void compute_grad_color_maps(vil_image_view<double>& orig_image,
-                                 vl_sift_pix** grad_data,
-                                 vgl_polygon<double>& poly,
-                                 bool mask_poly=true,
-                                 bool fliplr=false);
+                                 vl_sift_pix** grad_data);
 
     // Make copy ctor private
     dbskr_train_routines(const dbskr_train_routines&);
