@@ -21,6 +21,7 @@
 #include <vil/vil_plane.h>
 #include <vil/vil_convert.h>
 #include <vil/vil_load.h>
+#include <vil/vil_fill.h>
 
 #include <vgl/vgl_polygon_scan_iterator.h>
 
@@ -84,6 +85,8 @@ dbskr_test_routines::dbskr_test_routines(
         c_type="nopp";
     }
     
+    compute_bg_color(color_space_);
+
     vcl_cout<<"Using "<<d_type<<" descriptors in "<<c_type<<" color space"
             <<vcl_endl;
 
@@ -187,8 +190,14 @@ void dbskr_test_routines::test()
             vil_image_view<double> temp(query_ni_,
                                         query_nj_,
                                         3);
+
+            vil_image_view<double> chan1   = vil_plane(temp,0);
+            vil_image_view<double> chan2   = vil_plane(temp,1);
+            vil_image_view<double> chan3   = vil_plane(temp,2);
             
-            temp.fill(255.0);
+            vil_fill(chan1,bg_color_[0]);
+            vil_fill(chan2,bg_color_[1]);
+            vil_fill(chan3,bg_color_[2]);
 
             explicit_alignment(q_pts,
                                m_pts,
@@ -206,32 +215,20 @@ void dbskr_test_routines::test()
                 vil_convert_cast(temp,map_image);
                 vil_save(map_image,name.str().c_str());
             } 
-
-            vil_image_view<double> chan1   = vil_plane(temp,0);
-            vil_image_view<double> chan2   = vil_plane(temp,1);
-            vil_image_view<double> chan3   = vil_plane(temp,2);
             
             // Compute gradients of channels
             vl_sift_pix* model_chan1_grad_data(0);
             vl_sift_pix* model_chan2_grad_data(0);
             vl_sift_pix* model_chan3_grad_data(0);
             
-            vgl_polygon<double> poly;
-            
             compute_grad_color_maps(chan1,
-                                    &model_chan1_grad_data,
-                                    poly,
-                                    false);
+                                    &model_chan1_grad_data);
         
             compute_grad_color_maps(chan2,
-                                    &model_chan2_grad_data,
-                                    poly,
-                                    false);
+                                    &model_chan2_grad_data);
             
             compute_grad_color_maps(chan3,
-                                    &model_chan3_grad_data,
-                                    poly,
-                                    false);
+                                    &model_chan3_grad_data);
 
             // Compute model_fvs
             compute_fvs(test_points,
@@ -457,6 +454,73 @@ void dbskr_test_routines::load_gmm_data(vcl_string& filename)
 
 }
 
+void dbskr_test_routines::mask_image(vil_image_view<vxl_byte>& image,
+                                     vgl_polygon<double>& poly)
+{
+    for (unsigned j=0; j<image.nj() ;++j)
+    {
+        for (unsigned i=0;i< image.ni() ;++i)
+        {
+            vgl_point_2d<double> coord(i,j);
+            if (!poly.contains(coord))
+            {
+                image(i,j,0)=vxl_byte(255);
+                image(i,j,1)=vxl_byte(255);
+                image(i,j,2)=vxl_byte(255);
+            }
+        }
+        
+    }
+
+}
+
+
+void dbskr_test_routines::compute_bg_color(
+    ColorSpace color_space)
+{
+
+    double red=255;
+    double green=255;
+    double blue=255;
+
+    if ( color_space == LAB )
+    {
+
+        double L,a,b;
+        rgb2lab(red,green,blue,L,a,b);
+        bg_color_.push_back(L);
+        bg_color_.push_back(a);
+        bg_color_.push_back(b);
+
+    }
+    else if ( color_space == RGB )
+    {
+        bg_color_.push_back(red);
+        bg_color_.push_back(green);
+        bg_color_.push_back(blue);
+    }
+    else
+    {
+        double o1 = (red-green)/vcl_sqrt(2);
+        double o2 = (red+green-2*blue)/vcl_sqrt(6);
+        double o3 = (red+green+blue)/vcl_sqrt(3);
+        if ( color_space == NOPP )
+        {
+            if ( o3 > 0.0 )
+            {
+                o1=o1/o3;
+                o2=o2/o3;
+            }
+        }
+
+        bg_color_.push_back(o1);
+        bg_color_.push_back(o2);
+        bg_color_.push_back(o3);
+    }
+
+
+}
+
 //: Load model files and convert to color space if appropriate
 void dbskr_test_routines::load_dc_file(vcl_string& filename)
 {
@@ -569,12 +633,17 @@ void dbskr_test_routines::load_query_file(vcl_string& filename)
         vil_image_resource_sptr query_img_sptr = 
             vil_load_image_resource(query_imagename.c_str());
 
+        vil_image_view<vxl_byte> image=query_img_sptr->get_view();
+
+        // Mask image and convert to color space
+        mask_image(image,polygon);
+
         vil_image_view<double> chan_1,chan_2,chan_3;
 
         query_ni_=query_img_sptr->ni();
         query_nj_=query_img_sptr->nj();
 
-        convert_to_color_space(query_img_sptr,
+        convert_to_color_space(image,
                                chan_1,
                                chan_2,
                                chan_3,
@@ -608,11 +677,6 @@ void dbskr_test_routines::load_model_file(vcl_string& filename)
         // Load in two of the same one for mirroring one for not
         dbsk2d_shock_graph_sptr sg = loader.load_xshock_graph(line);
 
-        // Compute area, and figure out new sample ds
-        vgl_polygon<double> polygon=compute_boundary(sg);
-        
-        model_masks_.push_back(polygon);
-
         // Read in image file
         vcl_string model_imagename=vul_file::strip_extension(line);
         
@@ -621,9 +685,11 @@ void dbskr_test_routines::load_model_file(vcl_string& filename)
         vil_image_resource_sptr model_img_sptr = 
             vil_load_image_resource(model_imagename.c_str());
 
+        vil_image_view<vxl_byte> image=model_img_sptr->get_view();
+
         vil_image_view<double> chan_1,chan_2,chan_3;
         
-        convert_to_color_space(model_img_sptr,
+        convert_to_color_space(image,
                                chan_1,
                                chan_2,
                                chan_3,
@@ -818,19 +884,14 @@ void dbskr_test_routines::compute_query_gradients()
         vl_sift_pix* query_chan2_grad_data(0);
         vl_sift_pix* query_chan3_grad_data(0);
         
-        vgl_polygon<double> poly=query_masks_[i];
-        
         compute_grad_color_maps(query_chan_1_[i],
-                                &query_chan1_grad_data,
-                                poly);
+                                &query_chan1_grad_data);
         
         compute_grad_color_maps(query_chan_2_[i],
-                                &query_chan2_grad_data,
-                                poly);
+                                &query_chan2_grad_data);
         
         compute_grad_color_maps(query_chan_3_[i],
-                                &query_chan3_grad_data,
-                                poly);
+                                &query_chan3_grad_data);
         
         query_grad_chan_1_.push_back(query_chan1_grad_data);
         query_grad_chan_2_.push_back(query_chan2_grad_data);
@@ -892,87 +953,15 @@ void dbskr_test_routines::compute_query_test_points()
 
 void dbskr_test_routines::compute_grad_color_maps(
     vil_image_view<double>& orig_image,
-    vl_sift_pix** grad_data,
-    vgl_polygon<double>& poly,
-    bool mask_grad,
-    bool fliplr)
+    vl_sift_pix** grad_data)
 {
-
-    vil_image_view<double> flipped_image(orig_image.ni(),
-                                         orig_image.nj());
-    if ( mask_grad )
-    {
-        flipped_image.fill(0.0);
-
-        vcl_set<vcl_pair<int,int> > in_bounds;
-
-        // do not include boundary
-        vgl_polygon_scan_iterator<double> psi(poly, false);  
-        for (psi.reset(); psi.next(); ) 
-        {
-            int y = psi.scany();
-            for (int x = psi.startx(); x <= psi.endx(); ++x) 
-            {
-                if ( fliplr )
-                {
-                    flipped_image(flipped_image.ni()-1-x,y)=
-                        orig_image(
-                            x,
-                            y);
-                }
-                else
-                {
-                    flipped_image(x,y)=orig_image(x,y);
-                }
-
-                in_bounds.insert(vcl_make_pair(x,y));
-                
-            }
-        }
-
-
-        for ( int cols=0; cols < orig_image.nj() ; ++cols)
-        {
-            for ( int rows=0; rows < orig_image.ni() ; ++rows)
-            {
-                vcl_pair<int,int> key(rows,cols);
-
-                if ( !in_bounds.count(key) )
-                {
-                    orig_image(rows,cols)=0;
-                }
-            }
-        }
-
-    }
-    else
-    {
-        if ( fliplr )
-        {
-            for ( unsigned int cols=0; cols < flipped_image.nj() ; ++cols)
-            {
-                for ( unsigned int rows=0; rows < flipped_image.ni() ; ++rows)
-                {
-                    flipped_image(rows,cols)=orig_image(
-                        flipped_image.ni()-1-rows,
-                        cols);
-
-                }
-            }
-        }
-        else
-        {
-            flipped_image=orig_image;
-        }
-    }
-
-    unsigned int width  = flipped_image.ni();
-    unsigned int height = flipped_image.nj();
+    unsigned int width  = orig_image.ni();
+    unsigned int height = orig_image.nj();
 
     vil_image_view<vl_sift_pix> grad_mag;
     vil_image_view<vl_sift_pix> grad_angle;
     
-    vil_orientations_from_sobel(flipped_image,grad_angle,grad_mag);
+    vil_orientations_from_sobel(orig_image,grad_angle,grad_mag);
 
     *grad_data=(vl_sift_pix*) vl_malloc(sizeof(vl_sift_pix)*width*height*2);
     
@@ -1063,13 +1052,12 @@ void dbskr_test_routines::compute_sift_descr(
 
 
 void dbskr_test_routines::convert_to_color_space(
-    vil_image_resource_sptr& input_image,
+    vil_image_view<vxl_byte>& image,
     vil_image_view<double>& o1,
     vil_image_view<double>& o2,
     vil_image_view<double>& o3,
     ColorSpace color_space)
 {
-    vil_image_view<vxl_byte> image = input_image->get_view();
     unsigned int w = image.ni(); 
     unsigned int h = image.nj();
     o1.set_size(w,h);

@@ -102,9 +102,6 @@ private:
     vcl_string output_filename_;
 
     // Keep track of masks per image
-    vcl_vector<vgl_polygon<double> > model_masks_;
-
-    // Keep track of masks per image
     vcl_vector<vgl_polygon<double> > query_masks_;
 
     // Keep track of original files
@@ -117,11 +114,6 @@ private:
     vcl_vector<vil_image_view<double> > query_chan_2_;
     vcl_vector<vil_image_view<double> > query_chan_3_;
     
-    /* // Keep track of gradients */
-    /* vcl_vector<vl_sift_pix* > model_grad_chan_1_; */
-    /* vcl_vector<vl_sift_pix* > model_grad_chan_2_; */
-    /* vcl_vector<vl_sift_pix* > model_grad_chan_3_; */
-
     // Keep track of gradients
     vcl_vector<vl_sift_pix* > query_grad_chan_1_;
     vcl_vector<vl_sift_pix* > query_grad_chan_2_;
@@ -133,6 +125,9 @@ private:
     // Keep pca data
     vnl_matrix<vl_sift_pix> PCA_M_;
     vnl_vector<vl_sift_pix> PCA_mean_;
+
+    // Keep track of background value
+    vcl_vector<double> bg_color_;
 
     // Keep track of gmm data
     float* means_cg_;
@@ -161,6 +156,10 @@ private:
     void load_model_file(vcl_string& filename);
     void load_pca_data(vcl_string& M_filename,vcl_string& mean_filename);
     void load_gmm_data(vcl_string& gmm_filename);
+    void mask_image(vil_image_view<vxl_byte>& image,
+                    vgl_polygon<double>& poly);
+
+    void compute_bg_color(ColorSpace color_space);
 
     vnl_vector<vl_sift_pix> linear_embed(vnl_vector<vl_sift_pix>& descr)
     {
@@ -179,7 +178,7 @@ private:
         vil_image_view<double>& mapped_img);
 
     void convert_to_color_space(
-        vil_image_resource_sptr& input_image,
+        vil_image_view<vxl_byte>& image,
         vil_image_view<double>& o1,
         vil_image_view<double>& o2,
         vil_image_view<double>& o3,
@@ -213,10 +212,7 @@ private:
         vnl_vector<vl_sift_pix>& descriptor);
 
     void compute_grad_color_maps(vil_image_view<double>& orig_image,
-                                 vl_sift_pix** grad_data,
-                                 vgl_polygon<double>& poly,
-                                 bool mask_poly=true,
-                                 bool fliplr=false);
+                                 vl_sift_pix** grad_data);
 
     // Make copy ctor private
     dbskr_test_routines(const dbskr_test_routines&);
