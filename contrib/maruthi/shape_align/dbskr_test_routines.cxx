@@ -179,21 +179,20 @@ void dbskr_test_routines::test()
         vnl_matrix<vl_sift_pix> model_fvs(encoding_size,
                                           test_points.size(),0);
 
+        vil_image_view<double> temp(query_ni_,
+                                    query_nj_,
+                                    3);
+
+        vil_image_view<double> chan1   = vil_plane(temp,0);
+        vil_image_view<double> chan2   = vil_plane(temp,1);
+        vil_image_view<double> chan3   = vil_plane(temp,2);
+        
         for ( int m=0; m < model_points_.size() ; ++m)
         {
             vcl_cout<<"Distance: Query "<<q<<" vs Model "<<m
                     <<vcl_endl;
 
             vcl_vector<vcl_pair<float,float> > m_pts=model_points_[m][q];
-
-            
-            vil_image_view<double> temp(query_ni_,
-                                        query_nj_,
-                                        3);
-
-            vil_image_view<double> chan1   = vil_plane(temp,0);
-            vil_image_view<double> chan2   = vil_plane(temp,1);
-            vil_image_view<double> chan3   = vil_plane(temp,2);
             
             vil_fill(chan1,bg_color_[0]);
             vil_fill(chan2,bg_color_[1]);
