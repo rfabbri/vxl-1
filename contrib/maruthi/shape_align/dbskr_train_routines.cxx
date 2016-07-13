@@ -559,14 +559,14 @@ void dbskr_train_routines::compute_gradients()
         vl_sift_pix* model_chan2_grad_data(0);
         vl_sift_pix* model_chan3_grad_data(0);
         
-        compute_grad_color_maps(model_chan_1_[i],
-                                &model_chan1_grad_data);
+        compute_grad_smooth_color_maps(model_chan_1_[i],
+                                       &model_chan1_grad_data);
         
-        compute_grad_color_maps(model_chan_2_[i],
-                                &model_chan2_grad_data);
+        compute_grad_smooth_color_maps(model_chan_2_[i],
+                                       &model_chan2_grad_data);
         
-        compute_grad_color_maps(model_chan_3_[i],
-                                &model_chan3_grad_data);
+        compute_grad_smooth_color_maps(model_chan_3_[i],
+                                       &model_chan3_grad_data);
         
         grad_chan_1_.push_back(model_chan1_grad_data);
         grad_chan_2_.push_back(model_chan2_grad_data);
@@ -624,6 +624,16 @@ void dbskr_train_routines::compute_grad_smooth_color_maps(
         vl_malloc(width*height*sizeof(double));
 
     double* orig_image_data=orig_image.top_left_ptr();
+
+    vl_imsmooth_d(
+        orig_image_data,    // smoothed data
+        width,              // smoothed stride
+        orig_image_data,    // data to be smoothed
+        width,              // image width
+        height,             // image height
+        width,              // image stride
+        1.0,                // sigmaX
+        1.0);               // sigmaY
 
     vl_imgradient_polar_d(
         gradient_magnitude, // gradient magnitude 
