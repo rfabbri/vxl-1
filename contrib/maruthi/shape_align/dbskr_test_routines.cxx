@@ -35,6 +35,7 @@
 extern "C" {
 #include <vl/gmm.h>
 #include <vl/fisher.h>
+#include <vl/imopv.h>
 }
 
 //: Constructor
@@ -220,14 +221,14 @@ void dbskr_test_routines::test()
             vl_sift_pix* model_chan2_grad_data(0);
             vl_sift_pix* model_chan3_grad_data(0);
             
-            compute_grad_color_maps(chan1,
-                                    &model_chan1_grad_data);
+            compute_grad_smooth_color_maps(chan1,
+                                           &model_chan1_grad_data);
         
-            compute_grad_color_maps(chan2,
-                                    &model_chan2_grad_data);
+            compute_grad_smooth_color_maps(chan2,
+                                           &model_chan2_grad_data);
             
-            compute_grad_color_maps(chan3,
-                                    &model_chan3_grad_data);
+            compute_grad_smooth_color_maps(chan3,
+                                           &model_chan3_grad_data);
 
             // Compute model_fvs
             compute_fvs(test_points,
@@ -883,14 +884,14 @@ void dbskr_test_routines::compute_query_gradients()
         vl_sift_pix* query_chan2_grad_data(0);
         vl_sift_pix* query_chan3_grad_data(0);
         
-        compute_grad_color_maps(query_chan_1_[i],
-                                &query_chan1_grad_data);
+        compute_grad_smooth_color_maps(query_chan_1_[i],
+                                       &query_chan1_grad_data);
         
-        compute_grad_color_maps(query_chan_2_[i],
-                                &query_chan2_grad_data);
+        compute_grad_smooth_color_maps(query_chan_2_[i],
+                                       &query_chan2_grad_data);
         
-        compute_grad_color_maps(query_chan_3_[i],
-                                &query_chan3_grad_data);
+        compute_grad_smooth_color_maps(query_chan_3_[i],
+                                       &query_chan3_grad_data);
         
         query_grad_chan_1_.push_back(query_chan1_grad_data);
         query_grad_chan_2_.push_back(query_chan2_grad_data);
@@ -984,6 +985,57 @@ void dbskr_test_routines::compute_grad_color_maps(
     }
 }
 
+void dbskr_test_routines::compute_grad_smooth_color_maps(
+    vil_image_view<double>& orig_image,
+    vl_sift_pix** grad_data)
+{
+    unsigned int width  = orig_image.ni();
+    unsigned int height = orig_image.nj();
+
+    double* gradient_magnitude = (double*) 
+        vl_malloc(width*height*sizeof(double));
+    double* gradient_angle     = (double*) 
+        vl_malloc(width*height*sizeof(double));
+
+    double* orig_image_data=orig_image.top_left_ptr();
+
+    vl_imsmooth_d(
+        orig_image_data,    // smoothed data
+        width,              // smoothed stride
+        orig_image_data,    // data to be smoothed
+        width,              // image width
+        height,             // image height
+        width,              // image stride
+        1.0,                // sigmaX
+        1.0);               // sigmaY
+
+    vl_imgradient_polar_d(
+        gradient_magnitude, // gradient magnitude 
+        gradient_angle,     // gradient angle
+        1,                  // output width
+        width,              // output height
+        orig_image_data,    // input image
+        width,              // input image width
+        height,             // input image height
+        width);             // input image stride
+
+    *grad_data=(vl_sift_pix*) vl_malloc(sizeof(vl_sift_pix)*width*height*2);
+
+    unsigned int index=0;
+    for ( unsigned int i=0; i < width*height; ++i)
+    {
+        double mag  = gradient_magnitude[i];
+        double angle= gradient_angle[i];
+
+        (*grad_data)[index]=mag;
+        ++index;
+        (*grad_data)[index]=angle;
+        ++index;
+    }
+
+    vl_free(gradient_magnitude);
+    vl_free(gradient_angle);
+}
 
 void dbskr_test_routines::compute_sift_descr(
     vgl_point_2d<double>& pt,

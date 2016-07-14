@@ -214,6 +214,9 @@ private:
     void compute_grad_color_maps(vil_image_view<double>& orig_image,
                                  vl_sift_pix** grad_data);
 
+    void compute_grad_smooth_color_maps(vil_image_view<double>& orig_image,
+                                        vl_sift_pix** grad_data);
+
     // Make copy ctor private
     dbskr_test_routines(const dbskr_test_routines&);
 
