@@ -18,6 +18,7 @@
 #include <dbsk2d/algo/dbsk2d_ishock_grouping_transform.h>
 #include <dbsk2d/algo/dbsk2d_bnd_preprocess.h>
 #include <dbsk2d/dbsk2d_bnd_utils.h>
+#include <dbsk2d/algo/dbsk2d_prune_ishock.h>
 #include <vgl/vgl_area.h>
 
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
@@ -673,7 +674,101 @@ debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
     }
 
     temp_trans.write_fragments(filename,polygons);
-    
+
+
+    // Create filename
+    vcl_string coarse_poly=filename+"_coarse_fragments.txt";
+    vcl_string coarse_shock=filename+"_csg.cem";
+    dbsk2d_shock_graph coarse_shock_graph;
+
+    // Write out coarse shock graph 
+    dbsk2d_prune_ishock prune(ishock_graph, &coarse_shock_graph);
+
+    vcl_ofstream file_stream(coarse_poly.c_str());
+
+    vcl_vector<vsol_spatial_object_2d_sptr> vsol_list;
+
+    //draw the edges fragments first
+    for ( dbsk2d_shock_graph::edge_iterator curE = 
+              coarse_shock_graph.edges_begin();
+          curE != coarse_shock_graph.edges_end();
+          curE++ ) 
+    {
+        dbsk2d_shock_edge_sptr selm = (*curE);
+
+        //return if no fragment has been computed 
+        if (!selm->shock_fragment())
+        {
+            continue;
+        }
+        
+        file_stream<<selm->shock_fragment()->ex_pts().size()<<vcl_endl;
+
+        for( unsigned int i = 0 ; i < selm->shock_fragment()->ex_pts().size() 
+                 ; i++ ) {
+            file_stream<<selm->shock_fragment()->ex_pts()[i].x()<<" "<< 
+                selm->shock_fragment()->ex_pts()[i].y() <<" ";
+        }
+
+        // Add in contours for front 
+        vsol_spatial_object_2d_sptr obj=
+            new vsol_polyline_2d;
+
+        vsol_polyline_2d* curve=obj->cast_to_curve()->cast_to_polyline();
+
+        vcl_vector<vgl_point_2d<double> > ex_pts= selm->ex_pts();
+        
+        
+        for ( unsigned int i=0; i < ex_pts.size() ; ++i)
+        {
+            vsol_point_2d_sptr pt=new vsol_point_2d(ex_pts[i]);
+
+            curve->add_vertex(pt);
+        }
+
+        vsol_list.push_back(obj);
+
+
+    }
+    file_stream<<vcl_endl;
+
+    dbsol_save_cem(vsol_list, coarse_shock);
+
+
+    //then draw the node fragments
+  
+    for ( dbsk2d_shock_graph::vertex_iterator curN = 
+              coarse_shock_graph.vertices_begin();
+          curN != coarse_shock_graph.vertices_end();
+          curN++ ) 
+    {
+        dbsk2d_shock_node_sptr snode = (*curN);
+        
+        //traverse the descriptor list and draw the shock fragments for the 
+        //degenerate descriptors
+        vcl_list<dbsk2d_shock_node_descriptor>::iterator p_itr = 
+            snode->descriptor_list().begin();
+        for (; p_itr != snode->descriptor_list().end(); ++ p_itr)
+        {
+          dbsk2d_shock_node_descriptor cur_descriptor = (*p_itr);
+          
+          if (!cur_descriptor.fragment.ptr())
+          {
+              continue;
+          }
+          
+          file_stream<<cur_descriptor.fragment->ex_pts().size()<<vcl_endl;
+
+          for( unsigned int i = 0 ; i < 
+                   cur_descriptor.fragment->ex_pts().size() ; i++ ) {
+              file_stream<<cur_descriptor.fragment->ex_pts()[i].x()<<" "<< 
+                  cur_descriptor.fragment->ex_pts()[i].y()<<" ";
+          }
+     
+      }
+    }
+    file_stream<<vcl_endl;
+    file_stream.close();
 }
 
 void dbsk2d_compute_containment_graph_process::
