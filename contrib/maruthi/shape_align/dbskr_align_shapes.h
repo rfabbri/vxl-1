@@ -133,6 +133,15 @@ private:
         double model_scale_ratio,
         double query_scale_ratio);
 
+    void shape_alignment_tps(
+        vgl_polygon<double>& query_poly,
+        dbskr_tree_sptr& model_tree,
+        dbskr_tree_sptr& query_tree,
+        vcl_vector<dbskr_scurve_sptr>& curve_list1,
+        vcl_vector<dbskr_scurve_sptr>& curve_list2,
+        vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list, 
+        vcl_ofstream& output_binary_file);
+    
     // Make copy ctor private
     dbskr_align_shapes(const dbskr_align_shapes&);
 
