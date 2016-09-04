@@ -8,7 +8,7 @@
 #include"smw/smw_frame_clock.h"
 
 #include<vbl/vbl_ref_count.h>
-#include<vbl/vbl_smart_ptr.txx>
+#include<vbl/vbl_smart_ptr.hxx>
 
 #include<vcl_map.h>
 #include<vcl_set.h>

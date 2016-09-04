@@ -4,7 +4,7 @@
 //#include <vcsl/vcsl_spatial.h>
 //#include <vcsl/vcsl_graph.h>
 //#include <vcsl/vcsl_axis.h>
-//#include <vbl/vbl_smart_ptr.txx>
+//#include <vbl/vbl_smart_ptr.hxx>
 
 //VBL_SMART_PTR_INSTANTIATE(dbknee_coord_base);
 

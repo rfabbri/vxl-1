@@ -1,4 +1,4 @@
-//this is /contrib/bm/dts/algo/dts_pixel_time_series_pca_vnl_vector_fixed.txx
+//this is /contrib/bm/dts/algo/dts_pixel_time_series_pca_vnl_vector_fixed.hxx
 #ifndef DTS_PIXEL_TIME_SERIES_PCA_VNL_VECTOR_FIXED_TXX_
 #define DTS_PIXEL_TIME_SERIES_PCA_VNL_VECTOR_FIXED_TXX_
 #include<dts/algo/dts_pixel_time_series_pca_vnl_vector_fixed.h>

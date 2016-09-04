@@ -13,7 +13,7 @@
 #include <vil1/vil1_copy.h>
 #include <vil1/vil1_memory_image_of.h>
 #include <brip/brip_vil1_float_ops.h>
-#include <vepl1/vepl1_gaussian_convolution.h>
+#include <vepl/vepl_gaussian_convolution.h>
 
 #include <osl/osl_convolve.h>
 #include <osl/internals/droid.h> //name
@@ -136,7 +136,7 @@ void dbdet_lvwr::compute_costs_from_edges(vcl_list<osl_edge*> canny_edges) {
 
 void dbdet_lvwr::compute_gradients(vil1_image const &image)
 {
-  vil1_image smoothed = vepl1_gaussian_convolution(image, double(params_.gauss_sigma));
+  vil1_image smoothed = vepl_gaussian_convolution(image, double(params_.gauss_sigma));
 
   // copy input image to byte buffer
   //vil1_image_as_byte(image).get_section(image_buf.get_buffer(), 0, 0, image_w, image_h);

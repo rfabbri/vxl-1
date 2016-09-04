@@ -77,7 +77,7 @@ AUX_SOURCE_DIRECTORY(sel/Templates dbdet_sources)
 ADD_LIBRARY(dbdet ${dbdet_sources})
 
 # add the required libraries into this list
-TARGET_LINK_LIBRARIES( dbdet vil1 vil bil_algo dbnl_algo osl vepl vepl1 vdgl vnl_io bdgl dbgl_algo brip pdf1d mbl)
+TARGET_LINK_LIBRARIES( dbdet vil1 vil bil_algo dbnl_algo osl vepl vepl vdgl vnl_io bdgl dbgl_algo brip pdf1d mbl)
 
 
 IF(BUILD_TESTING)

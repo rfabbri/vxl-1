@@ -5,6 +5,6 @@
 #include <dbsksp/dbsksp_shock_fragment.h>
 #include <dbsks/dbsks_ocm_image_cost.h>
 
-#include <vbl/vbl_smart_ptr.txx>
+#include <vbl/vbl_smart_ptr.hxx>
 
 VBL_SMART_PTR_INSTANTIATE(dbsks_local_match);

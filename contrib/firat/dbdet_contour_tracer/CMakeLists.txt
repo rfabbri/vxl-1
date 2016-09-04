@@ -23,5 +23,5 @@ SET(dbdet_contour_tracer_sources
 ADD_LIBRARY(dbdet_contour_tracer ${dbdet_contour_tracer_sources})
 
 # add the required libraries into this list
-TARGET_LINK_LIBRARIES( dbdet_contour_tracer vil1 vil bil_algo dbnl_algo osl vepl vepl1 vdgl vnl_io bdgl dbgl_algo brip pdf1d mbl)
+TARGET_LINK_LIBRARIES( dbdet_contour_tracer vil1 vil bil_algo dbnl_algo osl vepl vepl vdgl vnl_io bdgl dbgl_algo brip pdf1d mbl)
 

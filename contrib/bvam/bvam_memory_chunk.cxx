@@ -7,7 +7,7 @@
 #include <vcl_cstring.h>
 #include <vcl_cassert.h>
 
-#include <vbl/vbl_smart_ptr.txx>
+#include <vbl/vbl_smart_ptr.hxx>
 
 //: Default constructor
 bvam_memory_chunk::bvam_memory_chunk() : data_(0), size_(0) {}

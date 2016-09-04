@@ -9,7 +9,7 @@
 #include <dbinfo/dbinfo_observation.h>
 #include <dbcvr/dbcvr_cv_cor.h>
 
-#include <vbl/vbl_smart_ptr.txx>
+#include <vbl/vbl_smart_ptr.hxx>
 
 VBL_SMART_PTR_INSTANTIATE(dbskr_v_node);
 

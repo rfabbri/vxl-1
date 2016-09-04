@@ -4,6 +4,6 @@
 #include <dbsksp/dbsksp_shock_edge.h>
 #include <dbsksp/dbsksp_shock_node.h>
 #include <dbsksp/dbsksp_shock_node_descriptor.h>
-#include <vbl/vbl_smart_ptr.txx>
+#include <vbl/vbl_smart_ptr.hxx>
 
 VBL_SMART_PTR_INSTANTIATE(dbsksp_shock_fragment);

@@ -2,7 +2,7 @@
 #include <dbrec3d/dbrec3d_context_manager.h>
 #include <dbrec3d/dbrec3d_parts_manager.h>
 #include <dbrec3d/dbrec3d_part.h>
-#include <vbl/vbl_smart_ptr.txx>
+#include <vbl/vbl_smart_ptr.hxx>
 
 VBL_SMART_PTR_INSTANTIATE(dbrec3d_context);
 VBL_SMART_PTR_INSTANTIATE(dbrec3d_context_manager);

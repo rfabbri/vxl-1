@@ -3,7 +3,7 @@
 #include <vsol/vsol_polygon_2d.h>
 #include <vcl_vector.h>
 #include <vcl_utility.h>
-#include <vbl/vbl_smart_ptr.txx>
+#include <vbl/vbl_smart_ptr.hxx>
 
 VBL_SMART_PTR_INSTANTIATE(Lie_cv_cor);
 

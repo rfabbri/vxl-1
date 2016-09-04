@@ -8,7 +8,7 @@
 #include <vcl_cassert.h>
 
 // to instantiate the private component_sptr
-#include <vbl/vbl_smart_ptr.txx>
+#include <vbl/vbl_smart_ptr.hxx>
 #include <vbl/io/vbl_io_smart_ptr.txx>
 #include <vsl/vsl_vector_io.h>
   

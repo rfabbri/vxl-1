@@ -12,7 +12,7 @@
 #include <vcl_vector.h>
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_smart_ptr.h>
-#include <vbl/vbl_smart_ptr.txx>
+#include <vbl/vbl_smart_ptr.hxx>
 
 class dbdet_1d_gaussian_derivative_filters
 {

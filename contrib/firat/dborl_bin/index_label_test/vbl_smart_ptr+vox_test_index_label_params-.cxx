@@ -12,7 +12,7 @@
 //
 
 #include <bpro1/bpro1_storage.h>
-#include <vbl/vbl_smart_ptr.txx>
+#include <vbl/vbl_smart_ptr.hxx>
 #include "vox_test_index_label_params.h"
 
 VBL_SMART_PTR_INSTANTIATE(vox_test_index_label_params);

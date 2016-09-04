@@ -1,4 +1,4 @@
-#include <vbl/vbl_smart_ptr.txx>
+#include <vbl/vbl_smart_ptr.hxx>
 #include <vidreg/vidreg_salient_group.h>
 #include <rgrl/rgrl_feature.h>
 

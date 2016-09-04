@@ -7,6 +7,6 @@
 #include <dbskr/dbskr_scurve.h>
 #include <dbru/dbru_multiple_instance_object.h>
 
-#include <vbl/vbl_smart_ptr.txx>
+#include <vbl/vbl_smart_ptr.hxx>
 
 VBL_SMART_PTR_INSTANTIATE(dbru_object);
