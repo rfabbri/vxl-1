@@ -679,10 +679,15 @@ debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
     // Create filename
     vcl_string coarse_poly=filename+"_coarse_fragments.txt";
     vcl_string coarse_shock=filename+"_csg.cem";
-    dbsk2d_shock_graph coarse_shock_graph;
+
+    //instantiate an empty coarse shock graph at this time
+    //this will be properly defined once the shock is pruned
+    dbsk2d_shock_graph_sptr coarse_shock_graph = new dbsk2d_shock_graph();
 
     // Write out coarse shock graph 
-    dbsk2d_prune_ishock prune(ishock_graph, &coarse_shock_graph);
+    dbsk2d_prune_ishock prune(ishock_graph, coarse_shock_graph);
+    prune.prune(1.0);
+    prune.compile_coarse_shock_graph();
 
     vcl_ofstream file_stream(coarse_poly.c_str());
 
@@ -690,8 +695,8 @@ debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
 
     //draw the edges fragments first
     for ( dbsk2d_shock_graph::edge_iterator curE = 
-              coarse_shock_graph.edges_begin();
-          curE != coarse_shock_graph.edges_end();
+              coarse_shock_graph->edges_begin();
+          curE != coarse_shock_graph->edges_end();
           curE++ ) 
     {
         dbsk2d_shock_edge_sptr selm = (*curE);
@@ -709,6 +714,7 @@ debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
             file_stream<<selm->shock_fragment()->ex_pts()[i].x()<<" "<< 
                 selm->shock_fragment()->ex_pts()[i].y() <<" ";
         }
+        file_stream<<vcl_endl;
 
         // Add in contours for front 
         vsol_spatial_object_2d_sptr obj=
@@ -730,7 +736,6 @@ debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
 
 
     }
-    file_stream<<vcl_endl;
 
     dbsol_save_cem(vsol_list, coarse_shock);
 
@@ -738,8 +743,8 @@ debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
     //then draw the node fragments
   
     for ( dbsk2d_shock_graph::vertex_iterator curN = 
-              coarse_shock_graph.vertices_begin();
-          curN != coarse_shock_graph.vertices_end();
+              coarse_shock_graph->vertices_begin();
+          curN != coarse_shock_graph->vertices_end();
           curN++ ) 
     {
         dbsk2d_shock_node_sptr snode = (*curN);
@@ -764,11 +769,13 @@ debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
               file_stream<<cur_descriptor.fragment->ex_pts()[i].x()<<" "<< 
                   cur_descriptor.fragment->ex_pts()[i].y()<<" ";
           }
+
+          file_stream<<vcl_endl;
      
       }
     }
-    file_stream<<vcl_endl;
     file_stream.close();
+
 }
 
 void dbsk2d_compute_containment_graph_process::
