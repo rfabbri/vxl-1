@@ -3,6 +3,7 @@
 // \file
 
 #include "dbdet_keypoint.h"
+#include <vcl_iostream.h>
 
 
 

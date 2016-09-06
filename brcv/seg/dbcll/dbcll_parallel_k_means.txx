@@ -1,6 +1,6 @@
-// This is brcv/seg/dbcll/dbcll_parallel_k_means.txx
-#ifndef dbcll_k_means_txx_
-#define dbcll_k_means_txx_
+// This is brcv/seg/dbcll/dbcll_parallel_k_means.hxx
+#ifndef dbcll_k_means.txx_
+#define dbcll_k_means.txx_
 //:
 // \file
 // \brief  Functions used for parallel K-Means Clustering (local contribution). 
@@ -408,6 +408,6 @@ dbcll_init_k_means_d2(const vcl_vector<vnl_vector_fixed<double,T > >& points, un
 
 
 
-#endif // dbcll_k_means_txx_
+#endif // dbcll_k_means.txx_
 
 

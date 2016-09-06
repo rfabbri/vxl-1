@@ -1,6 +1,6 @@
-// This is core/vpgl/vpgl_perspective_camera.txx
-#ifndef dvpgl_perspective_camera_vsl_txx_
-#define dvpgl_perspective_camera_vsl_txx_
+// This is core/vpgl/vpgl_perspective_camera.hxx
+#ifndef dvpgl_perspective_camera_vsl.txx_
+#define dvpgl_perspective_camera_vsl.txx_
 //:
 // \file
 
@@ -45,4 +45,4 @@ template void vsl_b_read(vsl_b_istream &is, dvpgl_perspective_camera_vsl<T >* &p
 template void vsl_b_write(vsl_b_ostream &os, const dvpgl_perspective_camera_vsl<T > * p);
 
 
-#endif // dvpgl_perspective_camera_vsl_txx_
+#endif // dvpgl_perspective_camera_vsl.txx_

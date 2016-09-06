@@ -1,5 +1,5 @@
-#include <vnl/io/vnl_io_matrix_fixed.txx>
-#include <vsl/vsl_map_io.txx>
+#include <vnl/io/vnl_io_matrix_fixed.hxx>
+#include <vsl/vsl_map_io.hxx>
 #include <vnl/vnl_matrix_fixed.h>
 
 typedef vnl_matrix_fixed<float,3,3> vnl_matrix_fixed_float_3_3; 

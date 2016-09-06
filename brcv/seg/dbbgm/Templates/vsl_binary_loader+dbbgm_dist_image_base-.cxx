@@ -1,4 +1,4 @@
-#include <vsl/vsl_binary_loader.txx>
+#include <vsl/vsl_binary_loader.hxx>
 #include <dbbgm/dbbgm_distribution_image.h>
 
  

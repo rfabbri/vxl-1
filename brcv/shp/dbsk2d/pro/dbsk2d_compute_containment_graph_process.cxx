@@ -28,7 +28,7 @@
 
 
 #include <vnl/vnl_random.h>
-#include <vgl/vgl_lineseg_test.txx>
+#include <vgl/vgl_lineseg_test.hxx>
 #include <vgl/vgl_closest_point.h>
 #include <vgl/vgl_box_2d.h>
 #include <vsol/vsol_point_2d.h>

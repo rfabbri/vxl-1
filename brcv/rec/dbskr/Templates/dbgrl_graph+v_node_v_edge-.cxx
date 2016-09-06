@@ -1,4 +1,4 @@
-#include <dbgrl/dbgrl_graph.txx>
+#include <dbgrl/dbgrl_graph.hxx>
 
 #include "../dbskr_shock_patch.h"
 #include <dbsk2d/dbsk2d_shock_node.h>

@@ -136,7 +136,7 @@ void dbdet_lvwr::compute_costs_from_edges(vcl_list<osl_edge*> canny_edges) {
 
 void dbdet_lvwr::compute_gradients(vil1_image const &image)
 {
-  vil1_image smoothed = vepl_gaussian_convolution(image, double(params_.gauss_sigma));
+  /*vil1_image smoothed = vepl_gaussian_convolution(image, double(params_.gauss_sigma));
 
   // copy input image to byte buffer
   //vil1_image_as_byte(image).get_section(image_buf.get_buffer(), 0, 0, image_w, image_h);
@@ -178,7 +178,7 @@ void dbdet_lvwr::compute_gradients(vil1_image const &image)
   compute_laplacian (&window_str,
              &image_laplacian_buf,
              &image_fxx_buf,
-             &image_fyy_buf);
+             &image_fyy_buf);*/
 
 }
 

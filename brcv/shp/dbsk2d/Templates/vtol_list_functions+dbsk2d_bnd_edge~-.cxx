@@ -2,8 +2,8 @@
 
 #include <dbsk2d/dbsk2d_bnd_edge.h>
 #include <dbsk2d/dbsk2d_bnd_edge_sptr.h>
-#include <vtol/vtol_list_functions.txx>
-#include <vcl_vector.txx>
+#include <vtol/vtol_list_functions.hxx>
+#include <vcl_vector.hxx>
 
 template vcl_vector<dbsk2d_bnd_edge* >* tagged_union(vcl_vector<dbsk2d_bnd_edge*>*);
 

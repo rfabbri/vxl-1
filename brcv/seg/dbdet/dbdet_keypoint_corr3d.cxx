@@ -6,6 +6,7 @@
 #include "dbdet_keypoint.h"
 #include <vsl/vsl_binary_io.h>
 #include <vsl/vsl_map_io.h>
+#include <vcl_iostream.h>
 
 
 //: Return the keypoint that corresponds in the give view

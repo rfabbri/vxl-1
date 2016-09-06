@@ -9,7 +9,7 @@
 
 #include <vcl_vector.h>
 #include <vil/vil_image_resource.h>
-#include <vgel/vgel_multi_view_data.txx>
+#include <vgel/vgel_multi_view_data.hxx>
 #include <vgel/vgel_kl.h>
 
 

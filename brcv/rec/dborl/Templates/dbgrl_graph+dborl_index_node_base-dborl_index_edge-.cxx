@@ -1,4 +1,4 @@
-#include <dbgrl/dbgrl_graph.txx>
+#include <dbgrl/dbgrl_graph.hxx>
 
 #include <dborl/dborl_index_node_base.h>
 #include <dborl/dborl_index_edge.h>

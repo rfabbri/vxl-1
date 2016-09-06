@@ -1,6 +1,6 @@
 // This is brcv/seg/dbbgm/dbbgm_distribution_image.txx
-#ifndef dbbgm_distribution_image_txx_
-#define dbbgm_distribution_image_txx_
+#ifndef dbbgm_distribution_image.txx_
+#define dbbgm_distribution_image.txx_
 //:
 // \file
 
@@ -120,7 +120,7 @@ vsl_b_read(vsl_b_istream &is, dbbgm_distribution_image<T>* &p)
     p = 0;
 }
 
-#include <vbl/io/vbl_io_array_2d.txx>
+#include <vbl/io/vbl_io_array_2d.hxx>
 
 #define DBBGM_DISTRIBUTION_IMAGE_INSTANTIATE(T) \
 template class dbbgm_distribution_image<T >;\
@@ -129,4 +129,4 @@ template void vsl_b_read(vsl_b_istream &is, dbbgm_distribution_image<T>* &p);\
 VBL_IO_ARRAY_2D_INSTANTIATE(dbsta_distribution<T> *);\
 
 
-#endif // dbbgm_distribution_image_txx_
+#endif // dbbgm_distribution_image.txx_

@@ -1,4 +1,4 @@
-#include <dbgrl/dbgrl_graph.txx>
+#include <dbgrl/dbgrl_graph.hxx>
 
 #include <dbsksp/dbsksp_xshock_node.h>
 #include <dbsksp/dbsksp_xshock_edge.h>

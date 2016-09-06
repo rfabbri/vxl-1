@@ -9,7 +9,7 @@
 
 #include <vcl_vector.h>
 #include <vtol/vtol_vertex_2d.h>
-#include <vgel/vgel_multi_view_data.txx>
+#include <vgel/vgel_multi_view_data.hxx>
 #include <vgel/vgel_kl.h>
 #include <vpgl/vpgl_proj_camera.h>
 #include <dbinfo/dbinfo_track_geometry.h>

@@ -4,6 +4,7 @@
 //
 
 #include "dbdet_frenet_keypoint.h"
+#include <vcl_iostream.h>
 
 //: Binary save self to stream.
 void
