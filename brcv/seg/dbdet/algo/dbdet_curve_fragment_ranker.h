@@ -10,6 +10,7 @@
 //
 #include <dbdet/algo/dbdet_curve_fragment_cues.h>
 #include <vnl/vnl_matrix_fixed.h>
+#include <vcl_iostream.h>
 
 // TODO Possibly class it
 //class dbdet_curve_fragment_ranker {
@@ -62,8 +63,10 @@ dbdet_curve_fragment_ranker(
   unsigned i = 0;
   vnl_vector<double> fmean2 = beta.get_row(0);
   vnl_vector<double> beta_2 = beta.get_row(2);
+
   for (dbdet_edgel_chain_list_const_iter it=frags.begin(); it != frags.end(); it++, i++) {
     cues.compute_all_cues(*(*it), &fv);
+
     // rank[i] =  1 / (1 + exp(-([1, bg_grad, sat_grad, hue_grad, abs_k, edge_sparsity, wigg, len]-fmean_2)*beta_2'));
     rank[i] = 0;
     for (unsigned f=0; f < Y_NUM_FEATURES; ++f)

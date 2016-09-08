@@ -2,6 +2,7 @@
 #include <dbgl/algo/dbgl_diffgeom.h>
 #include <vil/algo/vil_colour_space.h>
 #include <vcl_cmath.h>
+#include <vcl_iostream.h>
 
 void dbdet_curve_fragment_cues::
 compute_all_cues(
@@ -51,16 +52,23 @@ cuvature_cues(
   assert(k.size() == npts);
 
   for (unsigned i=0; i < npts; ++i)
-    if (vnl_math::isnan(k[i]))
+  {
+    //Need to check if k=0 when inf works
+    if (vnl_math::isnan(k[i]) || vnl_math::isinf(k[i]))
+    {
       k[i] = 0;
+    }
+  }
 
   { // wiggliness is the number of times curvature changes sign
     features[Y_WIGG] = 0;
     for (unsigned i=0; i + 1 < npts; ++i)
+    {
       features[Y_WIGG] += ( (k[i+1] >= 0) == (k[i] >= 0) );
+    }
     features[Y_WIGG] /= npts;
   }
-
+ 
   features[Y_ABS_K] = k.one_norm() / npts;
 }
 
@@ -165,6 +173,8 @@ lateral_edge_sparsity_cue(
   for (unsigned i=0; i < npts; ++i) {
     unsigned p_i = static_cast<unsigned>(e[i]->pt.x()+0.5);
     unsigned p_j = static_cast<unsigned>(e[i]->pt.y()+0.5);
+    //Need to check if it should be sum here
+    total_edges += em_.edge_cells(p_i,p_j).size();
     mark_visited(p_i, p_j);
   }
 
@@ -190,5 +200,6 @@ lateral_edge_sparsity_cue(
   }
   visited_id_++;
   
-  return total_edges/(features[Y_LEN] = euclidean_length(c));
+  features[Y_LEN] = euclidean_length(c);
+  return total_edges / (features[Y_LEN] == 0 ? 1.0 : features[Y_LEN]);
 }

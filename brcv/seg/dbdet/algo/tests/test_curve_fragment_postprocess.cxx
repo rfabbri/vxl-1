@@ -23,7 +23,7 @@
 static const double tolerance=1e-3;
 
 void
-load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img, dbdet_curve_fragment_graph &frags, dbdet_edgemap_sptr edgemap, y_trained_parameters &beta)
+load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img, dbdet_curve_fragment_graph &frags, dbdet_edgemap_sptr &edgemap, y_trained_parameters &beta)
 {
   // Perform all operations Yuliang does:
   //
@@ -141,7 +141,7 @@ realistic_test()
 {
   vil_image_view<vil_rgb<vxl_byte> > img;
   dbdet_curve_fragment_graph curve_fragment_graph;
-  dbdet_edgemap_sptr edgemap_sptr = new dbdet_edgemap(1, 1);
+  dbdet_edgemap_sptr edgemap_sptr;
   y_trained_parameters beta;
   load_dataset(img, curve_fragment_graph, edgemap_sptr, beta);
 
@@ -158,6 +158,7 @@ realistic_test()
   //for (unsigned i=0; i < n_gt; ++i) {
     //TEST_NEAR(rank[i], gt_rank[i], tolerance);
   //}
+
 }
 
 //: Test the dbdet_curve_fragment_* functions
