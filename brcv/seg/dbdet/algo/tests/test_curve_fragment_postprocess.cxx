@@ -55,17 +55,19 @@ load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img, dbdet_curve_fragment_graph
   //
   
   vcl_string root = dbtest_root_dir();
-  vcl_string base_path = root + "/brcv/seg/dbdet/algo/tests/";
+  vcl_string base_path = root + "/brcv/seg/dbdet/algo/tests/test_data/";
 
   vcl_string image_path = base_path + "2018.jpg";
   vcl_string frags_path = base_path + "2018.cem";
   vcl_string edge_path = base_path + "2018.edg";
   vcl_string beta_path = base_path + "gPb_SEL_beta_of_cues_for_seletion.txt";
 
-  img = vil_convert_to_component_order(vil_convert_to_n_planes(3, vil_convert_stretch_range (vxl_byte(), vil_load(image_path.c_str()))));
+  img = vil_convert_to_component_order(vil_convert_to_n_planes(3,
+        vil_convert_stretch_range (vxl_byte(), vil_load(image_path.c_str()))));
   dbdet_load_cem(frags_path, frags);
   dbdet_load_edg(edge_path, true, 1.0, edgemap);
-  vnl_matrix<double> tmp_beta = (vnl_matrix<double>)vnl_file_matrix<double>(beta_path.c_str());
+  vnl_matrix<double> tmp_beta =
+    static_cast<vnl_matrix<double> > vnl_file_matrix<double>(beta_path.c_str());
   beta = y_trained_parameters(tmp_beta.data_block());
 }
 
