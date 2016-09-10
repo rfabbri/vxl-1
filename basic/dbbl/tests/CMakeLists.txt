@@ -9,11 +9,11 @@ ADD_EXECUTABLE( dbbl_test_all
 )
 
 #TARGET_LINK_LIBRARIES( dbbl_test_all dbbl vbl testlib  )
-TARGET_LINK_LIBRARIES( dbbl_test_all vsol vbl testlib  )
+TARGET_LINK_LIBRARIES( dbbl_test_all vsol ${VXL_LIB_PREFIX}vbl ${VXL_LIB_PREFIX}testlib  )
 
-ADD_TEST( dbbl_test_subsequence  dbbl_test_all test_subsequence )
+ADD_TEST( NAME dbbl_test_subsequence  COMMAND $<TARGET_FILE:dbbl_test_all>  test_subsequence )
 
 ADD_EXECUTABLE( dbbl_test_include test_include.cxx )
 
 #TARGET_LINK_LIBRARIES( dbbl_test_include dbbl )
-TARGET_LINK_LIBRARIES( dbbl_test_include vsol vbl )
+TARGET_LINK_LIBRARIES( dbbl_test_include vsol ${VXL_LIB_PREFIX}vbl )
