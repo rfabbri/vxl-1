@@ -537,6 +537,35 @@ void dbsk2d_ishock_transform::write_shock_classification(vcl_string filename)
 
 }
 
+void dbsk2d_ishock_transform::write_polygons(
+    vcl_string mvf_string,
+    vcl_vector<vgl_polygon<double> >& polys)
+{
+    vcl_ofstream file_stream_mvf_frags(mvf_string.c_str());
+
+    for ( unsigned int i=0; i < polys.size() ; ++i)
+    {
+
+        vgl_polygon<double> region=polys[i];
+
+        file_stream_mvf_frags<<region.num_vertices()<<vcl_endl;
+        for (unsigned int s = 0; s < region.num_sheets(); ++s)
+        {
+            for (unsigned int p = 0; p < region[s].size(); ++p)
+            { 
+                file_stream_mvf_frags<<
+                    region[s][p].x()<<" "<<region[s][p].y()<<" ";
+                
+            }
+        }
+     
+        file_stream_mvf_frags<<vcl_endl;
+
+    }
+
+    file_stream_mvf_frags.close();
+
+}
 
 void dbsk2d_ishock_transform::write_fragments(
     vcl_string prefix,

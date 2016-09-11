@@ -81,6 +81,10 @@ public:
     //: write boundary
     void write_fragments(vcl_string prefix,
                          vcl_vector<vgl_polygon<double> >& polys);
+    
+    //: write polygons
+    void write_polygons(vcl_string prefix,
+                        vcl_vector<vgl_polygon<double> >& polys);
 
     //: write state
     void write_state(vcl_string filename, 

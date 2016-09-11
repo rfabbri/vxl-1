@@ -243,8 +243,6 @@ public:
     
     }
 
-private:
-
     // Method to tell if shock formed from end point
     bool inline shock_from_endpoint(dbsk2d_ishock_edge* selm)
     {
@@ -260,6 +258,8 @@ private:
 
         return lflag|rflag;
     }
+
+private:
 
     // Method test if node is still expandable
     void inline node_expandable(dbsk2d_ishock_node* node,
@@ -340,7 +340,9 @@ private:
     void expand_wavefront(dbsk2d_ishock_node* node,unsigned int map_key);
 
     // Expand wavefront in a Recursive manner
-    void expand_wavefront_coarse(dbsk2d_ishock_node* node,unsigned int map_key,
+    void expand_wavefront_coarse(dbsk2d_ishock_node* node,
+                                 dbsk2d_ishock_edge* ic_edge,
+                                 unsigned int map_key,
                                  vcl_set<int>& ids);
  
     // Private intrinsinc shock graph

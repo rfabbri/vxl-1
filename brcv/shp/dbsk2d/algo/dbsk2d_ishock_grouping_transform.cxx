@@ -73,17 +73,21 @@ void dbsk2d_ishock_grouping_transform::grow_coarse_regions()
 
         }
 
+        if ( selm->isHidden())
+        {
+            continue;
+        }
         if ( visited_edges_.count(selm->id()) == 0 )
         {
             visited_edges_[selm->id()]="temp";
             region_nodes_[index].push_back(selm);
             if ( selm->pSNode()->degree() > 1 )
             {
-                expand_wavefront_coarse(selm->pSNode(),index,ids);
+                expand_wavefront_coarse(selm->pSNode(),selm,index,ids);
             }
             if ( selm->cSNode())
             {
-                expand_wavefront_coarse(selm->cSNode(),index,ids);
+                expand_wavefront_coarse(selm->cSNode(),selm,index,ids);
             }
             index++;
         }
@@ -1050,9 +1054,11 @@ void dbsk2d_ishock_grouping_transform::write_out_polygons(vcl_string filename,
 
 void dbsk2d_ishock_grouping_transform::
 expand_wavefront_coarse(
-    dbsk2d_ishock_node* node,unsigned int map_key,vcl_set<int>& ids)
+    dbsk2d_ishock_node* node,dbsk2d_ishock_edge* ic_edge,
+    unsigned int map_key,vcl_set<int>& ids)
 {
 
+    bool ed_spawned = shock_from_endpoint(ic_edge);
     vcl_vector<dbsk2d_ishock_edge*> edges;
     bool insert=false;    
     node_coarse_expandable(node,edges,insert);
@@ -1064,13 +1070,33 @@ expand_wavefront_coarse(
         }
         return;
     }
-    else if( !ids.count(node->id()))
+    else
     {
         for ( unsigned int i=0; i < edges.size() ; ++i)
         {
             dbsk2d_ishock_edge* edge=edges[i];
             dbsk2d_ishock_node* opposite=(edge->pSNode()->id()==node->id())?
                 edge->cSNode():edge->pSNode();
+
+            if ( ids.count(node->id()))
+            {
+                if ( ed_spawned )
+                {
+                    continue;
+                }
+                else
+                {
+
+                    if ( !ic_edge->isHidden() )
+                    {
+                        if ( !edge->isHidden()) 
+                        {
+                            continue;
+                        }
+                    }
+                }
+
+            }
 
             if ( visited_edges_.count(edge->id())==0)
             {
@@ -1159,7 +1185,7 @@ expand_wavefront_coarse(
 
             if (opposite->degree() > 1 )
             {
-                expand_wavefront_coarse(opposite,map_key,ids);
+                expand_wavefront_coarse(opposite,edge,map_key,ids);
             }
         }
     }
