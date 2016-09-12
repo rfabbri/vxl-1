@@ -17,12 +17,23 @@
 
 project(lems)
 
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 2.8.9 FATAL_ERROR)
 
+# Set policies for cmake
 # Support for CMake 2.6
 if( COMMAND CMAKE_POLICY )
   cmake_policy(SET CMP0003 NEW)
 endif( COMMAND CMAKE_POLICY )
+if( POLICY CMP0033 )
+  ####
+  # Remove warning by disabling test.  The proper fix
+  # will require careful effort.
+  # Documentation for what would be a better solution
+  # is given at https://github.com/vxl/vxl/issues/127
+  # and https://github.com/vxl/vxl/pull/122
+  cmake_policy(SET CMP0033 OLD)
+endif()
+# TODO perhaps copy over the remaining ones from vxl
 
 set( BUILD_LEMS "NO" )
 
