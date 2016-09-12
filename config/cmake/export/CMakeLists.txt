@@ -7,9 +7,7 @@
 
 
 # Save the compiler settings so another project can import them.
-include(${CMAKE_ROOT}/Modules/CMakeExportBuildSettings.cmake)
 set(LEMS_BUILD_SETTINGS_FILE ${lems_BINARY_DIR}/LEMSBuildSettings.cmake)
-CMAKE_EXPORT_BUILD_SETTINGS(${LEMS_BUILD_SETTINGS_FILE})
 
 # Save library dependencies.
 set(LEMS_LIBRARY_DEPENDS_FILE ${lems_BINARY_DIR}/LEMSLibraryDepends.cmake)
