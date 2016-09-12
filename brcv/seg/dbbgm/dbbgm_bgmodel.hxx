@@ -1,5 +1,5 @@
-#ifndef dbbgm_bgmodel.hxx_
-#define dbbgm_bgmodel.hxx_
+#ifndef dbbgm_bgmodel_hxx
+#define dbbgm_bgmodel_hxx
 
 #include <dbbgm/dbbgm_bgmodel.h>
 #include <vil/vil_image_view.h>
@@ -308,6 +308,6 @@ float dbbgm_bgmodel<T>::getprobabilty(float mu, float sigma,float x)
 
 #define DBBGM_BGMODEL_INSTANTIATE(T) \
 template class dbbgm_bgmodel<T >; 
-#endif // dbbgm_bgmodel.hxx_
+#endif // dbbgm_bgmodel_hxx
 
 

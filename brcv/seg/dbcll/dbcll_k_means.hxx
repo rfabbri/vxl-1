@@ -1,6 +1,6 @@
 // This is brcv/seg/dbcll/dbcll_k_means.hxx
-#ifndef dbcll_k_means.hxx_
-#define dbcll_k_means.hxx_
+#ifndef dbcll_k_means_hxx
+#define dbcll_k_means_hxx
 //:
 // \file
 // \brief K-Means Clustering
@@ -356,4 +356,4 @@ dbcll_init_k_means_d2(const vcl_vector<vnl_vector_fixed<double,T > >& points, un
 
 
 
-#endif // dbcll_k_means.hxx_
+#endif // dbcll_k_means_hxx

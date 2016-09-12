@@ -1,11 +1,12 @@
 // This is brcv/seg/dbbgm/dbbgm_distribution_image.hxx
-#ifndef dbbgm_distribution_image.hxx_
-#define dbbgm_distribution_image.hxx_
+#ifndef dbbgm_distribution_image_hxx
+#define dbbgm_distribution_image_hxx
 //:
 // \file
 
 #include "dbbgm_distribution_image.h"
 #include <vcl_typeinfo.h>
+#include <vcl_iostream.h>
 
 //: Constructor
 template <class T>
@@ -129,4 +130,4 @@ template void vsl_b_read(vsl_b_istream &is, dbbgm_distribution_image<T>* &p);\
 VBL_IO_ARRAY_2D_INSTANTIATE(dbsta_distribution<T> *);\
 
 
-#endif // dbbgm_distribution_image.hxx_
+#endif // dbbgm_distribution_image_hxx

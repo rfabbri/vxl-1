@@ -9,10 +9,16 @@
 #include <vgui/vgui_viewer2D_tableau.h>
 #include <vgui/vgui_shell_tableau.h>
 #include <vul/vul_arg.h>
+/*
+  
+  ** OUTDATED -  VIDL1 DOES NOT EXISTS ANYMORE
+
 #include <vidl1/vidl1_movie.h>
 #include <vidl1/vidl1_clip.h>
 #include <vidl1/vidl1_io.h>
 #include <vidl1/vidl1_frame.h> 
+*/
+
 #include <vil/vil_convert.h>
 #include <vul/vul_sprintf.h>
 //#include <expatpp/src_pp/expatpplib.h>
@@ -25,7 +31,11 @@
 int main(int argc, char **argv)
 
 { 
-  vcl_FILE *xmlFile;
+
+
+
+
+  /*vcl_FILE *xmlFile;
  
   vul_arg<vcl_string> video_file("-video-path", "input video file");
   vul_arg<vcl_string> image_dir("-image-path", "output file");
@@ -143,7 +153,7 @@ else
   //              vcl_string c = *arg_it;
   //          }
 
-/*
+
 #ifdef WIN32
 
 
@@ -154,10 +164,10 @@ else
   int vheight = vp[3];
 
 #else
-*/  
+  
   void *buffer;
   OSMesaContext ctx;
-/*#endif*/
+#endif
 
 
 
@@ -188,7 +198,7 @@ int iFrameOffset = 0;
                   this_image = pframe->get_view();
                   break;
                 }
-            /* comment out since videos we have are 12 bit 
+             comment out since videos we have are 12 bit 
                case VIL_PIXEL_FORMAT_UINT_16:
                 {
                   vil_image_view<vxl_uint_16> uint_image = (*my_movie->get_frame(pos)).get_view();
@@ -200,7 +210,7 @@ int iFrameOffset = 0;
                   vil_convert_cast(double_image, this_image);
                   break;
                 }
-               */
+               
               case VIL_PIXEL_FORMAT_BOOL: 
                 {
                   vil_image_view<bool> bool_image = pframe->get_view();
@@ -349,21 +359,21 @@ int iFrameOffset = 0;
 
         vgui_image_tableau_new image(this_image);
      if (bInitWindow == false) { //set the windown to the image height and width.
-/*#ifdef WIN32
+#ifdef WIN32
         vgui_window *win = vgui::produce_window(image->width(), image->height(), "");
 #else
-        */
+        
         int    width = image->width();
         int     height = image->height();
              ctx = OSMesaCreateContextExt( OSMESA_RGBA, 16, 0, 0, NULL );
-                           /* Allocate the image buffer */
+                            Allocate the image buffer 
              buffer = malloc( width * height * 4 * sizeof(GLubyte) );
              if (!buffer) {
                 printf("Alloc image buffer failed!\n");
                 return 0;
              }
 
-             /* Bind the buffer to the context and make it current */
+              Bind the buffer to the context and make it current 
              if (!OSMesaMakeCurrent( ctx, buffer, GL_UNSIGNED_BYTE, width, height)) {
                 printf("OSMesaMakeCurrent failed!\n");
                 return 0;
@@ -378,7 +388,7 @@ int iFrameOffset = 0;
         // Put the image.tableau into a easy2D tableau 
         vgui_easy2D_tableau_new easy2D(image);
 
-/*
+
   float polygonx[4]={948,1038,1038,948};
   float polygony[4]={548,548,496,496};
   easy2D->set_foreground(0,1,0); 
@@ -390,7 +400,7 @@ int iFrameOffset = 0;
         //float polygony[4]={528,528,496,496};
   easy2D->add_polygon(4,polygonx,polygony);
 
-*/
+
         if (iNumPoints > 0){
           //vcl_cout << "Adding polygon with NumPoints " << iNumPoints << "..\n";
           easy2D->set_foreground(0,1,0); 
@@ -423,13 +433,13 @@ int iFrameOffset = 0;
    printf("all done\n");
 
 #ifndef WIN32
-   /* free the image buffer */
+    free the image buffer 
    free( buffer );
 
-   /* destroy the context */
+    destroy the context 
    OSMesaDestroyContext( ctx );
 #endif
 
-
+*/
   return(0);
 }
