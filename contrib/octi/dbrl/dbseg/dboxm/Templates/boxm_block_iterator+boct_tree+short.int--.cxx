@@ -1,4 +1,4 @@
-#include <dboxm/boxm_scene.txx>
+#include <dboxm/boxm_scene.hxx>
 #include <boct/boct_tree.h>
 
 typedef boct_tree<short,int >  tree_type;

@@ -4,7 +4,7 @@ if(OPENCL_FOUND)
   include_directories( ${OPENCL_INCLUDE_PATH} )
 
   set(dbocl_sources
-   opencl_manager.h   opencl_manager.txx 
+   opencl_manager.h   opencl_manager.hxx 
    bcl_cl.h
   )
 

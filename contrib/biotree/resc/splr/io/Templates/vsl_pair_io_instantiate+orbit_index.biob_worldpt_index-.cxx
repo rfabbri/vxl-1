@@ -1,4 +1,4 @@
-#include <vsl/vsl_pair_io.txx>
+#include <vsl/vsl_pair_io.hxx>
 #include <bio_defs.h>
 #include <biob/biob_worldpt_index.h>
 

@@ -1,4 +1,4 @@
-#include <dboxm/boxm_scene.txx>
+#include <dboxm/boxm_scene.hxx>
 #include <boct/boct_tree.h>
 #include <dboxm/opt/boxm_rt_sample.h>
 

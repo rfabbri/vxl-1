@@ -1,4 +1,4 @@
-#include <dbgrl/dbgrl_vertex.txx>
+#include <dbgrl/dbgrl_vertex.hxx>
 
 #include <rec/dbvxm_hierarchy_edge.h>
 

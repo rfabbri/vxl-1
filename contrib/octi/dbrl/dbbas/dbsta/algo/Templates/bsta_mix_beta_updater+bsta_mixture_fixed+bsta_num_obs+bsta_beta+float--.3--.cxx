@@ -1,4 +1,4 @@
-#include <dbsta/algo/bsta_beta_updater.txx>
+#include <dbsta/algo/bsta_beta_updater.hxx>
 #include <dbsta/bsta_mixture_fixed.h>
 #include <dbsta/bsta_beta.h>
 

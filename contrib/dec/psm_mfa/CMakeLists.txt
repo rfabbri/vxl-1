@@ -5,7 +5,7 @@ include_directories( ${lems_SOURCE_DIR}/contrib/dec )
 
 set(psm_mfa_sources
    psm_mfa_compute_factor_properties.h
-   psm_mfa_optimizer.h  psm_mfa_optimizer.txx
+   psm_mfa_optimizer.h  psm_mfa_optimizer.hxx
  )
 
 aux_source_directory(Templates psm_mfa_sources)

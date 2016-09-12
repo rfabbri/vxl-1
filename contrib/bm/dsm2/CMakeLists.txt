@@ -25,31 +25,31 @@ set( dsm2_sources
      dsm2_node_base_sptr.h
      vbl_smart_ptr+dsm2_node_base-.cxx
      
-     dsm2_node_gaussian.h                     dsm2_node_gaussian.txx
+     dsm2_node_gaussian.h                     dsm2_node_gaussian.hxx
      
      dsm2_transition_table_base.h
      dsm2_transition_table_base_sptr.h
      vbl_smart_ptr+dsm2_transition_table_base-.cxx
      
-     dsm2_transition_map.h                    dsm2_transition_map.txx
+     dsm2_transition_map.h                    dsm2_transition_map.hxx
      
      dsm2_state_machine_base.h
      dsm2_state_machine_base_sptr.h
      vbl_smart_ptr+dsm2_state_machine_base-.cxx
      
-     dsm2_state_machine.h                     dsm2_state_machine.txx 
+     dsm2_state_machine.h                     dsm2_state_machine.hxx 
      
-     dsm2_km_state_machine.h                  dsm2_km_state_machine.txx
+     dsm2_km_state_machine.h                  dsm2_km_state_machine.hxx
      
      dsm2_km_change_observer.h                dsm2_km_change_observer.cxx
-     dsm2_km_distribution_observer            dsm2_km_distribution_observer.txx
+     dsm2_km_distribution_observer            dsm2_km_distribution_observer.hxx
      
      dsm2_manager_base.h
      dsm2_manager_base_sptr.h
-     dsm2_manager_pixels.h                    dsm2_manager_pixels.txx
+     dsm2_manager_pixels.h                    dsm2_manager_pixels.hxx
      vbl_smart_ptr+dsm2_manager_base-.cxx
 
-     dsm2_num_obs.h                           dsm2_num_obs.txx
+     dsm2_num_obs.h                           dsm2_num_obs.hxx
      
      dsm2_vgl_point_2d_coord_compare.h
      )

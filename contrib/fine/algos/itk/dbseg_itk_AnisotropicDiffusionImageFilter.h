@@ -162,7 +162,7 @@ private:
 } // end namspace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAnisotropicDiffusionImageFilter.txx"
+#include "itkAnisotropicDiffusionImageFilter.hxx"
 #endif
 
 #undef ITK_LEAN_AND_MEAN

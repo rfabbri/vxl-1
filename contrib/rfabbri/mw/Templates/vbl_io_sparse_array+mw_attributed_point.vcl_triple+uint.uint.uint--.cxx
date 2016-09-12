@@ -1,4 +1,4 @@
-#include <vbl/io/vbl_io_sparse_array_base.txx>
+#include <vbl/io/vbl_io_sparse_array_base.hxx>
 #include <mw/mw_discrete_corresp.h>
 #include <vbl/vbl_triple.h>
 #include <vbl/io/vbl_io_triple.h>

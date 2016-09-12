@@ -1,5 +1,5 @@
 #include <psm/psm_scene_base.h>
-#include <vbl/io/vbl_io_smart_ptr.txx>
+#include <vbl/io/vbl_io_smart_ptr.hxx>
 
 #include "../psm_io_scene.h"
 

@@ -1,3 +1,3 @@
-#include <dbsta/dbsta_histogram.txx>
+#include <dbsta/dbsta_histogram.hxx>
 
 DBSTA_HISTOGRAM_INSTANTIATE(double);

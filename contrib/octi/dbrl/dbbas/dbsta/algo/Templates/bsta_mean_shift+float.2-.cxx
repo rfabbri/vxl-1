@@ -1,3 +1,3 @@
-#include <dbsta/algo/bsta_mean_shift.txx>
+#include <dbsta/algo/bsta_mean_shift.hxx>
 
 BSTA_MEAN_SHIFT_INSTANTIATE(float, 2);

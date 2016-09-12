@@ -195,7 +195,7 @@ vcl_ostream&  operator<<(vcl_ostream& s, dbvxm_multi_scale_voxel_world const& vo
 typedef vbl_smart_ptr<dbvxm_multi_scale_voxel_world> dbvxm_multi_scale_voxel_world_sptr;
 
 //////////////////////////////////////////////////////////
-// TODO: Move everything below here to .txx files -DEC
+// TODO: Move everything below here to .hxx files -DEC
 //////////////////////////////////////////////////////////
 
 //: get the observation count of a voxel type at a specific bin

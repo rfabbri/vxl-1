@@ -15,13 +15,13 @@ set( dbgl_sources
    dbgl_arc_base.h            dbgl_arc_base.cxx
    dbgl_arc.h                 dbgl_arc.cxx
    dbgl_eno_curve.h           dbgl_eno_curve.cxx
-   dbgl_minimal_container.h   dbgl_minimal_container.txx
+   dbgl_minimal_container.h   dbgl_minimal_container.hxx
 
    dbgl_param_curve_3d.h      dbgl_param_curve_3d.cxx
    dbgl_eno_curve_3d.h        dbgl_eno_curve_3d.cxx
    dbgl_linear_curve_3d.h     dbgl_linear_curve_3d.cxx
    
-   dbgl_area.h                dbgl_area.txx
+   dbgl_area.h                dbgl_area.hxx
 
    dbgl_rigid_align.cxx       dbgl_rigid_align.h
    
@@ -30,7 +30,7 @@ set( dbgl_sources
    
    # smallest enclosing balls of points
    # downloaded from http://www.inf.ethz.ch/personal/gaertner/miniball.html
-   internals/miniball.h       internals/miniball.txx
+   internals/miniball.h       internals/miniball.hxx
    internals/miniball_config.h
    internals/wrapped_array.h
    #########################################################################

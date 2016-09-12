@@ -1,3 +1,3 @@
 //this is /contrib/bm/dsm2/algo/Templates/dsm2_km_updater+dsm2_node_gaussian.d.1-.cxx
-#include<dsm2/algo/dsm2_km_updater.txx>
+#include<dsm2/algo/dsm2_km_updater.hxx>
 DSM2_KM_UPDATER_INSTANTIATE(dsm2_node_gaussian<bsta_gaussian_sphere<double,1> >);

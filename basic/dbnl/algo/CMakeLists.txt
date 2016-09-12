@@ -12,7 +12,7 @@ set( dbnl_algo_sources
    dbnl_eno_shock.cxx         dbnl_eno_shock.h
    dbnl_eno_image.cxx         dbnl_eno_image.h
    dbnl_eno_zerox_image.cxx   dbnl_eno_zerox_image.h
-   dbnl_bbf_tree.h            dbnl_bbf_tree.txx
+   dbnl_bbf_tree.h            dbnl_bbf_tree.hxx
    dbnl_matrix_multiply.cxx   dbnl_matrix_multiply.h
    dbnl_eno_third_order.cxx   dbnl_eno_third_order.h
    dbnl_brent_root.cxx        dbnl_brent_root.h

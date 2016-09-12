@@ -1,2 +1,2 @@
-#include <dbil3d/algo/dbil3d_hessian_decompose.txx>
+#include <dbil3d/algo/dbil3d_hessian_decompose.hxx>
 DBIL3D_HESSIAN_DECOMPOSE_INSTANTIATE(vxl_uint_16);

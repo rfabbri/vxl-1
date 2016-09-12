@@ -22,7 +22,7 @@ if (BUILD_CONTRIB_biotree_cluster)
   endif (MPI_CCFLAGS)
   
   set (biocluster_src  
-    biocluster_volpart_filtering_proc.txx biocluster_volpart_filtering_proc.h
+    biocluster_volpart_filtering_proc.hxx biocluster_volpart_filtering_proc.h
   )
     
   add_definitions (-DBUILD_CONTRIB_biotree_cluster)

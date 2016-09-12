@@ -1,4 +1,4 @@
-#include <dbbgm/bbgm_image_of.txx>
+#include <dbbgm/bbgm_image_of.hxx>
 #ifdef DEVELINCLUDEPATH
 #include <dbsta/bsta_attributes.h>
 #include <dbsta/bsta_mixture.h>

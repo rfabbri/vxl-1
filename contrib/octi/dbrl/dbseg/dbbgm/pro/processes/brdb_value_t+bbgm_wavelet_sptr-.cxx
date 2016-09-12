@@ -1,4 +1,4 @@
-#include <brdb/brdb_value.txx>
+#include <brdb/brdb_value.hxx>
 #include <dbbgm/bbgm_wavelet.h>
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <dbbgm/bbgm_wavelet_sptr.h>

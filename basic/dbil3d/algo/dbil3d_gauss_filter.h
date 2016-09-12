@@ -31,6 +31,6 @@ template<class T,class U>
 void dbil3d_gauss_filter(const vil3d_image_view<T>& src_im,
                         const float & sigma, 
                         vil3d_image_view<U>& dest_im);
-#define DBIL3D_GAUSS_FILTER_INSTANTIATE(T,U) extern "please include dbil3d_gauss_filter.txx instead"
+#define DBIL3D_GAUSS_FILTER_INSTANTIATE(T,U) extern "please include dbil3d_gauss_filter.hxx instead"
 
 #endif // dbil3d_gauss_filter_h_

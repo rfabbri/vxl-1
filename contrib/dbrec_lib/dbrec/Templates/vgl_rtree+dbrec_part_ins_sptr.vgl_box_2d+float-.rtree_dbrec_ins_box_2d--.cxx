@@ -1,4 +1,4 @@
-#include <vgl/algo/vgl_rtree.txx>
+#include <vgl/algo/vgl_rtree.hxx>
 #include <vgl/vgl_polygon.h>
 #include <vgl/algo/vgl_rtree_c.h>
 #include <dbrec/dbrec_part_context_sptr.h>

@@ -12,12 +12,12 @@ set( dts_sources
     dts_time_series_base.h
     dts_time_series_base_sptr.h
     
-    dts_time_series.h                   dts_time_series.txx  
+    dts_time_series.h                   dts_time_series.hxx  
     
     dts_pixel_time_series_base.h
     dts_pixel_time_series_base_sptr.h
     
-    dts_pixel_time_series.h             dts_pixel_time_series.txx
+    dts_pixel_time_series.h             dts_pixel_time_series.hxx
 
     )
     

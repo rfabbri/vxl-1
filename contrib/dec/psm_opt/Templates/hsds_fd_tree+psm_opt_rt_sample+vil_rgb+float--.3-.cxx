@@ -1,4 +1,4 @@
-#include <hsds/hsds_fd_tree.txx>
+#include <hsds/hsds_fd_tree.hxx>
 #include <psm/psm_apm_traits.h>
 #include "../psm_opt_rt_sample.h"
 #include <vil/vil_rgb.h>

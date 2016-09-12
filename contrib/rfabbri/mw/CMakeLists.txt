@@ -20,7 +20,7 @@ include_directories( ${lems_SOURCE_DIR}/contrib/rfabbri )
 # Personal Multiview Lib
 
 set( mw_sources
-   mw_util.txx       mw_util_defs.cxx mw_util.h
+   mw_util.hxx       mw_util_defs.cxx mw_util.h
    mw_curves.cxx      mw_curves.h
    mw_subpixel_point_set.cxx mw_subpixel_point_set.h
    mw_epi_interceptor.cxx mw_epi_interceptor.h

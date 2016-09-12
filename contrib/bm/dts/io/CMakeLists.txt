@@ -4,7 +4,7 @@ set( dts_io_sources
      dts_io_time_series_base.h          dts_io_time_series_base.cxx
      
      dts_io_pixel_time_series_base.h    dts_io_pixel_time_series_base.cxx
-     dts_io_pixel_time_series.h         dts_io_pixel_time_series.txx
+     dts_io_pixel_time_series.h         dts_io_pixel_time_series.hxx
     )
     
 include_directories( ${bm_SOURCE_DIR} )     

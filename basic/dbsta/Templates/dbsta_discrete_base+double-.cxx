@@ -1,3 +1,3 @@
-#include <dbsta/dbsta_discrete.txx>
+#include <dbsta/dbsta_discrete.hxx>
 
 DBSTA_DISCRETE_INSTANTIATE(double);

@@ -34,7 +34,7 @@
 
 #include <bbgm/bbgm_image_of.h>
 #include <bbgm/bbgm_image_sptr.h>
-#include <bbgm/bbgm_image_of.txx>
+#include <bbgm/bbgm_image_of.hxx>
 
 #include <vil/vil_convert.h>
 #include <vil/algo/vil_blob_finder.h>

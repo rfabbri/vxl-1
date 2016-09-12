@@ -1,4 +1,4 @@
-#include <structure/dbcfg_line.txx>
+#include <structure/dbcfg_line.hxx>
 
 DBCFG_LINE_INSTANTIATE(double);
 

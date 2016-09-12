@@ -8,7 +8,7 @@
 //
 // A realization of a class to store a (time, vnl_vector_fixed) pair.
 //
-// NOTE: need to add io file to dts_time_series.txx for a new
+// NOTE: need to add io file to dts_time_series.hxx for a new
 // featureT class!
 //
 // \verbatim

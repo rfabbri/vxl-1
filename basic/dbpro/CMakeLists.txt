@@ -14,7 +14,7 @@ configure_file( ${dbpro_SOURCE_DIR}/dbpro_config.h.in
 set(dbpro_sources
    dbpro_mutex.cxx                       dbpro_mutex.h 
    dbpro_parameters.cxx                  dbpro_parameters.h                  dbpro_parameters_sptr.h
-   dbpro_parameters.txx
+   dbpro_parameters.hxx
    dbpro_process.cxx                     dbpro_process.h                     dbpro_process_sptr.h
                                          dbpro_basic_processes.h
                                          dbpro_vsl_processes.h

@@ -429,6 +429,6 @@ struct mw_dereference_less {
 };
 
 
-#define MW_UTIL_INSTANTIATE(T) extern "please include mw/mw_util.txx first"
+#define MW_UTIL_INSTANTIATE(T) extern "please include mw/mw_util.hxx first"
 
 #endif // mw_util_h

@@ -1,6 +1,6 @@
 #include <Spatemp/algo/dbdet_temporal_bundle.h>
 #include <dbdet/sel/dbdet_curvelet.h>
-#include <vcl_map.txx>
+#include <vcl_map.hxx>
 
 typedef vcl_vector< dbdet_temporal_bundle*> vec_dbdet_temporal_bundle_ptr;
 #include "vcl_functional.h"

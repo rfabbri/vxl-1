@@ -13,13 +13,13 @@ set(bvam_sources
     bvam_mog_rgb_processor.h        bvam_mog_rgb_processor.cxx
     bvam_world_params.h             bvam_world_params.cxx
     bvam_voxel_slab_base.h
-    bvam_voxel_slab.h               bvam_voxel_slab.txx
+    bvam_voxel_slab.h               bvam_voxel_slab.hxx
     bvam_voxel_storage.h           
-    bvam_voxel_storage_disk.h       bvam_voxel_storage_disk.txx
-    bvam_voxel_storage_mem.h        bvam_voxel_storage_mem.txx
-    bvam_voxel_slab_iterator.h      bvam_voxel_slab_iterator.txx
+    bvam_voxel_storage_disk.h       bvam_voxel_storage_disk.hxx
+    bvam_voxel_storage_mem.h        bvam_voxel_storage_mem.hxx
+    bvam_voxel_slab_iterator.h      bvam_voxel_slab_iterator.hxx
     bvam_voxel_grid_base.h          
-    bvam_voxel_grid.h               bvam_voxel_grid.txx
+    bvam_voxel_grid.h               bvam_voxel_grid.hxx
     bvam_voxel_traits.h
     bvam_voxel_world.h              bvam_voxel_world.cxx
     bvam_image_metadata.h           bvam_image_metadata.cxx

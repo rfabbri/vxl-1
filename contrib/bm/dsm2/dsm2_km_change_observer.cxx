@@ -1,4 +1,4 @@
-//this is /contrib/bm/dsm2/dsm2_km_change_observer.txx
+//this is /contrib/bm/dsm2/dsm2_km_change_observer.hxx
 #ifndef DSM2_KM_CHANGE_OBSERVER_TXX_
 #define DSM2_KM_CHANGE_OBSERVER_TXX_
 

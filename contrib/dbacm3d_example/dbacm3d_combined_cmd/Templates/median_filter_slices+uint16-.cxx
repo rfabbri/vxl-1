@@ -1,2 +1,2 @@
-#include "../median_filter_slices.txx"
+#include "../median_filter_slices.hxx"
 MEDIAN_FILTER_SLICES_INSTANTIATE(vxl_uint_16);

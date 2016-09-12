@@ -9,7 +9,7 @@ if(OPENCL_FOUND)
   include_directories( ${GEL_INCLUDE_DIR}/mrc )
 
   set(dboxm_opt_opencl_sources
-  boxm_ray_trace_manager.h   boxm_ray_trace_manager.txx 
+  boxm_ray_trace_manager.h   boxm_ray_trace_manager.hxx 
   boxm_opt_opencl_utils.h  boxm_opt_opencl_utils.cxx
   )
   set(dbomx_opt_opencl_source_files

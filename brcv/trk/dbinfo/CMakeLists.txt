@@ -10,7 +10,7 @@ set(dbinfo_sources
    dbinfo_region_geometry_sptr.h  
    dbinfo_feature_base.h           dbinfo_feature_base.cxx
    dbinfo_feature_base_sptr.h          
-   dbinfo_feature_data_base.h      dbinfo_feature_data.txx
+   dbinfo_feature_data_base.h      dbinfo_feature_data.hxx
    dbinfo_feature_data_base_sptr.h 
    dbinfo_feature_data.h
    dbinfo_feature_format.h         dbinfo_feature_format.cxx 

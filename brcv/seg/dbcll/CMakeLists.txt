@@ -11,7 +11,7 @@ set(dbcll_sources
    dbcll_sim3d_cluster.h            dbcll_sim3d_cluster.cxx
    dbcll_similarity_matrix.h        dbcll_similarity_matrix.cxx
    dbcll_rnn_agg_clustering.h   dbcll_rnn_agg_clustering.cxx
-   dbcll_k_means.h              dbcll_k_means.cxx              dbcll_k_means.txx
+   dbcll_k_means.h              dbcll_k_means.cxx              dbcll_k_means.hxx
 )
 
 aux_source_directory(Templates dbcll_sources)

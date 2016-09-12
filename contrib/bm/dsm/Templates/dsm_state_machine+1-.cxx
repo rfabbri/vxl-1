@@ -1,3 +1,3 @@
 //this is /contrib/bm/dsm/Templates/dsm_state_machine+1-.cxx
-#include"../dsm_state_machine.txx"
+#include"../dsm_state_machine.hxx"
 DSM_STATE_MACHINE_INSTANTIATE(1);

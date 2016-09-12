@@ -3,7 +3,7 @@ include_directories(${VXL_BRL_INCLUDE_DIR}/bbas )
 
 set(vol3d_algo_src
     vol3d_radius_detection.h                      vol3d_radius_detection.cxx
-    vol3d_gaussian_filtering_proc.txx             vol3d_gaussian_filtering_proc.h
+    vol3d_gaussian_filtering_proc.hxx             vol3d_gaussian_filtering_proc.h
 )
 
 aux_source_directory(Templates vol3d_algo_src)

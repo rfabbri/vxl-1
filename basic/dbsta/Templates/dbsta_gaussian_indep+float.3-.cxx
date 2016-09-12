@@ -1,3 +1,3 @@
-#include <dbsta/dbsta_gaussian_indep.txx>
+#include <dbsta/dbsta_gaussian_indep.hxx>
 
 DBSTA_GAUSSIAN_INDEP_INSTANTIATE(float, 3);

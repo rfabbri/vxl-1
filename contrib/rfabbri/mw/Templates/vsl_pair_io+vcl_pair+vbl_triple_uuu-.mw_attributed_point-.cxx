@@ -1,4 +1,4 @@
-#include <vsl/vsl_pair_io.txx>
+#include <vsl/vsl_pair_io.hxx>
 #include <vbl/vbl_triple.h>
 #include <vbl/io/vbl_io_triple.h>
 #include <mw/mw_discrete_corresp.h>

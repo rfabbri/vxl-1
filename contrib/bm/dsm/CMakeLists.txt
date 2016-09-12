@@ -20,15 +20,15 @@ set( dsm_sources
      dsm_node_base.h                          dsm_node_base.cxx
      dsm_node_base_sptr.h
      vbl_smart_ptr+dsm_node_base-.cxx
-     dsm_node.h                               dsm_node.txx
+     dsm_node.h                               dsm_node.hxx
      dsm_state_machine_base.h               
      dsm_state_machine_base_sptr.h
-     dsm_state_machine.h                      dsm_state_machine.txx
+     dsm_state_machine.h                      dsm_state_machine.hxx
      dsm_manager_base.h                       dsm_manager_base.cxx     
      dsm_manager_base_sptr.h
-     dsm_manager.h                            dsm_manager.txx
+     dsm_manager.h                            dsm_manager.hxx
      dsm_utilities.h                          dsm_utilities.cxx
-     dsm_map_utilities.h		      dsm_map_utilities.txx
+     dsm_map_utilities.h		      dsm_map_utilities.hxx
      dsm_frame_clock.h                        dsm_frame_clock.cxx
      dsm_ncn.h                                dsm_ncn.cxx
      dsm_ncn_sptr.h

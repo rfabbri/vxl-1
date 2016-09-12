@@ -1,4 +1,4 @@
-#include "../psm_scene.txx"
+#include "../psm_scene.hxx"
 #include "../psm_sample.h"
 #include "../psm_apm_traits.h"
 

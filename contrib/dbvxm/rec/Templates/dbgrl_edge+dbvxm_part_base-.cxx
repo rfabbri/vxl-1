@@ -1,4 +1,4 @@
-#include <dbgrl/dbgrl_edge.txx>
+#include <dbgrl/dbgrl_edge.hxx>
 
 #include <rec/dbvxm_part_base.h>
 

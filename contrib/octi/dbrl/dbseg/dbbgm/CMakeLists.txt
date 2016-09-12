@@ -12,21 +12,21 @@ set(dbbgmo_sources
   bbgm_update.h
   bbgm_apply.h
   bbgm_detect.h
-  bbgm_image_of.h         bbgm_image_of.cxx      bbgm_image_of.txx  bbgm_image_sptr.h
+  bbgm_image_of.h         bbgm_image_of.cxx      bbgm_image_of.hxx  bbgm_image_sptr.h
   bbgm_viewer.h           bbgm_viewer.cxx        bbgm_viewer_sptr.h
   bbgm_view_maker.h                              bbgm_view_maker_sptr.h
   bbgm_loader.h           bbgm_loader.cxx
   bbgm_measure.h
-  bbgm_feature_image.h    bbgm_feature_image.cxx bbgm_feature_image.txx
+  bbgm_feature_image.h    bbgm_feature_image.cxx bbgm_feature_image.hxx
   bbgm_feature_image_sptr.h
   bbgm_features.h         bbgm_features.cxx
   bbgm_wavelet_compressor.h bbgm_wavelet_compressor.cxx
    
-  bbgm_vil_wavelet.h bbgm_vil_wavelet.txx
+  bbgm_vil_wavelet.h bbgm_vil_wavelet.hxx
   bbgm_wavelet_image_traits.h 	
-  bbgm_wavelet.h bbgm_wavelet.txx  bbgm_wavelet.cxx  bbgm_wavelet_sptr.h
+  bbgm_wavelet.h bbgm_wavelet.hxx  bbgm_wavelet.cxx  bbgm_wavelet_sptr.h
   bbgm_wavelet_engine_base.h
-  bbgm_wavelet_engine_GE.h  bbgm_wavelet_engine_GE.txx
+  bbgm_wavelet_engine_GE.h  bbgm_wavelet_engine_GE.hxx
   bbgm_wavelet_engine_kdu.h  bbgm_wavelet_engine_kdu_traits.h
   bbgm_interpolate.h
 )

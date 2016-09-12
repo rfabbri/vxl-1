@@ -1,4 +1,4 @@
-#include <hsds/hsds_fd_tree.txx>
+#include <hsds/hsds_fd_tree.hxx>
 #include <vil/vil_rgb.h>
 #include "../psm_dcdf_implicit_sample.h"
 

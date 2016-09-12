@@ -1,3 +1,3 @@
-#include <dbcll/dbcll_k_means.txx>
+#include <dbcll/dbcll_k_means.hxx>
 
 DBCLL_K_MEANS_INSTANTIATE(4);

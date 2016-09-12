@@ -6,16 +6,16 @@ include_directories( ${lems_SOURCE_DIR}/contrib/dec )
 set(psm_opt_sources
   psm_opt_sample.h
   psm_opt_rt_sample.h
-  psm_opt_alpha_cost_function.h  psm_opt_alpha_cost_function.txx
-  psm_opt_alpha_cost_function2.h  psm_opt_alpha_cost_function2.txx
-  psm_opt_optimizer.h  psm_opt_optimizer.txx 
+  psm_opt_alpha_cost_function.h  psm_opt_alpha_cost_function.hxx
+  psm_opt_alpha_cost_function2.h  psm_opt_alpha_cost_function2.hxx
+  psm_opt_optimizer.h  psm_opt_optimizer.hxx 
   psm_opt_generate_opt_samples.h
   psm_opt_generate_opt_rt_samples.h
-  psm_opt_bayesian_optimizer.h  psm_opt_bayesian_optimizer.txx
-  psm_opt_rt_bayesian_optimizer.h  psm_opt_rt_bayesian_optimizer.txx
-  psm_opt_appearance_estimator.h  psm_opt_appearance_estimator.txx
-  psm_opt_simplex_cost_function.h psm_opt_simplex_cost_function.txx
-  psm_opt_simplex_optimizer.h  psm_opt_simplex_optimizer.txx
+  psm_opt_bayesian_optimizer.h  psm_opt_bayesian_optimizer.hxx
+  psm_opt_rt_bayesian_optimizer.h  psm_opt_rt_bayesian_optimizer.hxx
+  psm_opt_appearance_estimator.h  psm_opt_appearance_estimator.hxx
+  psm_opt_simplex_cost_function.h psm_opt_simplex_cost_function.hxx
+  psm_opt_simplex_optimizer.h  psm_opt_simplex_optimizer.hxx
  )
 
 aux_source_directory(Templates psm_opt_sources)

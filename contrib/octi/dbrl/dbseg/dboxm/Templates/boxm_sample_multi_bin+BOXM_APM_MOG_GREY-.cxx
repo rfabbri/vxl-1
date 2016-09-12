@@ -1,5 +1,5 @@
 #include <dboxm/boxm_apm_traits.h>
-#include <dboxm/boxm_sample_multi_bin.txx>
+#include <dboxm/boxm_sample_multi_bin.hxx>
 #include <bsta/io/bsta_io_mixture_fixed.h>
 #include <bsta/io/bsta_io_gaussian_sphere.h>
 #include <bsta/io/bsta_io_mixture.h>

@@ -19,8 +19,8 @@ include_directories( ${lems_SOURCE_DIR}/brcv/trk )
 set(dbseg_structure_sources
    dbseg_seg_object.cxx                        dbseg_seg_object.h
    dbseg_seg_neighborhood.cxx                dbseg_seg_neighborhood.h
-   dbseg_seg_spatial_object.txx                dbseg_seg_spatial_object.h
-   dbseg_seg_tree.txx                        dbseg_seg_tree.h
+   dbseg_seg_spatial_object.hxx                dbseg_seg_spatial_object.h
+   dbseg_seg_tree.hxx                        dbseg_seg_tree.h
    dbseg_seg_storage.cxx                    dbseg_seg_storage.h
                                             dbseg_seg_storage_sptr.h
     dbseg_seg_object_base.cxx                dbseg_seg_object_base.h

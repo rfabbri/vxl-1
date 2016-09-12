@@ -2,7 +2,7 @@
 #include <vcl_string.h>
 #include <vcl_vector.h>
 #include <vsl/vsl_map_io.h>
-#include <vsl/vsl_vector_io.txx>
+#include <vsl/vsl_vector_io.hxx>
  
 typedef vcl_map< vcl_string, vcl_vector< bpro1_storage_sptr > > storage_map;
 

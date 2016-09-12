@@ -15,7 +15,7 @@ set(bvis_sources
 
 #basic bvis classes
    bvis_macros.h
-   bvis_manager.txx               bvis_manager.h 
+   bvis_manager.hxx               bvis_manager.h 
    bvis_view_tableau.cxx          bvis_view_tableau.h             bvis_view_tableau_sptr.h 
    bvis_proc_selector_tableau.cxx bvis_proc_selector_tableau.h    bvis_proc_selector_tableau_sptr.h
    bvis_video_view_tableau.cxx    bvis_video_view_tableau.h   
@@ -33,20 +33,20 @@ set(bvis_sources
                                           bvis_mapper_sptr.h
    displayer/bvis_vtol_displayer.cxx     displayer/bvis_vtol_displayer.h
 # New Menus
-   menu/bvis_file_menu.txx               menu/bvis_file_menu.h
+   menu/bvis_file_menu.hxx               menu/bvis_file_menu.h
    menu/video/bvis_video_file_menu.cxx   menu/video/bvis_video_file_menu.h
    menu/mview/bvis_mview_io_dialog.cxx   menu/mview/bvis_mview_io_dialog.h
    menu/video/bvis_video_menu.cxx        menu/video/bvis_video_menu.h
-   menu/bvis_repository_menu.txx         menu/bvis_repository_menu.h
-   menu/bvis_process_macro_menu.txx      menu/bvis_process_macro_menu.h
-   menu/bvis_tableau_menu.txx            menu/bvis_tableau_menu.h
-   menu/bvis_view_menu.txx               menu/bvis_view_menu.h
+   menu/bvis_repository_menu.hxx         menu/bvis_repository_menu.h
+   menu/bvis_process_macro_menu.hxx      menu/bvis_process_macro_menu.h
+   menu/bvis_tableau_menu.hxx            menu/bvis_tableau_menu.h
+   menu/bvis_view_menu.hxx               menu/bvis_view_menu.h
    menu/video/bvis_video_view_menu.cxx   menu/video/bvis_video_view_menu.h
    menu/video/bvis_video_add_menu.cxx    menu/video/bvis_video_add_menu.h
-   menu/bvis_command.txx                 menu/bvis_command.h
+   menu/bvis_command.hxx                 menu/bvis_command.h
 
 #tools      
-   bvis_tool_manager.txx                 bvis_tool_manager.h
+   bvis_tool_manager.hxx                 bvis_tool_manager.h
    tool/bvis_vsol2D_tools.cxx            tool/bvis_vsol2D_tools.h
    tool/bvis_soview2D_tools.cxx          tool/bvis_soview2D_tools.h
    tool/bvis_correspond_tools.cxx        tool/bvis_correspond_tools.h

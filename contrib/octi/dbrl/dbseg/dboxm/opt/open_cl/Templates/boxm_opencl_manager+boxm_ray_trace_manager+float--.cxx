@@ -1,4 +1,4 @@
-#include <dbocl/opencl_manager.txx>
+#include <dbocl/opencl_manager.hxx>
 #include <dboxm/opt/open_cl/boxm_ray_trace_manager.h>
 #include <dboxm/boxm_apm_traits.h>
 

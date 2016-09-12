@@ -2,7 +2,7 @@
 #include <vgl/vgl_polygon_scan_iterator.h>
 #include <vgl/vgl_point_2d.h>
 #include <vcl_vector.h>
-#include <vcl_vector.txx>
+#include <vcl_vector.hxx>
 #include <vcl_iostream.h>
 
 //Globals

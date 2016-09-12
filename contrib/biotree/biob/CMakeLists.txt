@@ -15,8 +15,8 @@ set(biob_src
     biob_worldpt_roster.h                    biob_worldpt_roster.cxx
     biob_worldpt_roster_sptr.h
     biob_subset_worldpt_roster_sptr.h
-    biob_worldpt_field.h biob_worldpt_field.txx
-    biob_enumerator.h biob_enumerator.txx
+    biob_worldpt_field.h biob_worldpt_field.hxx
+    biob_enumerator.h biob_enumerator.hxx
     biob_roster_to_grid_mapping.h            biob_roster_to_grid_mapping.cxx
 )  
 

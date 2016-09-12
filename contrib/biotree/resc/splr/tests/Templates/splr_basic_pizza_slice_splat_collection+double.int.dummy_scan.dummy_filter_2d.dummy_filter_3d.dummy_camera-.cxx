@@ -1,4 +1,4 @@
-#include <splr/splr_basic_pizza_slice_splat_collection.txx>
+#include <splr/splr_basic_pizza_slice_splat_collection.hxx>
 #include <splr/tests/dummy_filter_2d.h>
 #include <xscan/xscan_dummy_scan.h>
 #include <splr/tests/dummy_filter_3d.h>

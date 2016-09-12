@@ -1,4 +1,4 @@
-#include <dbspi/dbspi_chamfer.txx>
+#include <dbspi/dbspi_chamfer.hxx>
 #include <dbspi/dbspi_curve_map.h>
 #include <vsol/vsol_digital_curve_2d.h>
 

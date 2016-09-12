@@ -171,6 +171,6 @@ template <class T>
 vcl_istream&  operator>>(vcl_istream& is,  bsta_histogram<T>& h);
 
 
-#define BSTA_HISTOGRAM_INSTANTIATE(T) extern "Please #include <dbsta/bsta_histogram.txx>"
+#define BSTA_HISTOGRAM_INSTANTIATE(T) extern "Please #include <dbsta/bsta_histogram.hxx>"
 
 #endif // bsta_histogram_h_

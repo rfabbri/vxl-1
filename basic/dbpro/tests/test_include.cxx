@@ -7,7 +7,7 @@
 #include <dbpro/dbpro_observer.h>
 #include <dbpro/dbpro_parameters.h>
 #include <dbpro/dbpro_parameters_sptr.h>
-#include <dbpro/dbpro_parameters.txx>
+#include <dbpro/dbpro_parameters.hxx>
 #include <dbpro/dbpro_process_factory.h>
 #include <dbpro/dbpro_process.h>
 #include <dbpro/dbpro_process_sptr.h>

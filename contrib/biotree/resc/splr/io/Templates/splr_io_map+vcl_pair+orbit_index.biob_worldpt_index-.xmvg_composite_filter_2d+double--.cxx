@@ -1,4 +1,4 @@
-#include <splr/io/splr_io_map.txx>
+#include <splr/io/splr_io_map.hxx>
 #include <bio_defs.h>
 #include <biob/biob_worldpt_index.h>
 #include <xmvg/io/xmvg_io_composite_filter_2d.h>

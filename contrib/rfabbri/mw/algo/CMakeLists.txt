@@ -9,7 +9,7 @@ include_directories( ${lems_SOURCE_DIR}/contrib/rfabbri )
 set( mw_algo_sources
   mw_match_position_band.cxx      mw_match_position_band.h
   mw_match_tangent_band.cxx      mw_match_tangent_band.h
-  mw_discrete_corresp_algo.txx  mw_discrete_corresp_algo_defs.cxx  mw_discrete_corresp_algo.h
+  mw_discrete_corresp_algo.hxx  mw_discrete_corresp_algo_defs.cxx  mw_discrete_corresp_algo.h
   mw_match_old.cxx      mw_match_old.h
   mw_point_matcher.cxx         mw_point_matcher.h
   mw_stereo_app.cxx    mw_stereo_app.h

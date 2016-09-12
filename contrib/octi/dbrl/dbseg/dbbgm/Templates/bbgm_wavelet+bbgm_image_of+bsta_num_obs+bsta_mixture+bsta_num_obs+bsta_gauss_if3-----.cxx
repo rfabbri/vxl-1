@@ -1,4 +1,4 @@
-#include <dbbgm/bbgm_wavelet.txx>
+#include <dbbgm/bbgm_wavelet.hxx>
 #include <vil/vil_image_view.h>
 #include <dbsta/bsta_attributes.h>
 #include <dbsta/bsta_mixture.h>

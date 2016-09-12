@@ -3,11 +3,11 @@
 
 include_directories( ${MUL_INCLUDE_DIR} ${VXL_MUL_INCLUDE_DIR})
 set( dbil3d_algo_sources
-                dbil3d_gauss_filter.h dbil3d_gauss_filter.txx
-                dbil3d_finite_differences.h  dbil3d_finite_differences.txx
-                dbil3d_finite_second_differences.h  dbil3d_finite_second_differences.txx
-                dbil3d_hessian_decompose.h dbil3d_hessian_decompose.cxx dbil3d_hessian_decompose.txx 
-                dbil3d_detect_ridges.h dbil3d_detect_ridges.txx dbil3d_detect_ridges.cxx
+                dbil3d_gauss_filter.h dbil3d_gauss_filter.hxx
+                dbil3d_finite_differences.h  dbil3d_finite_differences.hxx
+                dbil3d_finite_second_differences.h  dbil3d_finite_second_differences.hxx
+                dbil3d_hessian_decompose.h dbil3d_hessian_decompose.cxx dbil3d_hessian_decompose.hxx 
+                dbil3d_detect_ridges.h dbil3d_detect_ridges.hxx dbil3d_detect_ridges.cxx
 )
 
 aux_source_directory(Templates dbil3d_algo_sources)

@@ -10,7 +10,7 @@
 #include <vul/vul_sprintf.h>
 
 #include <vsl/vsl_binary_io.h>
-#include <vbl/io/vbl_io_smart_ptr.txx>
+#include <vbl/io/vbl_io_smart_ptr.hxx>
 
 #include <bpro/bpro_storage.h>
 

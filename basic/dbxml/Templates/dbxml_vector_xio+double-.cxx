@@ -2,7 +2,7 @@
 
 static const char* DATA_TYPE = "vector+double";
 
-#include <dbxml/dbxml_vector_xio.txx>
+#include <dbxml/dbxml_vector_xio.hxx>
 
 DBXML_VECTOR_XIO_INSTANTIATE(double)
 

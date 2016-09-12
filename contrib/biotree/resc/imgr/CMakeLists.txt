@@ -21,7 +21,7 @@ imgr_scan_images_resource.cxx   imgr_scan_images_resource.h
 imgr_scan_resource_io.cxx       imgr_scan_resource_io.h
 imgr_view_data_base.h           imgr_view_data_base_sptr.h
 imgr_image_view_3d_base.h       imgr_image_view_3d_base_sptr.h 
-imgr_bounded_image_view_3d.txx  imgr_bounded_image_view_3d.h
+imgr_bounded_image_view_3d.hxx  imgr_bounded_image_view_3d.h
 imgr_scan_images_resource.h        
 )
 

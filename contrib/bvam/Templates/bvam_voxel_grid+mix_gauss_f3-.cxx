@@ -1,4 +1,4 @@
-#include "bvam_voxel_grid.txx"
+#include "bvam_voxel_grid.hxx"
 
 #include "bvam_mog_rgb_processor.h"
 

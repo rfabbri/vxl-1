@@ -3,9 +3,9 @@
 
 set(dbgrl_sources
          
-dbgrl_vertex.h             dbgrl_vertex.txx    
-dbgrl_edge.h               dbgrl_edge.txx
-dbgrl_graph.h              dbgrl_graph.txx            
+dbgrl_vertex.h             dbgrl_vertex.hxx    
+dbgrl_edge.h               dbgrl_edge.hxx
+dbgrl_graph.h              dbgrl_graph.hxx            
 
 dbgrl_hg_vertex.cxx        dbgrl_hg_vertex.h
 dbgrl_hg_edge.cxx          dbgrl_hg_edge.h

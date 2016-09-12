@@ -24,13 +24,13 @@ include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
   
 set(psm_sources
   psm_scene_base.h  psm_scene_base.cxx
-  psm_scene.h  psm_scene.txx
+  psm_scene.h  psm_scene.hxx
   psm_sample.h
   psm_cell_id.h
   psm_image_sample.h
   psm_scene_block_storage.h
-  psm_scene_block_storage_single.h   psm_scene_block_storage_single.txx  
-  psm_scene_block_storage_cached.h   psm_scene_block_storage_cached.txx
+  psm_scene_block_storage_single.h   psm_scene_block_storage_single.hxx  
+  psm_scene_block_storage_cached.h   psm_scene_block_storage_cached.hxx
   psm_scene_block_storage_null.h
   psm_apm_traits.h
   psm_cell_enumerator.h
@@ -40,7 +40,7 @@ set(psm_sources
   psm_mog_rgb_processor.h   psm_mog_rgb_processor.cxx
   psm_simple_rgb_processor.h   psm_simple_rgb_processor.cxx
   psm_aux_scene_base.h  psm_aux_scene_base.cxx
-  psm_aux_scene.h  psm_aux_scene.txx
+  psm_aux_scene.h  psm_aux_scene.hxx
   psm_vis_implicit_sample.h
   psm_dcdf_implicit_sample.h
   psm_update_sample.h

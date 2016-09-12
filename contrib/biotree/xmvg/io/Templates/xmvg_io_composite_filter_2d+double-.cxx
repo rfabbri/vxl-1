@@ -1,5 +1,5 @@
-#include <xmvg/io/xmvg_io_composite_filter_2d.txx>
-#include <vsl/vsl_vector_io.txx>
+#include <xmvg/io/xmvg_io_composite_filter_2d.hxx>
+#include <vsl/vsl_vector_io.hxx>
 
 XMVG_IO_COMPOSITE_FILTER_2D_INSTANTIATE(double );
 /*//template void vsl_b_write(vsl_b_ostream & , const xmvg_composite_filter_2d<double> &); \

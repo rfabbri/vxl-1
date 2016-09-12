@@ -9,21 +9,21 @@ doxygen_add_library(dcontrib/dbrl/dbbas/dbsta
 set(dbstao_sources
  bsta_gauss.cxx            bsta_gauss.h
  bsta_histogram_base.h
- bsta_histogram.txx        bsta_histogram.h       bsta_histogram_sptr.h
+ bsta_histogram.hxx        bsta_histogram.h       bsta_histogram_sptr.h
  bsta_joint_histogram_base.h
- bsta_joint_histogram.txx  bsta_joint_histogram.h bsta_joint_histogram_sptr.h
+ bsta_joint_histogram.hxx  bsta_joint_histogram.h bsta_joint_histogram_sptr.h
  bsta_k_medoid.cxx         bsta_k_medoid.h
- bsta_otsu_threshold.txx   bsta_otsu_threshold.h
+ bsta_otsu_threshold.hxx   bsta_otsu_threshold.h
  bsta_int_histogram_1d.cxx  bsta_int_histogram_1d.h
  bsta_int_histogram_2d.cxx  bsta_int_histogram_2d.h
 
   bsta_distribution.h
 
   bsta_gaussian.h
-  bsta_gaussian_full.txx         bsta_gaussian_full.h
-  bsta_gaussian_indep.txx        bsta_gaussian_indep.h
-  bsta_gaussian_sphere.txx       bsta_gaussian_sphere.h
-  bsta_parzen_sphere.txx         bsta_parzen_sphere.h
+  bsta_gaussian_full.hxx         bsta_gaussian_full.h
+  bsta_gaussian_indep.hxx        bsta_gaussian_indep.h
+  bsta_gaussian_sphere.hxx       bsta_gaussian_sphere.h
+  bsta_parzen_sphere.hxx         bsta_parzen_sphere.h
   bsta_parzen_sf1.h
   bsta_parzen_sf3.h
   bsta_gauss_f1.h
@@ -34,17 +34,17 @@ set(dbstao_sources
   bsta_gauss_ff3.h               bsta_gauss_fd3.h
 
   bsta_mixture.h
-  bsta_mixture.txx
+  bsta_mixture.hxx
   bsta_mixture_traits.h
   bsta_mixture_fixed.h
   bsta_basic_functors.h
   bsta_attributes.h
   bsta_detector_gaussian.h
   bsta_detector_mixture.h
-  bsta_weibull.h   bsta_weibull.txx
-  bsta_sampler.h   bsta_sampler.txx
+  bsta_weibull.h   bsta_weibull.hxx
+  bsta_sampler.h   bsta_sampler.hxx
   bsta_von_mises.h
-  bsta_beta.h      bsta_beta.txx
+  bsta_beta.h      bsta_beta.hxx
   bsta_beta_f1.h
 )
 

@@ -1,6 +1,6 @@
-#include <dboxm/boxm_block_vis_graph_iterator.txx>
+#include <dboxm/boxm_block_vis_graph_iterator.hxx>
 #include <dboxm/boxm_sample_multi_bin.h>
-#include <boct/boct_tree.txx>
+#include <boct/boct_tree.hxx>
 #include <vgl/io/vgl_io_point_3d.h>
 
 typedef boct_tree<short, boxm_sample_multi_bin<BOXM_APM_MOG_GREY> > tree_type;

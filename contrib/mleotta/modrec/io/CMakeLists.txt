@@ -3,8 +3,8 @@
 
 
 set(modrec_io_sources
-   modrec_io_desc_feature_3d.txx   modrec_io_desc_feature_3d.h 
-   modrec_io_codeword.txx          modrec_io_codeword.h
+   modrec_io_desc_feature_3d.hxx   modrec_io_desc_feature_3d.h 
+   modrec_io_codeword.hxx          modrec_io_codeword.h
 )
 
 aux_source_directory(Templates modrec_io_sources)

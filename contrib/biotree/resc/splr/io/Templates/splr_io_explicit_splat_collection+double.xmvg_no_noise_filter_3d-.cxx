@@ -1,4 +1,4 @@
-#include <splr/io/splr_io_explicit_splat_collection.txx>
+#include <splr/io/splr_io_explicit_splat_collection.hxx>
 #include <xmvg/xmvg_no_noise_filter_3d.h>
 #include <vcl_utility.h>
 #include <vsl/vsl_pair_io.h>

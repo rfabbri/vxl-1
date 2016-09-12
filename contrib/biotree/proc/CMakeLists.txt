@@ -11,9 +11,9 @@ include_directories( ${lems_SOURCE_DIR}/db3p )
 include_directories( ${lems_SOURCE_DIR}/db3p/expatpp/expat/lib )
 
 set(bioproc_src
-    bioproc_filtering_proc.txx        bioproc_filtering_proc.h
-    bioproc_splr_filtering_proc.txx   bioproc_splr_filtering_proc.h
-    bioproc_dummy_splat_resource.txx  bioproc_dummy_splat_resource.h
+    bioproc_filtering_proc.hxx        bioproc_filtering_proc.h
+    bioproc_splr_filtering_proc.hxx   bioproc_splr_filtering_proc.h
+    bioproc_dummy_splat_resource.hxx  bioproc_dummy_splat_resource.h
     bioproc_filtering_proc_helper.h
    )
 

@@ -1,4 +1,4 @@
-#include "bvam_voxel_storage_disk.txx"
+#include "bvam_voxel_storage_disk.hxx"
 #include <bsta/bsta_attributes.h>
 #include <bsta/bsta_mixture_fixed.h>
 #include <bsta/bsta_gauss_f1.h>

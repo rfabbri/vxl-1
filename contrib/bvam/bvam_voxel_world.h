@@ -203,7 +203,7 @@ typedef vbl_smart_ptr<bvam_voxel_world> bvam_voxel_world_sptr;
 
 
 //////////////////////////////////////////////////////////
-// TODO: Move everything below here to .txx files -DEC
+// TODO: Move everything below here to .hxx files -DEC
 //////////////////////////////////////////////////////////
 
 //: get the observation count of a voxel type at a specific bin

@@ -1,12 +1,12 @@
-#include <dbbgm/bbgm_image_of.txx>
+#include <dbbgm/bbgm_image_of.hxx>
 #ifdef DEVELINCLUDEPATH
 #include <dbsta/bsta_attributes.h>
-#include <dbsta/bsta_gaussian_sphere.txx>
+#include <dbsta/bsta_gaussian_sphere.hxx>
 #include <dbsta/io/bsta_io_attributes.h>
 #include <dbsta/io/bsta_io_gaussian_sphere.h>
 #else
 #include <bsta/bsta_attributes.h>
-#include <bsta/bsta_gaussian_sphere.txx>
+#include <bsta/bsta_gaussian_sphere.hxx>
 #include <bsta/io/bsta_io_attributes.h>
 #include <bsta/io/bsta_io_gaussian_sphere.h>
 #endif

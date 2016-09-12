@@ -1,4 +1,4 @@
-#include <dbgrl/dbgrl_graph.txx>
+#include <dbgrl/dbgrl_graph.hxx>
 
 #include <rec/dbvxm_part_base.h>
 #include <rec/dbvxm_hierarchy_edge.h>

@@ -12,13 +12,13 @@ include_directories( ${bm_SOURCE_DIR} )
 set( dsm2_algo_sources
      dsm2_state_machine_updater_base.h
      dsm2_state_machine_updater_mahalan.h  
-     dsm2_state_machine_updater_mahalan.txx
+     dsm2_state_machine_updater_mahalan.hxx
      
-     dsm2_pixel_updater_mahalan.h          dsm2_pixel_updater_mahalan.txx
+     dsm2_pixel_updater_mahalan.h          dsm2_pixel_updater_mahalan.hxx
      
-     dsm2_time_series_pca.h                dsm2_time_series_pca.txx
+     dsm2_time_series_pca.h                dsm2_time_series_pca.hxx
      
-     dsm2_km_updater.h                     dsm2_km_updater.txx
+     dsm2_km_updater.h                     dsm2_km_updater.hxx
     )
 
 aux_source_directory(Templates dsm2_algo_sources)    

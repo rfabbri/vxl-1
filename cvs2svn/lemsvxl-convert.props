@@ -47,7 +47,7 @@ AUTHORS                         = svn:mime-type=text/plain
 *.hh                            = svn:mime-type=text/x-c++hdr
 *.hpp                           = svn:mime-type=text/x-c++hdr
 *.h.in                          = svn:mime-type=text/x-chdr
-*.txx                           = svn:mime-type=text/x-c++src
+*.hxx                           = svn:mime-type=text/x-c++src
 *.tpp                           = svn:mime-type=text/x-c++src
 *.m                             = svn:mime-type=text/x-matlab-src
 *.htm                           = svn:mime-type=text/htm

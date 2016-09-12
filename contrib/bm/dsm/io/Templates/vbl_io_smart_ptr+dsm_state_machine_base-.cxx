@@ -2,5 +2,5 @@
 #include"dsm/dsm_state_machine_base_sptr.h"
 #include"dsm/dsm_state_machine_base.h"
 #include"dsm/io/dsm_io_state_machine_base.h"
-#include<vbl/io/vbl_io_smart_ptr.txx>
+#include<vbl/io/vbl_io_smart_ptr.hxx>
 VBL_IO_SMART_PTR_INSTANTIATE(dsm_state_machine_base);

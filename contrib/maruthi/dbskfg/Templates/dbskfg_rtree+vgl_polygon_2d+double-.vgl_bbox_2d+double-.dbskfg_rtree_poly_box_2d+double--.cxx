@@ -1,5 +1,5 @@
 #include <dbskfg/dbskfg_rtree_poly_box_2d.h>
-#include <vgl/algo/vgl_rtree.txx>
+#include <vgl/algo/vgl_rtree.hxx>
 #include <vgl/algo/vgl_rtree_c.h>
 
 typedef vcl_vector<vgl_point_2d<double> > v;

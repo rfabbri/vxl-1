@@ -10,8 +10,8 @@
 #include "bfrag_Manager.h"
 //rotation
 #include <vxl_config.h> // for vxl_byte
-#include <vil/vil_rotate.txx>
-#include <vil/vil_resample_bilin.txx>
+#include <vil/vil_rotate.hxx>
+#include <vil/vil_resample_bilin.hxx>
 //rotation
 
 vgui_bfrag2D_tableau::vgui_bfrag2D_tableau(const char* n) : bgui_vsol2D_tableau(n) { 

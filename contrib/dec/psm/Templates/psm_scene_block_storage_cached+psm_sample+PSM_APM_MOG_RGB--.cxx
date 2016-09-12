@@ -1,4 +1,4 @@
-#include "../psm_scene_block_storage_cached.txx"
+#include "../psm_scene_block_storage_cached.hxx"
 #include "../psm_sample.h"
 #include "../psm_apm_traits.h"
 

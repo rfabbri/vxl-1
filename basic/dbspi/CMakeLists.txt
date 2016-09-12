@@ -5,7 +5,7 @@
 include_directories(${VXL_GEL_INCLUDE_DIR} )
 
 set(dbspi_sources
-    dbspi_chamfer.txx          dbspi_chamfer.h
+    dbspi_chamfer.hxx          dbspi_chamfer.h
     dbspi_curve_map.cxx        dbspi_curve_map.h
     dbspi_curve_distance.cxx   dbspi_curve_distance.h
 )

@@ -1,5 +1,5 @@
 //this is /contrib/bm/dsm2/io/dsm2_io_manager_pixels+uint.dsm2_io_state_machine.dsm2_node_gaussian.d.2.dsm2_transition_map.uint.uint.d-.cxx
-#include<dsm2/io/dsm2_io_manager_pixels.txx>
+#include<dsm2/io/dsm2_io_manager_pixels.hxx>
 #include<dsm2/dsm2_state_machine.h>
 #include<dsm2/dsm2_node_gaussian.h>
 #include<dsm2/dsm2_transition_map.h>

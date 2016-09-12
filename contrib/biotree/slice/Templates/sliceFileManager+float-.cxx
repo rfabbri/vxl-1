@@ -1,2 +1,2 @@
-#include <slice/sliceFileManager.txx>
+#include <slice/sliceFileManager.hxx>
 SLICEFILEMANAGER_INSTANTIATE(float);

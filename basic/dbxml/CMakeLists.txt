@@ -7,7 +7,7 @@ include_directories( ${VXL_BRL_INCLUDE_DIR} )
 set(dbxml_sources 
     dbxml_algos.h                 dbxml_algos.cxx
     dbxml_xio.h                   dbxml_xio.cxx
-    dbxml_vector_xio.h            dbxml_vector_xio.txx
+    dbxml_vector_xio.h            dbxml_vector_xio.hxx
 )
 
 aux_source_directory(Templates dbxml_sources)

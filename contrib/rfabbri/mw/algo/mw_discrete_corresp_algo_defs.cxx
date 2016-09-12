@@ -1,5 +1,5 @@
 #include "mw_discrete_corresp_algo.h"
-#include "mw_discrete_corresp_algo.txx"
+#include "mw_discrete_corresp_algo.hxx"
 
 #include <mw/mw_util.h>
 #include <mw/algo/mw_curve_stereo.h>

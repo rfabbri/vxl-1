@@ -9,7 +9,7 @@ include_directories( ${VXL_MUL_INCLUDE_DIR}      )
         set(int_cedt3d_sources
                         cedt3d_utils.C dt_by_3d_cedt.C min_heap.C  propagate3d.C cedt3d.C
                         cedt3d_utils.h dt_by_3d_cedt.h propagate3d.h cedt3d.h
-                        dbil3d_cedt.h dbil3d_cedt.txx
+                        dbil3d_cedt.h dbil3d_cedt.hxx
            )
 
 aux_source_directory(Templates int_cedt3d_sources)

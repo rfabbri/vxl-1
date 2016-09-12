@@ -27,7 +27,7 @@
 #include <dboxm/boxm_cell_vis_graph_iterator.h>
 #include <dboxm/boxm_mog_grey_processor.h>
 #include <vpgl/vpgl_camera.h>
-#include <vbl/vbl_array_3d.txx>
+#include <vbl/vbl_array_3d.hxx>
 #include <vsl/vsl_binary_io.h>
 #include <vpl/vpl.h>
 #include <vul/vul_file.h>

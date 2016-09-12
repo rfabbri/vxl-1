@@ -1,3 +1,3 @@
-#include <bpro/bpro_parameters.txx>
+#include <bpro/bpro_parameters.hxx>
 
 vidpro_PARAMETERS_INSTANTIATE(bool);

@@ -28,13 +28,13 @@ set(psm_algo_sources
   psm_update_2pass_aa.h
   psm_update_vis_implicit_parallel.h
   psm_update_vis_implicit_aa.h
-  psm_cell_visibility_iterator.h psm_cell_visibility_iterator.txx
-  psm_block_visibility_iterator.h psm_block_visibility_iterator.txx
+  psm_cell_visibility_iterator.h psm_cell_visibility_iterator.hxx
+  psm_block_visibility_iterator.h psm_block_visibility_iterator.hxx
   psm_image_pyramid.h
   psm_triangle_scan_iterator_aa.h  psm_triangle_scan_iterator_aa.cxx
   psm_triangle_scan_iterator.h     psm_triangle_scan_iterator.cxx
-  psm_triangle_interpolation_iterator_aa.h  psm_triangle_interpolation_iterator_aa.txx
-  psm_triangle_interpolation_iterator.h  psm_triangle_interpolation_iterator.txx
+  psm_triangle_interpolation_iterator_aa.h  psm_triangle_interpolation_iterator_aa.hxx
+  psm_triangle_interpolation_iterator.h  psm_triangle_interpolation_iterator.hxx
   psm_raytrace_function.h
   psm_convert_to_boct.h
   psm_clean_unobserved.h

@@ -1,6 +1,6 @@
 #include <testlib/testlib_test.h>
 #include <biob/biob_grid_worldpt_roster.h>
-#include <splr/splr_per_orbit_index_splat_collection.txx>
+#include <splr/splr_per_orbit_index_splat_collection.hxx>
 #include <splr/tests/dummy_filter_2d.h>
 #include <splr/tests/dummy_filter_3d.h>
 #include <splr/tests/dummy_camera.h>

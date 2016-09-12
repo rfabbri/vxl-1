@@ -1,4 +1,4 @@
-#include "bvam_voxel_slab.txx"
+#include "bvam_voxel_slab.hxx"
 #include <vnl/vnl_vector_fixed.h>
 
 typedef vnl_vector_fixed<float,3> vnl_vector_fixed_f3;

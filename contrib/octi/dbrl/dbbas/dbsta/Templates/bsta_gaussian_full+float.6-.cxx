@@ -1,3 +1,3 @@
-#include <dbsta/bsta_gaussian_full.txx>
+#include <dbsta/bsta_gaussian_full.hxx>
 
 BSTA_GAUSSIAN_FULL_INSTANTIATE(float, 6);

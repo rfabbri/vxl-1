@@ -160,7 +160,7 @@ private:
 #endif
 
 #if ITK_TEMPLATE_TXX
-# include "itkInPlaceImageFilter.txx"
+# include "itkInPlaceImageFilter.hxx"
 #endif
 
 #endif

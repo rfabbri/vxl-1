@@ -1,4 +1,4 @@
-#include <boct/boct_tree.txx>
+#include <boct/boct_tree.hxx>
 #include <dboxm/boxm_apm_traits.h>
 #include <dboxm/boxm_sample_multi_bin.h>
 

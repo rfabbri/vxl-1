@@ -32,7 +32,7 @@
 #include "itkPoint.h"
 #include "itkMatrix.h"
 #include "itkImageHelper.h"
-#include <vnl/vnl_matrix_fixed.txx>
+#include <vnl/vnl_matrix_fixed.hxx>
 
 #include "itkImageRegion.h"
 
@@ -456,7 +456,7 @@ private:
 #endif
 
 #if ITK_TEMPLATE_TXX
-# include "itkImageBase.txx"
+# include "itkImageBase.hxx"
 #endif
 
 #endif

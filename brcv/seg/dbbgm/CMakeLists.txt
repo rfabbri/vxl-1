@@ -3,13 +3,13 @@
 
 
 set(dbbgm_sources
-  dbbgm_distribution_image.txx    dbbgm_distribution_image.h    
+  dbbgm_distribution_image.hxx    dbbgm_distribution_image.h    
   dbbgm_distribution_image_sptr.h dbbgm_distribution_image.cxx
   dbbgm_update.h
   dbbgm_apply.h
   dbbgm_detect.h
 
-  dbbgm_bgmodel.h       dbbgm_bgmodel.txx dbbgm_bgmodel_sptr.h
+  dbbgm_bgmodel.h       dbbgm_bgmodel.hxx dbbgm_bgmodel_sptr.h
   dbbgm_model_data.h    dbbgm_model_data.cxx
 
 

@@ -1,8 +1,8 @@
 include_directories(${BIOTREE_SOURCE_DIR} ${lems_SOURCE_DIR}/basic)
 
 set(xmvg_algo_src
-    xmvg_dot_product_2d.txx             xmvg_dot_product_2d.h
-    xmvg_ramp_compensation.txx             xmvg_ramp_compensation.h
+    xmvg_dot_product_2d.hxx             xmvg_dot_product_2d.h
+    xmvg_ramp_compensation.hxx             xmvg_ramp_compensation.h
    )
 
 aux_source_directory(Templates xmvg_algo_src)

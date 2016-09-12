@@ -9,19 +9,19 @@ include_directories( ${GEL_INCLUDE_DIR}/mrc )
 include_directories( ${BRL_INCLUDE_DIR}/b3p/expatpp )
 
 set(dboxm_sources
-    boxm_block.txx                         boxm_block.h
+    boxm_block.hxx                         boxm_block.h
     boxm_scene_base.cxx                    boxm_scene_base.h
-    boxm_scene.txx                         boxm_scene.h
+    boxm_scene.hxx                         boxm_scene.h
     boxm_scene_parser.cxx                  boxm_scene_parser.h
-    boxm_sample.txx                        boxm_sample.h
-    boxm_sample_multi_bin.txx              boxm_sample_multi_bin.h
+    boxm_sample.hxx                        boxm_sample.h
+    boxm_sample_multi_bin.hxx              boxm_sample_multi_bin.h
  
     boxm_apm_traits.cxx                    boxm_apm_traits.h
     boxm_mog_grey_processor.cxx            boxm_mog_grey_processor.h
     boxm_simple_grey_processor.cxx         boxm_simple_grey_processor.h
     boxm_block_vis_graph_node.h
-    boxm_block_vis_graph_iterator.txx      boxm_block_vis_graph_iterator.h
-    boxm_cell_vis_graph_iterator.txx       boxm_cell_vis_graph_iterator.h
+    boxm_block_vis_graph_iterator.hxx      boxm_block_vis_graph_iterator.h
+    boxm_cell_vis_graph_iterator.hxx       boxm_cell_vis_graph_iterator.h
     boxm_neighb_graph_node.h
     boxm_utils.cxx                         boxm_utils.h
     boxm_render_image.h                      boxm_render_image_triangle.h
@@ -32,7 +32,7 @@ set(dboxm_sources
     boxm_save_scene_raw.h
     boxm_quad_scan_iterator.h              boxm_quad_scan_iterator.cxx
     boxm_compute_volume_visibility.h
-    boxm_triangle_interpolation_iterator.h boxm_triangle_interpolation_iterator.txx
+    boxm_triangle_interpolation_iterator.h boxm_triangle_interpolation_iterator.hxx
     boxm_triangle_scan_iterator.h          boxm_triangle_scan_iterator.cxx
     boxm_raytrace_operations.h             boxm_raytrace_operations.cxx
 

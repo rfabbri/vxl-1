@@ -1,2 +1,2 @@
-#include <dbsta/bsta_histogram.txx>
+#include <dbsta/bsta_histogram.hxx>
 BSTA_HISTOGRAM_INSTANTIATE(double);

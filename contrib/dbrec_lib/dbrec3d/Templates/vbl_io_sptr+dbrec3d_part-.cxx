@@ -1,6 +1,6 @@
 #include <dbrec3d/dbrec3d_parts_manager.h>
 #include <dbrec3d/dbrec3d_context_manager.h>
-#include <vbl/io/vbl_io_smart_ptr.txx>
+#include <vbl/io/vbl_io_smart_ptr.hxx>
 
 
 VBL_IO_SMART_PTR_INSTANTIATE(dbrec3d_parts_manager);

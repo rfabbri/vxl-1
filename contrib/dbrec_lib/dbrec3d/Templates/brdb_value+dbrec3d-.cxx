@@ -5,7 +5,7 @@
 // All dbrec3d brdb instantiations
 
 
-#include <brdb/brdb_value.txx>
+#include <brdb/brdb_value.hxx>
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <dbrec3d/dbrec3d_parts_manager.h>
 #include <dbrec3d/dbrec3d_context_manager.h>

@@ -1,4 +1,4 @@
-#include <dbgrl/dbgrl_graph.txx>
+#include <dbgrl/dbgrl_graph.hxx>
 #include <dbskfg/dbskfg_composite_node.h>
 #include <dbskfg/dbskfg_composite_link.h>
 

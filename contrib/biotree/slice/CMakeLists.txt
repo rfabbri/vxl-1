@@ -11,11 +11,11 @@ set(CMAKE_CXX_FLAGS -g)
 
 set(slice_src 
                 sliceEngine.h
-                sliceEngine.txx
+                sliceEngine.hxx
                 sliceProcessor.cxx
                 sliceProcessor.h
                 sliceFileManager.h
-                sliceFileManager.txx
+                sliceFileManager.hxx
 )  
 
 aux_source_directory(Templates slice_src)

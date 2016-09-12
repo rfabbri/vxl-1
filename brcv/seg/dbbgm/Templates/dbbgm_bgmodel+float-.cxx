@@ -1,2 +1,2 @@
-#include <dbbgm/dbbgm_bgmodel.txx>
+#include <dbbgm/dbbgm_bgmodel.hxx>
 DBBGM_BGMODEL_INSTANTIATE(float);

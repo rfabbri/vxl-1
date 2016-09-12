@@ -23,7 +23,7 @@
 
 #include <dbbgm/pro/dbbgm_dbpro_filters.h>
 #include <bbgm/bbgm_image_of.h>
-#include <bbgm/bbgm_image_of.txx>
+#include <bbgm/bbgm_image_of.hxx>
 #include <bbgm/bbgm_viewer.h>
 
 #include <vpdl/vpdt/vpdt_gaussian.h>

@@ -1,4 +1,4 @@
-#include <brdb/brdb_value.txx>
+#include <brdb/brdb_value.hxx>
 #include <bof/bof_scene_categories.h>
 
 BRDB_VALUE_INSTANTIATE(bof_scene_categories_sptr, "bof_scene_categories_sptr");

@@ -123,6 +123,6 @@ class mw_discrete_corresp_algo {
       const vcl_vector<vsol_polyline_2d_sptr> &pts1);
 };
 
-#define MW_DISCRETE_CORRESP_ALGO_INSTANTIATE(T) extern "please include mw/mw_discrete_corresp_algo.txx first"
+#define MW_DISCRETE_CORRESP_ALGO_INSTANTIATE(T) extern "please include mw/mw_discrete_corresp_algo.hxx first"
 
 #endif // mw_discrete_corresp_algo_h

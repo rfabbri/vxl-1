@@ -1,4 +1,4 @@
-// This is dbxml/dbxml_xio.txx
+// This is dbxml/dbxml_xio.hxx
 
 //:
 // \file

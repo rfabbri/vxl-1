@@ -1,7 +1,7 @@
 
 #include "bvam_mog_rgb_processor.h"
 #include "bvam_voxel_slab.h"
-#include "bvam_voxel_slab.txx"
+#include "bvam_voxel_slab.hxx"
 #include "bvam_voxel_slab_iterator.h"
 
 //: Return probability density of observing pixel values

@@ -1,4 +1,4 @@
-#include <splr/splr_explicit_splat_collection.txx>
+#include <splr/splr_explicit_splat_collection.hxx>
 #include <splr/tests/dummy_filter_2d.h>
 #include <splr/tests/dummy_scan.h>
 #include <splr/tests/dummy_filter_3d.h>

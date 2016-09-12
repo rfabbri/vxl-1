@@ -1,4 +1,4 @@
-#include <dbgrl/dbgrl_graph.txx>
+#include <dbgrl/dbgrl_graph.hxx>
 
 #include "../test_node.h"
 #include "../test_edge.h"
