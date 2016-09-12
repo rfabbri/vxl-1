@@ -18,6 +18,7 @@
 #include <dbsk2d/algo/dbsk2d_ishock_grouping_transform.h>
 #include <dbsk2d/algo/dbsk2d_bnd_preprocess.h>
 #include <dbsk2d/dbsk2d_bnd_utils.h>
+#include <dbsk2d/algo/dbsk2d_prune_ishock.h>
 #include <vgl/vgl_area.h>
 
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
@@ -649,6 +650,7 @@ debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
    
     vcl_string shock_file=filename +"_shock.cem";
     vcl_string cem_file=filename + "_con.bnd";
+    vcl_string atomic_frags=filename + "_atomic_frags";
     dbsk2d_ishock_transform temp_trans(ishock_graph,
                                        dbsk2d_ishock_transform::LOOP);
     temp_trans.write_shock_boundary(shock_file);
@@ -673,7 +675,162 @@ debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
     }
 
     temp_trans.write_fragments(filename,polygons);
+
+
+    // Create filename
+    vcl_string coarse_poly=filename+"_coarse_fragments.txt";
+    vcl_string coarse_shock=filename+"_csg.cem";
+
+    //instantiate an empty coarse shock graph at this time
+    //this will be properly defined once the shock is pruned
+    dbsk2d_shock_graph_sptr coarse_shock_graph = new dbsk2d_shock_graph();
+
+    // Write out coarse shock graph 
+    dbsk2d_prune_ishock prune(ishock_graph, coarse_shock_graph);
+    prune.prune(1.0);
+    prune.compile_coarse_shock_graph();
+
+
+    dbsk2d_ishock_grouping_transform grouper2(ishock_graph);
+    grouper2.grow_coarse_regions();
+
+    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >
+        frag_edges2 = grouper2.get_region_nodes();
+
+    vcl_vector<vgl_polygon<double> > type_1_polygons;
+    vcl_vector<vgl_polygon<double> > type_2_polygons;
+    vcl_vector<vgl_polygon<double> > atomic_polygons;
+
+    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >::iterator it2;
+    for ( it2 = frag_edges2.begin() ; it2 != frag_edges2.end() ; ++it2)
+    {
+
+        vcl_vector<dbsk2d_ishock_edge*> vec=(*it2).second;
+        
+        bool flag=false;
+        for ( int i=0; i < vec.size() ; ++i)
+        {
+            flag=grouper2.shock_from_endpoint(vec[0]);
+            if ( flag )
+            {
+                break;
+            }
+        }
+        
+
+        // Grab polygon fragment
+        vgl_polygon<double> poly2;
+        grouper2.polygon_fragment((*it2).first,poly2);
+        atomic_polygons.push_back(poly2);
+
+        if ( !flag )
+        {
+            type_1_polygons.push_back(poly2);
+        }
+        else
+        {
+
+            type_2_polygons.push_back(poly2);
+        }
+    }
+
+    vcl_string type1=filename+"_type1_frags.txt";
+    vcl_string type2=filename+"_type2_frags.txt";
+    vcl_string type3=filename+"_type3_frags.txt";
+    vcl_string type4=filename+"_csg_nodes.txt";
+
+    temp_trans.write_polygons(type1,type_1_polygons);
+    temp_trans.write_polygons(type2,type_2_polygons);
+    temp_trans.write_polygons(type3,atomic_polygons);
+    grouper2.write_out_file(type4);
     
+    vcl_ofstream file_stream(coarse_poly.c_str());
+
+    vcl_vector<vsol_spatial_object_2d_sptr> vsol_list;
+
+    //draw the edges fragments first
+    for ( dbsk2d_shock_graph::edge_iterator curE = 
+              coarse_shock_graph->edges_begin();
+          curE != coarse_shock_graph->edges_end();
+          curE++ ) 
+    {
+        dbsk2d_shock_edge_sptr selm = (*curE);
+
+        //return if no fragment has been computed 
+        if (!selm->shock_fragment())
+        {
+            continue;
+        }
+        
+        file_stream<<selm->shock_fragment()->ex_pts().size()<<vcl_endl;
+
+        for( unsigned int i = 0 ; i < selm->shock_fragment()->ex_pts().size() 
+                 ; i++ ) {
+            file_stream<<selm->shock_fragment()->ex_pts()[i].x()<<" "<< 
+                selm->shock_fragment()->ex_pts()[i].y() <<" ";
+        }
+        file_stream<<vcl_endl;
+
+        // Add in contours for front 
+        vsol_spatial_object_2d_sptr obj=
+            new vsol_polyline_2d;
+
+        vsol_polyline_2d* curve=obj->cast_to_curve()->cast_to_polyline();
+
+        vcl_vector<vgl_point_2d<double> > ex_pts= selm->ex_pts();
+        
+        
+        for ( unsigned int i=0; i < ex_pts.size() ; ++i)
+        {
+            vsol_point_2d_sptr pt=new vsol_point_2d(ex_pts[i]);
+
+            curve->add_vertex(pt);
+        }
+
+        vsol_list.push_back(obj);
+
+
+    }
+
+    dbsol_save_cem(vsol_list, coarse_shock);
+
+
+    //then draw the node fragments
+  
+    for ( dbsk2d_shock_graph::vertex_iterator curN = 
+              coarse_shock_graph->vertices_begin();
+          curN != coarse_shock_graph->vertices_end();
+          curN++ ) 
+    {
+        dbsk2d_shock_node_sptr snode = (*curN);
+        
+        //traverse the descriptor list and draw the shock fragments for the 
+        //degenerate descriptors
+        vcl_list<dbsk2d_shock_node_descriptor>::iterator p_itr = 
+            snode->descriptor_list().begin();
+        for (; p_itr != snode->descriptor_list().end(); ++ p_itr)
+        {
+          dbsk2d_shock_node_descriptor cur_descriptor = (*p_itr);
+          
+          if (!cur_descriptor.fragment.ptr())
+          {
+              continue;
+          }
+          
+          file_stream<<cur_descriptor.fragment->ex_pts().size()<<vcl_endl;
+
+          for( unsigned int i = 0 ; i < 
+                   cur_descriptor.fragment->ex_pts().size() ; i++ ) {
+              file_stream<<cur_descriptor.fragment->ex_pts()[i].x()<<" "<< 
+                  cur_descriptor.fragment->ex_pts()[i].y()<<" ";
+          }
+
+          file_stream<<vcl_endl;
+     
+      }
+    }
+    file_stream.close();
+
 }
 
 void dbsk2d_compute_containment_graph_process::

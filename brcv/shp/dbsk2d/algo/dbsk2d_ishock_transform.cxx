@@ -464,6 +464,108 @@ void dbsk2d_ishock_transform::write_shock_boundary(vcl_string filename)
 
 }
 
+void dbsk2d_ishock_transform::write_shock_classification(vcl_string filename)
+{
+
+    vcl_ofstream stream(filename.c_str());
+    vcl_vector<vsol_spatial_object_2d_sptr> vsol_list;
+        
+    //draw the edges first
+    for ( dbsk2d_ishock_graph::edge_iterator curE = 
+              ishock_graph_->all_edges().begin();
+          curE != ishock_graph_->all_edges().end();
+          curE++ ) 
+    {
+        dbsk2d_ishock_edge* selm = (*curE);
+        vcl_vector<vgl_point_2d<double> > ex_pts= selm->ex_pts();
+        
+        if ( selm->is_a_contact() ) 
+        {
+            continue;
+        }
+
+        if (selm->type() == dbsk2d_ishock_elm::LINELINE) 
+        {
+            stream<<"4 0"<<vcl_endl;
+            continue;
+        }
+        
+        bool left_ept=false;
+        bool right_ept=false;
+
+        if ( selm->lBElement()->is_a_point() )
+        {
+            dbsk2d_ishock_bpoint* bpoint =
+                (dbsk2d_ishock_bpoint*) selm->lBElement();
+            if ( bpoint->is_an_end_point())
+            {
+                left_ept=true;
+            }            
+        }
+        
+        if ( selm->rBElement()->is_a_point() )
+        {
+            dbsk2d_ishock_bpoint* bpoint =
+                (dbsk2d_ishock_bpoint*) selm->rBElement();
+            if ( bpoint->is_an_end_point())
+            {
+                right_ept=true;
+            }            
+
+        }
+
+        if ( left_ept && right_ept )
+        {
+            stream<<"1 1"<<vcl_endl;
+        }
+        else if ( left_ept || right_ept )
+        {
+            stream<<"2 1"<<vcl_endl;
+        }
+        else
+        {
+            stream<<"4 0"<<vcl_endl;
+
+        }
+       
+
+    }
+
+    stream.close();
+
+
+
+}
+
+void dbsk2d_ishock_transform::write_polygons(
+    vcl_string mvf_string,
+    vcl_vector<vgl_polygon<double> >& polys)
+{
+    vcl_ofstream file_stream_mvf_frags(mvf_string.c_str());
+
+    for ( unsigned int i=0; i < polys.size() ; ++i)
+    {
+
+        vgl_polygon<double> region=polys[i];
+
+        file_stream_mvf_frags<<region.num_vertices()<<vcl_endl;
+        for (unsigned int s = 0; s < region.num_sheets(); ++s)
+        {
+            for (unsigned int p = 0; p < region[s].size(); ++p)
+            { 
+                file_stream_mvf_frags<<
+                    region[s][p].x()<<" "<<region[s][p].y()<<" ";
+                
+            }
+        }
+     
+        file_stream_mvf_frags<<vcl_endl;
+
+    }
+
+    file_stream_mvf_frags.close();
+
+}
 
 void dbsk2d_ishock_transform::write_fragments(
     vcl_string prefix,

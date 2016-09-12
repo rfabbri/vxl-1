@@ -13,6 +13,8 @@
 #include <vgl/vgl_area.h>
 #include <vgl/vgl_polygon_scan_iterator.h>
 
+#include <mbl/mbl_thin_plate_spline_2d.h>
+
 #include <dbsk2d/algo/dbsk2d_compute_bounding_box.h>
 #include <dbsk2d/algo/dbsk2d_hor_flip_shock_graph.h>
 #include <dbsk2d/algo/dbsk2d_xshock_graph_fileio.h>
@@ -627,6 +629,104 @@ void dbskr_align_shapes::shape_alignment(
                                              ->get_scale_ratio(),
                                              query_tree
                                              ->get_scale_ratio());
+            if ( mapping_pt.x() != -1 )
+            {
+                
+                if ( model_tree->mirror() )
+                {
+                    mapping_pt.set((model_width-mapping_pt.x()),
+                                   mapping_pt.y());
+                    
+                }
+               
+            }
+
+            float map_x=mapping_pt.x();
+            float map_y=mapping_pt.y();
+            output_binary_file.write(reinterpret_cast<char *>(&map_x),
+                                     sizeof(float));
+            output_binary_file.write(reinterpret_cast<char *>(&map_y),
+                                     sizeof(float));
+
+
+        }
+    }
+
+}
+
+// Get dense correspondence between two shapes
+void dbskr_align_shapes::shape_alignment_tps(
+    vgl_polygon<double>& poly,
+    dbskr_tree_sptr& model_tree,
+    dbskr_tree_sptr& query_tree,
+    vcl_vector<dbskr_scurve_sptr>& curve_list1,
+    vcl_vector<dbskr_scurve_sptr>& curve_list2,
+    vcl_vector< vcl_vector < vcl_pair <int,int> > >& map_list,
+    vcl_ofstream& output_binary_file)
+{
+
+    vcl_vector< vgl_point_2d<double> > model_pts;
+    vcl_vector< vgl_point_2d<double> > query_pts;
+    for (unsigned i = 0; i < map_list.size(); i++)
+    {
+        
+        dbskr_scurve_sptr sc1 = curve_list1[i];
+        dbskr_scurve_sptr sc2 = curve_list2[i];
+        
+        for (unsigned j = 0; j < map_list[i].size(); ++j) 
+        {
+            vcl_pair<int, int> cor = map_list[i][j];
+
+            // Shock Point 1 from Model 1
+            vgl_point_2d<double> ps1  = sc1->sh_pt(cor.first);
+            
+            // Shock Point 1 from Model 2
+            vgl_point_2d<double> ps2  = sc2->sh_pt(cor.second);
+
+            model_pts.push_back(ps1);
+            query_pts.push_back(ps2);
+
+        }
+    }
+
+    // write out results to binary file
+    mbl_thin_plate_spline_2d tps;
+    tps.build(query_pts,model_pts);
+
+    // do not include boundary
+    vgl_polygon_scan_iterator<double> psi(poly, false);  
+    for (psi.reset(); psi.next(); ) 
+    {
+        int y = psi.scany();
+        for (int x = psi.startx(); x <= psi.endx(); ++x) 
+        {
+            vgl_point_2d<double> ps1(x,y);
+
+            vgl_point_2d<double> model_rt(0,0),query_rt(0,0);
+
+            int curve_list_id(0);
+
+            double query_width=query_tree->get_width();
+            double model_width=model_tree->get_width();
+            double query_scale_ratio=query_tree->get_scale_ratio();
+            double model_scale_ratio=model_tree->get_scale_ratio();
+
+            if ( query_width > 0 )
+            {
+                ps1.set((query_width-ps1.x())*query_scale_ratio,
+                ps1.y()*query_scale_ratio);
+            }
+            else
+            {
+                ps1.set(ps1.x()*query_scale_ratio,ps1.y()*query_scale_ratio);
+            }
+
+            vgl_point_2d<double> mapping_pt=tps(ps1);
+
+            mapping_pt.set(mapping_pt.x()/model_scale_ratio,
+                           mapping_pt.y()/model_scale_ratio);
+            
+                
             if ( mapping_pt.x() != -1 )
             {
                 

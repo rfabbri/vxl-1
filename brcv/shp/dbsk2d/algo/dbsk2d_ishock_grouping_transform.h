@@ -46,6 +46,9 @@ public:
     //: grow regions
     void grow_regions();
 
+    //: grow coarse regions
+    void grow_coarse_regions();
+
     //: grow individual regions
     void grow_transformed_regions(int id);
 
@@ -240,8 +243,6 @@ public:
     
     }
 
-private:
-
     // Method to tell if shock formed from end point
     bool inline shock_from_endpoint(dbsk2d_ishock_edge* selm)
     {
@@ -257,6 +258,11 @@ private:
 
         return lflag|rflag;
     }
+
+
+    void write_out_file(vcl_string filename);
+
+private:
 
     // Method test if node is still expandable
     void inline node_expandable(dbsk2d_ishock_node* node,
@@ -294,9 +300,53 @@ private:
 
     }
 
+    // Method test if node is still expandable
+    void inline node_coarse_expandable(dbsk2d_ishock_node* node,
+                                       vcl_vector<dbsk2d_ishock_edge*>& edges,
+                                       bool& insert)
+    {
+
+        ishock_edge_list adj_edges=node->adj_edges();
+
+        ishock_edge_list::iterator curS = adj_edges.begin();
+        for(; curS!= adj_edges.end(); ++curS)
+        {
+            dbsk2d_ishock_edge* selm = *curS;
+            
+            if ( selm->is_a_contact())
+            {
+                continue;
+            }
+
+            bool endpoint_spawned=shock_from_endpoint(selm);
+            bool visited=visited_edges_.count(selm->id());
+
+            if ( endpoint_spawned )
+            {
+                insert=true;
+            }
+
+            if (!(visited))
+            {
+                edges.push_back(selm);
+            }
+            
+        }    
+
+
+    }
+
+    // Endpoints junction 
+    bool junction_endpoints(dbsk2d_ishock_node* cur_node);
 
     // Expand wavefront in a Recursive manner
     void expand_wavefront(dbsk2d_ishock_node* node,unsigned int map_key);
+
+    // Expand wavefront in a Recursive manner
+    void expand_wavefront_coarse(dbsk2d_ishock_node* node,
+                                 dbsk2d_ishock_edge* ic_edge,
+                                 unsigned int map_key,
+                                 vcl_set<int>& ids);
  
     // Private intrinsinc shock graph
     dbsk2d_ishock_graph_sptr ishock_graph_;

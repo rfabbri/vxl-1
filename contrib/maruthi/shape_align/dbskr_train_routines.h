@@ -59,7 +59,8 @@ public:
                          DescriptorType descr_type,
                          ColorSpace color_space,
                          int keywords=1024,
-                         int pca=128);
+                         int pca=128,
+                         int stride=8);
 
     //: Destructor
     ~dbskr_train_routines();
@@ -80,6 +81,9 @@ private:
 
     // int pca dimensitoinaly reduction
     int pca_;
+
+    // int stride
+    int stride_;
 
     // Keep track of masks per image
     vcl_vector<vgl_polygon<double> > masks_;
@@ -107,16 +111,8 @@ private:
     // Load model file
     void load_model_file(vcl_string& filename);
 
-    vnl_vector<vl_sift_pix> linear_embed(vnl_vector<vl_sift_pix>& descr)
-    {
-        vnl_vector<vl_sift_pix> zero_mean=descr-PCA_mean_;
-        
-        return zero_mean*PCA_M_; 
-        
-    }
-
     void convert_to_color_space(
-        vil_image_resource_sptr& input_image,
+        vil_image_view<vxl_byte>& image,
         vil_image_view<double>& o1,
         vil_image_view<double>& o2,
         vil_image_view<double>& o3,
@@ -125,6 +121,9 @@ private:
     // Compute boundary 
     vgl_polygon<double> compute_boundary(
         dbsk2d_shock_graph_sptr& sg);
+
+    void mask_image(vil_image_view<vxl_byte>& image,
+                    vgl_polygon<double>& poly);
 
     void compute_grad_descriptors();
     
@@ -143,10 +142,10 @@ private:
         vnl_vector<vl_sift_pix>& descriptor);
 
     void compute_grad_color_maps(vil_image_view<double>& orig_image,
-                                 vl_sift_pix** grad_data,
-                                 vgl_polygon<double>& poly,
-                                 bool mask_poly=true,
-                                 bool fliplr=false);
+                                 vl_sift_pix** grad_data);
+
+    void compute_grad_smooth_color_maps(vil_image_view<double>& orig_image,
+                                        vl_sift_pix** grad_data);
 
     // Make copy ctor private
     dbskr_train_routines(const dbskr_train_routines&);

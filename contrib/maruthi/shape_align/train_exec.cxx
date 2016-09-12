@@ -18,6 +18,7 @@ int main( int argc, char *argv[] )
     vul_arg<int> color_space("-c","Color Space: RGB=0,OPP=1,NOPP=2,LAB=3",3);
     vul_arg<int> keywords("-k","Number of components for GMM",1024);
     vul_arg<int> pca("-d","PCA Dimension Reduction", 128);
+    vul_arg<int> stride("-s","Stride for dense sampling",8);
 
     vul_arg_parse(argc, argv);
 
@@ -51,7 +52,8 @@ int main( int argc, char *argv[] )
                                  descriptor,
                                  color,
                                  keywords(),
-                                 pca());
+                                 pca(),
+                                 stride());
 
 
     double vox_time = t.real()/1000.0;

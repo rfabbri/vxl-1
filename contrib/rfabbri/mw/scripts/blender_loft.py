@@ -36,7 +36,7 @@ def new_curve_from_points(p0,name_prefix):
     spline.bezier_points.add(npts - 1) 
     # ^-- less one because one point is added when the spline is created.
     for p in range(0, npts):
-        spline.bezier_points[p].co = p0[p]
+        spline.bezier_points[p].co = spline.bezier_points[p].handle_right = spline.bezier_points[p].handle_left = p0[p]
         # spline.bezier_points[p].co = [p0[p][0], p0[p][1], p0[p][2]]
     return c0, o0, spline 
 
@@ -97,7 +97,14 @@ def loft(p0, p1):
     bpy.ops.mesh.reveal()
     bpy.ops.gpencil.surfsk_add_surface('INVOKE_DEFAULT')
 
+
+def test2():
+    p0 = []
+    p0.append([0, 1, 0])
+    p0.append([1, 1, 0])
+    new_curve_from_points(p0,'first-tst')
+
+
 if __name__ == "__main__":
     test1()
     bpy.ops.wm.quit_blender()
-

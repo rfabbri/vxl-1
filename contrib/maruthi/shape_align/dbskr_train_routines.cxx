@@ -18,6 +18,8 @@
 #include <vil/vil_convert.h>
 #include <vil/vil_load.h>
 
+#include <vnl/vnl_matlab_print.h>
+
 #include <vgl/vgl_polygon_scan_iterator.h>
 
 #include <vul/vul_timer.h>
@@ -29,6 +31,7 @@
 
 extern "C" {
 #include <vl/gmm.h>
+#include <vl/imopv.h>
 }
 
 //: Constructor
@@ -37,9 +40,10 @@ dbskr_train_routines::dbskr_train_routines(
     DescriptorType descr_type,
     ColorSpace color_space,
     int keywords,
-    int pca
+    int pca,
+    int stride
     ):descr_type_(descr_type),color_space_(color_space),keywords_(keywords),
-    pca_(pca)
+      pca_(pca),stride_(stride)
 {
 
     // Write out centers
@@ -71,8 +75,11 @@ dbskr_train_routines::dbskr_train_routines(
         c_type="nopp";
     }
 
+    vcl_cout<<"Using "<<d_type<<" descriptors in "<<c_type<<" color space"
+            <<vcl_endl;
+
     vcl_stringstream gmm_filename_stream;
-    gmm_filename_stream<<"gmm_"<<d_type<<"_"<<c_type<<"_"<<keywords<<"_.txt";
+    gmm_filename_stream<<"gmm_"<<d_type<<"_"<<c_type<<"_"<<keywords<<".txt";
 
     vcl_stringstream pca_filename_stream;
     pca_filename_stream<<"pca_"<<d_type<<"_"<<c_type<<"_dim_"<<pca_;
@@ -107,6 +114,19 @@ dbskr_train_routines::dbskr_train_routines(
 //: Destructor
 dbskr_train_routines::~dbskr_train_routines() 
 {
+    for ( unsigned int i=0; i < grad_chan_1_.size() ; ++i)
+    {
+        vl_free(grad_chan_1_[i]);
+        grad_chan_1_[i]=0;
+
+        vl_free(grad_chan_2_[i]);
+        grad_chan_2_[i]=0;
+
+        vl_free(grad_chan_3_[i]);
+        grad_chan_3_[i]=0;
+        
+    }
+
 }
 
 //: Write out files
@@ -146,11 +166,16 @@ void dbskr_train_routines::load_model_file(vcl_string& filename)
         model_imagename=model_imagename+".jpg";
 
         vil_image_resource_sptr model_img_sptr = 
-            vil_load_image_resource(line.c_str());
+            vil_load_image_resource(model_imagename.c_str());
 
+        vil_image_view<vxl_byte> image=model_img_sptr->get_view();
+
+        // Mask image and convert to color space
+        mask_image(image,polygon);
+        
         vil_image_view<double> chan_1,chan_2,chan_3;
         
-        convert_to_color_space(model_img_sptr,
+        convert_to_color_space(image,
                                chan_1,
                                chan_2,
                                chan_3,
@@ -180,7 +205,7 @@ void dbskr_train_routines::train(vcl_string& gmm_filename)
     for ( int i =0; i < descriptor_matrix_.rows() ; ++i)
     { 
         vnl_vector<vl_sift_pix> vec = descriptor_matrix_.get_row(i);
-        vnl_vector<vl_sift_pix> pca_vec = linear_embed(vec);
+        vnl_vector<vl_sift_pix> pca_vec = vec*PCA_M_;
 
         for ( int p=0; p < pca_vec.size() ; ++p)
         {
@@ -229,7 +254,7 @@ void dbskr_train_routines::train(vcl_string& gmm_filename)
     vcl_cout<<vcl_endl;
     vcl_cout<<"Clustering Time: "<<vox_time2<<" sec"<<vcl_endl;
      
-    vcl_ofstream gmm_stream(gmm_filename);
+    vcl_ofstream gmm_stream(gmm_filename.c_str());
 
     gmm_stream<<numCenters<<vcl_endl;
     gmm_stream<<dimension<<vcl_endl;
@@ -253,6 +278,8 @@ void dbskr_train_routines::train(vcl_string& gmm_filename)
     }
 
     gmm_stream.close();
+
+    vl_gmm_delete(gmm);
 
     double vox_time = t.real()/1000.0;
     t.mark();
@@ -283,6 +310,26 @@ vgl_polygon<double> dbskr_train_routines::compute_boundary(
  
 }
 
+void dbskr_train_routines::mask_image(vil_image_view<vxl_byte>& image,
+                                      vgl_polygon<double>& poly)
+{
+    for (unsigned j=0; j<image.nj() ;++j)
+    {
+        for (unsigned i=0;i< image.ni() ;++i)
+        {
+            vgl_point_2d<double> coord(i,j);
+            if (!poly.contains(coord))
+            {
+                image(i,j,0)=vxl_byte(255);
+                image(i,j,1)=vxl_byte(255);
+                image(i,j,2)=vxl_byte(255);
+            }
+        }
+        
+    }
+
+}
+
 void dbskr_train_routines::compute_grad_descriptors()
 {
 
@@ -291,7 +338,6 @@ void dbskr_train_routines::compute_grad_descriptors()
     double scale_3_radius=8;
     double scale_4_radius=4;
 
-    int stride=8;
     double fixed_theta=0.0;
 
     vcl_vector<vl_sift_pix> descriptors;
@@ -300,6 +346,8 @@ void dbskr_train_routines::compute_grad_descriptors()
 
     for ( unsigned int i=0; i < masks_.size() ; ++i)
     {
+        vcl_cout<<"Working on mask: "<<i<<vcl_endl;
+
         // Get grad data
         vl_sift_pix* model_chan1_grad_data = grad_chan_1_[i];
         vl_sift_pix* model_chan2_grad_data = grad_chan_2_[i];
@@ -308,7 +356,7 @@ void dbskr_train_routines::compute_grad_descriptors()
         // Create sift filter object
         filter = vl_sift_new(model_chan_1_[i].ni(),
                              model_chan_1_[i].nj(),
-                             3,3,0);
+                             -1,-1,0);
         vl_sift_set_magnif(filter,1.0);
 
         vgl_box_2d<double> bbox;
@@ -331,9 +379,9 @@ void dbskr_train_routines::compute_grad_descriptors()
         }
 
 
-        for ( unsigned int y=bbox.min_y(); y <= bbox.max_y(); y=y+stride)
+        for ( unsigned int y=bbox.min_y(); y <= bbox.max_y(); y=y+stride_)
         {
-            for ( unsigned int x=bbox.min_x(); x <= bbox.max_x() ; x=x+stride) 
+            for ( unsigned int x=bbox.min_x(); x <= bbox.max_x() ; x=x+stride_) 
             {
                 vcl_pair<int,int> key(x,y);
 
@@ -436,16 +484,21 @@ void dbskr_train_routines::compute_pca(vcl_string& M_filename,
 
     PCA_mean_/=descriptor_matrix_.rows();
 
-    // Comptue M
-    descriptor_matrix_.set_size(descriptor_matrix_.cols(),pca_);
-    descriptor_matrix_.fill(0.0);
+    // Subtract pca_mean from descriptor matrix
+    for ( int i=0; i < descriptor_matrix_.rows() ; ++i)
+    {
+        vnl_vector<vl_sift_pix> row=descriptor_matrix_.get_row(i);
+        vnl_vector<vl_sift_pix> zero_mean=row-PCA_mean_;
+        descriptor_matrix_.set_row(i,zero_mean);
+    }
 
     vnl_matrix<vl_sift_pix> descriptor_matrix_transpose=
         descriptor_matrix_.transpose();
 
     vnl_matrix<vl_sift_pix> symmetric_matrix = 
         (descriptor_matrix_transpose*descriptor_matrix_)
-        /(descriptor_matrix_.rows());
+        /(descriptor_matrix_.rows()-1);
+
 
     // Numeric scaling
     vnl_diag_matrix<vl_sift_pix> small_scaling(symmetric_matrix.rows(),0.001);
@@ -506,24 +559,19 @@ void dbskr_train_routines::compute_gradients()
         vl_sift_pix* model_chan2_grad_data(0);
         vl_sift_pix* model_chan3_grad_data(0);
         
-        vgl_polygon<double> poly=masks_[i];
-
-        compute_grad_color_maps(model_chan_1_[i],
-                                &model_chan1_grad_data,
-                                poly);
+        compute_grad_smooth_color_maps(model_chan_1_[i],
+                                       &model_chan1_grad_data);
         
-        compute_grad_color_maps(model_chan_2_[i],
-                                &model_chan2_grad_data,
-                                poly);
+        compute_grad_smooth_color_maps(model_chan_2_[i],
+                                       &model_chan2_grad_data);
         
-        compute_grad_color_maps(model_chan_3_[i],
-                                &model_chan3_grad_data,
-                                poly);
+        compute_grad_smooth_color_maps(model_chan_3_[i],
+                                       &model_chan3_grad_data);
         
         grad_chan_1_.push_back(model_chan1_grad_data);
         grad_chan_2_.push_back(model_chan2_grad_data);
         grad_chan_3_.push_back(model_chan3_grad_data);
-           
+
     }
 
 
@@ -531,87 +579,15 @@ void dbskr_train_routines::compute_gradients()
 
 void dbskr_train_routines::compute_grad_color_maps(
     vil_image_view<double>& orig_image,
-    vl_sift_pix** grad_data,
-    vgl_polygon<double>& poly,
-    bool mask_grad,
-    bool fliplr)
+    vl_sift_pix** grad_data)
 {
-
-    vil_image_view<double> flipped_image(orig_image.ni(),
-                                         orig_image.nj());
-    if ( mask_grad )
-    {
-        flipped_image.fill(0.0);
-
-        vcl_set<vcl_pair<int,int> > in_bounds;
-
-        // do not include boundary
-        vgl_polygon_scan_iterator<double> psi(poly, false);  
-        for (psi.reset(); psi.next(); ) 
-        {
-            int y = psi.scany();
-            for (int x = psi.startx(); x <= psi.endx(); ++x) 
-            {
-                if ( fliplr )
-                {
-                    flipped_image(flipped_image.ni()-1-x,y)=
-                        orig_image(
-                            x,
-                            y);
-                }
-                else
-                {
-                    flipped_image(x,y)=orig_image(x,y);
-                }
-
-                in_bounds.insert(vcl_make_pair(x,y));
-                
-            }
-        }
-
-
-        for ( int cols=0; cols < orig_image.nj() ; ++cols)
-        {
-            for ( int rows=0; rows < orig_image.ni() ; ++rows)
-            {
-                vcl_pair<int,int> key(rows,cols);
-
-                if ( !in_bounds.count(key) )
-                {
-                    orig_image(rows,cols)=0;
-                }
-            }
-        }
-
-    }
-    else
-    {
-        if ( fliplr )
-        {
-            for ( unsigned int cols=0; cols < flipped_image.nj() ; ++cols)
-            {
-                for ( unsigned int rows=0; rows < flipped_image.ni() ; ++rows)
-                {
-                    flipped_image(rows,cols)=orig_image(
-                        flipped_image.ni()-1-rows,
-                        cols);
-
-                }
-            }
-        }
-        else
-        {
-            flipped_image=orig_image;
-        }
-    }
-
-    unsigned int width  = flipped_image.ni();
-    unsigned int height = flipped_image.nj();
+    unsigned int width  = orig_image.ni();
+    unsigned int height = orig_image.nj();
 
     vil_image_view<vl_sift_pix> grad_mag;
     vil_image_view<vl_sift_pix> grad_angle;
     
-    vil_orientations_from_sobel(flipped_image,grad_angle,grad_mag);
+    vil_orientations_from_sobel(orig_image,grad_angle,grad_mag);
 
     *grad_data=(vl_sift_pix*) vl_malloc(sizeof(vl_sift_pix)*width*height*2);
     
@@ -633,6 +609,58 @@ void dbskr_train_routines::compute_grad_color_maps(
             
         }
     }
+}
+
+void dbskr_train_routines::compute_grad_smooth_color_maps(
+    vil_image_view<double>& orig_image,
+    vl_sift_pix** grad_data)
+{
+    unsigned int width  = orig_image.ni();
+    unsigned int height = orig_image.nj();
+
+    double* gradient_magnitude = (double*) 
+        vl_malloc(width*height*sizeof(double));
+    double* gradient_angle     = (double*) 
+        vl_malloc(width*height*sizeof(double));
+
+    double* orig_image_data=orig_image.top_left_ptr();
+
+    vl_imsmooth_d(
+        orig_image_data,    // smoothed data
+        width,              // smoothed stride
+        orig_image_data,    // data to be smoothed
+        width,              // image width
+        height,             // image height
+        width,              // image stride
+        1.0,                // sigmaX
+        1.0);               // sigmaY
+
+    vl_imgradient_polar_d(
+        gradient_magnitude, // gradient magnitude 
+        gradient_angle,     // gradient angle
+        1,                  // output width
+        width,              // output height
+        orig_image_data,    // input image
+        width,              // input image width
+        height,             // input image height
+        width);             // input image stride
+
+    *grad_data=(vl_sift_pix*) vl_malloc(sizeof(vl_sift_pix)*width*height*2);
+
+    unsigned int index=0;
+    for ( unsigned int i=0; i < width*height; ++i)
+    {
+        double mag  = gradient_magnitude[i];
+        double angle= gradient_angle[i];
+
+        (*grad_data)[index]=mag;
+        ++index;
+        (*grad_data)[index]=angle;
+        ++index;
+    }
+
+    vl_free(gradient_magnitude);
+    vl_free(gradient_angle);
 }
 
 
@@ -702,13 +730,12 @@ void dbskr_train_routines::compute_sift_descr(
 
 
 void dbskr_train_routines::convert_to_color_space(
-    vil_image_resource_sptr& input_image,
+    vil_image_view<vxl_byte>& image,
     vil_image_view<double>& o1,
     vil_image_view<double>& o2,
     vil_image_view<double>& o3,
     ColorSpace color_space)
 {
-    vil_image_view<vxl_byte> image = input_image->get_view();
     unsigned int w = image.ni(); 
     unsigned int h = image.nj();
     o1.set_size(w,h);

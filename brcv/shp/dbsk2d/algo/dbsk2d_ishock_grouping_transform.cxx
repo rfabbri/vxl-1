@@ -26,6 +26,78 @@ dbsk2d_ishock_grouping_transform::dbsk2d_ishock_grouping_transform(
 {
 }
 
+void dbsk2d_ishock_grouping_transform::grow_coarse_regions()
+{
+
+
+    //go through the vertex_list and insert it into the list
+    dbsk2d_ishock_graph::vertex_iterator curN = 
+        ishock_graph_->all_nodes().begin();
+
+    vcl_set<int> ids;
+
+    for (; curN != ishock_graph_->all_nodes().end(); curN++)
+    {
+        dbsk2d_ishock_node* curShock = (*curN);
+        
+        if ( curShock->degree(true) >= 3 )
+        {
+            ids.insert(curShock->id());
+        }
+        else if (curShock->degree(true) == 2 )
+        {
+            bool flag=this->junction_endpoints(curShock);
+            
+            if ( flag )
+            {
+                ids.insert(curShock->id());
+            }
+        }
+        
+    }
+
+
+    unsigned int index=0;
+
+    //draw the edges first
+    for ( dbsk2d_ishock_graph::edge_iterator curE = 
+              ishock_graph_->all_edges().begin();
+          curE != ishock_graph_->all_edges().end();
+          curE++ ) 
+    {
+        dbsk2d_ishock_edge* selm = (*curE);
+        
+        if (selm->is_a_contact() )
+        {
+            continue;
+
+        }
+
+        if ( selm->isHidden())
+        {
+            continue;
+        }
+        if ( visited_edges_.count(selm->id()) == 0 )
+        {
+            visited_edges_[selm->id()]="temp";
+            region_nodes_[index].push_back(selm);
+            if ( selm->pSNode()->degree() > 1 )
+            {
+                expand_wavefront_coarse(selm->pSNode(),selm,index,ids);
+            }
+            if ( selm->cSNode())
+            {
+                expand_wavefront_coarse(selm->cSNode(),selm,index,ids);
+            }
+            index++;
+        }
+
+    }
+
+     vcl_cout<<"Number of Regions: "<<region_nodes_.size()<<vcl_endl;
+
+
+}
 
 void dbsk2d_ishock_grouping_transform::grow_regions()
 {
@@ -981,6 +1053,145 @@ void dbsk2d_ishock_grouping_transform::write_out_polygons(vcl_string filename,
 }
 
 void dbsk2d_ishock_grouping_transform::
+expand_wavefront_coarse(
+    dbsk2d_ishock_node* node,dbsk2d_ishock_edge* ic_edge,
+    unsigned int map_key,vcl_set<int>& ids)
+{
+
+    bool ed_spawned = shock_from_endpoint(ic_edge);
+    vcl_vector<dbsk2d_ishock_edge*> edges;
+    bool insert=false;    
+    node_coarse_expandable(node,edges,insert);
+    if ( !edges.size() )
+    {
+        if ( insert )
+        {
+            outer_shock_nodes_[map_key].push_back(node);
+        }
+        return;
+    }
+    else
+    {
+        for ( unsigned int i=0; i < edges.size() ; ++i)
+        {
+            dbsk2d_ishock_edge* edge=edges[i];
+            dbsk2d_ishock_node* opposite=(edge->pSNode()->id()==node->id())?
+                edge->cSNode():edge->pSNode();
+
+            if ( ids.count(node->id()))
+            {
+                if ( ed_spawned )
+                {
+                    continue;
+                }
+                else
+                {
+
+                    if ( !ic_edge->isHidden() )
+                    {
+                        if ( !edge->isHidden()) 
+                        {
+                            continue;
+                        }
+                    }
+                }
+
+            }
+
+            if ( visited_edges_.count(edge->id())==0)
+            {
+                int lbe_id(0);
+                int rbe_id(0);
+
+                if ( edge->lBElement()->is_a_line())
+                {
+                    if ( !region_belms_ids_[map_key]
+                         .count(edge->lBElement()->id()) )
+                    {
+                        region_belms_[map_key].push_back(edge->lBElement());
+                        
+                        dbsk2d_ishock_bline* bline=(dbsk2d_ishock_bline*)
+                            (edge->lBElement());
+
+                        if ( !degree_three_node_ids_[map_key].count(
+                                 bline->s_pt()->id()) &&
+                             bline->s_pt()->nLinkedElms() >= 6 )
+                        {
+                            degree_three_nodes_[map_key].push_back(
+                                bline->s_pt());
+                            degree_three_node_ids_[map_key].insert(
+                                bline->s_pt()->id());
+                        }
+
+                        if ( !degree_three_node_ids_[map_key].count(
+                                 bline->e_pt()->id()) &&
+                             bline->e_pt()->nLinkedElms() >= 6 )
+                        {
+                            degree_three_nodes_[map_key].push_back(
+                                bline->e_pt());
+                            degree_three_node_ids_[map_key].insert(
+                                bline->e_pt()->id());
+                        }
+
+                    }
+
+                    region_belms_ids_[map_key].insert(
+                        edge->lBElement()->id());
+                    region_belms_contour_ids_[map_key].insert(
+                        edge->lBElement()->get_contour_id());
+                }
+
+                if ( edge->rBElement()->is_a_line())
+                {
+                    if ( !region_belms_ids_[map_key]
+                         .count(edge->rBElement()->id()) )
+                    {
+                        region_belms_[map_key].push_back(edge->rBElement());
+
+                        dbsk2d_ishock_bline* bline=(dbsk2d_ishock_bline*)
+                            (edge->rBElement());
+
+                        if ( !degree_three_node_ids_[map_key].count(
+                                 bline->s_pt()->id()) &&
+                             bline->s_pt()->nLinkedElms() >= 6 )
+                        {
+                            degree_three_nodes_[map_key].push_back(
+                                bline->s_pt());
+                            degree_three_node_ids_[map_key].insert(
+                                bline->s_pt()->id());
+                        }
+
+                        if ( !degree_three_node_ids_[map_key].count(
+                                 bline->e_pt()->id()) &&
+                             bline->e_pt()->nLinkedElms() >= 6 )
+                        {
+                            degree_three_nodes_[map_key].push_back(
+                                bline->e_pt());
+                            degree_three_node_ids_[map_key].insert(
+                                bline->e_pt()->id());
+                        }
+
+                    }
+
+                    region_belms_ids_[map_key].insert(
+                        edge->rBElement()->id());
+                    region_belms_contour_ids_[map_key].insert(
+                        edge->rBElement()->get_contour_id());
+                }
+
+                region_nodes_[map_key].push_back(edge);
+                visited_edges_[edge->id()]="temp";
+            }
+
+            if (opposite->degree() > 1 )
+            {
+                expand_wavefront_coarse(opposite,edge,map_key,ids);
+            }
+        }
+    }
+}
+
+void dbsk2d_ishock_grouping_transform::
 expand_wavefront(dbsk2d_ishock_node* node,unsigned int map_key)
 {
 
@@ -1094,4 +1305,87 @@ expand_wavefront(dbsk2d_ishock_node* node,unsigned int map_key)
             }
         }
     }
+}
+
+void dbsk2d_ishock_grouping_transform::write_out_file(vcl_string filename)
+{
+
+    vcl_ofstream stream(filename.c_str());
+    
+    //go through the vertex_list and insert it into the list
+    dbsk2d_ishock_graph::vertex_iterator curN = 
+        ishock_graph_->all_nodes().begin();
+
+    for (; curN != ishock_graph_->all_nodes().end(); curN++)
+    {
+        dbsk2d_ishock_node* curShock = (*curN);
+        vgl_point_2d<double> origin=curShock->origin();
+
+        if ( curShock->degree(true) >= 3 )
+        {
+            stream<<origin.x()<<" "<<origin.y()<<vcl_endl;
+        }
+        else if (curShock->degree(true) == 2 )
+        {
+            bool flag=this->junction_endpoints(curShock);
+            
+            if ( flag )
+            {
+                stream<<origin.x()<<" "<<origin.y()<<vcl_endl;
+            }
+        }
+        else if( curShock->degree(true) == 1 )
+        {
+                stream<<origin.x()<<" "<<origin.y()<<vcl_endl;
+        }
+        
+    }
+
+
+
+    stream.close();
+}
+bool dbsk2d_ishock_grouping_transform::junction_endpoints(
+dbsk2d_ishock_node* cur_node)
+{
+
+    ishock_edge_list adj_edges=cur_node->adj_edges();
+    
+    bool endpoint_spawned=false;
+    bool regular_spawned=false;
+    
+    ishock_edge_list::iterator curS = adj_edges.begin();
+    for(; curS!= adj_edges.end(); ++curS)
+    {
+        dbsk2d_ishock_edge* selm = *curS;
+        
+        if ( !selm->isHidden() )
+        {
+            dbsk2d_ishock_bpoint* bpoint_left = 
+                (selm->lBElement()->is_a_point())
+                ?(dbsk2d_ishock_bpoint*)selm->lBElement():0;
+            dbsk2d_ishock_bpoint* bpoint_right = 
+                (selm->rBElement()->is_a_point())
+                ?(dbsk2d_ishock_bpoint*)selm->rBElement():0;
+            
+            bool lflag=(bpoint_left)?bpoint_left->is_an_end_point()
+                :false;
+            bool rflag=(bpoint_right)?bpoint_right->is_an_end_point()
+                :false;
+                    
+            bool flag=lflag|rflag;
+            
+            if ( flag )
+            {
+                endpoint_spawned=true;
+            }
+            else
+            {
+                regular_spawned=true;
+            }
+        }
+    }
+    
+    return endpoint_spawned && regular_spawned; 
+
 }

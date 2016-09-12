@@ -1,0 +1,54 @@
+Original Images
+	Img1001_13.bmp	Img1002_08.bmp	Img1003_06.bmp	Img2001_04.bmp	Img2002_09.bmp	Img2003_02.bmp
+	Img3001_06.bmp	Img3002_09.bmp	Img3003_11.bm	Img4001_18.bmp	Img4002_18.bmp	Img4003_09.bmp
+       	Img5001_13.bmp	Img5002_19.bmp	Img5003_08.bmp	Img6001_19.bmp	Img6002_14.bmp	Img6003_10.bmp
+
+
+Matched Images SIFT (Same with and without gaussian filter) 			             [15x15,5]
+	Img1002_13.bmp	Img2003_09.bmp	Img3003_09.bmp	Img4002_18.bmp	Img5002_13.bmp	Img6001_14.bmp
+
+Matched Images MIN (with and without gaussian filter)				             [15x15,5]
+	Img1001_12.bmp	Img2002_08.bmp
+
+Matched Images MAX (with gaussian filter) 3000 images 							           [15x15,5]
+	'Img1001_12.bmp'    'Img2002_08.bmp'    'Img3003_09.bmp'    'Img4001_17.bmp'    'Img5001_12.bmp'    'Img6002_15.bmp'
+
+SIFT Matches 8 success,10 unsuccessful 									           [15x15,5]
+	'Img1001_13.bmp'    'Img1003_08.bmp'    'Img1002_06.bmp'    'Img2002_04.bmp'    'Img2002_09.bmp'    'Img2002_02.bmp'
+	'Img3002_06.bmp'    'Img3002_09.bmp'    'Img3003_10.bmp'    'Img4001_18.bmp'    'Img4001_18.bmp'    'Img4002_09.bmp'
+	'Img5001_13.bmp'    'Img5001_19.bmp'    'Img5003_09.bmp'    'Img6002_19.bmp'    'Img6002_14.bmp'    'Img6002_10.bmp'
+
+MAX Matches  15 success, 3 unsuccessful 						 	                   [15x15,5]
+	'Img1001_12.bmp'    'Img1002_09.bmp'    'Img1002_06.bmp'    'Img2001_05.bmp'    'Img2002_09.bmp'    'Img2003_01.bmp'
+	'Img3003_06.bmp'    'Img3003_09.bmp'    'Img3003_10.bmp'    'Img4001_17.bmp'    'Img4002_17.bmp'    'Img4003_08.bmp'
+	'Img5001_12.bmp'    'Img5002_15.bmp'    'Img5003_09.bmp'    'Img6001_16.bmp'    'Img6002_15.bmp'    'Img6003_09.bmp'
+  
+SIFT Matching (Only Query Filtered) 4 succ, 14 unsucc                                             	           [12x12,2]
+	'Img1002_13.bmp'    'Img1001_08.bmp'    'Img1002_06.bmp'    'Img2002_04.bmp'    'Img2002_09.bmp'    'Img2002_02.bmp'
+	'Img3002_06.bmp'    'Img3001_09.bmp'    'Img3002_11.bmp'    'Img4001_17.bmp'    'Img4002_17.bmp'    'Img4002_09.bmp'
+	'Img5002_13.bmp'    'Img5001_19.bmp'    'Img5003_09.bmp'    'Img6002_19.bmp'    'Img6001_14.bmp'    'Img6002_10.bmp'
+
+MIN Matching (Only Query Filtered) 7 succ,11 unsucc							           [12x12,2]
+	'Img5003_06.bmp'    'Img1001_08.bmp'    'Img1001_06.bmp'    'Img2002_05.bmp'    'Img2002_09.bmp'    'Img2001_01.bmp'
+	'Img3001_05.bmp'    'Img3002_08.bmp'    'Img3002_11.bmp'    'Img4002_17.bmp'    'Img5002_13.bmp'    'Img4002_09.bmp'
+	'Img5001_12.bmp'    'Img5002_16.bmp'    'Img5003_10.bmp'    'Img6001_16.bmp'    'Img6001_14.bmp'    'Img6001_14.bmp'
+
+MAX Matching (Query Filtered and Connected Components for both the query and database)                             [12x12,2]
+        'Img4001_15.bmp'    'Img4003_04.bmp'    'Img1003_02.bmp'    'Img2003_04.bmp'    'Img2002_09.bmp'    'Img5001_09.bmp'
+        'Img5002_14.bmp'    'Img5002_10.bmp'    'Img5002_16.bmp'    'Img4001_17.bmp'    'Img4002_17.bmp'    'Img4002_09.bmp'
+        'Img5002_07.bmp'    'Img5002_07.bmp'    'Img5003_09.bmp'    'Img5003_07.bmp'    'Img4002_05.bmp'    'Img6002_15.bmp'
+
+MAX Matching (Query and Database filtered with conn components)	 5 succ, 13 unsucc 				   [15x15,2]						
+    	'Img1002_13.bmp'    'Img1003_08.bmp'    'Img1002_06.bmp'    'Img2002_04.bmp'    'Img2002_09.bmp'    'Img2003_01.bmp'
+   	'Img3002_06.bmp'    'Img3001_09.bmp'    'Img3002_11.bmp'    'Img4001_17.bmp'    'Img4002_17.bmp'    'Img4002_09.bmp'
+    	'Img5002_13.bmp'    'Img5001_19.bmp'    'Img5003_09.bmp'    'Img6002_19.bmp'    'Img6001_14.bmp'    'Img6002_10.bmp'
+
+MIN Matching (Query and Database filtered with conn components)  5 succ, 13 unsucc				   [15x15,2]	
+        'Img1002_13.bmp'    'Img1001_08.bmp'    'Img1002_06.bmp'    'Img2001_05.bmp'    'Img2002_09.bmp'    'Img2002_02.bmp'
+        'Img3002_06.bmp'    'Img3003_09.bmp'    'Img3001_11.bmp'    'Img4001_17.bmp'    'Img4002_17.bmp'    'Img4002_09.bmp'
+        'Img5002_13.bmp'    'Img5001_19.bmp'    'Img5003_09.bmp'    'Img6002_19.bmp'    'Img6001_14.bmp'    'Img6002_10.bmp'
+
+Saddle Matching (Query and Database Filtered with conn components)  5 succ, 13 unsucc                              [15x15,2]
+	'Img1002_13.bmp'    'Img1003_08.bmp'    'Img1002_06.bmp'    'Img2002_04.bmp'    'Img2002_08.bmp'    'Img2003_01.bmp'
+    	'Img3002_06.bmp'    'Img3003_09.bmp'    'Img3002_11.bmp'    'Img4001_17.bmp'    'Img4002_17.bmp'    'Img4002_09.bmp'  
+  	'Img5002_13.bmp'    'Img5001_19.bmp'    'Img5003_09.bmp'    'Img6002_19.bmp'    'Img6001_14.bmp'    'Img6002_10.bmp'
