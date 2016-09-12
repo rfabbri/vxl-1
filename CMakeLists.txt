@@ -17,7 +17,7 @@
 
 project(lems)
 
-cmake_minimum_required(VERSION 2.4.5)
+cmake_minimum_required(VERSION 2.8.9)
 
 # Support for CMake 2.6
 if( COMMAND CMAKE_POLICY )
