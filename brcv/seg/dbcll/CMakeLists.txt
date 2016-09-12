@@ -3,6 +3,8 @@
 
 # include directories here if needed
 
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+
 set(dbcll_sources
    dbcll_cluster.h                  dbcll_cluster_sptr.h
    dbcll_euclidean_cluster.h       
@@ -19,12 +21,9 @@ aux_source_directory(Templates dbcll_sources)
 add_library(dbcll ${dbcll_sources})
 
 # add the required libraries into this list
-target_link_libraries( dbcll vnl vbl dbgl)
+target_link_libraries(dbcll vnl vbl dbgl bxml)
 
 
 if(BUILD_TESTING)
   add_subdirectory(tests)
 endif(BUILD_TESTING)
-
-
-

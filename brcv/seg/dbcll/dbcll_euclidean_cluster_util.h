@@ -16,6 +16,7 @@
 #include <vnl/vnl_vector_fixed.h>
 #include <vcl_limits.h>
 #include <vcl_vector.h>
+#include <dbcll/dbcll_euclidean_cluster_light.h>
 
 template <unsigned dim>
 class dbcll_euclidean_cluster_util{

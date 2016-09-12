@@ -20,6 +20,7 @@
 #include <vbl/vbl_smart_ptr.h>
 #include <vsl/vsl_binary_io.h>
 #include <vcl_typeinfo.h>
+#include <vcl_iostream.h>
 
 //: A mixture of distributions
 template <class T>
