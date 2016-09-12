@@ -37,18 +37,18 @@ add_library(dbacm3d  ${dbacm3d_sources})
 # add the required libraries into this list
 target_link_libraries( dbacm3d vil3d vbl dbnl_algo dbil3d_algo )
 
-#subdirs(pro)
+#add_subdirectory(pro)
 
-subdirs(xio)
+add_subdirectory(xio)
 
 if (VXL_VGUI_FOUND)
-#  subdirs(vis)
+#  add_subdirectory(vis)
 endif (VXL_VGUI_FOUND)
 
 if( BUILD_EXAMPLES )
-#  subdirs( examples )
+#  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )
 
 if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 endif(BUILD_TESTING)

@@ -11,5 +11,5 @@ add_library(dbdif_algo ${dbdif_algo_sources})
 target_link_libraries(dbdif_algo dbdif)
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )

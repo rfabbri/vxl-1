@@ -37,20 +37,20 @@ add_library(dbsk3d ${dbsk3d_sources})
 target_link_libraries( dbsk3d dbmsh3d dbgl )  
 
 # Algorithm Library
-subdirs(algo)
+add_subdirectory(algo)
 
 # FlowSheet Shock Detection Library (Frederic's Code)
-subdirs(flowsheet)
+add_subdirectory(flowsheet)
 
 # Processing Library
-subdirs(pro)
+add_subdirectory(pro)
 
 # Visualization Library
-subdirs(vis)
+add_subdirectory(vis)
 
 # Command-line Processing Library
-subdirs(cmdproc)
+add_subdirectory(cmdproc)
 
 if(BUILD_TESTING)
-subdirs(tests)
+add_subdirectory(tests)
 endif(BUILD_TESTING)

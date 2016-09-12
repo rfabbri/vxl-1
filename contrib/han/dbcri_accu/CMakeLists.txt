@@ -6,7 +6,7 @@ add_library(dtube ${tube_source})
 
 #target_link_libraries(dtube)
 # Processing Library
-subdirs(pro)
+add_subdirectory(pro)
 
 add_executable (dtube_test  main.cxx)
 target_link_libraries(dtube_test dtube vgl vnl vul)

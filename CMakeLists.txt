@@ -76,41 +76,41 @@ if(BUILD_LEMS)
   set(LEMS_CMAKE_DIR ${lems_SOURCE_DIR}/config/cmake)
 
   # Brown 3rd Party Libraries
-  subdirs( db3p )
+  add_subdirectory( db3p )
 
   # Brown Vision Algorithms
   option(BUILD_ALGO "Build Depreciated Algorithms" NO)
   if(BUILD_ALGO)
-    subdirs( algo )
+    add_subdirectory( algo )
   endif(BUILD_ALGO)
   
   # Basic Utility Libraries
-  subdirs( basic ) 
+  add_subdirectory( basic ) 
    
   # Brown Computer Vision Libraries
-  subdirs( brcv )
+  add_subdirectory( brcv )
   
   # Brown Eyes Code
   option(BUILD_BREYE "Build Brown Eyes" NO)
   if(BUILD_BREYE)
-    subdirs( breye )
+    add_subdirectory( breye )
   endif(BUILD_BREYE)
 
   # Brown Eyes Code
   option(BUILD_BREYE1 "Build Old Brown Eyes" YES)
   if(BUILD_BREYE1)
-    subdirs( breye1 )
+    add_subdirectory( breye1 )
   endif(BUILD_BREYE1)
 
   #Apps
   option(BUILD_APPS "Build Apps" NO)
   if(BUILD_APPS)
-    subdirs( apps )
+    add_subdirectory( apps )
   endif(BUILD_APPS)
 
   option(BUILD_PLAYLAND "Build the personal testing area" NO)
   if(BUILD_PLAYLAND)
-    subdirs( playland )
+    add_subdirectory( playland )
   endif(BUILD_PLAYLAND)
 
   if( DART_ROOT )
@@ -119,7 +119,7 @@ if(BUILD_LEMS)
     option(BUILD_CONTRIB "Build the contrib development area" NO)
   endif( DART_ROOT )
   if(BUILD_CONTRIB)
-    subdirs( contrib )
+    add_subdirectory( contrib )
   endif(BUILD_CONTRIB)
 
 endif(BUILD_LEMS)
@@ -168,7 +168,7 @@ endif(VXL_FOUND)
 
 if(NOT BUILD_BROWN_INTERLEAVED)
   # This SUBDIRS command must be the last SUBDIRS command in this file
-  subdirs( config/cmake/export )
+  add_subdirectory( config/cmake/export )
 endif(NOT BUILD_BROWN_INTERLEAVED)
 
 

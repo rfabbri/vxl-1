@@ -24,7 +24,7 @@ add_library( psm_opt ${psm_opt_sources})
 
 target_link_libraries( psm_opt psm psm_algo hsds vbl vul vgl vnl vnl_algo vpgl)
 
-subdirs(exe)
-subdirs(tests)
-subdirs(pro)
+add_subdirectory(exe)
+add_subdirectory(tests)
+add_subdirectory(pro)
 

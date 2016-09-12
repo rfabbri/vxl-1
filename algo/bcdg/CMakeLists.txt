@@ -24,5 +24,5 @@ add_library(bcdg ${bcdg_sources})
 target_link_libraries(bcdg vgl vbl vul vnl dbecl vsol) 
 
 if(BUILD_TESTING)
-  #subdirs(tests)
+  #add_subdirectory(tests)
 endif(BUILD_TESTING)

@@ -27,10 +27,10 @@ add_library(bof ${bof_sources})
 
 target_link_libraries(bof bvpl_octree dbcll vbl vbl_io rply bsta bsta_vis)
 
-subdirs(pro)
+add_subdirectory(pro)
 
 if( BUILD_TESTING )
-#  subdirs(tests)
+#  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
 endif(VXL_EXPAT_FOUND)

@@ -65,7 +65,7 @@ if(QT4_INSTALLED)
       target_link_libraries( dbrec3d_gui ${GLUT_LIBRARIES})
       target_link_libraries( dbrec3d_gui ${OPENGL_LIBRARIES})
    
-      subdirs(vtk)
+      add_subdirectory(vtk)
 
     endif(QGLVIEWER_FOUND AND QWT_FOUND)
     

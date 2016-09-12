@@ -29,5 +29,5 @@ if(OCTAVE_FOUND)
 endif(OCTAVE_FOUND)
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )

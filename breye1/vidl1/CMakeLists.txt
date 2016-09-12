@@ -106,9 +106,9 @@ if( AVI_FOUND )
 endif( AVI_FOUND )
 
 if( BUILD_TESTING )
-  subdirs( tests )
+  add_subdirectory( tests )
 endif( BUILD_TESTING )
 
 if( BUILD_EXAMPLES )
-  subdirs( examples )
+  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )

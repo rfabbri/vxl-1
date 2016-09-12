@@ -20,12 +20,12 @@ add_library(dvpgl_algo ${dvpgl_algo_sources})
 target_link_libraries(dvpgl_algo vpgl_algo triangulation_kanatani)
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
-subdirs(triangulation_kanatani)
+add_subdirectory(triangulation_kanatani)
 
-subdirs(cmd)
+add_subdirectory(cmd)
 
-subdirs(pro)
+add_subdirectory(pro)
 

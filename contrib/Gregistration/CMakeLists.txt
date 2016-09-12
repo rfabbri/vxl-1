@@ -5,24 +5,24 @@ include_directories( ${lems_SOURCE_DIR}/breye1 )
 
 
 #main library
-subdirs(georegister)
+add_subdirectory(georegister)
 
 #pro
-subdirs(pro)
+add_subdirectory(pro)
 
 
 #vis
-subdirs(vis)
+add_subdirectory(vis)
 
 #gui
-subdirs(gui)
+add_subdirectory(gui)
 
 
 #dt
-subdirs(exe)
+add_subdirectory(exe)
 
 #dt
-subdirs(dt)
+add_subdirectory(dt)
 
 #cmd
-subdirs(cmd)
+add_subdirectory(cmd)

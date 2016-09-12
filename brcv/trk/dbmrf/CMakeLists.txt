@@ -6,11 +6,11 @@ include_directories(${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories(${VXL_GEL_INCLUDE_DIR} )
 
 # Processing Library
-subdirs(pro)
+add_subdirectory(pro)
 
 # Visualization Library
-subdirs(vis)
+add_subdirectory(vis)
 
 if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 endif(BUILD_TESTING)

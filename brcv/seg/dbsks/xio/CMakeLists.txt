@@ -24,4 +24,4 @@ add_library( dbsks_xio ${dbsks_xio_sources} )
 target_link_libraries(dbsks_xio dbsks dbxml ) 
 
 # Tests
-subdirs( tests )
+add_subdirectory( tests )

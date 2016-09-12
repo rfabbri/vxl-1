@@ -19,5 +19,5 @@ target_link_libraries( dbccl vcl vgl vnl vil vidl1 vgl_algo vil_algo vpgl dvpgl_
 set( DBCCL_INCLUDE_DIR ${dbccl_SOURCE_DIR} )
 
 
-subdirs(tests)
-subdirs(pro)
+add_subdirectory(tests)
+add_subdirectory(pro)

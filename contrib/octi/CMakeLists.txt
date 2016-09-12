@@ -1,1 +1,1 @@
-subdirs(dbrl)
+add_subdirectory(dbrl)

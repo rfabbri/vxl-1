@@ -29,7 +29,7 @@ add_executable(face_gui ${face_gui_sources})
 
 target_link_libraries(face_gui face_pro face_vis dbdet_pro dbbgm_pro dbbgm_vis vidpro1 bvis1 dbsk2d_pro dbskr_pro dbskr_vis dbinfo_pro dbru_algo dbru_pro dbru_vis dbacm_pro dbsol_pro dbdet_pro dbsol_pro)
 
-subdirs(pro)
-subdirs(vis)
+add_subdirectory(pro)
+add_subdirectory(vis)
 
 endif (VXL_VGUI_FOUND)

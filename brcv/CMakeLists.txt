@@ -6,19 +6,19 @@ include_directories( ${lems_SOURCE_DIR}/db3p )
 include_directories( ${lems_SOURCE_DIR}/basic )
 
 # Brown Segmentation Libraries
-subdirs( seg )
+add_subdirectory( seg )
 
 # Brown Shape Libraries
-subdirs( shp )
+add_subdirectory( shp )
 
 # Brown Recognition Libraries
-subdirs( rec )
+add_subdirectory( rec )
 
 # Brown Tracking Libraries
-subdirs( trk )
+add_subdirectory( trk )
 
 # Brown Multi-View Geometry Libraries
-subdirs( mvg )
+add_subdirectory( mvg )
 
 
 

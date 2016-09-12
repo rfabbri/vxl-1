@@ -18,7 +18,7 @@ add_library( dbsta_algo  ${dbsta_algo_sources} )
 target_link_libraries( dbsta_algo dbsta vnl)
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
 

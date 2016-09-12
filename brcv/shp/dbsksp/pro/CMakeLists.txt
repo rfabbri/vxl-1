@@ -48,6 +48,6 @@ target_link_libraries(dbsksp_pro dbsksp_algo dbsksp_xio dbsk2d vidpro1 bil_algo 
 
 
 if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 endif(BUILD_TESTING)
 

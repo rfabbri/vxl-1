@@ -28,12 +28,12 @@ add_library(vidreg  ${vidreg_sources})
 target_link_libraries(vidreg rgrl vnl dbkpr gevd vil vpgl_algo)
 
 if( BUILD_TESTING )
-#  subdirs(tests)
+#  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
 
 # algorithms 
-#subdirs( algo ) 
+#add_subdirectory( algo ) 
 
 # processes
-#subdirs( pro )
+#add_subdirectory( pro )

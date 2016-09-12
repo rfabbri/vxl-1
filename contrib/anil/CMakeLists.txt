@@ -13,4 +13,4 @@ include_directories( ${lems_SOURCE_DIR}/contrib/Gregistration )
 include_directories( ${VXL_MUL_INCLUDE_DIR} )
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
 
-subdirs ( dborl_bin )
+add_subdirectory( dborl_bin )

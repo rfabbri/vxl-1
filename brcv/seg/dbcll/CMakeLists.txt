@@ -23,7 +23,7 @@ target_link_libraries( dbcll vnl vbl dbgl)
 
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)
 
 

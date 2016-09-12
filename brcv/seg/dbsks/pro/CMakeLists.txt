@@ -37,6 +37,6 @@ target_link_libraries(dbsks_pro dbsks_algo dbdet vidpro1 dbsksp_pro dbsol)
 
 
 if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 endif(BUILD_TESTING)
 

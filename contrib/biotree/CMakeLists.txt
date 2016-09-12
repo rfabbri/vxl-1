@@ -8,63 +8,63 @@ set( biotree_SOURCE_DIR ${lems_SOURCE_DIR}/contrib/biotree )
 include_directories( ${biotree_SOURCE_DIR} )
 
 # basic utilities of biotree project
-subdirs( biob )
+add_subdirectory( biob )
 
 # CT simulation (bother Rahul with your questions)
-subdirs( biocts )
+add_subdirectory( biocts )
 
 # Lung Modeling (bother Rahul with your questions)
-subdirs( biolung )
+add_subdirectory( biolung )
 
 # gui
-#subdirs( gui )
+#add_subdirectory( gui )
 
 # X-Ray Multiview Geometry
-subdirs( xmvg )
+add_subdirectory( xmvg )
 
 # Detection Library
-subdirs( det )
+add_subdirectory( det )
 
 # Scan Library
-subdirs( xscan )
+add_subdirectory( xscan )
 
 # Gui managers
 if(SIMVOLEON_FOUND)
-  subdirs( biov )
+  add_subdirectory( biov )
 endif(SIMVOLEON_FOUND)
 
 # Executables
-subdirs( bin )
+add_subdirectory( bin )
 
 # Resources (Image and Splat)
-subdirs( resc )
+add_subdirectory( resc )
 
 # control processes
-subdirs( proc )
+add_subdirectory( proc )
 
 # can's CT-simulator
-#subdirs( biosim )
+#add_subdirectory( biosim )
 
 # filtering on 3D vol data
-#subdirs( vol3d )
+#add_subdirectory( vol3d )
 
 #Biotree standard coordinate system
-subdirs( bscs )
+add_subdirectory( bscs )
 
-subdirs( geom )
+add_subdirectory( geom )
 
 # projected filters method
-subdirs( proj )
+add_subdirectory( proj )
 
 # optimized projected filters method
-subdirs( proj_opt )
+add_subdirectory( proj_opt )
 
 # cone-beam CT simulator
-subdirs( biocbs )
+add_subdirectory( biocbs )
 
 # slice-based processing
-subdirs( slice )
+add_subdirectory( slice )
 
-subdirs( roipick )
+add_subdirectory( roipick )
 
-subdirs( histogrampick )
+add_subdirectory( histogrampick )

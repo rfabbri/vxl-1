@@ -27,5 +27,5 @@ add_library(biob ${biob_src})
 target_link_libraries(biob vgl vgl_xio vbl vsl)
 
 if(BUILD_TESTING)
-  subdirs( tests )
+  add_subdirectory( tests )
 endif(BUILD_TESTING)

@@ -59,7 +59,7 @@ if (HAS_BGUI3D)
   target_link_libraries(pca_vehicle_gui bgui3d imesh modrec vil)
 endif (HAS_BGUI3D)
 
-subdirs(pca_vehicle)
+add_subdirectory(pca_vehicle)
 
 
 if (HAS_BGUI3D)

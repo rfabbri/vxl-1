@@ -70,7 +70,7 @@ read_write.cxx
 add_library(HindSiteCombinedExecutable_lib  ${HindSiteCombinedExecutable_lib_sources})
 target_link_libraries(HindSiteCombinedExecutable_lib vsol bsol bgui vil vcl dbsol dbsol_algo) 
 
-subdirs(web_system_executables)
+add_subdirectory(web_system_executables)
 
 set(HindSiteCombinedExecutable_vis_sources
 

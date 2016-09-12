@@ -28,7 +28,7 @@ if(PCL_FOUND)
   add_library(dbrec3d_pcl ${dbrec3d_pcl_sources})
   target_link_libraries(dbrec3d_pcl bvpl_octree dbcll pcl_common pcl_search pcl_features pcl_kdtree pcl_filters)
     
-  subdirs(pro)
+  add_subdirectory(pro)
 
 endif(PCL_FOUND)
 

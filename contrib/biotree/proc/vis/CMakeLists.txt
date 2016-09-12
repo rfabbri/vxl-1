@@ -41,5 +41,5 @@ add_executable(bio_vis ${bio_vis_sources})
 target_link_libraries(bio_vis bioproc bioproc_io bgui3d biov vil vil3d geom)
 
 # The executable tool
-subdirs(bin)
+add_subdirectory(bin)
 

@@ -9,21 +9,21 @@ include_directories( ${lems_SOURCE_DIR}/breye1 )
 include_directories( ${lems_SOURCE_DIR}/basic )
 
 # Brown Process Library
-subdirs( bpro1 )
+add_subdirectory( bpro1 )
 
 # Video Process Library
-subdirs( vidpro1 )
+add_subdirectory( vidpro1 )
 
 # Visualizer (will move to brl someday)
-subdirs( bvis1 )
+add_subdirectory( bvis1 )
 
 # Development Visualizer
-subdirs( dbvis1 )
+add_subdirectory( dbvis1 )
 
 # Virtual Object Recognition Lab
-subdirs( vorl1 )
+add_subdirectory( vorl1 )
 
 #To be compatible with latest verison of vxl copy over library
-subdirs( vidl1 )
+add_subdirectory( vidl1 )
 
 

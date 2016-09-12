@@ -23,6 +23,6 @@ add_library(bof_pro ${bof_pro_sources})
 target_link_libraries(bof_pro bof boxm boxm_algo boct bprb brdb bvpl_octree)
 
 #if( BUILD_TESTING )
-#  subdirs(tests)
+#  add_subdirectory(tests)
 #endif( BUILD_TESTING )
 

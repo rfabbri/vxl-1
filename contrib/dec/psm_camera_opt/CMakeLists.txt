@@ -23,8 +23,8 @@ add_library(psm_camera_opt ${psm_camera_opt_sources})
 
 target_link_libraries(psm_camera_opt psm psm_algo vpgl vpgl_algo vil vnl bgeo vgl vgl_algo vsol brip vimt dbvrl)
 
-subdirs(pro)
-#subdirs(tests)
+add_subdirectory(pro)
+#add_subdirectory(tests)
 
 
 

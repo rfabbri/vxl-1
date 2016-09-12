@@ -25,6 +25,6 @@ target_link_libraries(dbcri_pro  vidpro dbecl bmrf vgl vgl_algo)
 
 
 if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 endif(BUILD_TESTING)
 

@@ -4,18 +4,18 @@
 include_directories( ${lems_SOURCE_DIR}/brcv/trk )
 
 # Brown Epipolar Curve Tracking Library
-subdirs( dbetl )
+add_subdirectory( dbetl )
 
 # Brown shape Curve Tracking Library
-subdirs( dbctrk )
+add_subdirectory( dbctrk )
 
 # Brown edge Tracking Library
-subdirs( dbetrk )
+add_subdirectory( dbetrk )
 
 # Brown Markov Random Field Tracking
 # Deprecated Library
-# subdirs( dbmrf )
+# add_subdirectory( dbmrf )
 
 # Brown Mutual Information Tracking
-subdirs( dbinfo )
+add_subdirectory( dbinfo )
 

@@ -12,9 +12,9 @@ add_library(biosim ${biosim_src})
 target_link_libraries(biosim xmvg xscan biocts vpgl vpgl_algo vgl vil vil3d vbl vnl)
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)
 
 if (BUILD_EXAMPLES)
-  subdirs(examples)
+  add_subdirectory(examples)
 endif (BUILD_EXAMPLES)

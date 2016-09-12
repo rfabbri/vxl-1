@@ -18,9 +18,9 @@ add_library(biolung  ${biolung_sources})
 
 target_link_libraries( biolung vgl vcl vnl vbl vil)
 
-subdirs(pro)
+add_subdirectory(pro)
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)
 

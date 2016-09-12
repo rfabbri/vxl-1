@@ -20,7 +20,7 @@ target_link_libraries(dbvrl_vis dbvrl_pro bvis1)
 
 
 if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 endif(BUILD_TESTING)
 
 

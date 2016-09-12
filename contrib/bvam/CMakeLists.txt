@@ -34,14 +34,14 @@ add_library( bvam ${bvam_sources})
 target_link_libraries( bvam bsta bsta_algo vcl vgl vgl_io vnl vil vgl_algo vil_algo vpgl vul vbl vsl bgeo)
 
 
-subdirs( io )
-subdirs( apps )
-subdirs( pro )
-subdirs( algo )
+add_subdirectory( io )
+add_subdirectory( apps )
+add_subdirectory( pro )
+add_subdirectory( algo )
 
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
 

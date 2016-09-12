@@ -43,10 +43,10 @@ if( CMAKE_USE_PTHREADS_INIT )
 endif( CMAKE_USE_PTHREADS_INIT )
 
 
-subdirs( vis )
+add_subdirectory( vis )
 
-subdirs( xio )
+add_subdirectory( xio )
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)

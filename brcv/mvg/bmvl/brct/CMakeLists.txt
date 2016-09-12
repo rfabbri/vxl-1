@@ -41,5 +41,5 @@ target_link_libraries(brct vsrl)
 
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)

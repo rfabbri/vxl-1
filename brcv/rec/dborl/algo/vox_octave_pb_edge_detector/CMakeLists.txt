@@ -10,7 +10,7 @@ if(OCTAVE_FOUND)
     add_executable (vox_octave_pb_edge_detector ${vox_octave_pb_edge_detector_sources} )
     target_link_libraries (vox_octave_pb_edge_detector dborl_algo dbdet_pro)
     
-    #subdirs(vox_convert_and_associate_pb_output)
+    #add_subdirectory(vox_convert_and_associate_pb_output)
 endif(OCTAVE_FOUND)
 
 

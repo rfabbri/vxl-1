@@ -6,14 +6,14 @@ include_directories( ${lems_SOURCE_DIR}/basic )
 include_directories( ${lems_SOURCE_DIR}/contrib )
 
 # my bvis1 based GUI
-subdirs( gui )
+add_subdirectory( gui )
 
 # CSA library
-subdirs( csa )
+add_subdirectory( csa )
 
 # local processes
-subdirs( pro )
+add_subdirectory( pro )
 
 # local visualization routines
-subdirs( vis )
+add_subdirectory( vis )
 

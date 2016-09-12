@@ -6,10 +6,10 @@ include_directories( ${lems_SOURCE_DIR}/breye1 )
 include_directories( ${lems_SOURCE_DIR}/basic )
 
 # scrap bvis-based gui
-subdirs( gui )
+add_subdirectory( gui )
 
 # multiview stuff
-subdirs( mw )
+add_subdirectory( mw )
 
 # my command line executables
-#subdirs( cmd )
+#add_subdirectory( cmd )

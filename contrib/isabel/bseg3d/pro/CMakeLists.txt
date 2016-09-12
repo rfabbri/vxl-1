@@ -23,6 +23,6 @@ add_library(bseg3d_pro ${bseg3d_pro_sources})
 target_link_libraries(bseg3d_pro bseg3d)
 
 #if( BUILD_TESTING )
-#  subdirs(tests)
+#  add_subdirectory(tests)
 #endif( BUILD_TESTING )
 endif(VXL_EXPAT_FOUND)

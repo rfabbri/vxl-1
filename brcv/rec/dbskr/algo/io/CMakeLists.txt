@@ -24,7 +24,7 @@ add_library( dbskr_algoio  ${dbskr_algo_io_sources} )
 target_link_libraries( dbskr_algoio dbskr_algo dborl bxml) 
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)
 
 

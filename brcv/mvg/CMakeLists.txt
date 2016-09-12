@@ -4,31 +4,31 @@
 include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
 
 # Brown VXL multi-view library
-subdirs ( bmvl )
+add_subdirectory( bmvl )
 
 # Brown Camera Calibration Library
-#subdirs( dbcal )
+#add_subdirectory( dbcal )
 
 # Photogrammetry Library
-subdirs( dvpgl )
+add_subdirectory( dvpgl )
 
 # Brown Epipolar Curve Library
-subdirs( dbecl )
+add_subdirectory( dbecl )
 
 # Brown Video Registration Library
-subdirs( dbvrl )
+add_subdirectory( dbvrl )
 
 # Brown Video Reconstruction Library
-subdirs( dbrct )
+add_subdirectory( dbrct )
 
 # Brown Stereo Rectification Library
-subdirs( dbrkf )
+add_subdirectory( dbrkf )
 
 # Brown Information-theoretic Registration Library
-subdirs( dbirl )
+add_subdirectory( dbirl )
 
 # Brown Registered Camera Computation Library
-subdirs( dbrcl )
+add_subdirectory( dbrcl )
 
 # Brown Multiview Differential Geometry Library
-subdirs( dbdif )
+add_subdirectory( dbdif )

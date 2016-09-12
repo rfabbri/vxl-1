@@ -31,16 +31,16 @@ add_library(dbacm  ${dbacm_sources})
 # add the required libraries into this list
 target_link_libraries( dbacm vil vbl dbnl_algo bil_algo )
 
-subdirs(pro)
+add_subdirectory(pro)
 
 if (VXL_VGUI_FOUND)
-  subdirs(vis)
+  add_subdirectory(vis)
 endif (VXL_VGUI_FOUND)
 
 if( BUILD_EXAMPLES )
-#  subdirs( examples )
+#  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)

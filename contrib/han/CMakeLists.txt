@@ -5,49 +5,49 @@
 
 
 # dll library for recognition of video objects in each frame
-subdirs ( bcri_calib )
+add_subdirectory( bcri_calib )
 
 # my bvis based GUI
-subdirs( gui )
+add_subdirectory( gui )
 
 # commented by Yong Zhao for Breyes1 moving operation. gui_flip does not exist.
-# subdirs( gui_flip )
+# add_subdirectory( gui_flip )
 
 # commented by Yong Zhao for Breyes1 moving operation. pro does not exist.
-# subdirs( pro )
+# add_subdirectory( pro )
 
 # my command line executables
-#subdirs( cmd )
+#add_subdirectory( cmd )
 
 
-subdirs ( dbcri )
-subdirs ( dbcri_accu )
-subdirs ( dbcri_accu_edge )
-subdirs ( dbcri_whole )
-
-# commented by Yong Zhao for Breyes1 moving operation. gui_flip does not exist.
-#subdirs ( dbcri_whole_flip )
-
-#subdirs (dbsel)
-#subdirs (vis)
+add_subdirectory( dbcri )
+add_subdirectory( dbcri_accu )
+add_subdirectory( dbcri_accu_edge )
+add_subdirectory( dbcri_whole )
 
 # commented by Yong Zhao for Breyes1 moving operation. gui_flip does not exist.
-#subdirs (algo)
+#add_subdirectory( dbcri_whole_flip )
 
-#subdirs (vorl)
-subdirs (add_3D)
-subdirs (add_3D_same_direction)
-
-# commented by Yong Zhao for Breyes1 moving operation. gui_flip does not exist.
-# subdirs (add_3D_reverse_direction)
-
-#subdirs (add_3D_many_direction)
+#add_subdirectory(dbsel)
+#add_subdirectory(vis)
 
 # commented by Yong Zhao for Breyes1 moving operation. gui_flip does not exist.
-# subdirs( Z_height )
+#add_subdirectory(algo)
 
-subdirs (tree_rec)
-subdirs (tree_rec_rev)
+#add_subdirectory(vorl)
+add_subdirectory(add_3D)
+add_subdirectory(add_3D_same_direction)
 
 # commented by Yong Zhao for Breyes1 moving operation. gui_flip does not exist.
-#subdirs (CRHM)
+# add_subdirectory(add_3D_reverse_direction)
+
+#add_subdirectory(add_3D_many_direction)
+
+# commented by Yong Zhao for Breyes1 moving operation. gui_flip does not exist.
+# add_subdirectory( Z_height )
+
+add_subdirectory(tree_rec)
+add_subdirectory(tree_rec_rev)
+
+# commented by Yong Zhao for Breyes1 moving operation. gui_flip does not exist.
+#add_subdirectory(CRHM)

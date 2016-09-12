@@ -23,22 +23,22 @@ add_library(bioproc ${bioproc_src})
 
 target_link_libraries(bioproc vcl vgl vsl vil3d imgr imgr_file_format xmvg xmvg_algo splr xmvg_io biob )
 
-subdirs( util )
+add_subdirectory( util )
 
-subdirs( io )
+add_subdirectory( io )
 
-subdirs( biocluster )
+add_subdirectory( biocluster )
 
 if(BUILD_EXAMPLES)
 #  if(SIMVOLEON_FOUND)
-    subdirs(examples)
+    add_subdirectory(examples)
 #  endif(SIMVOLEON_FOUND)
 endif(BUILD_EXAMPLES)
   
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)
 
 if(SIMVOLEON_FOUND)
-  subdirs(vis)
+  add_subdirectory(vis)
 endif(SIMVOLEON_FOUND)

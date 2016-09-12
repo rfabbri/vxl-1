@@ -17,5 +17,5 @@ add_library( bvaml
 target_link_libraries( bvaml vcl vgl vnl vil vgl_algo vil_algo vpgl vul baml )
 set( BVAML_INCLUDE_DIR ${bvaml_SOURCE_DIR} )
 
-subdirs( apps )
-subdirs( tests )
+add_subdirectory( apps )
+add_subdirectory( tests )

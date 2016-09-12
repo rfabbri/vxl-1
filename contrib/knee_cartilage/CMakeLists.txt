@@ -7,14 +7,14 @@ include_directories( ${lems_SOURCE_DIR}/db3p )
 include_directories( ${lems_SOURCE_DIR}/breye1 )
 include_directories( ${lems_SOURCE_DIR}/contrib/knee_cartilage )
 
-# subdirs( MESH_nogui )
-subdirs( gui )
+# add_subdirectory( MESH_nogui )
+add_subdirectory( gui )
 
 
 
 # my command line executables
-subdirs( cmd )
+add_subdirectory( cmd )
 
-subdirs ( dbknee )
-subdirs( dbknee_coord_cmd )
-# subdirs( dbmsh3d )
+add_subdirectory( dbknee )
+add_subdirectory( dbknee_coord_cmd )
+# add_subdirectory( dbmsh3d )

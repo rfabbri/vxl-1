@@ -21,14 +21,14 @@ add_library(dbgrl ${dbgrl_sources})
 target_link_libraries( dbgrl )  
 
 #Algorithms on graphs
-subdirs(algo)
+add_subdirectory(algo)
 
 # Processing Library
-#subdirs(pro)
+#add_subdirectory(pro)
 
 # Visualization Library
-#subdirs(vis)
+#add_subdirectory(vis)
 
 if(BUILD_TESTING)
-subdirs(tests)
+add_subdirectory(tests)
 endif(BUILD_TESTING)

@@ -27,10 +27,10 @@ add_library( dbskr_algo  ${dbskr_algo_sources} )
 target_link_libraries( dbskr_algo dbskr dbgrl dbdet_algo bil_algo vul) 
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)
 
-subdirs( io )
+add_subdirectory( io )
 
 
 

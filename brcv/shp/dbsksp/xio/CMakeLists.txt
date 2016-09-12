@@ -13,4 +13,4 @@ add_library( dbsksp_xio ${dbsksp_xio_sources} )
 target_link_libraries(dbsksp_xio dbsksp bxml ) 
 
 # Tests
-subdirs( tests )
+add_subdirectory( tests )

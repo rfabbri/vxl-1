@@ -11,7 +11,7 @@ if(OCTAVE_FOUND)
     target_link_libraries (vox_octave_kovesi_edge_linker dborl_algo dbdet_pro)
 endif(OCTAVE_FOUND)
 
-#subdirs(vox_convert_and_associate_kovesi_output)
+#add_subdirectory(vox_convert_and_associate_kovesi_output)
 
 
 

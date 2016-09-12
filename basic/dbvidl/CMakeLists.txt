@@ -17,9 +17,9 @@ add_library(dbvidl  ${dbvidl_sources})
 target_link_libraries(dbvidl vidl1)
 
 
-subdirs( pro )
+add_subdirectory( pro )
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 

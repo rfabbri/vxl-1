@@ -25,6 +25,6 @@ add_library(dbinfo_pro ${dbinfo_pro_sources})
 target_link_libraries(dbinfo_pro dbinfo vidpro1)
 
 #if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 #endif(BUILD_TESTING)
 

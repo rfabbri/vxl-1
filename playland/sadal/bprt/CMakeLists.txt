@@ -31,6 +31,6 @@ target_link_libraries(bprt vnl vbl vil vgl vgl_algo bcal mvl rrel)
 
 
 if(BUILD_TESTING)
-  #subdirs(tests)
+  #add_subdirectory(tests)
 endif(BUILD_TESTING)
 

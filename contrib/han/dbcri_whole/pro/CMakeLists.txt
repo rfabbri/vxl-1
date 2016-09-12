@@ -28,6 +28,6 @@ target_link_libraries(dbcri_whole_pro  vidpro1 dbecl bmrf vgl vgl_algo brip  brc
 
 
 if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 endif(BUILD_TESTING)
 

@@ -13,5 +13,5 @@ target_link_libraries( dbacm3d_xio dbacm3d vsl )
 install_targets(/lib dbacm3d_xio)
 
 #if( BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 #endif( BUILD_TESTING)

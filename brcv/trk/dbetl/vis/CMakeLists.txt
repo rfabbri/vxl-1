@@ -34,7 +34,7 @@ endif (VXL_BGUI3D_FOUND)
 
 
 if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 endif(BUILD_TESTING)
 
 

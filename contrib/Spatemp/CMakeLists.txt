@@ -5,20 +5,20 @@ include_directories( ${lems_SOURCE_DIR}/breye1 )
 
 
 #pro
-subdirs(pro)
+add_subdirectory(pro)
 
 
 #vis
-subdirs(vis)
+add_subdirectory(vis)
 
 #gui
-subdirs(gui)
+add_subdirectory(gui)
 
 
 
 
 #lib
-subdirs(algo)
+add_subdirectory(algo)
 
 #graph cuts
-subdirs(gc)
+add_subdirectory(gc)

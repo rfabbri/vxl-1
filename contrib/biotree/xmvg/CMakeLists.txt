@@ -49,10 +49,10 @@ add_library(xmvg ${xmvg_src})
 
 target_link_libraries(xmvg vpgl vpgl_algo vgl vgl_xio vil vnl vnl_xio vsl)
 
-subdirs(algo)
+add_subdirectory(algo)
 
-subdirs(io)
+add_subdirectory(io)
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)

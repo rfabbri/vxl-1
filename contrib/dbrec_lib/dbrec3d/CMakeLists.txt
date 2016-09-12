@@ -37,14 +37,14 @@ add_library(dbrec3d ${dbrec3d_sources})
 
 target_link_libraries(dbrec3d bvpl_octree bsta bxml bvrml)
 
-subdirs(pro)
-subdirs(exe)
-subdirs(gui)
-subdirs(bof)
-subdirs(pcl)
+add_subdirectory(pro)
+add_subdirectory(exe)
+add_subdirectory(gui)
+add_subdirectory(bof)
+add_subdirectory(pcl)
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
 endif(VXL_EXPAT_FOUND)

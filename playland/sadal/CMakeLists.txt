@@ -14,11 +14,11 @@ include_directories(${VXL_RPL_INCLUDE_DIR} )
 
 include( ${LEMS_CMAKE_DIR}/Modules/UseBGUI3D.cmake )
 # my bvis based GUI
-subdirs( gui )
+add_subdirectory( gui )
 
 
-subdirs( bprt )
+add_subdirectory( bprt )
 
-subdirs( bfac )
+add_subdirectory( bfac )
 
 

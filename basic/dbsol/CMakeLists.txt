@@ -41,16 +41,16 @@ if( Boost_FOUND )
 endif( Boost_FOUND )
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
-subdirs( algo )
+add_subdirectory( algo )
 
-subdirs( pro )
+add_subdirectory( pro )
 
-subdirs( vis )
+add_subdirectory( vis )
 
 
 #if( BUILD_EXAMPLES )
-#  subdirs( examples )
+#  add_subdirectory( examples )
 #endif( BUILD_EXAMPLES )

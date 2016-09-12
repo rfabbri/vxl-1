@@ -34,7 +34,7 @@ add_library(bvam_pro ${bvam_pro_sources})
 target_link_libraries(bvam_pro bvam bvam_io bprb bil_algo sdet vpgl vpgl_io vpgl_algo vpgl_file_formats vsol vil vil_io vnl vnl_io bgeo vgl vgl_algo brip brdb)
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
 

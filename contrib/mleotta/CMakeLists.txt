@@ -8,22 +8,22 @@ include_directories( ${lems_SOURCE_DIR}/basic )
 include_directories( ${lems_SOURCE_DIR}/contrib/mleotta )
 
 # 3D model based recognition
-subdirs( modrec )
+add_subdirectory( modrec )
 
 # feature based video registration
-subdirs( vidreg )
+add_subdirectory( vidreg )
 
 # my bvis1 based GUI
-subdirs( gui )
+add_subdirectory( gui )
 
 # my processes
-subdirs( pro )
+add_subdirectory( pro )
 
 # my command line executables
-subdirs( cmd )
+add_subdirectory( cmd )
 
 # Demo executable for BAE
-subdirs( bae_demo )
+add_subdirectory( bae_demo )
 
 
 

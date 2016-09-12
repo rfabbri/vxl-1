@@ -18,7 +18,7 @@ target_link_libraries(vehicle3D vgl vgl_algo  vnl vul mbl )
 
 #target_link_libraries(dtube)
 # Processing Library
-#subdirs(exec)
+#add_subdirectory(exec)
 
 #add_executable (dtube_test  main.cxx)
 #target_link_libraries(dtube_test dtube vgl vnl vul)

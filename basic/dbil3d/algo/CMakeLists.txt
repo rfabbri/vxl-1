@@ -17,5 +17,5 @@ add_library( dbil3d_algo  ${dbil3d_algo_sources} )
 target_link_libraries( dbil3d_algo vil3d vil_algo vil3d_algo)
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )

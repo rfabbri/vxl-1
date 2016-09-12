@@ -2,12 +2,12 @@
 # Development Brown Image3d Library
 
 
-subdirs( algo )
+add_subdirectory( algo )
 
-subdirs( pro )
+add_subdirectory( pro )
 
-#subdirs( vis )
+#add_subdirectory( vis )
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )

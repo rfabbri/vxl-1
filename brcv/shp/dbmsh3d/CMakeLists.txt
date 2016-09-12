@@ -45,15 +45,15 @@ add_library( dbmsh3d  ${dbmsh3d_sources})
 
 target_link_libraries( dbmsh3d vsol dbgl dbul rply vil)
 
-subdirs( algo )
-subdirs( pro )
-subdirs( vis )
-subdirs( cmdproc )
+add_subdirectory( algo )
+add_subdirectory( pro )
+add_subdirectory( vis )
+add_subdirectory( cmdproc )
 if (BUILD_TESTING)
-    subdirs( tests )
+    add_subdirectory( tests )
 endif (BUILD_TESTING)
 if (BUILD_EXAMPLES)
-    subdirs( examples )
+    add_subdirectory( examples )
 endif (BUILD_EXAMPLES)
 
 

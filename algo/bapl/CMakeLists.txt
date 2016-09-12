@@ -27,11 +27,11 @@ add_library(bapl  ${bapl_sources})
 target_link_libraries(bapl vnl vbl vil ipts vimt brip rrel)
 
 if( BUILD_EXAMPLES )
-  subdirs( examples )
+  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )
 
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)
 

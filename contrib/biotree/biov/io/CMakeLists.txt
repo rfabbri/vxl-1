@@ -7,4 +7,4 @@ set(vol_file_src
 add_library(vol_file ${vol_file_src})
 target_link_libraries(vol_file vbl vil vil_algo vil_io)
 
-subdirs ( examples )
+add_subdirectory( examples )

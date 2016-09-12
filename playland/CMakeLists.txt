@@ -22,11 +22,11 @@ option(BUILD_PLAYLAND_han "Build playland for han" YES)
 option(BUILD_PLAYLAND_sadal "Build playland for sadal" NO)
 
 #if(BUILD_PLAYLAND_han)
-#    subdirs( han )
+#    add_subdirectory( han )
 #endif(BUILD_PLAYLAND_han)
 
 if(BUILD_PLAYLAND_sadal)
-    subdirs( sadal )
+    add_subdirectory( sadal )
 endif(BUILD_PLAYLAND_sadal)
 
 
@@ -34,6 +34,6 @@ endif(BUILD_PLAYLAND_sadal)
 # Playland for thom
 option(BUILD_PLAYLAND_thom "Build playland for thom" NO)
 if(BUILD_PLAYLAND_thom)
-    subdirs( thom )
+    add_subdirectory( thom )
 endif(BUILD_PLAYLAND_thom)
 

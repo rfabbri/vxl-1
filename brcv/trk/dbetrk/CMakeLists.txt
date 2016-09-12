@@ -17,11 +17,11 @@ add_library(dbetrk  ${dbetrk_sources})
 
 target_link_libraries(dbetrk vbl vdgl vtol vsol vil vnl  btol mvl mbl vsl brip)
 
-subdirs(pro)
+add_subdirectory(pro)
 if (VXL_VGUI_FOUND)
-subdirs(vis)
+add_subdirectory(vis)
 endif (VXL_VGUI_FOUND)
 
 if(BUILD_TESTING)
-        subdirs(tests)
+        add_subdirectory(tests)
 endif(BUILD_TESTING)

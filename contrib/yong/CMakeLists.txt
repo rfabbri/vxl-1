@@ -6,4 +6,4 @@ include_directories( ${lems_SOURCE_DIR}/breye )
 include_directories( ${lems_SOURCE_DIR}/basic )
 
 # my bvis based GUI
-subdirs( cplusplusclass )
+add_subdirectory( cplusplusclass )

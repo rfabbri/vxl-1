@@ -17,10 +17,10 @@ include_directories(${VXL_GEL_INCLUDE_DIR}/mrc)
 
 
 #if( BUILD_TESTING )
-#  subdirs(tests)
+#  add_subdirectory(tests)
 #endif( BUILD_TESTING )
 
-subdirs(algo)
-subdirs(io)
-subdirs(pro)
-subdirs(vis)
+add_subdirectory(algo)
+add_subdirectory(io)
+add_subdirectory(pro)
+add_subdirectory(vis)

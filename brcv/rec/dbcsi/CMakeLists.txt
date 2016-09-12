@@ -18,17 +18,17 @@ add_library(dbcsi  ${dbcsi_sources})
 target_link_libraries(dbcsi dbspi dbdet_algo )
 
 # algorithms library
-#subdirs(algo)
+#add_subdirectory(algo)
 
 # Processing Library
-#subdirs(pro)
+#add_subdirectory(pro)
 
 # Visualization Library
-#subdirs(vis)
+#add_subdirectory(vis)
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)
 
 # Executables
-#subdirs(bin)
+#add_subdirectory(bin)

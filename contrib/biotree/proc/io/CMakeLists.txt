@@ -8,7 +8,7 @@ set(io_sources
 )
 
 if( BUILD_EXAMPLES )
-  subdirs( examples )
+  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )
 
 

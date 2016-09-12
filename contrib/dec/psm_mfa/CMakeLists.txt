@@ -14,5 +14,5 @@ add_library( psm_mfa ${psm_mfa_sources})
 
 target_link_libraries( psm_mfa psm psm_algo hsds vbl vul vgl vnl vnl_algo vpgl)
 
-subdirs(pro)
+add_subdirectory(pro)
 

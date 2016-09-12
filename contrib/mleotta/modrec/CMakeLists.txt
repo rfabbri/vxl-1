@@ -39,7 +39,7 @@ add_library(modrec  ${modrec_sources})
 target_link_libraries(modrec dbpro dbvidl2_pro dbil_pro bbgm imesh_algo vpgl vil_algo rrel vgel)
 
 if( BUILD_TESTING )
-#  subdirs(tests)
+#  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
 # Make the Python Module for running experiemnts
@@ -73,11 +73,11 @@ endif( PYTHON_FOUND )
 
 
 # binary IO 
-subdirs( io ) 
+add_subdirectory( io ) 
 
 # processes
-subdirs( pro )
+add_subdirectory( pro )
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )

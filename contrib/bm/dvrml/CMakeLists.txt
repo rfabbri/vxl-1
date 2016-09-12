@@ -37,6 +37,6 @@ add_library( dvrml ${dvrml_sources} )
 target_link_libraries( dvrml vul vbl vgl vnl )	 
 
 if( BUILD_TESTING )
-	subdirs( tests )
+	add_subdirectory( tests )
 endif( BUILD_TESTING )
 		

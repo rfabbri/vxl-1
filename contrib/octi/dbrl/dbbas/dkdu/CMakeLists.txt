@@ -1,3 +1,3 @@
 project(kdu)
-subdirs(coresys)
-subdirs(apps)
+add_subdirectory(coresys)
+add_subdirectory(apps)

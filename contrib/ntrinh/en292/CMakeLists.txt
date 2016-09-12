@@ -11,13 +11,13 @@ aux_source_directory(Templates en292_sources)
 add_library(en292 ${en292_sources})
 target_link_libraries( en292 vgl vsol )
 
-subdirs( pro )
-subdirs( vis )
+add_subdirectory( pro )
+add_subdirectory( vis )
 
 #if( BUILD_TESTING )
-#  subdirs(tests)
+#  add_subdirectory(tests)
 #endif( BUILD_TESTING )
 
 if( BUILD_EXAMPLES )
-#  subdirs( examples )
+#  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )

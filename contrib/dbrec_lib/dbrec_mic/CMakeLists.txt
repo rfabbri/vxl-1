@@ -24,10 +24,10 @@ add_library(dbrec_mic ${dbrec_mic_sources})
 
 target_link_libraries(dbrec_mic mcal bsta bsvg bvgl brip)
 
-subdirs( pro )
+add_subdirectory( pro )
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
 

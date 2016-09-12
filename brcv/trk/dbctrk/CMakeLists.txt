@@ -33,12 +33,12 @@ add_library(dbctrk  ${dbctrk_sources})
 target_link_libraries(dbctrk vbl bdgl btol vsol vil vnl mvl mbl brct  vsl dbspi)
 
 
-subdirs(pro)
+add_subdirectory(pro)
 if (VXL_VGUI_FOUND)
-    subdirs(vis)
+    add_subdirectory(vis)
 endif (VXL_VGUI_FOUND)
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)
 

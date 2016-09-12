@@ -12,10 +12,10 @@ project(lems_itk)
 # if (VTK_FOUND)  
   
 #  include(${VTK_USE_FILE})
-#  subdirs ( isosurface )
+#  add_subdirectory( isosurface )
   
 # endif (VTK_FOUND)
 
 # if ( HAS_VTK )
-  subdirs ( isosurface )
+  add_subdirectory( isosurface )
 # endif (HAS_VTK )

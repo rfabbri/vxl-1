@@ -19,7 +19,7 @@ add_library(dbgui  ${dbgui_sources})
 target_link_libraries(dbgui vgui gl2ps dbgl_algo vpgl_algo )
 
 if( BUILD_EXAMPLES )
-  subdirs( examples )
+  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )
 
 endif (VXL_VGUI_FOUND)

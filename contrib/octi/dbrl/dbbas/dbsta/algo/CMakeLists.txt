@@ -23,5 +23,5 @@ target_link_libraries( dbstao_algo dbstao vnl_algo vnl )
 
 
 if (BUILD_OCTI_TESTING OR BUILD_TESTING)
-	subdirs(tests)
+	add_subdirectory(tests)
 endif(BUILD_OCTI_TESTING OR BUILD_TESTING)

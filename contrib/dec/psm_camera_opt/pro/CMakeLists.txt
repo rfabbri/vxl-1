@@ -23,6 +23,6 @@ add_library(psm_camera_opt_pro ${psm_camera_opt_pro_sources})
 target_link_libraries(psm_camera_opt_pro psm_camera_opt bprb vpgl vil vnl vnl_io bgeo vgl brdb)
 
 #if( BUILD_TESTING )
-#  subdirs(tests)
+#  add_subdirectory(tests)
 #endif( BUILD_TESTING )
 endif(VXL_EXPAT_FOUND)

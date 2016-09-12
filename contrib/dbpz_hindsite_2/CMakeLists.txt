@@ -72,7 +72,7 @@ read_write.cxx
 add_library(dbpz_hindsite_2_lib  ${dbpz_hindsite_2_lib_sources})
 target_link_libraries(dbpz_hindsite_2_lib vsol bsol bgui vil vcl dbsol dbsol_algo) 
 
-subdirs(web_system_executables)
+add_subdirectory(web_system_executables)
 
 set(dbpz_hindsite_vis_sources
 

@@ -21,9 +21,9 @@ add_library(biodet ${det_src})
 target_link_libraries(biodet vcl vgl vnl vnl_algo vbl biob xmvg vil3d)
 
 #if(BUILD_EXAMPLES)
-#  subdirs(examples)
+#  add_subdirectory(examples)
 #endif(BUILD_EXAMPLES)
 
 #if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 #endif(BUILD_TESTING)

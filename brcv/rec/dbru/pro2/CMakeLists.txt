@@ -17,6 +17,6 @@ add_library(dbru_pro2 ${dbru_pro2_sources})
 target_link_libraries(dbru_pro2 dbru bprb brdb bvgl)
 
 #if( BUILD_TESTING )
-#  subdirs(tests)
+#  add_subdirectory(tests)
 #endif( BUILD_TESTING )
 

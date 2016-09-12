@@ -24,18 +24,18 @@ target_link_libraries(dbbgm dbsta vsl vbl vbl_io)
 
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
 
 # algorithms for background modeling
-subdirs( algo )
+add_subdirectory( algo )
 
 # process for background modeling
-subdirs(pro)
+add_subdirectory(pro)
 
 # visualization for background modeling
-subdirs(vis)
+add_subdirectory(vis)
 
 
 

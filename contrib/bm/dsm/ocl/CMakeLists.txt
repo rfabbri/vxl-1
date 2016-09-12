@@ -16,9 +16,9 @@ add_library( dsm_ocl ${dsm_ocl_sources} )
 target_link_libraries( dsm_ocl dsm)
      
 #processes     
-subdirs( pro )
+add_subdirectory( pro )
 
 #tests
-subdirs( tests )
+add_subdirectory( tests )
 
 endif(OPENCL_FOUND)

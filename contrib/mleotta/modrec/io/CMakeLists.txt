@@ -14,5 +14,5 @@ add_library(modrec_io  ${modrec_io_sources})
 target_link_libraries(modrec_io modrec vnl_io vgl_io)
 
 if( BUILD_TESTING )
-#  subdirs(tests)
+#  add_subdirectory(tests)
 endif( BUILD_TESTING )

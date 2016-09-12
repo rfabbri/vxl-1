@@ -36,7 +36,7 @@ target_link_libraries(dbsksp_vis dbsksp_pro dbsksp_algo bvis1)
 
 
 if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 endif(BUILD_TESTING)
 
 

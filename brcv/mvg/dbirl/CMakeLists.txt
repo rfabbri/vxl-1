@@ -15,12 +15,12 @@ add_library(dbirl ${dbirl_sources})
 target_link_libraries(dbirl dbinfo sdet bsta brip bugl bsol btol bdgl vsol vil vgl_algo vnl vsl vbl_io vbl)
 
 # Processing Library
-subdirs(pro)
+add_subdirectory(pro)
 
 # Command line app
-subdirs(app)
+add_subdirectory(app)
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)
 

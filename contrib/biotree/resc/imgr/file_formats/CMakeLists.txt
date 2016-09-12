@@ -24,15 +24,15 @@ add_library(imgr_file_format ${imgr_file_format_src})
 target_link_libraries(imgr_file_format vcl imgr vnl vsl)
 
 if(BUILD_EXAMPLES)
-  subdirs(examples)
+  add_subdirectory(examples)
 endif(BUILD_EXAMPLES)
  
 if(VXL_VGUI_FOUND)
-  subdirs(vis)
+  add_subdirectory(vis)
 endif(VXL_VGUI_FOUND)
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)
 
-subdirs(converters)
+add_subdirectory(converters)

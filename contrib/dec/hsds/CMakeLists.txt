@@ -15,7 +15,7 @@ add_library(hsds ${hsds_sources})
 
 target_link_libraries(hsds vnl vgl vbl)
 
-subdirs(tests)
+add_subdirectory(tests)
 
 
 

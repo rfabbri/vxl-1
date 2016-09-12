@@ -8,21 +8,21 @@ include_directories( ${lems_SOURCE_DIR}/basic )
 include_directories( ${lems_SOURCE_DIR}/brcv )
 
 # bvis based GUIS
-subdirs( gui )
-subdirs( gui2 )
-subdirs( imatch_gui )
+add_subdirectory( gui )
+add_subdirectory( gui2 )
+add_subdirectory( imatch_gui )
 
 # command line executables
-#subdirs( cmd )
+#add_subdirectory( cmd )
 
 
 # vidpro elements
-subdirs( cmd )
+add_subdirectory( cmd )
 
 # vidpro elements
-#subdirs( pro )
+#add_subdirectory( pro )
 
 # tests for itrack classes
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)

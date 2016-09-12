@@ -19,7 +19,7 @@ add_library( ncn ${ncn_sources} )
 target_link_libraries( ncn vil vidl vul vsl vgl vbl bsta )
 
 if( BUILD_TESTING )
-  subdirs( tests )
+  add_subdirectory( tests )
 endif( BUILD_TESTING )
 
-subdirs( executables )
+add_subdirectory( executables )

@@ -38,7 +38,7 @@ add_library(con_graph ${con_graph_sources} )
 target_link_libraries(con_graph dbskfg dbskfg_algo dbskfg vidpro1)
 
 #process dir
-subdirs(pro)
+add_subdirectory(pro)
 
 add_executable (mem_test test_exec.cxx )
 add_executable (test_prune test_prune.cxx )

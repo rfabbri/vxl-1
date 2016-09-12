@@ -15,16 +15,16 @@ include_directories( ${VXL_RPL_INCLUDE_DIR} )
 include( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
 
 # my bvis1 based GUI
-subdirs( gui )
+add_subdirectory( gui )
 
 
-subdirs( bprt )
+add_subdirectory( bprt )
 
-subdirs( bfac )
+add_subdirectory( bfac )
 
 
-subdirs(dbbbopt_vis)
+add_subdirectory(dbbbopt_vis)
 
-subdirs(dbhom_vis)
+add_subdirectory(dbhom_vis)
 
 

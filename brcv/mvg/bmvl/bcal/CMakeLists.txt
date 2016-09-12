@@ -23,5 +23,5 @@ INSTALL_NOBASE_HEADER_FILES(/include/vxl/contrib/brl/bmvl/bcal ${bcal_sources})
 target_link_libraries(bcal vgl_algo vnl_algo vnl vgl vcsl)
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)

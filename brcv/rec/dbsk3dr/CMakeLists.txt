@@ -21,11 +21,11 @@ add_library(dbsk3dr  ${dbsk3dr_sources})
 # add the required libraries into this list
 target_link_libraries( dbsk3dr dbsk3d dbsk3d_algo dbmsh3dr dbasn )  
 
-subdirs( vis )
+add_subdirectory( vis )
 
-subdirs( pro )
+add_subdirectory( pro )
 
 if(BUILD_TESTING)
-subdirs(tests)
+add_subdirectory(tests)
 endif(BUILD_TESTING)
 

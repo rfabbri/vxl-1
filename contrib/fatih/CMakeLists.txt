@@ -9,4 +9,4 @@ include_directories( ${lems_SOURCE_DIR}/basic )
 include_directories( ${lems_SOURCE_DIR}/contrib/fatih )
 
 # my command line executables
-subdirs( cmd )
+add_subdirectory( cmd )

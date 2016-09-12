@@ -23,6 +23,6 @@ add_library(psm_pro ${psm_pro_sources})
 target_link_libraries(psm_pro psm psm_io bprb vpgl vpgl_io vpgl_algo vpgl_file_formats vpgl_pro vil vil_io vil_pro vnl vnl_io bgeo vgl brdb)
 
 #if( BUILD_TESTING )
-#  subdirs(tests)
+#  add_subdirectory(tests)
 #endif( BUILD_TESTING )
 endif(VXL_EXPAT_FOUND)

@@ -38,7 +38,7 @@ target_link_libraries(cali imgr xmvg xscan vpgl_algo vpgl dbil dbgl_algo vil vgl
 
 
 if(BUILD_EXAMPLES)
-  subdirs(examples)
+  add_subdirectory(examples)
 endif(BUILD_EXAMPLES)
 
-subdirs(tests)
+add_subdirectory(tests)

@@ -46,11 +46,11 @@ add_library(dbinfo ${dbinfo_sources})
 target_link_libraries(dbinfo sdet bsta brip bugl bsol btol bdgl vsol vil vgl_algo vnl vsl vbl_io vbl)
 
 # Processing Library
-subdirs(pro)
+add_subdirectory(pro)
 
 # Visualization Library
-subdirs(vis)
+add_subdirectory(vis)
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)

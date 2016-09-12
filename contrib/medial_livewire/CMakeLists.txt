@@ -17,10 +17,10 @@ include_directories( ${lems_SOURCE_DIR}/db3p/expatpp/expat/lib
 
 # my bvis1 based GUI
 
-subdirs( gui )
+add_subdirectory( gui )
 
 add_executable(example_compute_fish_sdt example_compute_fish_sdt.cxx)
 target_link_libraries(example_compute_fish_sdt vil dbil dbil_algo dbsol )
 
 # my command line executables
-# subdirs( cmd )
+# add_subdirectory( cmd )

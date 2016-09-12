@@ -8,10 +8,10 @@ include_directories( ${lems_SOURCE_DIR}/basic )
 include_directories( ${lems_SOURCE_DIR}/brcv )
 
 # bvis based GUIS
-subdirs( gui2 )
+add_subdirectory( gui2 )
 
 
 # tests 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)

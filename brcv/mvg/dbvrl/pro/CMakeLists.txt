@@ -24,7 +24,7 @@ target_link_libraries(dbvrl_pro dbvrl vidpro1 bsta)
 
 
 if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 endif(BUILD_TESTING)
 
 

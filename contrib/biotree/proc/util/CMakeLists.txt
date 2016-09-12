@@ -11,10 +11,10 @@ add_library(bioproc_util ${util_src})
 target_link_libraries(bioproc_util xmvg xmvg_algo vnl vcl)
 
 if(BUILD_EXAMPLES)
-    subdirs(examples)
+    add_subdirectory(examples)
 endif(BUILD_EXAMPLES)
   
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)
 

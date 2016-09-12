@@ -44,8 +44,8 @@ add_library(world_model ${world_model_sources})
 
 target_link_libraries( world_model dbmsh3d dbmsh3d_algo dbmsh3d_vis vil vbl vgl vgl_algo vnl vsol vpgl vpgl_algo bgui bgeo)
 
-subdirs(exe)
+add_subdirectory(exe)
 
-subdirs(tests)
+add_subdirectory(tests)
 
 endif(VXL_BGUI3D_FOUND)

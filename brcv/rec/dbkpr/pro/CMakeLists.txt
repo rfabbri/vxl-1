@@ -21,6 +21,6 @@ target_link_libraries(dbkpr_pro dbkpr dbdet_pro dvpgl_pro )
 
 
 if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 endif(BUILD_TESTING)
 

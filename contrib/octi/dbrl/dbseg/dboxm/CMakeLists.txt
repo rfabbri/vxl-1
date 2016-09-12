@@ -52,18 +52,18 @@ add_library(dboxm  ${dboxm_sources})
 target_link_libraries(dboxm boct vcl vgl vgl_io vgl_xio vbl vsl vpgl vpgl_algo vsol bgeo bsta bsta_algo vul vil imesh expatpp)
 
 #processes
-#subdirs(pro)
+#add_subdirectory(pro)
 
 #io
-#subdirs(io)
+#add_subdirectory(io)
 
 #tests
-#subdirs(tests)
+#add_subdirectory(tests)
 
 #opt
-subdirs(opt)
+add_subdirectory(opt)
 
 #basic algorithms involving scenes
-#subdirs(algo)
+#add_subdirectory(algo)
 
 endif(EXPAT_FOUND)

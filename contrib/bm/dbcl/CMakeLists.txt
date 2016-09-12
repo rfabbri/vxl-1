@@ -60,6 +60,6 @@ if(VXL_EXPAT_FOUND)
 	add_library( dbcl ${dbcl_sources} )
 	target_link_libraries( dbcl dncn vul vbl bsta bsta_algo dvrml ${EXPAT_LIBRARIES} expatpp )
 
-	subdirs( tests )
+	add_subdirectory( tests )
 	
 endif(VXL_EXPAT_FOUND)

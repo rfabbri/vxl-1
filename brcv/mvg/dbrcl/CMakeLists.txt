@@ -13,5 +13,5 @@ add_library( dbrcl
 target_link_libraries( dbrcl vcl vgl vnl vil vgl_algo vil_algo vsol vpgl vpgl_algo vgel dbinfo mvl )
 set( dbrcl_INCLUDE_DIR ${dbrcl_SOURCE_DIR} )
 
-subdirs( app )
-subdirs( tests )
+add_subdirectory( app )
+add_subdirectory( tests )

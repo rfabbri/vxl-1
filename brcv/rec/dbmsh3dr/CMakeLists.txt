@@ -23,12 +23,12 @@ add_library(dbmsh3dr  ${dbmsh3dr_sources})
 # add the required libraries into this list
 target_link_libraries( dbmsh3dr dbmsh3d dbmsh3d_algo dbgl rgrl )  
 
-subdirs( vis )
+add_subdirectory( vis )
 
-subdirs( pro )
+add_subdirectory( pro )
 
 if(BUILD_TESTING)
-#subdirs(tests)
+#add_subdirectory(tests)
 endif(BUILD_TESTING)
 
 

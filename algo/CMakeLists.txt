@@ -5,40 +5,40 @@ include_directories( ${VXL_BRL_INCLUDE_DIR} )
 include_directories( ${lems_SOURCE_DIR}/algo )
 
 # extrautils library
-subdirs( extrautils )
+add_subdirectory( extrautils )
 
 # shock library
-subdirs( shock )
+add_subdirectory( shock )
 
 # logical linear library
-subdirs( loglin )
+add_subdirectory( loglin )
 
 # susan library
-subdirs( susan )
+add_subdirectory( susan )
 
 # contour-tracing library
-subdirs( contourtracing )
+add_subdirectory( contourtracing )
 
 #contour-tracing library
-subdirs( curvematch )
+add_subdirectory( curvematch )
 
 # affine patch library
-subdirs( bapl )
+add_subdirectory( bapl )
 
 # graduated assignment to solve MxN quadratic assignment problems
-#subdirs( gradassign )
+#add_subdirectory( gradassign )
 
 # softassign to solve MxN assignment problems
-subdirs( softassign )
+add_subdirectory( softassign )
 
 # Livewire (intelligent scissors) core class to interactively segment images
-#subdirs( intscissors )
+#add_subdirectory( intscissors )
 
 # euler spiral library
-#subdirs( eulerspiral )
+#add_subdirectory( eulerspiral )
 
 # brown curve detection and generation
-subdirs( bcdg ) 
+add_subdirectory( bcdg ) 
 
 # brown edge tracking
-#subdirs( edgetrk )
+#add_subdirectory( edgetrk )

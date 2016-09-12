@@ -14,5 +14,5 @@ add_library(crvmtch3D ${crvmtch3D_src})
 target_link_libraries(crvmtch3D vcl)
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)

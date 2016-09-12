@@ -48,21 +48,21 @@ add_library(dbsksp  ${dbsksp_sources})
 target_link_libraries(dbsksp vgl vbl vnl vnl_algo vsl vsol dbgl_algo bil_algo dbnl dbgrl )
 
 if( BUILD_EXAMPLES )
-  subdirs( examples )
+  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )
 
 # Algorithm Library
-subdirs( algo )
+add_subdirectory( algo )
 
 # Processing Library
-subdirs( pro )
+add_subdirectory( pro )
 
 # Visualization Library
-subdirs( vis )
+add_subdirectory( vis )
 
 # XML IO library
-subdirs( xio )
+add_subdirectory( xio )
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)

@@ -34,6 +34,6 @@ if(VXL_VGUI_FOUND)
  
 
  # the main executables
- subdirs(bin)
+ add_subdirectory(bin)
 
 endif(VXL_VGUI_FOUND)

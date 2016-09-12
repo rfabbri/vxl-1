@@ -31,6 +31,6 @@ add_library(bseg3d_algo_pro ${bseg3d_algo_pro_sources})
 target_link_libraries(bseg3d_algo_pro bseg3d bseg3d_algo bprb vpgl vpgl_io vpgl_algo vpgl_file_formats vpgl_pro vil vil_io vil_pro vnl vnl_io bgeo vgl brdb)
 
 #if( BUILD_TESTING )
-#  subdirs(tests)
+#  add_subdirectory(tests)
 #endif( BUILD_TESTING )
 endif(VXL_EXPAT_FOUND)

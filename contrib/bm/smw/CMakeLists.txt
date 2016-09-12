@@ -29,7 +29,7 @@ target_link_libraries( smw vil vnl bsta )
 #add_test(smw_bvxm_voxel_world ${EXECUTABLE_OUTPUT_PATH}/smw_test_all test_smw_bvxm_voxel_world)
 #add_test(smw_node ${EXECUTABLE_OUTPUT_PATH}/smw_test_all test_smw_node)
 
-subdirs(tests)
+add_subdirectory(tests)
 
-subdirs(executables)
+add_subdirectory(executables)
 

@@ -1,3 +1,3 @@
-subdirs(image)
-subdirs(kdu_compress)
-subdirs(kdu_expand)
+add_subdirectory(image)
+add_subdirectory(kdu_compress)
+add_subdirectory(kdu_expand)

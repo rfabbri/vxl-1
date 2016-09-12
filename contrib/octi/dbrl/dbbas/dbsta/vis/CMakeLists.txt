@@ -11,5 +11,5 @@ add_library( dbstao_vis  ${dbstao_vis_sources} )
 target_link_libraries( dbstao_vis bsta bsvg vnl )
 
 if( BUILD_TESTING OR BUILD_OCTI_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING OR BUILD_OCTI_TESTING )

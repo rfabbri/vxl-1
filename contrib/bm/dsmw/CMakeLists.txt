@@ -22,6 +22,6 @@ add_library( dsmw ${dsmw_sources} )
 
 target_link_libraries( dsmw vil vnl bsta )
 
-subdirs( executables )
+add_subdirectory( executables )
 
-subdirs( scratch_area )
+add_subdirectory( scratch_area )

@@ -22,12 +22,12 @@ add_library(bseg3d_algo ${bseg3d_algo_sources})
 target_link_libraries(bseg3d_algo bseg3d vnl vbl bsta vil vil_algo vpdl)
 
 # Processes compatible with bprb
-subdirs(pro)
+add_subdirectory(pro)
 
 # A set of executables
-# subdirs(exe)
+# add_subdirectory(exe)
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 

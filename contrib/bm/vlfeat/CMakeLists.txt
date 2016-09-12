@@ -45,8 +45,8 @@ if( VL_FEAT_FOUND )
   add_library( vlfeat ${VLFEAT_SOURCES} )     
   target_link_libraries(vlfeat ${VL_FEAT_LIBRARY} vil vgl)
 
-  subdirs( exec )
-  subdirs( pro )
-  subdirs( tests )
+  add_subdirectory( exec )
+  add_subdirectory( pro )
+  add_subdirectory( tests )
 
 endif( VL_FEAT_FOUND )

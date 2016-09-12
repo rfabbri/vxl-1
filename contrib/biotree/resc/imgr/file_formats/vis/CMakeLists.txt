@@ -15,4 +15,4 @@ add_library(imgr_skyscan_vis ${imgr_skyscan_vis_sources})
 target_link_libraries( imgr_skyscan_vis imgr_file_format bgui vgui vil vbl vsol)
 
 # The executable tool
-subdirs(bin)
+add_subdirectory(bin)

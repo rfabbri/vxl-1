@@ -19,14 +19,14 @@ add_library(dbdif ${dbdif_sources})
 target_link_libraries(dbdif vpgl vsol)
 
 # Algorithms Library
-subdirs(algo)
+add_subdirectory(algo)
 
 # Processing Library
-subdirs(pro)
+add_subdirectory(pro)
 
 # Visualization Library
-#subdirs(vis)
+#add_subdirectory(vis)
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)

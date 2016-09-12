@@ -48,7 +48,7 @@ if (LINK_WITH_DLIBS)
 	target_link_libraries(dbbgmo dbstao dbstao_algo brip vnl_io vbl_io vsl vnl vil_algo vil vgl_algo vgl vbl 
 	kdu_coresys kdu_background_comp kdu_background_exp)
 	if (BUILD_OCTI_TESTING OR BUILD_TESTING)
-	subdirs(tests)
+	add_subdirectory(tests)
 	endif(BUILD_OCTI_TESTING OR BUILD_TESTING)
 	else(LINK_WITH_DLIBS)
 	include_directories(${brl_SOURCE_DIR}/bbas)
@@ -57,7 +57,7 @@ if (LINK_WITH_DLIBS)
 endif(LINK_WITH_DLIBS)
 
 
-subdirs(pro)
-subdirs(vis)
+add_subdirectory(pro)
+add_subdirectory(vis)
 
 

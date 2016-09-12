@@ -82,17 +82,17 @@ add_library(dborl ${dborl_sources})
 target_link_libraries(dborl bsol vsol dbgrl bdgl vil vbl)
 
 # Brown Recognition Tools to aid Testing
-#subdirs( vis )
+#add_subdirectory( vis )
 
 # Brown Recognition Algorithms via MPI
-subdirs (algo)
+add_subdirectory(algo)
 
 # Brown ORL Testing
-subdirs( tests )
+add_subdirectory( tests )
 
 # Brown ORL Command Line Utilities
-subdirs( bin )
+add_subdirectory( bin )
 
 # Brown Python Interface
-subdirs( pro )
+add_subdirectory( pro )
 

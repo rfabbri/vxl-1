@@ -4,9 +4,9 @@
 include_directories( ${lems_SOURCE_DIR}/breye1 )
 
 # my bvis1 based GUI
-subdirs( vehgui )
+add_subdirectory( vehgui )
 
 
 # executable or dlls
-subdirs(exe)
+add_subdirectory(exe)
 

@@ -69,11 +69,11 @@ add_library( gdt  ${gdt_sources})
 
 target_link_libraries( gdt dbmsh3d )
 
-subdirs(pro)
+add_subdirectory(pro)
 
 # Visualization Library
-subdirs(vis)
+add_subdirectory(vis)
 
-subdirs(cmdproc)
+add_subdirectory(cmdproc)
 
 

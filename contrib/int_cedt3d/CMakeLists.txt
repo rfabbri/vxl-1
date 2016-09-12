@@ -19,5 +19,5 @@ add_library(int_cedt3d  ${int_cedt3d_sources})
 target_link_libraries(int_cedt3d vil3d )
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )

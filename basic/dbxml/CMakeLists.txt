@@ -17,6 +17,6 @@ add_library(dbxml  ${dbxml_sources})
 target_link_libraries(dbxml bxml)
 
 if( BUILD_TESTING )
-#  subdirs(tests)
+#  add_subdirectory(tests)
 endif( BUILD_TESTING )
 

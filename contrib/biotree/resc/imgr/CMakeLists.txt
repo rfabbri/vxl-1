@@ -33,11 +33,11 @@ target_link_libraries(imgr xmvg xscan vpgl_algo vpgl dbil dbgl_algo vil vgl_algo
 
 #viewing tool for imgr 
 if (VXL_VGUI_FOUND)
-   subdirs(imgrv)
+   add_subdirectory(imgrv)
 endif (VXL_VGUI_FOUND)
 
-subdirs(file_formats)
+add_subdirectory(file_formats)
 
-subdirs( examples )
+add_subdirectory( examples )
 
-subdirs(tests)
+add_subdirectory(tests)

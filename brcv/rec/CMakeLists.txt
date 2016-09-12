@@ -4,33 +4,33 @@
 include_directories( ${lems_SOURCE_DIR}/brcv/rec )
 
 # Brown 3D Mesh Recognition Library
-subdirs( dbmsh3dr )
+add_subdirectory( dbmsh3dr )
 
 # Brown 3D Shock Recognition Library
-subdirs( dbsk3dr )
+add_subdirectory( dbsk3dr )
  
 # Brown Graph Assignment Solvers
-subdirs( dbasn )
+add_subdirectory( dbasn )
 
 project(rec)
 
 # Brown Elastic Curve Matching Library
-subdirs( dbcvr )
+add_subdirectory( dbcvr )
 
 # Brown Keypoint Recognition Library
-subdirs( dbkpr )
+add_subdirectory( dbkpr )
 
 # Brown Mutual Information Recognition Library
-subdirs( dbru )
+add_subdirectory( dbru )
 
 # Brown 2D Shock Recognition Library
-subdirs( dbskr )
+add_subdirectory( dbskr )
 
 # Brown Edge-Based Recognition Library
-subdirs( dber )
+add_subdirectory( dber )
 
 # Brown ORL - Object Recognition Library - web database to store datasets and cluster management via MPI
-subdirs( dborl )
+add_subdirectory( dborl )
 
 # Brown Curve-based Spatial Indexing Library
-subdirs( dbcsi )
+add_subdirectory( dbcsi )

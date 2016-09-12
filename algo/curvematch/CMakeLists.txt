@@ -29,7 +29,7 @@ add_library(curvematch  ${curvematch_sources})
 target_link_libraries(curvematch vbl vsol bsol)
 
 if( BUILD_EXAMPLES )
-  subdirs( examples )
+  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )
 
 

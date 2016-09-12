@@ -1,8 +1,8 @@
 # /basic/dbil/CMakeLists.txt
 # Development Brown Image Library
 
-subdirs( pro )
+add_subdirectory( pro )
 
-subdirs( vis )
+add_subdirectory( vis )
 
-subdirs( algo )
+add_subdirectory( algo )

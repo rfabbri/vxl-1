@@ -66,16 +66,16 @@ add_library(dbcvr  ${dbcvr_sources})
 target_link_libraries(dbcvr bsol dbsol dbdp dbnl_algo vdgl)
 
 # Processing Library
-subdirs(pro)
+add_subdirectory(pro)
 
 # Visualization Library
-subdirs(vis)
+add_subdirectory(vis)
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)
 
 # Executables
-# subdirs(bin)
+# add_subdirectory(bin)
 
-subdirs(examples)
+add_subdirectory(examples)

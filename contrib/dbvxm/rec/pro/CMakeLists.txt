@@ -26,7 +26,7 @@ add_library(dbvxm_rec_pro ${dbvxm_rec_pro_sources})
 target_link_libraries(dbvxm_rec_pro dbvxm_rec dbvxm bvxm_io bprb bil_algo sdet vpgl vpgl_io vpgl_algo vpgl_file_formats vpgl_pro vsol vil vil_io vil_pro vnl vnl_io bgeo vgl vgl_algo brip brdb)
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
 

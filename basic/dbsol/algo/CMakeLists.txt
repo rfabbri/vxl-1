@@ -18,9 +18,9 @@ add_library( dbsol_algo ${dbsol_algo_sources} )
 target_link_libraries( dbsol_algo dbsol dbnl_algo bil_algo)
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
 if( BUILD_EXAMPLES )
-  subdirs( examples )
+  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )

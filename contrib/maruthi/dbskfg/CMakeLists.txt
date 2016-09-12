@@ -66,17 +66,17 @@ add_library(dbskfg ${dbskfg_sources})
 target_link_libraries( dbskfg dbgrl vbl dbxml )
 
 #process algo
-subdirs(algo)
+add_subdirectory(algo)
 
 #process dir
-subdirs(pro)
+add_subdirectory(pro)
 
 #vis dir
-subdirs(vis)
+add_subdirectory(vis)
 
 
 #vox
-subdirs( vox_compute_composite_fragments )
-subdirs( vox_match_composite_fragments )
-subdirs( vox_detect_composite_fragments )
+add_subdirectory( vox_compute_composite_fragments )
+add_subdirectory( vox_match_composite_fragments )
+add_subdirectory( vox_detect_composite_fragments )
 

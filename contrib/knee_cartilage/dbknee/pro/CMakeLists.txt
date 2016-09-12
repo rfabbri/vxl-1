@@ -40,6 +40,6 @@ target_link_libraries( dbknee_pro vidpro1 dbknee dbmsh3d_algo dbmsh3d_pro dbdet 
 
 
 if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 endif(BUILD_TESTING)
 

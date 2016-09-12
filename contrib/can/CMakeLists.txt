@@ -2,7 +2,7 @@
 
 include_directories( ${lems_SOURCE_DIR} )
 
-subdirs( gui )
+add_subdirectory( gui )
 
-subdirs( 3d_curve_matching )
+add_subdirectory( 3d_curve_matching )
 

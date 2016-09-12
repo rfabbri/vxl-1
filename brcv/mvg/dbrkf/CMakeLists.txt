@@ -18,5 +18,5 @@ add_library(dbrkf  ${dbrkf_sources})
 target_link_libraries(dbrkf vbl vdgl vtol vsol vil vnl  btol mvl mbl brct bdgl vsl)
 
 if(BUILD_TESTING)
- subdirs(tests)
+ add_subdirectory(tests)
 endif(BUILD_TESTING)

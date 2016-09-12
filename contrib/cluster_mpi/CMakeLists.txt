@@ -21,6 +21,6 @@ set (cluster_src
 add_library(cluster_mpi ${cluster_src})
 target_link_libraries(cluster_mpi vcl vgl vsl )
 if(BUILD_EXAMPLES)
-  subdirs(examples)
+  add_subdirectory(examples)
 endif(BUILD_EXAMPLES)
 

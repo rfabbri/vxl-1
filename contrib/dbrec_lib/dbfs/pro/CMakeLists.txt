@@ -24,6 +24,6 @@ add_library(dbfs_pro ${dbfs_pro_sources})
 target_link_libraries(dbfs_pro dbfs )
 
 #if( BUILD_TESTING )
-#  subdirs(tests)
+#  add_subdirectory(tests)
 #endif( BUILD_TESTING )
 

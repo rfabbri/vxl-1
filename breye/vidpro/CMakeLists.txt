@@ -83,7 +83,7 @@ add_library(vidpro ${vidpro_sources})
 target_link_libraries(vidpro bpro sdet vgel vil_io vbl_io mvl vimt vidl brdb)
 
 # vgui add on library
-#subdirs( gui )
+#add_subdirectory( gui )
 
 # Add one of these libraries if you have linker errors
 #  vsol vdgl vtol vil vil_algo vnl vnl_io vnl_algo vbl vidl1 vul

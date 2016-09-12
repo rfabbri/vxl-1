@@ -10,7 +10,7 @@ include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg/bvxm)
 include_directories( ${lems_SOURCE_DIR}/contrib/dbvxm )
 include_directories( ${lems_SOURCE_DIR}/basic )
 
-subdirs( pro )
+add_subdirectory( pro )
 
 set(dbvxm_rec_sources
     dbvxm_bayesian_propagation.h  dbvxm_bayesian_propagation.cxx
@@ -37,7 +37,7 @@ add_library(dbvxm_rec ${dbvxm_rec_sources})
 target_link_libraries(dbvxm_rec bsta_algo dbgrl bsta bvgl vil brip)
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
 

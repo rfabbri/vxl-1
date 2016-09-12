@@ -12,5 +12,5 @@ add_library(xmvg_io ${xmvg_io_sources})
 target_link_libraries(xmvg_io xmvg vgl vsl vnl_io vbl vbl_io)
 
 #if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 #endif(BUILD_TESTING)

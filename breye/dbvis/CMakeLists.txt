@@ -4,7 +4,7 @@
 include_directories( ${VXL_VGUI_INCLUDE_DIR} )
 
 if( BUILD_EXAMPLES )
-  subdirs( examples )
+  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )
 
 

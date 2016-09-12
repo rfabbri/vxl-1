@@ -21,19 +21,19 @@ add_library(dbvrl  ${dbvrl_sources})
 target_link_libraries(dbvrl vnl vil vimt vbl vsl)
 
 if( BUILD_EXAMPLES )
-#  subdirs( examples )
+#  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )
 
 # Processing Library
-subdirs(pro)
+add_subdirectory(pro)
 
 # Visualization Library
-subdirs(vis)
+add_subdirectory(vis)
 
 # Executable library
-subdirs(exe)
+add_subdirectory(exe)
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)
 

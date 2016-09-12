@@ -62,8 +62,8 @@ target_link_libraries(psm_algo psm vnl vgl vbl bsta hsds vpgl vil vil_algo boct 
 #endif(PSM_USE_OPENGL2_1)
 
 
-subdirs(tests)
-subdirs(pro)
+add_subdirectory(tests)
+add_subdirectory(pro)
 
 
 

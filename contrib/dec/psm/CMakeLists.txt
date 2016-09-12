@@ -55,10 +55,10 @@ add_library(psm ${psm_sources})
 
 target_link_libraries(psm vnl vgl vil vil_algo vbl bsta bsta_algo vul hsds bgeo)
 
-subdirs(tests)
-subdirs(algo)
-subdirs(io)
-subdirs(pro)
+add_subdirectory(tests)
+add_subdirectory(algo)
+add_subdirectory(io)
+add_subdirectory(pro)
 
 
 

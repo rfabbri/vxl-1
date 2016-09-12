@@ -9,7 +9,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_STARTER_KIT "Build the contrib starter kit" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_STARTER_KIT)
-    subdirs( starter_kit )
+    add_subdirectory( starter_kit )
 endif(BUILD_CONTRIB_STARTER_KIT)
 
 
@@ -24,7 +24,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_dbrec_lib "Build contrib/dbrec_lib" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_dbrec_lib)
-    subdirs( dbrec_lib )
+    add_subdirectory( dbrec_lib )
 endif(BUILD_CONTRIB_dbrec_lib)
 
 # Contrib Project: dbvxm
@@ -34,7 +34,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_dbvxm "Build contrib/dbvxm" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_dbvxm)
-    subdirs( dbvxm )
+    add_subdirectory( dbvxm )
 endif(BUILD_CONTRIB_dbvxm)
 
 # Contrib Project: dbvxm_batch
@@ -44,7 +44,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_dbvxm_batch "Build contrib/dbvxm_batch" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_dbvxm_batch)
-    subdirs( dbvxm_batch)
+    add_subdirectory( dbvxm_batch)
 endif(BUILD_CONTRIB_dbvxm_batch)
 
 # Contrib Project: bvam
@@ -54,7 +54,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_bvam "Build contrib/bvam" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_bvam)
-    subdirs( bvam )
+    add_subdirectory( bvam )
 endif(BUILD_CONTRIB_bvam)
 
 # Contrib Project: bvam_batch
@@ -64,7 +64,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_bvam_batch "Build contrib/bvam_batch" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_bvam_batch)
-    subdirs( bvam_batch )
+    add_subdirectory( bvam_batch )
 endif(BUILD_CONTRIB_bvam_batch)
 
 # Contrib Project: db3dapp
@@ -74,7 +74,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_db3dapp "Build contrib/db3dapp" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_db3dapp)
-    subdirs( db3dapp )
+    add_subdirectory( db3dapp )
 endif(BUILD_CONTRIB_db3dapp)
 
 # Contrib Project: Gregistration
@@ -84,7 +84,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_Gregistration "Build contrib/Gregistration" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_Gregistration)
-    subdirs( Gregistration )
+    add_subdirectory( Gregistration )
 endif(BUILD_CONTRIB_Gregistration)
 
 
@@ -95,7 +95,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_dbmsh3dapp "Build contrib/dbmsh3dapp" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_dbmsh3dapp)
-    subdirs( dbmsh3dapp )
+    add_subdirectory( dbmsh3dapp )
 endif(BUILD_CONTRIB_dbmsh3dapp)
 
 
@@ -106,7 +106,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_dbsk3dapp "Build contrib/dbsk3dapp" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_dbsk3dapp)
-    subdirs( dbsk3dapp )
+    add_subdirectory( dbsk3dapp )
 endif(BUILD_CONTRIB_dbsk3dapp)
 
 
@@ -117,7 +117,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_meshvis "Build contrib/meshvis" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_meshvis)
-    subdirs( meshvis )
+    add_subdirectory( meshvis )
 endif(BUILD_CONTRIB_meshvis)
 
 # Contrib Project: han
@@ -127,7 +127,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_han "Build contrib/han" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_han)
-    subdirs( han )
+    add_subdirectory( han )
 endif(BUILD_CONTRIB_han)
 
 # Contrib Project: sadali
@@ -137,7 +137,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_sadali "Build contrib/sadali" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_sadali)
-    subdirs( sadali )
+    add_subdirectory( sadali )
 endif(BUILD_CONTRIB_sadali)
 
 # Contrib Project: int_cedt3d
@@ -147,7 +147,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_int_cedt3d "Build contrib/int_cedt3d" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_int_cedt3d)
-    subdirs( int_cedt3d )
+    add_subdirectory( int_cedt3d )
 endif(BUILD_CONTRIB_int_cedt3d)
 
 # Contrib Project: ozge
@@ -157,7 +157,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_ozge "Build contrib/ozge" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_ozge)
-    subdirs( ozge )
+    add_subdirectory( ozge )
 endif(BUILD_CONTRIB_ozge)
 
 # Contrib Project: matching_gui
@@ -167,7 +167,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_matching_gui "Build contrib/matching_gui" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_matching_gui)
-    subdirs( matching_gui )
+    add_subdirectory( matching_gui )
 endif(BUILD_CONTRIB_matching_gui)
 
 # Contrib Project: fatih
@@ -177,7 +177,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_fatih "Build contrib/fatih" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_fatih)
-    subdirs( fatih )
+    add_subdirectory( fatih )
 endif(BUILD_CONTRIB_fatih)
 
 
@@ -188,7 +188,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_world_model "Build contrib/world_model" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_world_model)
-    subdirs( world_model )
+    add_subdirectory( world_model )
 endif(BUILD_CONTRIB_world_model)
 
 # Contrib Project: ozge
@@ -198,7 +198,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_cluster_mpi "Build contrib/cluster_mpi" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_cluster_mpi)
-    subdirs( cluster_mpi )
+    add_subdirectory( cluster_mpi )
 endif(BUILD_CONTRIB_cluster_mpi)
 
 
@@ -209,7 +209,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_curve2d "Build contrib/curve2d" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_curve2d)
-    subdirs( curve2d )
+    add_subdirectory( curve2d )
 endif(BUILD_CONTRIB_curve2d)
 
 # Contrib Project: ntrinh
@@ -219,7 +219,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_ntrinh "Build contrib/ntrinh" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_ntrinh)
-    subdirs( ntrinh )
+    add_subdirectory( ntrinh )
 endif(BUILD_CONTRIB_ntrinh)
 
 # Contrib Project: biotree
@@ -229,7 +229,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_biotree "Build contrib/biotree" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_biotree)
-    subdirs( biotree )
+    add_subdirectory( biotree )
 endif(BUILD_CONTRIB_biotree)
 
 # Contrib Project: shock2d
@@ -239,7 +239,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_shock2d "Build contrib/shock2d" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_shock2d)
-    subdirs( shock2d )
+    add_subdirectory( shock2d )
 endif(BUILD_CONTRIB_shock2d)
 
 # Contrib Project: edge_det
@@ -249,7 +249,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_edge_det "Build contrib/edge_det" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_edge_det)
-    subdirs( edge_det )
+    add_subdirectory( edge_det )
 endif(BUILD_CONTRIB_edge_det)
 
 # Contrib Project: rfabbri
@@ -259,7 +259,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_rfabbri "Build contrib/rfabbri" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_rfabbri)
-    subdirs( rfabbri )
+    add_subdirectory( rfabbri )
 endif(BUILD_CONTRIB_rfabbri)
 
 #contrib project: dbctrkapp
@@ -269,7 +269,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_dbctrkapp "Build contrib/dbctrkapp" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_dbctrkapp)
-    subdirs( dbctrkapp)
+    add_subdirectory( dbctrkapp)
 endif(BUILD_CONTRIB_dbctrkapp)
 
 # Contrib Project: can
@@ -279,7 +279,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_can "Build contrib/can" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_can)
-    subdirs( can )
+    add_subdirectory( can )
 endif(BUILD_CONTRIB_can)
 
 #contrib project: dbpz_hindsite_2
@@ -289,7 +289,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_dbpz_hindsite_2 "Build contrib/dbpz_hindsite_2" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_dbpz_hindsite_2)
-    subdirs( dbpz_hindsite_2 )
+    add_subdirectory( dbpz_hindsite_2 )
 endif(BUILD_CONTRIB_dbpz_hindsite_2)
 
 #contrib project: dbpz_hindsite
@@ -299,7 +299,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_dbpz_hindsite "Build contrib/dbpz_hindsite_2" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_dbpz_hindsite)
-    subdirs( dbpz_hindsite )
+    add_subdirectory( dbpz_hindsite )
 endif(BUILD_CONTRIB_dbpz_hindsite)
 
 # Contrib Project: mleotta
@@ -309,7 +309,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_mleotta "Build contrib/mleotta" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_mleotta)
-    subdirs( mleotta )
+    add_subdirectory( mleotta )
 endif(BUILD_CONTRIB_mleotta)
 
 
@@ -320,7 +320,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_visualizer "Build contrib/visualizer" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_visualizer)
-    subdirs( visualizer )
+    add_subdirectory( visualizer )
 endif(BUILD_CONTRIB_visualizer)
 
 ## Contrib Project: shannon
@@ -330,7 +330,7 @@ endif(BUILD_CONTRIB_visualizer)
 #  option(BUILD_CONTRIB_shannon "Build contrib/shannon" NO)
 #endif( DART_ROOT )
 #if(BUILD_CONTRIB_shannon)
-#    subdirs( shannon )
+#    add_subdirectory( shannon )
 #endif(BUILD_CONTRIB_shannon)
 
 
@@ -341,7 +341,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_medial_livewire "Build contrib/medial_livewire" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_medial_livewire)
-    subdirs( medial_livewire )
+    add_subdirectory( medial_livewire )
 endif(BUILD_CONTRIB_medial_livewire)
 
 
@@ -353,7 +353,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_vehicleseg "Build contrib/vehicleseg" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_vehicleseg)
-    subdirs( vehicleseg)
+    add_subdirectory( vehicleseg)
 endif(BUILD_CONTRIB_vehicleseg)
 
 
@@ -365,7 +365,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_itrack "Build contrib/itrack" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_itrack)
-    subdirs( itrack )
+    add_subdirectory( itrack )
 endif(BUILD_CONTRIB_itrack)
 
 
@@ -376,7 +376,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_geodesic_mesh "Build contrib/geodesic_mesh" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_geodesic_mesh)
-    subdirs( geodesic_mesh )
+    add_subdirectory( geodesic_mesh )
 endif(BUILD_CONTRIB_geodesic_mesh)
 
 
@@ -387,7 +387,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_polygon_triangulation "Build contrib/polygon_triangulation" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_polygon_triangulation)
-    subdirs( polygon_triangulation )
+    add_subdirectory( polygon_triangulation )
 endif(BUILD_CONTRIB_polygon_triangulation)
 
 # Contrib Project: levelset_seg
@@ -397,7 +397,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_levelset_seg "Build contrib/levelset_seg" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_levelset_seg)
-    subdirs( levelset_seg )
+    add_subdirectory( levelset_seg )
 endif(BUILD_CONTRIB_levelset_seg)
 
 # Contrib Project: dbacm3d_example
@@ -407,7 +407,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_dbacm3d_example "Build contrib/dbacm3d_example" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_dbacm3d_example)
-    subdirs( dbacm3d_example )
+    add_subdirectory( dbacm3d_example )
 endif(BUILD_CONTRIB_dbacm3d_example)
 
 # Contrib Project: tpollard
@@ -417,7 +417,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_tpollard "Build contrib/tpollard" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_tpollard)
-    subdirs( tpollard )
+    add_subdirectory( tpollard )
 endif(BUILD_CONTRIB_tpollard)
 
 # Contrib Project: manifold_extraction
@@ -428,7 +428,7 @@ else( DART_ROOT )
 endif( DART_ROOT )
 
 if(BUILD_CONTRIB_manifold_extraction)
-    subdirs( manifold_extraction )
+    add_subdirectory( manifold_extraction )
 endif(BUILD_CONTRIB_manifold_extraction)
 
 # Contrib Project: knee_cartilage
@@ -445,11 +445,11 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_isabel "Build contrib/isabel" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_isabel)
-    subdirs( isabel )
+    add_subdirectory( isabel )
 endif(BUILD_CONTRIB_isabel)
 
 if(BUILD_CONTRIB_knee_cartilage)
-    subdirs( knee_cartilage )
+    add_subdirectory( knee_cartilage )
 endif(BUILD_CONTRIB_knee_cartilage)
 
 # Contrib Project: labelcontour
@@ -459,7 +459,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_labelcontour "Build contrib/labelcontour" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_labelcontour)
-    subdirs( labelcontour )
+    add_subdirectory( labelcontour )
 endif(BUILD_CONTRIB_labelcontour)
 
 # Contrib Project: amir
@@ -469,10 +469,10 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_amir "Build contrib/amir" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_amir)
-    subdirs( amir )
+    add_subdirectory( amir )
 endif(BUILD_CONTRIB_amir)
 
-#subdirs( top_down_segmentation )
+#add_subdirectory( top_down_segmentation )
 
 
 # Contrib Project: yong
@@ -482,7 +482,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_yong "Build contrib/yong" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_yong)
-    subdirs( yong )
+    add_subdirectory( yong )
 endif(BUILD_CONTRIB_yong)
 
 # Contrib Project: spatemp
@@ -492,7 +492,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_spatemp "Build contrib/spatemp" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_spatemp)
-    subdirs( spatemp)
+    add_subdirectory( spatemp)
 endif(BUILD_CONTRIB_spatemp)
 
 
@@ -504,7 +504,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_dec "Build contrib/dec" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_dec)
-    subdirs( dec )
+    add_subdirectory( dec )
 endif(BUILD_CONTRIB_dec)
 
 
@@ -515,7 +515,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_edubrito "Build contrib/edubrito" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_edubrito)
-    subdirs( edubrito )
+    add_subdirectory( edubrito )
 endif(BUILD_CONTRIB_edubrito)
 
 # Contrib Project: maruthi
@@ -525,7 +525,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_maruthi "Build contrib/maruthi" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_maruthi)
-    subdirs( maruthi )
+    add_subdirectory( maruthi )
 endif(BUILD_CONTRIB_maruthi)
 
 # Contrib Project: bwm_lidar
@@ -535,7 +535,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_bwm_lidar "Build contrib/bwm_lidar" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_bwm_lidar)
-    subdirs( bwm_lidar )
+    add_subdirectory( bwm_lidar )
 endif(BUILD_CONTRIB_bwm_lidar)
 
 # Contrib Project: anil
@@ -545,7 +545,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_anil "Build contrib/anil" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_anil)
-    subdirs( anil )
+    add_subdirectory( anil )
 endif(BUILD_CONTRIB_anil)
 
 # Contrib Project: bm
@@ -555,7 +555,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_bm "Build contrib/bm" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_bm)
-  subdirs( bm )
+  add_subdirectory( bm )
 endif(BUILD_CONTRIB_bm)
 
 # Contrib Project: gould
@@ -565,7 +565,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_gould "Build contrib/gould" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_gould)
-  subdirs( gould )
+  add_subdirectory( gould )
 endif(BUILD_CONTRIB_gould)
 
 # Contrib Project: firat
@@ -575,7 +575,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_firat "Build contrib/firat" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_firat)
-    subdirs( firat )
+    add_subdirectory( firat )
 endif(BUILD_CONTRIB_firat)
 
 # Contrib Project: octi
@@ -585,7 +585,7 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_octi "Build contrib/octi" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_octi)
-    subdirs( octi )
+    add_subdirectory( octi )
 endif(BUILD_CONTRIB_octi)
 
 # Contrib Project: Anant
@@ -595,7 +595,7 @@ endif(BUILD_CONTRIB_octi)
 #   option(BUILD_CONTRIB_Anant "Build contrib/Anant" NO)
 # endif( DART_ROOT )
 # if(BUILD_CONTRIB_Anant)
-#     subdirs( Anant )
+#     add_subdirectory( Anant )
 # endif(BUILD_CONTRIB_Anant)
 
 # Contrib Project: mauro
@@ -605,6 +605,6 @@ else( DART_ROOT )
   option(BUILD_CONTRIB_mauro "Build contrib/mauro" NO)
 endif( DART_ROOT )
 if(BUILD_CONTRIB_mauro)
-    subdirs( mauro )
+    add_subdirectory( mauro )
 endif(BUILD_CONTRIB_mauro)
 

@@ -25,5 +25,5 @@ add_library(splr ${splr_src})
 target_link_libraries(splr biob xmvg xmvg_io vgl_io vnl_xio vsl)
 
 #if(BUILD_TESTING)
-#  subdirs( tests )
+#  add_subdirectory( tests )
 #endif(BUILD_TESTING)

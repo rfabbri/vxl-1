@@ -14,5 +14,5 @@ add_library(bscs ${bscs_src})
 target_link_libraries(bscs vcsl)
 
 #if(BUILD_TESTING)
-#  subdirs( tests )
+#  add_subdirectory( tests )
 #endif(BUILD_TESTING)

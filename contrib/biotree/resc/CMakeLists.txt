@@ -1,7 +1,7 @@
 # /contrib/biotree/resc/CMakeLists.txt
 
 # splates resource
-subdirs( splr )
+add_subdirectory( splr )
 
 #image resource
-subdirs( imgr )
+add_subdirectory( imgr )

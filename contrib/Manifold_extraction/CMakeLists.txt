@@ -25,13 +25,13 @@ Lie_contour_utilities.cxx              Lie_contour_utilities.h
 Lie_spoke_utilities.cxx                Lie_spoke_utilities.h
 )           
 
-subdirs(cmd)
+add_subdirectory(cmd)
 
-subdirs(Templates)
+add_subdirectory(Templates)
 
-subdirs(vis)
+add_subdirectory(vis)
 
-subdirs(pro)
+add_subdirectory(pro)
 
 aux_source_directory(Templates manifold_extraction_sources)
 

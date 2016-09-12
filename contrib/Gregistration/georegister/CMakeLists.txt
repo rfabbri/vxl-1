@@ -51,4 +51,4 @@ add_library(georegister  ${georegister_sources})
 target_link_libraries(georegister vbl dbsta_algo dbnl_algo vul dt vil_io dbgl_algo vgui)
 
 #tests
-subdirs(tests)
+add_subdirectory(tests)

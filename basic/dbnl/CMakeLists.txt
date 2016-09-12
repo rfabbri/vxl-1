@@ -19,12 +19,12 @@ add_library(dbnl ${dbnl_sources})
 target_link_libraries( dbnl vnl )
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
-subdirs( algo )
+add_subdirectory( algo )
 
 if( BUILD_EXAMPLES )
-  subdirs( examples )
+  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )
 

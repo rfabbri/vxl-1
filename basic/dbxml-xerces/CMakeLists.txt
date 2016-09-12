@@ -50,7 +50,7 @@ aux_source_directory(Templates dbxml_sources)
 
 
 if( BUILD_EXAMPLES )
-  subdirs( examples )
+  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )
 
 add_library(dbxml  ${dbxml_sources})

@@ -11,13 +11,13 @@ add_library(vol3d_algo ${vol3d_algo_src})
 
 target_link_libraries(vol3d_algo vcl vbl vol3d bsta)
 
-subdirs(io)
+add_subdirectory(io)
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)
 
 if(BUILD_EXAMPLES)
-  subdirs(examples)
+  add_subdirectory(examples)
 endif(BUILD_EXAMPLES)
 

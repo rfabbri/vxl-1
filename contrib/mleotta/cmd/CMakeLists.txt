@@ -54,4 +54,4 @@ target_link_libraries(trace2clusters modrec_io vul dbcll)
 add_executable(cluster2codebook cluster2codebook.cxx)
 target_link_libraries(cluster2codebook modrec_io vul dbcll)
 
-subdirs(mesh)
+add_subdirectory(mesh)

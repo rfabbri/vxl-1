@@ -55,10 +55,10 @@ add_library( dbgl_algo ${dbgl_algo_sources} )
 target_link_libraries( dbgl_algo vnl_algo vsl vgl_algo dbnl dbgl vul ray_tri)
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
 if( BUILD_EXAMPLES )
-  subdirs( examples )
+  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )
 

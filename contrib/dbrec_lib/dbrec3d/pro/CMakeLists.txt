@@ -22,6 +22,6 @@ add_library(dbrec3d_pro ${dbrec3d_pro_sources})
 target_link_libraries(dbrec3d_pro dbrec3d boxm boct bprb brdb)
 
 #if( BUILD_TESTING )
-#  subdirs(tests)
+#  add_subdirectory(tests)
 #endif( BUILD_TESTING )
 

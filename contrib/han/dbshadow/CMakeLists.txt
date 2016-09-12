@@ -1,3 +1,3 @@
 # Processing Library
-subdirs(pro)
+add_subdirectory(pro)
 

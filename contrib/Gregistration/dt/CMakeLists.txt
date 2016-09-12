@@ -29,4 +29,4 @@ target_link_libraries(dt vul vgl vnl_algo)
 
 
 #tests
-subdirs(tests)
+add_subdirectory(tests)

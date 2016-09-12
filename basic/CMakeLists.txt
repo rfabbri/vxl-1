@@ -8,60 +8,60 @@ include_directories( ${lems_SOURCE_DIR}/db3p )
 include_directories( ${basic_BINARY_DIR} )
 
 # The Development Brown Process Library
-subdirs( dbpro )
+add_subdirectory( dbpro )
 
 # The Development Brown Numerical Library
-subdirs( dbnl )
+add_subdirectory( dbnl )
 
 # The Development Brown Geometry Library
-subdirs( dbgl ) 
+add_subdirectory( dbgl ) 
 
 # The Development Brown Graph/Hypergraph Library
-subdirs( dbgrl ) 
+add_subdirectory( dbgrl ) 
 
 # The Development Brown Spatial Objects Library
-subdirs( dbsol ) 
+add_subdirectory( dbsol ) 
 
 # The Development Brown Spatial Indexing Library
-subdirs( dbspi )
+add_subdirectory( dbspi )
 
 # The Development Brown Image Library
-subdirs( dbil ) 
+add_subdirectory( dbil ) 
 
 # The Development Brown Image3d Library
-subdirs( dbil3d ) 
+add_subdirectory( dbil3d ) 
 
 # The Development Brown Video Library
-subdirs( dbvidl )
+add_subdirectory( dbvidl )
 
 # The Development Brown Video Streaming Library
-subdirs( dbvidl2 ) 
+add_subdirectory( dbvidl2 ) 
 
 # Development Brown GUI (stuff that could move to /brl/bbas/bgui)
-subdirs( dbgui )
+add_subdirectory( dbgui )
 
 # Development XML Parser using Xerces
-#subdirs( dbxml-xerces )
+#add_subdirectory( dbxml-xerces )
 
 # Development XML Parser - augmenting bxml
-subdirs( dbxml )
+add_subdirectory( dbxml )
 
 # Development XML Parser using expat
 # NOTE: moved to vxl/contrib/brl/bbas/bxml
-##subdirs( dbxml2 )
+##add_subdirectory( dbxml2 )
 
 # The Development Brown Statistics Library
-subdirs( dbsta )
+add_subdirectory( dbsta )
 
 # The Development Brown Utility Library
-subdirs( dbul )
+add_subdirectory( dbul )
 
 # The Development Brown Dynamic Programming Library
-subdirs( dbdp ) 
+add_subdirectory( dbdp ) 
 
 # The Development Brown Basic (templates) Library
-subdirs( dbbl ) 
+add_subdirectory( dbbl ) 
 
 # The Development Brown Testing Library
-subdirs( dbtest ) 
+add_subdirectory( dbtest ) 
 

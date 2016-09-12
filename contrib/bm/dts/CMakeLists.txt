@@ -27,6 +27,6 @@ add_library( dts ${dts_sources} )
 
 target_link_libraries( dts vbl vgl vnl vnl_algo vsl )
 
-subdirs(algo)
-subdirs(pro)
-subdirs(io)
+add_subdirectory(algo)
+add_subdirectory(pro)
+add_subdirectory(io)

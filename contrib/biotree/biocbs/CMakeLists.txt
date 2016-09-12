@@ -12,9 +12,9 @@ add_library(biocbs ${biocbs_sources})
 target_link_libraries( biocbs vcl xscan )
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)
 
 if(BUILD_EXAMPLES)
-    subdirs(examples)
+    add_subdirectory(examples)
 endif(BUILD_EXAMPLES)

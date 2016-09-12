@@ -26,13 +26,13 @@ add_library( dbnl_algo ${dbnl_algo_sources} )
 target_link_libraries( dbnl_algo dbnl vnl_algo vil brent)
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
 if( BUILD_EXAMPLES )
-  subdirs( examples )
+  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )
 
-subdirs(pro)
+add_subdirectory(pro)
 
 

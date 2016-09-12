@@ -119,6 +119,6 @@ add_library(dbdet_pro ${dbdet_pro_sources})
 target_link_libraries(dbdet_pro dbdet_algo dbdet_xio vidpro1 bvis1 vgui bil)
 
 #if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 #endif(BUILD_TESTING)
 

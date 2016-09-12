@@ -19,7 +19,7 @@ set(movie_sources
 #aux_source_directory(Templates vidpro_sources)
 
 if( BUILD_EXAMPLES )
-  subdirs( examples )
+  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )
 
 
@@ -30,7 +30,7 @@ add_library(vorl  ${vorl_sources})
 target_link_libraries(vorl vul vidpro vidl1)
 
 # executables have not been ported from old brown eyes
-#subdirs(exec)
+#add_subdirectory(exec)
 
 
 add_executable (vorl_frame_extractor vorl_frame_extractor.cxx)

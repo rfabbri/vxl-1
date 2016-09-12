@@ -16,5 +16,5 @@ target_link_libraries(dbrct vbl vil1 vil vnl vnl_io vsrl vsl)
 
 
 if(BUILD_TESTING)
-subdirs(tests)
+add_subdirectory(tests)
 endif(BUILD_TESTING)

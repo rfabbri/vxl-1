@@ -20,7 +20,7 @@ target_link_libraries(dbinfo_vis bvis1 dbinfo)
 
 
 #if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 #endif(BUILD_TESTING)
 
 

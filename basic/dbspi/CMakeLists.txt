@@ -17,8 +17,8 @@ add_library(dbspi ${dbspi_sources})
 target_link_libraries(dbspi vsol vil)
 
 # Processing Library
-subdirs(pro)
+add_subdirectory(pro)
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)

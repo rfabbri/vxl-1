@@ -4,12 +4,12 @@
 
 project( bm )
 
-subdirs( dsm )
+add_subdirectory( dsm )
 
-subdirs( dsm_batch )
+add_subdirectory( dsm_batch )
 
-subdirs( dsm2 )
+add_subdirectory( dsm2 )
 
-subdirs( dsm2_batch )
+add_subdirectory( dsm2_batch )
 
-subdirs( dts )
+add_subdirectory( dts )

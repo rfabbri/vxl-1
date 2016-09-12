@@ -16,6 +16,6 @@ target_link_libraries(dbetl_pro dbetl dbecl_pro vidpro1)
 
 
 if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 endif(BUILD_TESTING)
 

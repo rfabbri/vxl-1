@@ -32,13 +32,13 @@ add_library(bioproj ${bioproj_src})
 target_link_libraries(bioproj vcl  vgl xscan imgr_file_format vil3d bscs vcsl) 
 
 if(BUILD_EXAMPLES)
-    subdirs(examples)
+    add_subdirectory(examples)
 endif(BUILD_EXAMPLES)
   
 #if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 #endif(BUILD_TESTING)
 
 if(SIMVOLEON_FOUND)
-  subdirs(vis)
+  add_subdirectory(vis)
 endif(SIMVOLEON_FOUND)

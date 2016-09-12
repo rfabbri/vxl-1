@@ -82,21 +82,21 @@ target_link_libraries( dbdet vil1 vil bil_algo dbnl_algo osl vepl vepl vdgl vnl_
 
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)
 
-subdirs(algo)
+add_subdirectory(algo)
 
-subdirs(pro)
+add_subdirectory(pro)
 
-subdirs( xio )
+add_subdirectory( xio )
 
 if (VXL_VGUI_FOUND)
-  subdirs(vis)
+  add_subdirectory(vis)
 endif (VXL_VGUI_FOUND)
 
 if( BUILD_EXAMPLES )
-  subdirs( examples )
+  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )
 
 

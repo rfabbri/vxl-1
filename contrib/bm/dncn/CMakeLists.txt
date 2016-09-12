@@ -29,5 +29,5 @@ add_library( dncn ${dncn_sources} )
 
 target_link_libraries( dncn vul bsta vidl vsl vil_io bapl )
 
-subdirs( tests )
+add_subdirectory( tests )
 

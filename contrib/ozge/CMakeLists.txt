@@ -10,18 +10,18 @@ include_directories( ${lems_SOURCE_DIR}/basic )
 project( ozge )
 
 # dll library for recognition of video objects in each frame
-#subdirs ( rec_exe )
+#add_subdirectory( rec_exe )
 
 # my simple processes
-subdirs( pro )
+add_subdirectory( pro )
 
 # my command line executables
-subdirs( bin )
-subdirs( dbskr_bin )
+add_subdirectory( bin )
+add_subdirectory( dbskr_bin )
 
 # my simple video player, modified vidfpl_vil from vxl/contrib/brl/vvid
-#subdirs( vidl_gui )
-#subdirs( face_gui )
+#add_subdirectory( vidl_gui )
+#add_subdirectory( face_gui )
 
 #include( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
 

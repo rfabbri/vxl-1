@@ -6,4 +6,4 @@ include_directories( ${lems_SOURCE_DIR}/breye1 )
 include_directories( ${lems_SOURCE_DIR}/basic )
 
 # camera calibration
-subdirs( calibration )
+add_subdirectory( calibration )

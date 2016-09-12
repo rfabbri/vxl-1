@@ -2,13 +2,13 @@
 
 project( dbrec_lib )
 
-subdirs( dbrec )
-subdirs( dbrec_batch )
-subdirs( dbrec_mic )
-subdirs( dbrec3d )
-subdirs( dbrec3d_batch )
+add_subdirectory( dbrec )
+add_subdirectory( dbrec_batch )
+add_subdirectory( dbrec_mic )
+add_subdirectory( dbrec3d )
+add_subdirectory( dbrec3d_batch )
 
 # The Development Brown Feature Selection Library
-subdirs( dbfs )
+add_subdirectory( dbfs )
 
 

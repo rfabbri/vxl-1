@@ -44,12 +44,12 @@ add_library(dbgl ${dbgl_sources})
 target_link_libraries( dbgl vgl vcl vnl vnl_algo)
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
-subdirs( algo )
+add_subdirectory( algo )
 
 #if( BUILD_EXAMPLES )
-#  subdirs( examples )
+#  add_subdirectory( examples )
 #endif( BUILD_EXAMPLES )
 

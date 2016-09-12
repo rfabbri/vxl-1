@@ -69,11 +69,11 @@ add_library( dbgdt3d  ${dbgdt3d_sources})
 
 target_link_libraries( dbgdt3d dbmsh3d )
 
-subdirs(pro)
+add_subdirectory(pro)
 
 # Visualization Library
-subdirs(vis)
+add_subdirectory(vis)
 
-subdirs(cmdproc)
+add_subdirectory(cmdproc)
 
 

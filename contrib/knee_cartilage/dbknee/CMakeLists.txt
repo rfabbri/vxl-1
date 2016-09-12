@@ -24,15 +24,15 @@ add_library(dbknee  ${dbknee_sources})
 target_link_libraries(dbknee vbl vnl_algo vsl vcsl dbgl_algo dbil_algo dbnl dbmsh3d_algo)
 
 if( BUILD_EXAMPLES )
-#  subdirs( examples )
+#  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )
 
 # Processing Library
-subdirs(pro)
+add_subdirectory(pro)
 
 # Visualization Library
-subdirs(vis)
+add_subdirectory(vis)
 
 if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 endif(BUILD_TESTING)

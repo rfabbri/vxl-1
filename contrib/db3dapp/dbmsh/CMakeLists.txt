@@ -13,6 +13,6 @@ set(dbmsh_sources
 
 add_library(dbmsh  ${dbmsh_sources})
 
-subdirs( vis )
+add_subdirectory( vis )
 
 

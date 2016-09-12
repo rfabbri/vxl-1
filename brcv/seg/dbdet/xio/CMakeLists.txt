@@ -13,4 +13,4 @@ set(dbdet_xio_sources
 add_library(dbdet_xio ${dbdet_xio_sources})
 target_link_libraries(dbdet_xio expatpp vsl dbdet) 
 
-subdirs( tests )
+add_subdirectory( tests )

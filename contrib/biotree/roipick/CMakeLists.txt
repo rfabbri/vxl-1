@@ -10,4 +10,4 @@ add_library(skyscan_roi_pick ${skyscan_roi_pick_sources})
 target_link_libraries(skyscan_roi_pick imgr_file_format bgui vgui vil vbl vsol)
 
 # The executable tool
-subdirs(bin)
+add_subdirectory(bin)

@@ -145,15 +145,15 @@ add_library(dbsk2d ${dbsk2d_sources})
 target_link_libraries( dbsk2d dbgrl vgl vcl vnl vbl vtol dbsol dbsol_algo )
 
 # Processing Library
-subdirs(pro)
+add_subdirectory(pro)
 
 # Visualization Library
-subdirs(vis)
+add_subdirectory(vis)
 
 # Shock algorithm library
-subdirs ( algo )
+add_subdirectory( algo )
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 

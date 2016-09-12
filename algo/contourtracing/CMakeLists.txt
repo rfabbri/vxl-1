@@ -53,7 +53,7 @@ add_library(contourtracing  ${contourtracing_sources})
 target_link_libraries(contourtracing  vgl vcl vnl vbl vsol )
 
 if( BUILD_EXAMPLES )
-  subdirs( examples )
+  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )
 
 

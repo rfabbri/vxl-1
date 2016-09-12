@@ -21,4 +21,4 @@ add_library(imgrv ${imgrv_sources})
 target_link_libraries(imgrv imgr xmvg vpgl_algo vpgl bgui vgui dbil  vil vgl_algo vgl vnl vbl )
 
 # The executable tool
-subdirs(bin)
+add_subdirectory(bin)

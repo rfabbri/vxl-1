@@ -28,10 +28,10 @@ add_library(dboxm_opt ${dboxm_opt_sources})
 target_link_libraries(dboxm_opt dboxm vpl)
 
 #processes
-#subdirs(pro)
+#add_subdirectory(pro)
 
 #tests
-subdirs(tests)
+add_subdirectory(tests)
 
 #open_cl parallel computation
-subdirs(open_cl)
+add_subdirectory(open_cl)

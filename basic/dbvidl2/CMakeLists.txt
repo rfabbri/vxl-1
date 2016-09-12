@@ -4,6 +4,6 @@
 
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 
-subdirs( pro )
+add_subdirectory( pro )
 
 

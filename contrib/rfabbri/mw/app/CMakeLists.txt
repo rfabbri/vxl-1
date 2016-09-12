@@ -90,6 +90,6 @@ target_link_libraries(sgui mw_pro mw_algo mw_vis dbdet_vis dbdet_pro dbkpr_vis d
 target_link_libraries(scmd mw_pro dbdif_pro dbkpr_pro vpgl_algo) 
 target_link_libraries(sexp mw_pro testlib) 
 # Requires a CMakeLists.txt file if SUBDIRS - JLM
-#subdirs(stereo)
+#add_subdirectory(stereo)
 
 endif (VXL_VGUI_FOUND)

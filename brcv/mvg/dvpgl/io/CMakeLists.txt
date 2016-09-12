@@ -17,5 +17,5 @@ add_library(dvpgl_io ${dvpgl_io_sources})
 target_link_libraries(dvpgl_io vpgl_io vsl vbl_io)
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )

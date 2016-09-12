@@ -1,3 +1,3 @@
 
-subdirs (exec)
+add_subdirectory(exec)
 

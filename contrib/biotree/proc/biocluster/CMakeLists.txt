@@ -34,6 +34,6 @@ if (BUILD_CONTRIB_biotree_cluster)
   target_link_libraries(biocluster vcl vgl vsl bioproc imgr imgr_file_format xmvg xmvg_algo xmvg_io biob )
 
   if(BUILD_EXAMPLES)
-    subdirs(examples)
+    add_subdirectory(examples)
   endif(BUILD_EXAMPLES)
 endif (BUILD_CONTRIB_biotree_cluster)

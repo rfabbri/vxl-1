@@ -17,9 +17,9 @@ aux_source_directory(Templates geom_src)
 add_library(geom ${geom_src})
 target_link_libraries(geom vbl vgl vsol biob)
 
-subdirs(examples)
+add_subdirectory(examples)
 
 if(BUILD_TESTING)
-  subdirs( tests )
+  add_subdirectory( tests )
 endif(BUILD_TESTING)
 

@@ -10,8 +10,8 @@ else(UNIX)
 endif(UNIX)
 
 
-subdirs(algo)
-subdirs(gui)
-subdirs(pro)
-subdirs(storage)
-subdirs(sandbox)
+add_subdirectory(algo)
+add_subdirectory(gui)
+add_subdirectory(pro)
+add_subdirectory(storage)
+add_subdirectory(sandbox)

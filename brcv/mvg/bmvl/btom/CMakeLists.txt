@@ -21,5 +21,5 @@ INSTALL_NOBASE_HEADER_FILES(/include/vxl/contrib/btom ${btom_sources})
 target_link_libraries(btom gevd vil1 vnl vbl)
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )

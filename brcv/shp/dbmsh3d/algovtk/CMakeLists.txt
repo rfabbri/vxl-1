@@ -34,10 +34,10 @@ add_library(dbmsh3d_algovtk  ${dbmsh3d_algovtk_sources})
 target_link_libraries(dbmsh3d_algovtk dbmsh3d vil3d ${VTK_LIBRARIES} )
 
 # if( BUILD_EXAMPLES )
-#  subdirs( examples )
+#  add_subdirectory( examples )
 # endif( BUILD_EXAMPLES )
 
-subdirs( pro )
+add_subdirectory( pro )
 
 
 endif(HAS_VTK)

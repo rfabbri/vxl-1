@@ -22,8 +22,8 @@ add_library(biocts  ${biocts_sources})
 
 target_link_libraries( biocts vgl vcl vnl vbl vil)
 
-subdirs(pro)
+add_subdirectory(pro)
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)

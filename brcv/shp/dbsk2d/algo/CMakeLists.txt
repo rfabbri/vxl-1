@@ -118,11 +118,11 @@ add_library( dbsk2d_algo  ${dbsk2d_algo_sources} )
 target_link_libraries( dbsk2d_algo dbsk2d )
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
 if( BUILD_EXAMPLES )
-#  subdirs( examples )
+#  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )
 
 

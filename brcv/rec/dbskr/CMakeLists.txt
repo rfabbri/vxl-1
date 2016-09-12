@@ -65,17 +65,17 @@ target_link_libraries(dbskr dbsk2d_algo vnl dbsol_algo dbcvr dbru dbdet_algo rgr
 #target_link_libraries(dbskr dbsk2d_algo vnl dbsol_algo dbcvr dbru dbdet_algo brct rgrl)
 
 # algorithms library
-subdirs(algo)
+add_subdirectory(algo)
 
 # Processing Library
-subdirs(pro)
+add_subdirectory(pro)
 
 # Visualization Library
-subdirs(vis)
+add_subdirectory(vis)
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)
 
 # Executables
-subdirs(bin)
+add_subdirectory(bin)

@@ -24,6 +24,6 @@ add_library(dborl_pro ${dborl_pro_sources})
 target_link_libraries(dborl_pro dborl_algo brdb bprb )
 
 #if( BUILD_TESTING )
-#  subdirs(tests)
+#  add_subdirectory(tests)
 #endif( BUILD_TESTING )
 

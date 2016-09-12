@@ -5,21 +5,21 @@ include_directories( ${lems_SOURCE_DIR}/brcv/seg )
 include_directories( ${lems_BINARY_DIR}/brcv/seg )
 
 # Brown Detection Library 
-subdirs( dbdet )
+add_subdirectory( dbdet )
 
 # Brown Clustering Library 
-subdirs( dbcll )
+add_subdirectory( dbcll )
 
 # Brown Background Modeling Library 
-subdirs( dbbgm )
+add_subdirectory( dbbgm )
 
 # Brown Active Contour Models Library
-subdirs( dbacm )
+add_subdirectory( dbacm )
 
 # Brown 3D Active Contour Models Library
-subdirs( dbacm3d )
+add_subdirectory( dbacm3d )
 
 # Brown Shock-Based Segmentation Library
-subdirs( dbsks )
+add_subdirectory( dbsks )
 
 

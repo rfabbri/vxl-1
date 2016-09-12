@@ -70,10 +70,10 @@ add_library( dbsksp_algo  ${dbsksp_algo_sources} )
 target_link_libraries( dbsksp_algo dbsksp dbsk2d dbskr)
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
 if( BUILD_EXAMPLES )
-#  subdirs( examples )
+#  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )
 

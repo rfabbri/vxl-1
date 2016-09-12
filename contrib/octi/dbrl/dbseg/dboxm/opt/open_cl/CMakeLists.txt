@@ -21,5 +21,5 @@ if(OPENCL_FOUND)
 
   target_link_libraries(dboxm_opt_opencl dboxm_opt dboxm dbocl bprb bgeo vgl vbl vbl_io ${OPENCL_LIBRARIES})
 
-subdirs(tests)
+add_subdirectory(tests)
 endif(OPENCL_FOUND)

@@ -2,7 +2,7 @@
 # other client projects that use LEMS VXL.  Nothing is built by this
 # CMakeLists.txt file.  This CMakeLists.txt file must be processed by
 # CMake after all the other CMakeLists.txt files in the LEMS tree,
-# which is why the subdirs(config/cmake/export) command is at the end
+# which is why the add_subdirectory(config/cmake/export) command is at the end
 # of the top level CMakeLists.txt file.
 
 

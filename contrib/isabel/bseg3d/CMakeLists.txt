@@ -16,6 +16,6 @@ add_library(bseg3d ${bseg3d_sources})
 
 target_link_libraries(bseg3d bvxm)
 
-subdirs(pro)
-subdirs(algo)
-#subdirs(tests)
+add_subdirectory(pro)
+add_subdirectory(algo)
+#add_subdirectory(tests)

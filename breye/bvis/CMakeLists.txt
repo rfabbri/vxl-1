@@ -62,7 +62,7 @@ target_link_libraries(bvis bpro vidpro bgui mvl vbl vbl_io)
 
 if( BUILD_EXAMPLES )
 
-  subdirs( examples )
+  add_subdirectory( examples )
 
 endif( BUILD_EXAMPLES )
 

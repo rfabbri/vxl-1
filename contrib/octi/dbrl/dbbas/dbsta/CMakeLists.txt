@@ -59,15 +59,15 @@ if (LINK_WITH_DLIBS)
 
 
 if (BUILD_OCTI_TESTING OR BUILD_TESTING)
-	subdirs(tests)
+	add_subdirectory(tests)
 endif(BUILD_OCTI_TESTING OR BUILD_TESTING)
 	# algorithms for statistical modeling
-	subdirs( algo )
+	add_subdirectory( algo )
 
 	# Binary I/O clip on library
-	subdirs( io )
+	add_subdirectory( io )
 
 	# Visualization Tools for various bsta constructs
-	subdirs( vis )
+	add_subdirectory( vis )
 endif(LINK_WITH_DLIBS)
 

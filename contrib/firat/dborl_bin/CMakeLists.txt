@@ -15,5 +15,5 @@ set(dborl_pb_edge_det_sources
 add_executable (dborl_pb_edge_det ${dborl_pb_edge_det_sources})
 target_link_libraries (dborl_pb_edge_det dborl_algo)
 
-subdirs(vox_third_order_edge_det)
-subdirs(index_label_test)
+add_subdirectory(vox_third_order_edge_det)
+add_subdirectory(index_label_test)

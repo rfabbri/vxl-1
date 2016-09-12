@@ -16,12 +16,12 @@ add_library( xscan ${xscan_src} )
 target_link_libraries( xscan vcl vbl vnl vnl_xio vgl_algo xmvg vsl vpgl_xio)
 
 # algorithms related to 3D imaging processing
-#subdirs( algo )
+#add_subdirectory( algo )
 
 # calibration artifact classes
-#subdirs( old_cali )
-subdirs( cali )
+#add_subdirectory( old_cali )
+add_subdirectory( cali )
 
 if(BUILD_TESTING)
-  subdirs( tests )
+  add_subdirectory( tests )
 endif(BUILD_TESTING)

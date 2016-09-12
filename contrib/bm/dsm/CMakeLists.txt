@@ -69,9 +69,9 @@ add_library( dsm ${dsm_sources} )
 target_link_libraries( dsm dsm_io bapl bsta bsta_algo bxml vbl vgl vil 
                        vil_io vnl vsl vul vbl_io vgl_io vnl_io vsol bsol )
 
-subdirs(pro)
-subdirs(io)
-#subdirs(ocl)
+add_subdirectory(pro)
+add_subdirectory(io)
+#add_subdirectory(ocl)
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)

@@ -99,24 +99,24 @@ target_link_libraries(dbsks dbsksp_algo dbdet_algo vidpro1 vnl_io)
 
 
 if( BUILD_EXAMPLES )
-  subdirs( cmdline )
+  add_subdirectory( cmdline )
 endif( BUILD_EXAMPLES )
 
 # Algorithm library
-subdirs( algo )
+add_subdirectory( algo )
 
 # Processing Library
-subdirs( pro )
+add_subdirectory( pro )
 
 # Visualization Library
-subdirs( vis )
+add_subdirectory( vis )
 
 # XML I/O Library
-subdirs( xio )
+add_subdirectory( xio )
 
 
 
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)

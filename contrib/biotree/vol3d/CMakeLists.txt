@@ -14,14 +14,14 @@ add_library(vol3d ${vol3d_src})
 
 target_link_libraries(vol3d vcl vbl vil3d imgr biob xmvg dbil)
 
-subdirs(algo)
+add_subdirectory(algo)
 
-subdirs(vis)
+add_subdirectory(vis)
 
 #if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 #endif(BUILD_TESTING)
 #
 #if(BUILD_EXAMPLES)
-#  subdirs(examples)
+#  add_subdirectory(examples)
 #endif(BUILD_EXAMPLES)

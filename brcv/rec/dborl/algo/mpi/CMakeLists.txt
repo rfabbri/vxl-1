@@ -31,16 +31,16 @@ set (dborl_cluster_src
 add_library(dborl_mpi ${dborl_cluster_src})
 target_link_libraries(dborl_mpi dborl_algo bxml vcl)
 if(BUILD_EXAMPLES)
-  subdirs(examples)
+  add_subdirectory(examples)
 endif(BUILD_EXAMPLES)
 
-subdirs(shock)
+add_subdirectory(shock)
 
-subdirs(retrieval)
+add_subdirectory(retrieval)
 
-subdirs( symseg )
+add_subdirectory( symseg )
 
-subdirs( compute_ishock )
+add_subdirectory( compute_ishock )
 
 endif (BUILD_dborl_cluster)
 

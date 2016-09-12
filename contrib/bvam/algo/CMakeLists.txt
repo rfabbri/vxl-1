@@ -20,8 +20,8 @@ add_library(bvam_algo ${bvam_algo_sources})
 
 target_link_libraries(bvam_algo bvam vpgl vpgl_algo vil vnl bgeo vgl vgl_algo vsol brip brdb vimt dbvrl)
 
-subdirs(pro)
-subdirs(tests)
+add_subdirectory(pro)
+add_subdirectory(tests)
 
 
 

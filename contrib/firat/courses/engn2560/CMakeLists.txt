@@ -1,2 +1,2 @@
-subdirs(bottom-up/egb)
+add_subdirectory(bottom-up/egb)
 

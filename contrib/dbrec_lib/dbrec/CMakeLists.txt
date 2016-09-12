@@ -58,10 +58,10 @@ add_library(dbrec ${dbrec_sources})
 
 target_link_libraries(dbrec brec bsvg dbfs)
 
-subdirs( pro )
+add_subdirectory( pro )
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
 

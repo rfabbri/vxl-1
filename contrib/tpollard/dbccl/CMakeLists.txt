@@ -22,5 +22,5 @@ target_link_libraries( dbccl_manual_app vcl vgl vnl vpgl vpgl_algo vul )
 #target_link_libraries( dbccl_manual_app_rewrite vcl vgl vnl vpgl vpgl_algo vul )
 target_link_libraries( dbccl_refine_pose_app vcl vgl vnl vpgl vpgl_algo vul )
 
-subdirs(tests)
-subdirs(pro)
+add_subdirectory(tests)
+add_subdirectory(pro)

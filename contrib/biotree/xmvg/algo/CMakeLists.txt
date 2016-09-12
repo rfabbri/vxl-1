@@ -12,5 +12,5 @@ add_library(xmvg_algo ${xmvg_algo_src})
 target_link_libraries(xmvg_algo xmvg dbil vnl_algo vnl)
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)

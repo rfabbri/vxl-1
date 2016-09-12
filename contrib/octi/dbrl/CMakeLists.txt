@@ -47,32 +47,32 @@ include_directories( ${VXLCORE_INCLUDE_DIR} )
 include_directories( ${DBRL_INCLUDE_DIR} )
 
 # basic services package
-subdirs(dbbas)
+add_subdirectory(dbbas)
 
 if( BUILD_GEL )
   # segmentation package
-subdirs(dbseg)
+add_subdirectory(dbseg)
 
   # video view library
- # subdirs(dvvid)
+ # add_subdirectory(dvvid)
 endif(BUILD_GEL)
 
 # multiview library
-#subdirs(dbmvl)
+#add_subdirectory(dbmvl)
 
 # standalone executables
-#subdirs(dbexe)
+#add_subdirectory(dbexe)
 
 # process libraries
 
 #3rd party libraries
-#subdirs(b3p)
+#add_subdirectory(b3p)
 
 
-#subdirs(dbbkmdl)
+#add_subdirectory(dbbkmdl)
 
-#subdirs(dJ2KTest)
+#add_subdirectory(dJ2KTest)
 
 #platform-independent includes for dbrl
-#subdirs(dbcl)
+#add_subdirectory(dbcl)
 

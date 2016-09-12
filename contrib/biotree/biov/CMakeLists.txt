@@ -23,8 +23,8 @@ include_directories(${lems_SOURCE_DIR}/basic)
  target_link_libraries(biov bgui3d vgui vnl)
 
   if ( BUILD_EXAMPLES )
-   subdirs ( examples )
+   add_subdirectory( examples )
   endif ( BUILD_EXAMPLES )
-  subdirs(io)
+  add_subdirectory(io)
 
 endif ( BUILD_CONTRIB_BIOTREE_biov )

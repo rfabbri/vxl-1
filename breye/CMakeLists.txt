@@ -9,17 +9,17 @@ include_directories( ${lems_SOURCE_DIR}/breye )
 include_directories( ${lems_SOURCE_DIR}/basic )
 
 # Brown Process Library
-subdirs( bpro )
+add_subdirectory( bpro )
 
 # Video Process Library
-subdirs( vidpro )
+add_subdirectory( vidpro )
 
 # Visualizer (will move to brl someday)
-subdirs( bvis )
+add_subdirectory( bvis )
 
 # Development Visualizer
-subdirs( dbvis )
+add_subdirectory( dbvis )
 
 # Virtual Object Recognition Lab
-subdirs( vorl )
+add_subdirectory( vorl )
 

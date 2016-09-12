@@ -14,6 +14,6 @@ target_link_libraries(dvpgl_algo_pro vpgl_algo bpgl_algo vidpro1 )
 
 
 if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 endif(BUILD_TESTING)
 

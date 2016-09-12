@@ -5,10 +5,10 @@
 include_directories( ${lems_SOURCE_DIR}/contrib/gould )
 
 # contour fragment graph structure
-subdirs( structure )
+add_subdirectory( structure )
 
 
 # contour fragment graph io
-subdirs( io )
+add_subdirectory( io )
 
 

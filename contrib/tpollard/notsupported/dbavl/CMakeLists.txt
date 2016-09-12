@@ -18,5 +18,5 @@ target_link_libraries( dbavl vcl vgl vnl vil vidl1 vgl_algo vil_algo vpgl dvpgl_
 set( DBAVL_INCLUDE_DIR ${dbavl_SOURCE_DIR} )
 
 
-subdirs(tests)
-subdirs(pro)
+add_subdirectory(tests)
+add_subdirectory(pro)

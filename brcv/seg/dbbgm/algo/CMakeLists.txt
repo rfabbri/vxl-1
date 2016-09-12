@@ -12,7 +12,7 @@ add_library( dbbgm_algo  ${dbbgm_algo_sources} )
 target_link_libraries( dbbgm_algo dbbgm vil)
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
 

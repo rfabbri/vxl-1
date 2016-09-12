@@ -29,12 +29,12 @@ add_library(dbsta  ${dbsta_sources})
 target_link_libraries(dbsta vnl_algo vbl vnl_io vsl)
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
 
 # algorithms for statistical modeling
-subdirs( algo ) 
+add_subdirectory( algo ) 
 
 # processes for statistical modeling
-subdirs( pro )
+add_subdirectory( pro )

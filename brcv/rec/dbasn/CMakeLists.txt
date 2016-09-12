@@ -34,7 +34,7 @@ add_library(dbasn  ${dbasn_sources})
 target_link_libraries( dbasn dbgl vnl vul )
 
 if(BUILD_TESTING)
-  subdirs(tests)
+  add_subdirectory(tests)
 endif(BUILD_TESTING)
   
 

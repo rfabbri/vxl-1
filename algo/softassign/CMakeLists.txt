@@ -19,7 +19,7 @@ add_library(softassign  ${softassign_sources})
 target_link_libraries( softassign mbl bdgl vgl mvl vbl vdgl vtol vsol btol vnl )    
 
 if( BUILD_EXAMPLES )
-  subdirs( examples )
+  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )
 
 

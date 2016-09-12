@@ -12,5 +12,5 @@ add_library(boxm_algo ${boxm_algo_sources})
 target_link_libraries(boxm_algo boxm)
 
 #processes
-subdirs(pro)
+add_subdirectory(pro)
 

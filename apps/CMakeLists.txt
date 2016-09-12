@@ -6,4 +6,4 @@ include_directories( ${lems_SOURCE_DIR}/algo )
 include_directories( ${lems_SOURCE_DIR}/basic )
 
 #Command line shock detection
-#subdirs( shockcmd )
+#add_subdirectory( shockcmd )

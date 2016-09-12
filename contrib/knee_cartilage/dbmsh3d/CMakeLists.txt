@@ -1,1 +1,1 @@
-subdirs( algovtk )
+add_subdirectory( algovtk )

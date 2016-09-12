@@ -28,6 +28,6 @@ if(PSM_USE_OPENGL2_1)
 endif(PSM_USE_OPENGL2_1)
 
 #if( BUILD_TESTING )
-#  subdirs(tests)
+#  add_subdirectory(tests)
 #endif( BUILD_TESTING )
 endif(VXL_EXPAT_FOUND)

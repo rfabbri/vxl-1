@@ -42,22 +42,22 @@ add_library(mw ${mw_sources})
 target_link_libraries(mw dborl vpgl dbsol_algo dbnl vil dbul vbl_io)
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
-subdirs(algo)
+add_subdirectory(algo)
 
-subdirs(pro)
+add_subdirectory(pro)
 
-subdirs(cmd)
+add_subdirectory(cmd)
 
 if (VXL_VGUI_FOUND)
-  subdirs(vis)
-  subdirs(app)
+  add_subdirectory(vis)
+  add_subdirectory(app)
 endif (VXL_VGUI_FOUND)
 
 option(BUILD_MATLAB_MEX "Build Matlab mex files" NO)
 
 if(BUILD_MATLAB_MEX)
-  subdirs(mex)
+  add_subdirectory(mex)
 endif(BUILD_MATLAB_MEX)

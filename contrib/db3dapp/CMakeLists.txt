@@ -29,6 +29,6 @@ target_link_libraries( db3d_app bgui3d dbsk3d dbsk3d_algo dbmsh dbmsh_vis )
 endif (HAS_BGUI3D)
 
 # Brown Mesh Library
-subdirs( dbmsh )
+add_subdirectory( dbmsh )
 
 

@@ -23,8 +23,8 @@ add_library(breg3d ${breg3d_sources})
 
 target_link_libraries(breg3d bvxm vpgl vpgl_algo vil vnl bgeo vgl vgl_algo vsol brip brdb vimt dbvrl)
 
-subdirs(pro)
-subdirs(tests)
+add_subdirectory(pro)
+add_subdirectory(tests)
 
 
 

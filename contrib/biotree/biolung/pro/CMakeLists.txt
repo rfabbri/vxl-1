@@ -12,5 +12,5 @@ add_library(biolung_process ${biolung_process_sources})
 target_link_libraries(biolung_process biolung vidpro1)
 
 if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 endif(BUILD_TESTING)

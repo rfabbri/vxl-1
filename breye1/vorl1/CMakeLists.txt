@@ -19,7 +19,7 @@ set(movie_sources
 #aux_source_directory(Templates vidpro1_sources)
 
 if( BUILD_EXAMPLES )
-  subdirs( examples )
+  add_subdirectory( examples )
 endif( BUILD_EXAMPLES )
 
 
@@ -29,7 +29,7 @@ add_library(vorl1  ${vorl1_sources})
 
 target_link_libraries(vorl1 vul vidpro1 vidl1)
 
-subdirs(exec)
+add_subdirectory(exec)
 
 
 add_executable (vorl1_frame_extractor vorl1_frame_extractor.cxx)

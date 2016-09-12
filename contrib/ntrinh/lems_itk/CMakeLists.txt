@@ -8,5 +8,5 @@ if(ITK_FOUND)
   add_executable(HelloWorld HelloWorld.cxx )
   target_link_libraries(HelloWorld ITKCommon)
   
-  subdirs( surfmatch )
+  add_subdirectory( surfmatch )
 endif(ITK_FOUND)

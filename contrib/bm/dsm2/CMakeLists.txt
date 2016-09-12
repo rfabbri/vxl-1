@@ -60,8 +60,8 @@ add_library( dsm2 ${dsm2_sources} )
 target_link_libraries( dsm2 dsm2_io dts dts_io bsta bsta_algo bsta_io vbl 
   vbl_io vil vnl vnl_io vsl vul)
 
-subdirs(pro)
-subdirs(algo)
-subdirs(exe)
-subdirs(io)
-# subdirs(io)     
+add_subdirectory(pro)
+add_subdirectory(algo)
+add_subdirectory(exe)
+add_subdirectory(io)
+# add_subdirectory(io)     

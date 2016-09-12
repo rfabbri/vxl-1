@@ -12,5 +12,5 @@ add_library(biocts_process ${biocts_process_sources})
 target_link_libraries(biocts_process biocts vidpro1)
 
 if(BUILD_TESTING)
-#  subdirs(tests)
+#  add_subdirectory(tests)
 endif(BUILD_TESTING)

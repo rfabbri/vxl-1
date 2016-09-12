@@ -3,64 +3,64 @@
 # Mutual dependencies: brip --> sdet --> (vpro,segv)
 
 # float image operations
-#subdirs(brip)
+#add_subdirectory(brip)
 
 # segmentation feature detection library
-#subdirs(sdet)
+#add_subdirectory(sdet)
 
 # video processors
-#subdirs(vpro)
+#add_subdirectory(vpro)
 
 # tracking
-#subdirs(strk)
+#add_subdirectory(strk)
 
 # Markov Random Fields - This library is deprecated
-#subdirs(bmrf)
+#add_subdirectory(bmrf)
 
 # misc
-#subdirs(bcons)
+#add_subdirectory(bcons)
 
 # segmentation view library
-#subdirs(segv)
+#add_subdirectory(segv)
 
 # segmentation application executables
-#subdirs(sbin)
+#add_subdirectory(sbin)
 
 # background modeling
-subdirs(dbbgm)
+add_subdirectory(dbbgm)
 
 # background modeling python interface
-subdirs(dbbgm_batch)
-subdirs(bbkmdl)
+add_subdirectory(dbbgm_batch)
+add_subdirectory(bbkmdl)
 #voxel world modeling
-#subdirs(bvxm)
+#add_subdirectory(bvxm)
 
 #voxel world modeling python interface
-#subdirs(bvxm_batch)
+#add_subdirectory(bvxm_batch)
 
 # Lidar modeling (segmentation and meshing)
-#subdirs(bmdl)
+#add_subdirectory(bmdl)
 
 # Lidar modeling python interface
-#subdirs(bmdl_batch)
+#add_subdirectory(bmdl_batch)
 
 # recognition library - uses background models of bbgm and/or bvxm
-#subdirs(brec)
+#add_subdirectory(brec)
 
 # recognition library - python interface
-#subdirs(brec_batch)
+#add_subdirectory(brec_batch)
 
 # octree
-#subdirs(boct)
+#add_subdirectory(boct)
 
 #octree based modeling 
-subdirs(dboxm)
+add_subdirectory(dboxm)
 
 #octree based modeling python interface
-#subdirs(boxm_batch)
+#add_subdirectory(boxm_batch)
 
 #voxel processing library
-#subdirs(bvpl)
+#add_subdirectory(bvpl)
 
 #voxel processing library python interface
-#subdirs(bvpl_batch)
+#add_subdirectory(bvpl_batch)

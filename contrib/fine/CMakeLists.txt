@@ -6,29 +6,29 @@ include_directories( ${lems_SOURCE_DIR}/basic )
 include_directories( ${lems_SOURCE_DIR}/contrib/fine )
 
 # my bvis based GUI
-subdirs( gui )
+add_subdirectory( gui )
 
 # my segmentation structure
-subdirs( structure )
+add_subdirectory( structure )
 
 # my displayers and tool
-subdirs( vis )
+add_subdirectory( vis )
 
 # various segmentation algorithms
-subdirs( algos )
+add_subdirectory( algos )
 
 # processes
-subdirs( pro )
+add_subdirectory( pro )
 
 
 # algorithms for VOX
-subdirs( algo )
+add_subdirectory( algo )
 
 
 
 
 # my command line executables
-#subdirs( cmd )
+#add_subdirectory( cmd )
 
 
 

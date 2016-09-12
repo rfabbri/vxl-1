@@ -24,9 +24,9 @@ add_library(slice ${slice_src})
 
 target_link_libraries(slice vcl vil3d vbl)
 
-subdirs( algo )
-subdirs( examples )
+add_subdirectory( algo )
+add_subdirectory( examples )
 
 #if(BUILD_TESTING)
-# subdirs( tests )
+# add_subdirectory( tests )
 #endif(BUILD_TESTING)

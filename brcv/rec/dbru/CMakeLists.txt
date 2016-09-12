@@ -33,18 +33,18 @@ add_library(dbru ${dbru_sources})
 
 target_link_libraries(dbru vsol dbinfo vil_io dbcvr)
 
-subdirs( pro )
+add_subdirectory( pro )
 
 # Brown Recognition Tools to aid Testing
-subdirs( vis )
+add_subdirectory( vis )
 
 # Brown Recognition Correspondence Generator Algorithms
-subdirs (algo)
+add_subdirectory(algo)
 
 # Brown Recognition Utilities Testing
-subdirs( tests )
+add_subdirectory( tests )
 
 # Brown Recognition Utilities Processes - new process structure of vxl/contrib/brl/bpro
-subdirs( pro2 )
+add_subdirectory( pro2 )
 
 

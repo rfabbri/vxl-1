@@ -16,7 +16,7 @@ add_library( breg3d
            
 target_link_libraries( breg3d vil vil3d vgl vpgl vimt brip vnl)
 
-subdirs(exe)
+add_subdirectory(exe)
 
 
 

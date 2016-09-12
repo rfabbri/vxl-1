@@ -6,23 +6,23 @@ include_directories( ${lems_SOURCE_DIR}/breye1 )
 include_directories( ${lems_SOURCE_DIR}/basic )
 
 # my bvis based GUI
-# subdirs( gui )
+# add_subdirectory( gui )
 
-subdirs ( dbsksp_gui )
+add_subdirectory( dbsksp_gui )
 
-subdirs ( skeleton_search )
+add_subdirectory( skeleton_search )
 
-subdirs ( learn_skeleton_gui )
+add_subdirectory( learn_skeleton_gui )
 
-# subdirs ( en292 )
-# subdirs ( en292_gui )
-# subdirs ( lems_itk )
-# subdirs ( lems_vtk )
+# add_subdirectory( en292 )
+# add_subdirectory( en292_gui )
+# add_subdirectory( lems_itk )
+# add_subdirectory( lems_vtk )
 
-# subdirs ( MESH_nogui )
+# add_subdirectory( MESH_nogui )
 
 # my command line executables
-subdirs( cmd )
-subdirs( dbsk2d_cmd )
+add_subdirectory( cmd )
+add_subdirectory( dbsk2d_cmd )
 
 

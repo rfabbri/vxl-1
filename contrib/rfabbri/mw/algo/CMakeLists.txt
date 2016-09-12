@@ -36,5 +36,5 @@ add_library(mw_algo ${mw_algo_sources})
 target_link_libraries(mw_algo mw vidpro1 bgui vil dbil_algo dbdet_pro dbgl_algo brct dvpgl_algo dbecl dbcsi dvpgl_io dbdif_algo dbspi dbul)
 
 if( BUILD_TESTING )
-  subdirs(tests)
+  add_subdirectory(tests)
 endif( BUILD_TESTING )

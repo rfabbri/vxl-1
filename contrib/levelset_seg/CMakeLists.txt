@@ -9,10 +9,10 @@ include_directories( ${lems_SOURCE_DIR}/brcv/seg )
 include_directories( ${lems_SOURCE_DIR}/contrib/levelset_seg )
 
 # my bvis1 based GUI
-subdirs( gui )
+add_subdirectory( gui )
 
 # my command line executables
-subdirs( cmd )
+add_subdirectory( cmd )
 
 # Active contour models
-# subdirs ( dbacm )
+# add_subdirectory( dbacm )
