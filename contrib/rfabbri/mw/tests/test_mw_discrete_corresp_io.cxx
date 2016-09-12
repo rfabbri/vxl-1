@@ -1,3 +1,4 @@
+#include <iostream>
 #include <testlib/testlib_test.h>
 #include <mw/mw_discrete_corresp.h>
 #include <vcl_limits.h>

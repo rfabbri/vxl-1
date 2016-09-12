@@ -1,6 +1,7 @@
 #include "brct_plane_calibrator.h"
 //:
 // \file
+#include <iostream>
 #include <vcl_fstream.h>
 #include <vcl_cmath.h> // for exp()
 #include <vnl/vnl_math.h>
