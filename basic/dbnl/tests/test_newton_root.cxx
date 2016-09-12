@@ -33,7 +33,7 @@ MAIN( test_newton_root )
    double succeed = dbnl_newton_secant_root(func2, 
                             x1, x2, xacc, & root);
    TEST("solve f(x) = (sin(a) - sin(a+x))/x - b = 0", 
-     vnl_math_abs(root - 2.513274123) < 1e-6 && succeed, true);
+     vnl_math::abs(root - 2.513274123) < 1e-6 && succeed, true);
    vcl_cout << "a = " << vnl_math::pi_over_2 * 1.2 << vcl_endl;
    vcl_cout << "b = " << .756826729 << vcl_endl;
    vcl_cout << "root = " << root << vcl_endl;
