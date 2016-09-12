@@ -33,7 +33,8 @@ MAIN( test_euclidean_cluster_util )
     
     for(unsigned i=0; i<4; ++i){
       
-      TEST("Closest Mean", cl_util.closest_euclidean_cluster(points[i]), i);
+      double dist;
+      TEST("Closest Mean", cl_util.closest_euclidean_cluster(points[i], dist), i);
 
     }
     
