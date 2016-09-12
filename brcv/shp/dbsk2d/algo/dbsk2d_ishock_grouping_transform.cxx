@@ -1307,7 +1307,44 @@ expand_wavefront(dbsk2d_ishock_node* node,unsigned int map_key)
     }
 }
 
+void dbsk2d_ishock_grouping_transform::write_out_file(vcl_string filename)
+{
 
+    vcl_ofstream stream(filename.c_str());
+    
+    //go through the vertex_list and insert it into the list
+    dbsk2d_ishock_graph::vertex_iterator curN = 
+        ishock_graph_->all_nodes().begin();
+
+    for (; curN != ishock_graph_->all_nodes().end(); curN++)
+    {
+        dbsk2d_ishock_node* curShock = (*curN);
+        vgl_point_2d<double> origin=curShock->origin();
+
+        if ( curShock->degree(true) >= 3 )
+        {
+            stream<<origin.x()<<" "<<origin.y()<<vcl_endl;
+        }
+        else if (curShock->degree(true) == 2 )
+        {
+            bool flag=this->junction_endpoints(curShock);
+            
+            if ( flag )
+            {
+                stream<<origin.x()<<" "<<origin.y()<<vcl_endl;
+            }
+        }
+        else if( curShock->degree(true) == 1 )
+        {
+                stream<<origin.x()<<" "<<origin.y()<<vcl_endl;
+        }
+        
+    }
+
+
+
+    stream.close();
+}
 bool dbsk2d_ishock_grouping_transform::junction_endpoints(
 dbsk2d_ishock_node* cur_node)
 {

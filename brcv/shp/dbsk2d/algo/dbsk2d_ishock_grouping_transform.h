@@ -259,6 +259,9 @@ public:
         return lflag|rflag;
     }
 
+
+    void write_out_file(vcl_string filename);
+
 private:
 
     // Method test if node is still expandable

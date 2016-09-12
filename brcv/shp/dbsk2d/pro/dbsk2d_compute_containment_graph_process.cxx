@@ -650,6 +650,7 @@ debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
    
     vcl_string shock_file=filename +"_shock.cem";
     vcl_string cem_file=filename + "_con.bnd";
+    vcl_string atomic_frags=filename + "_atomic_frags";
     dbsk2d_ishock_transform temp_trans(ishock_graph,
                                        dbsk2d_ishock_transform::LOOP);
     temp_trans.write_shock_boundary(shock_file);
@@ -689,6 +690,60 @@ debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
     prune.prune(1.0);
     prune.compile_coarse_shock_graph();
 
+
+    dbsk2d_ishock_grouping_transform grouper2(ishock_graph);
+    grouper2.grow_coarse_regions();
+
+    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >
+        frag_edges2 = grouper2.get_region_nodes();
+
+    vcl_vector<vgl_polygon<double> > type_1_polygons;
+    vcl_vector<vgl_polygon<double> > type_2_polygons;
+    vcl_vector<vgl_polygon<double> > atomic_polygons;
+
+    vcl_map<unsigned int,vcl_vector<dbsk2d_ishock_edge*> >::iterator it2;
+    for ( it2 = frag_edges2.begin() ; it2 != frag_edges2.end() ; ++it2)
+    {
+
+        vcl_vector<dbsk2d_ishock_edge*> vec=(*it2).second;
+        
+        bool flag=false;
+        for ( int i=0; i < vec.size() ; ++i)
+        {
+            flag=grouper2.shock_from_endpoint(vec[0]);
+            if ( flag )
+            {
+                break;
+            }
+        }
+        
+
+        // Grab polygon fragment
+        vgl_polygon<double> poly2;
+        grouper2.polygon_fragment((*it2).first,poly2);
+        atomic_polygons.push_back(poly2);
+
+        if ( !flag )
+        {
+            type_1_polygons.push_back(poly2);
+        }
+        else
+        {
+
+            type_2_polygons.push_back(poly2);
+        }
+    }
+
+    vcl_string type1=filename+"_type1_frags.txt";
+    vcl_string type2=filename+"_type2_frags.txt";
+    vcl_string type3=filename+"_type3_frags.txt";
+    vcl_string type4=filename+"_csg_nodes.txt";
+
+    temp_trans.write_polygons(type1,type_1_polygons);
+    temp_trans.write_polygons(type2,type_2_polygons);
+    temp_trans.write_polygons(type3,atomic_polygons);
+    grouper2.write_out_file(type4);
+    
     vcl_ofstream file_stream(coarse_poly.c_str());
 
     vcl_vector<vsol_spatial_object_2d_sptr> vsol_list;
