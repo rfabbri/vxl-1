@@ -85,7 +85,7 @@ class dbpro_storage_type : public dbpro_storage
 typedef dbpro_storage_type<dbpro_signal> dbpro_storage_signal;
 
 //: A storage class that contains only a message
-VCL_DEFINE_SPECIALIZATION
+template <>
 class dbpro_storage_type<dbpro_signal> : public dbpro_storage
 {
  public:

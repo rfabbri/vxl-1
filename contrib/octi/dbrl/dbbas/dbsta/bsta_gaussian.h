@@ -33,13 +33,13 @@ struct two_pi_e_power
   { return 2.0*vnl_math::pi*vnl_math::e*two_pi_power<n-1>::value(); }
 };
 
-VCL_DEFINE_SPECIALIZATION
+template <>
 struct two_pi_power<0>
 {
   static inline double value() { return 1.0; }
 };
 
-VCL_DEFINE_SPECIALIZATION
+template <>
 struct two_pi_e_power<0>
 {
   static inline double value() { return 1.0; }

@@ -2,9 +2,9 @@
 #include <vcl_iostream.h>
 
 
-VCL_DEFINE_SPECIALIZATION void settype(vul_arg<vcl_vector<vcl_string> > &arg) { arg.type_ = "string list"; }
+template <> void settype(vul_arg<vcl_vector<vcl_string> > &arg) { arg.type_ = "string list"; }
 
-VCL_DEFINE_SPECIALIZATION void print_value(vcl_ostream &s, vul_arg<vcl_vector<vcl_string> > const &argmt)
+template <> void print_value(vcl_ostream &s, vul_arg<vcl_vector<vcl_string> > const &argmt)
 {
   for (unsigned int i=0; i<argmt().size(); ++i) {
     s << argmt()[i];
@@ -15,7 +15,7 @@ VCL_DEFINE_SPECIALIZATION void print_value(vcl_ostream &s, vul_arg<vcl_vector<vc
   }
 }
 
-VCL_DEFINE_SPECIALIZATION int parse(vul_arg<vcl_vector<vcl_string> >* argmt, char ** argv)
+template <> int parse(vul_arg<vcl_vector<vcl_string> >* argmt, char ** argv)
 {
   const char separator=' ';
 

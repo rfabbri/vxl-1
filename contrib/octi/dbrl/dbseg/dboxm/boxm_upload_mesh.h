@@ -72,7 +72,7 @@ void boxm_upload_mesh_into_block(boxm_block<boct_tree<T_loc, T_data> > *block,
 }
 
 //: this is to copy mesh into existing tree and relacing the appearance model of the existing tree.
-VCL_DEFINE_SPECIALIZATION
+template <>
 void boxm_upload_mesh_into_block(boxm_block<boct_tree<short, boxm_sample<BOXM_APM_MOG_GREY> > > *block,
                                  imesh_mesh& mesh, bgeo_lvcs& lvcs,
                                  bool use_lvcs, boxm_sample<BOXM_APM_MOG_GREY> val)

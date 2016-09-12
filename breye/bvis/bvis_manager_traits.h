@@ -16,7 +16,7 @@ template <class T>
 class bvis_manager_traits;
 
 class bvis_video_manager;
-VCL_DEFINE_SPECIALIZATION
+template <>
 class bvis_manager_traits<bvis_video_manager>
 {
  public:
@@ -28,13 +28,13 @@ class bvis_manager_traits<bvis_video_manager>
 };
 
 #if !VCL_CANNOT_SPECIALIZE_CV
-VCL_DEFINE_SPECIALIZATION
+template <>
 class bvis_manager_traits<bvis_video_manager const> : 
 public bvis_manager_traits<bvis_video_manager> {};
 #endif
 
 class bvis_mview_manager;
-VCL_DEFINE_SPECIALIZATION
+template <>
 class bvis_manager_traits<bvis_mview_manager>
 {
  public:
@@ -47,7 +47,7 @@ class bvis_manager_traits<bvis_mview_manager>
 };
 
 #if !VCL_CANNOT_SPECIALIZE_CV
-VCL_DEFINE_SPECIALIZATION
+template <>
 class bvis_manager_traits<bvis_mview_manager const> : 
 public bvis_manager_traits<bvis_mview_manager> {};
 #endif
