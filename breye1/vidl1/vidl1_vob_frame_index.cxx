@@ -6,6 +6,7 @@
 // copied by l.e.galup
 // 10-18-02
 
+#include <iostream>
 #include <vcl_cassert.h>
 #include <vcl_cstdio.h>
 #include <vcl_fstream.h>

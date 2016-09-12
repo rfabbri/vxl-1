@@ -2,7 +2,7 @@
 
 //:
 // \file
-
+#include <iostream>
 #include "vidpro1_fmatrix_storage.h"
 #include <vsl/vsl_map_io.h>
 
