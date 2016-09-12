@@ -1,5 +1,5 @@
-#ifndef dvpgl_proj_camera_vsl.hxx_
-#define dvpgl_proj_camera_vsl.hxx_
+#ifndef dvpgl_proj_camera_vsl_hxx_
+#define dvpgl_proj_camera_vsl_hxx_
 
 #include "dvpgl_proj_camera_vsl.h"
 #include <vsl/vsl_binary_loader.h>
@@ -27,4 +27,4 @@ template void vsl_add_to_binary_loader(dvpgl_proj_camera_vsl<T > const& b);
 
 
 
-#endif // dvpgl_proj_camera_vsl.hxx_
+#endif // dvpgl_proj_camera_vsl_hxx_
