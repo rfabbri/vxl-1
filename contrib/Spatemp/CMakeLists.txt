@@ -1,24 +1,24 @@
 # contrib/spatemp/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
 
 
 
 #pro
-SUBDIRS(pro)
+subdirs(pro)
 
 
 #vis
-SUBDIRS(vis)
+subdirs(vis)
 
 #gui
-SUBDIRS(gui)
+subdirs(gui)
 
 
 
 
 #lib
-SUBDIRS(algo)
+subdirs(algo)
 
 #graph cuts
-SUBDIRS(gc)
+subdirs(gc)

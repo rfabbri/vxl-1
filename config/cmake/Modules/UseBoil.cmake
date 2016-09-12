@@ -1,14 +1,14 @@
-SET (HAS_BOIL "NO")
-IF (BUILD_BOIL)
+set (HAS_BOIL "NO")
+if (BUILD_BOIL)
 
   # Find Coin3D - Open Inventor
-  INCLUDE( ${LEMS_CMAKE_DIR}/Modules/FindCoin.cmake )
+  include( ${LEMS_CMAKE_DIR}/Modules/FindCoin.cmake )
   
-  IF (COIN_FOUND)
-    INCLUDE_DIRECTORIES( ${COIN_INCLUDE_DIR} )
-    SET( HAS_BOIL "YES" )
-    ADD_DEFINITIONS( -DHAS_BOIL )
-    LINK_LIBRARIES( ${COIN_LIBRARY} )
-  ENDIF (COIN_FOUND)
+  if (COIN_FOUND)
+    include_directories( ${COIN_INCLUDE_DIR} )
+    set( HAS_BOIL "YES" )
+    add_definitions( -DHAS_BOIL )
+    link_libraries( ${COIN_LIBRARY} )
+  endif (COIN_FOUND)
 
-ENDIF (BUILD_BOIL)
+endif (BUILD_BOIL)

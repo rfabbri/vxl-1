@@ -1,14 +1,14 @@
 # This is brcv/rec/dber/pro/CMakeLists.txt
 # Brown edge-based recognition library
 
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/Gregistration )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/contrib/Gregistration )
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/ozge )
+include_directories( ${lems_SOURCE_DIR}/contrib/ozge )
 
-SET(dber_pro_sources
+set(dber_pro_sources
 
 # storage classes
    dber_edge_match_storage.h                dber_edge_match_storage.cxx
@@ -23,7 +23,7 @@ SET(dber_pro_sources
 
 )
 
-ADD_LIBRARY(dber_pro ${dber_pro_sources})
+add_library(dber_pro ${dber_pro_sources})
 
-TARGET_LINK_LIBRARIES(dber_pro dber dbru vidpro1 vsl vil_io)
+target_link_libraries(dber_pro dber dbru vidpro1 vsl vil_io)
 

@@ -1,13 +1,13 @@
 # contourtracing library
 # algo/contourtracing/CMakeLists.txt
 
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR})
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR})
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+include_directories(${VXL_BRL_INCLUDE_DIR})
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories(${VXL_GEL_INCLUDE_DIR})
+include_directories( ${lems_SOURCE_DIR}/basic )
 
 
-SET(contourtracing_sources
+set(contourtracing_sources
 
 1d_eno_types.h           
 basic_utils.cpp          
@@ -46,15 +46,15 @@ ContourTracing_sptr.h
 
 )
 
-AUX_SOURCE_DIRECTORY(Templates contourtracing_sources)
+aux_source_directory(Templates contourtracing_sources)
 
-ADD_LIBRARY(contourtracing  ${contourtracing_sources})
+add_library(contourtracing  ${contourtracing_sources})
 
-TARGET_LINK_LIBRARIES(contourtracing  vgl vcl vnl vbl vsol )
+target_link_libraries(contourtracing  vgl vcl vnl vbl vsol )
 
-IF( BUILD_EXAMPLES )
-  SUBDIRS( examples )
-ENDIF( BUILD_EXAMPLES )
+if( BUILD_EXAMPLES )
+  subdirs( examples )
+endif( BUILD_EXAMPLES )
 
 
 

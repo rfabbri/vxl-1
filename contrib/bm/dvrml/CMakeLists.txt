@@ -4,10 +4,10 @@
 
 project( dvrml )
 
-INCLUDE_DIRECTORIES( ${VXL_CORE_INCLUDE_DIR} )
-#MESSAGE( "VXL_CORE_INCLUDE_DIR = " ${VXL_CORE_INCLUDE_DIR} )
+include_directories( ${VXL_CORE_INCLUDE_DIR} )
+#message( "VXL_CORE_INCLUDE_DIR = " ${VXL_CORE_INCLUDE_DIR} )
 
-SET( dvrml_sources
+set( dvrml_sources
 
 	 dvrml.h							dvrml.cxx 
 	 dvrml_appearance.h
@@ -33,10 +33,10 @@ SET( dvrml_sources
 	 vbl_smart_ptr+dvrml_indexed_lineset-.cxx
 	 )
 	 
-ADD_LIBRARY( dvrml ${dvrml_sources} )
-TARGET_LINK_LIBRARIES( dvrml vul vbl vgl vnl )	 
+add_library( dvrml ${dvrml_sources} )
+target_link_libraries( dvrml vul vbl vgl vnl )	 
 
-IF( BUILD_TESTING )
-	SUBDIRS( tests )
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+	subdirs( tests )
+endif( BUILD_TESTING )
 		

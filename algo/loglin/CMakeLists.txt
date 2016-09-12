@@ -1,13 +1,13 @@
 # Logical Linear library
 # algo/loglin/CMakeLists.txt
 
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories(${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 
 
-SET(loglin_sources
+set(loglin_sources
 
 EdgeDetection.h
 EdgeDetector.h
@@ -23,11 +23,11 @@ SubPixelOptimizer.h
 Tokenizer.h
 
 )
-AUX_SOURCE_DIRECTORY(Templates loglin_sources)
+aux_source_directory(Templates loglin_sources)
 
-#ADD_LIBRARY(loglin  ${loglin_sources})
+#add_library(loglin  ${loglin_sources})
 
 # Currently nothing to compile.  All files are header files.
 # Only inline functions and template definitions are here
-#TARGET_LINK_LIBRARIES(loglin)
+#target_link_libraries(loglin)
 

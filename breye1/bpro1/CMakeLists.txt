@@ -1,7 +1,7 @@
 # breye1/bpro1/CMakeLists.txt
 
 
-SET(bpro1_sources
+set(bpro1_sources
    bpro1_parameters.cxx                  bpro1_parameters.h                  bpro1_parameters_sptr.h
    bpro1_parameters.txx
    bpro1_process.cxx                     bpro1_process.h                     bpro1_process_sptr.h
@@ -9,9 +9,9 @@ SET(bpro1_sources
 )
 
 
-AUX_SOURCE_DIRECTORY(Templates bpro1_sources)
+aux_source_directory(Templates bpro1_sources)
 
-ADD_LIBRARY(bpro1  ${bpro1_sources})
+add_library(bpro1  ${bpro1_sources})
 
-TARGET_LINK_LIBRARIES(bpro1 vsl vbl)
+target_link_libraries(bpro1 vsl vbl)
 

@@ -1,13 +1,13 @@
 # This is brcv/rec/dbskr/pro/CMakeLists.txt
 # Brown shock recognition library
 
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/ozge )
+include_directories( ${lems_SOURCE_DIR}/contrib/ozge )
 
-SET(dbskr_pro_sources
+set(dbskr_pro_sources
 
 # storage classes
    dbskr_shock_match_storage.h                dbskr_shock_match_storage.cxx
@@ -33,10 +33,10 @@ SET(dbskr_pro_sources
    dbskr_detect_shock_patches_process.h       dbskr_detect_shock_patches_process.cxx 
 )
 
-ADD_LIBRARY(dbskr_pro ${dbskr_pro_sources})
+add_library(dbskr_pro ${dbskr_pro_sources})
 
-#TARGET_LINK_LIBRARIES(dbskr_pro dbskr dbru strk vidpro1 vul dbsdef)
+#target_link_libraries(dbskr_pro dbskr dbru strk vidpro1 vul dbsdef)
 
-TARGET_LINK_LIBRARIES(dbskr_pro dbskr_algo bpro1 vul)
+target_link_libraries(dbskr_pro dbskr_algo bpro1 vul)
 
 

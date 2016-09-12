@@ -1,23 +1,23 @@
 # contrib/biotree/proc/io/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/db3p )
+include_directories( ${lems_SOURCE_DIR}/db3p )
 
-SET(io_sources
+set(io_sources
    proc_io_filter_xml_parser.cxx proc_io_filter_xml_parser.h
    proc_io_run_xml_parser.cxx    proc_io_run_xml_parser.h 
 )
 
-IF( BUILD_EXAMPLES )
-  SUBDIRS( examples )
-ENDIF( BUILD_EXAMPLES )
+if( BUILD_EXAMPLES )
+  subdirs( examples )
+endif( BUILD_EXAMPLES )
 
 
-ADD_LIBRARY(bioproc_io ${io_sources})
+add_library(bioproc_io ${io_sources})
 
 
-IF ( APPLE )
-  TARGET_LINK_LIBRARIES(bioproc_io vgl vsl expatpp expat xmvg splr)
-ELSE( APPLE )
-  TARGET_LINK_LIBRARIES(bioproc_io vgl vsl expatpp xmvg splr)
-ENDIF ( APPLE )
+if ( APPLE )
+  target_link_libraries(bioproc_io vgl vsl expatpp expat xmvg splr)
+else( APPLE )
+  target_link_libraries(bioproc_io vgl vsl expatpp xmvg splr)
+endif ( APPLE )
 

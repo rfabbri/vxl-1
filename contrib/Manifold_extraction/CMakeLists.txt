@@ -1,17 +1,17 @@
 # contrib/Manifold_extraction/CMakeLists.txt
 # Developement for : pradeep
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic)
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_CORE_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/breye)
+include_directories( ${lems_SOURCE_DIR}/brcv/rec)
+include_directories( ${lems_SOURCE_DIR}/contrib)
+include_directories( ${lems_SOURCE_DIR}/basic)
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_CORE_INCLUDE_DIR} )
 
 
-SET(manifold_extraction_sources
+set(manifold_extraction_sources
 
 vehicle_model.cxx                       vehicle_model.h  
 vehicle_model_3d.cxx                    vehicle_model_3d.h
@@ -25,20 +25,20 @@ Lie_contour_utilities.cxx              Lie_contour_utilities.h
 Lie_spoke_utilities.cxx                Lie_spoke_utilities.h
 )           
 
-SUBDIRS(cmd)
+subdirs(cmd)
 
-SUBDIRS(Templates)
+subdirs(Templates)
 
-SUBDIRS(vis)
+subdirs(vis)
 
-SUBDIRS(pro)
+subdirs(pro)
 
-AUX_SOURCE_DIRECTORY(Templates manifold_extraction_sources)
+aux_source_directory(Templates manifold_extraction_sources)
 
-ADD_LIBRARY(manifold_extraction ${manifold_extraction_sources})
+add_library(manifold_extraction ${manifold_extraction_sources})
 
 
-TARGET_LINK_LIBRARIES(manifold_extraction vidpro1 sdet bsta brip bugl bsol btol bdgl vsol vil vgl_algo vnl vsl vbl_io vbl vul)
+target_link_libraries(manifold_extraction vidpro1 sdet bsta brip bugl bsol btol bdgl vsol vil vgl_algo vnl vsl vbl_io vbl vul)
 
 
 

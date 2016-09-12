@@ -1,70 +1,70 @@
-IF (VXL_VGUI_FOUND)
-  INCLUDE( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
-ENDIF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
+  include( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
+endif (VXL_VGUI_FOUND)
 
 
-SET( biotree_SOURCE_DIR ${lems_SOURCE_DIR}/contrib/biotree )
+set( biotree_SOURCE_DIR ${lems_SOURCE_DIR}/contrib/biotree )
 
-INCLUDE_DIRECTORIES( ${biotree_SOURCE_DIR} )
+include_directories( ${biotree_SOURCE_DIR} )
 
 # basic utilities of biotree project
-SUBDIRS( biob )
+subdirs( biob )
 
 # CT simulation (bother Rahul with your questions)
-SUBDIRS( biocts )
+subdirs( biocts )
 
 # Lung Modeling (bother Rahul with your questions)
-SUBDIRS( biolung )
+subdirs( biolung )
 
 # gui
-#SUBDIRS( gui )
+#subdirs( gui )
 
 # X-Ray Multiview Geometry
-SUBDIRS( xmvg )
+subdirs( xmvg )
 
 # Detection Library
-SUBDIRS( det )
+subdirs( det )
 
 # Scan Library
-SUBDIRS( xscan )
+subdirs( xscan )
 
 # Gui managers
-IF(SIMVOLEON_FOUND)
-  SUBDIRS( biov )
-ENDIF(SIMVOLEON_FOUND)
+if(SIMVOLEON_FOUND)
+  subdirs( biov )
+endif(SIMVOLEON_FOUND)
 
 # Executables
-SUBDIRS( bin )
+subdirs( bin )
 
 # Resources (Image and Splat)
-SUBDIRS( resc )
+subdirs( resc )
 
 # control processes
-SUBDIRS( proc )
+subdirs( proc )
 
 # can's CT-simulator
-#SUBDIRS( biosim )
+#subdirs( biosim )
 
 # filtering on 3D vol data
-#SUBDIRS( vol3d )
+#subdirs( vol3d )
 
 #Biotree standard coordinate system
-SUBDIRS( bscs )
+subdirs( bscs )
 
-SUBDIRS( geom )
+subdirs( geom )
 
 # projected filters method
-SUBDIRS( proj )
+subdirs( proj )
 
 # optimized projected filters method
-SUBDIRS( proj_opt )
+subdirs( proj_opt )
 
 # cone-beam CT simulator
-SUBDIRS( biocbs )
+subdirs( biocbs )
 
 # slice-based processing
-SUBDIRS( slice )
+subdirs( slice )
 
-SUBDIRS( roipick )
+subdirs( roipick )
 
-SUBDIRS( histogrampick )
+subdirs( histogrampick )

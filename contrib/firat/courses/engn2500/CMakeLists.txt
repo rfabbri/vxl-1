@@ -1,2 +1,2 @@
-SUBDIRS (rodehorst)
-SUBDIRS (distance_transform)
+subdirs (rodehorst)
+subdirs (distance_transform)

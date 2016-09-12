@@ -1,9 +1,9 @@
 # This is brl/blem/brcv/trk/dbinfo/pro/CMakeLists.txt
 # Brown Mutual Information Tracking Library
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
 
-SET(dbinfo_pro_sources
+set(dbinfo_pro_sources
                                            dbinfo_track_storage_sptr.h
     dbinfo_track_storage.cxx               dbinfo_track_storage.h
                                            dbinfo_osl_storage_sptr.h
@@ -20,11 +20,11 @@ SET(dbinfo_pro_sources
     dbinfo_save_osl_process.cxx            dbinfo_save_osl_process.h
 )
 
-ADD_LIBRARY(dbinfo_pro ${dbinfo_pro_sources})
+add_library(dbinfo_pro ${dbinfo_pro_sources})
 
-TARGET_LINK_LIBRARIES(dbinfo_pro dbinfo vidpro1)
+target_link_libraries(dbinfo_pro dbinfo vidpro1)
 
-#IF(BUILD_TESTING)
-#  SUBDIRS(tests)
-#ENDIF(BUILD_TESTING)
+#if(BUILD_TESTING)
+#  subdirs(tests)
+#endif(BUILD_TESTING)
 

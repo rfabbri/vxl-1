@@ -1,2 +1,2 @@
-ADD_EXECUTABLE(btom_test_include test_include.cxx )
-TARGET_LINK_LIBRARIES( btom_test_include btom )
+add_executable(btom_test_include test_include.cxx )
+target_link_libraries( btom_test_include btom )

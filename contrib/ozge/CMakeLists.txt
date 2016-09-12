@@ -1,80 +1,80 @@
 # 3D Model Registration Applications
 # contrib/ozge/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/basic )
 
-PROJECT( ozge )
+project( ozge )
 
 # dll library for recognition of video objects in each frame
-#SUBDIRS ( rec_exe )
+#subdirs ( rec_exe )
 
 # my simple processes
-SUBDIRS( pro )
+subdirs( pro )
 
 # my command line executables
-SUBDIRS( bin )
-SUBDIRS( dbskr_bin )
+subdirs( bin )
+subdirs( dbskr_bin )
 
 # my simple video player, modified vidfpl_vil from vxl/contrib/brl/vvid
-#SUBDIRS( vidl_gui )
-#SUBDIRS( face_gui )
+#subdirs( vidl_gui )
+#subdirs( face_gui )
 
-#INCLUDE( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
+#include( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
 
 # fit lines to input curve 
-#SET(cv_fitter
+#set(cv_fitter
 #   curvefitting_command.cxx
 #)
 
 # random curve sampler
-#SET(cv_sampler
+#set(cv_sampler
 #   random_curve_sampler.cxx
 #)
 
-#ADD_EXECUTABLE(cv_sampler_exec ${cv_sampler})
+#add_executable(cv_sampler_exec ${cv_sampler})
 
 # random subsampler, subsamples a given .con contour
-#SET(cv_subsampler
+#set(cv_subsampler
 #   random_subsampler.cxx
 #)
 
-#ADD_EXECUTABLE(cv_fitter_exec ${cv_fitter})
-#ADD_EXECUTABLE(cv_sampler_exec ${cv_sampler})
-#ADD_EXECUTABLE(cv_subsampler_exec ${cv_subsampler})
+#add_executable(cv_fitter_exec ${cv_fitter})
+#add_executable(cv_sampler_exec ${cv_sampler})
+#add_executable(cv_subsampler_exec ${cv_subsampler})
 
-#TARGET_LINK_LIBRARIES( cv_subsampler_exec bsol dbcvr dbsol dbsol_algo )
-#TARGET_LINK_LIBRARIES( cv_fitter_exec bsol vgl )
+#target_link_libraries( cv_subsampler_exec bsol dbcvr dbsol dbsol_algo )
+#target_link_libraries( cv_fitter_exec bsol vgl )
 
-#IF(HAS_BGUI3D)
+#if(HAS_BGUI3D)
 
-#INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-#INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
+#include_directories( ${lems_SOURCE_DIR}/basic )
+#include_directories( ${lems_SOURCE_DIR}/brcv/shp )
 
 # model registration sources
-#SET(mreg_sources
+#set(mreg_sources
 #   iv2ras.cxx
 #)
 
-#SET(mreg_sources2
+#set(mreg_sources2
 #   iv2rgb.cxx
 #)
 
-#SET(mreg_sources3
+#set(mreg_sources3
 #   iv2pov.cxx
 #)
 
 
-#ADD_EXECUTABLE(mreg_app ${mreg_sources})
-#ADD_EXECUTABLE(mreg_app2 ${mreg_sources2})
-#ADD_EXECUTABLE(mreg_app3 ${mreg_sources3})
+#add_executable(mreg_app ${mreg_sources})
+#add_executable(mreg_app2 ${mreg_sources2})
+#add_executable(mreg_app3 ${mreg_sources3})
 
-#TARGET_LINK_LIBRARIES( mreg_app bgui3d )
-#TARGET_LINK_LIBRARIES( mreg_app2 bgui3d )
-#TARGET_LINK_LIBRARIES( mreg_app3 bgui3d )
+#target_link_libraries( mreg_app bgui3d )
+#target_link_libraries( mreg_app2 bgui3d )
+#target_link_libraries( mreg_app3 bgui3d )
 
 
-#ENDIF(HAS_BGUI3D)
+#endif(HAS_BGUI3D)

@@ -1,6 +1,6 @@
 # This is /contrib/rfabbri/mw/tests
 
-ADD_EXECUTABLE ( mw_test_all
+add_executable ( mw_test_all
    # Driver source and utilities
    test_driver.cxx
 
@@ -11,13 +11,13 @@ ADD_EXECUTABLE ( mw_test_all
    test_dbmcs_curve_3d_sketch_io.cxx
 )
 
-TARGET_LINK_LIBRARIES( mw_test_all mw testlib )
+target_link_libraries( mw_test_all mw testlib )
 
-ADD_TEST( mw_test_mw_util mw_test_all test_mw_util )
-ADD_TEST( mw_test_discrete_corresp_io mw_test_all test_discrete_corresp_io )
-ADD_TEST( mw_test_discrete_corresp_n_io mw_test_all test_discrete_corresp_n_io )
-ADD_TEST( dbmcs_curve_3d_sketch_io mw_test_all test_dbmcs_curve_3d_sketch_io)
+add_test( mw_test_mw_util mw_test_all test_mw_util )
+add_test( mw_test_discrete_corresp_io mw_test_all test_discrete_corresp_io )
+add_test( mw_test_discrete_corresp_n_io mw_test_all test_discrete_corresp_n_io )
+add_test( dbmcs_curve_3d_sketch_io mw_test_all test_dbmcs_curve_3d_sketch_io)
 
-ADD_EXECUTABLE( mw_test_include test_include.cxx )
+add_executable( mw_test_include test_include.cxx )
 
-TARGET_LINK_LIBRARIES( mw_test_include mw )
+target_link_libraries( mw_test_include mw )

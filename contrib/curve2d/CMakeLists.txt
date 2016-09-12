@@ -1,29 +1,29 @@
 # contrib/curve2d/gui/CMakeLists.txt
-PROJECT( curve2d_gui )
+project( curve2d_gui )
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES(${VXL_OXL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES(${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories(${VXL_GEL_INCLUDE_DIR} )
+include_directories(${VXL_OXL_INCLUDE_DIR} )
+include_directories(${VXL_MUL_INCLUDE_DIR} )
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
-SET(curve2d_gui_sources
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/brcv/trk )
+set(curve2d_gui_sources
    curve2d_gui_menu.cxx       curve2d_gui_menu.h
    geno_app.cxx               geno_app.h
    curve2d_gui_main.cxx
 )
 
-AUX_SOURCE_DIRECTORY(Templates curve2d_gui_sources)
+aux_source_directory(Templates curve2d_gui_sources)
 
-ADD_EXECUTABLE(curve2d_gui ${curve2d_gui_sources})
+add_executable(curve2d_gui ${curve2d_gui_sources})
 
-TARGET_LINK_LIBRARIES(curve2d_gui vidpro1 bvis1 dbdet_vis dbcvr_vis dbnl_pro  dbgl_algo dbsol_pro dbdet_pro dbgui dbru_vis dbru_pro)
+target_link_libraries(curve2d_gui vidpro1 bvis1 dbdet_vis dbcvr_vis dbnl_pro  dbgl_algo dbsol_pro dbdet_pro dbgui dbru_vis dbru_pro)
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)

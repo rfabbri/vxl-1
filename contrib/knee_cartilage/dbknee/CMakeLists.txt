@@ -1,38 +1,38 @@
 # Brown shape modeling library
 # dbknee/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
 
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
 
-SET( dbknee_sources
+set( dbknee_sources
   dbknee_coord.h       dbknee_coord.cxx        dbknee_coord_sptr.h
   dbknee_tibia_cs.h    dbknee_tibia_cs.cxx
 )
 
 
-AUX_SOURCE_DIRECTORY(Templates dbknee_sources)
+aux_source_directory(Templates dbknee_sources)
 
-ADD_LIBRARY(dbknee  ${dbknee_sources})
+add_library(dbknee  ${dbknee_sources})
 
-TARGET_LINK_LIBRARIES(dbknee vbl vnl_algo vsl vcsl dbgl_algo dbil_algo dbnl dbmsh3d_algo)
+target_link_libraries(dbknee vbl vnl_algo vsl vcsl dbgl_algo dbil_algo dbnl dbmsh3d_algo)
 
-IF( BUILD_EXAMPLES )
-#  SUBDIRS( examples )
-ENDIF( BUILD_EXAMPLES )
+if( BUILD_EXAMPLES )
+#  subdirs( examples )
+endif( BUILD_EXAMPLES )
 
 # Processing Library
-SUBDIRS(pro)
+subdirs(pro)
 
 # Visualization Library
-SUBDIRS(vis)
+subdirs(vis)
 
-IF(BUILD_TESTING)
-#  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+#  subdirs(tests)
+endif(BUILD_TESTING)

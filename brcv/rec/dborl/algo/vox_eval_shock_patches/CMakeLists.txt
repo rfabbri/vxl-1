@@ -1,5 +1,5 @@
 
-SET( vox_eval_shock_patches_sources
+set( vox_eval_shock_patches_sources
  
   vox_eval_shock_patches_params.h 
   vox_eval_shock_patches_params_sptr.h
@@ -11,8 +11,8 @@ SET( vox_eval_shock_patches_sources
   vbl_smart_ptr+vox_eval_shock_patches_params-.cxx
 )
 
-ADD_EXECUTABLE (vox_eval_shock_patches ${vox_eval_shock_patches_sources} )
-TARGET_LINK_LIBRARIES (vox_eval_shock_patches dborl_algo dbxml)
+add_executable (vox_eval_shock_patches ${vox_eval_shock_patches_sources} )
+target_link_libraries (vox_eval_shock_patches dborl_algo dbxml)
 
 
 

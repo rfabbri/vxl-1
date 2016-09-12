@@ -7,46 +7,46 @@
 # NOTE: FOR WINDOWS YOU HAVE TO ADD THE ROOT DIRECTORY OF VL FEAT TO THE PATH SO vl.dll CAN BE 
 # FOUND BY EXECUTABLES OTHERWISE YOUR CODE WILL COMPILE BUT YOU WILL GET A RUNTIME ERROR.
 
-SET( VL_FEAT_FOUND "NO" )
+set( VL_FEAT_FOUND "NO" )
 
-IF( WIN32 )
-  FIND_PATH( VL_FEAT_INCLUDE_PATH vl/dsift.h )
-  IF( VL_FEAT_INCLUDE_PATH )
-    IF( CMAKE_CL_64 )
-      FIND_LIBRARY( VL_FEAT_LIBRARY NAMES vl.lib PATHS ${VL_FEAT_INCLUDE_PATH}/bin/w32 )
-    ELSEIF( CMAKE_CL_64 )
-      FIND_LIBRARY( VL_FEAT_LIBRARY NAMES vl.lib PATHS ${VL_FEAT_INCLUDE_PATH}/bin/w64 )
-    ENDIF( CMAKE_CL_64 )
+if( WIN32 )
+  find_path( VL_FEAT_INCLUDE_PATH vl/dsift.h )
+  if( VL_FEAT_INCLUDE_PATH )
+    if( CMAKE_CL_64 )
+      find_library( VL_FEAT_LIBRARY NAMES vl.lib PATHS ${VL_FEAT_INCLUDE_PATH}/bin/w32 )
+    elseif( CMAKE_CL_64 )
+      find_library( VL_FEAT_LIBRARY NAMES vl.lib PATHS ${VL_FEAT_INCLUDE_PATH}/bin/w64 )
+    endif( CMAKE_CL_64 )
     
-    IF( VL_FEAT_LIBRARY )
-      SET( VL_FEAT_FOUND "YES" )
-    ENDIF( VL_FEAT_LIBRARY )
-  ENDIF( VL_FEAT_INCLUDE_PATH )
-ENDIF( WIN32 )
+    if( VL_FEAT_LIBRARY )
+      set( VL_FEAT_FOUND "YES" )
+    endif( VL_FEAT_LIBRARY )
+  endif( VL_FEAT_INCLUDE_PATH )
+endif( WIN32 )
 
-IF( VL_FEAT_FOUND )
-# MESSAGE("VL_FEAT_LIBRARY = " ${VL_FEAT_LIBRARY} )
-# MESSAGE("VL_FEAT_INCLUDE_PATH = " ${VL_FEAT_INCLUDE_PATH})
+if( VL_FEAT_FOUND )
+# message("VL_FEAT_LIBRARY = " ${VL_FEAT_LIBRARY} )
+# message("VL_FEAT_INCLUDE_PATH = " ${VL_FEAT_INCLUDE_PATH})
 
-  PROJECT( vlfeat )
+  project( vlfeat )
 
-  INCLUDE_DIRECTORIES(${VXL_CORE_INCLUDE_DIR})
-  INCLUDE_DIRECTORIES(${VL_FEAT_INCLUDE_PATH})
+  include_directories(${VXL_CORE_INCLUDE_DIR})
+  include_directories(${VL_FEAT_INCLUDE_PATH})
   
 
-  SET( VL_FEAT_VXL_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR} )
+  set( VL_FEAT_VXL_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR} )
   
-  SET( VLFEAT_SOURCES
+  set( VLFEAT_SOURCES
        vlfeat.h                   vlfeat.cxx
        ${VL_FEAT_INCLUDE_PATH}/vl/dsift.h )
   
-  #AUX_SOURCE_DIRECTORY( ${VL_FEAT_INCLUDE_PATH}/vl VLFEAT_SOURCES )      
+  #aux_source_directory( ${VL_FEAT_INCLUDE_PATH}/vl VLFEAT_SOURCES )      
      
-  ADD_LIBRARY( vlfeat ${VLFEAT_SOURCES} )     
-  TARGET_LINK_LIBRARIES(vlfeat ${VL_FEAT_LIBRARY} vil vgl)
+  add_library( vlfeat ${VLFEAT_SOURCES} )     
+  target_link_libraries(vlfeat ${VL_FEAT_LIBRARY} vil vgl)
 
-  SUBDIRS( exec )
-  SUBDIRS( pro )
-  SUBDIRS( tests )
+  subdirs( exec )
+  subdirs( pro )
+  subdirs( tests )
 
-ENDIF( VL_FEAT_FOUND )
+endif( VL_FEAT_FOUND )

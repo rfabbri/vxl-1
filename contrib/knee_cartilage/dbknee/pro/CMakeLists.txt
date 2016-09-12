@@ -1,9 +1,9 @@
 # This is contrib/knee_cartilage/dbknee/pro/CMakeLists.txt
 # Brown Processing Library for the Knee cartilage
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
 
-SET(dbknee_pro_sources                                               
+set(dbknee_pro_sources                                               
   # Processes
   dbknee_compute_cylinder_cs_process.h      dbknee_compute_cylinder_cs_process.cxx
 
@@ -34,12 +34,12 @@ SET(dbknee_pro_sources
 )
 
 
-ADD_LIBRARY( dbknee_pro  ${dbknee_pro_sources} )
+add_library( dbknee_pro  ${dbknee_pro_sources} )
 
-TARGET_LINK_LIBRARIES( dbknee_pro vidpro1 dbknee dbmsh3d_algo dbmsh3d_pro dbdet dbdet_xio)
+target_link_libraries( dbknee_pro vidpro1 dbknee dbmsh3d_algo dbmsh3d_pro dbdet dbdet_xio)
 
 
-IF(BUILD_TESTING)
-#  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+#  subdirs(tests)
+endif(BUILD_TESTING)
 

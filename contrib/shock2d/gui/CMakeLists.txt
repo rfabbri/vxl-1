@@ -1,28 +1,28 @@
 # contrib/shock2d/gui/CMakeLists.txt
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_OXL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/brcv/trk )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/brcv/trk )
 
 
 
-#INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/Gregistration )
+#include_directories( ${lems_SOURCE_DIR}/contrib/Gregistration )
 
-SET(shock2d_gui_sources
+set(shock2d_gui_sources
    shock2d_gui_menu.cxx       shock2d_gui_menu.h
    shock2d_gui_main.cxx
 )
-ADD_EXECUTABLE(shock2d_gui ${shock2d_gui_sources})
-TARGET_LINK_LIBRARIES(shock2d_gui vidpro1 bvis1 dbsk2d_pro dbsk2d_vis dbskr_pro dber_pro dber_vis dbskr_vis dbdet_pro dbdet_vis dbinfo_pro dbsol_pro dbru_algo dbil_pro dbru_pro dbru_vis )
+add_executable(shock2d_gui ${shock2d_gui_sources})
+target_link_libraries(shock2d_gui vidpro1 bvis1 dbsk2d_pro dbsk2d_vis dbskr_pro dber_pro dber_vis dbskr_vis dbdet_pro dbdet_vis dbinfo_pro dbsol_pro dbru_algo dbil_pro dbru_pro dbru_vis )
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)

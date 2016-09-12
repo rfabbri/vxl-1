@@ -1,13 +1,13 @@
 # basic/dbvidl/pro/CMakeLists.txt
 # Development Brown Video Processing Extention Library
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/breye1/basic )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
 
 
-SET( dbvidl_pro_sources
+set( dbvidl_pro_sources
         vidpro1_load_boulder_video_process.cxx vidpro1_load_boulder_video_process.h
 )
-ADD_LIBRARY(dbvidl_pro  ${dbvidl_pro_sources})
-TARGET_LINK_LIBRARIES(dbvidl_pro dbvidl dbpro bpro1)
+add_library(dbvidl_pro  ${dbvidl_pro_sources})
+target_link_libraries(dbvidl_pro dbvidl dbpro bpro1)
 

@@ -1,7 +1,7 @@
 # dbrl/dbbas/dbsta/tests/CMakeLists.txt
 # Tests for dbsta library
 
-ADD_EXECUTABLE( dbstao_test_all
+add_executable( dbstao_test_all
   test_driver.cxx
   test_gaussian_full.cxx
   test_gaussian_indep.cxx
@@ -17,22 +17,22 @@ ADD_EXECUTABLE( dbstao_test_all
   test_beta.cxx
 )
 
-TARGET_LINK_LIBRARIES( dbstao_test_all dbstao vnl vpl vbl_io vsl vbl testlib )
+target_link_libraries( dbstao_test_all dbstao vnl vpl vbl_io vsl vbl testlib )
 
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/beta_distr_2_2.txt ${CMAKE_CURRENT_BINARY_DIR}/beta_distr_2_2.txt COPYONLY )
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/beta_distr_2_2.txt ${CMAKE_CURRENT_BINARY_DIR}/beta_distr_2_2.txt COPYONLY )
 
-ADD_TEST( dbsta_test_gaussian_full           ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_gaussian_full )
-ADD_TEST( dbsta_test_gaussian_indep          ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_gaussian_indep )
-ADD_TEST( dbsta_test_gaussian_sphere         ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_gaussian_sphere )
-ADD_TEST( dbsta_test_parzen_sphere           ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_parzen_sphere )
-ADD_TEST( dbsta_test_weibull                 ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_weibull )
-ADD_TEST( dbsta_test_von_mises               ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_von_mises )
-ADD_TEST( dbsta_test_mixture                 ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_mixture )
-ADD_TEST( dbsta_test_histogram               ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_bsta_histogram )
-ADD_TEST( dbsta_test_k_medoid                ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_k_medoid )
-ADD_TEST( dbsta_test_otsu_threshold          ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_otsu_threshold )
-ADD_TEST( dbsta_test_sampler                 ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_sampler )
-ADD_TEST( dbsta_test_beta                    ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_beta )
+add_test( dbsta_test_gaussian_full           ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_gaussian_full )
+add_test( dbsta_test_gaussian_indep          ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_gaussian_indep )
+add_test( dbsta_test_gaussian_sphere         ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_gaussian_sphere )
+add_test( dbsta_test_parzen_sphere           ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_parzen_sphere )
+add_test( dbsta_test_weibull                 ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_weibull )
+add_test( dbsta_test_von_mises               ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_von_mises )
+add_test( dbsta_test_mixture                 ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_mixture )
+add_test( dbsta_test_histogram               ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_bsta_histogram )
+add_test( dbsta_test_k_medoid                ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_k_medoid )
+add_test( dbsta_test_otsu_threshold          ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_otsu_threshold )
+add_test( dbsta_test_sampler                 ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_sampler )
+add_test( dbsta_test_beta                    ${EXECUTABLE_OUTPUT_PATH}/bsta_test_all test_beta )
 
-ADD_EXECUTABLE( dbstao_test_include test_include.cxx )
-TARGET_LINK_LIBRARIES( dbstao_test_include dbstao vsl)
+add_executable( dbstao_test_include test_include.cxx )
+target_link_libraries( dbstao_test_include dbstao vsl)

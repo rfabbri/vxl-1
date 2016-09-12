@@ -1,66 +1,66 @@
 # dbrl/dbbas/CMakeLists.txt
 # main package for basic operations common to all libraries
 # All libraries are mutually independent, except for bxml <-- bdgl
-INCLUDE( ${DBRL_MODULE_PATH}/find_open_cl.cmake )
+include( ${DBRL_MODULE_PATH}/find_open_cl.cmake )
 # xml<->vxl conversion 
-#SUBDIRS(bxml)
+#subdirs(bxml)
 
 # uncertainty geometry library
-#SUBDIRS(bugl)
+#subdirs(bugl)
 
 # Additions to vnl
-#SUBDIRS(bnl)
+#subdirs(bnl)
 
 # Brown Graph Library
-#SUBDIRS(bgrl)
+#subdirs(bgrl)
 # Brown Templated Graph Library
-#SUBDIRS(bgrl2)
+#subdirs(bgrl2)
 
 # Brown statistics library
-SUBDIRS(dbsta)
+subdirs(dbsta)
 
 # Brown dynamic programming library
-#SUBDIRS(bdpg)
+#subdirs(bdpg)
 
 #3D mesh library 
-#SUBDIRS(bmsh3d)
+#subdirs(bmsh3d)
 
 #In memory relational database
-#SUBDIRS(brdb)
+#subdirs(brdb)
 
 #Brown Imaging Library
-#SUBDIRS(bil)
+#subdirs(bil)
 
-IF(OPENCL_FOUND)
-	SUBDIRS(dbocl)
-ENDIF(OPENCL_FOUND)
+if(OPENCL_FOUND)
+	subdirs(dbocl)
+endif(OPENCL_FOUND)
 
-SUBDIRS(dkdu)
+subdirs(dkdu)
 
-IF( BUILD_GEL )
+if( BUILD_GEL )
   # spatial object algorithms
- # SUBDIRS(bsol)
+ # subdirs(bsol)
 
   # topology algorithms
- # SUBDIRS(btol)
+ # subdirs(btol)
 
   # digital library algorithms
- # SUBDIRS(bdgl)
+ # subdirs(bdgl)
 
   # basic vgui classes
-  #SUBDIRS(bgui)
+  #subdirs(bgui)
 
   # coin3D incorporated vgui classes
- # SUBDIRS(bgui3d)
+ # subdirs(bgui3d)
 
   # staged vgl development area
- # SUBDIRS(bvgl)
+ # subdirs(bvgl)
 
   #3D modeling library
-  #SUBDIRS(bwm)
+  #subdirs(bwm)
 
   #Indexed Mesh Library
- # SUBDIRS(imesh)
-ENDIF( BUILD_GEL )
+ # subdirs(imesh)
+endif( BUILD_GEL )
 
 

@@ -1,9 +1,9 @@
 # This is brcv/shp/dbmsh3d/algo/CMakeLists.txt
 # Brown 3D Mesh Algorithm Library
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/shp)
+include_directories( ${lems_SOURCE_DIR}/shp)
 
-SET(gdt_sources
+set(gdt_sources
 
                                      gdt_numerical.h
 
@@ -65,15 +65,15 @@ SET(gdt_sources
 )
 
 
-ADD_LIBRARY( gdt  ${gdt_sources})
+add_library( gdt  ${gdt_sources})
 
-TARGET_LINK_LIBRARIES( gdt dbmsh3d )
+target_link_libraries( gdt dbmsh3d )
 
-SUBDIRS(pro)
+subdirs(pro)
 
 # Visualization Library
-SUBDIRS(vis)
+subdirs(vis)
 
-SUBDIRS(cmdproc)
+subdirs(cmdproc)
 
 

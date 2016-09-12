@@ -1,10 +1,10 @@
 # This is brcv/seg/dbdet/pro/CMakeLists.txt
 # Brown Detection Processing library
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/basic )
 
-SET(dbdet_pro_sources
+set(dbdet_pro_sources
    dbdet_lowe_keypoint_process.cxx    dbdet_lowe_keypoint_process.h
 #  dbdet_keypoint_match_process.cxx   dbdet_keypoint_match_process.h
    dbdet_keypoint_storage.cxx         dbdet_keypoint_storage.h         
@@ -104,21 +104,21 @@ SET(dbdet_pro_sources
    dbdet_save_cem_seq_process.h dbdet_save_cem_seq_process.cxx
 )
 
-IF(OCTAVE_FOUND)
-    SET(dbdet_pro_sources
+if(OCTAVE_FOUND)
+    set(dbdet_pro_sources
         ${dbdet_pro_sources}
         dbdet_pb_edge_detector_process.h dbdet_pb_edge_detector_process.cxx
         dbdet_kovesi_edge_linker_process.h dbdet_kovesi_edge_linker_process.cxx
     )
-ENDIF(OCTAVE_FOUND)
+endif(OCTAVE_FOUND)
 
-#AUX_SOURCE_DIRECTORY(Templates dbdet_pro_sources)
+#aux_source_directory(Templates dbdet_pro_sources)
 
-ADD_LIBRARY(dbdet_pro ${dbdet_pro_sources})
+add_library(dbdet_pro ${dbdet_pro_sources})
 
-TARGET_LINK_LIBRARIES(dbdet_pro dbdet_algo dbdet_xio vidpro1 bvis1 vgui bil)
+target_link_libraries(dbdet_pro dbdet_algo dbdet_xio vidpro1 bvis1 vgui bil)
 
-#IF(BUILD_TESTING)
-#  SUBDIRS(tests)
-#ENDIF(BUILD_TESTING)
+#if(BUILD_TESTING)
+#  subdirs(tests)
+#endif(BUILD_TESTING)
 

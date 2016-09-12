@@ -1,4 +1,4 @@
-SET(util_sources 
+set(util_sources 
   configFileLexer.cc configure.cc
   exception.cc       image.cc
   kmeans.cc          message.cc
@@ -7,4 +7,4 @@ SET(util_sources
   timer.cc           util.cc
 )
 
-ADD_LIBRARY(pbUtil ${util_sources})
+add_library(pbUtil ${util_sources})

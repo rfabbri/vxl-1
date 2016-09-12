@@ -1,17 +1,17 @@
 # breye/dbpro/CMakeLists.txt
 
-PROJECT(dbpro)
+project(dbpro)
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/basic )
 
-FIND_PACKAGE( Threads )
+find_package( Threads )
 
-CONFIGURE_FILE( ${dbpro_SOURCE_DIR}/dbpro_config.h.in
+configure_file( ${dbpro_SOURCE_DIR}/dbpro_config.h.in
                 ${dbpro_BINARY_DIR}/dbpro_config.h )
 
 
-SET(dbpro_sources
+set(dbpro_sources
    dbpro_mutex.cxx                       dbpro_mutex.h 
    dbpro_parameters.cxx                  dbpro_parameters.h                  dbpro_parameters_sptr.h
    dbpro_parameters.txx
@@ -30,23 +30,23 @@ SET(dbpro_sources
 
 
 
-AUX_SOURCE_DIRECTORY(Templates dbpro_sources)
+aux_source_directory(Templates dbpro_sources)
 
-ADD_LIBRARY(dbpro  ${dbpro_sources})
-
-
-TARGET_LINK_LIBRARIES(dbpro vul vbl)
-
-IF( CMAKE_USE_PTHREADS_INIT )
-  SET_TARGET_PROPERTIES(dbpro PROPERTIES COMPILE_FLAGS -pthread)
-  TARGET_LINK_LIBRARIES(dbpro pthread)
-ENDIF( CMAKE_USE_PTHREADS_INIT )
+add_library(dbpro  ${dbpro_sources})
 
 
-SUBDIRS( vis )
+target_link_libraries(dbpro vul vbl)
 
-SUBDIRS( xio )
+if( CMAKE_USE_PTHREADS_INIT )
+  set_target_properties(dbpro PROPERTIES COMPILE_FLAGS -pthread)
+  target_link_libraries(dbpro pthread)
+endif( CMAKE_USE_PTHREADS_INIT )
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+
+subdirs( vis )
+
+subdirs( xio )
+
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)

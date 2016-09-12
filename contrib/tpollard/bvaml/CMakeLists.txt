@@ -1,9 +1,9 @@
-INCLUDE_DIRECTORIES( ${VXLCORE_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
-INCLUDE_DIRECTORIES(${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/tpollard )
+include_directories( ${VXLCORE_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories(${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/contrib/tpollard )
 
-ADD_LIBRARY( bvaml
+add_library( bvaml
              bvaml_params.h             bvaml_params.cxx
              bvaml_log_writer.h         bvaml_log_writer.cxx
              bvaml_world.h              bvaml_world.cxx
@@ -14,8 +14,8 @@ ADD_LIBRARY( bvaml
              vpgl_rays_to_voxels.h      vpgl_rays_to_voxels.cxx )
 
 
-TARGET_LINK_LIBRARIES( bvaml vcl vgl vnl vil vgl_algo vil_algo vpgl vul baml )
-SET( BVAML_INCLUDE_DIR ${bvaml_SOURCE_DIR} )
+target_link_libraries( bvaml vcl vgl vnl vil vgl_algo vil_algo vpgl vul baml )
+set( BVAML_INCLUDE_DIR ${bvaml_SOURCE_DIR} )
 
-SUBDIRS( apps )
-SUBDIRS( tests )
+subdirs( apps )
+subdirs( tests )

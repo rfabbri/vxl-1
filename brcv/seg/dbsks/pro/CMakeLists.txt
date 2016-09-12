@@ -1,9 +1,9 @@
 # This is brcv/seg/dbsks/pro
 # Brown Processing library for Symmetry-based segmentation
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
 
-SET(dbsks_pro_sources                         
+set(dbsks_pro_sources                         
   # Processes
   dbsks_compute_symmetry_points_process.h        dbsks_compute_symmetry_points_process.cxx
   dbsks_detect_shape_process.h                dbsks_detect_shape_process.cxx
@@ -31,12 +31,12 @@ SET(dbsks_pro_sources
 )
 
 
-ADD_LIBRARY(dbsks_pro ${dbsks_pro_sources})
+add_library(dbsks_pro ${dbsks_pro_sources})
 
-TARGET_LINK_LIBRARIES(dbsks_pro dbsks_algo dbdet vidpro1 dbsksp_pro dbsol)
+target_link_libraries(dbsks_pro dbsks_algo dbdet vidpro1 dbsksp_pro dbsol)
 
 
-IF(BUILD_TESTING)
-#  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+#  subdirs(tests)
+endif(BUILD_TESTING)
 

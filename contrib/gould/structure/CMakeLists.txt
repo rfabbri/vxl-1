@@ -2,9 +2,9 @@
 # Benjamin Gould
 
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
 
-SET(dbcfg_structure_srcs
+set(dbcfg_structure_srcs
 
      dbcfg_curve.h                  dbcfg_curve.txx
                                     dbcfg_junction.txx
@@ -13,9 +13,9 @@ SET(dbcfg_structure_srcs
      dbcfg_line.h                   dbcfg_line.txx
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbcfg_structure_srcs)
+aux_source_directory(Templates dbcfg_structure_srcs)
 
-ADD_LIBRARY(dbcfg_structure ${dbcfg_structure_srcs})
+add_library(dbcfg_structure ${dbcfg_structure_srcs})
 
-TARGET_LINK_LIBRARIES(dbcfg_structure vcl vnl dbdet)
+target_link_libraries(dbcfg_structure vcl vnl dbdet)
 

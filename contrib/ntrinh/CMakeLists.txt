@@ -1,28 +1,28 @@
 # contrib/lems_ntrinh/CMakeLists.txt
 # Developement for : lems_ntrinh
 
-# INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/algo )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+# include_directories( ${lems_SOURCE_DIR}/algo )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/basic )
 
 # my bvis based GUI
-# SUBDIRS( gui )
+# subdirs( gui )
 
-SUBDIRS ( dbsksp_gui )
+subdirs ( dbsksp_gui )
 
-SUBDIRS ( skeleton_search )
+subdirs ( skeleton_search )
 
-SUBDIRS ( learn_skeleton_gui )
+subdirs ( learn_skeleton_gui )
 
-# SUBDIRS ( en292 )
-# SUBDIRS ( en292_gui )
-# SUBDIRS ( lems_itk )
-# SUBDIRS ( lems_vtk )
+# subdirs ( en292 )
+# subdirs ( en292_gui )
+# subdirs ( lems_itk )
+# subdirs ( lems_vtk )
 
-# SUBDIRS ( MESH_nogui )
+# subdirs ( MESH_nogui )
 
 # my command line executables
-SUBDIRS( cmd )
-SUBDIRS( dbsk2d_cmd )
+subdirs( cmd )
+subdirs( dbsk2d_cmd )
 
 

@@ -1,21 +1,21 @@
-IF(UNIX)    
-    ADD_DEFINITIONS( -DPOISSON_RECONSTRUCTION_COMMAND=\\"/external/poisson_linux64\\"
+if(UNIX)    
+    add_definitions( -DPOISSON_RECONSTRUCTION_COMMAND=\\"/external/poisson_linux64\\"
                      -DMESH_CC_COMMAND=\\"/external/mesh_cc_linux64\\"   
                      -DMESH_SHADE_COMMAND=\\"/external/mesh_shade_linux64\\"
                      -DMESH_VIEW_COMMAND=\\"/external/mesh_view_linux64\\")       
-ELSE(UNIX)
+else(UNIX)
     
-ENDIF(UNIX)
+endif(UNIX)
 
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VTK_INCLUDE_PATH})
-INCLUDE_DIRECTORIES( ${BOOST_INCLUDE_PATH} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VTK_INCLUDE_PATH})
+include_directories( ${BOOST_INCLUDE_PATH} )
 
 
-SET(elbow__process_sources
+set(elbow__process_sources
        elbow_load_3d_volume_process.cxx       elbow_load_3d_volume_process.h
        elbow_show_slices_process.cxx          elbow_show_slices_process.h
        dbdet_third_order_3d_edge_detector_process.cxx dbdet_third_order_3d_edge_detector_process.h
@@ -31,5 +31,5 @@ SET(elbow__process_sources
     )
 
    
-ADD_LIBRARY (elbow_process ${elbow__process_sources})
-TARGET_LINK_LIBRARIES (elbow_process elbow_storage dbdet_levelset2d_segmentation dbdet_third_order_3d_edge_detector vil3d dbul boost_thread)
+add_library (elbow_process ${elbow__process_sources})
+target_link_libraries (elbow_process elbow_storage dbdet_levelset2d_segmentation dbdet_third_order_3d_edge_detector vil3d dbul boost_thread)

@@ -3,8 +3,8 @@
 
 #tools for brl/bseg/bvxm
 #obsolete. Implementation of dependent libraries have changed
-#SUBDIRS( bseg3d )
-#SUBDIRS( bseg3d_batch )
+#subdirs( bseg3d )
+#subdirs( bseg3d_batch )
 
 
-#SUBDIRS(octree_tests)
+#subdirs(octree_tests)

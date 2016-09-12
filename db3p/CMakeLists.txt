@@ -9,10 +9,10 @@
 ####################################################################
 
 # OpenGL to PostScript Converter
-SUBDIRS( gl2ps )
-#SUBDIRS( expatpp )
-#SUBDIRS( rply )
-SUBDIRS( mesh_tri )
-SUBDIRS( ray_tri )
-SUBDIRS( brent )
+subdirs( gl2ps )
+#subdirs( expatpp )
+#subdirs( rply )
+subdirs( mesh_tri )
+subdirs( ray_tri )
+subdirs( brent )
 

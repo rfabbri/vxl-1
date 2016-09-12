@@ -1,5 +1,5 @@
 
 # Processing Library
-SUBDIRS(pro)
+subdirs(pro)
 
 

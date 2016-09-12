@@ -1,20 +1,20 @@
 # Feb 09 2005, by MingChing to enable contrib app to use SoWin.
 
-SET (HAS_SOWIN "NO")
-IF (USE_SOWIN)
+set (HAS_SOWIN "NO")
+if (USE_SOWIN)
 
   # Find the SoWin library
-  INCLUDE( ${LEMS_CMAKE_DIR}/Modules/FindSoWin.cmake )
+  include( ${LEMS_CMAKE_DIR}/Modules/FindSoWin.cmake )
   
-  IF (SOWIN_FOUND)
-    INCLUDE_DIRECTORIES( ${COIN_INCLUDE_DIR} )
-    ADD_DEFINITIONS( -DHAS_SOWIN )
-    SET (HAS_SOWIN "YES")
-    LINK_LIBRARIES( ${SOWIN_LIBRARY} )
-  ENDIF (SOWIN_FOUND)
+  if (SOWIN_FOUND)
+    include_directories( ${COIN_INCLUDE_DIR} )
+    add_definitions( -DHAS_SOWIN )
+    set (HAS_SOWIN "YES")
+    link_libraries( ${SOWIN_LIBRARY} )
+  endif (SOWIN_FOUND)
 
-ENDIF (USE_SOWIN)
+endif (USE_SOWIN)
 
 #Ming: a hack here!
-#OPTION(HAS_BGUI3D "Force HAS_BGUI3D" YES)
-#ADD_DEFINITIONS( -DHAS_BGUI3D )
+#option(HAS_BGUI3D "Force HAS_BGUI3D" YES)
+#add_definitions( -DHAS_BGUI3D )

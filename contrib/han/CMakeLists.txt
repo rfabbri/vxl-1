@@ -5,49 +5,49 @@
 
 
 # dll library for recognition of video objects in each frame
-SUBDIRS ( bcri_calib )
+subdirs ( bcri_calib )
 
 # my bvis based GUI
-SUBDIRS( gui )
+subdirs( gui )
 
 # commented by Yong Zhao for Breyes1 moving operation. gui_flip does not exist.
-# SUBDIRS( gui_flip )
+# subdirs( gui_flip )
 
 # commented by Yong Zhao for Breyes1 moving operation. pro does not exist.
-# SUBDIRS( pro )
+# subdirs( pro )
 
 # my command line executables
-#SUBDIRS( cmd )
+#subdirs( cmd )
 
 
-SUBDIRS ( dbcri )
-SUBDIRS ( dbcri_accu )
-SUBDIRS ( dbcri_accu_edge )
-SUBDIRS ( dbcri_whole )
-
-# commented by Yong Zhao for Breyes1 moving operation. gui_flip does not exist.
-#SUBDIRS ( dbcri_whole_flip )
-
-#SUBDIRS (dbsel)
-#SUBDIRS (vis)
+subdirs ( dbcri )
+subdirs ( dbcri_accu )
+subdirs ( dbcri_accu_edge )
+subdirs ( dbcri_whole )
 
 # commented by Yong Zhao for Breyes1 moving operation. gui_flip does not exist.
-#SUBDIRS (algo)
+#subdirs ( dbcri_whole_flip )
 
-#SUBDIRS (vorl)
-SUBDIRS (add_3D)
-SUBDIRS (add_3D_same_direction)
-
-# commented by Yong Zhao for Breyes1 moving operation. gui_flip does not exist.
-# SUBDIRS (add_3D_reverse_direction)
-
-#SUBDIRS (add_3D_many_direction)
+#subdirs (dbsel)
+#subdirs (vis)
 
 # commented by Yong Zhao for Breyes1 moving operation. gui_flip does not exist.
-# SUBDIRS( Z_height )
+#subdirs (algo)
 
-SUBDIRS (tree_rec)
-SUBDIRS (tree_rec_rev)
+#subdirs (vorl)
+subdirs (add_3D)
+subdirs (add_3D_same_direction)
 
 # commented by Yong Zhao for Breyes1 moving operation. gui_flip does not exist.
-#SUBDIRS (CRHM)
+# subdirs (add_3D_reverse_direction)
+
+#subdirs (add_3D_many_direction)
+
+# commented by Yong Zhao for Breyes1 moving operation. gui_flip does not exist.
+# subdirs( Z_height )
+
+subdirs (tree_rec)
+subdirs (tree_rec_rev)
+
+# commented by Yong Zhao for Breyes1 moving operation. gui_flip does not exist.
+#subdirs (CRHM)

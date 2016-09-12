@@ -3,17 +3,17 @@
 
 #bprb depends on expat and dsm2_pro depends of bprb primarily
 
-IF( VXL_EXPAT_FOUND )
+if( VXL_EXPAT_FOUND )
 
-	SET( dsm2_pro_sources
+	set( dsm2_pro_sources
 		 dsm2_processes.h
 		 dsm2_register.h			dsm2_register.cxx )
 		 
-    AUX_SOURCE_DIRECTORY( Templates dsm2_pro_sources )
-	AUX_SOURCE_DIRECTORY( processes dsm2_pro_sources )
+    aux_source_directory( Templates dsm2_pro_sources )
+	aux_source_directory( processes dsm2_pro_sources )
 	
-	ADD_LIBRARY( dsm2_pro ${dsm2_pro_sources})
+	add_library( dsm2_pro ${dsm2_pro_sources})
 	
-	TARGET_LINK_LIBRARIES( dsm2_pro dsm2 bprb brdb vnl vil )
+	target_link_libraries( dsm2_pro dsm2 bprb brdb vnl vil )
 
-ENDIF( VXL_EXPAT_FOUND )
+endif( VXL_EXPAT_FOUND )

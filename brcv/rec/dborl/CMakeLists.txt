@@ -1,17 +1,17 @@
 # brcv/rec/dborl/CMakeLists.txt
 # Brown ORL - Object Recognition Library - web database to store datasets and cluster management via MPI
 
-PROJECT( dborl )
+project( dborl )
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/b3p )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR})
-INCLUDE_DIRECTORIES( ${VXL_EXPAT_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/b3p )
+include_directories( ${VXL_GEL_INCLUDE_DIR})
+include_directories( ${VXL_EXPAT_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/brcv/trk )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
 
-SET(dborl_sources  
+set(dborl_sources  
 
 dborl_object_base.h                  #dborl_object_base.cxx
 dborl_object_base_sptr.h
@@ -75,24 +75,24 @@ dborl_index_query.h                    dborl_index_query.cxx
 
 )
 
-AUX_SOURCE_DIRECTORY(Templates dborl_sources)
+aux_source_directory(Templates dborl_sources)
 
-ADD_LIBRARY(dborl ${dborl_sources})
+add_library(dborl ${dborl_sources})
 
-TARGET_LINK_LIBRARIES(dborl bsol vsol dbgrl bdgl vil vbl)
+target_link_libraries(dborl bsol vsol dbgrl bdgl vil vbl)
 
 # Brown Recognition Tools to aid Testing
-#SUBDIRS( vis )
+#subdirs( vis )
 
 # Brown Recognition Algorithms via MPI
-SUBDIRS (algo)
+subdirs (algo)
 
 # Brown ORL Testing
-SUBDIRS( tests )
+subdirs( tests )
 
 # Brown ORL Command Line Utilities
-SUBDIRS( bin )
+subdirs( bin )
 
 # Brown Python Interface
-SUBDIRS( pro )
+subdirs( pro )
 

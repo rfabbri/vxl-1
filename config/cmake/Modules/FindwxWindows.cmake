@@ -37,12 +37,12 @@
 ##     CMakeLists.txt: 
 ##   
 ##   # if you need OpenGL support please
-## SET(WXWINDOWS_USE_GL 1) 
+## set(WXWINDOWS_USE_GL 1) 
 ##   # in your CMakeLists.txt *before* you include this file.
 ##
 ##   # just include Use_wxWindows.cmake 
 ##   # in your projects CMakeLists.txt
-## INCLUDE( ${CMAKE_ROOT}/Modules/Use_wxWindows.cmake)
+## include( ${CMAKE_ROOT}/Modules/Use_wxWindows.cmake)
 ## 
 ## ------------------------------------------------------------------
 ## Author Jan Woetzel <http://www.mip.informatik.uni-kiel.de/~jw> (07/2003)
@@ -51,7 +51,7 @@
 ## -changed variable names to conventions from cmakes readme.txt (Jan Woetzel
 ##  07/07/2003)
 ## -added definition WINVER for WIN32 (Jan Woetzel 07/07//2003)
-## -added IF(CMAKE_WXWINDOWS_CONFIG_EXECUTABLE) found and changed
+## -added if(CMAKE_WXWINDOWS_CONFIG_EXECUTABLE) found and changed
 ##  CMAKE_WX_CONFIG to CMAKE_WXWINDOWS_CONFIG_EXECUTABLE (Jan Woetzel
 ##  07/22/2003)
 ## -removed OPTION for CMAKE_WXWINDOWS_USE_GL. Force the developer to SET it.
@@ -70,19 +70,19 @@
 ##  -testing of DLL linking under MS WIN32
 ## 
 
-IF(WIN32)
-  SET(WIN32_STYLE_FIND 1)
-ENDIF(WIN32)
-IF(MINGW)
-  SET(WIN32_STYLE_FIND 0)
-  SET(UNIX_STYLE_FIND 1)
-ENDIF(MINGW)
-IF(UNIX)
-  SET(UNIX_STYLE_FIND 1)
-ENDIF(UNIX)
+if(WIN32)
+  set(WIN32_STYLE_FIND 1)
+endif(WIN32)
+if(MINGW)
+  set(WIN32_STYLE_FIND 0)
+  set(UNIX_STYLE_FIND 1)
+endif(MINGW)
+if(UNIX)
+  set(UNIX_STYLE_FIND 1)
+endif(UNIX)
 
 
-IF(WIN32_STYLE_FIND)
+if(WIN32_STYLE_FIND)
   
   ## ######################################################################
   ##
@@ -93,35 +93,35 @@ IF(WIN32_STYLE_FIND)
   ## fix the root dir to avoid mixing of headers/libs from different
   ## versions/builds:
   
-  SET (WXWINDOWS_POSSIBLE_ROOT_PATHS
+  set (WXWINDOWS_POSSIBLE_ROOT_PATHS
     $ENV{WXWIN}
     "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\wxWindows_is1;Inno Setup: App Path]" )
   
-  FIND_PATH(WXWINDOWS_ROOT_DIR  include/wx/wx.h 
+  find_path(WXWINDOWS_ROOT_DIR  include/wx/wx.h 
     ${WXWINDOWS_POSSIBLE_ROOT_PATHS} )
   
-  ## MESSAGE("DBG found WXWINDOWS_ROOT_DIR: ${WXWINDOWS_ROOT_DIR}")
+  ## message("DBG found WXWINDOWS_ROOT_DIR: ${WXWINDOWS_ROOT_DIR}")
   
   ## find libs for combination of static/shared with release/debug
-  SET (WXWINDOWS_POSSIBLE_LIB_PATHS
+  set (WXWINDOWS_POSSIBLE_LIB_PATHS
     "${WXWINDOWS_ROOT_DIR}/lib" )
   
-  FIND_LIBRARY(WXWINDOWS_STATIC_LIBRARY
+  find_library(WXWINDOWS_STATIC_LIBRARY
     NAMES wx wxmsw
     PATHS ${WXWINDOWS_POSSIBLE_LIB_PATHS}
     DOC "wxWindows static release build library" )
   
-  FIND_LIBRARY(WXWINDOWS_STATIC_DEBUG_LIBRARY
+  find_library(WXWINDOWS_STATIC_DEBUG_LIBRARY
     NAMES wxd wxmswd
     PATHS ${WXWINDOWS_POSSIBLE_LIB_PATHS} 
     DOC "wxWindows static debug build library" )
   
-  FIND_LIBRARY(WXWINDOWS_SHARED_LIBRARY
+  find_library(WXWINDOWS_SHARED_LIBRARY
     NAMES wxmsw24 wxmsw241 wxmsw240 wx23_2 wx22_9 
     PATHS ${WXWINDOWS_POSSIBLE_LIB_PATHS} 
     DOC "wxWindows shared release build library" )
   
-  FIND_LIBRARY(WXWINDOWS_SHARED_DEBUG_LIBRARY
+  find_library(WXWINDOWS_SHARED_DEBUG_LIBRARY
     NAMES wxmsw24d wxmsw241d wxmsw240d wx23_2d wx22_9d 
     PATHS ${WXWINDOWS_POSSIBLE_LIB_PATHS} 
     DOC "wxWindows shared debug build library " )
@@ -129,16 +129,16 @@ IF(WIN32_STYLE_FIND)
   
   ## if there is at least one shared lib available
   ## let user choose wether to use shared or static wxwindows libs 
-  IF(WXWINDOWS_SHARED_LIBRARY OR WXWINDOWS_SHARED_DEBUG_LIBRARY)
+  if(WXWINDOWS_SHARED_LIBRARY OR WXWINDOWS_SHARED_DEBUG_LIBRARY)
     ## default value OFF because wxWindows MSVS default build is static
-    OPTION(WXWINDOWS_USE_SHARED_LIBS
+    option(WXWINDOWS_USE_SHARED_LIBS
       "Use shared versions (dll) of wxWindows libraries?" OFF)
-    MARK_AS_ADVANCED(WXWINDOWS_USE_SHARED_LIBS)
-  ENDIF(WXWINDOWS_SHARED_LIBRARY OR WXWINDOWS_SHARED_DEBUG_LIBRARY)
+    mark_as_advanced(WXWINDOWS_USE_SHARED_LIBS)
+  endif(WXWINDOWS_SHARED_LIBRARY OR WXWINDOWS_SHARED_DEBUG_LIBRARY)
   
   
   ## add system libraries wxwindows depends on
-  SET(CMAKE_WXWINDOWS_LIBRARIES ${CMAKE_WXWINDOWS_LIBRARIES}
+  set(CMAKE_WXWINDOWS_LIBRARIES ${CMAKE_WXWINDOWS_LIBRARIES}
     comctl32
     rpcrt4
     wsock32
@@ -152,16 +152,16 @@ IF(WIN32_STYLE_FIND)
     )
   
   # JW removed option and force the develper th SET it. 
-  # OPTION(WXWINDOWS_USE_GL "use wxWindows with GL support (use additional
+  # option(WXWINDOWS_USE_GL "use wxWindows with GL support (use additional
   # opengl, glu libs)?" OFF)
   
   ## opengl/glu: (TODO/FIXME: better use FindOpenGL.cmake here 
-  IF (WXWINDOWS_USE_GL)
-    SET(CMAKE_WXWINDOWS_LIBRARIES ${CMAKE_WXWINDOWS_LIBRARIES}
+  if (WXWINDOWS_USE_GL)
+    set(CMAKE_WXWINDOWS_LIBRARIES ${CMAKE_WXWINDOWS_LIBRARIES}
       opengl32
       glu32
       )
-  ENDIF (WXWINDOWS_USE_GL)
+  endif (WXWINDOWS_USE_GL)
   
   
   ##
@@ -173,126 +173,126 @@ IF(WIN32_STYLE_FIND)
   ## then add the build specific include dir for wx/setup.h
   ## 
   
-  IF(WXWINDOWS_USE_SHARED_LIBS)
-    ##MESSAGE("DBG wxWindows use shared lib selected.")
+  if(WXWINDOWS_USE_SHARED_LIBS)
+    ##message("DBG wxWindows use shared lib selected.")
     
     ## shared: both wx (debug and release) found?
-    IF(WXWINDOWS_SHARED_DEBUG_LIBRARY AND WXWINDOWS_SHARED_LIBRARY)
-      ##MESSAGE("DBG wx shared: debug and optimized found.")
-      SET(WXWINDOWS_LIBRARIES ${CMAKE_WXWINDOWS_LIBRARIES}
+    if(WXWINDOWS_SHARED_DEBUG_LIBRARY AND WXWINDOWS_SHARED_LIBRARY)
+      ##message("DBG wx shared: debug and optimized found.")
+      set(WXWINDOWS_LIBRARIES ${CMAKE_WXWINDOWS_LIBRARIES}
         debug     ${WXWINDOWS_SHARED_DEBUG_LIBRARY}
         optimized ${WXWINDOWS_SHARED_LIBRARY} )
-      FIND_PATH(WXWINDOWS_INCLUDE_DIR_SETUPH  wx/setup.h
+      find_path(WXWINDOWS_INCLUDE_DIR_SETUPH  wx/setup.h
         ${WXWINDOWS_ROOT_DIR}/lib/mswdlld
         ${WXWINDOWS_ROOT_DIR}/lib/mswdll )
-    ENDIF(WXWINDOWS_SHARED_DEBUG_LIBRARY AND WXWINDOWS_SHARED_LIBRARY)
+    endif(WXWINDOWS_SHARED_DEBUG_LIBRARY AND WXWINDOWS_SHARED_LIBRARY)
     
     ## shared: only debug wx lib found?
-    IF(WXWINDOWS_SHARED_DEBUG_LIBRARY)
-      IF(NOT WXWINDOWS_SHARED_LIBRARY)
-        ##MESSAGE("DBG wx shared: debug (but no optimized) found.")
-        SET(WXWINDOWS_LIBRARIES ${CMAKE_WXWINDOWS_LIBRARIES}
+    if(WXWINDOWS_SHARED_DEBUG_LIBRARY)
+      if(NOT WXWINDOWS_SHARED_LIBRARY)
+        ##message("DBG wx shared: debug (but no optimized) found.")
+        set(WXWINDOWS_LIBRARIES ${CMAKE_WXWINDOWS_LIBRARIES}
           ${WXWINDOWS_SHARED_DEBUG_LIBRARY} )
-        FIND_PATH(WXWINDOWS_INCLUDE_DIR_SETUPH  wx/setup.h
+        find_path(WXWINDOWS_INCLUDE_DIR_SETUPH  wx/setup.h
           ${WXWINDOWS_ROOT_DIR}/lib/mswdlld )
-      ENDIF(NOT WXWINDOWS_SHARED_LIBRARY)
-    ENDIF(WXWINDOWS_SHARED_DEBUG_LIBRARY)
+      endif(NOT WXWINDOWS_SHARED_LIBRARY)
+    endif(WXWINDOWS_SHARED_DEBUG_LIBRARY)
     
     ## shared: only release wx lib found?
-    IF(NOT WXWINDOWS_SHARED_DEBUG_LIBRARY)
-      IF(WXWINDOWS_SHARED_LIBRARY)
-        ##MESSAGE("DBG wx shared: optimized (but no debug) found.")
-        SET(WXWINDOWS_LIBRARIES ${CMAKE_WXWINDOWS_LIBRARIES}
+    if(NOT WXWINDOWS_SHARED_DEBUG_LIBRARY)
+      if(WXWINDOWS_SHARED_LIBRARY)
+        ##message("DBG wx shared: optimized (but no debug) found.")
+        set(WXWINDOWS_LIBRARIES ${CMAKE_WXWINDOWS_LIBRARIES}
           ${WXWINDOWS_SHARED_DEBUG_LIBRARY} )
-        FIND_PATH(WXWINDOWS_INCLUDE_DIR_SETUPH  wx/setup.h
+        find_path(WXWINDOWS_INCLUDE_DIR_SETUPH  wx/setup.h
           ${WXWINDOWS_ROOT_DIR}/lib/mswdll )
-      ENDIF(WXWINDOWS_SHARED_LIBRARY)    
-    ENDIF(NOT WXWINDOWS_SHARED_DEBUG_LIBRARY)
+      endif(WXWINDOWS_SHARED_LIBRARY)    
+    endif(NOT WXWINDOWS_SHARED_DEBUG_LIBRARY)
     
     ## shared: none found?
-    #IF(NOT WXWINDOWS_SHARED_DEBUG_LIBRARY)
-    #  IF(NOT WXWINDOWS_SHARED_LIBRARY)
-    #    MESSAGE(SEND_ERROR 
+    #if(NOT WXWINDOWS_SHARED_DEBUG_LIBRARY)
+    #  if(NOT WXWINDOWS_SHARED_LIBRARY)
+    #    message(SEND_ERROR 
     #      "No shared wxWindows lib found, but WXWINDOWS_USE_SHARED_LIBS=${WXWINDOWS_USE_SHARED_LIBS}.")
-    #  ENDIF(NOT WXWINDOWS_SHARED_LIBRARY)
-    #ENDIF(NOT WXWINDOWS_SHARED_DEBUG_LIBRARY)
+    #  endif(NOT WXWINDOWS_SHARED_LIBRARY)
+    #endif(NOT WXWINDOWS_SHARED_DEBUG_LIBRARY)
 
 
-  ELSE(WXWINDOWS_USE_SHARED_LIBS)
-    ##MESSAGE("DBG wxWindows static lib selected.")
+  else(WXWINDOWS_USE_SHARED_LIBS)
+    ##message("DBG wxWindows static lib selected.")
 
     ## static: both wx (debug and release) found?
-    IF(WXWINDOWS_STATIC_DEBUG_LIBRARY AND WXWINDOWS_STATIC_LIBRARY)
-      ##MESSAGE("DBG wx static: debug and optimized found.")
-      SET(WXWINDOWS_LIBRARIES ${CMAKE_WXWINDOWS_LIBRARIES}
+    if(WXWINDOWS_STATIC_DEBUG_LIBRARY AND WXWINDOWS_STATIC_LIBRARY)
+      ##message("DBG wx static: debug and optimized found.")
+      set(WXWINDOWS_LIBRARIES ${CMAKE_WXWINDOWS_LIBRARIES}
         debug     ${WXWINDOWS_STATIC_DEBUG_LIBRARY}
         optimized ${WXWINDOWS_STATIC_LIBRARY} )
-      FIND_PATH(WXWINDOWS_INCLUDE_DIR_SETUPH  wx/setup.h
+      find_path(WXWINDOWS_INCLUDE_DIR_SETUPH  wx/setup.h
         ${WXWINDOWS_ROOT_DIR}/lib/mswd
         ${WXWINDOWS_ROOT_DIR}/lib/msw )
-    ENDIF(WXWINDOWS_STATIC_DEBUG_LIBRARY AND WXWINDOWS_STATIC_LIBRARY)
+    endif(WXWINDOWS_STATIC_DEBUG_LIBRARY AND WXWINDOWS_STATIC_LIBRARY)
     
     ## static: only debug wx lib found?
-    IF(WXWINDOWS_STATIC_DEBUG_LIBRARY)
-      IF(NOT WXWINDOWS_STATIC_LIBRARY)
-        ##MESSAGE("DBG wx static: debug (but no optimized) found.")
-        SET(WXWINDOWS_LIBRARIES ${CMAKE_WXWINDOWS_LIBRARIES}
+    if(WXWINDOWS_STATIC_DEBUG_LIBRARY)
+      if(NOT WXWINDOWS_STATIC_LIBRARY)
+        ##message("DBG wx static: debug (but no optimized) found.")
+        set(WXWINDOWS_LIBRARIES ${CMAKE_WXWINDOWS_LIBRARIES}
           ${WXWINDOWS_STATIC_DEBUG_LIBRARY} )
-        FIND_PATH(WXWINDOWS_INCLUDE_DIR_SETUPH  wx/setup.h
+        find_path(WXWINDOWS_INCLUDE_DIR_SETUPH  wx/setup.h
           ${WXWINDOWS_ROOT_DIR}/lib/mswd )
-      ENDIF(NOT WXWINDOWS_STATIC_LIBRARY)
-    ENDIF(WXWINDOWS_STATIC_DEBUG_LIBRARY)
+      endif(NOT WXWINDOWS_STATIC_LIBRARY)
+    endif(WXWINDOWS_STATIC_DEBUG_LIBRARY)
     
     ## static: only release wx lib found?
-    IF(NOT WXWINDOWS_STATIC_DEBUG_LIBRARY)
-      IF(WXWINDOWS_STATIC_LIBRARY)
-        ##MESSAGE("DBG wx static: optimized (but no debug) found.")
-        SET(WXWINDOWS_LIBRARIES ${CMAKE_WXWINDOWS_LIBRARIES}
+    if(NOT WXWINDOWS_STATIC_DEBUG_LIBRARY)
+      if(WXWINDOWS_STATIC_LIBRARY)
+        ##message("DBG wx static: optimized (but no debug) found.")
+        set(WXWINDOWS_LIBRARIES ${CMAKE_WXWINDOWS_LIBRARIES}
           ${WXWINDOWS_STATIC_DEBUG_LIBRARY} )
-        FIND_PATH(WXWINDOWS_INCLUDE_DIR_SETUPH  wx/setup.h
+        find_path(WXWINDOWS_INCLUDE_DIR_SETUPH  wx/setup.h
           ${WXWINDOWS_ROOT_DIR}/lib/msw )
-      ENDIF(WXWINDOWS_STATIC_LIBRARY)
-    ENDIF(NOT WXWINDOWS_STATIC_DEBUG_LIBRARY)
+      endif(WXWINDOWS_STATIC_LIBRARY)
+    endif(NOT WXWINDOWS_STATIC_DEBUG_LIBRARY)
     
     ## static: none found?
-    #IF(NOT WXWINDOWS_STATIC_DEBUG_LIBRARY)
-    #  IF(NOT WXWINDOWS_STATIC_LIBRARY)
-    #    MESSAGE(SEND_ERROR 
+    #if(NOT WXWINDOWS_STATIC_DEBUG_LIBRARY)
+    #  if(NOT WXWINDOWS_STATIC_LIBRARY)
+    #    message(SEND_ERROR 
     #      "No static wxWindows lib found, but WXWINDOWS_USE_SHARED_LIBS=${WXWINDOWS_USE_SHARED_LIBS}.")
-    #  ENDIF(NOT WXWINDOWS_STATIC_LIBRARY)
-    #ENDIF(NOT WXWINDOWS_STATIC_DEBUG_LIBRARY)
+    #  endif(NOT WXWINDOWS_STATIC_LIBRARY)
+    #endif(NOT WXWINDOWS_STATIC_DEBUG_LIBRARY)
     
-  ENDIF(WXWINDOWS_USE_SHARED_LIBS)  
+  endif(WXWINDOWS_USE_SHARED_LIBS)  
   
   
   ## not neccessary in wxWindows 2.4.1 
   ## but it may fix a previous bug, see
   ## http://lists.wxwindows.org/cgi-bin/ezmlm-cgi?8:mss:37574:200305:mpdioeneabobmgjenoap
-  OPTION(WXWINDOWS_SET_DEFINITIONS "Set additional defines for wxWindows" OFF)
-  MARK_AS_ADVANCED(WXWINDOWS_SET_DEFINITIONS)
-  IF (WXWINDOWS_SET_DEFINITIONS) 
-    SET(WXWINDOWS_DEFINITIONS "-DWINVER=0x400")
-  ELSE (WXWINDOWS_SET_DEFINITIONS) 
+  option(WXWINDOWS_SET_DEFINITIONS "Set additional defines for wxWindows" OFF)
+  mark_as_advanced(WXWINDOWS_SET_DEFINITIONS)
+  if (WXWINDOWS_SET_DEFINITIONS) 
+    set(WXWINDOWS_DEFINITIONS "-DWINVER=0x400")
+  else (WXWINDOWS_SET_DEFINITIONS) 
     # clear:
-    SET(WXWINDOWS_DEFINITIONS "")
-  ENDIF (WXWINDOWS_SET_DEFINITIONS) 
+    set(WXWINDOWS_DEFINITIONS "")
+  endif (WXWINDOWS_SET_DEFINITIONS) 
   
   
   ## Find the include directories for wxwindows
   ## the first, build specific for wx/setup.h was determined before.
   ## add inc dir for general for "wx/wx.h" 
-  SET (WXWINDOWS_POSSIBLE_INCLUDE_PATHS
+  set (WXWINDOWS_POSSIBLE_INCLUDE_PATHS
     "${WXWINDOWS_ROOT_DIR}/include"
     )
-  FIND_PATH(WXWINDOWS_INCLUDE_DIR  wx/wx.h 
+  find_path(WXWINDOWS_INCLUDE_DIR  wx/wx.h 
     ${WXWINDOWS_POSSIBLE_INCLUDE_PATHS}
     )  
   # append the build specific include dir for wx/setup.h:
-  IF (WXWINDOWS_INCLUDE_DIR_SETUPH)
-    SET(WXWINDOWS_INCLUDE_DIR ${WXWINDOWS_INCLUDE_DIR} ${WXWINDOWS_INCLUDE_DIR_SETUPH} )
-  ENDIF (WXWINDOWS_INCLUDE_DIR_SETUPH)
+  if (WXWINDOWS_INCLUDE_DIR_SETUPH)
+    set(WXWINDOWS_INCLUDE_DIR ${WXWINDOWS_INCLUDE_DIR} ${WXWINDOWS_INCLUDE_DIR_SETUPH} )
+  endif (WXWINDOWS_INCLUDE_DIR_SETUPH)
   
-  MARK_AS_ADVANCED(
+  mark_as_advanced(
     WXWINDOWS_ROOT_DIR
     WXWINDOWS_INCLUDE_DIR
     WXWINDOWS_INCLUDE_DIR_SETUPH
@@ -303,8 +303,8 @@ IF(WIN32_STYLE_FIND)
     )
   
   
-ELSE(WIN32_STYLE_FIND)
-  IF (UNIX_STYLE_FIND) 
+else(WIN32_STYLE_FIND)
+  if (UNIX_STYLE_FIND) 
     ## ######################################################################
     ## 
     ## UNIX/Linux specific:
@@ -313,74 +313,74 @@ ELSE(WIN32_STYLE_FIND)
     ## 06/2003 Jan Woetzel
     ## 
     
-    OPTION(WXWINDOWS_USE_SHARED_LIBS "Use shared versions (.so) of wxWindows libraries" ON)
-    MARK_AS_ADVANCED(WXWINDOWS_USE_SHARED_LIBS)
+    option(WXWINDOWS_USE_SHARED_LIBS "Use shared versions (.so) of wxWindows libraries" ON)
+    mark_as_advanced(WXWINDOWS_USE_SHARED_LIBS)
 
     # JW removed option and force the develper th SET it. 
-    # OPTION(WXWINDOWS_USE_GL "use wxWindows with GL support (use additional
+    # option(WXWINDOWS_USE_GL "use wxWindows with GL support (use additional
     # --gl-libs for wx-config)?" OFF)
     
     # wx-config should be in your path anyhow, usually no need to set WXWIN or
     # search in ../wx or ../../wx
-    FIND_PROGRAM(CMAKE_WXWINDOWS_WXCONFIG_EXECUTABLE wx-config
+    find_program(CMAKE_WXWINDOWS_WXCONFIG_EXECUTABLE wx-config
       $ENV{WXWIN}
       ../wx/bin
       ../../wx/bin )
     
     # check wether wx-config was found:
-    IF(CMAKE_WXWINDOWS_WXCONFIG_EXECUTABLE)    
+    if(CMAKE_WXWINDOWS_WXCONFIG_EXECUTABLE)    
 
       # use shared/static wx lib?
       # remember: always link shared to use systems GL etc. libs (no static
       # linking, just link *against* static .a libs)
-      IF(WXWINDOWS_USE_SHARED_LIBS)
-        SET(WX_CONFIG_ARGS_LIBS "--libs")
-      ELSE(WXWINDOWS_USE_SHARED_LIBS)
-        SET(WX_CONFIG_ARGS_LIBS "--static --libs")
-      ENDIF(WXWINDOWS_USE_SHARED_LIBS)
+      if(WXWINDOWS_USE_SHARED_LIBS)
+        set(WX_CONFIG_ARGS_LIBS "--libs")
+      else(WXWINDOWS_USE_SHARED_LIBS)
+        set(WX_CONFIG_ARGS_LIBS "--static --libs")
+      endif(WXWINDOWS_USE_SHARED_LIBS)
       
       # do we need additionial wx GL stuff like GLCanvas ?
-      IF(WXWINDOWS_USE_GL)
-        SET(WX_CONFIG_ARGS_LIBS "${WX_CONFIG_ARGS_LIBS} --gl-libs" )
-      ENDIF(WXWINDOWS_USE_GL)
-      ##MESSAGE("DBG: WX_CONFIG_ARGS_LIBS=${WX_CONFIG_ARGS_LIBS}===")
+      if(WXWINDOWS_USE_GL)
+        set(WX_CONFIG_ARGS_LIBS "${WX_CONFIG_ARGS_LIBS} --gl-libs" )
+      endif(WXWINDOWS_USE_GL)
+      ##message("DBG: WX_CONFIG_ARGS_LIBS=${WX_CONFIG_ARGS_LIBS}===")
       
       # set CXXFLAGS to be fed into CMAKE_CXX_FLAGS by the user:
-      SET(CMAKE_WXWINDOWS_CXX_FLAGS "`${CMAKE_WXWINDOWS_WXCONFIG_EXECUTABLE} --cxxflags`")
-      ##MESSAGE("DBG: for compilation:
+      set(CMAKE_WXWINDOWS_CXX_FLAGS "`${CMAKE_WXWINDOWS_WXCONFIG_EXECUTABLE} --cxxflags`")
+      ##message("DBG: for compilation:
       ##CMAKE_WXWINDOWS_CXX_FLAGS=${CMAKE_WXWINDOWS_CXX_FLAGS}===")
 
       # keep the back-quoted string for clarity
-      SET(WXWINDOWS_LIBRARIES "`${CMAKE_WXWINDOWS_WXCONFIG_EXECUTABLE} ${WX_CONFIG_ARGS_LIBS}`")
-      ##MESSAGE("DBG2: for linking:
+      set(WXWINDOWS_LIBRARIES "`${CMAKE_WXWINDOWS_WXCONFIG_EXECUTABLE} ${WX_CONFIG_ARGS_LIBS}`")
+      ##message("DBG2: for linking:
       ##WXWINDOWS_LIBRARIES=${WXWINDOWS_LIBRARIES}===")
       
       # evaluate wx-config output to separate linker flags and linkdirs for
       # rpath:
-      EXEC_PROGRAM(${CMAKE_WXWINDOWS_WXCONFIG_EXECUTABLE}
+      exec_program(${CMAKE_WXWINDOWS_WXCONFIG_EXECUTABLE}
         ARGS ${WX_CONFIG_ARGS_LIBS}
         OUTPUT_VARIABLE WX_CONFIG_LIBS )
       
       ## extract linkdirs (-L) for rpath
       ## use regular expression to match wildcard equivalent "-L*<endchar>"
       ## with <endchar> is a space or a semicolon
-      STRING(REGEX MATCHALL "[-][L]([^ ;])+" WXWINDOWS_LINK_DIRECTORIES_WITH_PREFIX "${WX_CONFIG_LIBS}" )
-      #MESSAGE("DBG  WXWINDOWS_LINK_DIRECTORIES_WITH_PREFIX=${WXWINDOWS_LINK_DIRECTORIES_WITH_PREFIX}")
+      string(REGEX MATCHALL "[-][L]([^ ;])+" WXWINDOWS_LINK_DIRECTORIES_WITH_PREFIX "${WX_CONFIG_LIBS}" )
+      #message("DBG  WXWINDOWS_LINK_DIRECTORIES_WITH_PREFIX=${WXWINDOWS_LINK_DIRECTORIES_WITH_PREFIX}")
       
       ## remove prefix -L because we need the pure directory for LINK_DIRECTORIES
       ## replace -L by ; because the separator seems to be lost otherwise (bug or
       ## feature?)
-      IF(WXWINDOWS_LINK_DIRECTORIES_WITH_PREFIX)
-        STRING(REGEX REPLACE "[-][L]" ";" WXWINDOWS_LINK_DIRECTORIES ${WXWINDOWS_LINK_DIRECTORIES_WITH_PREFIX} )
-        #MESSAGE("DBG  WXWINDOWS_LINK_DIRECTORIES=${WXWINDOWS_LINK_DIRECTORIES}")
-      ENDIF(WXWINDOWS_LINK_DIRECTORIES_WITH_PREFIX)
+      if(WXWINDOWS_LINK_DIRECTORIES_WITH_PREFIX)
+        string(REGEX REPLACE "[-][L]" ";" WXWINDOWS_LINK_DIRECTORIES ${WXWINDOWS_LINK_DIRECTORIES_WITH_PREFIX} )
+        #message("DBG  WXWINDOWS_LINK_DIRECTORIES=${WXWINDOWS_LINK_DIRECTORIES}")
+      endif(WXWINDOWS_LINK_DIRECTORIES_WITH_PREFIX)
 
       
       ## replace space separated string by semicolon separated vector to make it
       ## work with LINK_DIRECTORIES
-      SEPARATE_ARGUMENTS(WXWINDOWS_LINK_DIRECTORIES)
+      separate_arguments(WXWINDOWS_LINK_DIRECTORIES)
       
-      MARK_AS_ADVANCED(
+      mark_as_advanced(
         CMAKE_WXWINDOWS_CXX_FLAGS
         WXWINDOWS_INCLUDE_DIR
         WXWINDOWS_LIBRARIES
@@ -390,30 +390,30 @@ ELSE(WIN32_STYLE_FIND)
       
       # we really need wx-config...
       # Ming: comment out for now
-    ELSE(CMAKE_WXWINDOWS_WXCONFIG_EXECUTABLE)    
-    #  MESSAGE(SEND_ERROR "Cannot find wx-config anywhere on the system. Please put the file into your path or specify it in CMAKE_WXWINDOWS_WXCONFIG_EXECUTABLE.")
-      MARK_AS_ADVANCED(CMAKE_WXWINDOWS_WXCONFIG_EXECUTABLE)
-    ENDIF(CMAKE_WXWINDOWS_WXCONFIG_EXECUTABLE)
+    else(CMAKE_WXWINDOWS_WXCONFIG_EXECUTABLE)    
+    #  message(SEND_ERROR "Cannot find wx-config anywhere on the system. Please put the file into your path or specify it in CMAKE_WXWINDOWS_WXCONFIG_EXECUTABLE.")
+      mark_as_advanced(CMAKE_WXWINDOWS_WXCONFIG_EXECUTABLE)
+    endif(CMAKE_WXWINDOWS_WXCONFIG_EXECUTABLE)
 
     
     
-  ELSE(UNIX_STYLE_FIND)
-    MESSAGE(SEND_ERROR "FindwxWindows.cmake:  Platform unknown/unsupported by FindwxWindows.cmake. It's neither WIN32 nor UNIX")
-  ENDIF(UNIX_STYLE_FIND)
-ENDIF(WIN32_STYLE_FIND)
+  else(UNIX_STYLE_FIND)
+    message(SEND_ERROR "FindwxWindows.cmake:  Platform unknown/unsupported by FindwxWindows.cmake. It's neither WIN32 nor UNIX")
+  endif(UNIX_STYLE_FIND)
+endif(WIN32_STYLE_FIND)
 
 
-IF(WXWINDOWS_LIBRARIES)
-  IF(WXWINDOWS_INCLUDE_DIR OR CMAKE_WXWINDOWS_CXX_FLAGS)
+if(WXWINDOWS_LIBRARIES)
+  if(WXWINDOWS_INCLUDE_DIR OR CMAKE_WXWINDOWS_CXX_FLAGS)
     
     ## found all we need.
-    SET(WXWINDOWS_FOUND 1)
+    set(WXWINDOWS_FOUND 1)
     
     ## set deprecated variables for backward compatibility: 
-    SET(CMAKE_WX_CAN_COMPILE   ${WXWINDOWS_FOUND})
-    SET(WXWINDOWS_LIBRARY      ${WXWINDOWS_LIBRARIES})
-    SET(WXWINDOWS_INCLUDE_PATH ${WXWINDOWS_INCLUDE_DIR})
-    SET(CMAKE_WX_CXX_FLAGS     ${CMAKE_WXWINDOWS_CXX_FLAGS})
+    set(CMAKE_WX_CAN_COMPILE   ${WXWINDOWS_FOUND})
+    set(WXWINDOWS_LIBRARY      ${WXWINDOWS_LIBRARIES})
+    set(WXWINDOWS_INCLUDE_PATH ${WXWINDOWS_INCLUDE_DIR})
+    set(CMAKE_WX_CXX_FLAGS     ${CMAKE_WXWINDOWS_CXX_FLAGS})
     
-  ENDIF(WXWINDOWS_INCLUDE_DIR OR CMAKE_WXWINDOWS_CXX_FLAGS)
-ENDIF(WXWINDOWS_LIBRARIES)
+  endif(WXWINDOWS_INCLUDE_DIR OR CMAKE_WXWINDOWS_CXX_FLAGS)
+endif(WXWINDOWS_LIBRARIES)

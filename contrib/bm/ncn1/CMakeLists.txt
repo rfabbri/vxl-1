@@ -3,12 +3,12 @@
 
 
 
-PROJECT( ncn1 )
-INCLUDE_DIRECTORIES( ${VXL_CORE_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg ) #bsta is the next step down
+project( ncn1 )
+include_directories( ${VXL_CORE_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg ) #bsta is the next step down
 #to parse xml
 
-SET( ncn1_sources
+set( ncn1_sources
 	 
 	 ncn1_neighborhood.h          				ncn1_neighborhood.cxx
 	 ncn1_neighborhood_sptr.h
@@ -30,12 +30,12 @@ SET( ncn1_sources
 	 ncn1_factory.h               ncn1_factory.cxx
 	 ncn1_utilities.h			  ncn1_utilities.cxx )
 	 
-ADD_LIBRARY( ncn1 ${ncn1_sources} )
-TARGET_LINK_LIBRARIES( ncn1 vil vil_io vidl vul vsl vgl vbl bsta)
+add_library( ncn1 ${ncn1_sources} )
+target_link_libraries( ncn1 vil vil_io vidl vul vsl vgl vbl bsta)
 
-IF( BUILD_TESTING )
-  SUBDIRS( tests )
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs( tests )
+endif( BUILD_TESTING )
 
-SUBDIRS( executables )
+subdirs( executables )
 

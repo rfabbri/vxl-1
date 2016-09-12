@@ -1,14 +1,14 @@
 # contrib/dbrl/dbseg/dboxm/CMakeLists.txt
-INCLUDE( ${DBRL_MODULE_PATH}/FindEXPAT.cmake )
-IF(EXPAT_FOUND)
+include( ${DBRL_MODULE_PATH}/FindEXPAT.cmake )
+if(EXPAT_FOUND)
 
-INCLUDE_DIRECTORIES( ${EXPAT_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${GEL_INCLUDE_DIR} )
-#INCLUDE_DIRECTORIES( ${BRL_INCLUDE_DIR}/bbas)
-INCLUDE_DIRECTORIES( ${GEL_INCLUDE_DIR}/mrc )
-INCLUDE_DIRECTORIES( ${BRL_INCLUDE_DIR}/b3p/expatpp )
+include_directories( ${EXPAT_INCLUDE_DIR} )
+include_directories( ${GEL_INCLUDE_DIR} )
+#include_directories( ${BRL_INCLUDE_DIR}/bbas)
+include_directories( ${GEL_INCLUDE_DIR}/mrc )
+include_directories( ${BRL_INCLUDE_DIR}/b3p/expatpp )
 
-SET(dboxm_sources
+set(dboxm_sources
     boxm_block.txx                         boxm_block.h
     boxm_scene_base.cxx                    boxm_scene_base.h
     boxm_scene.txx                         boxm_scene.h
@@ -45,25 +45,25 @@ SET(dboxm_sources
 
 )
 
-AUX_SOURCE_DIRECTORY(Templates dboxm_sources)
+aux_source_directory(Templates dboxm_sources)
 
-ADD_LIBRARY(dboxm  ${dboxm_sources})
+add_library(dboxm  ${dboxm_sources})
 
-TARGET_LINK_LIBRARIES(dboxm boct vcl vgl vgl_io vgl_xio vbl vsl vpgl vpgl_algo vsol bgeo bsta bsta_algo vul vil imesh expatpp)
+target_link_libraries(dboxm boct vcl vgl vgl_io vgl_xio vbl vsl vpgl vpgl_algo vsol bgeo bsta bsta_algo vul vil imesh expatpp)
 
 #processes
-#SUBDIRS(pro)
+#subdirs(pro)
 
 #io
-#SUBDIRS(io)
+#subdirs(io)
 
 #tests
-#SUBDIRS(tests)
+#subdirs(tests)
 
 #opt
-SUBDIRS(opt)
+subdirs(opt)
 
 #basic algorithms involving scenes
-#SUBDIRS(algo)
+#subdirs(algo)
 
-ENDIF(EXPAT_FOUND)
+endif(EXPAT_FOUND)

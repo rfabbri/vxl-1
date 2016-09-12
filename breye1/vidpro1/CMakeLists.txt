@@ -1,17 +1,17 @@
 # brl/vidpro1/CMakeLists.txt
 
-PROJECT(vidpro1)
+project(vidpro1)
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_OXL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${lems_SOURCE_DIR}/basic )
 
 
-SET(vidpro1_sources
+set(vidpro1_sources
    vidpro1_process_manager.cxx             vidpro1_process_manager.h             vidpro1_process_manager_sptr.h
    vidpro1_repository.cxx                  vidpro1_repository.h                  vidpro1_repository_sptr.h
 
@@ -66,14 +66,14 @@ SET(vidpro1_sources
 )
 
 
-AUX_SOURCE_DIRECTORY(Templates vidpro1_sources)
+aux_source_directory(Templates vidpro1_sources)
 
-ADD_LIBRARY(vidpro1  ${vidpro1_sources})
+add_library(vidpro1  ${vidpro1_sources})
 
-IF(DIRECTSHOW_FOUND)
-  TARGET_LINK_LIBRARIES(vidpro1 bpro1 sdet vgel vil_io mvl dbsol_algo vnl_io vidl vgui)
-ELSE(DIRECTSHOW_FOUND)
-  TARGET_LINK_LIBRARIES(vidpro1 bpro1 sdet vgel vil_io mvl dbsol_algo vnl_io vidl vgui)
-ENDIF(DIRECTSHOW_FOUND)
+if(DIRECTSHOW_FOUND)
+  target_link_libraries(vidpro1 bpro1 sdet vgel vil_io mvl dbsol_algo vnl_io vidl vgui)
+else(DIRECTSHOW_FOUND)
+  target_link_libraries(vidpro1 bpro1 sdet vgel vil_io mvl dbsol_algo vnl_io vidl vgui)
+endif(DIRECTSHOW_FOUND)
 
 

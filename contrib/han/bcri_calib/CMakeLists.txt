@@ -1,3 +1,3 @@
 
-SUBDIRS (exec)
+subdirs (exec)
 

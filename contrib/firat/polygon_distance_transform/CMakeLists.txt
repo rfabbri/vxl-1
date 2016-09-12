@@ -1,29 +1,29 @@
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES(${lems_SOURCE_DIR}/brcv/seg)
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories(${lems_SOURCE_DIR}/brcv/seg)
 
-SET(polygon_distance_transform_sources
+set(polygon_distance_transform_sources
        polygon_distance_transform.h polygon_distance_transform.cxx
     )
-ADD_LIBRARY(polygon_distance_transform  ${polygon_distance_transform_sources} )
-TARGET_LINK_LIBRARIES (polygon_distance_transform vsol vgl vnl)
+add_library(polygon_distance_transform  ${polygon_distance_transform_sources} )
+target_link_libraries (polygon_distance_transform vsol vgl vnl)
 
-SET(compute_polygon_distance_transform_sources
+set(compute_polygon_distance_transform_sources
        compute_polygon_distance_transform.cxx
     )
-ADD_EXECUTABLE(compute_polygon_distance_transform  ${compute_polygon_distance_transform_sources} )
-TARGET_LINK_LIBRARIES (compute_polygon_distance_transform polygon_distance_transform)
+add_executable(compute_polygon_distance_transform  ${compute_polygon_distance_transform_sources} )
+target_link_libraries (compute_polygon_distance_transform polygon_distance_transform)
 
 
 #mex version
-IF(UNIX)
-	FIND_PACKAGE(Matlab)
-	INCLUDE_DIRECTORIES(${MATLAB_INCLUDE_DIR})
-	ADD_DEFINITIONS(-DMATLAB_MEX_FILE)
-	ADD_LIBRARY(mex_poly_dist_trans MODULE mex_poly_dist_trans.cxx)
-	SET_TARGET_PROPERTIES(mex_poly_dist_trans PROPERTIES
+if(UNIX)
+	find_package(Matlab)
+	include_directories(${MATLAB_INCLUDE_DIR})
+	add_definitions(-DMATLAB_MEX_FILE)
+	add_library(mex_poly_dist_trans MODULE mex_poly_dist_trans.cxx)
+	set_target_properties(mex_poly_dist_trans PROPERTIES
 	LIBRARY_OUTPUT_DIRECTORY /home/firat/lemsvxl/bin/mex PREFIX "" SUFFIX ".mexa64")
-	TARGET_LINK_LIBRARIES(mex_poly_dist_trans  polygon_distance_transform ${MATLAB_LIBRARIES})
-ENDIF(UNIX)
+	target_link_libraries(mex_poly_dist_trans  polygon_distance_transform ${MATLAB_LIBRARIES})
+endif(UNIX)

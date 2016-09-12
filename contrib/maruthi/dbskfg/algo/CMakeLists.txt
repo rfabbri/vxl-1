@@ -1,17 +1,17 @@
 # This is brcv/shp/dbskfg/pro/CMakeLists.txt
 # Brown 2D Composite_graph library
 
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_RPL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${CMAKE_VLFEAT_INCLUDES} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_RPL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${CMAKE_VLFEAT_INCLUDES} )
 
 
-SET(dbskfg_algo_sources
+set(dbskfg_algo_sources
 
   #algos
   dbskfg_sift_data.h
@@ -75,8 +75,8 @@ SET(dbskfg_algo_sources
 
 )
 
-ADD_LIBRARY(dbskfg_algo ${dbskfg_algo_sources})
+add_library(dbskfg_algo ${dbskfg_algo_sources})
 
-TARGET_LINK_LIBRARIES(dbskfg_algo dbskr dbskfg dbsk2d_pro dbskfg_pro)
+target_link_libraries(dbskfg_algo dbskr dbskfg dbsk2d_pro dbskfg_pro)
 
 

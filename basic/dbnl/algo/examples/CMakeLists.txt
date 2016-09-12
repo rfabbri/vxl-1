@@ -1,3 +1,3 @@
-LINK_LIBRARIES( dbnl_algo )
+link_libraries( dbnl_algo )
 
-ADD_EXECUTABLE( eno_example eno_example.cxx )
+add_executable( eno_example eno_example.cxx )

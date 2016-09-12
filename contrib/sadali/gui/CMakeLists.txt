@@ -2,24 +2,24 @@
 
 
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_RPL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${RPL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bmvl )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${VXL_RPL_INCLUDE_DIR}/rrel )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/sadali/dbbbopt_vis )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_RPL_INCLUDE_DIR} )
+include_directories( ${RPL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bmvl )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${VXL_RPL_INCLUDE_DIR}/rrel )
+include_directories( ${lems_SOURCE_DIR}/contrib/sadali/dbbbopt_vis )
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/sadali/dbbbopt_pro )
+include_directories( ${lems_SOURCE_DIR}/contrib/sadali/dbbbopt_pro )
 
-SET(sadal_gui_sources
+set(sadal_gui_sources
 
    sadali_menu.cxx                              sadali_menu.h
    sadali_main.cxx
@@ -42,10 +42,10 @@ SET(sadal_gui_sources
    planar_curve_reconst_problem.cxx             planar_curve_reconst_problem.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates bvis1_sources)
+aux_source_directory(Templates bvis1_sources)
 
-ADD_EXECUTABLE(sadal_gui ${sadal_gui_sources})
+add_executable(sadal_gui ${sadal_gui_sources})
 
-TARGET_LINK_LIBRARIES(sadal_gui  bvis1 vidpro1 vidl1 rrel bprt vgel bfac vgl vgl_algo vsl brct  dbbbopt_vis dbhom_vis)
+target_link_libraries(sadal_gui  bvis1 vidpro1 vidl1 rrel bprt vgel bfac vgl vgl_algo vsl brct  dbbbopt_vis dbhom_vis)
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)

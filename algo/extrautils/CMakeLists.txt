@@ -1,9 +1,9 @@
 # extrautils library
 # algo/extrautils/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
 
-SET(extra_util_sources
+set(extra_util_sources
 
 arc.h
 common.h
@@ -16,9 +16,9 @@ extrautils.cpp
 
 )
 
-AUX_SOURCE_DIRECTORY(Templates extra_util_sources)
+aux_source_directory(Templates extra_util_sources)
 
-ADD_LIBRARY(extrautils  ${extra_util_sources})
+add_library(extrautils  ${extra_util_sources})
 
-TARGET_LINK_LIBRARIES( extrautils vgl vcl vnl vbl )
+target_link_libraries( extrautils vgl vcl vnl vbl )
 

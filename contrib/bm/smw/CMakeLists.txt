@@ -3,14 +3,14 @@
 
 project( smw )
 
-#MESSAGE( "smw_SOURCE_DIR = " ${smw_SOURCE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_CORE_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg ) #bsta is next step down
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/bm )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
+#message( "smw_SOURCE_DIR = " ${smw_SOURCE_DIR} )
+include_directories( ${VXL_CORE_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg ) #bsta is next step down
+include_directories( ${lems_SOURCE_DIR}/contrib/bm )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 
-SET( smw_sources 
+set( smw_sources 
      #smw_node_gaussian_frames.h     smw_node_gaussian_frames.cxx
      #smw_graph_gaussian_frames.h    smw_graph_gaussian_frames.cxx
      smw_frame_clock.h              smw_frame_clock.cxx
@@ -20,16 +20,16 @@ SET( smw_sources
      smw_world.h                    smw_world.cxx
 )
 
-AUX_SOURCE_DIRECTORY( Templates smw_sources )
+aux_source_directory( Templates smw_sources )
 
-ADD_LIBRARY( smw ${smw_sources} )
+add_library( smw ${smw_sources} )
 
-TARGET_LINK_LIBRARIES( smw vil vnl bsta )
+target_link_libraries( smw vil vnl bsta )
 
-#ADD_TEST(smw_bvxm_voxel_world ${EXECUTABLE_OUTPUT_PATH}/smw_test_all test_smw_bvxm_voxel_world)
-#ADD_TEST(smw_node ${EXECUTABLE_OUTPUT_PATH}/smw_test_all test_smw_node)
+#add_test(smw_bvxm_voxel_world ${EXECUTABLE_OUTPUT_PATH}/smw_test_all test_smw_bvxm_voxel_world)
+#add_test(smw_node ${EXECUTABLE_OUTPUT_PATH}/smw_test_all test_smw_node)
 
-SUBDIRS(tests)
+subdirs(tests)
 
-SUBDIRS(executables)
+subdirs(executables)
 

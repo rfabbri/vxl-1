@@ -2,16 +2,16 @@
 # contrib/tpollard/CMakeLists.txt
 
 # A basic gui
-SUBDIRS( gui )
+subdirs( gui )
 
 # Volumetric appearance modeling
-SUBDIRS( bvaml )
+subdirs( bvaml )
 
 # Appearance modeling
-SUBDIRS( baml )
+subdirs( baml )
 
 # Misc code and apps
-SUBDIRS( btpl )
+subdirs( btpl )
 
 # Camera computation
-SUBDIRS( dbccl )
+subdirs( dbccl )

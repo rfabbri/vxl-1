@@ -1,19 +1,19 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+cmake_minimum_required(VERSION 2.6)
 
-IF(VXL_FOUND)
+if(VXL_FOUND)
 
-  PROJECT(bmvrec)
-  SET(VXL_PROVIDE_STANDARD_OPTIONS 1)
-  INCLUDE(${VXL_CMAKE_DIR}/UseVXL.cmake)
+  project(bmvrec)
+  set(VXL_PROVIDE_STANDARD_OPTIONS 1)
+  include(${VXL_CMAKE_DIR}/UseVXL.cmake)
 
-  INCLUDE_DIRECTORIES( /home/brandon/vxl/contrib/brl/bseg )
-  INCLUDE_DIRECTORIES( /home/brandon/vxl/contrib/gel )
-  INCLUDE_DIRECTORIES( /home/brandon/vxl/contrib/brl/bbas )
+  include_directories( /home/brandon/vxl/contrib/brl/bseg )
+  include_directories( /home/brandon/vxl/contrib/gel )
+  include_directories( /home/brandon/vxl/contrib/brl/bbas )
 
-  SET(bmvrec_sources bmvrec_cmd.cxx bmvrec_functions.h     bmvrec_functions.cxx)
+  set(bmvrec_sources bmvrec_cmd.cxx bmvrec_functions.h     bmvrec_functions.cxx)
 
-  ADD_EXECUTABLE(bmvrec_cmd ${bmvrec_sources})
+  add_executable(bmvrec_cmd ${bmvrec_sources})
 
-  TARGET_LINK_LIBRARIES(bmvrec_cmd bsta bsta_algo brip vnl vil vul)
+  target_link_libraries(bmvrec_cmd bsta bsta_algo brip vnl vil vul)
 
-ENDIF(VXL_FOUND)
+endif(VXL_FOUND)

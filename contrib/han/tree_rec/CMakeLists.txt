@@ -1,21 +1,21 @@
-SET(tube_source
+set(tube_source
     tube.cxx tube.h
     )
 
-ADD_LIBRARY(dtube_rec ${tube_source})
+add_library(dtube_rec ${tube_source})
 
-#TARGET_LINK_LIBRARIES(dtube)
-
-
-ADD_EXECUTABLE (dtube_test_rec  main.cxx)
-TARGET_LINK_LIBRARIES(dtube_test_rec dtube_rec vgl vnl vul)
-
-ADD_EXECUTABLE (dtube_learn_rec  main_learn.cxx control.cxx recog.h main.h sub.h)
-TARGET_LINK_LIBRARIES(dtube_learn_rec dtube_rec vgl vnl vul)
+#target_link_libraries(dtube)
 
 
-ADD_EXECUTABLE (learn_rec  learn.cxx )
-TARGET_LINK_LIBRARIES(learn_rec dtube_rec vgl vnl vul)
+add_executable (dtube_test_rec  main.cxx)
+target_link_libraries(dtube_test_rec dtube_rec vgl vnl vul)
+
+add_executable (dtube_learn_rec  main_learn.cxx control.cxx recog.h main.h sub.h)
+target_link_libraries(dtube_learn_rec dtube_rec vgl vnl vul)
+
+
+add_executable (learn_rec  learn.cxx )
+target_link_libraries(learn_rec dtube_rec vgl vnl vul)
 
 
 

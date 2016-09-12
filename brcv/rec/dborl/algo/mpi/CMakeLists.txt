@@ -1,46 +1,46 @@
 # If we're building for a cluster, add mpi include directory and the proc classes.
 # The "FindMPI" cmake include does the work including Windows vs. Linux
 
-OPTION (BUILD_dborl_cluster "Build dborl cluster utilities using MPI" NO)
-IF (BUILD_dborl_cluster)
+option (BUILD_dborl_cluster "Build dborl cluster utilities using MPI" NO)
+if (BUILD_dborl_cluster)
 
-INCLUDE_DIRECTORIES(${lems_SOURCE_DIR}/basic)
-INCLUDE_DIRECTORIES(${lems_SOURCE_DIR}/brcv/rec)
-INCLUDE_DIRECTORIES(${lems_SOURCE_DIR}/brcv/trk )
-INCLUDE_DIRECTORIES(${lems_SOURCE_DIR}/brcv/shp)
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bbas)
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
+include_directories(${lems_SOURCE_DIR}/basic)
+include_directories(${lems_SOURCE_DIR}/brcv/rec)
+include_directories(${lems_SOURCE_DIR}/brcv/trk )
+include_directories(${lems_SOURCE_DIR}/brcv/shp)
+include_directories(${VXL_BRL_INCLUDE_DIR}/bbas)
+include_directories(${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
 
-OPTION (MPI_CPP_BINDING "Use the C++ bindings for MPI" NO)
-INCLUDE (${LEMS_CMAKE_DIR}/Modules/FindMPI.cmake)
-INCLUDE_DIRECTORIES (${MPI_INCLUDE_DIR})
-IF (MPI_CCFLAGS)
-   ADD_DEFINITIONS (${MPI_CCFLAGS})
-ENDIF (MPI_CCFLAGS)
-LINK_DIRECTORIES (${MPI_LIBRARY_DIR})
-SET (dborl_cluster_src
+option (MPI_CPP_BINDING "Use the C++ bindings for MPI" NO)
+include (${LEMS_CMAKE_DIR}/Modules/FindMPI.cmake)
+include_directories (${MPI_INCLUDE_DIR})
+if (MPI_CCFLAGS)
+   add_definitions (${MPI_CCFLAGS})
+endif (MPI_CCFLAGS)
+link_directories (${MPI_LIBRARY_DIR})
+set (dborl_cluster_src
   dborl_cluster.h dborl_cluster.cxx
   dborl_processor_base.h
   dborl_dataset_processor.h 
 )  
 
-#AUX_SOURCE_DIRECTORY(Templates dborl_cluster_src)
+#aux_source_directory(Templates dborl_cluster_src)
 
-ADD_LIBRARY(dborl_mpi ${dborl_cluster_src})
-TARGET_LINK_LIBRARIES(dborl_mpi dborl_algo bxml vcl)
-IF(BUILD_EXAMPLES)
-  SUBDIRS(examples)
-ENDIF(BUILD_EXAMPLES)
+add_library(dborl_mpi ${dborl_cluster_src})
+target_link_libraries(dborl_mpi dborl_algo bxml vcl)
+if(BUILD_EXAMPLES)
+  subdirs(examples)
+endif(BUILD_EXAMPLES)
 
-SUBDIRS(shock)
+subdirs(shock)
 
-SUBDIRS(retrieval)
+subdirs(retrieval)
 
-SUBDIRS( symseg )
+subdirs( symseg )
 
-SUBDIRS( compute_ishock )
+subdirs( compute_ishock )
 
-ENDIF (BUILD_dborl_cluster)
+endif (BUILD_dborl_cluster)
 

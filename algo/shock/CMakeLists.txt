@@ -1,10 +1,10 @@
 # Shock library
 # algo/shock/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
 
-SET(shock_sources
+set(shock_sources
 
 BaseGUIGeometry.h
 belements-bucketing.cpp
@@ -78,9 +78,9 @@ curve_utils.cxx
 
 )
 
-AUX_SOURCE_DIRECTORY(Templates shock_sources)
+aux_source_directory(Templates shock_sources)
 
-ADD_LIBRARY(shock  ${shock_sources})
+add_library(shock  ${shock_sources})
 
-TARGET_LINK_LIBRARIES( shock extrautils vgl vcl vnl vbl )
+target_link_libraries( shock extrautils vgl vcl vnl vbl )
 

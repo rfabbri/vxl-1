@@ -2,23 +2,23 @@
 # The Development Brown Geometry Library - Specific Algorithms
 
 # Set up dbgl_where_lemsvxl_lib_dir.h to have a macro set to $LIBRARY_OUTPUT_PATH
-CONFIGURE_FILE(
+configure_file(
   ${lems_SOURCE_DIR}/basic/dbgl/algo/dbgl_where_lemsvxl_lib_dir.h.in
   ${lems_BINARY_DIR}/basic/dbgl/algo/dbgl_where_lemsvxl_lib_dir.h ESCAPE_QUOTES
 )
 
 # Copy the Eulerspiral lookup-table file to the LEMSVXL library folder
-CONFIGURE_FILE(
+configure_file(
   ${lems_SOURCE_DIR}/basic/dbgl/algo/dbgl_eulerspiral_lookup_table.bvl
   ${LIBRARY_OUTPUT_PATH}/dbgl_eulerspiral_lookup_table.bvl COPYONLY
 )
 
-ADD_DEFINITIONS(-DDBGL_WHERE_LEMSVXL_LIB_DIR_H_EXISTS)
+add_definitions(-DDBGL_WHERE_LEMSVXL_LIB_DIR_H_EXISTS)
 
-INCLUDE_DIRECTORIES( ${lems_BINARY_DIR}/basic/dbgl/algo/ )
-INCLUDE_DIRECTORIES( ${lems_BINARY_DIR}/basic/dbgl/ )
+include_directories( ${lems_BINARY_DIR}/basic/dbgl/algo/ )
+include_directories( ${lems_BINARY_DIR}/basic/dbgl/ )
 
-SET( dbgl_algo_sources
+set( dbgl_algo_sources
   dbgl_where_lemsvxl_lib_dir.h.in
   dbgl_biarc.cxx               dbgl_biarc.h
   dbgl_eulerspiral.cxx         dbgl_eulerspiral.h
@@ -50,15 +50,15 @@ SET( dbgl_algo_sources
   dbgl_diffgeom.h               dbgl_diffgeom.cxx
 )
 
-ADD_LIBRARY( dbgl_algo ${dbgl_algo_sources} )
+add_library( dbgl_algo ${dbgl_algo_sources} )
 
-TARGET_LINK_LIBRARIES( dbgl_algo vnl_algo vsl vgl_algo dbnl dbgl vul ray_tri)
+target_link_libraries( dbgl_algo vnl_algo vsl vgl_algo dbnl dbgl vul ray_tri)
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )
 
-IF( BUILD_EXAMPLES )
-  SUBDIRS( examples )
-ENDIF( BUILD_EXAMPLES )
+if( BUILD_EXAMPLES )
+  subdirs( examples )
+endif( BUILD_EXAMPLES )
 

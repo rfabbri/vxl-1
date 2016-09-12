@@ -1,30 +1,30 @@
 # This is 
 # Brown xxxxxxx Processing library
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/mvg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_OXL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
+include_directories( ${lems_SOURCE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR}/breye )
 
-SET(dbcri_accu_pro_sources
+set(dbcri_accu_pro_sources
    dbcri_accu_process.cxx   dbcri_accu_process.h
    
 )
 
-#AUX_SOURCE_DIRECTORY(Templates dbecl_pro_sources)
+#aux_source_directory(Templates dbecl_pro_sources)
 
-ADD_LIBRARY(dbcri_accu_pro ${dbcri_accu_pro_sources})
+add_library(dbcri_accu_pro ${dbcri_accu_pro_sources})
 
-TARGET_LINK_LIBRARIES(dbcri_accu_pro  vidpro dbecl bmrf vgl vgl_algo brip dtube)
+target_link_libraries(dbcri_accu_pro  vidpro dbecl bmrf vgl vgl_algo brip dtube)
 
 
-IF(BUILD_TESTING)
-#  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+#  subdirs(tests)
+endif(BUILD_TESTING)
 

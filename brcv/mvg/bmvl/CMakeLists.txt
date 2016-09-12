@@ -4,13 +4,13 @@
 # Also, bcal and btom are independent of the rest of brl; brct depends on bbas and vsrl.
 
 # camera calibration
-SUBDIRS(bcal)
+subdirs(bcal)
 
 
 # 3-d reconstruction
-SUBDIRS(brct)
+subdirs(brct)
 
 # 3-d tomography
-SUBDIRS(btom)
+subdirs(btom)
 
 

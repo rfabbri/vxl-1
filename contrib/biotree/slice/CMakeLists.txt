@@ -1,15 +1,15 @@
 # /contrib/biotree/slice/CMakeLists.txt
-INCLUDE_DIRECTORIES(
+include_directories(
     ${lems_SOURCE_DIR}
     ${BIOTREE_SOURCE_DIR} 
     ${VXL_MUL_INCLUDE_DIR} 
     ${VXL_CORE_INCLUDE_DIR} 
 )
-INCLUDE_DIRECTORIES( )
+include_directories( )
 
-SET(CMAKE_CXX_FLAGS -g)
+set(CMAKE_CXX_FLAGS -g)
 
-SET(slice_src 
+set(slice_src 
                 sliceEngine.h
                 sliceEngine.txx
                 sliceProcessor.cxx
@@ -18,15 +18,15 @@ SET(slice_src
                 sliceFileManager.txx
 )  
 
-AUX_SOURCE_DIRECTORY(Templates slice_src)
+aux_source_directory(Templates slice_src)
 
-ADD_LIBRARY(slice ${slice_src})
+add_library(slice ${slice_src})
 
-TARGET_LINK_LIBRARIES(slice vcl vil3d vbl)
+target_link_libraries(slice vcl vil3d vbl)
 
-SUBDIRS( algo )
-SUBDIRS( examples )
+subdirs( algo )
+subdirs( examples )
 
-#IF(BUILD_TESTING)
-# SUBDIRS( tests )
-#ENDIF(BUILD_TESTING)
+#if(BUILD_TESTING)
+# subdirs( tests )
+#endif(BUILD_TESTING)

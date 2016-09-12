@@ -2,21 +2,21 @@
 # contrib/dbsk3dapp/CMakeLists.txt
 
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_RPL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_RPL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 
 
 # This is to produce a VOX executable.
 
 #Need this because dborl_utilities.h use bpro1
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
 
-SET(dbsk3dappvox_sources
+set(dbsk3dappvox_sources
   dborl_shock3d_match_params.h
   dborl_shock3d_match_params_sptr.h
   dbsk3dapp_vox_main.cxx
@@ -24,9 +24,9 @@ SET(dbsk3dappvox_sources
 )
 
 
-ADD_EXECUTABLE( dbsk3dappvox ${dbsk3dappvox_sources} )
+add_executable( dbsk3dappvox ${dbsk3dappvox_sources} )
 
-TARGET_LINK_LIBRARIES( dbsk3dappvox 
+target_link_libraries( dbsk3dappvox 
                        dborl_algo
                        dbmsh3d dbmsh3d_algo dbmsh3d_pro 
                        dbmsh3dr dbmsh3dr_pro 
@@ -36,18 +36,18 @@ TARGET_LINK_LIBRARIES( dbsk3dappvox
                        dbsk3dr dbsk3dr_pro)
 
 
-INCLUDE( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
-#INCLUDE( ${VXL_BRL_INCLUDE_DIR}/bmods/UseBGUI3D.cmake )
+include( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
+#include( ${VXL_BRL_INCLUDE_DIR}/bmods/UseBGUI3D.cmake )
 
 # copy the qvoronoi.exe file to the running directory
-#CONFIGURE_FILE(
+#configure_file(
 #  ${lems_SOURCE_DIR}/contrib/dbsk3dappw/qvoronoi.exe
 #  ${lems_BINARY_DIR}/contrib/dbsk3dappw/qvoronoi.exe COPYONLY
 #)
 
-IF (HAS_BGUI3D)
+if (HAS_BGUI3D)
 
-SET(dbsk3dapp_sources
+set(dbsk3dapp_sources
 
    dbsk3dapp_main.cxx
 
@@ -61,9 +61,9 @@ SET(dbsk3dapp_sources
 )
 
 
-ADD_EXECUTABLE( dbsk3dapp ${dbsk3dapp_sources} )
+add_executable( dbsk3dapp ${dbsk3dapp_sources} )
 
-TARGET_LINK_LIBRARIES( dbsk3dapp 
+target_link_libraries( dbsk3dapp 
                        dbmsh3d dbmsh3d_algo dbmsh3d_pro dbmsh3d_vis dbmsh3d_cmdproc
                        dbmsh3dr dbmsh3dr_pro dbmsh3dr_vis 
                        dbgdt3d dbgdt3d_pro dbgdt3d_vis dbgdt3d_cmdproc
@@ -71,20 +71,20 @@ TARGET_LINK_LIBRARIES( dbsk3dapp
                        dbasn dbsk3dr dbsk3dr_pro dbsk3dr_vis )
 
 
-IF (WIN32)
+if (WIN32)
 
-SET (USE_SOWIN "YES")
-INCLUDE( ${LEMS_CMAKE_DIR}/Modules/UseSoWin.cmake )
-INCLUDE_DIRECTORIES( ${SOWIN_INCLUDE_DIR} )
+set (USE_SOWIN "YES")
+include( ${LEMS_CMAKE_DIR}/Modules/UseSoWin.cmake )
+include_directories( ${SOWIN_INCLUDE_DIR} )
 
-SET(dbsk3dappw_sources
+set(dbsk3dappw_sources
     dbsk3dappw_main.cxx 
 )
 
-ADD_EXECUTABLE( dbsk3dappw ${dbsk3dappw_sources} )
+add_executable( dbsk3dappw ${dbsk3dappw_sources} )
 
 # add the required libraries into this list
-TARGET_LINK_LIBRARIES( dbsk3dappw 
+target_link_libraries( dbsk3dappw 
                        dbmsh3d dbmsh3d_algo  dbmsh3d_vis dbmsh3d_pro
                        dbmsh3dr dbmsh3dr_pro dbmsh3dr_vis dbmsh3d_cmdproc
                        dbgdt3d dbgdt3d_pro dbgdt3d_vis dbgdt3d_cmdproc
@@ -93,7 +93,7 @@ TARGET_LINK_LIBRARIES( dbsk3dappw
                        dbasn dbsk3dr dbsk3dr_pro dbsk3dr_vis 
                        ${COIN_LIBRARY} )    
 
-ENDIF (WIN32)
+endif (WIN32)
 
-ENDIF (HAS_BGUI3D)
+endif (HAS_BGUI3D)
 

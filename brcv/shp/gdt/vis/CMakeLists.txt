@@ -1,12 +1,12 @@
 # This is contrib/dbmsh3d/gdt/vis/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
 
-INCLUDE( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
-IF (HAS_BGUI3D)
+include( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
+if (HAS_BGUI3D)
 
-SET ( gdt_vis_sources
+set ( gdt_vis_sources
    gdtvis_backpt.cxx            gdtvis_backpt.h
 
    gdtvis_interval.cxx          gdtvis_interval.h
@@ -20,9 +20,9 @@ SET ( gdt_vis_sources
    gdtvis_ws.cxx                gdtvis_ws.h
 )
 
-ADD_LIBRARY( gdt_vis ${gdt_vis_sources})
+add_library( gdt_vis ${gdt_vis_sources})
 
-TARGET_LINK_LIBRARIES( gdt_vis dbmsh3d_vis dbmsh3d gdt )
+target_link_libraries( gdt_vis dbmsh3d_vis dbmsh3d gdt )
 
-ENDIF (HAS_BGUI3D)
+endif (HAS_BGUI3D)
 

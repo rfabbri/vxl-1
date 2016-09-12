@@ -1,26 +1,26 @@
 # brcv/mvg/dvpgl/CMakeLists.txt
 # Photogrametry Library.
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/mvg )
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bbas)
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR})
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR}/mrc)
+include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bbas)
+include_directories(${VXL_GEL_INCLUDE_DIR})
+include_directories(${VXL_GEL_INCLUDE_DIR}/mrc)
 
-#SET( dvpgl_sources
+#set( dvpgl_sources
 #  EMPTY
 #)
 
-#AUX_SOURCE_DIRECTORY(Templates dvpgl_sources)
+#aux_source_directory(Templates dvpgl_sources)
 
-#ADD_LIBRARY(dvpgl ${dvpgl_sources})
-#TARGET_LINK_LIBRARIES( dvpgl vnl vnl_algo vnl_io vgl vgl_algo vgl_io vgl_xio vsl)
+#add_library(dvpgl ${dvpgl_sources})
+#target_link_libraries( dvpgl vnl vnl_algo vnl_io vgl vgl_algo vgl_io vgl_xio vsl)
 
 
-#IF( BUILD_TESTING )
-#  SUBDIRS(tests)
-#ENDIF( BUILD_TESTING )
+#if( BUILD_TESTING )
+#  subdirs(tests)
+#endif( BUILD_TESTING )
 
-SUBDIRS(algo)
-SUBDIRS(io)
-SUBDIRS(pro)
-SUBDIRS(vis)
+subdirs(algo)
+subdirs(io)
+subdirs(pro)
+subdirs(vis)

@@ -1,9 +1,9 @@
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/dec )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
+include_directories( ${lems_SOURCE_DIR}/contrib/dec )
 
-SET(psm_opt_sources
+set(psm_opt_sources
   psm_opt_sample.h
   psm_opt_rt_sample.h
   psm_opt_alpha_cost_function.h  psm_opt_alpha_cost_function.txx
@@ -18,13 +18,13 @@ SET(psm_opt_sources
   psm_opt_simplex_optimizer.h  psm_opt_simplex_optimizer.txx
  )
 
-AUX_SOURCE_DIRECTORY(Templates psm_opt_sources)
+aux_source_directory(Templates psm_opt_sources)
 
-ADD_LIBRARY( psm_opt ${psm_opt_sources})
+add_library( psm_opt ${psm_opt_sources})
 
-TARGET_LINK_LIBRARIES( psm_opt psm psm_algo hsds vbl vul vgl vnl vnl_algo vpgl)
+target_link_libraries( psm_opt psm psm_algo hsds vbl vul vgl vnl vnl_algo vpgl)
 
-SUBDIRS(exe)
-SUBDIRS(tests)
-SUBDIRS(pro)
+subdirs(exe)
+subdirs(tests)
+subdirs(pro)
 

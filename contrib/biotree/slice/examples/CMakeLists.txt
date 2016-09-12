@@ -1,40 +1,40 @@
 # /contrib/biotree/slice/examples/CMakeLists.txt
 
-INCLUDE_DIRECTORIES(
+include_directories(
     ${lems_SOURCE_DIR}
     ${BIOTREE_SOURCE_DIR} 
     ${VXL_MUL_INCLUDE_DIR} 
     ${VXL_CORE_INCLUDE_DIR} 
 )
 
-SET(CMAKE_CXX_FLAGS -g )
+set(CMAKE_CXX_FLAGS -g )
 
-ADD_EXECUTABLE(vbl_example vblExample.cxx)
-TARGET_LINK_LIBRARIES(vbl_example slice biodet vil3d vil3d_algo dbil3d_algo vil3d_io vsl)
+add_executable(vbl_example vblExample.cxx)
+target_link_libraries(vbl_example slice biodet vil3d vil3d_algo dbil3d_algo vil3d_io vsl)
 
-ADD_EXECUTABLE(modify modify_imgs.cxx)
-TARGET_LINK_LIBRARIES(modify vil3d vil3d_algo vil)
+add_executable(modify modify_imgs.cxx)
+target_link_libraries(modify vil3d vil3d_algo vil)
 
-ADD_EXECUTABLE(convert_to_tifs convert_to_tifs.cxx )
-TARGET_LINK_LIBRARIES(convert_to_tifs vil vil3d slice)
+add_executable(convert_to_tifs convert_to_tifs.cxx )
+target_link_libraries(convert_to_tifs vil vil3d slice)
 
-ADD_EXECUTABLE(vil3d_to_tifs vil3d_to_tifs.cxx )
-TARGET_LINK_LIBRARIES(vil3d_to_tifs vil vil3d slice vil3d_io)
+add_executable(vil3d_to_tifs vil3d_to_tifs.cxx )
+target_link_libraries(vil3d_to_tifs vil vil3d slice vil3d_io)
 
-ADD_EXECUTABLE(vil3d_to_slice vil3d_to_slice.cxx )
-TARGET_LINK_LIBRARIES(vil3d_to_slice vil vil3d slice vil3d_io)
-ADD_EXECUTABLE(vil3d_to_gradients vil3d_to_gradients.cxx )
-TARGET_LINK_LIBRARIES(vil3d_to_gradients vil vil3d slice vil3d_io vil3d_algo dbil3d_algo)
+add_executable(vil3d_to_slice vil3d_to_slice.cxx )
+target_link_libraries(vil3d_to_slice vil vil3d slice vil3d_io)
+add_executable(vil3d_to_gradients vil3d_to_gradients.cxx )
+target_link_libraries(vil3d_to_gradients vil vil3d slice vil3d_io vil3d_algo dbil3d_algo)
 
-ADD_EXECUTABLE(slice_edge_detect_example sliceEdgeDetectExample.cxx )
-TARGET_LINK_LIBRARIES(slice_edge_detect_example slice slice_algo biodet vil3d vil3d_algo
+add_executable(slice_edge_detect_example sliceEdgeDetectExample.cxx )
+target_link_libraries(slice_edge_detect_example slice slice_algo biodet vil3d vil3d_algo
 dbil3d_algo vil3d_io vsl)
 
 
-ADD_EXECUTABLE(slice_ridge_detect_example 
+add_executable(slice_ridge_detect_example 
 sliceRidgeDetectExample.cxx 
 )
-TARGET_LINK_LIBRARIES(slice_ridge_detect_example slice slice_algo dbil3d_algo vnl vnl_algo vil vil3d vil3d_algo vil3d_io vsl)
+target_link_libraries(slice_ridge_detect_example slice slice_algo dbil3d_algo vnl vnl_algo vil vil3d vil3d_algo vil3d_io vsl)
 
-ADD_EXECUTABLE(slice_dummy_example sliceDummyExample.cxx )
-TARGET_LINK_LIBRARIES(slice_dummy_example slice)
+add_executable(slice_dummy_example sliceDummyExample.cxx )
+target_link_libraries(slice_dummy_example slice)

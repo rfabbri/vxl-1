@@ -3,64 +3,64 @@
 # Mutual dependencies: brip --> sdet --> (vpro,segv)
 
 # float image operations
-#SUBDIRS(brip)
+#subdirs(brip)
 
 # segmentation feature detection library
-#SUBDIRS(sdet)
+#subdirs(sdet)
 
 # video processors
-#SUBDIRS(vpro)
+#subdirs(vpro)
 
 # tracking
-#SUBDIRS(strk)
+#subdirs(strk)
 
 # Markov Random Fields - This library is deprecated
-#SUBDIRS(bmrf)
+#subdirs(bmrf)
 
 # misc
-#SUBDIRS(bcons)
+#subdirs(bcons)
 
 # segmentation view library
-#SUBDIRS(segv)
+#subdirs(segv)
 
 # segmentation application executables
-#SUBDIRS(sbin)
+#subdirs(sbin)
 
 # background modeling
-SUBDIRS(dbbgm)
+subdirs(dbbgm)
 
 # background modeling python interface
-SUBDIRS(dbbgm_batch)
-SUBDIRS(bbkmdl)
+subdirs(dbbgm_batch)
+subdirs(bbkmdl)
 #voxel world modeling
-#SUBDIRS(bvxm)
+#subdirs(bvxm)
 
 #voxel world modeling python interface
-#SUBDIRS(bvxm_batch)
+#subdirs(bvxm_batch)
 
 # Lidar modeling (segmentation and meshing)
-#SUBDIRS(bmdl)
+#subdirs(bmdl)
 
 # Lidar modeling python interface
-#SUBDIRS(bmdl_batch)
+#subdirs(bmdl_batch)
 
 # recognition library - uses background models of bbgm and/or bvxm
-#SUBDIRS(brec)
+#subdirs(brec)
 
 # recognition library - python interface
-#SUBDIRS(brec_batch)
+#subdirs(brec_batch)
 
 # octree
-#SUBDIRS(boct)
+#subdirs(boct)
 
 #octree based modeling 
-SUBDIRS(dboxm)
+subdirs(dboxm)
 
 #octree based modeling python interface
-#SUBDIRS(boxm_batch)
+#subdirs(boxm_batch)
 
 #voxel processing library
-#SUBDIRS(bvpl)
+#subdirs(bvpl)
 
 #voxel processing library python interface
-#SUBDIRS(bvpl_batch)
+#subdirs(bvpl_batch)

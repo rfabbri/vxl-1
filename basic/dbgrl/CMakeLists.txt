@@ -1,7 +1,7 @@
 # This is lemsvxlsrc/basic/dbgrl/CMakeLists.txt
 # Development Brown Graph/Hypergraph Library
 
-SET(dbgrl_sources
+set(dbgrl_sources
          
 dbgrl_vertex.h             dbgrl_vertex.txx    
 dbgrl_edge.h               dbgrl_edge.txx
@@ -16,19 +16,19 @@ dbgrl_hg_hypergraph.cxx    dbgrl_hg_hypergraph.h
 
 )
 
-ADD_LIBRARY(dbgrl ${dbgrl_sources})
+add_library(dbgrl ${dbgrl_sources})
 
-TARGET_LINK_LIBRARIES( dbgrl )  
+target_link_libraries( dbgrl )  
 
 #Algorithms on graphs
-SUBDIRS(algo)
+subdirs(algo)
 
 # Processing Library
-#SUBDIRS(pro)
+#subdirs(pro)
 
 # Visualization Library
-#SUBDIRS(vis)
+#subdirs(vis)
 
-IF(BUILD_TESTING)
-SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+subdirs(tests)
+endif(BUILD_TESTING)

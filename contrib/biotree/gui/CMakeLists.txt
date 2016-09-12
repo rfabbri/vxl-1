@@ -1,24 +1,24 @@
 # contrib/biotree/gui/CMakeLists.txt
 
 
-IF (VXL_VGUI_FOUND)
-IF (BUILD_BREYE)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
+if (VXL_VGUI_FOUND)
+if (BUILD_BREYE)
+include_directories( ${lems_SOURCE_DIR}/contrib )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
 
-SET(biotree_gui_sources
+set(biotree_gui_sources
    biotree_menu.cxx       biotree_menu.h
    biotree_main.cxx
 )
 
 
-AUX_SOURCE_DIRECTORY(Templates bvis1_sources)
+aux_source_directory(Templates bvis1_sources)
 
-ADD_EXECUTABLE(biotree_gui ${biotree_gui_sources})
+add_executable(biotree_gui ${biotree_gui_sources})
 
-TARGET_LINK_LIBRARIES(biotree_gui bvis1 biolung_process biocts_process)
-ENDIF (BUILD_BREYE)
-ENDIF (VXL_VGUI_FOUND)
+target_link_libraries(biotree_gui bvis1 biolung_process biocts_process)
+endif (BUILD_BREYE)
+endif (VXL_VGUI_FOUND)

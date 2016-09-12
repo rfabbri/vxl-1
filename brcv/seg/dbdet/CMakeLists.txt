@@ -1,27 +1,27 @@
 # Brown Detection Libraries
 # contains Livewire Manual Segmentation Algorithm 
 # brcv/seg/dbdet/CMakeLists.txt
-PROJECT(dbdet)
+project(dbdet)
 
 # include directories into here if needed
-INCLUDE_DIRECTORIES( ${VXL_VCL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_TBL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas/bil/algo )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_VCL_INCLUDE_DIR} )
+include_directories( ${VXL_OXL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_TBL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas/bil/algo )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 
 
-OPTION(DBDET_USE_APPROX_SINE "Use approximate sines in dbdet_curve_model for faster edge linking" NO)
+option(DBDET_USE_APPROX_SINE "Use approximate sines in dbdet_curve_model for faster edge linking" NO)
 
 
-CONFIGURE_FILE( ${dbdet_SOURCE_DIR}/dbdet_config.h.in
+configure_file( ${dbdet_SOURCE_DIR}/dbdet_config.h.in
                 ${dbdet_BINARY_DIR}/dbdet_config.h )
 
 
-SET(dbdet_sources
+set(dbdet_sources
    lvwr/dbdet_lvwr.cxx         lvwr/dbdet_lvwr.h
    lvwr/dbdet_lvwr_params.cxx  lvwr/dbdet_lvwr_params.h
    lvwr/dbdet_lvwr_fit.cxx         lvwr/dbdet_lvwr_fit.h
@@ -72,31 +72,31 @@ SET(dbdet_sources
 
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbdet_sources)
-AUX_SOURCE_DIRECTORY(sel/Templates dbdet_sources)
+aux_source_directory(Templates dbdet_sources)
+aux_source_directory(sel/Templates dbdet_sources)
 
-ADD_LIBRARY(dbdet ${dbdet_sources})
+add_library(dbdet ${dbdet_sources})
 
 # add the required libraries into this list
-TARGET_LINK_LIBRARIES( dbdet vil1 vil bil_algo dbnl_algo osl vepl vepl vdgl vnl_io bdgl dbgl_algo brip pdf1d mbl)
+target_link_libraries( dbdet vil1 vil bil_algo dbnl_algo osl vepl vepl vdgl vnl_io bdgl dbgl_algo brip pdf1d mbl)
 
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)
 
-SUBDIRS(algo)
+subdirs(algo)
 
-SUBDIRS(pro)
+subdirs(pro)
 
-SUBDIRS( xio )
+subdirs( xio )
 
-IF (VXL_VGUI_FOUND)
-  SUBDIRS(vis)
-ENDIF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
+  subdirs(vis)
+endif (VXL_VGUI_FOUND)
 
-IF( BUILD_EXAMPLES )
-  SUBDIRS( examples )
-ENDIF( BUILD_EXAMPLES )
+if( BUILD_EXAMPLES )
+  subdirs( examples )
+endif( BUILD_EXAMPLES )
 
 

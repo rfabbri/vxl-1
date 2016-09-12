@@ -11,7 +11,7 @@
 #
 #
 
-SET ( geodesic_mesh_sources
+set ( geodesic_mesh_sources
 
    sp.cxx
    cone.cxx              cone.h
@@ -23,7 +23,7 @@ SET ( geodesic_mesh_sources
 )
 
 
-ADD_EXECUTABLE ( geodesic_mesh ${geodesic_mesh_sources})
+add_executable ( geodesic_mesh ${geodesic_mesh_sources})
 
-TARGET_LINK_LIBRARIES( geodesic_mesh vcl )
+target_link_libraries( geodesic_mesh vcl )
 

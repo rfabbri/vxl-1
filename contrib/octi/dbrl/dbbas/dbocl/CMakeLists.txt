@@ -1,16 +1,16 @@
 # contrib/dbrl/dbbas/docl
-INCLUDE( ${DBRL_MODULE_PATH}/find_open_cl.cmake )
-IF(OPENCL_FOUND)
-  INCLUDE_DIRECTORIES( ${OPENCL_INCLUDE_PATH} )
+include( ${DBRL_MODULE_PATH}/find_open_cl.cmake )
+if(OPENCL_FOUND)
+  include_directories( ${OPENCL_INCLUDE_PATH} )
 
-  SET(dbocl_sources
+  set(dbocl_sources
    opencl_manager.h   opencl_manager.txx 
    bcl_cl.h
   )
 
-  AUX_SOURCE_DIRECTORY(Templates dbocl_sources)	
-  ADD_LIBRARY(dbocl ${dbocl_sources})
+  aux_source_directory(Templates dbocl_sources)	
+  add_library(dbocl ${dbocl_sources})
 
-  TARGET_LINK_LIBRARIES(dbocl vgl vbl vbl_io ${OPENCL_LIBRARIES})
+  target_link_libraries(dbocl vgl vbl vbl_io ${OPENCL_LIBRARIES})
 
-ENDIF(OPENCL_FOUND)
+endif(OPENCL_FOUND)

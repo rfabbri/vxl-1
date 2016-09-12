@@ -1,16 +1,16 @@
 # This is brcv/shp/dbskfg/pro/CMakeLists.txt
 # Brown 2D Composite_graph library
 
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_RPL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${CMAKE_VLFEAT_INCLUDES} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_RPL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${CMAKE_VLFEAT_INCLUDES} )
 
-LINK_DIRECTORIES(${CMAKE_VLFEAT_LIBS})
+link_directories(${CMAKE_VLFEAT_LIBS})
 
-SET(dbskfg_pro_sources
+set(dbskfg_pro_sources
 
   # storage classes
   dbskfg_composite_graph_storage.h      dbskfg_composite_graph_storage.cxx
@@ -32,6 +32,6 @@ SET(dbskfg_pro_sources
   dbskfg_match_bag_of_curves_process.h dbskfg_match_bag_of_curves_process.cxx
 )
 
-ADD_LIBRARY(dbskfg_pro ${dbskfg_pro_sources})
+add_library(dbskfg_pro ${dbskfg_pro_sources})
 
-TARGET_LINK_LIBRARIES(dbskfg_pro dbskfg_algo dbsk2d bpro1 vidpro1 vl)
+target_link_libraries(dbskfg_pro dbskfg_algo dbsk2d bpro1 vidpro1 vl)

@@ -1,10 +1,10 @@
 # dbxml/tests/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/basic )
 
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR} )
+include_directories(${VXL_GEL_INCLUDE_DIR} )
 
-ADD_EXECUTABLE(dbxml_example dbxml_example.cxx)
+add_executable(dbxml_example dbxml_example.cxx)
 
-TARGET_LINK_LIBRARIES(dbxml_example dbxml ${XERCES_LIBRARIES})
+target_link_libraries(dbxml_example dbxml ${XERCES_LIBRARIES})
 

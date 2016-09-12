@@ -1,18 +1,18 @@
 
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/mvg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/Gregistration )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-SET( georegistration_pro_sources
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_OXL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
+include_directories( ${lems_SOURCE_DIR}/contrib/Gregistration )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR}/brcv/trk )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/basic )
+set( georegistration_pro_sources
         dbrl_rpm_rigid_process.h        dbrl_rpm_rigid_process.cxx
         dbrl_rpm_affine_process.h       dbrl_rpm_affine_process.cxx
         dbrl_rpm_tps_process.h  dbrl_rpm_tps_process.cxx
@@ -54,7 +54,7 @@ SET( georegistration_pro_sources
  )
 
 
-AUX_SOURCE_DIRECTORY(Templates georegistration_pro_sources)
-ADD_LIBRARY( georegistration_pro  ${georegistration_pro_sources})
+aux_source_directory(Templates georegistration_pro_sources)
+add_library( georegistration_pro  ${georegistration_pro_sources})
 
-TARGET_LINK_LIBRARIES( georegistration_pro georegister bpro1  vbl vil_io bpro1 osl dbbgm_pro dbsta_algo dbbgm sdet)
+target_link_libraries( georegistration_pro georegister bpro1  vbl vil_io bpro1 osl dbbgm_pro dbsta_algo dbbgm sdet)

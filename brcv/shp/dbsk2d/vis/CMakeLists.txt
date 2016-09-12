@@ -1,12 +1,12 @@
 # This is brcv/shp/dbsk2d/vis/CMakeLists.txt
 # Brown 2D Shock Computation Library
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
-SET(dbsk2d_vis_sources
+set(dbsk2d_vis_sources
 
 #views
   dbsk2d_bpoint_view.h             dbsk2d_bpoint_view.cxx
@@ -39,8 +39,8 @@ SET(dbsk2d_vis_sources
   dbsk2d_shock_subgraph_tool.h           dbsk2d_shock_subgraph_tool.cxx
 )
 
-ADD_LIBRARY(dbsk2d_vis ${dbsk2d_vis_sources})
+add_library(dbsk2d_vis ${dbsk2d_vis_sources})
 
-TARGET_LINK_LIBRARIES(dbsk2d_vis dbsk2d_pro dbsk2d_algo bvis1)
+target_link_libraries(dbsk2d_vis dbsk2d_pro dbsk2d_algo bvis1)
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)

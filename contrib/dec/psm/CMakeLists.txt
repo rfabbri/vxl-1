@@ -2,27 +2,27 @@
 # Probabalistic Scene Modeling
 
 # Some operations can be optimized using OpenGL 2.1 calls.
-#FIND_PACKAGE(OPENGL)
-#FIND_PACKAGE(GLUT)
-#INCLUDE( ${LEMS_CMAKE_DIR}/Modules/FindGLEW.cmake )
-#IF(OPENGL_FOUND)
-#  IF (GLUT_FOUND)
-#    IF (GLEW_FOUND)
-#       OPTION(PSM_USE_OPENGL2_1 "Use OpenGL 2.1 optimizations" NO)
-#    ENDIF(GLEW_FOUND)
-#  ENDIF(GLUT_FOUND)
-#ENDIF(OPENGL_FOUND)
+#find_package(OPENGL)
+#find_package(GLUT)
+#include( ${LEMS_CMAKE_DIR}/Modules/FindGLEW.cmake )
+#if(OPENGL_FOUND)
+#  if (GLUT_FOUND)
+#    if (GLEW_FOUND)
+#       option(PSM_USE_OPENGL2_1 "Use OpenGL 2.1 optimizations" NO)
+#    endif(GLEW_FOUND)
+#  endif(GLUT_FOUND)
+#endif(OPENGL_FOUND)
 
-#IF(PSM_USE_OPENGL2_1)
-#  ADD_DEFINITIONS( -DPSM_USE_GPU )
-#ENDIF(PSM_USE_OPENGL2_1)
+#if(PSM_USE_OPENGL2_1)
+#  add_definitions( -DPSM_USE_GPU )
+#endif(PSM_USE_OPENGL2_1)
 
-INCLUDE_DIRECTORIES( ${VXL_CORE_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/dec )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
+include_directories( ${VXL_CORE_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${lems_SOURCE_DIR}/contrib/dec )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
   
-SET(psm_sources
+set(psm_sources
   psm_scene_base.h  psm_scene_base.cxx
   psm_scene.h  psm_scene.txx
   psm_sample.h
@@ -48,17 +48,17 @@ SET(psm_sources
   psm_sigma_normalizer.h psm_sigma_normalizer.cxx
 )
 
-AUX_SOURCE_DIRECTORY(Templates psm_sources)
+aux_source_directory(Templates psm_sources)
 
 
-ADD_LIBRARY(psm ${psm_sources})
+add_library(psm ${psm_sources})
 
-TARGET_LINK_LIBRARIES(psm vnl vgl vil vil_algo vbl bsta bsta_algo vul hsds bgeo)
+target_link_libraries(psm vnl vgl vil vil_algo vbl bsta bsta_algo vul hsds bgeo)
 
-SUBDIRS(tests)
-SUBDIRS(algo)
-SUBDIRS(io)
-SUBDIRS(pro)
+subdirs(tests)
+subdirs(algo)
+subdirs(io)
+subdirs(pro)
 
 
 

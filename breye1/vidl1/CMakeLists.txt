@@ -1,28 +1,28 @@
 # vxl/vidl1/CMakeLists.txt
 
 
-INCLUDE( ${VXL_CMAKE_DIR}/FindMPEG2.cmake )
-INCLUDE( ${VXL_CMAKE_DIR}/NewCMake/FindFFMPEG.cmake )
-INCLUDE( ${LEMS_CMAKE_DIR}/config/vxl_utils.cmake )
+include( ${VXL_CMAKE_DIR}/FindMPEG2.cmake )
+include( ${VXL_CMAKE_DIR}/NewCMake/FindFFMPEG.cmake )
+include( ${LEMS_CMAKE_DIR}/config/vxl_utils.cmake )
 
-IF( MPEG2_FOUND )
-  INCLUDE_DIRECTORIES(${MPEG2_INCLUDE_DIR})
-  ADD_DEFINITIONS(-DHAS_MPEG2)
-ENDIF( MPEG2_FOUND )
+if( MPEG2_FOUND )
+  include_directories(${MPEG2_INCLUDE_DIR})
+  add_definitions(-DHAS_MPEG2)
+endif( MPEG2_FOUND )
 
-IF( FFMPEG_FOUND )
-  INCLUDE_DIRECTORIES(${FFMPEG_INCLUDE_DIR})
-  ADD_DEFINITIONS(-DHAS_FFMPEG)
+if( FFMPEG_FOUND )
+  include_directories(${FFMPEG_INCLUDE_DIR})
+  add_definitions(-DHAS_FFMPEG)
 # some versions of FFMPEG require this definition before including
 # the headers for C++ compatibility
-  ADD_DEFINITIONS(-D__STDC_CONSTANT_MACROS )
-ENDIF( FFMPEG_FOUND )
+  add_definitions(-D__STDC_CONSTANT_MACROS )
+endif( FFMPEG_FOUND )
 
 if ( FFMPEG_FOUND_SEVERAL )
-  ADD_DEFINITIONS(-DHAS_FFMPEG_SEVERAL)
-ENDIF ( FFMPEG_FOUND_SEVERAL )
+  add_definitions(-DHAS_FFMPEG_SEVERAL)
+endif ( FFMPEG_FOUND_SEVERAL )
 
-SET(vidl1_sources
+set(vidl1_sources
   dll.h
 
   vidl1_vob_frame_index.cxx    vidl1_vob_frame_index.h
@@ -36,44 +36,44 @@ SET(vidl1_sources
   vidl1_io.cxx    vidl1_io.h
 )
 
-IF( MPEG2_FOUND )
-  SET(vidl1_sources ${vidl1_sources}
+if( MPEG2_FOUND )
+  set(vidl1_sources ${vidl1_sources}
     vidl1_mpegcodec.cxx vidl1_mpegcodec.h vidl1_mpegcodec_sptr.h
     vidl1_mpegcodec_helper.cxx vidl1_mpegcodec_helper.h
     vidl1_yuv_2_rgb.h
   )
-ENDIF( MPEG2_FOUND )
+endif( MPEG2_FOUND )
 
-IF( FFMPEG_FOUND )
-  SET(vidl1_sources ${vidl1_sources}
+if( FFMPEG_FOUND )
+  set(vidl1_sources ${vidl1_sources}
     vidl1_ffmpeg_codec.cxx vidl1_ffmpeg_codec.h
   )
-ENDIF( FFMPEG_FOUND )
+endif( FFMPEG_FOUND )
 
-AUX_SOURCE_DIRECTORY(Templates vidl1_sources)
+aux_source_directory(Templates vidl1_sources)
 
 
-IF (NOT AVIFILE_FOUND)
-  INCLUDE(${CMAKE_ROOT}/Modules/FindAVIFile.cmake)
-  IF(AVIFILE_FOUND)
-    INCLUDE_DIRECTORIES( ${AVIFILE_INCLUDE_DIR} )
-    ADD_DEFINITIONS (${AVIFILE_DEFINITIONS} )
-  ENDIF(AVIFILE_FOUND)
-ENDIF (NOT AVIFILE_FOUND)
+if (NOT AVIFILE_FOUND)
+  include(${CMAKE_ROOT}/Modules/FindAVIFile.cmake)
+  if(AVIFILE_FOUND)
+    include_directories( ${AVIFILE_INCLUDE_DIR} )
+    add_definitions (${AVIFILE_DEFINITIONS} )
+  endif(AVIFILE_FOUND)
+endif (NOT AVIFILE_FOUND)
 
-SET(AVI_FOUND "NO")
-IF (AVIFILE_FOUND)
-  SET(vidl1_sources ${vidl1_sources}
+set(AVI_FOUND "NO")
+if (AVIFILE_FOUND)
+  set(vidl1_sources ${vidl1_sources}
       vidl1_avicodec.h
       vidl1_avifile_avicodec.h vidl1_avifile_avicodec.cxx
      )
-  SET(AVI_LIBRARIES ${AVIFILE_LIBRARIES})
-  SET(AVI_FOUND "YES")
-  ADD_DEFINITIONS( -DHAS_AVI )
-ELSE (AVIFILE_FOUND)
-  IF (WIN32)
-    IF( NOT CYGWIN )
-      SET(vidl1_sources ${vidl1_sources}
+  set(AVI_LIBRARIES ${AVIFILE_LIBRARIES})
+  set(AVI_FOUND "YES")
+  add_definitions( -DHAS_AVI )
+else (AVIFILE_FOUND)
+  if (WIN32)
+    if( NOT CYGWIN )
+      set(vidl1_sources ${vidl1_sources}
           vidl1_avicodec.h
           vidl1_win_avicodec.h vidl1_win_avicodec.cxx
          )
@@ -82,33 +82,33 @@ ELSE (AVIFILE_FOUND)
       # installed correctly.  Make sure the ilink32.cfg file
       # lists the directory containing the library in the -L option.
       # For example: -L"c:\Borland\BCC55\Lib";"c:\Borland\BCC55\Lib\PSDK"
-      SET(AVI_LIBRARIES vfw32 gdi32)
-      SET(AVI_FOUND "YES")
-      ADD_DEFINITIONS( -DHAS_AVI )
-    ENDIF( NOT CYGWIN )
-  ENDIF (WIN32)
-ENDIF (AVIFILE_FOUND)
+      set(AVI_LIBRARIES vfw32 gdi32)
+      set(AVI_FOUND "YES")
+      add_definitions( -DHAS_AVI )
+    endif( NOT CYGWIN )
+  endif (WIN32)
+endif (AVIFILE_FOUND)
 
 
-ADD_LIBRARY(vidl1 ${vidl1_sources})
-INSTALL_TARGETS(/lib vidl1)
+add_library(vidl1 ${vidl1_sources})
+install_targets(/lib vidl1)
 INSTALL_NOBASE_HEADER_FILES(/include/vxl/core/vidl1 ${vidl1_sources})
 
-TARGET_LINK_LIBRARIES( vidl1 vbl vul vil vcl )
-IF( MPEG2_FOUND )
-  TARGET_LINK_LIBRARIES( vidl1 ${MPEG2_LIBRARIES} )
-ENDIF( MPEG2_FOUND )
-IF( FFMPEG_FOUND )
-  TARGET_LINK_LIBRARIES( vidl1 ${FFMPEG_LIBRARIES} )
-ENDIF( FFMPEG_FOUND )
-IF( AVI_FOUND )
-  TARGET_LINK_LIBRARIES( vidl1 ${AVI_LIBRARIES} )
-ENDIF( AVI_FOUND )
+target_link_libraries( vidl1 vbl vul vil vcl )
+if( MPEG2_FOUND )
+  target_link_libraries( vidl1 ${MPEG2_LIBRARIES} )
+endif( MPEG2_FOUND )
+if( FFMPEG_FOUND )
+  target_link_libraries( vidl1 ${FFMPEG_LIBRARIES} )
+endif( FFMPEG_FOUND )
+if( AVI_FOUND )
+  target_link_libraries( vidl1 ${AVI_LIBRARIES} )
+endif( AVI_FOUND )
 
-IF( BUILD_TESTING )
-  SUBDIRS( tests )
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs( tests )
+endif( BUILD_TESTING )
 
-IF( BUILD_EXAMPLES )
-  SUBDIRS( examples )
-ENDIF( BUILD_EXAMPLES )
+if( BUILD_EXAMPLES )
+  subdirs( examples )
+endif( BUILD_EXAMPLES )

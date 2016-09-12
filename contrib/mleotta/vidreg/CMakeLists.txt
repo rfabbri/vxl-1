@@ -1,14 +1,14 @@
 # contrib/mleotta/vidreg/CMakeLists.txt
 # feature based video registration
 
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_RPL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/mvg )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_RPL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
 
-SET(vidreg_sources
+set(vidreg_sources
   vidreg_detector.cxx             vidreg_detector.h
   vidreg_matcher.cxx              vidreg_matcher.h
   vidreg_feature_pt_desc.cxx      vidreg_feature_pt_desc.h
@@ -21,19 +21,19 @@ SET(vidreg_sources
   vidreg_reconstructor.cxx        vidreg_reconstructor.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates vidreg_sources)
+aux_source_directory(Templates vidreg_sources)
 
-ADD_LIBRARY(vidreg  ${vidreg_sources})
+add_library(vidreg  ${vidreg_sources})
 
-TARGET_LINK_LIBRARIES(vidreg rgrl vnl dbkpr gevd vil vpgl_algo)
+target_link_libraries(vidreg rgrl vnl dbkpr gevd vil vpgl_algo)
 
-IF( BUILD_TESTING )
-#  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+#  subdirs(tests)
+endif( BUILD_TESTING )
 
 
 # algorithms 
-#SUBDIRS( algo ) 
+#subdirs( algo ) 
 
 # processes
-#SUBDIRS( pro )
+#subdirs( pro )

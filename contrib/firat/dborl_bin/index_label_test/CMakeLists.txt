@@ -1,6 +1,6 @@
-INCLUDE_DIRECTORIES(${lems_SOURCE_DIR}/brcv/seg/)
+include_directories(${lems_SOURCE_DIR}/brcv/seg/)
 
-SET( vox_test_index_label_sources
+set( vox_test_index_label_sources
   vox_test_index_label_params.h 
   vox_test_index_label_params_sptr.h
   vox_test_index_label_params.cxx
@@ -8,8 +8,8 @@ SET( vox_test_index_label_sources
   vox_test_index_label_main.cxx 
 )
 
-ADD_EXECUTABLE (vox_test_index_label ${vox_test_index_label_sources} )
-TARGET_LINK_LIBRARIES (vox_test_index_label dborl_algo)
+add_executable (vox_test_index_label ${vox_test_index_label_sources} )
+target_link_libraries (vox_test_index_label dborl_algo)
 
 
 

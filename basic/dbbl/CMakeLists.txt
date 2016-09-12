@@ -1,16 +1,16 @@
 # /basic/dbbl/CMakeLists.txt
 # Development Brown Basics (templates) Library
 
-# SET(dbbl_sources 
+# set(dbbl_sources 
 #   dbbl_subsequence.h
 #    )
 # 
-# #AUX_SOURCE_DIRECTORY(Templates dbbl_sources)
+# #aux_source_directory(Templates dbbl_sources)
 # 
-# ADD_LIBRARY(dbbl  ${dbbl_sources})
+# add_library(dbbl  ${dbbl_sources})
 # 
-# TARGET_LINK_LIBRARIES(dbbl vbl)
+# target_link_libraries(dbbl vbl)
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )

@@ -1,11 +1,11 @@
 # Visualization for Brown segmentation library
 # brcv/seg/dbdet/vis/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 
-SET(dbdet_vis_sources
+set(dbdet_vis_sources
    
    dbdet_livewire_tool.cxx                dbdet_livewire_tool.h 
    dbdet_multiview_livewire_tool.cxx      dbdet_multiview_livewire_tool.h
@@ -36,7 +36,7 @@ SET(dbdet_vis_sources
    dbdet_crop_curvelet_map_tool.cxx       dbdet_crop_curvelet_map_tool.h
 )
 
-ADD_LIBRARY(dbdet_vis ${dbdet_vis_sources})
+add_library(dbdet_vis ${dbdet_vis_sources})
 
-TARGET_LINK_LIBRARIES(dbdet_vis dbdet_pro dbgl_algo brip)
+target_link_libraries(dbdet_vis dbdet_pro dbgl_algo brip)
 

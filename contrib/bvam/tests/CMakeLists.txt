@@ -1,4 +1,4 @@
-ADD_EXECUTABLE( bvam_test_all
+add_executable( bvam_test_all
   test_driver.cxx
   test_voxel_storage_mem.cxx
   test_voxel_storage_disk.cxx
@@ -10,16 +10,16 @@ ADD_EXECUTABLE( bvam_test_all
   test_gen_synthetic_world.cxx
 )
 
-TARGET_LINK_LIBRARIES( bvam_test_all bvam testlib vcl vbl vpgl bsta bsta_algo)
+target_link_libraries( bvam_test_all bvam testlib vcl vbl vpgl bsta bsta_algo)
 
-ADD_TEST( bvam_test_voxel_storage_mem    ${EXECUTABLE_OUTPUT_PATH}/bvam_test_all   test_voxel_storage_mem )
-ADD_TEST( bvam_test_voxel_storage_disk   ${EXECUTABLE_OUTPUT_PATH}/bvam_test_all   test_voxel_storage_disk )
-ADD_TEST( bvam_test_voxel_grid           ${EXECUTABLE_OUTPUT_PATH}/bvam_test_all   test_voxel_grid )
-ADD_TEST( bvam_test_apm_processors   ${EXECUTABLE_OUTPUT_PATH}/bvam_test_all   test_apm_processors )
-ADD_TEST( bvam_test_voxel_world      ${EXECUTABLE_OUTPUT_PATH}/bvam_test_all   test_voxel_world )
-ADD_TEST( bvam_test_voxel_world_update      ${EXECUTABLE_OUTPUT_PATH}/bvam_test_all   test_voxel_world_update )
-ADD_TEST( bvam_test_voxel_world_mog_image   ${EXECUTABLE_OUTPUT_PATH}/bvam_test_all   test_voxel_world_mog_image )
-ADD_TEST( bvam_test_gen_synthetic_world     ${EXECUTABLE_OUTPUT_PATH}/bvam_test_all   test_gen_synthetic_world )
+add_test( bvam_test_voxel_storage_mem    ${EXECUTABLE_OUTPUT_PATH}/bvam_test_all   test_voxel_storage_mem )
+add_test( bvam_test_voxel_storage_disk   ${EXECUTABLE_OUTPUT_PATH}/bvam_test_all   test_voxel_storage_disk )
+add_test( bvam_test_voxel_grid           ${EXECUTABLE_OUTPUT_PATH}/bvam_test_all   test_voxel_grid )
+add_test( bvam_test_apm_processors   ${EXECUTABLE_OUTPUT_PATH}/bvam_test_all   test_apm_processors )
+add_test( bvam_test_voxel_world      ${EXECUTABLE_OUTPUT_PATH}/bvam_test_all   test_voxel_world )
+add_test( bvam_test_voxel_world_update      ${EXECUTABLE_OUTPUT_PATH}/bvam_test_all   test_voxel_world_update )
+add_test( bvam_test_voxel_world_mog_image   ${EXECUTABLE_OUTPUT_PATH}/bvam_test_all   test_voxel_world_mog_image )
+add_test( bvam_test_gen_synthetic_world     ${EXECUTABLE_OUTPUT_PATH}/bvam_test_all   test_gen_synthetic_world )
 
 
 

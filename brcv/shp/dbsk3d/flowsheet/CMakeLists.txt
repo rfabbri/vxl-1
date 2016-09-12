@@ -1,9 +1,9 @@
 # This is brcv/shp/dbsk3d/algo/CMakeLists.txt
 # Brown Shock3D Algorithm Library
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/shp)
+include_directories( ${lems_SOURCE_DIR}/shp)
 
-SET( dbsk3d_flowsheet_sources
+set( dbsk3d_flowsheet_sources
 
 dbsk3d_fs_flowsheet.cxx             dbsk3d_fs_flowsheet.h
 dbsk3d_fs_flowsheet_bucket.cxx      dbsk3d_fs_flowsheet_bucket.h
@@ -31,7 +31,7 @@ valid_shocks.cxx                    valid_shocks.h
 )
 
 
-ADD_LIBRARY(dbsk3d_flowsheet ${dbsk3d_flowsheet_sources})
+add_library(dbsk3d_flowsheet ${dbsk3d_flowsheet_sources})
 
-TARGET_LINK_LIBRARIES(dbsk3d_flowsheet dbsk3d dbmsh3d_algo)
+target_link_libraries(dbsk3d_flowsheet dbsk3d dbmsh3d_algo)
 

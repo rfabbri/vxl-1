@@ -1,10 +1,10 @@
 #This is contrib/bm/smw/tests/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${smw_SOURCE_DIR} )
-#INCLUDE_DIRECTORIES( ${vxlcore_SOURCE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${smw_SOURCE_DIR} )
+#include_directories( ${vxlcore_SOURCE_DIR} )
 
-SET( smw_test_src
+set( smw_test_src
      test_driver.cxx
      #test_smw_voxel_world.cxx
      #test_smw_node.cxx
@@ -14,9 +14,9 @@ SET( smw_test_src
 )
 
 
-ADD_EXECUTABLE( smw_test_all ${smw_test_src} )
+add_executable( smw_test_all ${smw_test_src} )
 
-TARGET_LINK_LIBRARIES( smw_test_all testlib smw vul vnl)
+target_link_libraries( smw_test_all testlib smw vul vnl)
 
-ADD_TEST( smw_test_graph smw_test_all test_graph )
+add_test( smw_test_graph smw_test_all test_graph )
 

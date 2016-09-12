@@ -4,8 +4,8 @@
 # The file brent.shar has instruction on how to create these source files.
 
 
-SET ( brent_sources
+set ( brent_sources
   brent.h    zeroin.c fminbr.c
 )
  
-ADD_LIBRARY(brent ${brent_sources})
+add_library(brent ${brent_sources})

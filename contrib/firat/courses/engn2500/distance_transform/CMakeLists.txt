@@ -1,17 +1,17 @@
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/brcv )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/basic )
 
-SET(fabbri_dt_sources
+set(fabbri_dt_sources
        fabbri_dt.cxx
     )
-ADD_EXECUTABLE(fabbri_dt  ${fabbri_dt_sources} )
-TARGET_LINK_LIBRARIES (fabbri_dt dbil_algo)
+add_executable(fabbri_dt  ${fabbri_dt_sources} )
+target_link_libraries (fabbri_dt dbil_algo)

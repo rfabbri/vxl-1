@@ -1,23 +1,23 @@
 # contrib/medial_livewire/gui/CMakeLists.txt
 
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES(${VXL_OXL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES(${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories(${VXL_OXL_INCLUDE_DIR} )
+include_directories(${VXL_MUL_INCLUDE_DIR} )
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg/dbdet )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg/dbdet )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib)
+include_directories( ${lems_SOURCE_DIR}/contrib)
 
 
-SET(medial_livewire_gui_sources
+set(medial_livewire_gui_sources
    medial_livewire_menu.cxx       medial_livewire_menu.h
    medial_livewire_main.cxx
    dbdet_draw_spheres_tool.cxx    dbdet_draw_spheres_tool.h
@@ -37,12 +37,12 @@ SET(medial_livewire_gui_sources
 )
 
 
-AUX_SOURCE_DIRECTORY(Templates medial_livewire_gui_sources)
+aux_source_directory(Templates medial_livewire_gui_sources)
 
-ADD_EXECUTABLE(medial_livewire_gui ${medial_livewire_gui_sources})
+add_executable(medial_livewire_gui ${medial_livewire_gui_sources})
 
-TARGET_LINK_LIBRARIES(medial_livewire_gui bvis1 dbgui dbsol vidpro1 vidl1 dbdet_vis dbdet_xio dbsol_vis dbsol_pro)
-#TARGET_LINK_LIBRARIES(medial_livewire_gui bvis1 dbgui dbsol vidpro1 vidl1 dbdet_vis dbdet_xio dbmsh3d_algovtk_pro dbsol_vis dbsol_pro )
+target_link_libraries(medial_livewire_gui bvis1 dbgui dbsol vidpro1 vidl1 dbdet_vis dbdet_xio dbsol_vis dbsol_pro)
+#target_link_libraries(medial_livewire_gui bvis1 dbgui dbsol vidpro1 vidl1 dbdet_vis dbdet_xio dbmsh3d_algovtk_pro dbsol_vis dbsol_pro )
 
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)

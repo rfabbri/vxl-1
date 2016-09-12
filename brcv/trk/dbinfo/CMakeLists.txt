@@ -1,11 +1,11 @@
 # brcv/trk/dbinfo/CMakeLists.txt
 # brcv mutual information tracking library
 
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories(${VXL_GEL_INCLUDE_DIR} )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bbas )
 
-SET(dbinfo_sources
+set(dbinfo_sources
    dbinfo_region_geometry.h        dbinfo_region_geometry.cxx    
    dbinfo_region_geometry_sptr.h  
    dbinfo_feature_base.h           dbinfo_feature_base.cxx
@@ -39,18 +39,18 @@ SET(dbinfo_sources
     dbinfo_match_optimizer.cxx         dbinfo_match_optimizer.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbinfo_sources)
+aux_source_directory(Templates dbinfo_sources)
 
-ADD_LIBRARY(dbinfo ${dbinfo_sources})
+add_library(dbinfo ${dbinfo_sources})
 
-TARGET_LINK_LIBRARIES(dbinfo sdet bsta brip bugl bsol btol bdgl vsol vil vgl_algo vnl vsl vbl_io vbl)
+target_link_libraries(dbinfo sdet bsta brip bugl bsol btol bdgl vsol vil vgl_algo vnl vsl vbl_io vbl)
 
 # Processing Library
-SUBDIRS(pro)
+subdirs(pro)
 
 # Visualization Library
-SUBDIRS(vis)
+subdirs(vis)
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)

@@ -1,22 +1,22 @@
 # contrib/seg/structure/CMakeLists.txt
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_OXL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/brcv/trk )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/brcv/trk )
 
 
-SET(dbseg_structure_sources
+set(dbseg_structure_sources
    dbseg_seg_object.cxx                        dbseg_seg_object.h
    dbseg_seg_neighborhood.cxx                dbseg_seg_neighborhood.h
    dbseg_seg_spatial_object.txx                dbseg_seg_spatial_object.h
@@ -31,9 +31,9 @@ SET(dbseg_structure_sources
     #dbseg_seg_storage+vxl_byte-.cxx
     
 )
-ADD_LIBRARY(dbseg_structure ${dbseg_structure_sources})
-TARGET_LINK_LIBRARIES(dbseg_structure dbdet)
+add_library(dbseg_structure ${dbseg_structure_sources})
+target_link_libraries(dbseg_structure dbdet)
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)
 
 

@@ -1,13 +1,13 @@
 # This is brcv/rec/dbskr/vis/CMakeLists.txt
 # Brown shock recognition library
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
-SET(dbskr_vis_sources
+set(dbskr_vis_sources
 
 #views
 
@@ -34,9 +34,9 @@ SET(dbskr_vis_sources
 
 )
 
-ADD_LIBRARY(dbskr_vis ${dbskr_vis_sources})
+add_library(dbskr_vis ${dbskr_vis_sources})
 
-TARGET_LINK_LIBRARIES(dbskr_vis dbskr_algo dbskr_pro bvis1 ) 
+target_link_libraries(dbskr_vis dbskr_algo dbskr_pro bvis1 ) 
 # dbsk2d_vis)
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)

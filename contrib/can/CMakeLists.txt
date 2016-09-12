@@ -1,8 +1,8 @@
 # contrib/can/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR} )
+include_directories( ${lems_SOURCE_DIR} )
 
-SUBDIRS( gui )
+subdirs( gui )
 
-SUBDIRS( 3d_curve_matching )
+subdirs( 3d_curve_matching )
 

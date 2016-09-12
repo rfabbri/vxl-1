@@ -1,17 +1,17 @@
 # This is contrib/dbmsh3d/vis/CMakeLists.txt
 # 3D application 
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 
-INCLUDE( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
+include( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
 
-IF (HAS_BGUI3D)
+if (HAS_BGUI3D)
 
-SET(dbmsh3d_vis_sources
+set(dbmsh3d_vis_sources
 
    dbmsh3d_vis_backpt.cxx       dbmsh3d_vis_backpt.h
    dbmsh3d_vis_utils.cxx        dbmsh3d_vis_utils.h
@@ -30,9 +30,9 @@ SET(dbmsh3d_vis_sources
    dbmsh3d_click_getinfo.cxx    dbmsh3d_click_getinfo.h
 )
 
-ADD_LIBRARY(dbmsh3d_vis ${dbmsh3d_vis_sources})
+add_library(dbmsh3d_vis ${dbmsh3d_vis_sources})
 
-TARGET_LINK_LIBRARIES( dbmsh3d_vis dbmsh3d dbmsh3d_algo dbmsh3d_pro bgui3d )
+target_link_libraries( dbmsh3d_vis dbmsh3d dbmsh3d_algo dbmsh3d_pro bgui3d )
 
-ENDIF (HAS_BGUI3D)
+endif (HAS_BGUI3D)
 

@@ -1,27 +1,27 @@
 # created by K. Kang for holding all the filters to 3d volume data
 
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} ${VXL_GEL_INCLUDE_DIR}/mrc )
-INCLUDE_DIRECTORIES(${biotree_SOURCE_DIR}/resc)
-INCLUDE_DIRECTORIES(${lems_SOURCE_DIR}/basic)
+include_directories( ${VXL_MUL_INCLUDE_DIR} ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories(${biotree_SOURCE_DIR}/resc)
+include_directories(${lems_SOURCE_DIR}/basic)
 
-SET(vol3d_src
+set(vol3d_src
     vol3d_radius_filter.cxx                     vol3d_radius_filter.h
     vol3d_gaussian_kernel_3d.cxx                vol3d_gaussian_kernel_3d.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates vol3d_src)
-ADD_LIBRARY(vol3d ${vol3d_src})
+aux_source_directory(Templates vol3d_src)
+add_library(vol3d ${vol3d_src})
 
-TARGET_LINK_LIBRARIES(vol3d vcl vbl vil3d imgr biob xmvg dbil)
+target_link_libraries(vol3d vcl vbl vil3d imgr biob xmvg dbil)
 
-SUBDIRS(algo)
+subdirs(algo)
 
-SUBDIRS(vis)
+subdirs(vis)
 
-#IF(BUILD_TESTING)
-#  SUBDIRS(tests)
-#ENDIF(BUILD_TESTING)
+#if(BUILD_TESTING)
+#  subdirs(tests)
+#endif(BUILD_TESTING)
 #
-#IF(BUILD_EXAMPLES)
-#  SUBDIRS(examples)
-#ENDIF(BUILD_EXAMPLES)
+#if(BUILD_EXAMPLES)
+#  subdirs(examples)
+#endif(BUILD_EXAMPLES)

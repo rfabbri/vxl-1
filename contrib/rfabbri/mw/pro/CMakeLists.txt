@@ -1,7 +1,7 @@
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/rfabbri )
+include_directories( ${lems_SOURCE_DIR}/contrib/rfabbri )
 
-SET(mw_pro_sources
+set(mw_pro_sources
 dvpgl_load_camera_process.cxx dvpgl_load_camera_process.h
 #old/mw_cvmatch_process.cxx old/mw_cvmatch_process.h
 mw_discrete_corresp_storage.cxx mw_discrete_corresp_storage.h mw_discrete_corresp_storage_sptr.h
@@ -27,7 +27,7 @@ dbmcs_nearest_edgels_process.h dbmcs_nearest_edgels_process.cxx
 )
 
 
-ADD_LIBRARY(mw_pro ${mw_pro_sources})
+add_library(mw_pro ${mw_pro_sources})
 
-TARGET_LINK_LIBRARIES(mw_pro mw_algo bpgl_algo vpgl_algo dbkpr_pro dvpgl_pro dbdet_pro bvis1 bpro1 dbpro vsl)
+target_link_libraries(mw_pro mw_algo bpgl_algo vpgl_algo dbkpr_pro dvpgl_pro dbdet_pro bvis1 bpro1 dbpro vsl)
 

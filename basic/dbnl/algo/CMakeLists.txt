@@ -1,8 +1,8 @@
 # The Development Brown Numerical Library - Specific Algorithms
-INCLUDE_DIRECTORIES( ${vxl_SOURCE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_NETLIB_INCLUDE_DIR} )
+include_directories( ${vxl_SOURCE_DIR} )
+include_directories( ${VXL_NETLIB_INCLUDE_DIR} )
 
-SET( dbnl_algo_sources
+set( dbnl_algo_sources
    dbnl_eno.cxx               dbnl_eno.h
    dbnl_eno_interp.cxx
    dbnl_eno_poly.cxx
@@ -19,20 +19,20 @@ SET( dbnl_algo_sources
 
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbnl_algo_sources)
+aux_source_directory(Templates dbnl_algo_sources)
 
-ADD_LIBRARY( dbnl_algo ${dbnl_algo_sources} )
+add_library( dbnl_algo ${dbnl_algo_sources} )
 
-TARGET_LINK_LIBRARIES( dbnl_algo dbnl vnl_algo vil brent)
+target_link_libraries( dbnl_algo dbnl vnl_algo vil brent)
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )
 
-IF( BUILD_EXAMPLES )
-  SUBDIRS( examples )
-ENDIF( BUILD_EXAMPLES )
+if( BUILD_EXAMPLES )
+  subdirs( examples )
+endif( BUILD_EXAMPLES )
 
-SUBDIRS(pro)
+subdirs(pro)
 
 

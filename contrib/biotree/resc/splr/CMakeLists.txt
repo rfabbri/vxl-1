@@ -1,9 +1,9 @@
 # /contrib/biotree/resc/splr/CMakeLists.txt
-INCLUDE_DIRECTORIES(${biotree_SOURCE_DIR}/resc ${lems_SOURCE_DIR}/brcv/mvg)
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bbas)
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories(${biotree_SOURCE_DIR}/resc ${lems_SOURCE_DIR}/brcv/mvg)
+include_directories(${VXL_BRL_INCLUDE_DIR}/bbas)
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 
-SET(splr_src 
+set(splr_src 
     splr_populatable_worldpt_roster.h
     splr_splat_resource.h                    splr_splat_resource.txx
     splr_explicit_splat_collection.h         splr_explicit_splat_collection.txx
@@ -19,11 +19,11 @@ SET(splr_src
     splr_subset_splat_collection.h           splr_subset_splat_collection.txx
     splr_basic_pizza_slice_splat_collection.h splr_basic_pizza_slice_splat_collection.txx
    )
-AUX_SOURCE_DIRECTORY(Templates splr_src)
-ADD_LIBRARY(splr ${splr_src})
+aux_source_directory(Templates splr_src)
+add_library(splr ${splr_src})
 
-TARGET_LINK_LIBRARIES(splr biob xmvg xmvg_io vgl_io vnl_xio vsl)
+target_link_libraries(splr biob xmvg xmvg_io vgl_io vnl_xio vsl)
 
-#IF(BUILD_TESTING)
-#  SUBDIRS( tests )
-#ENDIF(BUILD_TESTING)
+#if(BUILD_TESTING)
+#  subdirs( tests )
+#endif(BUILD_TESTING)

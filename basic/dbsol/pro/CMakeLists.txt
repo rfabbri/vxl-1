@@ -1,9 +1,9 @@
 # basic/dbsol/pro/CMakeLists.txt
 # Development Brown Spatial Object Processing Library
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
 
-SET(dbsol_pro_sources
+set(dbsol_pro_sources
    dbsol_curve_sampling_process.cxx    dbsol_curve_sampling_process.h
    dbsol_translate_2d_process.cxx      dbsol_translate_2d_process.h
    dbsol_roi_image_process.cxx         dbsol_roi_image_process.h
@@ -15,9 +15,9 @@ SET(dbsol_pro_sources
 )
 
 
-# AUX_SOURCE_DIRECTORY(Templates dbsol_pro_sources)
+# aux_source_directory(Templates dbsol_pro_sources)
 
-ADD_LIBRARY(dbsol_pro  ${dbsol_pro_sources})
+add_library(dbsol_pro  ${dbsol_pro_sources})
 
-TARGET_LINK_LIBRARIES(dbsol_pro dbsol_algo vidpro1 )
+target_link_libraries(dbsol_pro dbsol_algo vidpro1 )
 

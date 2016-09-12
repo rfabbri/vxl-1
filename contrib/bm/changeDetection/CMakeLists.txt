@@ -1,14 +1,14 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+cmake_minimum_required(VERSION 2.6)
 
-IF(VXL_FOUND)
+if(VXL_FOUND)
   #include the standard vxl stuff
 
-  PROJECT(scale_prob)
-  SET(VXL_PROVIDE_STANDARD_OPTIONS 1)
-  INCLUDE(${VXL_CMAKE_DIR}/UseVXL.cmake)
+  project(scale_prob)
+  set(VXL_PROVIDE_STANDARD_OPTIONS 1)
+  include(${VXL_CMAKE_DIR}/UseVXL.cmake)
   
-  ADD_EXECUTABLE( exec scale_prob_map_main.cxx)
+  add_executable( exec scale_prob_map_main.cxx)
   
-  TARGET_LINK_LIBRARIES(exec vnl vil vul)
+  target_link_libraries(exec vnl vil vul)
     
-ENDIF(VXL_FOUND)
+endif(VXL_FOUND)

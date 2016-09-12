@@ -1,29 +1,29 @@
 # contrib/mleotta/CMakeLists.txt
 # Developement for : mleotta
 
-PROJECT(mleotta_contrib)
+project(mleotta_contrib)
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/mleotta )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/contrib/mleotta )
 
 # 3D model based recognition
-SUBDIRS( modrec )
+subdirs( modrec )
 
 # feature based video registration
-SUBDIRS( vidreg )
+subdirs( vidreg )
 
 # my bvis1 based GUI
-SUBDIRS( gui )
+subdirs( gui )
 
 # my processes
-SUBDIRS( pro )
+subdirs( pro )
 
 # my command line executables
-SUBDIRS( cmd )
+subdirs( cmd )
 
 # Demo executable for BAE
-SUBDIRS( bae_demo )
+subdirs( bae_demo )
 
 
 

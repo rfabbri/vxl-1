@@ -1,10 +1,10 @@
 # This is dbsks/xio/CMakeLists.txt
 # XML I/O library for Shock-Based Object Segmentation
 
-INCLUDE_DIRECTORIES( ${VXL_CORE_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_CORE_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
 
-SET(dbsks_xio_sources 
+set(dbsks_xio_sources 
 
   # Extrinsic shock graphs
 
@@ -20,8 +20,8 @@ SET(dbsks_xio_sources
   dbsks_xio_stats.h             dbsks_xio_stats.cxx
 )
 
-ADD_LIBRARY( dbsks_xio ${dbsks_xio_sources} )
-TARGET_LINK_LIBRARIES(dbsks_xio dbsks dbxml ) 
+add_library( dbsks_xio ${dbsks_xio_sources} )
+target_link_libraries(dbsks_xio dbsks dbxml ) 
 
 # Tests
-SUBDIRS( tests )
+subdirs( tests )

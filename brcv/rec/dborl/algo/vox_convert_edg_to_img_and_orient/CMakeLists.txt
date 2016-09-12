@@ -1,4 +1,4 @@
-SET( vox_convert_edg_to_img_and_orient_sources
+set( vox_convert_edg_to_img_and_orient_sources
   vox_convert_edg_to_img_and_orient_params.h 
   vox_convert_edg_to_img_and_orient_params_sptr.h
   vox_convert_edg_to_img_and_orient_params.cxx
@@ -6,8 +6,8 @@ SET( vox_convert_edg_to_img_and_orient_sources
   vox_convert_edg_to_img_and_orient_main.cxx 
 )
 
-ADD_EXECUTABLE (vox_convert_edg_to_img_and_orient ${vox_convert_edg_to_img_and_orient_sources} )
-TARGET_LINK_LIBRARIES (vox_convert_edg_to_img_and_orient dborl_algo dbdet_algo)
+add_executable (vox_convert_edg_to_img_and_orient ${vox_convert_edg_to_img_and_orient_sources} )
+target_link_libraries (vox_convert_edg_to_img_and_orient dborl_algo dbdet_algo)
 
 
 

@@ -3,19 +3,19 @@
 
 
 
-SET(hsds_sources
+set(hsds_sources
     hsds_fd_tree_node_index.h
     hsds_fd_tree.h hsds_fd_tree.txx
     hsds_fd_tree_incremental_reader.h hsds_fd_tree_incremental_reader.txx
    )
 
-AUX_SOURCE_DIRECTORY(Templates hsds_sources)
+aux_source_directory(Templates hsds_sources)
 
-ADD_LIBRARY(hsds ${hsds_sources})
+add_library(hsds ${hsds_sources})
 
-TARGET_LINK_LIBRARIES(hsds vnl vgl vbl)
+target_link_libraries(hsds vnl vgl vbl)
 
-SUBDIRS(tests)
+subdirs(tests)
 
 
 

@@ -1,13 +1,13 @@
-IF(UNIX)
-    SET (VTK_LIBRARY_PATH "/home/firat/vtk/release/lib/vtk-5.8/")
-    SET (VTK_INCLUDE_PATH "/home/firat/vtk/release/include/vtk-5.8")
-    SET (ANN_LIBRARY_PATH "/home/firat/ann/lib")
-    SET (ANN_INCLUDE_PATH "/home/firat/ann/include")
-    SET (BOOST_LIBRARY_PATH "/home/firat/boost/lib") 
-    SET (BOOST_INCLUDE_PATH "/home/firat/boost/include")
-ELSE(UNIX)
+if(UNIX)
+    set (VTK_LIBRARY_PATH "/home/firat/vtk/release/lib/vtk-5.8/")
+    set (VTK_INCLUDE_PATH "/home/firat/vtk/release/include/vtk-5.8")
+    set (ANN_LIBRARY_PATH "/home/firat/ann/lib")
+    set (ANN_INCLUDE_PATH "/home/firat/ann/include")
+    set (BOOST_LIBRARY_PATH "/home/firat/boost/lib") 
+    set (BOOST_INCLUDE_PATH "/home/firat/boost/include")
+else(UNIX)
     
-ENDIF(UNIX)
+endif(UNIX)
 
 
 subdirs(algo)

@@ -5,27 +5,27 @@
 # They are moved here for archiving purpose. Eventually, they should be removed completely.
 
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/algo )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/algo )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/breye )
 
-INCLUDE_DIRECTORIES( ${BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${BRL_INCLUDE_DIR}/bbas )
+include_directories( ${BRL_INCLUDE_DIR} )
+include_directories( ${GEL_INCLUDE_DIR} )
+include_directories( ${BRL_INCLUDE_DIR}/bbas )
 
 # Optionally Build this library
-OPTION(BUILD_DBXML "Build XML support" NO)
+option(BUILD_DBXML "Build XML support" NO)
 
-IF(BUILD_DBXML)
+if(BUILD_DBXML)
 
 # find the path to the xerces libraries and includes
-INCLUDE( ${LEMS_CMAKE_DIR}/Modules/find_xerces.cmake )
+include( ${LEMS_CMAKE_DIR}/Modules/find_xerces.cmake )
 
 
-IF(HAS_XERCES)
+if(HAS_XERCES)
 
-SET(dbxml_sources
+set(dbxml_sources
 dbxml_input_converter.cxx  dbxml_input_converter.h
                                                                                         dbxml_dom.h
                                                                                                 DOMPrintErrorHandler.hpp
@@ -46,17 +46,17 @@ dbxml_io.cxx                                dbxml_io.h
 
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbxml_sources)
+aux_source_directory(Templates dbxml_sources)
 
 
-IF( BUILD_EXAMPLES )
-  SUBDIRS( examples )
-ENDIF( BUILD_EXAMPLES )
+if( BUILD_EXAMPLES )
+  subdirs( examples )
+endif( BUILD_EXAMPLES )
 
-ADD_LIBRARY(dbxml  ${dbxml_sources})
+add_library(dbxml  ${dbxml_sources})
 
-TARGET_LINK_LIBRARIES(dbxml ${XERCES_LIBRARIES} vul vbl )
+target_link_libraries(dbxml ${XERCES_LIBRARIES} vul vbl )
 
-ENDIF(HAS_XERCES)
+endif(HAS_XERCES)
 
-ENDIF(BUILD_DBXML)
+endif(BUILD_DBXML)

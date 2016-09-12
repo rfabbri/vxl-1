@@ -1,15 +1,15 @@
 # Shock library
 # brcv/shp/dbsk2d/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
 
 
-PROJECT ( dbsk2d )
+project ( dbsk2d )
 
-SET( dbsk2d_sources
+set( dbsk2d_sources
 
 # Basic defines and utility functions
 dbsk2d_assert.h                   dbsk2d_assert.cxx
@@ -138,22 +138,22 @@ dbsk2d_containment_node_sptr.h
 dbsk2d_transform_manager.h dbsk2d_transform_manager.cxx
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbsk2d_sources)
+aux_source_directory(Templates dbsk2d_sources)
 
-ADD_LIBRARY(dbsk2d ${dbsk2d_sources})
+add_library(dbsk2d ${dbsk2d_sources})
 
-TARGET_LINK_LIBRARIES( dbsk2d dbgrl vgl vcl vnl vbl vtol dbsol dbsol_algo )
+target_link_libraries( dbsk2d dbgrl vgl vcl vnl vbl vtol dbsol dbsol_algo )
 
 # Processing Library
-SUBDIRS(pro)
+subdirs(pro)
 
 # Visualization Library
-SUBDIRS(vis)
+subdirs(vis)
 
 # Shock algorithm library
-SUBDIRS ( algo )
+subdirs ( algo )
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )
 

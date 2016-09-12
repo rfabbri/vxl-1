@@ -1,6 +1,6 @@
-SET(dbul_matlab_test_sources
+set(dbul_matlab_test_sources
        dbul_matlab_test.cxx
     )
     
-    ADD_EXECUTABLE (dbul_matlab_test ${dbul_matlab_test_sources})
-    TARGET_LINK_LIBRARIES (dbul_matlab_test dbul vnl)
+    add_executable (dbul_matlab_test ${dbul_matlab_test_sources})
+    target_link_libraries (dbul_matlab_test dbul vnl)

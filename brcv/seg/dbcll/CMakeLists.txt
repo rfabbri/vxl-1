@@ -3,7 +3,7 @@
 
 # include directories here if needed
 
-SET(dbcll_sources
+set(dbcll_sources
    dbcll_cluster.h                  dbcll_cluster_sptr.h
    dbcll_euclidean_cluster.h       
    dbcll_euclidean_cluster_light.h  dbcll_euclidean_cluster_light.cxx
@@ -14,17 +14,17 @@ SET(dbcll_sources
    dbcll_k_means.h              dbcll_k_means.cxx              dbcll_k_means.txx
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbcll_sources)
+aux_source_directory(Templates dbcll_sources)
 
-ADD_LIBRARY(dbcll ${dbcll_sources})
+add_library(dbcll ${dbcll_sources})
 
 # add the required libraries into this list
-TARGET_LINK_LIBRARIES( dbcll vnl vbl dbgl)
+target_link_libraries( dbcll vnl vbl dbgl)
 
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)
 
 
 

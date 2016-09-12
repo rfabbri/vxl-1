@@ -1,11 +1,11 @@
 # brl/bmvl/bcal/tests/CMakeLists.txt
 
-INCLUDE_DIRECTORIES(${BRL_INCLUDE_DIR})
+include_directories(${BRL_INCLUDE_DIR})
 
-ADD_EXECUTABLE(bcal_test_all bcal_test.cxx)
-TARGET_LINK_LIBRARIES(bcal_test_all bcal vgl testlib)
+add_executable(bcal_test_all bcal_test.cxx)
+target_link_libraries(bcal_test_all bcal vgl testlib)
 
-ADD_TEST(bcal_test ${EXECUTABLE_OUTPUT_PATH}/bcal_test_all ${CMAKE_CURRENT_SOURCE_DIR})
+add_test(bcal_test ${EXECUTABLE_OUTPUT_PATH}/bcal_test_all ${CMAKE_CURRENT_SOURCE_DIR})
 
-ADD_EXECUTABLE(bcal_test_include test_include.cxx)
-TARGET_LINK_LIBRARIES(bcal_test_include bcal)
+add_executable(bcal_test_include test_include.cxx)
+target_link_libraries(bcal_test_include bcal)

@@ -2,25 +2,25 @@
 # Dev-Brown Classifier Library
 # Library of statistical classifiers implemented using factory method.
 
-IF(VXL_EXPAT_FOUND)
-  INCLUDE_DIRECTORIES( ${VXL_EXPAT_INCLUDE_DIR} )
-	#MESSAGE("expat found")
-	PROJECT( dbcl )
-	INCLUDE_DIRECTORIES( ${VXL_CORE_INCLUDE_DIR} )
-	INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg ) #bsta is one step down
+if(VXL_EXPAT_FOUND)
+  include_directories( ${VXL_EXPAT_INCLUDE_DIR} )
+	#message("expat found")
+	project( dbcl )
+	include_directories( ${VXL_CORE_INCLUDE_DIR} )
+	include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg ) #bsta is one step down
 	
 	#to include non-compact neighborhood structures
-	INCLUDE_DIRECTORIES( ${dncn_SOURCE_DIR} )
+	include_directories( ${dncn_SOURCE_DIR} )
 	
 	#to include dvrml api
-	INCLUDE_DIRECTORIES( ${dvrml_SOURCE_DIR} )
-	#MESSAGE("dvrml_SOURCE_DIR = " ${dvrml_SOURCE_DIR} )
+	include_directories( ${dvrml_SOURCE_DIR} )
+	#message("dvrml_SOURCE_DIR = " ${dvrml_SOURCE_DIR} )
 	
 	#to parse xml
-	INCLUDE_DIRECTORIES( ${EXPAT_INCLUDE_DIRS} )
-	INCLUDE_DIRECTORIES( ${BRL_INCLUDE_DIR}/b3p/expatpp )
+	include_directories( ${EXPAT_INCLUDE_DIRS} )
+	include_directories( ${BRL_INCLUDE_DIR}/b3p/expatpp )
 	
-	SET( dbcl_sources
+	set( dbcl_sources
 		 dbcl_classifier.h						                  dbcl_classifier.cxx
 		 dbcl_classifier_sptr.h
 		 smart_ptr+dbcl_classifier-.cxx
@@ -57,9 +57,9 @@ IF(VXL_EXPAT_FOUND)
      dbcl_vgl_point_2d_dist_compare.h
 		 )
 
-	ADD_LIBRARY( dbcl ${dbcl_sources} )
-	TARGET_LINK_LIBRARIES( dbcl dncn vul vbl bsta bsta_algo dvrml ${EXPAT_LIBRARIES} expatpp )
+	add_library( dbcl ${dbcl_sources} )
+	target_link_libraries( dbcl dncn vul vbl bsta bsta_algo dvrml ${EXPAT_LIBRARIES} expatpp )
 
-	SUBDIRS( tests )
+	subdirs( tests )
 	
-ENDIF(VXL_EXPAT_FOUND)
+endif(VXL_EXPAT_FOUND)

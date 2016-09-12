@@ -1,16 +1,16 @@
 # This is contrib/bvam/pro/CMakeLists.txt
 # Bvam's Process Library
 
-INCLUDE_DIRECTORIES( ${BRL_INCLUDE_DIR}/bpro )
-INCLUDE_DIRECTORIES( ${BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${BRL_INCLUDE_DIR}/bbas/dbil/algo )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR})
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-#INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic/dbil/algo )
+include_directories( ${BRL_INCLUDE_DIR}/bpro )
+include_directories( ${BRL_INCLUDE_DIR}/bseg )
+include_directories( ${BRL_INCLUDE_DIR}/bbas/dbil/algo )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
+include_directories( ${VXL_GEL_INCLUDE_DIR})
+include_directories( ${lems_SOURCE_DIR}/contrib )
+include_directories( ${lems_SOURCE_DIR}/basic )
+#include_directories( ${lems_SOURCE_DIR}/basic/dbil/algo )
 
-SET(bvam_pro_sources
+set(bvam_pro_sources
 #   bvam_load_voxel_world_process.h       bvam_load_voxel_world_process.cxx
     bvam_create_voxel_world_process.h     bvam_create_voxel_world_process.cxx
     bvam_detect_changes_process.h         bvam_detect_changes_process.cxx
@@ -27,15 +27,15 @@ SET(bvam_pro_sources
     bvam_clean_world_process.h            bvam_clean_world_process.cxx
 )
 
-AUX_SOURCE_DIRECTORY(Templates bvam_pro_sources)
+aux_source_directory(Templates bvam_pro_sources)
 
-ADD_LIBRARY(bvam_pro ${bvam_pro_sources})
+add_library(bvam_pro ${bvam_pro_sources})
 
-TARGET_LINK_LIBRARIES(bvam_pro bvam bvam_io bprb bil_algo sdet vpgl vpgl_io vpgl_algo vpgl_file_formats vsol vil vil_io vnl vnl_io bgeo vgl vgl_algo brip brdb)
+target_link_libraries(bvam_pro bvam bvam_io bprb bil_algo sdet vpgl vpgl_io vpgl_algo vpgl_file_formats vsol vil vil_io vnl vnl_io bgeo vgl vgl_algo brip brdb)
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )
 
 
 

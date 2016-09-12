@@ -2,14 +2,14 @@
 #
 # 
 
-PROJECT( bm )
+project( bm )
 
-SUBDIRS( dsm )
+subdirs( dsm )
 
-SUBDIRS( dsm_batch )
+subdirs( dsm_batch )
 
-SUBDIRS( dsm2 )
+subdirs( dsm2 )
 
-SUBDIRS( dsm2_batch )
+subdirs( dsm2_batch )
 
-SUBDIRS( dts )
+subdirs( dts )

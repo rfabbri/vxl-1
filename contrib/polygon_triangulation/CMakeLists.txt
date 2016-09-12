@@ -18,13 +18,13 @@
 #
 #
 
-SET ( polygon_tri_sources
+set ( polygon_tri_sources
    triangulate.cxx              triangulate.h
    test.cxx
 )
 
 
-ADD_EXECUTABLE ( polygon_tri ${polygon_tri_sources})
+add_executable ( polygon_tri ${polygon_tri_sources})
 
-TARGET_LINK_LIBRARIES( polygon_tri vcl )
+target_link_libraries( polygon_tri vcl )
 

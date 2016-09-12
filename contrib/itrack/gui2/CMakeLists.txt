@@ -1,26 +1,26 @@
 # contrib/itrack2/gui/CMakeLists.txt
 
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/ )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${lems_SOURCE_DIR}/contrib/ )
+include_directories( ${lems_SOURCE_DIR}/brcv/trk )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
 
-SET(itrack2_gui_sources
+set(itrack2_gui_sources
    itrack2_menu.cxx       itrack2_menu.h
    itrack2_main.cxx
 )
 
 
-AUX_SOURCE_DIRECTORY(Templates bvis_sources)
+aux_source_directory(Templates bvis_sources)
 
-ADD_EXECUTABLE(itrack2_gui ${itrack2_gui_sources})
+add_executable(itrack2_gui ${itrack2_gui_sources})
 
-TARGET_LINK_LIBRARIES(itrack2_gui dbinfo_vis dbbgm_vis bvis dbgui vsol vidl1)
+target_link_libraries(itrack2_gui dbinfo_vis dbbgm_vis bvis dbgui vsol vidl1)
 
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)

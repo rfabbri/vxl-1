@@ -1,10 +1,10 @@
 # library for storing / loading 3d image 
-OPTION ( BUILD_CONTRIB_BIOTREE_biov "Build contrib/biotree/biov" ON)
-IF ( BUILD_CONTRIB_BIOTREE_biov )
+option ( BUILD_CONTRIB_BIOTREE_biov "Build contrib/biotree/biov" ON)
+if ( BUILD_CONTRIB_BIOTREE_biov )
 
-INCLUDE_DIRECTORIES(${lems_SOURCE_DIR}/basic)
+include_directories(${lems_SOURCE_DIR}/basic)
 
- SET(biov_sources
+ set(biov_sources
   biov_examiner_tableau.cxx     biov_examiner_tableau.h     biov_examiner_tableau_sptr.h
   biov_transfer_function.h      biov_transfer_function.cxx
   CvrGIMPGradient.h             GIMPGradient.cpp
@@ -18,13 +18,13 @@ INCLUDE_DIRECTORIES(${lems_SOURCE_DIR}/basic)
   TEMPERATURE.h
  )
 
- ADD_LIBRARY(biov  ${biov_sources})
+ add_library(biov  ${biov_sources})
 
- TARGET_LINK_LIBRARIES(biov bgui3d vgui vnl)
+ target_link_libraries(biov bgui3d vgui vnl)
 
-  IF ( BUILD_EXAMPLES )
-   SUBDIRS ( examples )
-  ENDIF ( BUILD_EXAMPLES )
-  SUBDIRS(io)
+  if ( BUILD_EXAMPLES )
+   subdirs ( examples )
+  endif ( BUILD_EXAMPLES )
+  subdirs(io)
 
-ENDIF ( BUILD_CONTRIB_BIOTREE_biov )
+endif ( BUILD_CONTRIB_BIOTREE_biov )

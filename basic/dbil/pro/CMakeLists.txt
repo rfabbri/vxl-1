@@ -1,13 +1,13 @@
 # basic/dbil/pro/CMakeLists.txt
 # Development Brown Image Processing Extention Library
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES(${VXL_OXL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories(${VXL_GEL_INCLUDE_DIR} )
+include_directories(${VXL_OXL_INCLUDE_DIR} )
 
-SET(dbil_pro_sources
+set(dbil_pro_sources
                                         dbil_pro_register.h 
    dbil_gaussian_blur_process.cxx       dbil_gaussian_blur_process.h
    dbil_diff_process.cxx                dbil_diff_process.h
@@ -28,9 +28,9 @@ dbil_osl_canny_edges_process.h  dbil_osl_canny_edges_process.cxx
 )
 
 
-AUX_SOURCE_DIRECTORY(Templates dbil_pro_sources)
+aux_source_directory(Templates dbil_pro_sources)
 
-ADD_LIBRARY(dbil_pro ${dbil_pro_sources})
+add_library(dbil_pro ${dbil_pro_sources})
 
-TARGET_LINK_LIBRARIES(dbil_pro dbil_algo vidpro1 bpro1 bil vil vil_algo dbpro bil_algo osl )
+target_link_libraries(dbil_pro dbil_algo vidpro1 bpro1 bil vil vil_algo dbpro bil_algo osl )
 

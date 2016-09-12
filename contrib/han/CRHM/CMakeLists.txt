@@ -1,7 +1,7 @@
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR}/mbl )
-ADD_EXECUTABLE (CRHM  main.cxx )
-TARGET_LINK_LIBRARIES(CRHM vgl vnl vul mbl)
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR}/mbl )
+add_executable (CRHM  main.cxx )
+target_link_libraries(CRHM vgl vnl vul mbl)
 
 
 

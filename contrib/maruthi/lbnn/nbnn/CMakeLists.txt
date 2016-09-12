@@ -1,32 +1,32 @@
 # SIFT library
 # brcv/shp/dbsk2d/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/maruthi )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/maruthi/vlfeat-0.9.16 )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/maruthi/lbnn )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/maruthi/flann-1.8.4-src/src/cpp )
+include_directories( ${lems_SOURCE_DIR}/contrib/maruthi )
+include_directories( ${lems_SOURCE_DIR}/contrib/maruthi/vlfeat-0.9.16 )
+include_directories( ${lems_SOURCE_DIR}/contrib/maruthi/lbnn )
+include_directories( ${lems_SOURCE_DIR}/contrib/maruthi/flann-1.8.4-src/src/cpp )
 
-LINK_DIRECTORIES(${lems_SOURCE_DIR}/contrib/maruthi/vlfeat-0.9.16/bin/glnxa64 )
-LINK_DIRECTORIES(/usr/local/boost_1_42_0/stage/lib)
+link_directories(${lems_SOURCE_DIR}/contrib/maruthi/vlfeat-0.9.16/bin/glnxa64 )
+link_directories(/usr/local/boost_1_42_0/stage/lib)
 
-PROJECT ( nbnn )
+project ( nbnn )
 
-ADD_EXECUTABLE (lbnn_exec experiment_3.cc )
-TARGET_LINK_LIBRARIES ( lbnn_exec protobuf sift_lib gflags glog boost_filesystem boost_system )
+add_executable (lbnn_exec experiment_3.cc )
+target_link_libraries ( lbnn_exec protobuf sift_lib gflags glog boost_filesystem boost_system )
 
 
 # # SIFT library
 # # brcv/shp/dbsk2d/CMakeLists.txt
 
-# INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/maruthi )
-# INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/maruthi/vlfeat-0.9.16 )
+# include_directories( ${lems_SOURCE_DIR}/contrib/maruthi )
+# include_directories( ${lems_SOURCE_DIR}/contrib/maruthi/vlfeat-0.9.16 )
 
-# LINK_DIRECTORIES(${lems_SOURCE_DIR}/contrib/maruthi/vlfeat-0.9.16/bin/glnxa64 )
-# LINK_DIRECTORIES(/usr/local/boost_1_42_0/stage/lib)
+# link_directories(${lems_SOURCE_DIR}/contrib/maruthi/vlfeat-0.9.16/bin/glnxa64 )
+# link_directories(/usr/local/boost_1_42_0/stage/lib)
 
-# PROJECT ( sift )
+# project ( sift )
 
-# SET( sift_sources
+# set( sift_sources
 
   
 #   extractor.h
@@ -45,10 +45,10 @@ TARGET_LINK_LIBRARIES ( lbnn_exec protobuf sift_lib gflags glog boost_filesystem
  
 # )
 
-# ADD_LIBRARY(sift_lib ${sift_sources} )
-# #TARGET_LINK_LIBRARIES( sift_lib boost_filesystem-mt)
+# add_library(sift_lib ${sift_sources} )
+# #target_link_libraries( sift_lib boost_filesystem-mt)
 
-# ADD_EXECUTABLE (extract_descriptors_cli extract_descriptors_cli.cc )
-# TARGET_LINK_LIBRARIES ( extract_descriptors_cli sift_lib boost_system boost_filesystem opencv_imgproc opencv_core opencv_highgui gflags glog  protobuf vl)
+# add_executable (extract_descriptors_cli extract_descriptors_cli.cc )
+# target_link_libraries ( extract_descriptors_cli sift_lib boost_system boost_filesystem opencv_imgproc opencv_core opencv_highgui gflags glog  protobuf vl)
 
 

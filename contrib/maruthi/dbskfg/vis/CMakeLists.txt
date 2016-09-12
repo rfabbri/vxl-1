@@ -1,12 +1,12 @@
 # This is brcv/shp/dbskfg/vis/CMakeLists.txt
 # Brown 2D Composite Graph Computation Library
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
-SET(dbskfg_vis_sources
+set(dbskfg_vis_sources
 
   #views
   dbskfg_soview_composite_node.h dbskfg_soview_composite_node.cxx
@@ -26,8 +26,8 @@ SET(dbskfg_vis_sources
   dbskfg_composite_graph_transform_tool.cxx
 )
 
-ADD_LIBRARY(dbskfg_vis ${dbskfg_vis_sources})
+add_library(dbskfg_vis ${dbskfg_vis_sources})
 
-TARGET_LINK_LIBRARIES(dbskfg_vis dbskfg_pro bvis1)
+target_link_libraries(dbskfg_vis dbskfg_pro bvis1)
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)

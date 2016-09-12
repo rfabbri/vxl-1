@@ -1,12 +1,12 @@
 # This is brcv/rec/dbcvr/vis/CMakeLists.txt
 # Brown Curve Matching Library Visualization
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
-SET(dbcvr_vis_sources
+set(dbcvr_vis_sources
 
 #tableaux
   dbcvr_curvematch_tableau.h          dbcvr_curvematch_tableau.cxx
@@ -17,8 +17,8 @@ SET(dbcvr_vis_sources
   
 )
 
-ADD_LIBRARY(dbcvr_vis ${dbcvr_vis_sources})
+add_library(dbcvr_vis ${dbcvr_vis_sources})
 
-TARGET_LINK_LIBRARIES(dbcvr_vis dbcvr_pro bvis1)
+target_link_libraries(dbcvr_vis dbcvr_pro bvis1)
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)

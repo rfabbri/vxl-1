@@ -1,9 +1,9 @@
 # brcv/mvg/dbvrl/CMakeLists.txt
 # Brown video registration library
 
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
 
-SET(dbvrl_sources
+set(dbvrl_sources
    dbvrl_world_roi.cxx         dbvrl_world_roi.h          dbvrl_world_roi_sptr.h  
    dbvrl_region.cxx            dbvrl_region.h             dbvrl_region_sptr.h   
                                dbvrl_transform_2d.h       dbvrl_transform_2d_sptr.h     
@@ -14,26 +14,26 @@ SET(dbvrl_sources
    dbvrl_super_res.cxx         dbvrl_super_res.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbvrl_sources)
+aux_source_directory(Templates dbvrl_sources)
 
-ADD_LIBRARY(dbvrl  ${dbvrl_sources})
+add_library(dbvrl  ${dbvrl_sources})
 
-TARGET_LINK_LIBRARIES(dbvrl vnl vil vimt vbl vsl)
+target_link_libraries(dbvrl vnl vil vimt vbl vsl)
 
-IF( BUILD_EXAMPLES )
-#  SUBDIRS( examples )
-ENDIF( BUILD_EXAMPLES )
+if( BUILD_EXAMPLES )
+#  subdirs( examples )
+endif( BUILD_EXAMPLES )
 
 # Processing Library
-SUBDIRS(pro)
+subdirs(pro)
 
 # Visualization Library
-SUBDIRS(vis)
+subdirs(vis)
 
 # Executable library
-SUBDIRS(exe)
+subdirs(exe)
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)
 

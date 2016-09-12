@@ -1,7 +1,7 @@
 # This is dbsks/algo/CMakeLists.txt
 # The Algorithm Library for Shock-Based Segmentation
 
-SET( dbsks_algo_sources
+set( dbsks_algo_sources
   dbsks_algos.h                    dbsks_algos.cxx
   
   dbsks_vox_utils.h                dbsks_vox_utils.cxx
@@ -17,14 +17,14 @@ SET( dbsks_algo_sources
   #dbsks_detect_xgraph.h            dbsks_detect_xgraph.cxx
   
 )
-ADD_LIBRARY( dbsks_algo  ${dbsks_algo_sources} )
-TARGET_LINK_LIBRARIES( dbsks_algo dbsks dbsks_xio dbul dborl )
+add_library( dbsks_algo  ${dbsks_algo_sources} )
+target_link_libraries( dbsks_algo dbsks dbsks_xio dbul dborl )
 
-IF( BUILD_TESTING )
-#  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+#  subdirs(tests)
+endif( BUILD_TESTING )
 
-IF( BUILD_EXAMPLES )
-#  SUBDIRS( examples )
-ENDIF( BUILD_EXAMPLES )
+if( BUILD_EXAMPLES )
+#  subdirs( examples )
+endif( BUILD_EXAMPLES )
 

@@ -1,5 +1,5 @@
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/dbpz_hindsite_2 )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/contrib/dbpz_hindsite_2 )
 
-ADD_EXECUTABLE(dbpz_hindsite_web_combined_process dbpz_hindsite_web_combined_process.cxx)
-TARGET_LINK_LIBRARIES(dbpz_hindsite_web_combined_process bxml dbpz_hindsite_2_lib)
+add_executable(dbpz_hindsite_web_combined_process dbpz_hindsite_web_combined_process.cxx)
+target_link_libraries(dbpz_hindsite_web_combined_process bxml dbpz_hindsite_2_lib)

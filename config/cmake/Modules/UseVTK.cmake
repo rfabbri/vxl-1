@@ -5,12 +5,12 @@
 
 
 # Find and load the VTK configuration.
-FIND_PACKAGE( VTK )
-IF (VTK_FOUND)
-  INCLUDE(${VTK_USE_FILE})
+find_package( VTK )
+if (VTK_FOUND)
+  include(${VTK_USE_FILE})
   
   # we're only interested in a subset of VTK's libraries
-  SET(VTK_LIBRARIES ${VTK_LIBRARY_DIRS}/libvtksys.a ${VTK_LIBRARY_DIRS}/vtkCommon ${VTK_LIBRARY_DIRS}/vtkFiltering ${VTK_LIBRARY_DIRS}/vtkGraphics ${VTK_LIBRARY_DIRS}/vtkGenericFiltering ${VTK_LIBRARY_DIRS}/vtkImaging )
+  set(VTK_LIBRARIES ${VTK_LIBRARY_DIRS}/libvtksys.a ${VTK_LIBRARY_DIRS}/vtkCommon ${VTK_LIBRARY_DIRS}/vtkFiltering ${VTK_LIBRARY_DIRS}/vtkGraphics ${VTK_LIBRARY_DIRS}/vtkGenericFiltering ${VTK_LIBRARY_DIRS}/vtkImaging )
   
-  SET(HAS_VTK "YES")
-ENDIF (VTK_FOUND)
+  set(HAS_VTK "YES")
+endif (VTK_FOUND)

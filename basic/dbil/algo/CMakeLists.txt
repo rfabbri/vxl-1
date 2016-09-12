@@ -2,32 +2,32 @@
 # The Development Brown Image Algorithms Library 
 
  
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic)
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/basic)
 
-SET( dbil_algo_sources
+set( dbil_algo_sources
   dbil_gradient_color.h          dbil_gradient_color.cxx
   dbil_exact_distance_transform.h dbil_exact_distance_transform.cxx
 )
 
-IF(OCTAVE_FOUND)
-    SET(dbil_algo_sources
+if(OCTAVE_FOUND)
+    set(dbil_algo_sources
         ${dbil_algo_sources}
         dbil_octave.h dbil_octave.cxx
     )
-ENDIF(OCTAVE_FOUND)
+endif(OCTAVE_FOUND)
 
-#AUX_SOURCE_DIRECTORY(Templates dbil_algo_sources)
+#aux_source_directory(Templates dbil_algo_sources)
 
-ADD_LIBRARY( dbil_algo ${dbil_algo_sources} )
+add_library( dbil_algo ${dbil_algo_sources} )
 
-TARGET_LINK_LIBRARIES( dbil_algo vil_algo vul)
+target_link_libraries( dbil_algo vil_algo vul)
 
-IF(OCTAVE_FOUND)
-    TARGET_LINK_LIBRARIES(dbil_algo dbul)
-ENDIF(OCTAVE_FOUND)
+if(OCTAVE_FOUND)
+    target_link_libraries(dbil_algo dbul)
+endif(OCTAVE_FOUND)
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )

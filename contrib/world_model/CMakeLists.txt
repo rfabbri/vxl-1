@@ -1,21 +1,21 @@
 # world modeling application
 # contrib/world_model/CMakeLists.txt
 
-IF(VXL_BGUI3D_FOUND)
+if(VXL_BGUI3D_FOUND)
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
-INCLUDE_DIRECTORIES( ${VXL_TIFF_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEOTIFF_INCLUDE_DIR} ) 
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/contrib )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories( ${VXL_TIFF_INCLUDE_DIR} )
+include_directories( ${VXL_GEOTIFF_INCLUDE_DIR} ) 
 
-ADD_DEFINITIONS ( -DCOIN_NOT_DLL )
-INCLUDE_DIRECTORIES( ${VXL_COIN3D_INCLUDE_DIR} )
+add_definitions ( -DCOIN_NOT_DLL )
+include_directories( ${VXL_COIN3D_INCLUDE_DIR} )
 
-SET(world_model_sources
+set(world_model_sources
    poly_menu.cxx            poly_menu.h
    poly_lidar_menu.cxx      poly_lidar_menu.h
    poly_hybrid_menu.cxx     poly_hybrid_menu.h
@@ -39,13 +39,13 @@ SET(world_model_sources
 )
 
 
-#ADD_EXECUTABLE( world_model ${world_model_sources} )
-ADD_LIBRARY(world_model ${world_model_sources})
+#add_executable( world_model ${world_model_sources} )
+add_library(world_model ${world_model_sources})
 
-TARGET_LINK_LIBRARIES( world_model dbmsh3d dbmsh3d_algo dbmsh3d_vis vil vbl vgl vgl_algo vnl vsol vpgl vpgl_algo bgui bgeo)
+target_link_libraries( world_model dbmsh3d dbmsh3d_algo dbmsh3d_vis vil vbl vgl vgl_algo vnl vsol vpgl vpgl_algo bgui bgeo)
 
-SUBDIRS(exe)
+subdirs(exe)
 
-SUBDIRS(tests)
+subdirs(tests)
 
-ENDIF(VXL_BGUI3D_FOUND)
+endif(VXL_BGUI3D_FOUND)

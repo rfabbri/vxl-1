@@ -1,25 +1,25 @@
 # breye/CMakeLists.txt
 # Brown Eyes package.
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas/brdb )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/db3p )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/algo )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas/brdb )
+include_directories( ${lems_SOURCE_DIR}/db3p )
+include_directories( ${lems_SOURCE_DIR}/algo )
+include_directories( ${lems_SOURCE_DIR}/breye )
+include_directories( ${lems_SOURCE_DIR}/basic )
 
 # Brown Process Library
-SUBDIRS( bpro )
+subdirs( bpro )
 
 # Video Process Library
-SUBDIRS( vidpro )
+subdirs( vidpro )
 
 # Visualizer (will move to brl someday)
-SUBDIRS( bvis )
+subdirs( bvis )
 
 # Development Visualizer
-SUBDIRS( dbvis )
+subdirs( dbvis )
 
 # Virtual Object Recognition Lab
-SUBDIRS( vorl )
+subdirs( vorl )
 

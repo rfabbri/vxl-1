@@ -1,13 +1,13 @@
 # This is brcv/rec/dbru/pro/CMakeLists.txt
 # Brown Recognition Tools to aid Testing
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${VXL_OXL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
 
-SET(dbru_pro_sources 
+set(dbru_pro_sources 
 
 #storage classes
 dbru_rcor_storage_sptr.h
@@ -29,7 +29,7 @@ dbru_create_empty_osl_process.h   dbru_create_empty_osl_process.cxx
 #dbru_run_osl_process.h            dbru_run_osl_process.cxx
 )
 
-ADD_LIBRARY(dbru_pro ${dbru_pro_sources})
+add_library(dbru_pro ${dbru_pro_sources})
 
-TARGET_LINK_LIBRARIES(dbru_pro bvis1 dbdet dbru_algo dbskr dbsk2d_algo)
+target_link_libraries(dbru_pro bvis1 dbdet dbru_algo dbskr dbsk2d_algo)
 

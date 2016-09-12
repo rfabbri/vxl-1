@@ -1,10 +1,10 @@
 # brcv/seg/dbdet/algo/CMakeLists.txt
 # Algorithms for Brown Detection Libraries
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg/dbdet )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg/dbdet )
+include_directories( ${lems_SOURCE_DIR}/basic )
 
-SET( dbdet_algo_sources
+set( dbdet_algo_sources
 
 # I/O functions
   dbdet_load_edg.cxx           dbdet_load_edg.h
@@ -59,29 +59,29 @@ SET( dbdet_algo_sources
   dbdet_curve_fragment_cues.h dbdet_curve_fragment_cues.cxx
 )
 
-IF(OCTAVE_FOUND)
-    SET(dbdet_algo_sources
+if(OCTAVE_FOUND)
+    set(dbdet_algo_sources
         ${dbdet_algo_sources}
         dbdet_pb_edge_detector.h dbdet_pb_edge_detector_embedded_files.h dbdet_pb_edge_detector.cxx dbdet_pb_edge_detector_embedded_files.cxx
         dbdet_kovesi_edge_linker.h dbdet_kovesi_edge_linker_embedded_files.h dbdet_kovesi_edge_linker.cxx dbdet_kovesi_edge_linker_embedded_files.cxx
     )
-ENDIF(OCTAVE_FOUND)
+endif(OCTAVE_FOUND)
 
-AUX_SOURCE_DIRECTORY(Templates dbdet_algo_sources)
+aux_source_directory(Templates dbdet_algo_sources)
 
-ADD_LIBRARY(dbdet_algo ${dbdet_algo_sources})
-TARGET_LINK_LIBRARIES( dbdet_algo dbdet )
+add_library(dbdet_algo ${dbdet_algo_sources})
+target_link_libraries( dbdet_algo dbdet )
 
-IF(OCTAVE_FOUND)
-    TARGET_LINK_LIBRARIES( dbdet_algo dbil_algo)
-ENDIF(OCTAVE_FOUND)
+if(OCTAVE_FOUND)
+    target_link_libraries( dbdet_algo dbil_algo)
+endif(OCTAVE_FOUND)
 
-IF ( Boost_FOUND )
-  TARGET_LINK_LIBRARIES( dbdet_algo ${Boost_LIBRARIES} )
-  INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIRS} )
-ENDIF( Boost_FOUND )
+if ( Boost_FOUND )
+  target_link_libraries( dbdet_algo ${Boost_LIBRARIES} )
+  include_directories( ${Boost_INCLUDE_DIRS} )
+endif( Boost_FOUND )
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )
 

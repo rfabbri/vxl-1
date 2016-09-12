@@ -1,16 +1,16 @@
 # brcv/rec/dbru/CMakeLists.txt
 # Brown Recognition Utililities Libraries.
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/rec )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR})
-INCLUDE_DIRECTORIES( ${VXL_RPL_INCLUDE_DIR})
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/rec )
+include_directories( ${VXL_GEL_INCLUDE_DIR})
+include_directories( ${VXL_RPL_INCLUDE_DIR})
+include_directories( ${lems_SOURCE_DIR}/brcv/trk )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
 
-SET(dbru_sources  
+set(dbru_sources  
 dbru_label.h                           dbru_label.cxx
 dbru_label_sptr.h                      
 
@@ -27,24 +27,24 @@ dbru_multiple_instance_object.h        dbru_multiple_instance_object.cxx
 dbru_multiple_instance_object_sptr.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbru_sources)
+aux_source_directory(Templates dbru_sources)
 
-ADD_LIBRARY(dbru ${dbru_sources})
+add_library(dbru ${dbru_sources})
 
-TARGET_LINK_LIBRARIES(dbru vsol dbinfo vil_io dbcvr)
+target_link_libraries(dbru vsol dbinfo vil_io dbcvr)
 
-SUBDIRS( pro )
+subdirs( pro )
 
 # Brown Recognition Tools to aid Testing
-SUBDIRS( vis )
+subdirs( vis )
 
 # Brown Recognition Correspondence Generator Algorithms
-SUBDIRS (algo)
+subdirs (algo)
 
 # Brown Recognition Utilities Testing
-SUBDIRS( tests )
+subdirs( tests )
 
 # Brown Recognition Utilities Processes - new process structure of vxl/contrib/brl/bpro
-SUBDIRS( pro2 )
+subdirs( pro2 )
 
 

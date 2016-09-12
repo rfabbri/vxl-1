@@ -2,21 +2,21 @@
 # Brown Recognition Utililities Algorithms Libraries.
 
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/rec )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR})
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/rec )
+include_directories( ${VXL_GEL_INCLUDE_DIR})
+include_directories( ${lems_SOURCE_DIR}/brcv/trk )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
 
-SET(dbru_algo_sources  
+set(dbru_algo_sources  
 dbru_rcor_generator.h                  dbru_rcor_generator.cxx
 dbru_object_matcher.h                  dbru_object_matcher.cxx
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbru_sources)
+aux_source_directory(Templates dbru_sources)
 
-ADD_LIBRARY(dbru_algo ${dbru_algo_sources})
+add_library(dbru_algo ${dbru_algo_sources})
 
-TARGET_LINK_LIBRARIES(dbru_algo dbru dbskr dbsk2d_algo mbl)
+target_link_libraries(dbru_algo dbru dbskr dbsk2d_algo mbl)

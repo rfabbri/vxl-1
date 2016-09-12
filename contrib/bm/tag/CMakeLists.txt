@@ -3,12 +3,12 @@
 
 project( tag )
 
-INCLUDE_DIRECTORIES( ${VXL_CORE_INCLUDE_DIR} )
+include_directories( ${VXL_CORE_INCLUDE_DIR} )
 
-SET( tag_sources
+set( tag_sources
      tag.h          tag.cxx
 )
 
-ADD_LIBRARY( tag ${tag_sources})
-TARGET_LINK_LIBRARIES( tag vil vnl )
+add_library( tag ${tag_sources})
+target_link_libraries( tag vil vnl )
 

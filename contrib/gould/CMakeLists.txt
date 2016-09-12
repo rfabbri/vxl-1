@@ -2,13 +2,13 @@
 # Benjamin Gould
 
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/gould )
+include_directories( ${lems_SOURCE_DIR}/contrib/gould )
 
 # contour fragment graph structure
-SUBDIRS( structure )
+subdirs( structure )
 
 
 # contour fragment graph io
-SUBDIRS( io )
+subdirs( io )
 
 

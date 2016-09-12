@@ -1,28 +1,28 @@
 # contrib/knee_cartilage/gui/CMakeLists.txt
 
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/basic )
 
 
-SET(knee_cartilage_gui_sources
+set(knee_cartilage_gui_sources
    knee_cartilage_gui_menu.cxx       knee_cartilage_gui_menu.h
    knee_cartilage_gui_main.cxx 
    dbknee_dicom_image_displayer.h
    dbknee_dicom_image_displayer.cxx
 )
 
-AUX_SOURCE_DIRECTORY(Templates bvis1_sources)
-ADD_EXECUTABLE(knee_cartilage_gui ${knee_cartilage_gui_sources})
-TARGET_LINK_LIBRARIES( knee_cartilage_gui bvis1 dbknee dbknee_pro dbsol_algo dbsol_vis dbsol_pro dbgui dbdet_pro)
+aux_source_directory(Templates bvis1_sources)
+add_executable(knee_cartilage_gui ${knee_cartilage_gui_sources})
+target_link_libraries( knee_cartilage_gui bvis1 dbknee dbknee_pro dbsol_algo dbsol_vis dbsol_pro dbgui dbdet_pro)
 
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)

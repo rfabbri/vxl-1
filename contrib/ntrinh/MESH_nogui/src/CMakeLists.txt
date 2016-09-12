@@ -1,7 +1,7 @@
-PROJECT(MESH_nogui)
+project(MESH_nogui)
 
-INCLUDE_DIRECTORIES(${MESH_nogui_SOURCE_DIR} )
+include_directories(${MESH_nogui_SOURCE_DIR} )
 
-SUBDIRS (lib3d)
-SUBDIRS (mesh_error_lib)
-SUBDIRS (mesh_cmd)
+subdirs (lib3d)
+subdirs (mesh_error_lib)
+subdirs (mesh_cmd)

@@ -1,16 +1,16 @@
 # shp/dbsksp/vis/CMakeLists.txt
 # Brown Visualization Library for Shape Design Using Shock
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-#INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+#include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/ntrinh )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/contrib/ntrinh )
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
-SET( dbsksp_vis_sources
+set( dbsksp_vis_sources
 # Tableaus and Displayers
   dbsksp_shock_tableau.h                   dbsksp_shock_tableau.cxx     dbsksp_shock_tableau_sptr.h
   dbsksp_shock_displayer.h                 dbsksp_shock_displayer.cxx
@@ -30,15 +30,15 @@ SET( dbsksp_vis_sources
   dbsksp_xshock_design_tool.h  dbsksp_xshock_design_tool.cxx
 )
 
-ADD_LIBRARY(dbsksp_vis ${dbsksp_vis_sources})
+add_library(dbsksp_vis ${dbsksp_vis_sources})
 
-TARGET_LINK_LIBRARIES(dbsksp_vis dbsksp_pro dbsksp_algo bvis1)
-
-
-IF(BUILD_TESTING)
-#  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+target_link_libraries(dbsksp_vis dbsksp_pro dbsksp_algo bvis1)
 
 
-ENDIF (VXL_VGUI_FOUND)
+if(BUILD_TESTING)
+#  subdirs(tests)
+endif(BUILD_TESTING)
+
+
+endif (VXL_VGUI_FOUND)
 

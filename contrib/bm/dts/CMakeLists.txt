@@ -1,13 +1,13 @@
 # This is contrib/bm/dts/CMakeLists.txt
 # A library for extracting and representing time series datum
 
-PROJECT(dts)
+project(dts)
 
-INCLUDE_DIRECTORIES( ${VXL_CORE_INCLUDE_DIR} )
+include_directories( ${VXL_CORE_INCLUDE_DIR} )
 
-INCLUDE_DIRECTORIES( ${bm_SOURCE_DIR} )
+include_directories( ${bm_SOURCE_DIR} )
 
-SET( dts_sources
+set( dts_sources
    
     dts_time_series_base.h
     dts_time_series_base_sptr.h
@@ -22,11 +22,11 @@ SET( dts_sources
     )
     
     
-AUX_SOURCE_DIRECTORY( Templates dts_sources )    
-ADD_LIBRARY( dts ${dts_sources} )
+aux_source_directory( Templates dts_sources )    
+add_library( dts ${dts_sources} )
 
-TARGET_LINK_LIBRARIES( dts vbl vgl vnl vnl_algo vsl )
+target_link_libraries( dts vbl vgl vnl vnl_algo vsl )
 
-SUBDIRS(algo)
-SUBDIRS(pro)
-SUBDIRS(io)
+subdirs(algo)
+subdirs(pro)
+subdirs(io)

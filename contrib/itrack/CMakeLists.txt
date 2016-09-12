@@ -1,28 +1,28 @@
 # contrib/lems_itrack/CMakeLists.txt
 # Developement for : lems_itrack
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/algo )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv )
+include_directories( ${lems_SOURCE_DIR}/algo )
+include_directories( ${lems_SOURCE_DIR}/breye )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/brcv )
 
 # bvis based GUIS
-SUBDIRS( gui )
-SUBDIRS( gui2 )
-SUBDIRS( imatch_gui )
+subdirs( gui )
+subdirs( gui2 )
+subdirs( imatch_gui )
 
 # command line executables
-#SUBDIRS( cmd )
+#subdirs( cmd )
 
 
 # vidpro elements
-SUBDIRS( cmd )
+subdirs( cmd )
 
 # vidpro elements
-#SUBDIRS( pro )
+#subdirs( pro )
 
 # tests for itrack classes
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)

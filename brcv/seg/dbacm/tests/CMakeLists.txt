@@ -1,14 +1,14 @@
 # This is brcv/seg/dbacm/tests/CMakeLists.txt
 
 
-ADD_EXECUTABLE( dbacm_test_all
+add_executable( dbacm_test_all
   test_driver.cxx
   test_image_filters.cxx
 )
-TARGET_LINK_LIBRARIES( dbacm_test_all dbacm testlib )
+target_link_libraries( dbacm_test_all dbacm testlib )
 
-# ADD_TEST( )
+# add_test( )
 
 
-ADD_EXECUTABLE( dbacm_test_include test_include.cxx )
-TARGET_LINK_LIBRARIES( dbacm_test_include dbacm )
+add_executable( dbacm_test_include test_include.cxx )
+target_link_libraries( dbacm_test_include dbacm )

@@ -1,15 +1,15 @@
 # lemsvxlsrc/basic/dbsol/CMakeLists.txt
 # The Development Brown Spatial Object Library
-PROJECT(dbsol)
+project(dbsol)
 
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES(${lems_SOURCE_DIR}/basic)
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories(${lems_SOURCE_DIR}/basic)
 
-CONFIGURE_FILE( ${dbsol_SOURCE_DIR}/dbsol_config.h.in
+configure_file( ${dbsol_SOURCE_DIR}/dbsol_config.h.in
                 ${dbsol_BINARY_DIR}/dbsol_config.h )
 
-SET( dbsol_sources
+set( dbsol_sources
   dbsol_interp_curve_2d.cxx dbsol_interp_curve_2d.h dbsol_interp_curve_2d_sptr.h  
   dbsol_geno_curve_2d.cxx dbsol_geno_curve_2d.h dbsol_geno_curve_2d_sptr.h
   dbsol_gshock.cxx dbsol_gshock.h dbsol_gshock_sptr.h
@@ -25,32 +25,32 @@ SET( dbsol_sources
   dbsol_interp_curve_3d.cxx dbsol_interp_curve_3d.h dbsol_interp_curve_3d_sptr.h  
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbsol_sources)
+aux_source_directory(Templates dbsol_sources)
 
-ADD_LIBRARY(dbsol ${dbsol_sources})
+add_library(dbsol ${dbsol_sources})
 
 if(Boost_FOUND)
-  TARGET_LINK_LIBRARIES( dbsol dbgl dbgl_algo vgl vsol vil ${Boost_LIBRARIES} )
-  INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIRS} )
+  target_link_libraries( dbsol dbgl dbgl_algo vgl vsol vil ${Boost_LIBRARIES} )
+  include_directories( ${Boost_INCLUDE_DIRS} )
 else()
-  TARGET_LINK_LIBRARIES( dbsol dbgl dbgl_algo vgl vsol vil )
+  target_link_libraries( dbsol dbgl dbgl_algo vgl vsol vil )
 endif()
 
-IF( Boost_FOUND )
-  TARGET_LINK_LIBRARIES( dbsol ${Boost_LIBRARIES})
-ENDIF( Boost_FOUND )
+if( Boost_FOUND )
+  target_link_libraries( dbsol ${Boost_LIBRARIES})
+endif( Boost_FOUND )
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )
 
-SUBDIRS( algo )
+subdirs( algo )
 
-SUBDIRS( pro )
+subdirs( pro )
 
-SUBDIRS( vis )
+subdirs( vis )
 
 
-#IF( BUILD_EXAMPLES )
-#  SUBDIRS( examples )
-#ENDIF( BUILD_EXAMPLES )
+#if( BUILD_EXAMPLES )
+#  subdirs( examples )
+#endif( BUILD_EXAMPLES )

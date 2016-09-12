@@ -1,11 +1,11 @@
 # This is brcv/shp/dbsk2d/pro/CMakeLists.txt
 # Brown 2D Shock library
 
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
 
-SET(dbsk2d_pro_sources
+set(dbsk2d_pro_sources
 
 # storage classes
    dbsk2d_shock_storage.h              dbsk2d_shock_storage.cxx
@@ -27,8 +27,8 @@ SET(dbsk2d_pro_sources
    dbsk2d_compute_containment_graph_process.h dbsk2d_compute_containment_graph_process.cxx
 )
 
-ADD_LIBRARY(dbsk2d_pro ${dbsk2d_pro_sources})
+add_library(dbsk2d_pro ${dbsk2d_pro_sources})
 
-TARGET_LINK_LIBRARIES(dbsk2d_pro dbsk2d_algo bpro1 vul)
+target_link_libraries(dbsk2d_pro dbsk2d_algo bpro1 vul)
 
 

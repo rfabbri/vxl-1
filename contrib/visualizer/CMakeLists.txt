@@ -18,45 +18,45 @@
 ##define wxUSE_GLCANVAS       1
 
 
-#INCLUDE( ${CMAKE_ROOT}/Modules/FindwxWindows.cmake )
-INCLUDE( ${LEMS_CMAKE_DIR}/Modules/FindwxWindows.cmake )
+#include( ${CMAKE_ROOT}/Modules/FindwxWindows.cmake )
+include( ${LEMS_CMAKE_DIR}/Modules/FindwxWindows.cmake )
 
 
-IF (WXWINDOWS_FOUND)
+if (WXWINDOWS_FOUND)
 
-IF (WIN32)
+if (WIN32)
 
-INCLUDE( ${CMAKE_ROOT}/Modules/USE_wxWindows.cmake )
+include( ${CMAKE_ROOT}/Modules/USE_wxWindows.cmake )
 
-ADD_DEFINITIONS(-D__WXMSW__)
-#ADD_DEFINITIONS(-DWINVER=0x400)
-#ADD_DEFINITIONS(-DwxUSE_GUI=1)
+add_definitions(-D__WXMSW__)
+#add_definitions(-DWINVER=0x400)
+#add_definitions(-DwxUSE_GUI=1)
 
-IF(WXWINDOWS_INCLUDE_PATH)
-  INCLUDE_DIRECTORIES(${WXWINDOWS_INCLUDE_PATH})
-ENDIF(WXWINDOWS_INCLUDE_PATH)
+if(WXWINDOWS_INCLUDE_PATH)
+  include_directories(${WXWINDOWS_INCLUDE_PATH})
+endif(WXWINDOWS_INCLUDE_PATH)
 
-IF(CMAKE_WX_CXX_FLAGS)
-  SET(CMAKE_CXX_FLAGS "${CMAKE_WX_CXX_FLAGS} ${CMAKE_CXX_FLAGS}")
-ENDIF(CMAKE_WX_CXX_FLAGS)
-
-
-#SET (USE_FREETYPE "YES")
-#INCLUDE( ${LEMS_CMAKE_DIR}/Modules/UseSoWin.cmake )
-
-#SET (USE_FTGL "YES")
-#INCLUDE( ${LEMS_CMAKE_DIR}/Modules/UseSoWin.cmake )
+if(CMAKE_WX_CXX_FLAGS)
+  set(CMAKE_CXX_FLAGS "${CMAKE_WX_CXX_FLAGS} ${CMAKE_CXX_FLAGS}")
+endif(CMAKE_WX_CXX_FLAGS)
 
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+#set (USE_FREETYPE "YES")
+#include( ${LEMS_CMAKE_DIR}/Modules/UseSoWin.cmake )
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/visualizer )
-
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
+#set (USE_FTGL "YES")
+#include( ${LEMS_CMAKE_DIR}/Modules/UseSoWin.cmake )
 
 
-SET( visualizer_sources
+include_directories( ${lems_SOURCE_DIR}/basic )
+
+include_directories( ${lems_SOURCE_DIR}/contrib/visualizer )
+
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+
+
+set( visualizer_sources
 
     test_include.cxx
 
@@ -152,12 +152,12 @@ SET( visualizer_sources
 
 )
 
-ADD_EXECUTABLE( visualizer WIN32  ${visualizer_sources} resource.rc )
+add_executable( visualizer WIN32  ${visualizer_sources} resource.rc )
 
 # add the required libraries into this list
-TARGET_LINK_LIBRARIES( visualizer  C:/wxWindows-2.4.2/lib/wxmswd vcl opengl32 glu32 )    #  
+target_link_libraries( visualizer  C:/wxWindows-2.4.2/lib/wxmswd vcl opengl32 glu32 )    #  
 
-ENDIF (WIN32)
+endif (WIN32)
 
-ENDIF (WXWINDOWS_FOUND)
+endif (WXWINDOWS_FOUND)
 

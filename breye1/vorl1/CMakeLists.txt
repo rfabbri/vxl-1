@@ -1,39 +1,39 @@
 # breye1/vorl1/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/db3p )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_EXPAT_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/db3p )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_EXPAT_INCLUDE_DIR} )
 
-INCLUDE_DIRECTORIES (${VXL_BRL_INCLUDE_DIR}/b3p )
+include_directories (${VXL_BRL_INCLUDE_DIR}/b3p )
 
-SET(vorl1_sources
+set(vorl1_sources
                                    vorl1.h
    vorl1_manager.cxx                vorl1_manager.h
 )
 
-SET(movie_sources
+set(movie_sources
    track.cpp     vorl1_movie_extractor.cxx        track.h 
 )
 
 
-#AUX_SOURCE_DIRECTORY(Templates vidpro1_sources)
+#aux_source_directory(Templates vidpro1_sources)
 
-IF( BUILD_EXAMPLES )
-  SUBDIRS( examples )
-ENDIF( BUILD_EXAMPLES )
-
-
-
-ADD_LIBRARY(vorl1  ${vorl1_sources})
+if( BUILD_EXAMPLES )
+  subdirs( examples )
+endif( BUILD_EXAMPLES )
 
 
-TARGET_LINK_LIBRARIES(vorl1 vul vidpro1 vidl1)
 
-SUBDIRS(exec)
+add_library(vorl1  ${vorl1_sources})
 
 
-ADD_EXECUTABLE (vorl1_frame_extractor vorl1_frame_extractor.cxx)
-TARGET_LINK_LIBRARIES(vorl1_frame_extractor vidl1 vil vul)
+target_link_libraries(vorl1 vul vidpro1 vidl1)
 
-ADD_EXECUTABLE (vorl1_movie_extractor ${movie_sources})
-TARGET_LINK_LIBRARIES(vorl1_movie_extractor expatpp vidl1 vil vul)
+subdirs(exec)
+
+
+add_executable (vorl1_frame_extractor vorl1_frame_extractor.cxx)
+target_link_libraries(vorl1_frame_extractor vidl1 vil vul)
+
+add_executable (vorl1_movie_extractor ${movie_sources})
+target_link_libraries(vorl1_movie_extractor expatpp vidl1 vil vul)

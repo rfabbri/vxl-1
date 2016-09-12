@@ -1,11 +1,11 @@
 # curvematch library
 # algo/curvematch/CMakeLists.txt
 
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR})
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bbas)
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR})
+include_directories(${VXL_BRL_INCLUDE_DIR})
+include_directories(${VXL_BRL_INCLUDE_DIR}/bbas)
+include_directories(${VXL_GEL_INCLUDE_DIR})
 
-SET(curvematch_sources
+set(curvematch_sources
 
 CIMatch.h
 curve_dpmatch_2d.h
@@ -22,14 +22,14 @@ WSearch.cpp
 
 )
 
-AUX_SOURCE_DIRECTORY(Templates curvematch_sources)
+aux_source_directory(Templates curvematch_sources)
 
-ADD_LIBRARY(curvematch  ${curvematch_sources})
+add_library(curvematch  ${curvematch_sources})
 
-TARGET_LINK_LIBRARIES(curvematch vbl vsol bsol)
+target_link_libraries(curvematch vbl vsol bsol)
 
-IF( BUILD_EXAMPLES )
-  SUBDIRS( examples )
-ENDIF( BUILD_EXAMPLES )
+if( BUILD_EXAMPLES )
+  subdirs( examples )
+endif( BUILD_EXAMPLES )
 
 

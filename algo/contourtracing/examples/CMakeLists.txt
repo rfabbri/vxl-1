@@ -1,13 +1,13 @@
 # This is algo/contourtracing/examples/CMakeLists.txt
 
-LINK_LIBRARIES( contourtracing vil bdgl)
-ADD_EXECUTABLE(contourtracing_command contourtracing_command.cxx )
+link_libraries( contourtracing vil bdgl)
+add_executable(contourtracing_command contourtracing_command.cxx )
 
-LINK_LIBRARIES( contourtracing dbil_algo vil )
-ADD_EXECUTABLE(cmd cmd.cxx )
+link_libraries( contourtracing dbil_algo vil )
+add_executable(cmd cmd.cxx )
 
-#LINK_LIBRARIES( bapl vul )
-#ADD_EXECUTABLE(make_pyramids bapl_make_pyramids.cxx )
+#link_libraries( bapl vul )
+#add_executable(make_pyramids bapl_make_pyramids.cxx )
 
-#LINK_LIBRARIES( bapl vul ipts )
-#ADD_EXECUTABLE(draw_keypoints bapl_draw_keypoints.cxx )
+#link_libraries( bapl vul ipts )
+#add_executable(draw_keypoints bapl_draw_keypoints.cxx )

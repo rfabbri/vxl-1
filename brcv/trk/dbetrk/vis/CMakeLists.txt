@@ -1,8 +1,8 @@
 # Visualization for Brown edge tracking library
 # brcv/trk/dbetrk/vis/CMakeLists.txt
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE( ${LEMS_CMAKE_DIR}/Modules/UseMATLAB.cmake )
-SET(dbetrk_vis_sources
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include( ${LEMS_CMAKE_DIR}/Modules/UseMATLAB.cmake )
+set(dbetrk_vis_sources
    
    
    dbetrk_displayer.cxx dbetrk_displayer.h
@@ -14,9 +14,9 @@ SET(dbetrk_vis_sources
 
 
 
-ADD_LIBRARY(dbetrk_vis  ${dbetrk_vis_sources})
+add_library(dbetrk_vis  ${dbetrk_vis_sources})
 
-TARGET_LINK_LIBRARIES(dbetrk_vis dbetrk_pro)
+target_link_libraries(dbetrk_vis dbetrk_pro)
 
 
 

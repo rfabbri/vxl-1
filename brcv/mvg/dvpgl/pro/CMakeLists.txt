@@ -1,19 +1,19 @@
 # This is brcv/mvg/dvpgl/pro/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
 
-SET( dvpgl_pro_sources
+set( dvpgl_pro_sources
    dvpgl_fm_storage.cxx  dvpgl_fm_storage.h  dvpgl_fm_storage_sptr.h
    dvpgl_camera_storage.cxx  dvpgl_camera_storage.h  dvpgl_camera_storage_sptr.h
 )
 
 
-ADD_LIBRARY(dvpgl_pro ${dvpgl_pro_sources})
+add_library(dvpgl_pro ${dvpgl_pro_sources})
 
-TARGET_LINK_LIBRARIES(dvpgl_pro vpgl_io dvpgl_io vidpro1 dvpgl_algo_pro )
+target_link_libraries(dvpgl_pro vpgl_io dvpgl_io vidpro1 dvpgl_algo_pro )
 
 
-IF(BUILD_TESTING)
-#  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+#  subdirs(tests)
+endif(BUILD_TESTING)
 

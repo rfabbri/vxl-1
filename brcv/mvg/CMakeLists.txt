@@ -1,34 +1,34 @@
 # brcv/mvg/CMakeLists.txt
 # Brown Multi-View Geometry Libraries.
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/mvg )
+include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
 
 # Brown VXL multi-view library
-SUBDIRS ( bmvl )
+subdirs ( bmvl )
 
 # Brown Camera Calibration Library
-#SUBDIRS( dbcal )
+#subdirs( dbcal )
 
 # Photogrammetry Library
-SUBDIRS( dvpgl )
+subdirs( dvpgl )
 
 # Brown Epipolar Curve Library
-SUBDIRS( dbecl )
+subdirs( dbecl )
 
 # Brown Video Registration Library
-SUBDIRS( dbvrl )
+subdirs( dbvrl )
 
 # Brown Video Reconstruction Library
-SUBDIRS( dbrct )
+subdirs( dbrct )
 
 # Brown Stereo Rectification Library
-SUBDIRS( dbrkf )
+subdirs( dbrkf )
 
 # Brown Information-theoretic Registration Library
-SUBDIRS( dbirl )
+subdirs( dbirl )
 
 # Brown Registered Camera Computation Library
-SUBDIRS( dbrcl )
+subdirs( dbrcl )
 
 # Brown Multiview Differential Geometry Library
-SUBDIRS( dbdif )
+subdirs( dbdif )

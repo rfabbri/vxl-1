@@ -1,14 +1,14 @@
 # This is brcv/rec/dber/vis/CMakeLists.txt
 # Brown edge-based recognition library
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/Gregistration )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${lems_SOURCE_DIR}/contrib/Gregistration )
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
-SET(dber_vis_sources
+set(dber_vis_sources
 
 #views
 
@@ -23,8 +23,8 @@ SET(dber_vis_sources
   dber_instance_tools.h              dber_instance_tools.cxx
 )
 
-ADD_LIBRARY(dber_vis ${dber_vis_sources})
+add_library(dber_vis ${dber_vis_sources})
 
-TARGET_LINK_LIBRARIES(dber_vis dber_pro bvis1)
+target_link_libraries(dber_vis dber_pro bvis1)
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)

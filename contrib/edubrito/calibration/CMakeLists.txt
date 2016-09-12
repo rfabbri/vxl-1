@@ -3,13 +3,13 @@
 # Use VPGL to calibrate perspective cameras based on 3D world to image correspondences
 
 
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR}/mrc )
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bmvl )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories(${VXL_GEL_INCLUDE_DIR} )
+include_directories(${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bmvl )
 
 
 
-ADD_EXECUTABLE( calibration_vpgl  calibration_vpgl.cxx)
+add_executable( calibration_vpgl  calibration_vpgl.cxx)
 
-TARGET_LINK_LIBRARIES( calibration_vpgl brct vpgl_algo vsol )
+target_link_libraries( calibration_vpgl brct vpgl_algo vsol )

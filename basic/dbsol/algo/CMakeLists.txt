@@ -1,7 +1,7 @@
 # This is dbsol/algo/CMakeLists.txt
 # The Development Brown Spatial Object Library - Specific Algorithms
 
-SET( dbsol_algo_sources
+set( dbsol_algo_sources
   dbsol_curve_algs.cxx            dbsol_curve_algs.h
   dbsol_geno.cxx                  dbsol_geno.h
   dbsol_geno_shock.cxx            dbsol_geno_shock.h
@@ -13,14 +13,14 @@ SET( dbsol_algo_sources
   dbsol_img_curve_algs_two.cxx       dbsol_img_curve_algs_two.h
 )
 
-ADD_LIBRARY( dbsol_algo ${dbsol_algo_sources} )
+add_library( dbsol_algo ${dbsol_algo_sources} )
 
-TARGET_LINK_LIBRARIES( dbsol_algo dbsol dbnl_algo bil_algo)
+target_link_libraries( dbsol_algo dbsol dbnl_algo bil_algo)
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )
 
-IF( BUILD_EXAMPLES )
-  SUBDIRS( examples )
-ENDIF( BUILD_EXAMPLES )
+if( BUILD_EXAMPLES )
+  subdirs( examples )
+endif( BUILD_EXAMPLES )

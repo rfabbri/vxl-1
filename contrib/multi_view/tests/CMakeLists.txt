@@ -1,15 +1,15 @@
 # brl/bseg/blem/contrib/multi_view/tests/CMakeLists.txt
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/ )
-#ADD_EXECUTABLE( mview2_test_all
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${lems_SOURCE_DIR}/brcv/trk )
+include_directories( ${lems_SOURCE_DIR}/contrib/ )
+#add_executable( mview2_test_all
 #  test_driver.cxx
 #)
 
-#TARGET_LINK_LIBRARIES(mview2_test_all dbinfo vidpro bpro vsol vsl vpl vbl vul testlib)
+#target_link_libraries(mview2_test_all dbinfo vidpro bpro vsol vsl vpl vbl vul testlib)
 
-#ADD_TEST(mview2_test_track_storage  mview2_test_all   test_track_storage)
+#add_test(mview2_test_track_storage  mview2_test_all   test_track_storage)
 
-#ADD_EXECUTABLE( mview2_test_include test_include.cxx )
-#TARGET_LINK_LIBRARIES( mview2_test_include mview2 )
+#add_executable( mview2_test_include test_include.cxx )
+#target_link_libraries( mview2_test_include mview2 )

@@ -1,21 +1,21 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+cmake_minimum_required(VERSION 2.6)
 
-IF(VXL_FOUND)
+if(VXL_FOUND)
   # include the standard vxl stuff
 
-  PROJECT(vehicleRecognition)
-  SET(VXL_PROVIDE_STANDARD_OPTIONS 1)
-  INCLUDE(${VXL_CMAKE_DIR}/UseVXL.cmake)
+  project(vehicleRecognition)
+  set(VXL_PROVIDE_STANDARD_OPTIONS 1)
+  include(${VXL_CMAKE_DIR}/UseVXL.cmake)
 
-  INCLUDE_DIRECTORIES( /home/brandon/vxl/contrib/brl/bseg )
-  INCLUDE_DIRECTORIES( /home/brandon/vxl/contrib/gel )
-  INCLUDE_DIRECTORIES( /home/brandon/vxl/contrib/brl/bbas )
+  include_directories( /home/brandon/vxl/contrib/brl/bseg )
+  include_directories( /home/brandon/vxl/contrib/gel )
+  include_directories( /home/brandon/vxl/contrib/brl/bbas )
 
-  SET(sources driver.cxx bmvr_functions.h
+  set(sources driver.cxx bmvr_functions.h
                          bmvr_functions.cxx )
 
-  ADD_EXECUTABLE(exec ${sources})
+  add_executable(exec ${sources})
 
-  TARGET_LINK_LIBRARIES(exec bsta bsta_algo brip vnl vil vul)
+  target_link_libraries(exec bsta bsta_algo brip vnl vil vul)
 
-ENDIF(VXL_FOUND)
+endif(VXL_FOUND)

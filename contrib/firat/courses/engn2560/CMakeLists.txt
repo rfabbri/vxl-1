@@ -1,2 +1,2 @@
-SUBDIRS(bottom-up/egb)
+subdirs(bottom-up/egb)
 

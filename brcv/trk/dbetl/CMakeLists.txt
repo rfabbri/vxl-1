@@ -1,10 +1,10 @@
 # brcv/trk/dbetl/CMakeLists.txt
 # Brown Epipolar Tracking Library
 
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES(${lems_SOURCE_DIR}/brcv/mvg)
+include_directories(${VXL_GEL_INCLUDE_DIR} )
+include_directories(${lems_SOURCE_DIR}/brcv/mvg)
 
-SET(dbetl_sources
+set(dbetl_sources
                                    dbetl_image_stats.h 
     dbetl_point_2d.cxx             dbetl_point_2d.h              dbetl_point_2d_sptr.h
     dbetl_point_track.cxx          dbetl_point_track.h           dbetl_point_track_sptr.h
@@ -14,18 +14,18 @@ SET(dbetl_sources
     dbetl_reproject_lsqr_cost.cxx  dbetl_reproject_lsqr_cost.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbetl_sources)
+aux_source_directory(Templates dbetl_sources)
 
-ADD_LIBRARY(dbetl ${dbetl_sources})
+add_library(dbetl ${dbetl_sources})
 
-TARGET_LINK_LIBRARIES(dbetl dbecl vil)
+target_link_libraries(dbetl dbecl vil)
 
 # Processing Library
-SUBDIRS(pro)
+subdirs(pro)
 
 # Visualization Library
-SUBDIRS(vis)
+subdirs(vis)
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)

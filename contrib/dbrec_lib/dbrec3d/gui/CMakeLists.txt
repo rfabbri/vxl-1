@@ -1,34 +1,34 @@
 # this is dbrec3d_gui - uses QT
 
 
-INCLUDE(${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
-INCLUDE(${CMAKE_ROOT}/Modules/FindGLUT.cmake)
-INCLUDE(${CMAKE_ROOT}/Modules/FindQt.cmake)
-INCLUDE(${LEMS_CMAKE_DIR}/Modules/FindQGLViewer.cmake)
-INCLUDE(${LEMS_CMAKE_DIR}/Modules/FindQWT.cmake)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/dbrec_lib/dbrec3d )
+include(${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
+include(${CMAKE_ROOT}/Modules/FindGLUT.cmake)
+include(${CMAKE_ROOT}/Modules/FindQt.cmake)
+include(${LEMS_CMAKE_DIR}/Modules/FindQGLViewer.cmake)
+include(${LEMS_CMAKE_DIR}/Modules/FindQWT.cmake)
+include_directories( ${lems_SOURCE_DIR}/contrib/dbrec_lib/dbrec3d )
 
 
-IF(QT4_INSTALLED)
-  MESSAGE("qt4 installed")
-  IF(GLUT_FOUND)
-    MESSAGE("GLUT installed")
-    IF(QGLVIEWER_FOUND AND QWT_FOUND)
-      MESSAGE("QGLViewer  and QWT installed")
-      MESSAGE(${QGLVIEWER_INCLUDE_DIR})
-      MESSAGE(${QWT_INCLUDE_DIR})
+if(QT4_INSTALLED)
+  message("qt4 installed")
+  if(GLUT_FOUND)
+    message("GLUT installed")
+    if(QGLVIEWER_FOUND AND QWT_FOUND)
+      message("QGLViewer  and QWT installed")
+      message(${QGLVIEWER_INCLUDE_DIR})
+      message(${QWT_INCLUDE_DIR})
       
-      #    ADD_DEFINITIONS(-DQT3_SUPPORT_WARNINGS ${QT_DEFINITIONS} ${QT_USE_QTOPENGL})
+      #    add_definitions(-DQT3_SUPPORT_WARNINGS ${QT_DEFINITIONS} ${QT_USE_QTOPENGL})
           
           
-      INCLUDE_DIRECTORIES( ${QGLVIEWER_INCLUDE_DIR} )
-      INCLUDE_DIRECTORIES( ${QGLVIEWER_INCLUDE_DIR}/QGLViewer )
-      INCLUDE_DIRECTORIES( ${QWT_INCLUDE_DIR} )
-      INCLUDE_DIRECTORIES( ${QT_INCLUDE_DIR} ${QT_QT_INCLUDE_DIR} ${QT_QTGUI_INCLUDE_DIR} 
+      include_directories( ${QGLVIEWER_INCLUDE_DIR} )
+      include_directories( ${QGLVIEWER_INCLUDE_DIR}/QGLViewer )
+      include_directories( ${QWT_INCLUDE_DIR} )
+      include_directories( ${QT_INCLUDE_DIR} ${QT_QT_INCLUDE_DIR} ${QT_QTGUI_INCLUDE_DIR} 
                            ${QT_QTCORE_INCLUDE_DIR} ${QT_QTOPENGL_INCLUDE_DIR} ${QT_QTXML_INCLUDE_DIR} ${GLUT_INCLUDE_DIR})
       
       
-      SET(dbrec3d_qt_sources
+      set(dbrec3d_qt_sources
        dbrec3d_scene_model.cxx       dbrec3d_scene_model.h
        dbrec3d_scene_widgets.cxx     dbrec3d_scene_widgets.h
        dbrec3d_scene_viewer.cxx      dbrec3d_scene_viewer.h
@@ -42,7 +42,7 @@ IF(QT4_INSTALLED)
 
       )
 
-      QT_WRAP_CPP(dbrec3d_gui dbrec3d_qt_moc_files
+      qt_wrap_cpp(dbrec3d_gui dbrec3d_qt_moc_files
           dbrec3d_scene_viewer.h
           dbrec3d_scene_widgets.h
           dbrec3d_histogram_widgets.h
@@ -54,24 +54,24 @@ IF(QT4_INSTALLED)
           #dbrec3d_line.h
       )
       
-      SET(dbrec3d_gui_sources ${dbrec3d_qt_sources} ${dbrec3d_qt_moc_files} )
+      set(dbrec3d_gui_sources ${dbrec3d_qt_sources} ${dbrec3d_qt_moc_files} )
 
-      ADD_LIBRARY(dbrec3d_gui ${dbrec3d_gui_sources})
+      add_library(dbrec3d_gui ${dbrec3d_gui_sources})
 
-      TARGET_LINK_LIBRARIES( dbrec3d_gui dbrec3d boxm boct bvpl )
-      TARGET_LINK_LIBRARIES( dbrec3d_gui ${QGLVIEWER_LIBRARY} )
-      TARGET_LINK_LIBRARIES( dbrec3d_gui ${QWT_LIBRARY} )
-      TARGET_LINK_LIBRARIES( dbrec3d_gui ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTOPENGL_LIBRARY} ${QT_QTXML_LIBRARY})
-      TARGET_LINK_LIBRARIES( dbrec3d_gui ${GLUT_LIBRARIES})
-      TARGET_LINK_LIBRARIES( dbrec3d_gui ${OPENGL_LIBRARIES})
+      target_link_libraries( dbrec3d_gui dbrec3d boxm boct bvpl )
+      target_link_libraries( dbrec3d_gui ${QGLVIEWER_LIBRARY} )
+      target_link_libraries( dbrec3d_gui ${QWT_LIBRARY} )
+      target_link_libraries( dbrec3d_gui ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTOPENGL_LIBRARY} ${QT_QTXML_LIBRARY})
+      target_link_libraries( dbrec3d_gui ${GLUT_LIBRARIES})
+      target_link_libraries( dbrec3d_gui ${OPENGL_LIBRARIES})
    
-      SUBDIRS(vtk)
+      subdirs(vtk)
 
-    ENDIF(QGLVIEWER_FOUND AND QWT_FOUND)
+    endif(QGLVIEWER_FOUND AND QWT_FOUND)
     
-  ENDIF(GLUT_FOUND)
+  endif(GLUT_FOUND)
  
-ENDIF(QT4_INSTALLED)
+endif(QT4_INSTALLED)
 
 
 

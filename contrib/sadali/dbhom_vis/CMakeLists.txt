@@ -3,17 +3,17 @@
 
 
 
-SET(dbhom_vis_sources
+set(dbhom_vis_sources
 
 dbvis1_homog_view_tools.cxx   dbvis1_homog_view_tools.h
 
    
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbhom_vis_sources)
+aux_source_directory(Templates dbhom_vis_sources)
 
-ADD_LIBRARY(dbhom_vis  ${dbhom_vis_sources})
+add_library(dbhom_vis  ${dbhom_vis_sources})
 
-TARGET_LINK_LIBRARIES(dbhom_vis_sources)
+target_link_libraries(dbhom_vis_sources)
 
 

@@ -9,32 +9,32 @@
 
 
 
-IF (WIN32)
-  IF (CYGWIN)
+if (WIN32)
+  if (CYGWIN)
 
     # FIX Me
 
-  ELSE (CYGWIN)
-    FIND_PATH(MATLAB_INCLUDE_DIR engine.h
+  else (CYGWIN)
+    find_path(MATLAB_INCLUDE_DIR engine.h
       PATHS c:/ d:/
     )
 
-    FIND_PATH(MATLAB_LIBRARY_PATH  mx eng
+    find_path(MATLAB_LIBRARY_PATH  mx eng
 	PATHS      C:/ d:/
     )
 
     
 
-  ENDIF (CYGWIN)
+  endif (CYGWIN)
 
-ELSE (WIN32)
-    FIND_PATH(MATLAB_INCLUDE_DIR engine.h
+else (WIN32)
+    find_path(MATLAB_INCLUDE_DIR engine.h
     /usr/include
     /usr/local/MATLAB/extern/include
    /usr/local
   )
 
-  FIND_PATH(MATLAB_LIBRARY_PATH libeng.so
+  find_path(MATLAB_LIBRARY_PATH libeng.so
     PATHS 
      /usr/lib
     /usr/local 
@@ -42,11 +42,11 @@ ELSE (WIN32)
   )   
   #FIX Me
 
-ENDIF (WIN32)
+endif (WIN32)
 
 
-SET( MATLAB_FOUND "NO" )
-IF(MATLAB_LIBRARY)
-  SET( MATLAB_FOUND "YES" )
-ENDIF(MATLAB_LIBRARY)
+set( MATLAB_FOUND "NO" )
+if(MATLAB_LIBRARY)
+  set( MATLAB_FOUND "YES" )
+endif(MATLAB_LIBRARY)
 

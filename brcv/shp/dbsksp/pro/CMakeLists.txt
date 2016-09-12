@@ -1,9 +1,9 @@
 # This is brcv/shp/dbsksp/pro/CMakeLists.txt
 # Brown Processing library for Shape Design Using Shock
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
 
-SET(dbsksp_pro_sources
+set(dbsksp_pro_sources
   # Storages
   dbsksp_shock_storage.h                         dbsksp_shock_storage.cxx                 dbsksp_shock_storage_sptr.h
   dbsksp_xgraph_storage.h                        dbsksp_xgraph_storage.cxx                dbsksp_xgraph_storage_sptr.h
@@ -42,12 +42,12 @@ SET(dbsksp_pro_sources
 )
 
 
-ADD_LIBRARY(dbsksp_pro ${dbsksp_pro_sources})
+add_library(dbsksp_pro ${dbsksp_pro_sources})
 
-TARGET_LINK_LIBRARIES(dbsksp_pro dbsksp_algo dbsksp_xio dbsk2d vidpro1 bil_algo vpdfl)
+target_link_libraries(dbsksp_pro dbsksp_algo dbsksp_xio dbsk2d vidpro1 bil_algo vpdfl)
 
 
-IF(BUILD_TESTING)
-#  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+#  subdirs(tests)
+endif(BUILD_TESTING)
 

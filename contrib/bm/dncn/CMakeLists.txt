@@ -1,14 +1,14 @@
 # This is contrib/bm/dncn/CMakeLists.txt
 
-PROJECT( dncn )
+project( dncn )
 
-#MESSAGE( "dncn_SOURCE_DIR = " ${dncn_SOURCE_DIR} )
-#SET( DNCN_INCLUDE_DIR ${VXL_BRL_INCLUDE_DIR} )
+#message( "dncn_SOURCE_DIR = " ${dncn_SOURCE_DIR} )
+#set( DNCN_INCLUDE_DIR ${VXL_BRL_INCLUDE_DIR} )
 
-INCLUDE_DIRECTORIES( ${VXL_CORE_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg ) #bsta is one step down
+include_directories( ${VXL_CORE_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg ) #bsta is one step down
 
-SET ( dncn_sources	
+set ( dncn_sources	
 	  dncn_factory.h						    dncn_factory.cxx
 	  dncn_target_list_2d.h					    dncn_target_list_2d.cxx
 	  dncn_target_list_2d_sptr.h
@@ -25,9 +25,9 @@ SET ( dncn_sources
 	  smart_ptr+dncn_feature-.cxx
 	  dncn_less_than.h
 	  )
-ADD_LIBRARY( dncn ${dncn_sources} )
+add_library( dncn ${dncn_sources} )
 
-TARGET_LINK_LIBRARIES( dncn vul bsta vidl vsl vil_io bapl )
+target_link_libraries( dncn vul bsta vidl vsl vil_io bapl )
 
-SUBDIRS( tests )
+subdirs( tests )
 

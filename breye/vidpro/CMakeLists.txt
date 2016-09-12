@@ -1,16 +1,16 @@
 # brl/vidpro/CMakeLists.txt
 
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas/brdb )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic/ )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_OXL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas/brdb )
+include_directories( ${lems_SOURCE_DIR}/basic/ )
 
-SET(vidpro_sources
+set(vidpro_sources
    vidpro_process_manager.cxx             vidpro_process_manager.h             vidpro_process_manager_sptr.h
    vidpro_repository.cxx                  vidpro_repository.h                  vidpro_repository_sptr.h
   # vidpro_vidl_gui_param_dialog.cxx      vidpro_vidl_gui_param_dialog.h  
@@ -76,14 +76,14 @@ SET(vidpro_sources
 )
 
 
-AUX_SOURCE_DIRECTORY(Templates vidpro_sources)
+aux_source_directory(Templates vidpro_sources)
 
-ADD_LIBRARY(vidpro ${vidpro_sources})
+add_library(vidpro ${vidpro_sources})
 
-TARGET_LINK_LIBRARIES(vidpro bpro sdet vgel vil_io vbl_io mvl vimt vidl brdb)
+target_link_libraries(vidpro bpro sdet vgel vil_io vbl_io mvl vimt vidl brdb)
 
 # vgui add on library
-#SUBDIRS( gui )
+#subdirs( gui )
 
 # Add one of these libraries if you have linker errors
 #  vsol vdgl vtol vil vil_algo vnl vnl_io vnl_algo vbl vidl1 vul

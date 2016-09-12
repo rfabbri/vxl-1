@@ -2,27 +2,27 @@
 # bseg3d's Process Library
 
 # bprb depends on expat and bvxm_prodepends on bprb primarily
-IF(VXL_EXPAT_FOUND)
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bpro )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bpro/bprb )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/dec )
+if(VXL_EXPAT_FOUND)
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bpro )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bpro/bprb )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories( ${lems_SOURCE_DIR}/contrib/dec )
 
-SET(bseg3d_pro_sources
+set(bseg3d_pro_sources
   bseg3d_processes.h
   bseg3d_register.h   bseg3d_register.cxx
 )
 
-AUX_SOURCE_DIRECTORY(Templates bseg3d_pro_sources)
-AUX_SOURCE_DIRECTORY(processes bseg3d_pro_sources)
+aux_source_directory(Templates bseg3d_pro_sources)
+aux_source_directory(processes bseg3d_pro_sources)
 
-ADD_LIBRARY(bseg3d_pro ${bseg3d_pro_sources})
+add_library(bseg3d_pro ${bseg3d_pro_sources})
 
-TARGET_LINK_LIBRARIES(bseg3d_pro bseg3d)
+target_link_libraries(bseg3d_pro bseg3d)
 
-#IF( BUILD_TESTING )
-#  SUBDIRS(tests)
-#ENDIF( BUILD_TESTING )
-ENDIF(VXL_EXPAT_FOUND)
+#if( BUILD_TESTING )
+#  subdirs(tests)
+#endif( BUILD_TESTING )
+endif(VXL_EXPAT_FOUND)

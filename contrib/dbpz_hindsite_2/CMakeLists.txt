@@ -1,20 +1,20 @@
 # lemsvxlsrc/contrib/dbpz_hindsite_2/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES(${lems_SOURCE_DIR})
-INCLUDE_DIRECTORIES(${lems_SOURCE_DIR}/basic)
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories(${lems_SOURCE_DIR})
+include_directories(${lems_SOURCE_DIR}/basic)
 
 #added for livewire:
-#INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
+#include_directories( ${VXL_OXL_INCLUDE_DIR} )
 
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
 
-SET(dbpz_hindsite_2_sources
+set(dbpz_hindsite_2_sources
 
                                                 bfrag_Main.cxx
     bfrag_Main_Menu.h                           bfrag_Main_Menu.cxx
@@ -52,15 +52,15 @@ bfrag_curve.cxx
 read_write.cxx
 )
 
-ADD_EXECUTABLE(dbpz_hindsite_2 ${dbpz_hindsite_2_sources})
+add_executable(dbpz_hindsite_2 ${dbpz_hindsite_2_sources})
 
-TARGET_LINK_LIBRARIES(dbpz_hindsite_2 vsol bsol bgui vil vcl dbsol dbsol_algo bxml) 
+target_link_libraries(dbpz_hindsite_2 vsol bsol bgui vil vcl dbsol dbsol_algo bxml) 
 #add for liveWire: dbvis
 
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)
 
-SET(dbpz_hindsite_2_lib_sources
+set(dbpz_hindsite_2_lib_sources
 bfrag2D.cxx
 # direct from jonah
 PuzzleSolving.cxx
@@ -69,12 +69,12 @@ bfrag_curve.cxx
 read_write.cxx
 )
 
-ADD_LIBRARY(dbpz_hindsite_2_lib  ${dbpz_hindsite_2_lib_sources})
-TARGET_LINK_LIBRARIES(dbpz_hindsite_2_lib vsol bsol bgui vil vcl dbsol dbsol_algo) 
+add_library(dbpz_hindsite_2_lib  ${dbpz_hindsite_2_lib_sources})
+target_link_libraries(dbpz_hindsite_2_lib vsol bsol bgui vil vcl dbsol dbsol_algo) 
 
-SUBDIRS(web_system_executables)
+subdirs(web_system_executables)
 
-SET(dbpz_hindsite_vis_sources
+set(dbpz_hindsite_vis_sources
 
                                                 my_bfrag_Main.cxx
     my_bfrag_Main_Menu.h                        my_bfrag_Main_Menu.cxx
@@ -106,8 +106,8 @@ bfrag_curve.cxx
 read_write.cxx
 )
 
-ADD_EXECUTABLE(dbpz_hindsite_vis ${dbpz_hindsite_vis_sources})
+add_executable(dbpz_hindsite_vis ${dbpz_hindsite_vis_sources})
 
-TARGET_LINK_LIBRARIES(dbpz_hindsite_vis vsol bsol bgui vil vcl dbsol dbsol_algo bxml) 
+target_link_libraries(dbpz_hindsite_vis vsol bsol bgui vil vcl dbsol dbsol_algo bxml) 
 
 

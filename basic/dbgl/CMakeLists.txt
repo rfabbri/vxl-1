@@ -1,7 +1,7 @@
 # lemsvxlsrc/basic/dbgl/CMakeLists.txt
 # The Development Brown Geometry Library
 
-SET( dbgl_sources
+set( dbgl_sources
 
    dbgl_fuzzy_boolean.h
    dbgl_dist.h                dbgl_dist.cxx
@@ -37,19 +37,19 @@ SET( dbgl_sources
       
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbgl_sources)
+aux_source_directory(Templates dbgl_sources)
 
-ADD_LIBRARY(dbgl ${dbgl_sources})
+add_library(dbgl ${dbgl_sources})
   
-TARGET_LINK_LIBRARIES( dbgl vgl vcl vnl vnl_algo)
+target_link_libraries( dbgl vgl vcl vnl vnl_algo)
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )
 
-SUBDIRS( algo )
+subdirs( algo )
 
-#IF( BUILD_EXAMPLES )
-#  SUBDIRS( examples )
-#ENDIF( BUILD_EXAMPLES )
+#if( BUILD_EXAMPLES )
+#  subdirs( examples )
+#endif( BUILD_EXAMPLES )
 

@@ -1,14 +1,14 @@
-INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_TBL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas/bil/algo )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES(${lems_SOURCE_DIR}/brcv/seg)
+include_directories( ${VXL_OXL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_TBL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas/bil/algo )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories(${lems_SOURCE_DIR}/brcv/seg)
 
-SET(firat_contour_src
+set(firat_contour_src
 detect_and_export_contours.cxx
 )
-ADD_EXECUTABLE(detect_and_export_contours ${firat_contour_src})
-TARGET_LINK_LIBRARIES(detect_and_export_contours dbdet_pro)
+add_executable(detect_and_export_contours ${firat_contour_src})
+target_link_libraries(detect_and_export_contours dbdet_pro)

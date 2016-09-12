@@ -1,9 +1,9 @@
 # This is brcv/mvg/dbmrf/pro/CMakeLists.txt
 # Brown Markov Random Field Track Processing Library
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
 
-SET(dbmrf_pro_sources
+set(dbmrf_pro_sources
    dbmrf_network_builder_process.cxx    dbmrf_network_builder_process.h
    dbmrf_curve_3d_builder_process.cxx   dbmrf_curve_3d_builder_process.h
    dbmrf_curve_projector_process.cxx    dbmrf_curve_projector_process.h
@@ -16,14 +16,14 @@ SET(dbmrf_pro_sources
    dbmrf_curvel_3d_storage.cxx     dbmrf_curvel_3d_storage.h     dbmrf_curvel_3d_storage_sptr.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbmrf_pro_sources)
+aux_source_directory(Templates dbmrf_pro_sources)
 
-ADD_LIBRARY(dbmrf_pro ${dbmrf_pro_sources})
+add_library(dbmrf_pro ${dbmrf_pro_sources})
 
-TARGET_LINK_LIBRARIES(dbmrf_pro bmrf vidpro1)
+target_link_libraries(dbmrf_pro bmrf vidpro1)
 
 
-IF(BUILD_TESTING)
-#  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+#  subdirs(tests)
+endif(BUILD_TESTING)
 

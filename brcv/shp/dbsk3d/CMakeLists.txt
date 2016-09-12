@@ -1,14 +1,14 @@
 # This is brcv/shp/dbsk3d/CMakeLists.txt
 # Brown Shock3D Library
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/shp)
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_OXL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/shp)
 
-SET(dbsk3d_sources
+set(dbsk3d_sources
 
 dbsk3d_fs_vertex.cxx                  dbsk3d_fs_vertex.h
 dbsk3d_fs_edge.cxx                    dbsk3d_fs_edge.h
@@ -32,25 +32,25 @@ dbsk3d_sg_sa.cxx                      dbsk3d_sg_sa.h
 
 )
 
-ADD_LIBRARY(dbsk3d ${dbsk3d_sources})
+add_library(dbsk3d ${dbsk3d_sources})
 
-TARGET_LINK_LIBRARIES( dbsk3d dbmsh3d dbgl )  
+target_link_libraries( dbsk3d dbmsh3d dbgl )  
 
 # Algorithm Library
-SUBDIRS(algo)
+subdirs(algo)
 
 # FlowSheet Shock Detection Library (Frederic's Code)
-SUBDIRS(flowsheet)
+subdirs(flowsheet)
 
 # Processing Library
-SUBDIRS(pro)
+subdirs(pro)
 
 # Visualization Library
-SUBDIRS(vis)
+subdirs(vis)
 
 # Command-line Processing Library
-SUBDIRS(cmdproc)
+subdirs(cmdproc)
 
-IF(BUILD_TESTING)
-SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+subdirs(tests)
+endif(BUILD_TESTING)

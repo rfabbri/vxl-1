@@ -1,19 +1,19 @@
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-#INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bmvl )
-#INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/mvg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/bwm_lidar/algo )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_OXL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+#include_directories( ${VXL_BRL_INCLUDE_DIR}/bmvl )
+#include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
+include_directories( ${lems_SOURCE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/contrib/bwm_lidar/algo )
 
-SET( bwm_lidar_algo_sources
+set( bwm_lidar_algo_sources
   all_includes.h
   flimap_reader.cxx  flimap_reader.h
   get_connected_components.cxx  get_connected_components.h
@@ -25,11 +25,11 @@ SET( bwm_lidar_algo_sources
   bwm_lidar_algo.cxx   bwm_lidar_algo.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates bwm_lidar_algo_sources)
+aux_source_directory(Templates bwm_lidar_algo_sources)
 
-ADD_LIBRARY(bwm_lidar_algo  ${bwm_lidar_algo_sources})
+add_library(bwm_lidar_algo  ${bwm_lidar_algo_sources})
 
-TARGET_LINK_LIBRARIES(bwm_lidar_algo vil_algo imesh dbmsh3d dbmsh3d_algo)
+target_link_libraries(bwm_lidar_algo vil_algo imesh dbmsh3d dbmsh3d_algo)
 # vbl vpdfl vpgl vpgl_algo
 
 

@@ -1,12 +1,12 @@
 # basic open_cl library
 
-INCLUDE( ${VXL_CMAKE_DIR}/NewCMake/FindOpenCL.cmake )
-IF(OPENCL_FOUND)
-  ADD_DEFINITIONS(-DHAS_OPENCL=1)
-  INCLUDE_DIRECTORIES( ${OPENCL_INCLUDE_PATH} )
-  INCLUDE_DIRECTORIES( ${bm_SOURCE_DIR} )
+include( ${VXL_CMAKE_DIR}/NewCMake/FindOpenCL.cmake )
+if(OPENCL_FOUND)
+  add_definitions(-DHAS_OPENCL=1)
+  include_directories( ${OPENCL_INCLUDE_PATH} )
+  include_directories( ${bm_SOURCE_DIR} )
 
-  SET(bmocl_sources
+  set(bmocl_sources
       bmocl_manager.h    bmocl_manager.cxx
       bmocl_manager_sptr.h
       smart_ptr+bmocl_manager-.cxx
@@ -15,8 +15,8 @@ IF(OPENCL_FOUND)
       bmocl_utils.h      bmocl_utils.cxx
   )
 
-  ADD_LIBRARY(bmocl ${bmocl_sources} )
+  add_library(bmocl ${bmocl_sources} )
 
-  TARGET_LINK_LIBRARIES(bmocl bocl vnl vnl_algo vbl_io vpgl vgl vil vbl vul ${OPENCL_LIBRARIES})
+  target_link_libraries(bmocl bocl vnl vnl_algo vbl_io vpgl vgl vil vbl vul ${OPENCL_LIBRARIES})
 
-ENDIF(OPENCL_FOUND)
+endif(OPENCL_FOUND)

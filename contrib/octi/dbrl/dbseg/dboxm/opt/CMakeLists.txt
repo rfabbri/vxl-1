@@ -1,8 +1,8 @@
 # dbrl/dbseg/dboxm/opt/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${GEL_INCLUDE_DIR}/mrc )
+include_directories( ${GEL_INCLUDE_DIR}/mrc )
 
-SET(boxm_opt_sources
+set(boxm_opt_sources
    boxm_aux_traits.h
    boxm_aux_scene.txx                   boxm_aux_scene.h
    boxm_opt_rt_bayesian_optimizer.txx   boxm_opt_rt_bayesian_optimizer.h
@@ -21,17 +21,17 @@ SET(boxm_opt_sources
    boxm_rpc_registration.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates dboxm_opt_sources)
+aux_source_directory(Templates dboxm_opt_sources)
 
-ADD_LIBRARY(dboxm_opt ${dboxm_opt_sources})
+add_library(dboxm_opt ${dboxm_opt_sources})
 
-TARGET_LINK_LIBRARIES(dboxm_opt dboxm vpl)
+target_link_libraries(dboxm_opt dboxm vpl)
 
 #processes
-#SUBDIRS(pro)
+#subdirs(pro)
 
 #tests
-SUBDIRS(tests)
+subdirs(tests)
 
 #open_cl parallel computation
-SUBDIRS(open_cl)
+subdirs(open_cl)

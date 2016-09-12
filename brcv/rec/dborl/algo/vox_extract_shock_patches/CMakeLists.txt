@@ -1,6 +1,6 @@
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/db3p )
+include_directories( ${lems_SOURCE_DIR}/db3p )
 
-SET( vox_extract_shock_patches_sources
+set( vox_extract_shock_patches_sources
   vox_extract_shock_patches_params.h 
   vox_extract_shock_patches_params_sptr.h
   vox_extract_shock_patches_params.cxx
@@ -8,8 +8,8 @@ SET( vox_extract_shock_patches_sources
   vbl_smart_ptr+vox_extract_shock_patches_params-.cxx
 )
 
-ADD_EXECUTABLE (vox_extract_shock_patches ${vox_extract_shock_patches_sources} )
-TARGET_LINK_LIBRARIES (vox_extract_shock_patches dborl_algo dbskr_algo dbskr_pro bpro1)
+add_executable (vox_extract_shock_patches ${vox_extract_shock_patches_sources} )
+target_link_libraries (vox_extract_shock_patches dborl_algo dbskr_algo dbskr_pro bpro1)
 
 
 

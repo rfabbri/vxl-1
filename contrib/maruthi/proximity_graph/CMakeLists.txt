@@ -2,19 +2,19 @@
 # This file is used to build the proximity graph stuff
 
 
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/maruthi )
-INCLUDE_DIRECTORIES( /usr/local/boost_1_42_0 )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec)
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/contrib/maruthi )
+include_directories( /usr/local/boost_1_42_0 )
 
-LINK_DIRECTORIES(/usr/local/boost_1_42_0/stage/lib )
+link_directories(/usr/local/boost_1_42_0/stage/lib )
 
 #turn off warnings in boost graph library
-SET( CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS}-Wno-deprecated)
+set( CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS}-Wno-deprecated)
 
-SET(gc_sources
+set(gc_sources
 
   # Creates graphs
   dborl_proximity_graph.h                dborl_proximity_graph.cxx
@@ -32,7 +32,7 @@ SET(gc_sources
 
 )
 
-SET(find_nn_sources
+set(find_nn_sources
 
   #performs wave propagation
   dborl_graph_wave_propagation.h         dborl_graph_wave_propagation.cxx
@@ -42,15 +42,15 @@ SET(find_nn_sources
   dborl_find_nn_params_sptr.h vbl_smart_ptr+dborl_find_nn_params-.cxx
 )
 
-ADD_LIBRARY(graph_building ${gc_sources})
-ADD_LIBRARY(finding_nn ${find_nn_sources})
+add_library(graph_building ${gc_sources})
+add_library(finding_nn ${find_nn_sources})
 
-#ADD_EXECUTABLE(example test_things.cxx )
-ADD_EXECUTABLE(graph_categorization dborl_graph_categorization_main.cxx )
-ADD_EXECUTABLE(graph_constructor dborl_graph_construction_main.cxx )
-ADD_EXECUTABLE(search_nn dborl_find_nn_main.cxx )
+#add_executable(example test_things.cxx )
+add_executable(graph_categorization dborl_graph_categorization_main.cxx )
+add_executable(graph_constructor dborl_graph_construction_main.cxx )
+add_executable(search_nn dborl_find_nn_main.cxx )
 
-TARGET_LINK_LIBRARIES(graph_constructor vnl graph_building dborl_algo boost_graph )
-TARGET_LINK_LIBRARIES(search_nn vnl dborl_algo finding_nn boost_graph)
-TARGET_LINK_LIBRARIES(graph_categorization vnl graph_building dborl_algo boost_graph)
-#TARGET_LINK_LIBRARIES(example vnl graph_building dborl_algo boost_graph)
+target_link_libraries(graph_constructor vnl graph_building dborl_algo boost_graph )
+target_link_libraries(search_nn vnl dborl_algo finding_nn boost_graph)
+target_link_libraries(graph_categorization vnl graph_building dborl_algo boost_graph)
+#target_link_libraries(example vnl graph_building dborl_algo boost_graph)

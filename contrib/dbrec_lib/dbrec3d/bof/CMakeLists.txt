@@ -2,16 +2,16 @@
 # CMakeList for Brown Development 3d recognition library
 # This library contains for bag of features recognition in boxm_scenes
 
-OPTION( VXL_FORCE_V3P_RPLY "Use v3p ply library" YES)
-MARK_AS_ADVANCED( VXL_FORCE_V3P_RPLY )
+option( VXL_FORCE_V3P_RPLY "Use v3p ply library" YES)
+mark_as_advanced( VXL_FORCE_V3P_RPLY )
 
-IF(VXL_EXPAT_FOUND)
+if(VXL_EXPAT_FOUND)
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg/ )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/dbrec_lib/dbrec3d )
-INCLUDE_DIRECTORIES( ${VXL_V3P_INCLUDE_DIR_deprecated}/rply/ )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg/ )
+include_directories( ${lems_SOURCE_DIR}/contrib/dbrec_lib/dbrec3d )
+include_directories( ${VXL_V3P_INCLUDE_DIR_deprecated}/rply/ )
 
-SET(bof_sources
+set(bof_sources
     bof_info.h                    bof_info.cxx
     bof_util.h                    bof_util.cxx
     bof_codebook.h                bof_codebook.cxx
@@ -21,18 +21,18 @@ SET(bof_sources
 
 )
 
-AUX_SOURCE_DIRECTORY(Templates bof_sources)
+aux_source_directory(Templates bof_sources)
 
-ADD_LIBRARY(bof ${bof_sources})
+add_library(bof ${bof_sources})
 
-TARGET_LINK_LIBRARIES(bof bvpl_octree dbcll vbl vbl_io rply bsta bsta_vis)
+target_link_libraries(bof bvpl_octree dbcll vbl vbl_io rply bsta bsta_vis)
 
-SUBDIRS(pro)
+subdirs(pro)
 
-IF( BUILD_TESTING )
-#  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+#  subdirs(tests)
+endif( BUILD_TESTING )
 
-ENDIF(VXL_EXPAT_FOUND)
+endif(VXL_EXPAT_FOUND)
 
 

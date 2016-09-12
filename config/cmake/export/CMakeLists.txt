@@ -2,19 +2,19 @@
 # other client projects that use LEMS VXL.  Nothing is built by this
 # CMakeLists.txt file.  This CMakeLists.txt file must be processed by
 # CMake after all the other CMakeLists.txt files in the LEMS tree,
-# which is why the SUBDIRS(config/cmake/export) command is at the end
+# which is why the subdirs(config/cmake/export) command is at the end
 # of the top level CMakeLists.txt file.
 
 
 # Save the compiler settings so another project can import them.
-INCLUDE(${CMAKE_ROOT}/Modules/CMakeExportBuildSettings.cmake)
-SET(LEMS_BUILD_SETTINGS_FILE ${lems_BINARY_DIR}/LEMSBuildSettings.cmake)
+include(${CMAKE_ROOT}/Modules/CMakeExportBuildSettings.cmake)
+set(LEMS_BUILD_SETTINGS_FILE ${lems_BINARY_DIR}/LEMSBuildSettings.cmake)
 CMAKE_EXPORT_BUILD_SETTINGS(${LEMS_BUILD_SETTINGS_FILE})
 
 # Save library dependencies.
-SET(LEMS_LIBRARY_DEPENDS_FILE ${lems_BINARY_DIR}/LEMSLibraryDepends.cmake)
-EXPORT_LIBRARY_DEPENDENCIES(${LEMS_LIBRARY_DEPENDS_FILE})
+set(LEMS_LIBRARY_DEPENDS_FILE ${lems_BINARY_DIR}/LEMSLibraryDepends.cmake)
+export_library_dependencies(${LEMS_LIBRARY_DEPENDS_FILE})
 
 # Create the VXLConfig.cmake file for the build tree.
-CONFIGURE_FILE(${LEMS_CMAKE_DIR}/Modules/LEMSConfig.cmake.in
+configure_file(${LEMS_CMAKE_DIR}/Modules/LEMSConfig.cmake.in
                ${lems_BINARY_DIR}/LEMSConfig.cmake @ONLY IMMEDIATE)

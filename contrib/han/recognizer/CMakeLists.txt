@@ -1,8 +1,8 @@
 
-ADD_EXECUTABLE (recognizer  recognizer.cxx tube.h tube.cxx recogognizers_tree_type.h subsidary_routine.h)
-TARGET_LINK_LIBRARIES(recognizer vgl vnl vul)
+add_executable (recognizer  recognizer.cxx tube.h tube.cxx recogognizers_tree_type.h subsidary_routine.h)
+target_link_libraries(recognizer vgl vnl vul)
 
 
 
-ADD_EXECUTABLE (recogtest  recogtest.cxx )
-TARGET_LINK_LIBRARIES(recogtest vgl vnl vul)
+add_executable (recogtest  recogtest.cxx )
+target_link_libraries(recogtest vgl vnl vul)

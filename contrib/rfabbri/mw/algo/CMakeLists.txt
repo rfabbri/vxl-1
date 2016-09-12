@@ -1,12 +1,12 @@
-IF (VXL_VGUI_FOUND)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-ENDIF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+endif (VXL_VGUI_FOUND)
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/rfabbri )
+include_directories( ${lems_SOURCE_DIR}/contrib/rfabbri )
 
 # Multiview algo - higher-level and end-application stuff
 
-SET( mw_algo_sources
+set( mw_algo_sources
   mw_match_position_band.cxx      mw_match_position_band.h
   mw_match_tangent_band.cxx      mw_match_tangent_band.h
   mw_discrete_corresp_algo.txx  mw_discrete_corresp_algo_defs.cxx  mw_discrete_corresp_algo.h
@@ -29,12 +29,12 @@ SET( mw_algo_sources
   #  mw_cvmatch.cxx       mw_cvmatch.h mw_cvmatch_sptr.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates mw_sources)
+aux_source_directory(Templates mw_sources)
 
-ADD_LIBRARY(mw_algo ${mw_algo_sources})
+add_library(mw_algo ${mw_algo_sources})
 
-TARGET_LINK_LIBRARIES(mw_algo mw vidpro1 bgui vil dbil_algo dbdet_pro dbgl_algo brct dvpgl_algo dbecl dbcsi dvpgl_io dbdif_algo dbspi dbul)
+target_link_libraries(mw_algo mw vidpro1 bgui vil dbil_algo dbdet_pro dbgl_algo brct dvpgl_algo dbecl dbcsi dvpgl_io dbdif_algo dbspi dbul)
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )

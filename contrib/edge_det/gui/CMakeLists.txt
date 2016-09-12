@@ -1,26 +1,26 @@
 # contrib/edge_det/gui/CMakeLists.txt
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib )
-#INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/Gregistration )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_OXL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/brcv/trk )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/brcv/trk )
+include_directories( ${lems_SOURCE_DIR}/contrib )
+#include_directories( ${lems_SOURCE_DIR}/contrib/Gregistration )
 
-SET(sel_gui_sources
+set(sel_gui_sources
    sel_gui_menu.cxx       sel_gui_menu.h
    sel_gui_main.cxx
 )
-ADD_EXECUTABLE(sel_gui ${sel_gui_sources})
-TARGET_LINK_LIBRARIES(sel_gui vidpro1 bvis1 dbgl_algo dbsol_pro dbil_pro dbdet_pro dbdet_vis dbgui edge_det_pro edge_det_vis)
+add_executable(sel_gui ${sel_gui_sources})
+target_link_libraries(sel_gui vidpro1 bvis1 dbgl_algo dbsol_pro dbil_pro dbdet_pro dbdet_vis dbgui edge_det_pro edge_det_vis)
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)

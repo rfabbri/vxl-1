@@ -1,14 +1,14 @@
 # Brown curve tracking library
 # brcv/trk/dbctrk/CMakeLists.txt
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES(${lems_SOURCE_DIR}/brcv/mvg/bmvl )
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR}/mrc )
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES(${VXL_OXL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES(${VXL_MUL_INCLUDE_DIR} )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories(${lems_SOURCE_DIR}/brcv/mvg/bmvl )
+include_directories(${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories(${VXL_GEL_INCLUDE_DIR} )
+include_directories(${VXL_OXL_INCLUDE_DIR} )
+include_directories(${VXL_MUL_INCLUDE_DIR} )
 
-SET(dbctrk_sources
+set(dbctrk_sources
    
     dbctrk_algs.cxx                    dbctrk_algs.h
     dbctrk_curve_description.cxx       dbctrk_curve_description.h
@@ -26,19 +26,19 @@ SET(dbctrk_sources
     dbctrk_benchmarking.cxx            dbctrk_benchmarking.h
  
 )
-AUX_SOURCE_DIRECTORY(Templates dbctrk_sources)
+aux_source_directory(Templates dbctrk_sources)
 
-ADD_LIBRARY(dbctrk  ${dbctrk_sources})
+add_library(dbctrk  ${dbctrk_sources})
 
-TARGET_LINK_LIBRARIES(dbctrk vbl bdgl btol vsol vil vnl mvl mbl brct  vsl dbspi)
+target_link_libraries(dbctrk vbl bdgl btol vsol vil vnl mvl mbl brct  vsl dbspi)
 
 
-SUBDIRS(pro)
-IF (VXL_VGUI_FOUND)
-    SUBDIRS(vis)
-ENDIF (VXL_VGUI_FOUND)
+subdirs(pro)
+if (VXL_VGUI_FOUND)
+    subdirs(vis)
+endif (VXL_VGUI_FOUND)
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)
 

@@ -1,25 +1,25 @@
-IF (VXL_VGUI_FOUND)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-ENDIF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+endif (VXL_VGUI_FOUND)
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
-INCLUDE_DIRECTORIES(${VXL_OXL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES(${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/mvg)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/mvg/bmvl)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories(${VXL_OXL_INCLUDE_DIR} )
+include_directories(${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR}/brcv/mvg)
+include_directories( ${lems_SOURCE_DIR}/brcv/mvg/bmvl)
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/basic )
 
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/rfabbri )
+include_directories( ${lems_SOURCE_DIR}/contrib/rfabbri )
 
 # Personal Multiview Lib
 
-SET( mw_sources
+set( mw_sources
    mw_util.txx       mw_util_defs.cxx mw_util.h
    mw_curves.cxx      mw_curves.h
    mw_subpixel_point_set.cxx mw_subpixel_point_set.h
@@ -34,30 +34,30 @@ SET( mw_sources
    dbmcs_curve_3d_sketch.cxx dbmcs_curve_3d_sketch.h 
 )
 
-AUX_SOURCE_DIRECTORY(Templates mw_sources)
-AUX_SOURCE_DIRECTORY(Templates bvis1_sources)
+aux_source_directory(Templates mw_sources)
+aux_source_directory(Templates bvis1_sources)
 
-ADD_LIBRARY(mw ${mw_sources})
+add_library(mw ${mw_sources})
 
-TARGET_LINK_LIBRARIES(mw dborl vpgl dbsol_algo dbnl vil dbul vbl_io)
+target_link_libraries(mw dborl vpgl dbsol_algo dbnl vil dbul vbl_io)
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )
 
-SUBDIRS(algo)
+subdirs(algo)
 
-SUBDIRS(pro)
+subdirs(pro)
 
-SUBDIRS(cmd)
+subdirs(cmd)
 
-IF (VXL_VGUI_FOUND)
-  SUBDIRS(vis)
-  SUBDIRS(app)
-ENDIF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
+  subdirs(vis)
+  subdirs(app)
+endif (VXL_VGUI_FOUND)
 
-OPTION(BUILD_MATLAB_MEX "Build Matlab mex files" NO)
+option(BUILD_MATLAB_MEX "Build Matlab mex files" NO)
 
-IF(BUILD_MATLAB_MEX)
-  SUBDIRS(mex)
-ENDIF(BUILD_MATLAB_MEX)
+if(BUILD_MATLAB_MEX)
+  subdirs(mex)
+endif(BUILD_MATLAB_MEX)

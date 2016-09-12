@@ -1,26 +1,26 @@
 # bdirl information-theoretic resistration library
 # blem/brcv/mvg/dbirl/CMakeLists.txt
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories(${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/brcv/trk )
 
-SET(dbirl_sources
+set(dbirl_sources
     dbirl_h_computation.cxx           dbirl_h_computation.h
 )
 
-ADD_LIBRARY(dbirl ${dbirl_sources})
+add_library(dbirl ${dbirl_sources})
 
 
-TARGET_LINK_LIBRARIES(dbirl dbinfo sdet bsta brip bugl bsol btol bdgl vsol vil vgl_algo vnl vsl vbl_io vbl)
+target_link_libraries(dbirl dbinfo sdet bsta brip bugl bsol btol bdgl vsol vil vgl_algo vnl vsl vbl_io vbl)
 
 # Processing Library
-SUBDIRS(pro)
+subdirs(pro)
 
 # Command line app
-SUBDIRS(app)
+subdirs(app)
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)
 

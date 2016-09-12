@@ -1,14 +1,14 @@
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/Gregistration )
+include_directories( ${lems_SOURCE_DIR}/contrib/Gregistration )
 
 
-ADD_EXECUTABLE( dt_test_all
+add_executable( dt_test_all
   test_driver.cxx
   test_partial_derivatives.cxx
 )
 
-TARGET_LINK_LIBRARIES( dt_test_all dt testlib vnl_algo)
-ADD_TEST( dt_test_partial_derivatives dbgl_test_all test_partial_derivatives)
+target_link_libraries( dt_test_all dt testlib vnl_algo)
+add_test( dt_test_partial_derivatives dbgl_test_all test_partial_derivatives)
 
 
-ADD_EXECUTABLE( dt_test_include test_include.cxx )
-TARGET_LINK_LIBRARIES( dt_test_include dt )
+add_executable( dt_test_include test_include.cxx )
+target_link_libraries( dt_test_include dt )

@@ -1,23 +1,23 @@
 # int_cedt3d Semi-converted legacy C-code contour based euclidean 3D distance transform 
 # lemsvxlsrc/contrib/int_cedt3d/CMakeLists.txt
 
-SET (CMAKE_CXX_FLAGS -g)
+set (CMAKE_CXX_FLAGS -g)
 
-INCLUDE_DIRECTORIES( ${VXL_CORE_INCLUDE_DIR}     )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR}      )
+include_directories( ${VXL_CORE_INCLUDE_DIR}     )
+include_directories( ${VXL_MUL_INCLUDE_DIR}      )
 
-        SET(int_cedt3d_sources
+        set(int_cedt3d_sources
                         cedt3d_utils.C dt_by_3d_cedt.C min_heap.C  propagate3d.C cedt3d.C
                         cedt3d_utils.h dt_by_3d_cedt.h propagate3d.h cedt3d.h
                         dbil3d_cedt.h dbil3d_cedt.txx
            )
 
-AUX_SOURCE_DIRECTORY(Templates int_cedt3d_sources)
+aux_source_directory(Templates int_cedt3d_sources)
 
-ADD_LIBRARY(int_cedt3d  ${int_cedt3d_sources})
+add_library(int_cedt3d  ${int_cedt3d_sources})
 
-TARGET_LINK_LIBRARIES(int_cedt3d vil3d )
+target_link_libraries(int_cedt3d vil3d )
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )

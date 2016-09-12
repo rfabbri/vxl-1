@@ -1,24 +1,24 @@
 # brcv/CMakeLists.txt
 # Brown Computer Vision Libraries.
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/db3p )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/db3p )
+include_directories( ${lems_SOURCE_DIR}/basic )
 
 # Brown Segmentation Libraries
-SUBDIRS( seg )
+subdirs( seg )
 
 # Brown Shape Libraries
-SUBDIRS( shp )
+subdirs( shp )
 
 # Brown Recognition Libraries
-SUBDIRS( rec )
+subdirs( rec )
 
 # Brown Tracking Libraries
-SUBDIRS( trk )
+subdirs( trk )
 
 # Brown Multi-View Geometry Libraries
-SUBDIRS( mvg )
+subdirs( mvg )
 
 
 

@@ -1,10 +1,10 @@
-INCLUDE_DIRECTORIES(${biotree_SOURCE_DIR})
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR})
+include_directories(${biotree_SOURCE_DIR})
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories( ${VXL_MUL_INCLUDE_DIR})
 
-SET(CMAKE_CXX_FLAGS -pg)
+set(CMAKE_CXX_FLAGS -pg)
 
-SET(bioproj_opt_src
+set(bioproj_opt_src
     bioproj_io.h                bioproj_io.cxx
     bioproj_mem_io.h            bioproj_mem_io.cxx
     bioproj_proc.h              bioproj_proc.cxx
@@ -25,8 +25,8 @@ SET(bioproj_opt_src
     bioproj_filter_integrant.h  
    )
 
-AUX_SOURCE_DIRECTORY(Templates bioproj_opt_src)
+aux_source_directory(Templates bioproj_opt_src)
 
-ADD_LIBRARY(bioproj_opt ${bioproj_opt_src})
+add_library(bioproj_opt ${bioproj_opt_src})
 
-TARGET_LINK_LIBRARIES(bioproj_opt vcl  vgl xscan imgr_file_format vil3d bscs vcsl) 
+target_link_libraries(bioproj_opt vcl  vgl xscan imgr_file_format vil3d bscs vcsl) 

@@ -1,19 +1,19 @@
-INCLUDE_DIRECTORIES( ${BRL_INCLUDE_DIR}/lemsvxlsrc/contrib/bm/dbcl )
+include_directories( ${BRL_INCLUDE_DIR}/lemsvxlsrc/contrib/bm/dbcl )
 
-ADD_EXECUTABLE( vidl_exec vidl_exec.cxx )
-TARGET_LINK_LIBRARIES( vidl_exec vidl vil )
+add_executable( vidl_exec vidl_exec.cxx )
+target_link_libraries( vidl_exec vidl vil )
 
-ADD_EXECUTABLE( westin1 westin1.cxx )
-TARGET_LINK_LIBRARIES( westin1 vidl vil ncn1 dbcl )
+add_executable( westin1 westin1.cxx )
+target_link_libraries( westin1 vidl vil ncn1 dbcl )
 
-ADD_EXECUTABLE( crop_image_sequence crop_image_sequence.cxx )
-TARGET_LINK_LIBRARIES( crop_image_sequence vil vidl vul )
+add_executable( crop_image_sequence crop_image_sequence.cxx )
+target_link_libraries( crop_image_sequence vil vidl vul )
 
-ADD_EXECUTABLE( temporal_entropy temporal_entropy.cxx )
-TARGET_LINK_LIBRARIES( temporal_entropy vil vidl vul ncn1 )
+add_executable( temporal_entropy temporal_entropy.cxx )
+target_link_libraries( temporal_entropy vil vidl vul ncn1 )
 
-ADD_EXECUTABLE( westin_full westin_full.cxx )
-TARGET_LINK_LIBRARIES( westin_full vil vidl vul ncn1 )
+add_executable( westin_full westin_full.cxx )
+target_link_libraries( westin_full vil vidl vul ncn1 )
 
-ADD_EXECUTABLE( expat_test expat_test.cxx )
-TARGET_LINK_LIBRARIES( expat_test vil vul ncn1 )
+add_executable( expat_test expat_test.cxx )
+target_link_libraries( expat_test vil vul ncn1 )

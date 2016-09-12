@@ -1,18 +1,18 @@
 # This is contrib/dbvxm/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${VXL_CORE_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR})
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas/bsta)
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg/bvxm)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/dbvxm )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+include_directories( ${VXL_CORE_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR})
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas/bsta)
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg/bvxm)
+include_directories( ${lems_SOURCE_DIR}/contrib/dbvxm )
+include_directories( ${lems_SOURCE_DIR}/basic )
 
-SUBDIRS( pro )
+subdirs( pro )
 
-SET(dbvxm_rec_sources
+set(dbvxm_rec_sources
     dbvxm_bayesian_propagation.h  dbvxm_bayesian_propagation.cxx
     dbvxm_param_estimation.h  dbvxm_param_estimation.cxx
     dbvxm_fg_bg_pair_density.h  dbvxm_fg_bg_pair_density.cxx
@@ -30,15 +30,15 @@ SET(dbvxm_rec_sources
     dbvxm_part_hierarchy_builder.h    dbvxm_part_hierarchy_builder.cxx
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbvxm_rec_sources)
+aux_source_directory(Templates dbvxm_rec_sources)
 
-ADD_LIBRARY(dbvxm_rec ${dbvxm_rec_sources})
+add_library(dbvxm_rec ${dbvxm_rec_sources})
 
-TARGET_LINK_LIBRARIES(dbvxm_rec bsta_algo dbgrl bsta bvgl vil brip)
+target_link_libraries(dbvxm_rec bsta_algo dbgrl bsta bvgl vil brip)
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )
 
 
 

@@ -1,26 +1,26 @@
 # contrib/can/gui/CMakeLists.txt
 
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-#INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/basic )
+#include_directories( ${lems_SOURCE_DIR}/contrib )
+include_directories( ${lems_SOURCE_DIR}/breye )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
 
-SET(can_gui_sources
+set(can_gui_sources
    can_menu.cxx       can_menu.h
    can_main.cxx
 )
 
 
-AUX_SOURCE_DIRECTORY(Templates bvis_sources)
+aux_source_directory(Templates bvis_sources)
 
-ADD_EXECUTABLE(can_gui ${can_gui_sources})
+add_executable(can_gui ${can_gui_sources})
 
-TARGET_LINK_LIBRARIES(can_gui bvis dbil_pro)
+target_link_libraries(can_gui bvis dbil_pro)
 
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)

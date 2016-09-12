@@ -1,9 +1,9 @@
 # This is brcv/shp/dbgdt3d/algo/CMakeLists.txt
 # Debug Brown Geodesic Distance Transform 3D Library
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/shp)
+include_directories( ${lems_SOURCE_DIR}/shp)
 
-SET(dbgdt3d_sources
+set(dbgdt3d_sources
 
                                      dbgdt3d_numerical.h
 
@@ -65,15 +65,15 @@ SET(dbgdt3d_sources
 )
 
 
-ADD_LIBRARY( dbgdt3d  ${dbgdt3d_sources})
+add_library( dbgdt3d  ${dbgdt3d_sources})
 
-TARGET_LINK_LIBRARIES( dbgdt3d dbmsh3d )
+target_link_libraries( dbgdt3d dbmsh3d )
 
-SUBDIRS(pro)
+subdirs(pro)
 
 # Visualization Library
-SUBDIRS(vis)
+subdirs(vis)
 
-SUBDIRS(cmdproc)
+subdirs(cmdproc)
 
 

@@ -1,11 +1,11 @@
 # Brown affine patch library
 # algo/bapl/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_RPL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_RPL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
 
-SET(bapl_sources
+set(bapl_sources
    bapl_keypoint.cxx            bapl_keypoint.h                 bapl_keypoint_sptr.h
    bapl_lowe_keypoint.cxx       bapl_lowe_keypoint.h            bapl_lowe_keypoint_sptr.h
    bapl_lowe_pyramid.txx        bapl_lowe_pyramid.h
@@ -20,18 +20,18 @@ SET(bapl_sources
    bapl_mi_matcher_params.h     bapl_mi_matcher_params.cxx
 )
 
-AUX_SOURCE_DIRECTORY(Templates bapl_sources)
+aux_source_directory(Templates bapl_sources)
 
-ADD_LIBRARY(bapl  ${bapl_sources})
+add_library(bapl  ${bapl_sources})
 
-TARGET_LINK_LIBRARIES(bapl vnl vbl vil ipts vimt brip rrel)
+target_link_libraries(bapl vnl vbl vil ipts vimt brip rrel)
 
-IF( BUILD_EXAMPLES )
-  SUBDIRS( examples )
-ENDIF( BUILD_EXAMPLES )
+if( BUILD_EXAMPLES )
+  subdirs( examples )
+endif( BUILD_EXAMPLES )
 
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)
 

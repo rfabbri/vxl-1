@@ -1,15 +1,15 @@
 # This is contrib/dbrl/dbbas/dbsta/vis/CMakeLists.txt
 # The Brown Statistics Algorithms Library Visualization Tools
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-SET( dbstao_vis_sources
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+set( dbstao_vis_sources
   bsta_svg_tools.h bsta_svg_tools.cxx
 )
 
-ADD_LIBRARY( dbstao_vis  ${dbstao_vis_sources} )
+add_library( dbstao_vis  ${dbstao_vis_sources} )
 
-TARGET_LINK_LIBRARIES( dbstao_vis bsta bsvg vnl )
+target_link_libraries( dbstao_vis bsta bsvg vnl )
 
-IF( BUILD_TESTING OR BUILD_OCTI_TESTING)
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING OR BUILD_OCTI_TESTING )
+if( BUILD_TESTING OR BUILD_OCTI_TESTING)
+  subdirs(tests)
+endif( BUILD_TESTING OR BUILD_OCTI_TESTING )

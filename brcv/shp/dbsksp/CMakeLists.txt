@@ -1,17 +1,17 @@
 # Brown shape modeling library
 # shp/dbsksp/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_RPL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_RPL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/basic)
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
 
 
-SET( dbsksp_sources
+set( dbsksp_sources
   # Shock
   dbsksp_shock_node.h         dbsksp_shock_node.cxx        dbsksp_shock_node_sptr.h
   dbsksp_shock_node_descriptor.h         dbsksp_shock_node_descriptor.cxx        dbsksp_shock_node_descriptor_sptr.h
@@ -41,28 +41,28 @@ SET( dbsksp_sources
 
 
 
-AUX_SOURCE_DIRECTORY(Templates dbsksp_sources)
+aux_source_directory(Templates dbsksp_sources)
 
-ADD_LIBRARY(dbsksp  ${dbsksp_sources})
+add_library(dbsksp  ${dbsksp_sources})
 
-TARGET_LINK_LIBRARIES(dbsksp vgl vbl vnl vnl_algo vsl vsol dbgl_algo bil_algo dbnl dbgrl )
+target_link_libraries(dbsksp vgl vbl vnl vnl_algo vsl vsol dbgl_algo bil_algo dbnl dbgrl )
 
-IF( BUILD_EXAMPLES )
-  SUBDIRS( examples )
-ENDIF( BUILD_EXAMPLES )
+if( BUILD_EXAMPLES )
+  subdirs( examples )
+endif( BUILD_EXAMPLES )
 
 # Algorithm Library
-SUBDIRS( algo )
+subdirs( algo )
 
 # Processing Library
-SUBDIRS( pro )
+subdirs( pro )
 
 # Visualization Library
-SUBDIRS( vis )
+subdirs( vis )
 
 # XML IO library
-SUBDIRS( xio )
+subdirs( xio )
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)

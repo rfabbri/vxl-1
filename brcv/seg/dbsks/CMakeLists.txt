@@ -1,18 +1,18 @@
 # Brown Symmetry-based segmentation library
 # seg/dbsks
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_CONVERSIONS_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_CONVERSIONS_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/breye1)
+include_directories( ${lems_SOURCE_DIR}/basic)
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
 
 
-SET( dbsks_sources
+set( dbsks_sources
 
 dbsks_detect_symmetry.h    dbsks_detect_symmetry.cxx
 
@@ -90,33 +90,33 @@ libsvm/svm.cpp
 
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbsks_sources)
+aux_source_directory(Templates dbsks_sources)
 
-ADD_LIBRARY(dbsks ${dbsks_sources})
+add_library(dbsks ${dbsks_sources})
 
-TARGET_LINK_LIBRARIES(dbsks dbsksp_algo dbdet_algo vidpro1 vnl_io)
+target_link_libraries(dbsks dbsksp_algo dbdet_algo vidpro1 vnl_io)
 
 
 
-IF( BUILD_EXAMPLES )
-  SUBDIRS( cmdline )
-ENDIF( BUILD_EXAMPLES )
+if( BUILD_EXAMPLES )
+  subdirs( cmdline )
+endif( BUILD_EXAMPLES )
 
 # Algorithm library
-SUBDIRS( algo )
+subdirs( algo )
 
 # Processing Library
-SUBDIRS( pro )
+subdirs( pro )
 
 # Visualization Library
-SUBDIRS( vis )
+subdirs( vis )
 
 # XML I/O Library
-SUBDIRS( xio )
+subdirs( xio )
 
 
 
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)

@@ -3,12 +3,12 @@
 # Grad. Asgn Graph Matching Algorithms.
 
 
-#INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-#INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-#INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-#INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
+#include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+#include_directories( ${VXL_GEL_INCLUDE_DIR} )
+#include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+#include_directories( ${lems_SOURCE_DIR}/brcv/rec )
 
-SET(dbasn_sources
+set(dbasn_sources
 
 dbasn_graph.cxx               dbasn_graph.h
                               dbasn_node.h
@@ -28,13 +28,13 @@ dbasnh_gradasgn.cxx           dbasnh_gradasgn.h
 
 )
 
-ADD_LIBRARY(dbasn  ${dbasn_sources})
+add_library(dbasn  ${dbasn_sources})
 
 # add the required libraries into this list
-TARGET_LINK_LIBRARIES( dbasn dbgl vnl vul )
+target_link_libraries( dbasn dbgl vnl vul )
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)
   
 

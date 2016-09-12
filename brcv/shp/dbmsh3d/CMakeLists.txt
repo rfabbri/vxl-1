@@ -1,11 +1,11 @@
 # dbmsh3d - Brown 3D Mesh Library
 # brcv/shp/dbmsh3d/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/db3p )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp)
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/db3p )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp)
 
-SET(dbmsh3d_sources
+set(dbmsh3d_sources
 
                                      dbmsh3d_utils.h
                                      dbmsh3d_ptr_list.h
@@ -41,19 +41,19 @@ SET(dbmsh3d_sources
    dbmsh3d_sg3pi.cxx                 dbmsh3d_sg3pi.h
 )
 
-ADD_LIBRARY( dbmsh3d  ${dbmsh3d_sources})
+add_library( dbmsh3d  ${dbmsh3d_sources})
 
-TARGET_LINK_LIBRARIES( dbmsh3d vsol dbgl dbul rply vil)
+target_link_libraries( dbmsh3d vsol dbgl dbul rply vil)
 
-SUBDIRS( algo )
-SUBDIRS( pro )
-SUBDIRS( vis )
-SUBDIRS( cmdproc )
+subdirs( algo )
+subdirs( pro )
+subdirs( vis )
+subdirs( cmdproc )
 if (BUILD_TESTING)
-    SUBDIRS( tests )
+    subdirs( tests )
 endif (BUILD_TESTING)
 if (BUILD_EXAMPLES)
-    SUBDIRS( examples )
+    subdirs( examples )
 endif (BUILD_EXAMPLES)
 
 

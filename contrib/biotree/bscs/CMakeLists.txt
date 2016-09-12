@@ -1,18 +1,18 @@
 # /contrib/biotree/bscs/CMakeLists.txt
 
 
-INCLUDE_DIRECTORIES( ${VXL_CORE_INCLUDE_DIR} )
+include_directories( ${VXL_CORE_INCLUDE_DIR} )
 
-SET(bscs_src 
+set(bscs_src 
                 bscs.cxx  bscs_sptr.h    bscs.h    
 )  
 
-AUX_SOURCE_DIRECTORY(Templates bscs_src)
+aux_source_directory(Templates bscs_src)
 
-ADD_LIBRARY(bscs ${bscs_src})
+add_library(bscs ${bscs_src})
 
-TARGET_LINK_LIBRARIES(bscs vcsl)
+target_link_libraries(bscs vcsl)
 
-#IF(BUILD_TESTING)
-#  SUBDIRS( tests )
-#ENDIF(BUILD_TESTING)
+#if(BUILD_TESTING)
+#  subdirs( tests )
+#endif(BUILD_TESTING)

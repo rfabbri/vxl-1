@@ -1,21 +1,21 @@
 # lems code linked with vtk
 
-PROJECT(lems_itk)
+project(lems_itk)
 
 # Find and load the VTK configuration.
-# FIND_PACKAGE(VTK)
+# find_package(VTK)
   
-  #IF(NOT VTK_DIR)
-  #  MESSAGE(FATAL_ERROR "Please set VTK_DIR.")
-  #ENDIF(NOT VTK_DIR)
+  #if(NOT VTK_DIR)
+  #  message(FATAL_ERROR "Please set VTK_DIR.")
+  #endif(NOT VTK_DIR)
 
-# IF (VTK_FOUND)  
+# if (VTK_FOUND)  
   
-#  INCLUDE(${VTK_USE_FILE})
-#  SUBDIRS ( isosurface )
+#  include(${VTK_USE_FILE})
+#  subdirs ( isosurface )
   
-# ENDIF (VTK_FOUND)
+# endif (VTK_FOUND)
 
-# IF ( HAS_VTK )
-  SUBDIRS ( isosurface )
-# ENDIF (HAS_VTK )
+# if ( HAS_VTK )
+  subdirs ( isosurface )
+# endif (HAS_VTK )

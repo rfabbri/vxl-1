@@ -1,10 +1,10 @@
 # This is brcv/mvg/dbecl/CMakeLists.txt
 # Brown Epipolar Curve Library
 
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories(${VXL_GEL_INCLUDE_DIR} )
+include_directories(${VXL_GEL_INCLUDE_DIR}/mrc )
 
-SET(dbecl_sources
+set(dbecl_sources
     dbecl_epipole.cxx           dbecl_epipole.h            dbecl_epipole_sptr.h
     dbecl_episeg.cxx            dbecl_episeg.h             dbecl_episeg_sptr.h
     dbecl_episeg_point.cxx      dbecl_episeg_point.h       dbecl_episeg_point_sptr.h
@@ -14,18 +14,18 @@ SET(dbecl_sources
     dbecl_epiband_builder.cxx dbecl_epiband_builder.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbecl_sources)
+aux_source_directory(Templates dbecl_sources)
 
-ADD_LIBRARY(dbecl ${dbecl_sources})
+add_library(dbecl ${dbecl_sources})
 
-TARGET_LINK_LIBRARIES(dbecl vpgl vgl dbgl_algo vbl vul vnl vil vsol)
+target_link_libraries(dbecl vpgl vgl dbgl_algo vbl vul vnl vil vsol)
 
 # Processing Library
-SUBDIRS(pro)
+subdirs(pro)
 
 # Visualization Library
-SUBDIRS(vis)
+subdirs(vis)
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)

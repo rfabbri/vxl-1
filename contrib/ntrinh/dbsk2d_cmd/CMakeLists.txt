@@ -3,25 +3,25 @@
 
 
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/ntrinh )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/contrib/ntrinh )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR}/basic )
 
 
-SET(dbsk2d_cmd_sources
+set(dbsk2d_cmd_sources
    dbsk2d_cmd.cxx
    dbsk2d_cmd_utils.h    dbsk2d_cmd_utils.cxx
 )
 
-ADD_EXECUTABLE(dbsk2d_cmd ${dbsk2d_cmd_sources})
+add_executable(dbsk2d_cmd ${dbsk2d_cmd_sources})
 
-TARGET_LINK_LIBRARIES(dbsk2d_cmd dbsk2d_algo)
+target_link_libraries(dbsk2d_cmd dbsk2d_algo)
 
 
 

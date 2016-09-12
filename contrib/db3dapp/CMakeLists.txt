@@ -1,17 +1,17 @@
 # 3D application
 # contrib/db3dapp/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
 
-INCLUDE( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
-#INCLUDE( ${VXL_BRL_INCLUDE_DIR}/bmods/UseBGUI3D.cmake )
+include( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
+#include( ${VXL_BRL_INCLUDE_DIR}/bmods/UseBGUI3D.cmake )
 
-IF (HAS_BGUI3D)
+if (HAS_BGUI3D)
 
-SET(db3d_app_sources
+set(db3d_app_sources
 
    main.cxx
    MeshEditorMenu.h      MeshEditorMenu.cxx
@@ -22,13 +22,13 @@ SET(db3d_app_sources
 )
 
 
-ADD_EXECUTABLE(db3d_app ${db3d_app_sources})
+add_executable(db3d_app ${db3d_app_sources})
 
-TARGET_LINK_LIBRARIES( db3d_app bgui3d dbsk3d dbsk3d_algo dbmsh dbmsh_vis )
+target_link_libraries( db3d_app bgui3d dbsk3d dbsk3d_algo dbmsh dbmsh_vis )
 
-ENDIF (HAS_BGUI3D)
+endif (HAS_BGUI3D)
 
 # Brown Mesh Library
-SUBDIRS( dbmsh )
+subdirs( dbmsh )
 
 

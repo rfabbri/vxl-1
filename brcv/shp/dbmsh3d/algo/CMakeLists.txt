@@ -1,11 +1,11 @@
 # This is brcv/shp/dbmsh3d/algo/CMakeLists.txt
 # Brown 3D Mesh Algorithm Library
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_RPL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_RPL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
 
-SET( dbmsh3d_algo_sources
+set( dbmsh3d_algo_sources
 
   dbmsh3d_fileio.cxx                dbmsh3d_fileio.h
   dbmsh3d_fileio_ply.cxx
@@ -47,12 +47,12 @@ SET( dbmsh3d_algo_sources
 )
 
 
-AUX_SOURCE_DIRECTORY(Templates dbmsh3d_algo_sources )
+aux_source_directory(Templates dbmsh3d_algo_sources )
 
-ADD_LIBRARY( dbmsh3d_algo  ${dbmsh3d_algo_sources})
+add_library( dbmsh3d_algo  ${dbmsh3d_algo_sources})
 
-TARGET_LINK_LIBRARIES( dbmsh3d_algo dbmsh3d rply mesh_tri ray_tri rsdl rgrl dbgl_algo vgl_algo )
+target_link_libraries( dbmsh3d_algo dbmsh3d rply mesh_tri ray_tri rsdl rgrl dbgl_algo vgl_algo )
 
-SUBDIRS (tests)
+subdirs (tests)
 
 

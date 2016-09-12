@@ -1,29 +1,29 @@
 # mesh_vis application
 # contrib/meshvis/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
 
-INCLUDE( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
-#INCLUDE( ${VXL_BRL_INCLUDE_DIR}/bmods/UseBGUI3D.cmake )
+include( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
+#include( ${VXL_BRL_INCLUDE_DIR}/bmods/UseBGUI3D.cmake )
 
-IF (HAS_BGUI3D)
+if (HAS_BGUI3D)
 
-SET(meshvis_sources
+set(meshvis_sources
 
    meshvis_main.cxx
 
 )
 
 
-ADD_EXECUTABLE( meshvis ${meshvis_sources} )
+add_executable( meshvis ${meshvis_sources} )
 
-TARGET_LINK_LIBRARIES( meshvis dbmsh3d dbmsh3d_algo dbmsh3d_vis dbul bgui3d vsol vpgl vsl)
+target_link_libraries( meshvis dbmsh3d dbmsh3d_algo dbmsh3d_vis dbul bgui3d vsol vpgl vsl)
 
-ADD_EXECUTABLE(mesh_project_real mesh_project_real.cxx)
-TARGET_LINK_LIBRARIES( mesh_project_real dbmsh3d dbmsh3d_vis bgui3d )
+add_executable(mesh_project_real mesh_project_real.cxx)
+target_link_libraries( mesh_project_real dbmsh3d dbmsh3d_vis bgui3d )
 
-ENDIF (HAS_BGUI3D)
+endif (HAS_BGUI3D)
 

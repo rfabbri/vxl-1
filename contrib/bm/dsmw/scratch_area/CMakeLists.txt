@@ -2,8 +2,8 @@
 #This directory will be used to test ideas for the dsmw library
 
 
-ADD_EXECUTABLE( transition_table transition_table.cxx )
+add_executable( transition_table transition_table.cxx )
 
-TARGET_LINK_LIBRARIES( transition_table bsta )
+target_link_libraries( transition_table bsta )
 
 

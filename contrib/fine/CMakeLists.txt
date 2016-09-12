@@ -1,34 +1,34 @@
 # contrib/fine/CMakeLists.txt
 # Developement for : eli fine
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/fine )
+include_directories( ${lems_SOURCE_DIR}/breye )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/contrib/fine )
 
 # my bvis based GUI
-SUBDIRS( gui )
+subdirs( gui )
 
 # my segmentation structure
-SUBDIRS( structure )
+subdirs( structure )
 
 # my displayers and tool
-SUBDIRS( vis )
+subdirs( vis )
 
 # various segmentation algorithms
-SUBDIRS( algos )
+subdirs( algos )
 
 # processes
-SUBDIRS( pro )
+subdirs( pro )
 
 
 # algorithms for VOX
-SUBDIRS( algo )
+subdirs( algo )
 
 
 
 
 # my command line executables
-#SUBDIRS( cmd )
+#subdirs( cmd )
 
 
 

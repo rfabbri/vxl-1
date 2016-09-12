@@ -3,29 +3,29 @@
 
 
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/ntrinh )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/contrib/ntrinh )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR}/basic )
 
 
-SET(dbsksp_morph_image_sources
+set(dbsksp_morph_image_sources
    dbsksp_morph_image.cxx
    dbsksp_morph_image_utils.h    dbsksp_morph_image_utils.cxx
 )
 
-ADD_EXECUTABLE(dbsksp_morph_image ${dbsksp_morph_image_sources})
+add_executable(dbsksp_morph_image ${dbsksp_morph_image_sources})
 
-TARGET_LINK_LIBRARIES(dbsksp_morph_image dbsksp vgui dbgui)
+target_link_libraries(dbsksp_morph_image dbsksp vgui dbgui)
 
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)
 
 

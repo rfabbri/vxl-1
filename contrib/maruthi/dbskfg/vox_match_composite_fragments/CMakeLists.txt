@@ -1,10 +1,10 @@
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/db3p )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/db3p )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
 
-LINK_DIRECTORIES(${CMAKE_VLFEAT_LIBS})
+link_directories(${CMAKE_VLFEAT_LIBS})
 
 
-SET( vox_match_composite_fragments_sources
+set( vox_match_composite_fragments_sources
   vox_match_composite_fragments_params.h 
   vox_match_composite_fragments_params_sptr.h
 #  vox_match_bag_of_fragments.h
@@ -14,8 +14,8 @@ SET( vox_match_composite_fragments_sources
   vbl_smart_ptr+vox_match_composite_fragments_params-.cxx
 )
 
-ADD_EXECUTABLE (vox_match_composite_fragments ${vox_match_composite_fragments_sources} )
-TARGET_LINK_LIBRARIES (vox_match_composite_fragments dbskfg dborl_algo dbsk2d_pro dbskfg_pro dbskfg_algo dbdet_pro )
+add_executable (vox_match_composite_fragments ${vox_match_composite_fragments_sources} )
+target_link_libraries (vox_match_composite_fragments dbskfg dborl_algo dbsk2d_pro dbskfg_pro dbskfg_algo dbdet_pro )
 
 
 

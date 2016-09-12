@@ -1,12 +1,12 @@
 # contrib/edge_det/vis/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 
-SET(edge_det_vis_sources
+set(edge_det_vis_sources
    
    edge_corr_displayer.h           edge_corr_displayer.cxx
    
@@ -15,6 +15,6 @@ SET(edge_det_vis_sources
    
 )
 
-ADD_LIBRARY(edge_det_vis ${edge_det_vis_sources})
+add_library(edge_det_vis ${edge_det_vis_sources})
 
-TARGET_LINK_LIBRARIES(edge_det_vis bvis1 dbdet)
+target_link_libraries(edge_det_vis bvis1 dbdet)

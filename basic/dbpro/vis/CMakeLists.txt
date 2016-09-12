@@ -2,9 +2,9 @@
 # Development Brown Processing Visualization Extention Library
 
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
-SET(dbpro_vis_sources
+set(dbpro_vis_sources
 
   dbpro_run_tableau.cxx             dbpro_run_tableau.h           dbpro_run_tableau_sptr.h
   dbpro_basic_gui_observers.h
@@ -12,10 +12,10 @@ SET(dbpro_vis_sources
 )
 
 
-#AUX_SOURCE_DIRECTORY(Templates dbpro_vis_sources)
+#aux_source_directory(Templates dbpro_vis_sources)
 
-ADD_LIBRARY(dbpro_vis  ${dbpro_vis_sources})
+add_library(dbpro_vis  ${dbpro_vis_sources})
 
-TARGET_LINK_LIBRARIES(dbpro_vis dbpro vgui)
+target_link_libraries(dbpro_vis dbpro vgui)
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)

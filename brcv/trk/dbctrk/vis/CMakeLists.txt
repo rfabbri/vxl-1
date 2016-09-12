@@ -1,8 +1,8 @@
 # Visualization for Brown curve tracking library
 # brcv/trk/dbctrk/vis/CMakeLists.txt
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE( ${LEMS_CMAKE_DIR}/Modules/UseMATLAB.cmake )
-SET(dbctrk_vis_sources
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include( ${LEMS_CMAKE_DIR}/Modules/UseMATLAB.cmake )
+set(dbctrk_vis_sources
    
    dbctrk_get_info_tool.cxx           dbctrk_get_info_tool.h
    dbctrk_write_info_tool.cxx         dbctrk_write_info_tool.h
@@ -20,22 +20,22 @@ SET(dbctrk_vis_sources
  
 )
 
-IF (HAS_MATLAB)
+if (HAS_MATLAB)
 
-SET(dbctrk_vis_sources ${dbctrk_vis_sources}
+set(dbctrk_vis_sources ${dbctrk_vis_sources}
   dbctrk_intensity_tool.cxx         dbctrk_intensity_tool.h
   
 )   
-ENDIF (HAS_MATLAB)
+endif (HAS_MATLAB)
 
 
 
-ADD_LIBRARY(dbctrk_vis  ${dbctrk_vis_sources})
+add_library(dbctrk_vis  ${dbctrk_vis_sources})
 
-TARGET_LINK_LIBRARIES(dbctrk_vis dbctrk_pro)
+target_link_libraries(dbctrk_vis dbctrk_pro)
 
-IF (HAS_MATLAB)
-TARGET_LINK_LIBRARIES(dbctrk_vis ${MATLAB_LIBRARIES})
-ENDIF (HAS_MATLAB)
+if (HAS_MATLAB)
+target_link_libraries(dbctrk_vis ${MATLAB_LIBRARIES})
+endif (HAS_MATLAB)
 
 

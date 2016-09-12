@@ -1,11 +1,11 @@
 # contrib/biotree/xmvg/tests/CMakeLists.txt
 
-ADD_EXECUTABLE( xmvg_algo_test_all   
+add_executable( xmvg_algo_test_all   
   test_driver.cxx  
   test_ramp_compensation.cxx  
               )
 
-TARGET_LINK_LIBRARIES(xmvg_algo_test_all xmvg xmvg_algo testlib )
+target_link_libraries(xmvg_algo_test_all xmvg xmvg_algo testlib )
 
-ADD_TEST( xmvg_test_ramp_compensation   xmvg_test_all test_ramp_compensation)
+add_test( xmvg_test_ramp_compensation   xmvg_test_all test_ramp_compensation)
 

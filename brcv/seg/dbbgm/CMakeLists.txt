@@ -2,7 +2,7 @@
 # Brown background modeling Library
 
 
-SET(dbbgm_sources
+set(dbbgm_sources
   dbbgm_distribution_image.txx    dbbgm_distribution_image.h    
   dbbgm_distribution_image_sptr.h dbbgm_distribution_image.cxx
   dbbgm_update.h
@@ -15,27 +15,27 @@ SET(dbbgm_sources
 
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbbgm_sources)
+aux_source_directory(Templates dbbgm_sources)
 
-ADD_LIBRARY(dbbgm  ${dbbgm_sources})
+add_library(dbbgm  ${dbbgm_sources})
 
 # add the required libraries into this list
-TARGET_LINK_LIBRARIES(dbbgm dbsta vsl vbl vbl_io)  
+target_link_libraries(dbbgm dbsta vsl vbl vbl_io)  
 
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )
 
 
 # algorithms for background modeling
-SUBDIRS( algo )
+subdirs( algo )
 
 # process for background modeling
-SUBDIRS(pro)
+subdirs(pro)
 
 # visualization for background modeling
-SUBDIRS(vis)
+subdirs(vis)
 
 
 

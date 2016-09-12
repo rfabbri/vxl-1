@@ -1,4 +1,4 @@
-SUBDIRS(group)
-SUBDIRS(util)
-SUBDIRS(partition)
+subdirs(group)
+subdirs(util)
+subdirs(partition)
 

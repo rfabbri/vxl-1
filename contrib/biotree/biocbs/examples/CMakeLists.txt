@@ -1,3 +1,3 @@
-ADD_EXECUTABLE(biocbs_example biocbs_example.cxx )
-TARGET_LINK_LIBRARIES(biocbs_example biocbs vbl)
+add_executable(biocbs_example biocbs_example.cxx )
+target_link_libraries(biocbs_example biocbs vbl)
   

@@ -6,7 +6,7 @@ doxygen_add_library(dcontrib/dbrl/dbbas/dbsta
   PACKAGE contrib/dbrl
   )
 
-SET(dbstao_sources
+set(dbstao_sources
  bsta_gauss.cxx            bsta_gauss.h
  bsta_histogram_base.h
  bsta_histogram.txx        bsta_histogram.h       bsta_histogram_sptr.h
@@ -48,26 +48,26 @@ SET(dbstao_sources
   bsta_beta_f1.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbstao_sources)
-ADD_LIBRARY(dbstao  ${dbstao_sources})
-INSTALL_TARGETS(/lib dbstao)
+aux_source_directory(Templates dbstao_sources)
+add_library(dbstao  ${dbstao_sources})
+install_targets(/lib dbstao)
 
 
-TARGET_LINK_LIBRARIES(dbstao vnl_algo vbl vnl)
+target_link_libraries(dbstao vnl_algo vbl vnl)
 
-IF (LINK_WITH_DLIBS)
+if (LINK_WITH_DLIBS)
 
 
-IF (BUILD_OCTI_TESTING OR BUILD_TESTING)
-	SUBDIRS(tests)
-ENDIF(BUILD_OCTI_TESTING OR BUILD_TESTING)
+if (BUILD_OCTI_TESTING OR BUILD_TESTING)
+	subdirs(tests)
+endif(BUILD_OCTI_TESTING OR BUILD_TESTING)
 	# algorithms for statistical modeling
-	SUBDIRS( algo )
+	subdirs( algo )
 
 	# Binary I/O clip on library
-	SUBDIRS( io )
+	subdirs( io )
 
 	# Visualization Tools for various bsta constructs
-	SUBDIRS( vis )
-ENDIF(LINK_WITH_DLIBS)
+	subdirs( vis )
+endif(LINK_WITH_DLIBS)
 

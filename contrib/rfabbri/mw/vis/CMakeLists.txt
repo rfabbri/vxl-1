@@ -1,11 +1,11 @@
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bmvl )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bmvl )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 
 
-SET(mw_vis_sources
+set(mw_vis_sources
   mw_curve_tracing_tool_2.cxx mw_curve_tracing_tool_2.h mw_curve_tracing_tool_common_2.h
   mw_curve_dt_tracing_tool_2.cxx mw_curve_dt_tracing_tool_2.h
   mw_curve_edit_tracing_tool_2.cxx mw_curve_edit_tracing_tool_2.h
@@ -37,7 +37,7 @@ SET(mw_vis_sources
   mw_sel_inliers_to_curve.cxx mw_sel_inliers_to_curve.h
 )
 
-ADD_LIBRARY(mw_vis ${mw_vis_sources})
+add_library(mw_vis ${mw_vis_sources})
 
-TARGET_LINK_LIBRARIES(mw_vis dbdet_vis bvis1 mw_algo dbcsi vpgl brct )
+target_link_libraries(mw_vis dbdet_vis bvis1 mw_algo dbcsi vpgl brct )
 

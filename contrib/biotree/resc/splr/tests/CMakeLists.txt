@@ -1,6 +1,6 @@
 # contrib/biotree/resc/splr/tests/CMakeLists.txt
 
-SET(splr_test_src
+set(splr_test_src
     test_driver.cxx
     test_explicit_splat_collection.cxx
     test_pizza_slice_symmetry.cxx
@@ -13,11 +13,11 @@ SET(splr_test_src
     dummy_filter_2d.cxx
 )
 
-AUX_SOURCE_DIRECTORY(Templates splr_test_src)
+aux_source_directory(Templates splr_test_src)
 
-ADD_EXECUTABLE(splr_test_all ${splr_test_src})
+add_executable(splr_test_all ${splr_test_src})
 
-TARGET_LINK_LIBRARIES(splr_test_all splr xmvg xmvg_io xscan testlib vcl vbl biob vsl)
+target_link_libraries(splr_test_all splr xmvg xmvg_io xscan testlib vcl vbl biob vsl)
 
-ADD_TEST(splr_test splr_test_all)
+add_test(splr_test splr_test_all)
 

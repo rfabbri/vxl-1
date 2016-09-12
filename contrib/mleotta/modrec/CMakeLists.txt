@@ -1,17 +1,17 @@
 # contrib/mleotta/modrec/CMakeLists.txt
 # 3D model based recognition Library.
 
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_OXL_INCLUDE_DIR} )
 
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
-INCLUDE_DIRECTORIES( ${VXL_RPL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/mvg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories( ${VXL_RPL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
 
-SET(modrec_sources
+set(modrec_sources
   modrec_proj_cost_func.cxx         modrec_proj_cost_func.h
   modrec_proj_lsqr_cost_func.cxx    modrec_proj_lsqr_cost_func.h
 
@@ -32,52 +32,52 @@ SET(modrec_sources
   modrec_codeword.h
 )
 
-#AUX_SOURCE_DIRECTORY(Templates modrec_sources)
+#aux_source_directory(Templates modrec_sources)
 
-ADD_LIBRARY(modrec  ${modrec_sources})
+add_library(modrec  ${modrec_sources})
 
-TARGET_LINK_LIBRARIES(modrec dbpro dbvidl2_pro dbil_pro bbgm imesh_algo vpgl vil_algo rrel vgel)
+target_link_libraries(modrec dbpro dbvidl2_pro dbil_pro bbgm imesh_algo vpgl vil_algo rrel vgel)
 
-IF( BUILD_TESTING )
-#  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+#  subdirs(tests)
+endif( BUILD_TESTING )
 
 # Make the Python Module for running experiemnts
-INCLUDE( ${VXL_CMAKE_DIR}/NewCMake/FindPython.cmake )
-IF( PYTHON_FOUND )
-  INCLUDE_DIRECTORIES( ${PYTHON_INCLUDE_PATH} )
+include( ${VXL_CMAKE_DIR}/NewCMake/FindPython.cmake )
+if( PYTHON_FOUND )
+  include_directories( ${PYTHON_INCLUDE_PATH} )
   
-  SET(py_modrec_sources
+  set(py_modrec_sources
       py_modrec.cxx
       py_modrec_manager.cxx   py_modrec_manager.h
   )
 
-  ADD_LIBRARY(py_modrec MODULE ${py_modrec_sources})
+  add_library(py_modrec MODULE ${py_modrec_sources})
 
-  IF(WIN32)
+  if(WIN32)
     #library has to have different name depending on debug or release version.
-    SET_TARGET_PROPERTIES(py_modrec PROPERTIES OUTPUT_NAME py_modrec DEBUG_POSTFIX _d SUFFIX .pyd)
-  ENDIF(WIN32)
-  SET_TARGET_PROPERTIES(py_modrec PROPERTIES PREFIX "")
+    set_target_properties(py_modrec PROPERTIES OUTPUT_NAME py_modrec DEBUG_POSTFIX _d SUFFIX .pyd)
+  endif(WIN32)
+  set_target_properties(py_modrec PROPERTIES PREFIX "")
 
-  TARGET_LINK_LIBRARIES(py_modrec modrec dbul) 
+  target_link_libraries(py_modrec modrec dbul) 
 
-  IF (PYTHON_DEBUG_LIBRARIES)
-    TARGET_LINK_LIBRARIES( py_modrec debug ${PYTHON_DEBUG_LIBRARY})
-  ENDIF(PYTHON_DEBUG_LIBRARIES )
+  if (PYTHON_DEBUG_LIBRARIES)
+    target_link_libraries( py_modrec debug ${PYTHON_DEBUG_LIBRARY})
+  endif(PYTHON_DEBUG_LIBRARIES )
 
-  IF(PYTHON_LIBRARIES)
-    TARGET_LINK_LIBRARIES( py_modrec optimized ${PYTHON_LIBRARY})
-  ENDIF(PYTHON_LIBRARIES)
-ENDIF( PYTHON_FOUND )
+  if(PYTHON_LIBRARIES)
+    target_link_libraries( py_modrec optimized ${PYTHON_LIBRARY})
+  endif(PYTHON_LIBRARIES)
+endif( PYTHON_FOUND )
 
 
 # binary IO 
-SUBDIRS( io ) 
+subdirs( io ) 
 
 # processes
-SUBDIRS( pro )
+subdirs( pro )
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )

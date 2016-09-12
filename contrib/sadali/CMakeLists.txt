@@ -1,30 +1,30 @@
 # contrib/sadali/CMakeLists.txt
 # Brown personal testing area.
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/algo )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/sadali )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
-#INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR}/mvl )
-INCLUDE_DIRECTORIES( ${VXL_RPL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/algo )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/contrib/sadali )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_OXL_INCLUDE_DIR} )
+#include_directories( ${VXL_OXL_INCLUDE_DIR}/mvl )
+include_directories( ${VXL_RPL_INCLUDE_DIR} )
 
-INCLUDE( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
+include( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
 
 # my bvis1 based GUI
-SUBDIRS( gui )
+subdirs( gui )
 
 
-SUBDIRS( bprt )
+subdirs( bprt )
 
-SUBDIRS( bfac )
+subdirs( bfac )
 
 
-SUBDIRS(dbbbopt_vis)
+subdirs(dbbbopt_vis)
 
-SUBDIRS(dbhom_vis)
+subdirs(dbhom_vis)
 
 

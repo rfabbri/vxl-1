@@ -7,65 +7,65 @@
 #
 # Feb 09, 2005: by MingChing to enable contrib app to use SoWin.
 
-IF (WIN32)
-  IF (CYGWIN)
+if (WIN32)
+  if (CYGWIN)
 
-    FIND_LIBRARY(COIN_LIBRARY SoWin
+    find_library(COIN_LIBRARY SoWin
       /usr/lib
       /usr/local/lib
     )
 
-  ELSE (CYGWIN)
+  else (CYGWIN)
 
-    FIND_PATH(SOWIN_INCLUDE_DIR Inventor/So.h
+    find_path(SOWIN_INCLUDE_DIR Inventor/So.h
       "[HKEY_LOCAL_MACHINE\\SOFTWARE\\SIM\\Coin3D\\2;Installation Path]/include"
     )
     
-    FIND_LIBRARY(SOWIN_LIBRARY_DEBUG sowin1d
+    find_library(SOWIN_LIBRARY_DEBUG sowin1d
       "[HKEY_LOCAL_MACHINE\\SOFTWARE\\SIM\\Coin3D\\2;Installation Path]/lib"
     )
 
-    FIND_LIBRARY(SOWIN_LIBRARY_RELEASE sowin1
+    find_library(SOWIN_LIBRARY_RELEASE sowin1
       "[HKEY_LOCAL_MACHINE\\SOFTWARE\\SIM\\Coin3D\\2;Installation Path]/lib"
     )
 
-    IF (SOWIN_LIBRARY_DEBUG AND SOWIN_LIBRARY_RELEASE)
-      SET(SOWIN_LIBRARY optimized ${SOWIN_LIBRARY_RELEASE}
+    if (SOWIN_LIBRARY_DEBUG AND SOWIN_LIBRARY_RELEASE)
+      set(SOWIN_LIBRARY optimized ${SOWIN_LIBRARY_RELEASE}
                          debug ${SOWIN_LIBRARY_DEBUG})
-    ELSE (SOWIN_LIBRARY_DEBUG AND SOWIN_LIBRARY_RELEASE)
-      IF (SOWIN_LIBRARY_DEBUG)
-        SET (SOWIN_LIBRARY ${SOWIN_LIBRARY_DEBUG})
-      ENDIF (SOWIN_LIBRARY_DEBUG)
-      IF (SOWIN_LIBRARY_RELEASE)
-        SET (SOWIN_LIBRARY ${SOWIN_LIBRARY_RELEASE})
-      ENDIF (SOWIN_LIBRARY_RELEASE)
-    ENDIF (SOWIN_LIBRARY_DEBUG AND SOWIN_LIBRARY_RELEASE)
+    else (SOWIN_LIBRARY_DEBUG AND SOWIN_LIBRARY_RELEASE)
+      if (SOWIN_LIBRARY_DEBUG)
+        set (SOWIN_LIBRARY ${SOWIN_LIBRARY_DEBUG})
+      endif (SOWIN_LIBRARY_DEBUG)
+      if (SOWIN_LIBRARY_RELEASE)
+        set (SOWIN_LIBRARY ${SOWIN_LIBRARY_RELEASE})
+      endif (SOWIN_LIBRARY_RELEASE)
+    endif (SOWIN_LIBRARY_DEBUG AND SOWIN_LIBRARY_RELEASE)
 
-    IF (SOWIN_LIBRARY)
-      ADD_DEFINITIONS ( -DSOWIN_NOT_DLL )
-    #ELSE (SOWIN_LIBRARY)
-    #  SET (SOWIN_LIBRARY coin2d CACHE STRING "SoWin Library (Debug) - Open Inventor GUI")
-    ENDIF (SOWIN_LIBRARY)
+    if (SOWIN_LIBRARY)
+      add_definitions ( -DSOWIN_NOT_DLL )
+    #else (SOWIN_LIBRARY)
+    #  set (SOWIN_LIBRARY coin2d CACHE STRING "SoWin Library (Debug) - Open Inventor GUI")
+    endif (SOWIN_LIBRARY)
     
-    #IF (SOWIN_LIBRARY)
-    #  ADD_DEFINITIONS ( -DSOWIN_NOT_DLL )
-    #ELSE (SOWIN_LIBRARY)
-    #  SET (SOWIN_LIBRARY sowin1d CACHE STRING "SoWin Library (Debug) - Open Inventor GUI")
-    #ENDIF (SOWIN_LIBRARY)
+    #if (SOWIN_LIBRARY)
+    #  add_definitions ( -DSOWIN_NOT_DLL )
+    #else (SOWIN_LIBRARY)
+    #  set (SOWIN_LIBRARY sowin1d CACHE STRING "SoWin Library (Debug) - Open Inventor GUI")
+    #endif (SOWIN_LIBRARY)
 
-  ENDIF (CYGWIN)
+  endif (CYGWIN)
 
-ELSE (WIN32)
+else (WIN32)
 
-  FIND_LIBRARY(SOWIN_LIBRARY SoWin
+  find_library(SOWIN_LIBRARY SoWin
     /usr/lib
     /usr/local/lib
   )   
 
-ENDIF (WIN32)
+endif (WIN32)
 
-SET( SOWIN_FOUND "NO" )
-IF(SOWIN_LIBRARY)  
-  SET( SOWIN_FOUND "YES" )
-ENDIF(SOWIN_LIBRARY)
+set( SOWIN_FOUND "NO" )
+if(SOWIN_LIBRARY)  
+  set( SOWIN_FOUND "YES" )
+endif(SOWIN_LIBRARY)
 

@@ -1,17 +1,17 @@
-#ADD_EXECUTABLE(firstproj firstproj.cxx)
-#TARGET_LINK_LIBRARIES(firstproj vcl vsl)
+#add_executable(firstproj firstproj.cxx)
+#target_link_libraries(firstproj vcl vsl)
 
-#ADD_EXECUTABLE(logDensityCT logDensityCT.cxx)
-#TARGET_LINK_LIBRARIES(logDensityCT vcl vil vgui vnl)
+#add_executable(logDensityCT logDensityCT.cxx)
+#target_link_libraries(logDensityCT vcl vil vgui vnl)
 
-#ADD_EXECUTABLE(circleDraw circleDraw.cxx)
-#TARGET_LINK_LIBRARIES(circleDraw vcl vnl vil vgui)
+#add_executable(circleDraw circleDraw.cxx)
+#target_link_libraries(circleDraw vcl vnl vil vgui)
 
-ADD_EXECUTABLE(miscProj miscProj.cxx)
-TARGET_LINK_LIBRARIES(miscProj vcl vnl vil vgui vbl dcmtk)
+add_executable(miscProj miscProj.cxx)
+target_link_libraries(miscProj vcl vnl vil vgui vbl dcmtk)
 
-ADD_EXECUTABLE(logCT logCt.cxx)
-TARGET_LINK_LIBRARIES(logCT vul vgui vnl dcmtk)
+add_executable(logCT logCt.cxx)
+target_link_libraries(logCT vul vgui vnl dcmtk)
 
 
 

@@ -1,7 +1,7 @@
 # This is basic/dbsta/algo/CMakeLists.txt
 # The Brown Statistics Algorithms Library
 
-SET( dbsta_algo_sources
+set( dbsta_algo_sources
    dbsta_gaussian_stats.txx        dbsta_gaussian_stats.h
    dbsta_mixture_updaters.h
    dbsta_adaptive_updater.txx      dbsta_adaptive_updater.h
@@ -11,15 +11,15 @@ SET( dbsta_algo_sources
 
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbsta_algo_sources)
+aux_source_directory(Templates dbsta_algo_sources)
 
-ADD_LIBRARY( dbsta_algo  ${dbsta_algo_sources} )
+add_library( dbsta_algo  ${dbsta_algo_sources} )
 
-TARGET_LINK_LIBRARIES( dbsta_algo dbsta vnl)
+target_link_libraries( dbsta_algo dbsta vnl)
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )
 
 
 

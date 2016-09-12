@@ -1,9 +1,9 @@
 # CT simulation library
 # algo/biocts/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
 
-SET(biocts_sources
+set(biocts_sources
 
 biocts_rvgs.h
 biocts_rvgs.cxx
@@ -16,14 +16,14 @@ biocts_ctsim.cxx
 
 )
 
-AUX_SOURCE_DIRECTORY(Templates biocts_sources)
+aux_source_directory(Templates biocts_sources)
 
-ADD_LIBRARY(biocts  ${biocts_sources})
+add_library(biocts  ${biocts_sources})
 
-TARGET_LINK_LIBRARIES( biocts vgl vcl vnl vbl vil)
+target_link_libraries( biocts vgl vcl vnl vbl vil)
 
-SUBDIRS(pro)
+subdirs(pro)
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)

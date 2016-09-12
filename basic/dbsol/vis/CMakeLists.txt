@@ -2,12 +2,12 @@
 # Development Brown Spatial Object Visualization Library
 
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 
-SET( dbsol_vis_sources
+set( dbsol_vis_sources
 
 dbsol_soview2D_circ_arc.cxx   dbsol_soview2D_circ_arc.h
 #dbsol_circ_arc_tool.cxx       dbsol_circ_arc_tool.h
@@ -18,11 +18,11 @@ dbsol_soview2D_circ_arc.cxx   dbsol_soview2D_circ_arc.h
 dbsol_cut_contour_tool.cxx     dbsol_cut_contour_tool.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbsol_vis_sources)
+aux_source_directory(Templates dbsol_vis_sources)
 
-ADD_LIBRARY(dbsol_vis  ${dbsol_vis_sources})
-TARGET_LINK_LIBRARIES(dbsol_vis bvis1 bgui dbsol)
+add_library(dbsol_vis  ${dbsol_vis_sources})
+target_link_libraries(dbsol_vis bvis1 bgui dbsol)
 
 
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)

@@ -1,10 +1,10 @@
 # contrib/edge_det/csa/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
 
-SET(csa_sources
+set(csa_sources
 
    csa_defs.h     csa_types.h
    csa.h          csa.cpp
@@ -15,6 +15,6 @@ SET(csa_sources
    
 )
 
-ADD_LIBRARY(csa ${csa_sources})
+add_library(csa ${csa_sources})
 
-TARGET_LINK_LIBRARIES(csa )
+target_link_libraries(csa )

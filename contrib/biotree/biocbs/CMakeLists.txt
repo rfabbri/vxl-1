@@ -1,20 +1,20 @@
 # cone-beam ct simulator
 
-INCLUDE_DIRECTORIES( ${biotree_SOURCE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories( ${biotree_SOURCE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 
-SET(biocbs_sources
+set(biocbs_sources
 biocbs_scan.h   biocbs_scan.cxx
 )
 
-ADD_LIBRARY(biocbs ${biocbs_sources})
+add_library(biocbs ${biocbs_sources})
 
-TARGET_LINK_LIBRARIES( biocbs vcl xscan )
+target_link_libraries( biocbs vcl xscan )
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)
 
-IF(BUILD_EXAMPLES)
-    SUBDIRS(examples)
-ENDIF(BUILD_EXAMPLES)
+if(BUILD_EXAMPLES)
+    subdirs(examples)
+endif(BUILD_EXAMPLES)

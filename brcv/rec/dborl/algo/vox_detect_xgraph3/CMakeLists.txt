@@ -1,7 +1,7 @@
 # This is dborl/algo/vox_detect_xgraph/CMakeLists.txt
 
 # Support library
-SET( vox_detect_xgraph3_lib_sources
+set( vox_detect_xgraph3_lib_sources
   vox_detect_xgraph_params.h 
   vox_detect_xgraph_params_sptr.h
   vox_detect_xgraph_params.cxx
@@ -10,27 +10,27 @@ SET( vox_detect_xgraph3_lib_sources
   dbsks_detect_xgraph_using_edgemap.cxx
 )
 
-ADD_LIBRARY (vox_detect_xgraph3_lib ${vox_detect_xgraph3_lib_sources} )
-TARGET_LINK_LIBRARIES (vox_detect_xgraph3_lib dborl_algo dbsks dbsks_pro dbsksp_xio vidpro1)
+add_library (vox_detect_xgraph3_lib ${vox_detect_xgraph3_lib_sources} )
+target_link_libraries (vox_detect_xgraph3_lib dborl_algo dbsks dbsks_pro dbsksp_xio vidpro1)
 
 
 # Main executable for vox
-SET( vox_detect_xgraph3_sources
+set( vox_detect_xgraph3_sources
   vox_detect_xgraph_main.cxx
 )
-ADD_EXECUTABLE (vox_detect_xgraph3 ${vox_detect_xgraph3_sources} )
-TARGET_LINK_LIBRARIES (vox_detect_xgraph3 vox_detect_xgraph3_lib dborl_algo dbsks dbsks_xio dbsks_algo dbsks_pro dbsksp_xio dbdet_pro dbdet)
+add_executable (vox_detect_xgraph3 ${vox_detect_xgraph3_sources} )
+target_link_libraries (vox_detect_xgraph3 vox_detect_xgraph3_lib dborl_algo dbsks dbsks_xio dbsks_algo dbsks_pro dbsksp_xio dbdet_pro dbdet)
 
 
 # Post-processing executable
-#SET( vox_detect_xgraph_postprocess_sources
+#set( vox_detect_xgraph_postprocess_sources
 #  vox_detect_xgraph_postprocess_main.cxx
 #  vox_detect_xgraph_postprocess_utils.h
 #  vox_detect_xgraph_postprocess_utils.cxx
 #)
 
-#ADD_EXECUTABLE (vox_detect_xgraph_postprocess ${vox_detect_xgraph_postprocess_sources} )
-#TARGET_LINK_LIBRARIES (vox_detect_xgraph_postprocess vox_detect_xgraph_lib dbul dborl_algo dbsks_algo dbsks_xio dbsks_pro dbsksp_xio vidpro1)
+#add_executable (vox_detect_xgraph_postprocess ${vox_detect_xgraph_postprocess_sources} )
+#target_link_libraries (vox_detect_xgraph_postprocess vox_detect_xgraph_lib dbul dborl_algo dbsks_algo dbsks_xio dbsks_pro dbsksp_xio vidpro1)
 
 
 

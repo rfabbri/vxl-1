@@ -1,14 +1,14 @@
 # basic/dbil/vis/CMakeLists.txt
 # Development Brown Image Visualization Extention Library
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
-SET(dbil_vis_sources 
+set(dbil_vis_sources 
 
 #tools
 
@@ -21,10 +21,10 @@ SET(dbil_vis_sources
 )
 
 
-#AUX_SOURCE_DIRECTORY(Templates bvis1_sources)
+#aux_source_directory(Templates bvis1_sources)
 
-ADD_LIBRARY(dbil_vis ${dbil_vis_sources})
+add_library(dbil_vis ${dbil_vis_sources})
 
-TARGET_LINK_LIBRARIES(dbil_vis bvis1 bil_algo vgl)
+target_link_libraries(dbil_vis bvis1 bil_algo vgl)
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)

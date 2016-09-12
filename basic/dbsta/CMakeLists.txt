@@ -1,9 +1,9 @@
 # basic/dbsta/CMakeLists.txt
 # Brown statistics Library.
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/basic )
 
-SET(dbsta_sources
+set(dbsta_sources
   dbsta_distribution.h
   dbsta_mixture.txx               dbsta_mixture.h
   dbsta_gaussian.h
@@ -22,19 +22,19 @@ SET(dbsta_sources
   vbl_smart_ptr_io_wo_serialization.h vbl_smart_ptr_io_wo_serialization.txx
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbsta_sources)
+aux_source_directory(Templates dbsta_sources)
 
-ADD_LIBRARY(dbsta  ${dbsta_sources})
+add_library(dbsta  ${dbsta_sources})
 
-TARGET_LINK_LIBRARIES(dbsta vnl_algo vbl vnl_io vsl)
+target_link_libraries(dbsta vnl_algo vbl vnl_io vsl)
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )
 
 
 # algorithms for statistical modeling
-SUBDIRS( algo ) 
+subdirs( algo ) 
 
 # processes for statistical modeling
-SUBDIRS( pro )
+subdirs( pro )

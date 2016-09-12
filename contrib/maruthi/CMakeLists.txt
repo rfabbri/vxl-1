@@ -2,34 +2,34 @@
 # Developement for maruthi
 # Main driver cmake file, simply subdirs into other directories
 
-PROJECT( maruthi )
+project( maruthi )
 
 
-SET( CMAKE_VLFEAT_LIBS             CACHE PATH "Path of vlfeat libs" )
-SET( CMAKE_VLFEAT_INCLUDES             CACHE PATH "Path of vlfeat includes" )
+set( CMAKE_VLFEAT_LIBS             CACHE PATH "Path of vlfeat libs" )
+set( CMAKE_VLFEAT_INCLUDES             CACHE PATH "Path of vlfeat includes" )
 
 
-SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
 
 #GO TO SUBDIRS
 #pb Edge Detector code
-#SUBDIRS( pbEdgeDet )
+#subdirs( pbEdgeDet )
 
 #GO TO SUBDIRS
 #en250_project final project
 #Nhon changed this folder very drastically and the code at this point will
 #not work with the new top down shock shap stuff
 #Folder disabled (commented) at 11/04/09
-#SUBDIRS( en250_project )
+#subdirs( en250_project )
 
 #GO TO SUBDIRS
-#SUBDIRS( geometric_embedding )
+#subdirs( geometric_embedding )
 
-#SUBDIRS( proximity_graph )
+#subdirs( proximity_graph )
 
-SUBDIRS( dbskfg )
+subdirs( dbskfg )
 
-SUBDIRS( con_graph )
+subdirs( con_graph )
 
-SUBDIRS( shape_align )
-#SUBDIRS(lbnn)
+subdirs( shape_align )
+#subdirs(lbnn)

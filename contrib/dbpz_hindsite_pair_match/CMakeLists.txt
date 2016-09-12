@@ -1,14 +1,14 @@
 # breyes/bfrag/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
 
-SET(pairMatch_sources
+set(pairMatch_sources
 
   main.cpp
   pairMatcher.h                pairMatcher.cpp
@@ -22,10 +22,10 @@ SET(pairMatch_sources
 
 )
 
-ADD_EXECUTABLE(pairMatch ${pairMatch_sources})
+add_executable(pairMatch ${pairMatch_sources})
 
-TARGET_LINK_LIBRARIES(pairMatch vsol bsol bgui vcl) 
-#TARGET_LINK_LIBRARIES(pairMatch vsol bsol bgui vil vcl) 
+target_link_libraries(pairMatch vsol bsol bgui vcl) 
+#target_link_libraries(pairMatch vsol bsol bgui vil vcl) 
 
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)

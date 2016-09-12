@@ -1,21 +1,21 @@
 # Brown Shock Recognition Library  
 # brcv/rec/dbskr/CMakeLists.txt
 
-INCLUDE_DIRECTORIES(${VXL_MUL_INCLUDE_DIR})
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR})
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR}/mrc)
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR})
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bbas)
-INCLUDE_DIRECTORIES(${lems_SOURCE_DIR}/brcv/mvg/bmvl )
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bseg)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_RPL_INCLUDE_DIR} )
+include_directories(${VXL_MUL_INCLUDE_DIR})
+include_directories(${VXL_GEL_INCLUDE_DIR})
+include_directories(${VXL_GEL_INCLUDE_DIR}/mrc)
+include_directories(${VXL_BRL_INCLUDE_DIR})
+include_directories(${VXL_BRL_INCLUDE_DIR}/bbas)
+include_directories(${lems_SOURCE_DIR}/brcv/mvg/bmvl )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bseg)
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/brcv/trk )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR}/contrib )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_RPL_INCLUDE_DIR} )
 
-SET(dbskr_sources
+set(dbskr_sources
 dbskr_tree.h                dbskr_tree.cxx
 dbskr_tree_sptr.h
 #dbskr_tree_edit_mi.h       dbskr_tree_edit_mi.cxx
@@ -57,25 +57,25 @@ dbskr_utilities.h dbskr_utilities.cxx
 
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbskr_sources)
+aux_source_directory(Templates dbskr_sources)
 
-ADD_LIBRARY(dbskr  ${dbskr_sources})
+add_library(dbskr  ${dbskr_sources})
 
-TARGET_LINK_LIBRARIES(dbskr dbsk2d_algo vnl dbsol_algo dbcvr dbru dbdet_algo rgrl)
-#TARGET_LINK_LIBRARIES(dbskr dbsk2d_algo vnl dbsol_algo dbcvr dbru dbdet_algo brct rgrl)
+target_link_libraries(dbskr dbsk2d_algo vnl dbsol_algo dbcvr dbru dbdet_algo rgrl)
+#target_link_libraries(dbskr dbsk2d_algo vnl dbsol_algo dbcvr dbru dbdet_algo brct rgrl)
 
 # algorithms library
-SUBDIRS(algo)
+subdirs(algo)
 
 # Processing Library
-SUBDIRS(pro)
+subdirs(pro)
 
 # Visualization Library
-SUBDIRS(vis)
+subdirs(vis)
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)
 
 # Executables
-SUBDIRS(bin)
+subdirs(bin)

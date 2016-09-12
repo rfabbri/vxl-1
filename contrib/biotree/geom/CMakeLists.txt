@@ -1,6 +1,6 @@
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR})
+include_directories(${VXL_GEL_INCLUDE_DIR})
 
-SET(geom_src
+set(geom_src
              geom_probe_volume.h                    
              geom_probe_volume_sptr.h
              geom_volume.h                          geom_volume.cxx
@@ -12,14 +12,14 @@ SET(geom_src
              geom_voxel_enumerator_from_box.h       geom_voxel_enumerator_from_box.cxx
 )
 
-AUX_SOURCE_DIRECTORY(Templates geom_src)
+aux_source_directory(Templates geom_src)
 
-ADD_LIBRARY(geom ${geom_src})
-TARGET_LINK_LIBRARIES(geom vbl vgl vsol biob)
+add_library(geom ${geom_src})
+target_link_libraries(geom vbl vgl vsol biob)
 
-SUBDIRS(examples)
+subdirs(examples)
 
-IF(BUILD_TESTING)
-  SUBDIRS( tests )
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs( tests )
+endif(BUILD_TESTING)
 

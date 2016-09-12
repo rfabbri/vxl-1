@@ -1,9 +1,9 @@
 # This is lemsvxlsrc/basic/dbfs/CMakeLists.txt
 # Development Brown Feature Selection Library
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/dbrec_lib )
+include_directories( ${lems_SOURCE_DIR}/contrib/dbrec_lib )
 
-SET(dbfs_sources
+set(dbfs_sources
   dbfs_selector.h  dbfs_selector.cxx    
   dbfs_selector_sptr.h
   dbfs_measure.h   dbfs_measure.cxx
@@ -12,14 +12,14 @@ SET(dbfs_sources
   dbfs_rect_feature_sptr.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbfs_sources)
+aux_source_directory(Templates dbfs_sources)
 
-ADD_LIBRARY(dbfs ${dbfs_sources})
+add_library(dbfs ${dbfs_sources})
 
-TARGET_LINK_LIBRARIES( dbfs )  
+target_link_libraries( dbfs )  
 
-SUBDIRS( pro )
+subdirs( pro )
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)

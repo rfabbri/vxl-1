@@ -1,7 +1,7 @@
 # brcv/seg/dbcll/tests/CMakeLists.txt
 
 
-ADD_EXECUTABLE( dbcll_test_all
+add_executable( dbcll_test_all
   test_driver.cxx
   test_rnn_agg_clustering.cxx
   test_euclidean_cluster.cxx
@@ -11,16 +11,16 @@ ADD_EXECUTABLE( dbcll_test_all
   test_euclidean_cluster_util.cxx
 )
 
-TARGET_LINK_LIBRARIES( dbcll_test_all dbcll testlib vul)
+target_link_libraries( dbcll_test_all dbcll testlib vul)
 
 
-ADD_TEST( dbcll_test_rnn_agg_clustering          dbcll_test_all test_rnn_agg_clustering )
-ADD_TEST( dbcll_test_euclidean_cluster           dbcll_test_all test_euclidean_cluster )
-ADD_TEST( dbcll_test_similarity_matrix           dbcll_test_all test_similarity_matrix )
-ADD_TEST( dbcll_test_sim3d_cluster               dbcll_test_all test_sim3d_cluster )
-ADD_TEST( dbcll_k_means                          dbcll_test_all test_k_means )
-ADD_TEST( dbcll_test_euclidean_cluster_util      dbcll_test_all test_euclidean_cluster_util )
+add_test( dbcll_test_rnn_agg_clustering          dbcll_test_all test_rnn_agg_clustering )
+add_test( dbcll_test_euclidean_cluster           dbcll_test_all test_euclidean_cluster )
+add_test( dbcll_test_similarity_matrix           dbcll_test_all test_similarity_matrix )
+add_test( dbcll_test_sim3d_cluster               dbcll_test_all test_sim3d_cluster )
+add_test( dbcll_k_means                          dbcll_test_all test_k_means )
+add_test( dbcll_test_euclidean_cluster_util      dbcll_test_all test_euclidean_cluster_util )
 
 
-ADD_EXECUTABLE( dbcll_test_include test_include.cxx )
-TARGET_LINK_LIBRARIES( dbcll_test_include dbcll )
+add_executable( dbcll_test_include test_include.cxx )
+target_link_libraries( dbcll_test_include dbcll )

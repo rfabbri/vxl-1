@@ -1,6 +1,6 @@
 #contrib/bm/dsm/io/CMakeLists.txt
 
-SET( dsm_io_sources 
+set( dsm_io_sources 
      dsm_io_ncn.h                       dsm_io_ncn.cxx
      dsm_io_features.h                  dsm_io_features.cxx
      dsm_io_frame_clock.h               dsm_io_frame_clock.cxx
@@ -18,10 +18,10 @@ SET( dsm_io_sources
      dsm_io_map_map_map.h               dsm_io_map_map_map.txx
      )
      
-AUX_SOURCE_DIRECTORY( Templates dsm_io_sources )
+aux_source_directory( Templates dsm_io_sources )
 
-INCLUDE_DIRECTORIES(${bm_SOURCE_DIR})
-INCLUDE_DIRECTORIES(${VXL_CORE_INCLUDE_DIR})
+include_directories(${bm_SOURCE_DIR})
+include_directories(${VXL_CORE_INCLUDE_DIR})
 
-ADD_LIBRARY( dsm_io ${dsm_io_sources} )      
-TARGET_LINK_LIBRARIES( dsm_io dsm vbl vgl vil vnl vsl vbl_io vgl_io vil_io vnl_io )
+add_library( dsm_io ${dsm_io_sources} )      
+target_link_libraries( dsm_io dsm vbl vgl vil vnl vsl vbl_io vgl_io vil_io vnl_io )

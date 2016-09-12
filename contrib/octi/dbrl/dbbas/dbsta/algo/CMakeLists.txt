@@ -1,7 +1,7 @@
 # This is dbrl/dbsta/algo/CMakeLists.txt
 # The Brown Statistics Algorithms Library
 
-SET( dbstao_algo_sources
+set( dbstao_algo_sources
    bsta_gaussian_stats.h
    bsta_gaussian_updater.h
    bsta_mixture_functors.h
@@ -16,12 +16,12 @@ SET( dbstao_algo_sources
    bsta_beta_updater.txx      bsta_beta_updater.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbstao_algo_sources)
+aux_source_directory(Templates dbstao_algo_sources)
 
-ADD_LIBRARY( dbstao_algo ${dbstao_algo_sources} )
-TARGET_LINK_LIBRARIES( dbstao_algo dbstao vnl_algo vnl )
+add_library( dbstao_algo ${dbstao_algo_sources} )
+target_link_libraries( dbstao_algo dbstao vnl_algo vnl )
 
 
-IF (BUILD_OCTI_TESTING OR BUILD_TESTING)
-	SUBDIRS(tests)
-ENDIF(BUILD_OCTI_TESTING OR BUILD_TESTING)
+if (BUILD_OCTI_TESTING OR BUILD_TESTING)
+	subdirs(tests)
+endif(BUILD_OCTI_TESTING OR BUILD_TESTING)

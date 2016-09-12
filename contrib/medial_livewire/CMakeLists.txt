@@ -1,26 +1,26 @@
 # This is contrib/medial_livewire/CMakeLists.txt
 # Developement for : medial_livewire
 
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR} )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories(${VXL_GEL_INCLUDE_DIR} )
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/algo )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR})
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/db3p )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/db3p/expatpp/expat/lib
+include_directories( ${lems_SOURCE_DIR}/algo )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/brcv )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR})
+include_directories( ${lems_SOURCE_DIR}/db3p )
+include_directories( ${lems_SOURCE_DIR}/db3p/expatpp/expat/lib
  )
 
 # my bvis1 based GUI
 
-SUBDIRS( gui )
+subdirs( gui )
 
-ADD_EXECUTABLE(example_compute_fish_sdt example_compute_fish_sdt.cxx)
-TARGET_LINK_LIBRARIES(example_compute_fish_sdt vil dbil dbil_algo dbsol )
+add_executable(example_compute_fish_sdt example_compute_fish_sdt.cxx)
+target_link_libraries(example_compute_fish_sdt vil dbil dbil_algo dbsol )
 
 # my command line executables
-# SUBDIRS( cmd )
+# subdirs( cmd )

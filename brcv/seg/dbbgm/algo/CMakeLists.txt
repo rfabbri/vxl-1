@@ -1,19 +1,19 @@
 # This is brcv/seg/dbbgm/algo/CMakeLists.txt
 # The Brown Background Modeling Algorithms Library
 
-SET( dbbgm_algo_sources
+set( dbbgm_algo_sources
   dbbgm_hmm_algo.cxx         dbbgm_hmm_algo.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbbgm_algo_sources)
+aux_source_directory(Templates dbbgm_algo_sources)
 
-ADD_LIBRARY( dbbgm_algo  ${dbbgm_algo_sources} )
+add_library( dbbgm_algo  ${dbbgm_algo_sources} )
 
-TARGET_LINK_LIBRARIES( dbbgm_algo dbbgm vil)
+target_link_libraries( dbbgm_algo dbbgm vil)
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )
 
 
 

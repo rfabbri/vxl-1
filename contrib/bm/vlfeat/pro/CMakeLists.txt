@@ -3,17 +3,17 @@
 # Author: Brandon A. Mayer 2/28/2011
 #
 
-IF( VL_FEAT_FOUND )
+if( VL_FEAT_FOUND )
 
-  INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bpro )
-  INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bpro/bprb )
-  INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR} )
+  include_directories( ${VXL_BRL_INCLUDE_DIR}/bpro )
+  include_directories( ${VXL_BRL_INCLUDE_DIR}/bpro/bprb )
+  include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
 
-  SET( VLFEAT_PRO_SOURCES
+  set( VLFEAT_PRO_SOURCES
        vlfeat_processes.h
        vlfeat_register.h            vlfeat_register.cxx )
        
-  AUX_SOURCE_DIRECTORY( processes VLFEAT_PRO_SOURCES )
-  ADD_LIBRARY( vlfeat_pro ${VLFEAT_PRO_SOURCES} )
+  aux_source_directory( processes VLFEAT_PRO_SOURCES )
+  add_library( vlfeat_pro ${VLFEAT_PRO_SOURCES} )
   
-ENDIF( VL_FEAT_FOUND )
+endif( VL_FEAT_FOUND )

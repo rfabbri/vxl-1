@@ -1,43 +1,43 @@
 # Finds libraries and include files associated with Matlab Engine
 # author: firat 
 
-SET(MATLAB_ENGINE_FOUND "NO")
+set(MATLAB_ENGINE_FOUND "NO")
 
-IF(WIN32)
-    FIND_PATH(MATLAB_ENGINE_SHARED_LIBRARY_PATH liboctinterp.dll
+if(WIN32)
+    find_path(MATLAB_ENGINE_SHARED_LIBRARY_PATH liboctinterp.dll
         C:/ D:/
     )
-    FIND_PATH(MATLAB_ENGINE_INCLUDE_PATH MATLAB_ENGINE.h
+    find_path(MATLAB_ENGINE_INCLUDE_PATH MATLAB_ENGINE.h
         C:/ D:/
     )    
-ELSE(WIN32)
-    IF(UNIX)
-        FIND_PATH(MATLAB_ENGINE_SHARED_LIBRARY_PATH libeng.so
+else(WIN32)
+    if(UNIX)
+        find_path(MATLAB_ENGINE_SHARED_LIBRARY_PATH libeng.so
             /opt/matlab/bin/glnxa64/
         )
-        FIND_PATH(MATLAB_ENGINE_INCLUDE_PATH engine.h
+        find_path(MATLAB_ENGINE_INCLUDE_PATH engine.h
             /opt/matlab/extern/include/
         )           
-    ENDIF(UNIX)
-ENDIF(WIN32)  
+    endif(UNIX)
+endif(WIN32)  
 
-IF(MATLAB_ENGINE_SHARED_LIBRARY_PATH)    
-    IF(MATLAB_ENGINE_INCLUDE_PATH)
-        IF(WIN32)
-            IF(EXISTS "${MATLAB_ENGINE_SHARED_LIBRARY_PATH}/liboctinterp.dll")
-                IF(EXISTS "${MATLAB_ENGINE_INCLUDE_PATH}/MATLAB_ENGINE.h")
-                   SET(MATLAB_ENGINE_FOUND "YES") 
-                ENDIF(EXISTS "${MATLAB_ENGINE_INCLUDE_PATH}/MATLAB_ENGINE.h")
-            ENDIF(EXISTS "${MATLAB_ENGINE_SHARED_LIBRARY_PATH}/liboctinterp.dll")
-        ELSE(WIN32)
-            IF(UNIX)
-                IF(EXISTS "${MATLAB_ENGINE_SHARED_LIBRARY_PATH}/libeng.so")
-                    IF(EXISTS "${MATLAB_ENGINE_INCLUDE_PATH}/engine.h")
-                       SET(MATLAB_ENGINE_FOUND "YES") 
-                    ENDIF(EXISTS "${MATLAB_ENGINE_INCLUDE_PATH}/engine.h")
-                ENDIF(EXISTS "${MATLAB_ENGINE_SHARED_LIBRARY_PATH}/libeng.so")
-            ENDIF(UNIX)
-        ENDIF(WIN32)        
-    ENDIF(MATLAB_ENGINE_INCLUDE_PATH)
-ENDIF(MATLAB_ENGINE_SHARED_LIBRARY_PATH)
+if(MATLAB_ENGINE_SHARED_LIBRARY_PATH)    
+    if(MATLAB_ENGINE_INCLUDE_PATH)
+        if(WIN32)
+            if(EXISTS "${MATLAB_ENGINE_SHARED_LIBRARY_PATH}/liboctinterp.dll")
+                if(EXISTS "${MATLAB_ENGINE_INCLUDE_PATH}/MATLAB_ENGINE.h")
+                   set(MATLAB_ENGINE_FOUND "YES") 
+                endif(EXISTS "${MATLAB_ENGINE_INCLUDE_PATH}/MATLAB_ENGINE.h")
+            endif(EXISTS "${MATLAB_ENGINE_SHARED_LIBRARY_PATH}/liboctinterp.dll")
+        else(WIN32)
+            if(UNIX)
+                if(EXISTS "${MATLAB_ENGINE_SHARED_LIBRARY_PATH}/libeng.so")
+                    if(EXISTS "${MATLAB_ENGINE_INCLUDE_PATH}/engine.h")
+                       set(MATLAB_ENGINE_FOUND "YES") 
+                    endif(EXISTS "${MATLAB_ENGINE_INCLUDE_PATH}/engine.h")
+                endif(EXISTS "${MATLAB_ENGINE_SHARED_LIBRARY_PATH}/libeng.so")
+            endif(UNIX)
+        endif(WIN32)        
+    endif(MATLAB_ENGINE_INCLUDE_PATH)
+endif(MATLAB_ENGINE_SHARED_LIBRARY_PATH)
 

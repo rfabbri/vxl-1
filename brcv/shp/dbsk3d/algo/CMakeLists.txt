@@ -1,10 +1,10 @@
 # This is brcv/shp/dbsk3d/algo/CMakeLists.txt
 # Brown Shock3D Algorithm Library
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/shp)
-INCLUDE_DIRECTORIES( ${VXL_RPL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/shp)
+include_directories( ${VXL_RPL_INCLUDE_DIR} )
 
-SET( dbsk3d_algo_sources
+set( dbsk3d_algo_sources
 
 dbsk3d_mesh_bnd.cxx                 dbsk3d_mesh_bnd.h
 
@@ -54,7 +54,7 @@ dbsk3d_sg_sa_smooth.cxx
 )
 
 
-ADD_LIBRARY(dbsk3d_algo ${dbsk3d_algo_sources})
+add_library(dbsk3d_algo ${dbsk3d_algo_sources})
 
-TARGET_LINK_LIBRARIES(dbsk3d_algo dbsk3d dbmsh3d_algo)
+target_link_libraries(dbsk3d_algo dbsk3d dbmsh3d_algo)
 

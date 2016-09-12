@@ -1,41 +1,41 @@
 # This is brcv/trk/dbetl/vis/CMakeLists.txt
 # Brown Epipolar Tracking Visualization library
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
-SET(dbetl_vis_sources
+set(dbetl_vis_sources
    dbetl_episeg_tools.cxx        dbetl_episeg_tools.h
 )
 
 # Add the following files if bgui3d is available for 3D rendering
-IF (VXL_BGUI3D_FOUND)
-SET(dbetl_vis_sources ${dbetl_vis_sources}
+if (VXL_BGUI3D_FOUND)
+set(dbetl_vis_sources ${dbetl_vis_sources}
    dbetl_track_displayer.cxx     dbetl_track_displayer.h
 )
-ENDIF (VXL_BGUI3D_FOUND)
+endif (VXL_BGUI3D_FOUND)
 
-ADD_DEFINITIONS ( -DCOIN_NOT_DLL )
-INCLUDE_DIRECTORIES( ${VXL_COIN3D_INCLUDE_DIR} )
+add_definitions ( -DCOIN_NOT_DLL )
+include_directories( ${VXL_COIN3D_INCLUDE_DIR} )
 
-#AUX_SOURCE_DIRECTORY(Templates dbetl_vis_sources)
+#aux_source_directory(Templates dbetl_vis_sources)
 
-ADD_LIBRARY(dbetl_vis ${dbetl_vis_sources})
+add_library(dbetl_vis ${dbetl_vis_sources})
 
-TARGET_LINK_LIBRARIES(dbetl_vis dbetl_pro dbecl_vis)
+target_link_libraries(dbetl_vis dbetl_pro dbecl_vis)
 
 # Add the bgui3d library if bgui3d is built is available for 3D rendering
-IF (VXL_BGUI3D_FOUND)
-  TARGET_LINK_LIBRARIES(dbetl_vis bgui3d)
-ENDIF (VXL_BGUI3D_FOUND)
+if (VXL_BGUI3D_FOUND)
+  target_link_libraries(dbetl_vis bgui3d)
+endif (VXL_BGUI3D_FOUND)
 
 
-IF(BUILD_TESTING)
-#  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+#  subdirs(tests)
+endif(BUILD_TESTING)
 
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)

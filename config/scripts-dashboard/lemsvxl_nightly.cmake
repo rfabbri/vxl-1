@@ -8,7 +8,7 @@ set(CTEST_SOURCE_DIRECTORY "/projects/dashboards/lemsvxl/src")
 set(CTEST_BINARY_DIRECTORY "/projects/dashboards/lemsvxl/bin-nightly")
 
 # remove build directory because this is not a continuous build
-#SET(CTEST_START_WITH_EMPTY_BINARY_DIRECTORY TRUE)
+#set(CTEST_START_WITH_EMPTY_BINARY_DIRECTORY TRUE)
 set(CTEST_SITE "lems.brown.edu")
 set(CTEST_BUILD_NAME "LINUX - visionsrever")
 set(CTEST_BUILD_FLAGS "-j4") # parallel build for makefiles

@@ -1,33 +1,33 @@
 # Brown "contrib" plane reconstruction library
 # contrib/sadali/bprt/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bmvl )
-INCLUDE_DIRECTORIES( ${VXL_RPL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_RPL_INCLUDE_DIR}/rrel )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR}/mvl )
-INCLUDE_DIRECTORIES( ${OXL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${RPL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${BRL_INCLUDE_DIR}/bmvl )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bmvl )
+include_directories( ${VXL_RPL_INCLUDE_DIR} )
+include_directories( ${VXL_RPL_INCLUDE_DIR}/rrel )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_OXL_INCLUDE_DIR} )
+include_directories( ${VXL_OXL_INCLUDE_DIR}/mvl )
+include_directories( ${OXL_INCLUDE_DIR} )
+include_directories( ${RPL_INCLUDE_DIR} )
+include_directories( ${BRL_INCLUDE_DIR}/bmvl )
 
 
 
 
-SET(bfac_sources
+set(bfac_sources
 
 bfac_factorization.cxx   bfac_factorization.h
    
    
 )
 
-AUX_SOURCE_DIRECTORY(Templates bfac_sources)
+aux_source_directory(Templates bfac_sources)
 
-ADD_LIBRARY(bfac  ${bfac_sources})
+add_library(bfac  ${bfac_sources})
 
-TARGET_LINK_LIBRARIES(bfac vnl vbl vgl vgl_algo  brct vdgl vsol bcal mvl rrel mbl )
+target_link_libraries(bfac vnl vbl vgl vgl_algo  brct vdgl vsol bcal mvl rrel mbl )
 
 
 

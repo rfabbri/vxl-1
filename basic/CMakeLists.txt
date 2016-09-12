@@ -1,67 +1,67 @@
 # basic/CMakeLists.txt
 # Brown Basic Libraries.
 
-PROJECT(basic)
+project(basic)
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/db3p )
-INCLUDE_DIRECTORIES( ${basic_BINARY_DIR} )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/db3p )
+include_directories( ${basic_BINARY_DIR} )
 
 # The Development Brown Process Library
-SUBDIRS( dbpro )
+subdirs( dbpro )
 
 # The Development Brown Numerical Library
-SUBDIRS( dbnl )
+subdirs( dbnl )
 
 # The Development Brown Geometry Library
-SUBDIRS( dbgl ) 
+subdirs( dbgl ) 
 
 # The Development Brown Graph/Hypergraph Library
-SUBDIRS( dbgrl ) 
+subdirs( dbgrl ) 
 
 # The Development Brown Spatial Objects Library
-SUBDIRS( dbsol ) 
+subdirs( dbsol ) 
 
 # The Development Brown Spatial Indexing Library
-SUBDIRS( dbspi )
+subdirs( dbspi )
 
 # The Development Brown Image Library
-SUBDIRS( dbil ) 
+subdirs( dbil ) 
 
 # The Development Brown Image3d Library
-SUBDIRS( dbil3d ) 
+subdirs( dbil3d ) 
 
 # The Development Brown Video Library
-SUBDIRS( dbvidl )
+subdirs( dbvidl )
 
 # The Development Brown Video Streaming Library
-SUBDIRS( dbvidl2 ) 
+subdirs( dbvidl2 ) 
 
 # Development Brown GUI (stuff that could move to /brl/bbas/bgui)
-SUBDIRS( dbgui )
+subdirs( dbgui )
 
 # Development XML Parser using Xerces
-#SUBDIRS( dbxml-xerces )
+#subdirs( dbxml-xerces )
 
 # Development XML Parser - augmenting bxml
-SUBDIRS( dbxml )
+subdirs( dbxml )
 
 # Development XML Parser using expat
 # NOTE: moved to vxl/contrib/brl/bbas/bxml
-##SUBDIRS( dbxml2 )
+##subdirs( dbxml2 )
 
 # The Development Brown Statistics Library
-SUBDIRS( dbsta )
+subdirs( dbsta )
 
 # The Development Brown Utility Library
-SUBDIRS( dbul )
+subdirs( dbul )
 
 # The Development Brown Dynamic Programming Library
-SUBDIRS( dbdp ) 
+subdirs( dbdp ) 
 
 # The Development Brown Basic (templates) Library
-SUBDIRS( dbbl ) 
+subdirs( dbbl ) 
 
 # The Development Brown Testing Library
-SUBDIRS( dbtest ) 
+subdirs( dbtest ) 
 

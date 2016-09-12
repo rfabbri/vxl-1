@@ -1,8 +1,8 @@
-INCLUDE_DIRECTORIES(${BIOTREE_SOURCE_DIR} ${lems_SOURCE_DIR}/brcv/mvg)
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bbas)
+include_directories(${BIOTREE_SOURCE_DIR} ${lems_SOURCE_DIR}/brcv/mvg)
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bbas)
 
-SET(xmvg_src
+set(xmvg_src
 xmvg_filter_descriptor.cxx              xmvg_filter_descriptor.h
 xmvg_composite_filter_descriptor.cxx    xmvg_composite_filter_descriptor.h                               
                                         xmvg_atomic_filter_3d.h
@@ -44,15 +44,15 @@ xmvg_splat_filter.cxx                   xmvg_splat_filter.h
                                         xmvg_filter_3d_wrapper.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates xmvg_src)
-ADD_LIBRARY(xmvg ${xmvg_src})
+aux_source_directory(Templates xmvg_src)
+add_library(xmvg ${xmvg_src})
 
-TARGET_LINK_LIBRARIES(xmvg vpgl vpgl_algo vgl vgl_xio vil vnl vnl_xio vsl)
+target_link_libraries(xmvg vpgl vpgl_algo vgl vgl_xio vil vnl vnl_xio vsl)
 
-SUBDIRS(algo)
+subdirs(algo)
 
-SUBDIRS(io)
+subdirs(io)
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)

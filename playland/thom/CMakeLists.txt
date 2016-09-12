@@ -2,7 +2,7 @@
 # Brown personal testing area.
 
 # my bvis based GUI
-SUBDIRS( gui )
+subdirs( gui )
 
 # my command line executables
-SUBDIRS( cmd )
+subdirs( cmd )

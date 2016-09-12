@@ -1,23 +1,23 @@
 # contrib/ntrinh/en292/CMakeLists.txt
 # Library for en292 final project (Spring 2005)
 
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
 
-SET( en292_sources
+set( en292_sources
   en292_insert_scene.cxx                 en292_insert_scene.h 
 )
 
-AUX_SOURCE_DIRECTORY(Templates en292_sources)
-ADD_LIBRARY(en292 ${en292_sources})
-TARGET_LINK_LIBRARIES( en292 vgl vsol )
+aux_source_directory(Templates en292_sources)
+add_library(en292 ${en292_sources})
+target_link_libraries( en292 vgl vsol )
 
-SUBDIRS( pro )
-SUBDIRS( vis )
+subdirs( pro )
+subdirs( vis )
 
-#IF( BUILD_TESTING )
-#  SUBDIRS(tests)
-#ENDIF( BUILD_TESTING )
+#if( BUILD_TESTING )
+#  subdirs(tests)
+#endif( BUILD_TESTING )
 
-IF( BUILD_EXAMPLES )
-#  SUBDIRS( examples )
-ENDIF( BUILD_EXAMPLES )
+if( BUILD_EXAMPLES )
+#  subdirs( examples )
+endif( BUILD_EXAMPLES )

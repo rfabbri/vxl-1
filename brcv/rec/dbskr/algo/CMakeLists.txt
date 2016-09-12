@@ -1,14 +1,14 @@
 # This is brcv/rec/dbskr/algo/CMakeLists.txt
 # The Development Brown Shock Recognition Library - Specific Algorithms
 
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp)
+include_directories( ${lems_SOURCE_DIR}/brcv/rec)
+include_directories( ${lems_SOURCE_DIR}/brcv/seg)
+include_directories( ${lems_SOURCE_DIR}/breye1 )
 
-SET( dbskr_algo_sources
+set( dbskr_algo_sources
    dbskr_rec_algs.h dbskr_rec_algs.cxx
    dbskr_shock_patch_selector.h dbskr_shock_patch_selector.cxx
    dbskr_shock_patch_model_selector.h dbskr_shock_patch_model_selector.cxx
@@ -20,17 +20,17 @@ SET( dbskr_algo_sources
    dbskr_shock_path_finder_sptr.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbskr_algo_sources)
+aux_source_directory(Templates dbskr_algo_sources)
 
-ADD_LIBRARY( dbskr_algo  ${dbskr_algo_sources} )
+add_library( dbskr_algo  ${dbskr_algo_sources} )
 
-TARGET_LINK_LIBRARIES( dbskr_algo dbskr dbgrl dbdet_algo bil_algo vul) 
+target_link_libraries( dbskr_algo dbskr dbgrl dbdet_algo bil_algo vul) 
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)
 
-SUBDIRS( io )
+subdirs( io )
 
 
 

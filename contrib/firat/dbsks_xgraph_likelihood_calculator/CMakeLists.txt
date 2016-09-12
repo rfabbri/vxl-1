@@ -1,19 +1,19 @@
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/brcv )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/basic )
 
-SET(dbsks_xgraph_likelihood_calculator_sources
+set(dbsks_xgraph_likelihood_calculator_sources
        dbsks_xgraph_likelihood_calculator.cxx dbsks_xgraph_likelihood_calculator_utils.cxx
        dbsks_xgraph_likelihood_calculator_utils.h
     )
-ADD_EXECUTABLE( dbsks_xgraph_likelihood_calculator  ${dbsks_xgraph_likelihood_calculator_sources} )
-TARGET_LINK_LIBRARIES (dbsks_xgraph_likelihood_calculator dbsksp_pro  dbsks_pro dbsks_algo)
+add_executable( dbsks_xgraph_likelihood_calculator  ${dbsks_xgraph_likelihood_calculator_sources} )
+target_link_libraries (dbsks_xgraph_likelihood_calculator dbsksp_pro  dbsks_pro dbsks_algo)
 

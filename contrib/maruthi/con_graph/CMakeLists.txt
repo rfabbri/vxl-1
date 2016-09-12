@@ -1,24 +1,24 @@
 # Shock library
 # brcv/shp/dbsk2d/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/maruthi )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_RPL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${CMAKE_VLFEAT_INCLUDES})
+include_directories( ${lems_SOURCE_DIR}/contrib/maruthi )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_RPL_INCLUDE_DIR} )
+include_directories( ${CMAKE_VLFEAT_INCLUDES})
 
-LINK_DIRECTORIES(${CMAKE_VLFEAT_LIBS})
+link_directories(${CMAKE_VLFEAT_LIBS})
 
 
-PROJECT ( con_graph )
+project ( con_graph )
 
-SET( con_graph_sources
+set( con_graph_sources
   
   # Base class for nodes and links
   dbskfg_containment_node.h dbskfg_containment_node.cxx
@@ -32,19 +32,19 @@ SET( con_graph_sources
 
 )
 
-AUX_SOURCE_DIRECTORY(Templates con_graph_sources)
+aux_source_directory(Templates con_graph_sources)
 
-ADD_LIBRARY(con_graph ${con_graph_sources} )
-TARGET_LINK_LIBRARIES(con_graph dbskfg dbskfg_algo dbskfg vidpro1)
+add_library(con_graph ${con_graph_sources} )
+target_link_libraries(con_graph dbskfg dbskfg_algo dbskfg vidpro1)
 
 #process dir
-SUBDIRS(pro)
+subdirs(pro)
 
-ADD_EXECUTABLE (mem_test test_exec.cxx )
-ADD_EXECUTABLE (test_prune test_prune.cxx )
-ADD_EXECUTABLE (sim_matrix construct_sim_matrix.cxx )
-ADD_EXECUTABLE ( sift_compute sift_compute.cxx )
-TARGET_LINK_LIBRARIES ( mem_test dbsk2d_pro dbsk2d dbsk2d_algo dbskfg dbskfg_algo vidpro1)
-TARGET_LINK_LIBRARIES ( test_prune dbskfg dbskfg_algo dbdet_pro)
-TARGET_LINK_LIBRARIES ( sim_matrix dbskfg dbskfg_pro vl)
-TARGET_LINK_LIBRARIES ( sift_compute vil_algo vl vnl )
+add_executable (mem_test test_exec.cxx )
+add_executable (test_prune test_prune.cxx )
+add_executable (sim_matrix construct_sim_matrix.cxx )
+add_executable ( sift_compute sift_compute.cxx )
+target_link_libraries ( mem_test dbsk2d_pro dbsk2d dbsk2d_algo dbskfg dbskfg_algo vidpro1)
+target_link_libraries ( test_prune dbskfg dbskfg_algo dbdet_pro)
+target_link_libraries ( sim_matrix dbskfg dbskfg_pro vl)
+target_link_libraries ( sift_compute vil_algo vl vnl )

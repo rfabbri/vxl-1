@@ -1,4 +1,4 @@
-SET(crvmtch3D_src
+set(crvmtch3D_src
 Curve.h Curve.C
 DPMatch.h DPMatch.C
 NewDPMatch.h NewDPMatch.C
@@ -7,12 +7,12 @@ test.h test.C
 utils.h utils.C
 )
 
-AUX_SOURCE_DIRECTORY(Templates crvmtch3D_src)
+aux_source_directory(Templates crvmtch3D_src)
 
-ADD_LIBRARY(crvmtch3D ${crvmtch3D_src})
+add_library(crvmtch3D ${crvmtch3D_src})
 
-TARGET_LINK_LIBRARIES(crvmtch3D vcl)
+target_link_libraries(crvmtch3D vcl)
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)

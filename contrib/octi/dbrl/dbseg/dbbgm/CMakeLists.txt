@@ -6,7 +6,7 @@ doxygen_add_library(contrib/dbrl/dbseg/dbbgmo
   PACKAGE contrib/dbrl
   )
 
-SET(dbbgmo_sources
+set(dbbgmo_sources
 
   bbgm_planes_to_sample.h
   bbgm_update.h
@@ -31,33 +31,33 @@ SET(dbbgmo_sources
   bbgm_interpolate.h
 )
 #TODO enclose statement with LINK_WITH_DLIBS if BRIP will be ported
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bseg)
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR})
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bbas)
+include_directories(${VXL_BRL_INCLUDE_DIR}/bseg)
+include_directories(${VXL_GEL_INCLUDE_DIR})
+include_directories(${VXL_BRL_INCLUDE_DIR}/bbas)
 
 
-AUX_SOURCE_DIRECTORY(Templates dbbgmo_sources)
-ADD_LIBRARY(dbbgmo  ${dbbgmo_sources})
+aux_source_directory(Templates dbbgmo_sources)
+add_library(dbbgmo  ${dbbgmo_sources})
 
 # add the required libraries into this list
 #switch to linking with the main brl root using LINK_WITH_DLIBS
-IF (LINK_WITH_DLIBS)
+if (LINK_WITH_DLIBS)
 	add_definitions( 
 	-DDEVELINCLUDEPATH
 	)
-	TARGET_LINK_LIBRARIES(dbbgmo dbstao dbstao_algo brip vnl_io vbl_io vsl vnl vil_algo vil vgl_algo vgl vbl 
+	target_link_libraries(dbbgmo dbstao dbstao_algo brip vnl_io vbl_io vsl vnl vil_algo vil vgl_algo vgl vbl 
 	kdu_coresys kdu_background_comp kdu_background_exp)
-	IF (BUILD_OCTI_TESTING OR BUILD_TESTING)
-	SUBDIRS(tests)
-	ENDIF(BUILD_OCTI_TESTING OR BUILD_TESTING)
-	ELSE(LINK_WITH_DLIBS)
-	INCLUDE_DIRECTORIES(${brl_SOURCE_DIR}/bbas)
-	TARGET_LINK_LIBRARIES(dbbgmo bsta bsta_algo brip vnl_io vbl_io vsl vnl vil_algo vil vgl_algo vgl vbl)
+	if (BUILD_OCTI_TESTING OR BUILD_TESTING)
+	subdirs(tests)
+	endif(BUILD_OCTI_TESTING OR BUILD_TESTING)
+	else(LINK_WITH_DLIBS)
+	include_directories(${brl_SOURCE_DIR}/bbas)
+	target_link_libraries(dbbgmo bsta bsta_algo brip vnl_io vbl_io vsl vnl vil_algo vil vgl_algo vgl vbl)
 	
-ENDIF(LINK_WITH_DLIBS)
+endif(LINK_WITH_DLIBS)
 
 
-SUBDIRS(pro)
-SUBDIRS(vis)
+subdirs(pro)
+subdirs(vis)
 
 

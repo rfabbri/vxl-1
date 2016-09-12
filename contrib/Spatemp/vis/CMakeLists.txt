@@ -1,25 +1,25 @@
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/mvg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/db3p )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib )
-SET( spatemp_vis_sources
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_OXL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR}/brcv/trk )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/db3p )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/breye )
+include_directories( ${lems_SOURCE_DIR}/contrib )
+set( spatemp_vis_sources
 dbdet_temporal_map_displayer.h dbdet_temporal_map_displayer.cxx
 dbdet_temporal_map_tableau.h dbdet_temporal_map_tableau.cxx dbdet_temporal_map_tableau_sptr.h
  )
 
 
-AUX_SOURCE_DIRECTORY(Templates spatemp_vis_sources)
-ADD_LIBRARY( spatemp_vis ${spatemp_vis_sources})
+aux_source_directory(Templates spatemp_vis_sources)
+add_library( spatemp_vis ${spatemp_vis_sources})
 
-TARGET_LINK_LIBRARIES( spatemp_vis  bpro1  vbl vil_io)
+target_link_libraries( spatemp_vis  bpro1  vbl vil_io)

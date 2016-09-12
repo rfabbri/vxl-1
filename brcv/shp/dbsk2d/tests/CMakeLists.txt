@@ -1,12 +1,12 @@
 # This is brcv/shp/dbsk2d/tests/CMakeLists.txt
 
 # Copy the test files to the LEMSVXL build folder
-CONFIGURE_FILE (
+configure_file (
   ${lems_SOURCE_DIR}/brcv/shp/dbsk2d/tests/file_io_data/test_file1.bnd
   ${lems_BINARY_DIR}/brcv/shp/dbsk2d/tests/file_io_data/test_file1.bnd COPYONLY
 )  
 
-ADD_EXECUTABLE( dbsk2d_test_all
+add_executable( dbsk2d_test_all
   test_driver.cxx
   
   # test exception handling
@@ -51,29 +51,29 @@ ADD_EXECUTABLE( dbsk2d_test_all
   
 )
 
-TARGET_LINK_LIBRARIES( dbsk2d_test_all dbsk2d testlib )
+target_link_libraries( dbsk2d_test_all dbsk2d testlib )
 
 # exceptions test
-ADD_TEST( dbsk2d_test_dbsk2d_exceptions     dbsk2d_test_all test_dbsk2d_exceptions )
+add_test( dbsk2d_test_dbsk2d_exceptions     dbsk2d_test_all test_dbsk2d_exceptions )
 
 # file i/o tests
 
-ADD_TEST( dbsk2d_test_file_load_bnd         dbsk2d_test_all test_file_load_bnd ${CMAKE_CURRENT_SOURCE_DIR})
-ADD_TEST( dbsk2d_test_file_load_txt         dbsk2d_test_all test_file_load_txt ${CMAKE_CURRENT_SOURCE_DIR})
-ADD_TEST( dbsk2d_test_file_load_con         dbsk2d_test_all test_file_load_con ${CMAKE_CURRENT_SOURCE_DIR})
-ADD_TEST( dbsk2d_test_file_load_edg         dbsk2d_test_all test_file_load_edg ${CMAKE_CURRENT_SOURCE_DIR})
-ADD_TEST( dbsk2d_test_file_load_cem         dbsk2d_test_all test_file_load_cem ${CMAKE_CURRENT_SOURCE_DIR})
+add_test( dbsk2d_test_file_load_bnd         dbsk2d_test_all test_file_load_bnd ${CMAKE_CURRENT_SOURCE_DIR})
+add_test( dbsk2d_test_file_load_txt         dbsk2d_test_all test_file_load_txt ${CMAKE_CURRENT_SOURCE_DIR})
+add_test( dbsk2d_test_file_load_con         dbsk2d_test_all test_file_load_con ${CMAKE_CURRENT_SOURCE_DIR})
+add_test( dbsk2d_test_file_load_edg         dbsk2d_test_all test_file_load_edg ${CMAKE_CURRENT_SOURCE_DIR})
+add_test( dbsk2d_test_file_load_cem         dbsk2d_test_all test_file_load_cem ${CMAKE_CURRENT_SOURCE_DIR})
 
-ADD_TEST( dbsk2d_test_ishock_belm           dbsk2d_test_all test_ishock_belm )
+add_test( dbsk2d_test_ishock_belm           dbsk2d_test_all test_ishock_belm )
 
-ADD_TEST( dbsk2d_test_bnd_vertex            dbsk2d_test_all test_bnd_vertex )
-ADD_TEST( dbsk2d_test_bnd_contour           dbsk2d_test_all test_bnd_contour )
-ADD_TEST( dbsk2d_test_bnd_utils             dbsk2d_test_all test_bnd_utils )
-ADD_TEST( dbsk2d_test_boundary_inputs       dbsk2d_test_all test_boundary_inputs )
-ADD_TEST( dbsk2d_test_boundary_bounding_box dbsk2d_test_all test_boundary_bounding_box )
-ADD_TEST( dbsk2d_test_boundary_partition    dbsk2d_test_all test_boundary_partition )
-ADD_TEST( dbsk2d_test_dbsk2d_distance       dbsk2d_test_all test_dbsk2d_distance )
-ADD_TEST( dbsk2d_test_dbsk2d_closest_pont   dbsk2d_test_all test_dbsk2d_closest_point )
+add_test( dbsk2d_test_bnd_vertex            dbsk2d_test_all test_bnd_vertex )
+add_test( dbsk2d_test_bnd_contour           dbsk2d_test_all test_bnd_contour )
+add_test( dbsk2d_test_bnd_utils             dbsk2d_test_all test_bnd_utils )
+add_test( dbsk2d_test_boundary_inputs       dbsk2d_test_all test_boundary_inputs )
+add_test( dbsk2d_test_boundary_bounding_box dbsk2d_test_all test_boundary_bounding_box )
+add_test( dbsk2d_test_boundary_partition    dbsk2d_test_all test_boundary_partition )
+add_test( dbsk2d_test_dbsk2d_distance       dbsk2d_test_all test_dbsk2d_distance )
+add_test( dbsk2d_test_dbsk2d_closest_pont   dbsk2d_test_all test_dbsk2d_closest_point )
 
-ADD_EXECUTABLE( dbsk2d_test_include test_include.cxx )
-TARGET_LINK_LIBRARIES( dbsk2d_test_include dbsk2d )
+add_executable( dbsk2d_test_include test_include.cxx )
+target_link_libraries( dbsk2d_test_include dbsk2d )

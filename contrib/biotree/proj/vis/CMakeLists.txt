@@ -1,10 +1,10 @@
-IF(VXL_VGUI_FOUND)
-  INCLUDE( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake)
-ENDIF (VXL_VGUI_FOUND)
+if(VXL_VGUI_FOUND)
+  include( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake)
+endif (VXL_VGUI_FOUND)
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/biotree/resc )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/contrib/biotree/resc )
 
-ADD_EXECUTABLE(bioproj_response_vis bioproj_response_vis.cxx)
-TARGET_LINK_LIBRARIES(bioproj_response_vis biov bgui3d)
+add_executable(bioproj_response_vis bioproj_response_vis.cxx)
+target_link_libraries(bioproj_response_vis biov bgui3d)
 

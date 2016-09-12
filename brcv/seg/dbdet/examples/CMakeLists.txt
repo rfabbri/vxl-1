@@ -1,8 +1,8 @@
 
 
-ADD_EXECUTABLE( contourtracing_command contourtracing_command.cxx )
-TARGET_LINK_LIBRARIES( contourtracing_command dbdet bdgl )
+add_executable( contourtracing_command contourtracing_command.cxx )
+target_link_libraries( contourtracing_command dbdet bdgl )
 
 
-ADD_EXECUTABLE( screenshot_cfg_command screenshot_cfg_command.cxx )
-TARGET_LINK_LIBRARIES( screenshot_cfg_command dbdet_algo )
+add_executable( screenshot_cfg_command screenshot_cfg_command.cxx )
+target_link_libraries( screenshot_cfg_command dbdet_algo )

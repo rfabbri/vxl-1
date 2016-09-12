@@ -1,13 +1,13 @@
 # This is brcv/shp/dbsk3d/vis/CMakeLists.txt
 # Brown Shock3D Visualization library
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp)
+include_directories( ${lems_SOURCE_DIR}/brcv/shp)
 
-INCLUDE( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
+include( ${VXL_CMAKE_DIR}/UseBGUI3D.cmake )
 
-IF (HAS_BGUI3D)
+if (HAS_BGUI3D)
 
-SET(dbsk3d_vis_sources
+set(dbsk3d_vis_sources
    dbsk3d_click_getinfo.cxx         dbsk3d_click_getinfo.h
 
    dbsk3d_vis_backpt.cxx            dbsk3d_vis_backpt.h
@@ -29,8 +29,8 @@ SET(dbsk3d_vis_sources
 )
 
 
-ADD_LIBRARY(dbsk3d_vis ${dbsk3d_vis_sources})
+add_library(dbsk3d_vis ${dbsk3d_vis_sources})
 
-TARGET_LINK_LIBRARIES(dbsk3d_vis dbsk3d dbsk3d_algo dbsk3d_pro dbmsh3d_vis dbgl bgui3d)
+target_link_libraries(dbsk3d_vis dbsk3d dbsk3d_algo dbsk3d_pro dbmsh3d_vis dbgl bgui3d)
 
-ENDIF (HAS_BGUI3D)
+endif (HAS_BGUI3D)

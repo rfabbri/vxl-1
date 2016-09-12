@@ -9,37 +9,37 @@
 
 
 # Optionally Build this library
-OPTION(BUILD_DBMSH3D_ALGOVTK "Build VTK-based Brown Mesh Algorithm Library" NO)
+option(BUILD_DBMSH3D_ALGOVTK "Build VTK-based Brown Mesh Algorithm Library" NO)
 
-IF(BUILD_DBMSH3D_ALGOVTK)
+if(BUILD_DBMSH3D_ALGOVTK)
 
 # find the path to the vtk library
-INCLUDE( ${LEMS_CMAKE_DIR}/Modules/UseVTK.cmake )
+include( ${LEMS_CMAKE_DIR}/Modules/UseVTK.cmake )
 
   
-IF(HAS_VTK)
+if(HAS_VTK)
 
-# INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+# include_directories( ${lems_SOURCE_DIR}/basic )
 
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
 
-SET(dbmsh3d_algovtk_sources
+set(dbmsh3d_algovtk_sources
   dbmsh3d_isosurface.cxx          dbmsh3d_isosurface.h
 )
-AUX_SOURCE_DIRECTORY(Templates dbmsh3d_algovtk_sources)
+aux_source_directory(Templates dbmsh3d_algovtk_sources)
 
-ADD_LIBRARY(dbmsh3d_algovtk  ${dbmsh3d_algovtk_sources})
+add_library(dbmsh3d_algovtk  ${dbmsh3d_algovtk_sources})
 
-TARGET_LINK_LIBRARIES(dbmsh3d_algovtk dbmsh3d vil3d ${VTK_LIBRARIES} )
+target_link_libraries(dbmsh3d_algovtk dbmsh3d vil3d ${VTK_LIBRARIES} )
 
-# IF( BUILD_EXAMPLES )
-#  SUBDIRS( examples )
-# ENDIF( BUILD_EXAMPLES )
+# if( BUILD_EXAMPLES )
+#  subdirs( examples )
+# endif( BUILD_EXAMPLES )
 
-SUBDIRS( pro )
+subdirs( pro )
 
 
-ENDIF(HAS_VTK)
+endif(HAS_VTK)
 
-ENDIF(BUILD_DBMSH3D_ALGOVTK)
+endif(BUILD_DBMSH3D_ALGOVTK)

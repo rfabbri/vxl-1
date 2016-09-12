@@ -40,6 +40,6 @@ add_definitions(
   -D_CRT_SECURE_NO_WARNINGS
 )
 
-ADD_LIBRARY( kdu_coresys STATIC ${SOURCES} )
-SET_TARGET_PROPERTIES(kdu_coresys PROPERTIES OUTPUT_NAME kdu_coresys DEBUG_POSTFIX d)
+add_library( kdu_coresys STATIC ${SOURCES} )
+set_target_properties(kdu_coresys PROPERTIES OUTPUT_NAME kdu_coresys DEBUG_POSTFIX d)
 

@@ -1,5 +1,5 @@
-IF(OCTAVE_FOUND)
-    SET( vox_octave_kovesi_edge_linker_sources
+if(OCTAVE_FOUND)
+    set( vox_octave_kovesi_edge_linker_sources
       vox_octave_kovesi_edge_linker_params.h 
       vox_octave_kovesi_edge_linker_params_sptr.h
       vox_octave_kovesi_edge_linker_params.cxx
@@ -7,11 +7,11 @@ IF(OCTAVE_FOUND)
       vox_octave_kovesi_edge_linker_main.cxx 
     )
     
-    ADD_EXECUTABLE (vox_octave_kovesi_edge_linker ${vox_octave_kovesi_edge_linker_sources} )
-    TARGET_LINK_LIBRARIES (vox_octave_kovesi_edge_linker dborl_algo dbdet_pro)
-ENDIF(OCTAVE_FOUND)
+    add_executable (vox_octave_kovesi_edge_linker ${vox_octave_kovesi_edge_linker_sources} )
+    target_link_libraries (vox_octave_kovesi_edge_linker dborl_algo dbdet_pro)
+endif(OCTAVE_FOUND)
 
-#SUBDIRS(vox_convert_and_associate_kovesi_output)
+#subdirs(vox_convert_and_associate_kovesi_output)
 
 
 

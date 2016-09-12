@@ -1,7 +1,7 @@
 # This is brcv/mvg/dvpgl/io/CMakeLists.txt
 
 
-SET(dvpgl_io_sources
+set(dvpgl_io_sources
 #    dpgl_io_camera.h               vpgl_io_camera.hxx      vpgl_io_camera.cxx
 #    dpgl_io_proj_camera.h             vpgl_io_proj_camera.hxx
 #    dpgl_io_perspective_camera.h      vpgl_io_perspective_camera.hxx
@@ -10,12 +10,12 @@ SET(dvpgl_io_sources
     dvpgl_proj_camera_vsl.h dvpgl_proj_camera_vsl.txx
 )
 
-AUX_SOURCE_DIRECTORY(Templates dvpgl_io_sources)
+aux_source_directory(Templates dvpgl_io_sources)
 
-ADD_LIBRARY(dvpgl_io ${dvpgl_io_sources})
+add_library(dvpgl_io ${dvpgl_io_sources})
 
-TARGET_LINK_LIBRARIES(dvpgl_io vpgl_io vsl vbl_io)
+target_link_libraries(dvpgl_io vpgl_io vsl vbl_io)
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )

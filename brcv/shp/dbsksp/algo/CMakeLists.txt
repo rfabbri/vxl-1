@@ -1,7 +1,7 @@
 # This is dbsksp/algo/CMakeLists.txt
 # The Development Shock Modelling Algorithm Library
 
-SET( dbsksp_algo_sources
+set( dbsksp_algo_sources
   dbsksp_xgraph_algos.h                              dbsksp_xgraph_algos.cxx
   dbsksp_build_from_xshock_graph.h                   dbsksp_build_from_xshock_graph.cxx
   dbsksp_interp_two_xnodes.h                         dbsksp_interp_two_xnodes.cxx
@@ -64,16 +64,16 @@ SET( dbsksp_algo_sources
   
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbsksp_algo_sources)
+aux_source_directory(Templates dbsksp_algo_sources)
 
-ADD_LIBRARY( dbsksp_algo  ${dbsksp_algo_sources} )
-TARGET_LINK_LIBRARIES( dbsksp_algo dbsksp dbsk2d dbskr)
+add_library( dbsksp_algo  ${dbsksp_algo_sources} )
+target_link_libraries( dbsksp_algo dbsksp dbsk2d dbskr)
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )
 
-IF( BUILD_EXAMPLES )
-#  SUBDIRS( examples )
-ENDIF( BUILD_EXAMPLES )
+if( BUILD_EXAMPLES )
+#  subdirs( examples )
+endif( BUILD_EXAMPLES )
 

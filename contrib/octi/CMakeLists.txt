@@ -1,1 +1,1 @@
-SUBDIRS(dbrl)
+subdirs(dbrl)

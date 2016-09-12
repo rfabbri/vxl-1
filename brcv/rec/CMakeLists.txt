@@ -1,36 +1,36 @@
 # brcv/rec/CMakeLists.txt
 # Brown Recognition Libraries.
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
 
 # Brown 3D Mesh Recognition Library
-SUBDIRS( dbmsh3dr )
+subdirs( dbmsh3dr )
 
 # Brown 3D Shock Recognition Library
-SUBDIRS( dbsk3dr )
+subdirs( dbsk3dr )
  
 # Brown Graph Assignment Solvers
-SUBDIRS( dbasn )
+subdirs( dbasn )
 
-PROJECT(rec)
+project(rec)
 
 # Brown Elastic Curve Matching Library
-SUBDIRS( dbcvr )
+subdirs( dbcvr )
 
 # Brown Keypoint Recognition Library
-SUBDIRS( dbkpr )
+subdirs( dbkpr )
 
 # Brown Mutual Information Recognition Library
-SUBDIRS( dbru )
+subdirs( dbru )
 
 # Brown 2D Shock Recognition Library
-SUBDIRS( dbskr )
+subdirs( dbskr )
 
 # Brown Edge-Based Recognition Library
-SUBDIRS( dber )
+subdirs( dber )
 
 # Brown ORL - Object Recognition Library - web database to store datasets and cluster management via MPI
-SUBDIRS( dborl )
+subdirs( dborl )
 
 # Brown Curve-based Spatial Indexing Library
-SUBDIRS( dbcsi )
+subdirs( dbcsi )

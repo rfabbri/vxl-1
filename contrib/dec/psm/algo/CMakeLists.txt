@@ -1,17 +1,17 @@
 # This is contrib/dec/psm/algo/CMakeLists.txt
 # Probabalistic Scene Modeling Algorithms
 
-INCLUDE_DIRECTORIES( ${VXL_CORE_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/dec )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories( ${VXL_CORE_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/contrib/dec )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
   
-#IF(PSM_USE_OPENGL2_1)
-#  INCLUDE_DIRECTORIES(${OPENGL_INCLUDE_DIR})
-#  INCLUDE_DIRECTORIES(${GLUT_INCLUDE_DIR})
-#  INCLUDE_DIRECTORIES(${GLEW_INCLUDE_DIR})
-#ENDIF(PSM_USE_OPENGL2_1)
+#if(PSM_USE_OPENGL2_1)
+#  include_directories(${OPENGL_INCLUDE_DIR})
+#  include_directories(${GLUT_INCLUDE_DIR})
+#  include_directories(${GLEW_INCLUDE_DIR})
+#endif(PSM_USE_OPENGL2_1)
 
-SET(psm_algo_sources
+set(psm_algo_sources
   psm_raytrace_operations.h psm_raytrace_operations.cxx
   psm_refine_scene.h
   psm_condense_scene.h
@@ -45,25 +45,25 @@ SET(psm_algo_sources
   psm_convert_dcdf_implicit.h
 )
 
-#IF(PSM_USE_OPENGL2_1)
-#  SET(psm_algo_sources ${psm_algo_sources}
+#if(PSM_USE_OPENGL2_1)
+#  set(psm_algo_sources ${psm_algo_sources}
 #    psm_render_expected_gpu.h
 #  )
-#ENDIF(PSM_USE_OPENGL2_1)
+#endif(PSM_USE_OPENGL2_1)
 
-AUX_SOURCE_DIRECTORY(Templates psm_algo_sources)
+aux_source_directory(Templates psm_algo_sources)
 
-ADD_LIBRARY(psm_algo ${psm_algo_sources})
+add_library(psm_algo ${psm_algo_sources})
 
-TARGET_LINK_LIBRARIES(psm_algo psm vnl vgl vbl bsta hsds vpgl vil vil_algo boct boxm)
+target_link_libraries(psm_algo psm vnl vgl vbl bsta hsds vpgl vil vil_algo boct boxm)
 
-#IF(PSM_USE_OPENGL2_1)
-#  TARGET_LINK_LIBRARIES(psm_algo ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} ${GLEW_LIBRARY})
-#ENDIF(PSM_USE_OPENGL2_1)
+#if(PSM_USE_OPENGL2_1)
+#  target_link_libraries(psm_algo ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} ${GLEW_LIBRARY})
+#endif(PSM_USE_OPENGL2_1)
 
 
-SUBDIRS(tests)
-SUBDIRS(pro)
+subdirs(tests)
+subdirs(pro)
 
 
 

@@ -1,11 +1,11 @@
 # susan library
 # algo/susan/CMakeLists.txt
 
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories(${VXL_GEL_INCLUDE_DIR} )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bbas )
 
-SET(susan_sources
+set(susan_sources
 
 susan_main.c 
 edge_draw.c  
@@ -24,9 +24,9 @@ susan_sub_function.c
 
 )
 
-AUX_SOURCE_DIRECTORY(Templates susan_sources)
+aux_source_directory(Templates susan_sources)
 
-ADD_LIBRARY(susan  ${susan_sources})
+add_library(susan  ${susan_sources})
 
-TARGET_LINK_LIBRARIES(susan )
+target_link_libraries(susan )
 

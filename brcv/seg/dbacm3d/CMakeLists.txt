@@ -3,12 +3,12 @@
 # brcv/seg/dbacm3d/CMakeLists.txt
 
 # include directories into here if needed
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 
-SET(dbacm3d_sources
+set(dbacm3d_sources
 
 # Levelset functions
    dbacm3d_levelset_func.cxx        dbacm3d_levelset_func.h
@@ -30,25 +30,25 @@ SET(dbacm3d_sources
   dbacm3d_edge_lowmem_levelset_func.cxx dbacm3d_edge_lowmem_levelset_func.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbacm3d_sources)
+aux_source_directory(Templates dbacm3d_sources)
 
-ADD_LIBRARY(dbacm3d  ${dbacm3d_sources})
+add_library(dbacm3d  ${dbacm3d_sources})
 
 # add the required libraries into this list
-TARGET_LINK_LIBRARIES( dbacm3d vil3d vbl dbnl_algo dbil3d_algo )
+target_link_libraries( dbacm3d vil3d vbl dbnl_algo dbil3d_algo )
 
-#SUBDIRS(pro)
+#subdirs(pro)
 
-SUBDIRS(xio)
+subdirs(xio)
 
-IF (VXL_VGUI_FOUND)
-#  SUBDIRS(vis)
-ENDIF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
+#  subdirs(vis)
+endif (VXL_VGUI_FOUND)
 
-IF( BUILD_EXAMPLES )
-#  SUBDIRS( examples )
-ENDIF( BUILD_EXAMPLES )
+if( BUILD_EXAMPLES )
+#  subdirs( examples )
+endif( BUILD_EXAMPLES )
 
-IF(BUILD_TESTING)
-#  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+#  subdirs(tests)
+endif(BUILD_TESTING)

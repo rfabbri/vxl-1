@@ -1,12 +1,12 @@
 # Brown Elastic Curve Matching Library
 # brcv/rec/dbcvr/CMakeLists.txt
 
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR})
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bbas)
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bseg)
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR})
+include_directories(${VXL_BRL_INCLUDE_DIR})
+include_directories(${VXL_BRL_INCLUDE_DIR}/bbas)
+include_directories(${VXL_BRL_INCLUDE_DIR}/bseg)
+include_directories(${VXL_GEL_INCLUDE_DIR})
 
-SET(dbcvr_sources
+set(dbcvr_sources
 
 dbcvr_cimatch.h
 
@@ -59,23 +59,23 @@ dbcvr_open_2d_cvmatch_even_grid.h
 dbcvr_open_2d_cvmatch_even_grid.cxx
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbcvr_sources)
+aux_source_directory(Templates dbcvr_sources)
 
-ADD_LIBRARY(dbcvr  ${dbcvr_sources})
+add_library(dbcvr  ${dbcvr_sources})
 
-TARGET_LINK_LIBRARIES(dbcvr bsol dbsol dbdp dbnl_algo vdgl)
+target_link_libraries(dbcvr bsol dbsol dbdp dbnl_algo vdgl)
 
 # Processing Library
-SUBDIRS(pro)
+subdirs(pro)
 
 # Visualization Library
-SUBDIRS(vis)
+subdirs(vis)
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)
 
 # Executables
-# SUBDIRS(bin)
+# subdirs(bin)
 
-SUBDIRS(examples)
+subdirs(examples)

@@ -1,27 +1,27 @@
 # This is brcv/mvg/dbecl/vis/CMakeLists.txt
 # Brown Epipolar Curve Visualization library
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
-SET(dbecl_vis_sources
+set(dbecl_vis_sources
    dbecl_episeg_soview2D.cxx     dbecl_episeg_soview2D.h
    dbecl_episeg_displayer.cxx    dbecl_episeg_displayer.h
    dbecl_episeg_tools.cxx        dbecl_episeg_tools.h
 )
 
-#AUX_SOURCE_DIRECTORY(Templates dbecl_vis_sources)
+#aux_source_directory(Templates dbecl_vis_sources)
 
-ADD_LIBRARY(dbecl_vis ${dbecl_vis_sources})
+add_library(dbecl_vis ${dbecl_vis_sources})
 
-TARGET_LINK_LIBRARIES(dbecl_vis dbecl_pro bvis1)
-
-
-IF(BUILD_TESTING)
-#  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+target_link_libraries(dbecl_vis dbecl_pro bvis1)
 
 
-ENDIF (VXL_VGUI_FOUND)
+if(BUILD_TESTING)
+#  subdirs(tests)
+endif(BUILD_TESTING)
+
+
+endif (VXL_VGUI_FOUND)

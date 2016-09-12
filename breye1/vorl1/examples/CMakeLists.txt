@@ -1,9 +1,9 @@
 # breyes/vorl/examples/CMakeLists.txt
 
 
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR} )
+include_directories(${VXL_GEL_INCLUDE_DIR} )
 
-ADD_EXECUTABLE(vorl1_harris_example vorl1_harris_example.cxx)
+add_executable(vorl1_harris_example vorl1_harris_example.cxx)
 
-TARGET_LINK_LIBRARIES(vorl1_harris_example vorl1)
+target_link_libraries(vorl1_harris_example vorl1)
 

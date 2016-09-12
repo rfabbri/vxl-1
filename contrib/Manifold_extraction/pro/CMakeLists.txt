@@ -1,18 +1,18 @@
 # contrib/Manifold_extraction/pro/CMakeLists.txt
 # Developement for : pradeep
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic)
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_CORE_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/breye)
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec)
+include_directories( ${lems_SOURCE_DIR}/contrib)
+include_directories( ${lems_SOURCE_DIR}/basic)
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_CORE_INCLUDE_DIR} )
 
 
-SET(manifold_extraction_pro_sources
+set(manifold_extraction_pro_sources
 
 Lie_contour_match_process.cxx                  Lie_contour_match_process.h
 Lie_contour_match_storage.cxx                  Lie_contour_match_storage.h
@@ -33,10 +33,10 @@ Flip_spoke_process.cxx                         Flip_spoke_process.h
 )
 
 
-ADD_LIBRARY(manifold_extraction_pro ${manifold_extraction_pro_sources})
+add_library(manifold_extraction_pro ${manifold_extraction_pro_sources})
 
 
-TARGET_LINK_LIBRARIES(manifold_extraction_pro manifold_extraction vidpro1 brip vtol dbsol_algo dbsk2d_pro )
+target_link_libraries(manifold_extraction_pro manifold_extraction vidpro1 brip vtol dbsol_algo dbsk2d_pro )
 
 
 

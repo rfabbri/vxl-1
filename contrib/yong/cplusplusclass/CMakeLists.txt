@@ -1,12 +1,12 @@
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/yong )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/contrib/yong )
+include_directories( ${lems_SOURCE_DIR}/breye )
+include_directories( ${lems_SOURCE_DIR}/basic )
 
 
-SET(yong_cplusplusclass_sources
+set(yong_cplusplusclass_sources
  my_rectangle.h
  my_rectangle.cxx
  my_rectangle_sptr.h
@@ -41,9 +41,9 @@ SET(yong_cplusplusclass_sources
 )
 
 
-AUX_SOURCE_DIRECTORY(Templates yong_cplusplusclass_sources)
+aux_source_directory(Templates yong_cplusplusclass_sources)
 
-ADD_EXECUTABLE(yong_cplusplusclass ${yong_cplusplusclass_sources})
+add_executable(yong_cplusplusclass ${yong_cplusplusclass_sources})
 
-TARGET_LINK_LIBRARIES(yong_cplusplusclass vnl vsol vgl vgui vnl_algo vil_algo vul vsl vil_io dbpro vidpro)
+target_link_libraries(yong_cplusplusclass vnl vsol vgl vgui vnl_algo vil_algo vul vsl vil_io dbpro vidpro)
 

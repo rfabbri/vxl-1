@@ -1,21 +1,21 @@
 # This is contrib/isabel/bseg3d/CMakeLists.txt
 # 3-d segmentation using the bvxm library
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR})
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
+include_directories( ${VXL_MUL_INCLUDE_DIR})
+include_directories( ${lems_SOURCE_DIR}/contrib )
 
-SET(bseg3d_sources
+set(bseg3d_sources
 bseg3d_test.cxx
 )
 
-#AUX_SOURCE_DIRECTORY(Templates breg3d_sources)
-ADD_LIBRARY(bseg3d ${bseg3d_sources})
+#aux_source_directory(Templates breg3d_sources)
+add_library(bseg3d ${bseg3d_sources})
 
-TARGET_LINK_LIBRARIES(bseg3d bvxm)
+target_link_libraries(bseg3d bvxm)
 
-SUBDIRS(pro)
-SUBDIRS(algo)
-#SUBDIRS(tests)
+subdirs(pro)
+subdirs(algo)
+#subdirs(tests)

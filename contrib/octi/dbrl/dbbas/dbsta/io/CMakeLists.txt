@@ -1,7 +1,7 @@
 # basic/bsta/io/CMakeLists.txt
 # Brown statistics io Library.
 
-SET(dbsta_io_sources
+set(dbsta_io_sources
   bsta_io_mixture.h
   bsta_io_mixture_fixed.h
   bsta_io_attributes.h
@@ -19,5 +19,5 @@ SET(dbsta_io_sources
 # instantiations are added then the library targets below
 # should be uncommented
 
-#ADD_LIBRARY(bsta_io  ${bsta_io_sources})
-#TARGET_LINK_LIBRARIES(bsta_io bsta vnl_io vbl)
+#add_library(bsta_io  ${bsta_io_sources})
+#target_link_libraries(bsta_io bsta vnl_io vbl)

@@ -1,11 +1,11 @@
 # Brown Curve Detection and Generation Library
 # algo/bcdg/CMakeLists.txt
 
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/mvg )
+include_directories(${VXL_GEL_INCLUDE_DIR} )
+include_directories(${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
 
-SET(bcdg_sources
+set(bcdg_sources
   bcdg_algo0.cxx              bcdg_algo0.h            
   bcdg_finger.cxx             bcdg_finger.h           bcdg_finger_sptr.h
   bcdg_frame.cxx              bcdg_frame.h            bcdg_frame_sptr.h
@@ -17,12 +17,12 @@ SET(bcdg_sources
   bcdg_3d_reconstructor.cxx   bcdg_3d_reconstructor.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates bcdg_sources)
+aux_source_directory(Templates bcdg_sources)
 
-ADD_LIBRARY(bcdg ${bcdg_sources})
+add_library(bcdg ${bcdg_sources})
 
-TARGET_LINK_LIBRARIES(bcdg vgl vbl vul vnl dbecl vsol) 
+target_link_libraries(bcdg vgl vbl vul vnl dbecl vsol) 
 
-IF(BUILD_TESTING)
-  #SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  #subdirs(tests)
+endif(BUILD_TESTING)

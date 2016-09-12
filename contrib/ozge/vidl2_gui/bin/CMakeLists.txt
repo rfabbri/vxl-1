@@ -1,11 +1,11 @@
 # brl/vvid/bin/CMakeLists.txt
 
-#INCLUDE_DIRECTORIES( ${VXLCORE_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR}/mrc)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib )
+#include_directories( ${VXLCORE_INCLUDE_DIR} )
+include_directories(${VXL_GEL_INCLUDE_DIR}/mrc)
+include_directories( ${lems_SOURCE_DIR}/contrib )
 
-IF(DIRECTSHOW_FOUND)
- SET(videx_dshow_sources videx_dshow.cxx videx_dshow_menus.cxx videx_dshow_menus.h)
- ADD_EXECUTABLE (videx_dshow ${videx_dshow_sources})
- TARGET_LINK_LIBRARIES(videx_dshow ozgevvid vidl_vil1 vgui vidl)
-ENDIF(DIRECTSHOW_FOUND)
+if(DIRECTSHOW_FOUND)
+ set(videx_dshow_sources videx_dshow.cxx videx_dshow_menus.cxx videx_dshow_menus.h)
+ add_executable (videx_dshow ${videx_dshow_sources})
+ target_link_libraries(videx_dshow ozgevvid vidl_vil1 vgui vidl)
+endif(DIRECTSHOW_FOUND)

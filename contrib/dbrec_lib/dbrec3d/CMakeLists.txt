@@ -2,18 +2,18 @@
 # CMakeList for Brown Development 3d recognition library
 # This library contains specialization of dbrec to 3d
 
-IF(VXL_EXPAT_FOUND)
-  INCLUDE_DIRECTORIES( ${VXL_EXPAT_INCLUDE_DIR} )
-  MESSAGE("${VXL_EXPAT_INCLUDE_DIR}")
-  INCLUDE_DIRECTORIES( ${VXL_CORE_INCLUDE_DIR} )
-  INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
-  INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-  INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-  INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/b3p/expatpp )
+if(VXL_EXPAT_FOUND)
+  include_directories( ${VXL_EXPAT_INCLUDE_DIR} )
+  message("${VXL_EXPAT_INCLUDE_DIR}")
+  include_directories( ${VXL_CORE_INCLUDE_DIR} )
+  include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
+  include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+  include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+  include_directories( ${VXL_BRL_INCLUDE_DIR}/b3p/expatpp )
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/dbrec_lib )
+include_directories( ${lems_SOURCE_DIR}/contrib/dbrec_lib )
 
-SET(dbrec3d_sources
+set(dbrec3d_sources
     dbrec3d_part.h                            dbrec3d_part.cxx                       
     dbrec3d_composite_part.h                  dbrec3d_composite_part.cxx
     dbrec3d_primitive_kernel_part.h           dbrec3d_primitive_kernel_part.cxx
@@ -31,22 +31,22 @@ SET(dbrec3d_sources
     dbrec3d_scene_utils.h                     dbrec3d_scene_utils.cxx
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbrec3d_sources)
+aux_source_directory(Templates dbrec3d_sources)
 
-ADD_LIBRARY(dbrec3d ${dbrec3d_sources})
+add_library(dbrec3d ${dbrec3d_sources})
 
-TARGET_LINK_LIBRARIES(dbrec3d bvpl_octree bsta bxml bvrml)
+target_link_libraries(dbrec3d bvpl_octree bsta bxml bvrml)
 
-SUBDIRS(pro)
-SUBDIRS(exe)
-SUBDIRS(gui)
-SUBDIRS(bof)
-SUBDIRS(pcl)
+subdirs(pro)
+subdirs(exe)
+subdirs(gui)
+subdirs(bof)
+subdirs(pcl)
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )
 
-ENDIF(VXL_EXPAT_FOUND)
+endif(VXL_EXPAT_FOUND)
 
 

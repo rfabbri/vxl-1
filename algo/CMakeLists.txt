@@ -1,44 +1,44 @@
 # algo/CMakeLists.txt
 # main package for LEMS algorithms.
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-#INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/algo )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+#include_directories( ${VXL_OXL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/algo )
 
 # extrautils library
-SUBDIRS( extrautils )
+subdirs( extrautils )
 
 # shock library
-SUBDIRS( shock )
+subdirs( shock )
 
 # logical linear library
-SUBDIRS( loglin )
+subdirs( loglin )
 
 # susan library
-SUBDIRS( susan )
+subdirs( susan )
 
 # contour-tracing library
-SUBDIRS( contourtracing )
+subdirs( contourtracing )
 
 #contour-tracing library
-SUBDIRS( curvematch )
+subdirs( curvematch )
 
 # affine patch library
-SUBDIRS( bapl )
+subdirs( bapl )
 
 # graduated assignment to solve MxN quadratic assignment problems
-#SUBDIRS( gradassign )
+#subdirs( gradassign )
 
 # softassign to solve MxN assignment problems
-SUBDIRS( softassign )
+subdirs( softassign )
 
 # Livewire (intelligent scissors) core class to interactively segment images
-#SUBDIRS( intscissors )
+#subdirs( intscissors )
 
 # euler spiral library
-#SUBDIRS( eulerspiral )
+#subdirs( eulerspiral )
 
 # brown curve detection and generation
-SUBDIRS( bcdg ) 
+subdirs( bcdg ) 
 
 # brown edge tracking
-#SUBDIRS( edgetrk )
+#subdirs( edgetrk )

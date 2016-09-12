@@ -1,19 +1,19 @@
 # Shock library
 # brcv/shp/dbsk2d/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/maruthi )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_RPL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${CMAKE_VLFEAT_INCLUDES} )
+include_directories( ${lems_SOURCE_DIR}/contrib/maruthi )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_RPL_INCLUDE_DIR} )
+include_directories( ${CMAKE_VLFEAT_INCLUDES} )
 
-PROJECT ( dbskfg )
+project ( dbskfg )
 
-SET( dbskfg_sources
+set( dbskfg_sources
   
   # Base class for nodes and links
 
@@ -59,24 +59,24 @@ SET( dbskfg_sources
 
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbskfg_sources)
+aux_source_directory(Templates dbskfg_sources)
 
-ADD_LIBRARY(dbskfg ${dbskfg_sources})
+add_library(dbskfg ${dbskfg_sources})
 
-TARGET_LINK_LIBRARIES( dbskfg dbgrl vbl dbxml )
+target_link_libraries( dbskfg dbgrl vbl dbxml )
 
 #process algo
-SUBDIRS(algo)
+subdirs(algo)
 
 #process dir
-SUBDIRS(pro)
+subdirs(pro)
 
 #vis dir
-SUBDIRS(vis)
+subdirs(vis)
 
 
 #vox
-SUBDIRS( vox_compute_composite_fragments )
-SUBDIRS( vox_match_composite_fragments )
-SUBDIRS( vox_detect_composite_fragments )
+subdirs( vox_compute_composite_fragments )
+subdirs( vox_match_composite_fragments )
+subdirs( vox_detect_composite_fragments )
 

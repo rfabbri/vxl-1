@@ -1,7 +1,7 @@
 # Calibration of scan by using an artifact model
 # blem/contrib/biotree/xscan/cali/CMakeLists.txt
 
-INCLUDE_DIRECTORIES(
+include_directories(
 ${VXL_GEL_INCLUDE_DIR}/mrc
 ${biotree_SOURCE_DIR}
 ${biotree_SOURCE_DIR}/resc
@@ -15,7 +15,7 @@ ${VXL_BRL_INCLUDE_DIR}/bbas
 )
 
 
-SET(cali_sources
+set(cali_sources
 cali_artf_model.h
 cali_simulated_scan_resource.h                cali_simulated_scan_resource.cxx
 cali_artf_projector.h                         cali_artf_projector.cxx
@@ -28,17 +28,17 @@ cali_param.h                                  cali_param.cxx
 
 )
 
-AUX_SOURCE_DIRECTORY(Templates cali_sources)
+aux_source_directory(Templates cali_sources)
 
-ADD_LIBRARY(cali ${cali_sources})
-
-
-TARGET_LINK_LIBRARIES(cali imgr xmvg xscan vpgl_algo vpgl dbil dbgl_algo vil vgl_algo vgl vnl vbl vul sdet vsl vsol)
+add_library(cali ${cali_sources})
 
 
+target_link_libraries(cali imgr xmvg xscan vpgl_algo vpgl dbil dbgl_algo vil vgl_algo vgl vnl vbl vul sdet vsl vsol)
 
-IF(BUILD_EXAMPLES)
-  SUBDIRS(examples)
-ENDIF(BUILD_EXAMPLES)
 
-SUBDIRS(tests)
+
+if(BUILD_EXAMPLES)
+  subdirs(examples)
+endif(BUILD_EXAMPLES)
+
+subdirs(tests)

@@ -1,15 +1,15 @@
 # medial_livewire/xio/tests/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/medial_livewire )
+include_directories( ${lems_SOURCE_DIR}/contrib )
+include_directories( ${lems_SOURCE_DIR}/contrib/medial_livewire )
 
-ADD_EXECUTABLE( dbdet_xio_test_all
+add_executable( dbdet_xio_test_all
   test_driver.cxx
   test_xml_write_read.cxx
 )
 
-TARGET_LINK_LIBRARIES( dbdet_xio_test_all dbdet_xio testlib )
+target_link_libraries( dbdet_xio_test_all dbdet_xio testlib )
 
 
-ADD_EXECUTABLE( dbdet_xio_test_include test_include.cxx )
-TARGET_LINK_LIBRARIES( dbdet_xio_test_include dbdet_xio vsl )
+add_executable( dbdet_xio_test_include test_include.cxx )
+target_link_libraries( dbdet_xio_test_include dbdet_xio vsl )

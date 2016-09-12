@@ -1,18 +1,18 @@
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES(${lems_SOURCE_DIR})
-INCLUDE_DIRECTORIES(${lems_SOURCE_DIR}/basic)
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories(${lems_SOURCE_DIR})
+include_directories(${lems_SOURCE_DIR}/basic)
 
 #added for livewire:
-#INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
+#include_directories( ${VXL_OXL_INCLUDE_DIR} )
 
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
 
-SET(HindSiteCombinedExecutable_sources
+set(HindSiteCombinedExecutable_sources
 
                                                 bfrag_Main.cxx
     bfrag_Main_Menu.h                           bfrag_Main_Menu.cxx
@@ -50,15 +50,15 @@ bfrag_curve.cxx
 read_write.cxx
 )
 
-ADD_EXECUTABLE(HindSiteCombinedExecutable ${HindSiteCombinedExecutable_sources})
+add_executable(HindSiteCombinedExecutable ${HindSiteCombinedExecutable_sources})
 
-TARGET_LINK_LIBRARIES(HindSiteCombinedExecutable vsol bsol bgui vil vcl dbsol dbsol_algo bxml) 
+target_link_libraries(HindSiteCombinedExecutable vsol bsol bgui vil vcl dbsol dbsol_algo bxml) 
 #add for liveWire: dbvis
 
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)
 
-SET(HindSiteCombinedExecutable_lib_sources
+set(HindSiteCombinedExecutable_lib_sources
 bfrag2D.cxx
 # direct from jonah
 PuzzleSolving.cxx
@@ -67,12 +67,12 @@ bfrag_curve.cxx
 read_write.cxx
 )
 
-ADD_LIBRARY(HindSiteCombinedExecutable_lib  ${HindSiteCombinedExecutable_lib_sources})
-TARGET_LINK_LIBRARIES(HindSiteCombinedExecutable_lib vsol bsol bgui vil vcl dbsol dbsol_algo) 
+add_library(HindSiteCombinedExecutable_lib  ${HindSiteCombinedExecutable_lib_sources})
+target_link_libraries(HindSiteCombinedExecutable_lib vsol bsol bgui vil vcl dbsol dbsol_algo) 
 
-SUBDIRS(web_system_executables)
+subdirs(web_system_executables)
 
-SET(HindSiteCombinedExecutable_vis_sources
+set(HindSiteCombinedExecutable_vis_sources
 
                                                 my_bfrag_Main.cxx
     my_bfrag_Main_Menu.h                        my_bfrag_Main_Menu.cxx
@@ -104,8 +104,8 @@ bfrag_curve.cxx
 read_write.cxx
 )
 
-ADD_EXECUTABLE(HindSiteCombinedExecutable_vis ${HindSiteCombinedExecutable_vis_sources})
+add_executable(HindSiteCombinedExecutable_vis ${HindSiteCombinedExecutable_vis_sources})
 
-TARGET_LINK_LIBRARIES(HindSiteCombinedExecutable_vis vsol bsol bgui vil vcl dbsol dbsol_algo bxml) 
+target_link_libraries(HindSiteCombinedExecutable_vis vsol bsol bgui vil vcl dbsol dbsol_algo bxml) 
 
 

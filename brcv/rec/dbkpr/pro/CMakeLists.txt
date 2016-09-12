@@ -1,11 +1,11 @@
 # This is brcv/seg/dbkpr/pro/CMakeLists.txt
 # Brown Detection Processing library
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/mvg )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 
-SET(dbkpr_pro_sources
+set(dbkpr_pro_sources
   dbkpr_bbf_match_process.cxx      dbkpr_bbf_match_process.h
   dbkpr_span_match_process.cxx     dbkpr_span_match_process.h
   dbkpr_reconstruct_process.cxx    dbkpr_reconstruct_process.h
@@ -13,14 +13,14 @@ SET(dbkpr_pro_sources
   dbkpr_corr3d_storage.cxx         dbkpr_corr3d_storage.h          dbkpr_corr3d_storage_sptr.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbkpr_pro_sources)
+aux_source_directory(Templates dbkpr_pro_sources)
 
-ADD_LIBRARY(dbkpr_pro ${dbkpr_pro_sources})
+add_library(dbkpr_pro ${dbkpr_pro_sources})
 
-TARGET_LINK_LIBRARIES(dbkpr_pro dbkpr dbdet_pro dvpgl_pro )
+target_link_libraries(dbkpr_pro dbkpr dbdet_pro dvpgl_pro )
 
 
-IF(BUILD_TESTING)
-#  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+#  subdirs(tests)
+endif(BUILD_TESTING)
 

@@ -1,29 +1,29 @@
 # This is dbsks/examples/CMakeLists.txt
 # Examples of using dbsksp library
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/brcv/trk )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories(${VXL_BRL_INCLUDE_DIR} )
+include_directories(${VXL_GEL_INCLUDE_DIR} )
 
-ADD_EXECUTABLE( screenshot_xgraph screenshot_xgraph.cxx )
-TARGET_LINK_LIBRARIES( screenshot_xgraph dbsksp_algo dbsksp_xio )
+add_executable( screenshot_xgraph screenshot_xgraph.cxx )
+target_link_libraries( screenshot_xgraph dbsksp_algo dbsksp_xio )
 
-ADD_EXECUTABLE( esf2xgraph convert_esf_to_xgraph_main.cxx )
-TARGET_LINK_LIBRARIES( esf2xgraph dbsksp_pro dbsk2d_pro )
+add_executable( esf2xgraph convert_esf_to_xgraph_main.cxx )
+target_link_libraries( esf2xgraph dbsksp_pro dbsk2d_pro )
 
-ADD_EXECUTABLE( average_xgraph average_two_xgraphs_main.cxx )
-TARGET_LINK_LIBRARIES( average_xgraph dbsksp_pro )
+add_executable( average_xgraph average_two_xgraphs_main.cxx )
+target_link_libraries( average_xgraph dbsksp_pro )
 
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
 # save xgraph to pdf file
-ADD_EXECUTABLE( xgraph2ps xgraph2ps.cxx )
-TARGET_LINK_LIBRARIES( xgraph2ps bvis1 dbsksp_pro dbsk2d_pro dbsksp_vis dbsk2d_vis dbgui)
+add_executable( xgraph2ps xgraph2ps.cxx )
+target_link_libraries( xgraph2ps bvis1 dbsksp_pro dbsk2d_pro dbsksp_vis dbsk2d_vis dbgui)
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)

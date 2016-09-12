@@ -1,4 +1,4 @@
-SET( dborl_edge_det_link_sources
+set( dborl_edge_det_link_sources
   dborl_edge_det_link_params.h 
   dborl_edge_det_link_params_sptr.h
   dborl_edge_det_link_params.cxx
@@ -6,7 +6,7 @@ SET( dborl_edge_det_link_sources
   dborl_edge_det_link_main.cxx 
 )
 
-SET( dborl_compute_curvelets_sources
+set( dborl_compute_curvelets_sources
   dborl_edge_det_link_params.h 
   dborl_edge_det_link_params_sptr.h
   dborl_edge_det_link_params.cxx
@@ -14,7 +14,7 @@ SET( dborl_compute_curvelets_sources
   dborl_compute_curvelets_main.cxx 
 )
 
-ADD_EXECUTABLE (dborl_compute_contours ${dborl_edge_det_link_sources} )
-ADD_EXECUTABLE (dborl_compute_curvelets ${dborl_compute_curvelets_sources} )
-TARGET_LINK_LIBRARIES (dborl_compute_contours dborl_algo dbdet_pro)
-TARGET_LINK_LIBRARIES (dborl_compute_curvelets dborl_algo dbdet_pro)
+add_executable (dborl_compute_contours ${dborl_edge_det_link_sources} )
+add_executable (dborl_compute_curvelets ${dborl_compute_curvelets_sources} )
+target_link_libraries (dborl_compute_contours dborl_algo dbdet_pro)
+target_link_libraries (dborl_compute_curvelets dborl_algo dbdet_pro)

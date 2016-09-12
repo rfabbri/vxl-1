@@ -2,11 +2,11 @@
 # The MESH_nogui project
 
 
-INCLUDE_DIRECTORIES(${MESH_nogui_SOURCE_DIR}/lib3d )
-INCLUDE_DIRECTORIES(${MESH_nogui_SOURCE_DIR}/mesh_error_lib )
-INCLUDE_DIRECTORIES(${MESH_nogui_SOURCE_DIR}/mesh_cmd )
+include_directories(${MESH_nogui_SOURCE_DIR}/lib3d )
+include_directories(${MESH_nogui_SOURCE_DIR}/mesh_error_lib )
+include_directories(${MESH_nogui_SOURCE_DIR}/mesh_cmd )
 
-SET( mesh_cmd_sources
+set( mesh_cmd_sources
 # colormap.h        
 # compute_error.c                 
 # compute_error.h
@@ -26,7 +26,7 @@ mesh.cpp
             
 )
 
-ADD_EXECUTABLE(mesh_cmd ${mesh_cmd_sources})
-TARGET_LINK_LIBRARIES( mesh_cmd lib3d mesh_error_lib )
+add_executable(mesh_cmd ${mesh_cmd_sources})
+target_link_libraries( mesh_cmd lib3d mesh_error_lib )
 
 

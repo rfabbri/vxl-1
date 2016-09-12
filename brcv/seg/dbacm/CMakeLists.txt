@@ -4,12 +4,12 @@
 
 
 # include directories into here if needed
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 
-SET(dbacm_sources
+set(dbacm_sources
 
 # Levelset functions
    dbacm_levelset_func.cxx               dbacm_levelset_func.h
@@ -24,23 +24,23 @@ SET(dbacm_sources
   dbacm_levelset_math.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbacm_sources)
+aux_source_directory(Templates dbacm_sources)
 
-ADD_LIBRARY(dbacm  ${dbacm_sources})
+add_library(dbacm  ${dbacm_sources})
 
 # add the required libraries into this list
-TARGET_LINK_LIBRARIES( dbacm vil vbl dbnl_algo bil_algo )
+target_link_libraries( dbacm vil vbl dbnl_algo bil_algo )
 
-SUBDIRS(pro)
+subdirs(pro)
 
-IF (VXL_VGUI_FOUND)
-  SUBDIRS(vis)
-ENDIF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
+  subdirs(vis)
+endif (VXL_VGUI_FOUND)
 
-IF( BUILD_EXAMPLES )
-#  SUBDIRS( examples )
-ENDIF( BUILD_EXAMPLES )
+if( BUILD_EXAMPLES )
+#  subdirs( examples )
+endif( BUILD_EXAMPLES )
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)

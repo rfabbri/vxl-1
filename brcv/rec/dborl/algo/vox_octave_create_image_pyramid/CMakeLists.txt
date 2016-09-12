@@ -1,5 +1,5 @@
-IF(OCTAVE_FOUND)
-    SET( vox_octave_create_image_pyramid_sources
+if(OCTAVE_FOUND)
+    set( vox_octave_create_image_pyramid_sources
       vox_octave_create_image_pyramid_params.h 
       vox_octave_create_image_pyramid_params_sptr.h
       vox_octave_create_image_pyramid_params.cxx
@@ -7,9 +7,9 @@ IF(OCTAVE_FOUND)
       vox_octave_create_image_pyramid_main.cxx 
     )
     
-    ADD_EXECUTABLE (vox_octave_create_image_pyramid ${vox_octave_create_image_pyramid_sources} )
-    TARGET_LINK_LIBRARIES (vox_octave_create_image_pyramid dborl_algo dbil_algo)
-ENDIF(OCTAVE_FOUND)
+    add_executable (vox_octave_create_image_pyramid ${vox_octave_create_image_pyramid_sources} )
+    target_link_libraries (vox_octave_create_image_pyramid dborl_algo dbil_algo)
+endif(OCTAVE_FOUND)
 
 
 

@@ -1,34 +1,34 @@
 # Brown Curve-based Spatial Indexing Library  
 # brcv/rec/dbcsi/CMakeLists.txt
 
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR})
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR})
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories(${VXL_GEL_INCLUDE_DIR})
+include_directories(${VXL_BRL_INCLUDE_DIR})
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
 
-SET(dbcsi_sources
+set(dbcsi_sources
     dbcsi_shotton_ocm.h             dbcsi_shotton_ocm.cxx
     dbcsi_curve_distance.h          dbcsi_curve_distance.cxx
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbcsi_sources)
+aux_source_directory(Templates dbcsi_sources)
 
-ADD_LIBRARY(dbcsi  ${dbcsi_sources})
+add_library(dbcsi  ${dbcsi_sources})
 
-TARGET_LINK_LIBRARIES(dbcsi dbspi dbdet_algo )
+target_link_libraries(dbcsi dbspi dbdet_algo )
 
 # algorithms library
-#SUBDIRS(algo)
+#subdirs(algo)
 
 # Processing Library
-#SUBDIRS(pro)
+#subdirs(pro)
 
 # Visualization Library
-#SUBDIRS(vis)
+#subdirs(vis)
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)
 
 # Executables
-#SUBDIRS(bin)
+#subdirs(bin)

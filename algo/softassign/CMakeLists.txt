@@ -2,24 +2,24 @@
 # algo/softassign/CMakeLists.txt
 
 # include directories into here if needed
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-#INCLUDE_DIRECTORIES(${VXL_OXL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+#include_directories(${VXL_OXL_INCLUDE_DIR} )
+include_directories(${VXL_GEL_INCLUDE_DIR} )
 
-SET(softassign_sources
+set(softassign_sources
    softassign.cxx           softassign.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates softassign_sources)
+aux_source_directory(Templates softassign_sources)
 
-ADD_LIBRARY(softassign  ${softassign_sources})
+add_library(softassign  ${softassign_sources})
 
 # add the required libraries into this list
-TARGET_LINK_LIBRARIES( softassign mbl bdgl vgl mvl vbl vdgl vtol vsol btol vnl )    
+target_link_libraries( softassign mbl bdgl vgl mvl vbl vdgl vtol vsol btol vnl )    
 
-IF( BUILD_EXAMPLES )
-  SUBDIRS( examples )
-ENDIF( BUILD_EXAMPLES )
+if( BUILD_EXAMPLES )
+  subdirs( examples )
+endif( BUILD_EXAMPLES )
 
 

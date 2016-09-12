@@ -3,20 +3,20 @@
 # Latest state machine library unifying the non-compact 
 # neighborhood and state machine classification
 
-PROJECT( dsm )
+project( dsm )
 #include dm source directory so it is available in the subfolders
-INCLUDE_DIRECTORIES( ${bm_SOURCE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_CORE_INDLUDE_DIR} )
+include_directories( ${bm_SOURCE_DIR} )
+include_directories( ${VXL_CORE_INDLUDE_DIR} )
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg ) #bsta is one step down
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas ) #bxml is one step down
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg ) #bsta is one step down
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas ) #bxml is one step down
 #for vsol (spatial library implemented on heap)
-INCLUDE_DIRECTORIES( ${GEL_INCLUDE_DIR} ) 
+include_directories( ${GEL_INCLUDE_DIR} ) 
 
-#INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} ) #hog is implemented in /mipa
-#INCLUDE_DIRECTORIES( ${VL_FEAT_LIBRARY} )
+#include_directories( ${VXL_MUL_INCLUDE_DIR} ) #hog is implemented in /mipa
+#include_directories( ${VL_FEAT_LIBRARY} )
 
-SET( dsm_sources 
+set( dsm_sources 
      dsm_node_base.h                          dsm_node_base.cxx
      dsm_node_base_sptr.h
      vbl_smart_ptr+dsm_node_base-.cxx
@@ -61,17 +61,17 @@ SET( dsm_sources
      vbl_smart_ptr+dsm_binary_tree-.cxx
      )
      
-AUX_SOURCE_DIRECTORY( Templates dsm_sources )     
-ADD_LIBRARY( dsm ${dsm_sources} )
-#TARGET_LINK_LIBRARIES( dsm vsl vbl vbl_io vgl 
+aux_source_directory( Templates dsm_sources )     
+add_library( dsm ${dsm_sources} )
+#target_link_libraries( dsm vsl vbl vbl_io vgl 
 #                       vgl_io vul bsta bsta_algo bapl bxml mipa 
 #                       ${VL_FEAT_LIBRARY} )
-TARGET_LINK_LIBRARIES( dsm dsm_io bapl bsta bsta_algo bxml vbl vgl vil 
+target_link_libraries( dsm dsm_io bapl bsta bsta_algo bxml vbl vgl vil 
                        vil_io vnl vsl vul vbl_io vgl_io vnl_io vsol bsol )
 
-SUBDIRS(pro)
-SUBDIRS(io)
-#SUBDIRS(ocl)
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+subdirs(pro)
+subdirs(io)
+#subdirs(ocl)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)

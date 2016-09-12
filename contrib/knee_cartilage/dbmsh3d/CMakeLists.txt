@@ -1,1 +1,1 @@
-SUBDIRS( algovtk )
+subdirs( algovtk )

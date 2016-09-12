@@ -1,12 +1,12 @@
 # contrib/vehicleseg/CMakeLists.txt
 # Developement for : vehicleseg
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
 
 # my bvis1 based GUI
-SUBDIRS( vehgui )
+subdirs( vehgui )
 
 
 # executable or dlls
-SUBDIRS(exe)
+subdirs(exe)
 

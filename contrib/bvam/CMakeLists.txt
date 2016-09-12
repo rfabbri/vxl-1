@@ -1,12 +1,12 @@
-INCLUDE_DIRECTORIES( ${VXL_CORE_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
-INCLUDE_DIRECTORIES(${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bbas/bsta)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/bvam )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/db3p)
+include_directories( ${VXL_CORE_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc/vpgl )
+include_directories(${VXL_MUL_INCLUDE_DIR} )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bbas/bsta)
+include_directories( ${lems_SOURCE_DIR}/contrib/bvam )
+include_directories( ${lems_SOURCE_DIR}/db3p)
 
-SET(bvam_sources
+set(bvam_sources
 
     bvam_memory_chunk.h             bvam_memory_chunk.cxx 
     bvam_mog_grey_processor.h       bvam_mog_grey_processor.cxx  
@@ -26,23 +26,23 @@ SET(bvam_sources
     bvam_util.h                     bvam_util.cxx
 )
 
-AUX_SOURCE_DIRECTORY(Templates bvam_sources)
+aux_source_directory(Templates bvam_sources)
 
-ADD_LIBRARY( bvam ${bvam_sources})
-
-
-TARGET_LINK_LIBRARIES( bvam bsta bsta_algo vcl vgl vgl_io vnl vil vgl_algo vil_algo vpgl vul vbl vsl bgeo)
+add_library( bvam ${bvam_sources})
 
 
-SUBDIRS( io )
-SUBDIRS( apps )
-SUBDIRS( pro )
-SUBDIRS( algo )
+target_link_libraries( bvam bsta bsta_algo vcl vgl vgl_io vnl vil vgl_algo vil_algo vpgl vul vbl vsl bgeo)
 
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+subdirs( io )
+subdirs( apps )
+subdirs( pro )
+subdirs( algo )
+
+
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )
 
 
 

@@ -1,8 +1,8 @@
 # /contrib/biotree/biob/CMakeLists.txt
-INCLUDE_DIRECTORIES(${lems_SOURCE_DIR}/brcv/mvg ${biotree_SOURCE_DIR}/resc)
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories(${lems_SOURCE_DIR}/brcv/mvg ${biotree_SOURCE_DIR}/resc)
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 
-SET(biob_src 
+set(biob_src 
     biob_worldpt_transformation.h            biob_worldpt_transformation.cxx
     biob_grid_worldpt_roster.h               biob_grid_worldpt_roster.cxx       
     biob_worldpt_index.h                     biob_worldpt_index.cxx                
@@ -20,12 +20,12 @@ SET(biob_src
     biob_roster_to_grid_mapping.h            biob_roster_to_grid_mapping.cxx
 )  
 
-AUX_SOURCE_DIRECTORY(Templates biob_src)
+aux_source_directory(Templates biob_src)
 
-ADD_LIBRARY(biob ${biob_src})
+add_library(biob ${biob_src})
 
-TARGET_LINK_LIBRARIES(biob vgl vgl_xio vbl vsl)
+target_link_libraries(biob vgl vgl_xio vbl vsl)
 
-IF(BUILD_TESTING)
-  SUBDIRS( tests )
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs( tests )
+endif(BUILD_TESTING)

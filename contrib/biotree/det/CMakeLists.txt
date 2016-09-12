@@ -1,10 +1,10 @@
 # /contrib/biotree/det/CMakeLists.txt
 
-SET(CMAKE_CXX_FLAGS -g)
+set(CMAKE_CXX_FLAGS -g)
 
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
 
-SET(det_src
+set(det_src
 det_map_entry.h
 det_cylinder_map.h  det_cylinder_map.cxx
 det_edge_map.h  det_edge_map.cxx
@@ -16,14 +16,14 @@ det_suppression_and_interpolation.h det_suppression_and_interpolation.cxx
 
 )
 
-AUX_SOURCE_DIRECTORY(Templates det_src)
-ADD_LIBRARY(biodet ${det_src})
-TARGET_LINK_LIBRARIES(biodet vcl vgl vnl vnl_algo vbl biob xmvg vil3d)
+aux_source_directory(Templates det_src)
+add_library(biodet ${det_src})
+target_link_libraries(biodet vcl vgl vnl vnl_algo vbl biob xmvg vil3d)
 
-#IF(BUILD_EXAMPLES)
-#  SUBDIRS(examples)
-#ENDIF(BUILD_EXAMPLES)
+#if(BUILD_EXAMPLES)
+#  subdirs(examples)
+#endif(BUILD_EXAMPLES)
 
-#IF(BUILD_TESTING)
-#  SUBDIRS(tests)
-#ENDIF(BUILD_TESTING)
+#if(BUILD_TESTING)
+#  subdirs(tests)
+#endif(BUILD_TESTING)

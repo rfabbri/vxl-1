@@ -2,13 +2,13 @@
 
 # main package for shock3d algorithms.
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_RPL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_RPL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
 
-SET(dbsk3dr_sources
+set(dbsk3dr_sources
 
 dbsk3dr_match.cxx              dbsk3dr_match.h
 dbsk3dr_dpmatch.cxx            dbsk3dr_dpmatch.h
@@ -16,16 +16,16 @@ dbsk3dr_ms_curve.cxx        dbsk3dr_ms_curve.h
 
 )
 
-ADD_LIBRARY(dbsk3dr  ${dbsk3dr_sources})
+add_library(dbsk3dr  ${dbsk3dr_sources})
 
 # add the required libraries into this list
-TARGET_LINK_LIBRARIES( dbsk3dr dbsk3d dbsk3d_algo dbmsh3dr dbasn )  
+target_link_libraries( dbsk3dr dbsk3d dbsk3d_algo dbmsh3dr dbasn )  
 
-SUBDIRS( vis )
+subdirs( vis )
 
-SUBDIRS( pro )
+subdirs( pro )
 
-IF(BUILD_TESTING)
-SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+subdirs(tests)
+endif(BUILD_TESTING)
 

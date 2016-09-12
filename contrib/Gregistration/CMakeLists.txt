@@ -1,28 +1,28 @@
 # contrib/pointmatching2d/CMakeLists.txt
 # Developement for :2D fetaure registration
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
 
 
 #main library
-SUBDIRS(georegister)
+subdirs(georegister)
 
 #pro
-SUBDIRS(pro)
+subdirs(pro)
 
 
 #vis
-SUBDIRS(vis)
+subdirs(vis)
 
 #gui
-SUBDIRS(gui)
+subdirs(gui)
 
 
 #dt
-SUBDIRS(exe)
+subdirs(exe)
 
 #dt
-SUBDIRS(dt)
+subdirs(dt)
 
 #cmd
-SUBDIRS(cmd)
+subdirs(cmd)

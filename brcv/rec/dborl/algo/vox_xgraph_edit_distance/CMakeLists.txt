@@ -1,6 +1,6 @@
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/db3p )
+include_directories( ${lems_SOURCE_DIR}/db3p )
 
-SET( vox_xgraph_edit_distance_sources
+set( vox_xgraph_edit_distance_sources
   vbl_smart_ptr+vox_xgraph_edit_distance_params-.cxx
   vox_xgraph_edit_distance_one_to_many.cxx
   vox_xgraph_edit_distance_one_to_many.h
@@ -10,8 +10,8 @@ SET( vox_xgraph_edit_distance_sources
   vox_xgraph_edit_distance_params_sptr.h
 )
 
-ADD_EXECUTABLE (vox_xgraph_edit_distance ${vox_xgraph_edit_distance_sources} )
-TARGET_LINK_LIBRARIES (vox_xgraph_edit_distance dborl_algo dbsksp_pro dbsk2d_pro)
+add_executable (vox_xgraph_edit_distance ${vox_xgraph_edit_distance_sources} )
+target_link_libraries (vox_xgraph_edit_distance dborl_algo dbsksp_pro dbsk2d_pro)
 
 
 

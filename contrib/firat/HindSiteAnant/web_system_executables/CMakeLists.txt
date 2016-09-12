@@ -1,12 +1,12 @@
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/firat/HindSiteAnant)
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES(${lems_SOURCE_DIR})
+include_directories( ${lems_SOURCE_DIR}/basic)
+include_directories( ${lems_SOURCE_DIR}/contrib/firat/HindSiteAnant)
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories(${lems_SOURCE_DIR})
 
-SET(HindSiteCombinedExecutable_sources2
+set(HindSiteCombinedExecutable_sources2
 
                                                 #my_bfrag_Main.cxx
     my_bfrag_Main_Menu.h                        my_bfrag_Main_Menu.cxx
@@ -39,5 +39,5 @@ read_write.cxx
 #Anant
 dbpz_hindsite_web_combined_process.cxx
 )
-ADD_EXECUTABLE(HindSiteCombinedExecutable_combined_process ${HindSiteCombinedExecutable_sources2})
-TARGET_LINK_LIBRARIES(HindSiteCombinedExecutable_combined_process bxml HindSiteCombinedExecutable_lib vsol bsol bgui vil vcl dbsol dbsol_algo bxml)
+add_executable(HindSiteCombinedExecutable_combined_process ${HindSiteCombinedExecutable_sources2})
+target_link_libraries(HindSiteCombinedExecutable_combined_process bxml HindSiteCombinedExecutable_lib vsol bsol bgui vil vcl dbsol dbsol_algo bxml)

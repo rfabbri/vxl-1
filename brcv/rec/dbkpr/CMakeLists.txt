@@ -1,30 +1,30 @@
 # brcv/rec/dbkpr/CMakeLists.txt
 # Brown Keypoint Recognition Library
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg)
-INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg)
+include_directories( ${VXL_OXL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 
-SET(dbkpr_sources
+set(dbkpr_sources
   dbkpr_view_span_tree.cxx      dbkpr_view_span_tree.h  dbkpr_view_span_tree_sptr.h
 #  dbkpr_lowe_cluster.cxx        dbkpr_lowe_cluster.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbkpr_sources)
+aux_source_directory(Templates dbkpr_sources)
 
-ADD_LIBRARY(dbkpr ${dbkpr_sources})
+add_library(dbkpr ${dbkpr_sources})
 
 # add the required libraries into this list
-TARGET_LINK_LIBRARIES( dbkpr dbdet mvl dbnl_algo )
+target_link_libraries( dbkpr dbdet mvl dbnl_algo )
 
 # Processing Library
-SUBDIRS(pro)
+subdirs(pro)
 
 # Visualization Library
-SUBDIRS(vis)
+subdirs(vis)
 
-IF(BUILD_TESTING)
-#  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+#  subdirs(tests)
+endif(BUILD_TESTING)
   
 

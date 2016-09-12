@@ -1,12 +1,12 @@
 # This is brcv/shp/dbsk2d/algo/CMakeLists.txt
 # The Development Brown Shock 2D Library - Specific Algorithms
 
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp)
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp)
+include_directories(${VXL_BRL_INCLUDE_DIR}/bbas )
 
 
-SET( dbsk2d_algo_sources
+set( dbsk2d_algo_sources
 
 # *********************************************************
 #             Various Algorithms
@@ -113,17 +113,17 @@ dbsk2d_xshock_graph_loader_from_esg_sh_file.h dbsk2d_xshock_graph_loader_from_es
 
 )
 
-ADD_LIBRARY( dbsk2d_algo  ${dbsk2d_algo_sources} )
+add_library( dbsk2d_algo  ${dbsk2d_algo_sources} )
 
-TARGET_LINK_LIBRARIES( dbsk2d_algo dbsk2d )
+target_link_libraries( dbsk2d_algo dbsk2d )
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )
 
-IF( BUILD_EXAMPLES )
-#  SUBDIRS( examples )
-ENDIF( BUILD_EXAMPLES )
+if( BUILD_EXAMPLES )
+#  subdirs( examples )
+endif( BUILD_EXAMPLES )
 
 
 

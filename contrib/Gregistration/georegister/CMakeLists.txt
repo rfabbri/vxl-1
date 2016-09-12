@@ -1,17 +1,17 @@
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_RPL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/trk )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/mvg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic/ )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/Gregistration )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_RPL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_OXL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${lems_SOURCE_DIR}/brcv/trk )
+include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/basic/ )
+include_directories( ${lems_SOURCE_DIR}/contrib/Gregistration )
 
-SET( georegister_sources
+set( georegister_sources
       dbrl_feature_sptr.h dbrl_feature.h        dbrl_feature.cxx
       dbrl_feature_point.h      dbrl_feature_point.cxx dbrl_feature_point_sptr.h
       dbrl_feature_point_tangent.h      dbrl_feature_point_tangent.cxx dbrl_feature_point_tangent_sptr.h 
@@ -45,10 +45,10 @@ SET( georegister_sources
 
       dbrl_feature_point_tangent_curvature_groupings.h dbrl_feature_point_tangent_curvature_groupings.cxx
 )
-AUX_SOURCE_DIRECTORY(Templates georegister_sources)
-ADD_LIBRARY(georegister  ${georegister_sources})
+aux_source_directory(Templates georegister_sources)
+add_library(georegister  ${georegister_sources})
 
-TARGET_LINK_LIBRARIES(georegister vbl dbsta_algo dbnl_algo vul dt vil_io dbgl_algo vgui)
+target_link_libraries(georegister vbl dbsta_algo dbnl_algo vul dt vil_io dbgl_algo vgui)
 
 #tests
-SUBDIRS(tests)
+subdirs(tests)

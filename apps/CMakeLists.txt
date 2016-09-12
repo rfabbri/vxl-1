@@ -1,9 +1,9 @@
 # apps/CMakeLists.txt
 # Other Apps.
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/algo )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/algo )
+include_directories( ${lems_SOURCE_DIR}/basic )
 
 #Command line shock detection
-#SUBDIRS( shockcmd )
+#subdirs( shockcmd )

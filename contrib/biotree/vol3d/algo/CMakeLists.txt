@@ -1,23 +1,23 @@
 # created by K. Kang for holding all the algorithm based on 3d volume data 
-INCLUDE_DIRECTORIES(${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories(${VXL_BRL_INCLUDE_DIR}/bbas )
 
-SET(vol3d_algo_src
+set(vol3d_algo_src
     vol3d_radius_detection.h                      vol3d_radius_detection.cxx
     vol3d_gaussian_filtering_proc.txx             vol3d_gaussian_filtering_proc.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates vol3d_algo_src)
-ADD_LIBRARY(vol3d_algo ${vol3d_algo_src})
+aux_source_directory(Templates vol3d_algo_src)
+add_library(vol3d_algo ${vol3d_algo_src})
 
-TARGET_LINK_LIBRARIES(vol3d_algo vcl vbl vol3d bsta)
+target_link_libraries(vol3d_algo vcl vbl vol3d bsta)
 
-SUBDIRS(io)
+subdirs(io)
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)
 
-IF(BUILD_EXAMPLES)
-  SUBDIRS(examples)
-ENDIF(BUILD_EXAMPLES)
+if(BUILD_EXAMPLES)
+  subdirs(examples)
+endif(BUILD_EXAMPLES)
 

@@ -1,29 +1,29 @@
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/shp )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/rec )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories( ${lems_SOURCE_DIR}/brcv )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${lems_SOURCE_DIR}/brcv/rec )
+include_directories( ${lems_SOURCE_DIR}/basic )
 
-SET(dbsksp_shape_factory_sources
+set(dbsksp_shape_factory_sources
        dbsksp_shape_factory.h dbsksp_shape_factory.cxx
     )
-ADD_LIBRARY( dbsksp_shape_factory  ${dbsksp_shape_factory_sources} )
-TARGET_LINK_LIBRARIES (dbsksp_shape_factory dbsksp_pro  dbsks_pro)
+add_library( dbsksp_shape_factory  ${dbsksp_shape_factory_sources} )
+target_link_libraries (dbsksp_shape_factory dbsksp_pro  dbsks_pro)
 
-SET(dbsksp_shape_factory_driver_sources
+set(dbsksp_shape_factory_driver_sources
        driver.cxx
     )
-ADD_EXECUTABLE( dbsksp_shape_factory_driver  ${dbsksp_shape_factory_driver_sources} )
-TARGET_LINK_LIBRARIES (dbsksp_shape_factory_driver dbsksp_shape_factory)
+add_executable( dbsksp_shape_factory_driver  ${dbsksp_shape_factory_driver_sources} )
+target_link_libraries (dbsksp_shape_factory_driver dbsksp_shape_factory)
 
-SET(dbsksp_shape_factory_driver2_sources
+set(dbsksp_shape_factory_driver2_sources
        driver2.cxx
     )
-ADD_EXECUTABLE( dbsksp_shape_factory_driver2  ${dbsksp_shape_factory_driver2_sources} )
-TARGET_LINK_LIBRARIES (dbsksp_shape_factory_driver2 dbsksp_shape_factory)
+add_executable( dbsksp_shape_factory_driver2  ${dbsksp_shape_factory_driver2_sources} )
+target_link_libraries (dbsksp_shape_factory_driver2 dbsksp_shape_factory)

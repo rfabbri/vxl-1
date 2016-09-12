@@ -1,17 +1,17 @@
 # breye2s/bvis/CMakeLists.txt
 
 
-INCLUDE_DIRECTORIES( ${VXL_VGUI_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
+include_directories( ${VXL_VGUI_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_OXL_INCLUDE_DIR} )
 
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
-SET(bvis_sources 
+set(bvis_sources 
 
 #basic bvis classes
    bvis_macros.h
@@ -53,18 +53,18 @@ SET(bvis_sources
 )
 
 
-AUX_SOURCE_DIRECTORY(Templates bvis_sources)
+aux_source_directory(Templates bvis_sources)
 
-ADD_LIBRARY(bvis ${bvis_sources})
+add_library(bvis ${bvis_sources})
 
-TARGET_LINK_LIBRARIES(bvis bpro vidpro bgui mvl vbl vbl_io)
-
-
-IF( BUILD_EXAMPLES )
-
-  SUBDIRS( examples )
-
-ENDIF( BUILD_EXAMPLES )
+target_link_libraries(bvis bpro vidpro bgui mvl vbl vbl_io)
 
 
-ENDIF (VXL_VGUI_FOUND)
+if( BUILD_EXAMPLES )
+
+  subdirs( examples )
+
+endif( BUILD_EXAMPLES )
+
+
+endif (VXL_VGUI_FOUND)

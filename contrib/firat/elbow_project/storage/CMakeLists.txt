@@ -1,11 +1,11 @@
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VTK_LIBRARY_PATH})
-INCLUDE_DIRECTORIES( ${VTK_INCLUDE_PATH})
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VTK_LIBRARY_PATH})
+include_directories( ${VTK_INCLUDE_PATH})
 
-SET(elbow_storage_sources
+set(elbow_storage_sources
        elbow_vil3d_storage.cxx
        elbow_vil3d_storage.h
        elbow_vil3d_storage_sptr.h
@@ -20,5 +20,5 @@ SET(elbow_storage_sources
        elbow_levelset_function_storage_sptr.h
     )
     
-ADD_LIBRARY (elbow_storage ${elbow_storage_sources})
-TARGET_LINK_LIBRARIES (elbow_storage bpro1 vil3d)
+add_library (elbow_storage ${elbow_storage_sources})
+target_link_libraries (elbow_storage bpro1 vil3d)

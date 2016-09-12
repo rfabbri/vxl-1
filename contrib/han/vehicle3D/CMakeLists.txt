@@ -1,34 +1,34 @@
 
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR}/mbl )
-#ADD_EXECUTABLE (CRHM  main.cxx )
-#TARGET_LINK_LIBRARIES(CRHM vgl vnl vul mbl)
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR}/mbl )
+#add_executable (CRHM  main.cxx )
+#target_link_libraries(CRHM vgl vnl vul mbl)
 
 
-SET(vehicle3D_source
+set(vehicle3D_source
     vehicle3D.cxx vehicle3D.h
     )
 
-ADD_LIBRARY(vehicle3D ${vehicle3D_source})
-TARGET_LINK_LIBRARIES(vehicle3D vgl vgl_algo  vnl vul mbl )
+add_library(vehicle3D ${vehicle3D_source})
+target_link_libraries(vehicle3D vgl vgl_algo  vnl vul mbl )
 
 
 
 
 
-#TARGET_LINK_LIBRARIES(dtube)
+#target_link_libraries(dtube)
 # Processing Library
-#SUBDIRS(exec)
+#subdirs(exec)
 
-#ADD_EXECUTABLE (dtube_test  main.cxx)
-#TARGET_LINK_LIBRARIES(dtube_test dtube vgl vnl vul)
+#add_executable (dtube_test  main.cxx)
+#target_link_libraries(dtube_test dtube vgl vnl vul)
 
-#ADD_EXECUTABLE (dtube_learn  main_learn.cxx control.cxx recog.h main.h sub.h)
-#TARGET_LINK_LIBRARIES(dtube_learn dtube vgl vnl vul)
+#add_executable (dtube_learn  main_learn.cxx control.cxx recog.h main.h sub.h)
+#target_link_libraries(dtube_learn dtube vgl vnl vul)
 
 
-ADD_EXECUTABLE (test_vehicle3D   test_vehicle3D.cxx )
-TARGET_LINK_LIBRARIES(test_vehicle3D vehicle3D vgl vnl vul)
+add_executable (test_vehicle3D   test_vehicle3D.cxx )
+target_link_libraries(test_vehicle3D vehicle3D vgl vnl vul)
 
 
 

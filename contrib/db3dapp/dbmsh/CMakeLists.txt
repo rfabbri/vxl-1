@@ -2,7 +2,7 @@
 # brcv/shp/dbmsh/CMakeLists.txt
 
 
-SET(dbmsh_sources
+set(dbmsh_sources
 
    dbmsh_item.h            dbmsh_item.cxx
    dbmsh_node.h            dbmsh_node.cxx
@@ -11,8 +11,8 @@ SET(dbmsh_sources
 
 )
 
-ADD_LIBRARY(dbmsh  ${dbmsh_sources})
+add_library(dbmsh  ${dbmsh_sources})
 
-SUBDIRS( vis )
+subdirs( vis )
 
 

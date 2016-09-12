@@ -2,11 +2,11 @@
 # Command line programs for mauro
 
 
-#SET(hello_sources
+#set(hello_sources
 #   hello.cxx
 #)
 
-SET(mytest_sources
+set(mytest_sources
 #   my_test_1.cxx
 #   my_test_2.cxx
    my_test_3.cxx
@@ -14,23 +14,23 @@ SET(mytest_sources
 
 
 ####################################################
-#ADD_EXECUTABLE(hello
+#add_executable(hello
 #  hello.h   you would list this here if it existed
 #  ${hello_sources}
 #
 #)
 #
 # add vxl components you wanna use:
-#TARGET_LINK_LIBRARIES( hello vcl )
+#target_link_libraries( hello vcl )
 
 ####################################################
-ADD_EXECUTABLE(my_test
+add_executable(my_test
 #  mytest.h   you would list this here if it existed
   ${mytest_sources}
 
 )
 
 # add vxl components you wanna use:
-#TARGET_LINK_LIBRARIES( my_test vcl vnl )
-#TARGET_LINK_LIBRARIES( my_test vcl vil) 
-TARGET_LINK_LIBRARIES(my_test vcl vgl)
+#target_link_libraries( my_test vcl vnl )
+#target_link_libraries( my_test vcl vil) 
+target_link_libraries(my_test vcl vgl)

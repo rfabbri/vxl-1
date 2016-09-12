@@ -1,20 +1,20 @@
 # This is contrib/knee_cartilage/CMakeLists.txt
 # Developement for : knee cartilage project
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/db3p )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/knee_cartilage )
+include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/brcv )
+include_directories( ${lems_SOURCE_DIR}/db3p )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/contrib/knee_cartilage )
 
-# SUBDIRS( MESH_nogui )
-SUBDIRS( gui )
+# subdirs( MESH_nogui )
+subdirs( gui )
 
 
 
 # my command line executables
-SUBDIRS( cmd )
+subdirs( cmd )
 
-SUBDIRS ( dbknee )
-SUBDIRS( dbknee_coord_cmd )
-# SUBDIRS( dbmsh3d )
+subdirs ( dbknee )
+subdirs( dbknee_coord_cmd )
+# subdirs( dbmsh3d )

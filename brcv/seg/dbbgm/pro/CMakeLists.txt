@@ -3,14 +3,14 @@
 
 
 # include directories into here if needed
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1)
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/brcv/seg )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/breye1)
+include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 
 
-SET(dbbgm_pro_sources
+set(dbbgm_pro_sources
    dbbgm_process.cxx          dbbgm_process.h
    dbbgm_storage.cxx          dbbgm_storage.h   dbbgm_storage_sptr.h
    
@@ -41,11 +41,11 @@ SET(dbbgm_pro_sources
 
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbbgm_pro_sources)
+aux_source_directory(Templates dbbgm_pro_sources)
 
-ADD_LIBRARY(dbbgm_pro ${dbbgm_pro_sources})
+add_library(dbbgm_pro ${dbbgm_pro_sources})
 
-TARGET_LINK_LIBRARIES(dbbgm_pro dbbgm_algo bbgm dbsta_algo bsta_algo)
+target_link_libraries(dbbgm_pro dbbgm_algo bbgm dbsta_algo bsta_algo)
 
 
 

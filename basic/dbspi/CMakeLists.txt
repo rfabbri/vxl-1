@@ -2,23 +2,23 @@
 # Brown Spatial Index Library
 
 
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR} )
+include_directories(${VXL_GEL_INCLUDE_DIR} )
 
-SET(dbspi_sources
+set(dbspi_sources
     dbspi_chamfer.txx          dbspi_chamfer.h
     dbspi_curve_map.cxx        dbspi_curve_map.h
     dbspi_curve_distance.cxx   dbspi_curve_distance.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbspi_sources)
+aux_source_directory(Templates dbspi_sources)
 
-ADD_LIBRARY(dbspi ${dbspi_sources})
+add_library(dbspi ${dbspi_sources})
 
-TARGET_LINK_LIBRARIES(dbspi vsol vil)
+target_link_libraries(dbspi vsol vil)
 
 # Processing Library
-SUBDIRS(pro)
+subdirs(pro)
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)

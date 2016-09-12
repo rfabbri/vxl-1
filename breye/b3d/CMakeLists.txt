@@ -1,15 +1,15 @@
 # breyes/b3d/CMakeLists.txt
 
-INCLUDE( ${LEMS_CMAKE_DIR}/Modules/UseBoil.cmake )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/basic )
+include( ${LEMS_CMAKE_DIR}/Modules/UseBoil.cmake )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${lems_SOURCE_DIR}/basic )
 
-#IF (HAS_BGUI3D)
+#if (HAS_BGUI3D)
 
-SET(b3d_sources
+set(b3d_sources
 
    main.cxx
    Shock3d_Main_Menu.cxx  Shock3d_Main_Menu.h
@@ -18,8 +18,8 @@ SET(b3d_sources
    Shock3d_Loader.cxx   Shock3d_Loader.h
 )
 
-ADD_EXECUTABLE(b3d ${b3d_sources})
+add_executable(b3d ${b3d_sources})
 
-TARGET_LINK_LIBRARIES(b3d boil shock3d vsol bsol shock3d bgui3d)
+target_link_libraries(b3d boil shock3d vsol bsol shock3d bgui3d)
 
-#ENDIF (HAS_BGUI3D)
+#endif (HAS_BGUI3D)

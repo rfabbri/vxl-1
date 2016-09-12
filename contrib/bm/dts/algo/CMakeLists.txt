@@ -1,12 +1,12 @@
 # This is /contrib/bm/dts/algo/CMakeLists.txt
 # Algorithms for time series data
 
-SET( dts_algo_sources
+set( dts_algo_sources
      dts_time_series_pca_vnl_vector_fixed.h              dts_time_series_pca_vnl_vector_fixed.hxx     
 	 dts_pixel_time_series_pca_vnl_vector_fixed.h		 dts_pixel_time_series_pca_vnl_vector_fixed.hxx
     )
    
-AUX_SOURCE_DIRECTORY( Templates dts_algo_sources )
+aux_source_directory( Templates dts_algo_sources )
 
-ADD_LIBRARY( dts_algo ${dts_algo_sources} )
-TARGET_LINK_LIBRARIES( dts_algo dts vbl vnl_algo vnl )
+add_library( dts_algo ${dts_algo_sources} )
+target_link_libraries( dts_algo dts vbl vnl_algo vnl )

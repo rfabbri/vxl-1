@@ -1,4 +1,4 @@
-SET( dborl_compute_xgraphs_from_silhou_sources
+set( dborl_compute_xgraphs_from_silhou_sources
   dborl_compute_xgraphs_from_silhou_params.h 
   dborl_compute_xgraphs_from_silhou_params_sptr.h
   dborl_compute_xgraphs_from_silhou_params.cxx
@@ -7,5 +7,5 @@ SET( dborl_compute_xgraphs_from_silhou_sources
 )
 
 
-ADD_EXECUTABLE (dborl_compute_xgraphs_from_silhou ${dborl_compute_xgraphs_from_silhou_sources} )
-TARGET_LINK_LIBRARIES (dborl_compute_xgraphs_from_silhou dborl_algo dbsk2d_pro dbsksp_pro dbdet_pro vidpro1)
+add_executable (dborl_compute_xgraphs_from_silhou ${dborl_compute_xgraphs_from_silhou_sources} )
+target_link_libraries (dborl_compute_xgraphs_from_silhou dborl_algo dbsk2d_pro dbsksp_pro dbdet_pro vidpro1)

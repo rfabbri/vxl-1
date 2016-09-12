@@ -1,32 +1,32 @@
 # This is brcv/mvg/dbdif/CMakeLists.txt
 # Brown Multiview Differential Geometry Library
 
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES(${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories(${VXL_GEL_INCLUDE_DIR} )
+include_directories(${VXL_GEL_INCLUDE_DIR}/mrc )
 
 
-SET(dbdif_sources
+set(dbdif_sources
 dbdif_analytic.cxx dbdif_analytic.h
 dbdif_camera.cxx dbdif_camera.h dbdif_frenet.h 
 dbdif_rig.cxx dbdif_rig.h
 dbdif_util.cxx dbdif_util.h
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbdif_sources)
+aux_source_directory(Templates dbdif_sources)
 
-ADD_LIBRARY(dbdif ${dbdif_sources})
+add_library(dbdif ${dbdif_sources})
 
-TARGET_LINK_LIBRARIES(dbdif vpgl vsol)
+target_link_libraries(dbdif vpgl vsol)
 
 # Algorithms Library
-SUBDIRS(algo)
+subdirs(algo)
 
 # Processing Library
-SUBDIRS(pro)
+subdirs(pro)
 
 # Visualization Library
-#SUBDIRS(vis)
+#subdirs(vis)
 
-IF(BUILD_TESTING)
-  SUBDIRS(tests)
-ENDIF(BUILD_TESTING)
+if(BUILD_TESTING)
+  subdirs(tests)
+endif(BUILD_TESTING)

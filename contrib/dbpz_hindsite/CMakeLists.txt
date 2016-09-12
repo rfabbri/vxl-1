@@ -1,18 +1,18 @@
 # lemsvxlsrc/contrib/dbpz_hindsite/CMakeLists.txt
 
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bbas )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_MUL_INCLUDE_DIR} )
 
 #added for livewire:
-#INCLUDE_DIRECTORIES( ${VXL_OXL_INCLUDE_DIR} )
+#include_directories( ${VXL_OXL_INCLUDE_DIR} )
 
 
-IF (VXL_VGUI_FOUND)
+if (VXL_VGUI_FOUND)
 
 
-SET(dbpz_hindsite_sources
+set(dbpz_hindsite_sources
 
                                                 bfrag_Main.cxx
     bfrag_Main_Menu.h                           bfrag_Main_Menu.cxx
@@ -44,11 +44,11 @@ SET(dbpz_hindsite_sources
 
 )
 
-ADD_EXECUTABLE(dbpz_hindsite ${dbpz_hindsite_sources})
+add_executable(dbpz_hindsite ${dbpz_hindsite_sources})
 
-TARGET_LINK_LIBRARIES(dbpz_hindsite vsol bsol bgui vil vcl) 
-#TARGET_LINK_LIBRARIES(dbpz_hindsite vsol bsol bgui dbvis1) 
+target_link_libraries(dbpz_hindsite vsol bsol bgui vil vcl) 
+#target_link_libraries(dbpz_hindsite vsol bsol bgui dbvis1) 
 #add for liveWire: dbvis1
 
 
-ENDIF (VXL_VGUI_FOUND)
+endif (VXL_VGUI_FOUND)

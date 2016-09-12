@@ -1,12 +1,12 @@
 # This project is designed to be built outside the Insight source tree.
-PROJECT(lems_itk)
+project(lems_itk)
 
 # Find ITK.
-FIND_PACKAGE(ITK)
-IF(ITK_FOUND)
-  INCLUDE(${ITK_USE_FILE})
-  ADD_EXECUTABLE(HelloWorld HelloWorld.cxx )
-  TARGET_LINK_LIBRARIES(HelloWorld ITKCommon)
+find_package(ITK)
+if(ITK_FOUND)
+  include(${ITK_USE_FILE})
+  add_executable(HelloWorld HelloWorld.cxx )
+  target_link_libraries(HelloWorld ITKCommon)
   
-  SUBDIRS( surfmatch )
-ENDIF(ITK_FOUND)
+  subdirs( surfmatch )
+endif(ITK_FOUND)

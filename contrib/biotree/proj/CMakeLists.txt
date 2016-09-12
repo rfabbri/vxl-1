@@ -1,11 +1,11 @@
-INCLUDE_DIRECTORIES(${biotree_SOURCE_DIR})
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
-INCLUDE_DIRECTORIES( ${VXL_MUL_INCLUDE_DIR})
+include_directories(${biotree_SOURCE_DIR})
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories( ${VXL_MUL_INCLUDE_DIR})
 
-SET(CMAKE_CXX_FLAGS -O3)
-#SET(CMAKE_CXX_FLAGS -g)
+set(CMAKE_CXX_FLAGS -O3)
+#set(CMAKE_CXX_FLAGS -g)
 
-SET(bioproj_src
+set(bioproj_src
     bioproj_io.h                bioproj_io.cxx
     bioproj_mem_io.h            bioproj_mem_io.cxx
     bioproj_proc.h              bioproj_proc.cxx
@@ -25,20 +25,20 @@ SET(bioproj_src
     bioproj_filter_integrant.h  
    )
 
-AUX_SOURCE_DIRECTORY(Templates bioproj_src)
+aux_source_directory(Templates bioproj_src)
 
-ADD_LIBRARY(bioproj ${bioproj_src})
+add_library(bioproj ${bioproj_src})
 
-TARGET_LINK_LIBRARIES(bioproj vcl  vgl xscan imgr_file_format vil3d bscs vcsl) 
+target_link_libraries(bioproj vcl  vgl xscan imgr_file_format vil3d bscs vcsl) 
 
-IF(BUILD_EXAMPLES)
-    SUBDIRS(examples)
-ENDIF(BUILD_EXAMPLES)
+if(BUILD_EXAMPLES)
+    subdirs(examples)
+endif(BUILD_EXAMPLES)
   
-#IF(BUILD_TESTING)
-#  SUBDIRS(tests)
-#ENDIF(BUILD_TESTING)
+#if(BUILD_TESTING)
+#  subdirs(tests)
+#endif(BUILD_TESTING)
 
-IF(SIMVOLEON_FOUND)
-  SUBDIRS(vis)
-ENDIF(SIMVOLEON_FOUND)
+if(SIMVOLEON_FOUND)
+  subdirs(vis)
+endif(SIMVOLEON_FOUND)

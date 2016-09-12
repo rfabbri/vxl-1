@@ -2,24 +2,24 @@
 # Development Brown Video Library
 
 
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1 )
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/breye1/basic )
+include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories( ${lems_SOURCE_DIR}/breye1/basic )
 
-SET(dbvidl_sources 
+set(dbvidl_sources 
     dbvidl_boulder_video_codec.cxx    dbvidl_boulder_video_codec.h      dbvidl_boulder_video_codec_sptr.h
 dbvidl_parse_meta_file.h        dbvidl_parse_meta_file.cxx
 )
 
-AUX_SOURCE_DIRECTORY(Templates dbvidl_sources)
+aux_source_directory(Templates dbvidl_sources)
 
-ADD_LIBRARY(dbvidl  ${dbvidl_sources})
+add_library(dbvidl  ${dbvidl_sources})
 
-TARGET_LINK_LIBRARIES(dbvidl vidl1)
+target_link_libraries(dbvidl vidl1)
 
 
-SUBDIRS( pro )
+subdirs( pro )
 
-IF( BUILD_TESTING )
-  SUBDIRS(tests)
-ENDIF( BUILD_TESTING )
+if( BUILD_TESTING )
+  subdirs(tests)
+endif( BUILD_TESTING )
 

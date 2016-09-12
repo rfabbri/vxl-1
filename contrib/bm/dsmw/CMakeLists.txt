@@ -6,22 +6,22 @@
 
 project( smw )
 
-#MESSAGE( "smw_SOURCE_DIR = " ${smw_SOURCE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_CORE_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_BRL_INCLUDE_DIR}/bseg ) #bsta is next step down
-INCLUDE_DIRECTORIES( ${lems_SOURCE_DIR}/contrib/bm )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES( ${VXL_GEL_INCLUDE_DIR}/mrc )
+#message( "smw_SOURCE_DIR = " ${smw_SOURCE_DIR} )
+include_directories( ${VXL_CORE_INCLUDE_DIR} )
+include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg ) #bsta is next step down
+include_directories( ${lems_SOURCE_DIR}/contrib/bm )
+include_directories( ${VXL_GEL_INCLUDE_DIR} )
+include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 
-SET( dsmw_sources 
+set( dsmw_sources 
      dsmw_world.h    dsmw_world.cxx
      dsmw_graph.h    dsmw_graph.cxx
      dsmw_node.h     dsmw_node.cxx )
 
-ADD_LIBRARY( dsmw ${dsmw_sources} )
+add_library( dsmw ${dsmw_sources} )
 
-TARGET_LINK_LIBRARIES( dsmw vil vnl bsta )
+target_link_libraries( dsmw vil vnl bsta )
 
-SUBDIRS( executables )
+subdirs( executables )
 
-SUBDIRS( scratch_area )
+subdirs( scratch_area )
