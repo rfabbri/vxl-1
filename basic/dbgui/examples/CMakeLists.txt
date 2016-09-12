@@ -13,6 +13,6 @@
     if (HAS_OSMESA)
       set (srcs dump_screen.cxx track.cxx track.h segmented_contours.cxx segmented_contours.h)
       add_executable( dump_screen ${srcs})
-      target_link_libraries(dump_screen vgui vil vul expatpp ${OPENGL_LIBRARIES} ${OSMESA_LIBRARIES})
+      target_link_libraries(dump_screen vgui vidl1 vil vul expatpp ${OPENGL_LIBRARIES} ${OSMESA_LIBRARIES})
     endif (HAS_OSMESA)
   endif (VXL_VGUI_FOUND)

@@ -2,7 +2,6 @@
 # Brown statistics Library.
 
 include_directories( ${lems_SOURCE_DIR}/basic )
-include_directories( ${VCL_INCLUDE_DIR} )
 
 set(dbsta_sources
   dbsta_distribution.h

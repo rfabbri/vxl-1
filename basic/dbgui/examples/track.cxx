@@ -14,14 +14,10 @@
 #include <vul/vul_arg.h>
 #include <vil/vil_save.h>
 
-/*
-
-   ** OUTDATED -  VIDL1 DOES NOT EXISTS ANYMORE
-
 #include <vidl1/vidl1_movie.h>
 #include <vidl1/vidl1_clip.h>
 #include <vidl1/vidl1_io.h>
-*/
+
 
 track_info::track_info()
 {

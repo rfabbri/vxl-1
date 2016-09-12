@@ -15,7 +15,6 @@
 
 #include <vil/vil_image_view.h>
 #include <vil/vil_math.h>
-#include <vnl/vnl_math.h>
 
 #define MAX_CURVATURE 100
 #define MIN_CURVATURE .001

@@ -6,7 +6,6 @@
 // \file
 
 #include "dbsta_histogram.h"
-#include <vcl_iostream.h>
 
 
 

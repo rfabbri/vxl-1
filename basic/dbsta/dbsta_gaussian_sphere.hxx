@@ -10,7 +10,6 @@
 #include <vnl/io/vnl_io_matrix.h>
 #include <vnl/io/vnl_io_vector_fixed.h>
 #include <vnl/io/vnl_io_diag_matrix.h>
-#include <vcl_iostream.h>
 
 
 //: Update the covariance (and clear cached values)

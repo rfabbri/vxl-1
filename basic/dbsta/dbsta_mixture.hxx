@@ -11,7 +11,6 @@
 #include <vbl/vbl_smart_ptr.hxx>
 #include <vbl/io/vbl_io_smart_ptr.hxx>
 #include <vsl/vsl_vector_io.h>
-#include <vcl_iostream.h>
   
   
 

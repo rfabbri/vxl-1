@@ -11,7 +11,6 @@
 #include <vnl/vnl_inverse.h>
 #include <vnl/vnl_math.h>
 #include <vcl_algorithm.h>
-#include <vcl_iostream.h>
 #include <vnl/io/vnl_io_matrix.h>
 #include <vnl/io/vnl_io_matrix_fixed.h>
 

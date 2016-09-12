@@ -9,7 +9,6 @@
 #include <vnl/vnl_math.h>
 #include <vcl_algorithm.h>
 #include <vcl_limits.h>
-#include <vcl_iostream.h>
 #include <vnl/io/vnl_io_matrix.h>
 #include <vnl/io/vnl_io_vector_fixed.h>
 #include <vnl/io/vnl_io_diag_matrix.h>

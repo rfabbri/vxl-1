@@ -20,7 +20,7 @@ public://functions
   track_info();
   int get_count();
   void setTrackCoordindateInfo ( track_coord_info* info);
-  void addTrackCoordinateInfo();
+  void track_info::addTrackCoordinateInfo();
   vcl_string getWidth();
   vcl_string getHeight();
   void setX(vcl_string *s);
