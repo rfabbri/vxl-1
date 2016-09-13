@@ -15,8 +15,8 @@
 #include <vil/vil_save.h>
 
 /*
-
-   ** OUTDATED -  VIDL1 DOES NOT EXISTS ANYMORE
+  ** vidl1 is DEPRECATED - if you need it, a copy is in breye1/vidl1
+  ** but rewriting to use the more efficient vidl is recommended
 
 #include <vidl1/vidl1_movie.h>
 #include <vidl1/vidl1_clip.h>
