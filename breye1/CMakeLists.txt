@@ -23,5 +23,9 @@ add_subdirectory( dbvis1 )
 # Virtual Object Recognition Lab
 add_subdirectory( vorl1 )
 
-#To be compatible with latest verison of vxl copy over library
-#add_subdirectory( vidl1 )
+# To be compatible with latest verison of vxl we have copied over obsolete vidl1
+# FIXME This lib is deprecated and must be removed from lemsvxl.
+# Old code still compiles but may have video functionality disabled.
+# Either rewrite the old code to use vxl's vidl (which is way more efficient),
+# or comment out if you need to use vidl1
+# add_subdirectory( vidl1 )
