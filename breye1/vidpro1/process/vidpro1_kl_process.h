@@ -15,10 +15,16 @@
 #include <bpro1/bpro1_process.h>
 #include <vcl_vector.h>
 #include <vcl_string.h>
+/*
+  XXX This will not compile with latest VXL because vgel has been terminated
+  There is a copy of it in lemsvxl/old/contrib/gel/vgel
+  If you need this, you must first modernize vgel and make it build
+
 #include <vgel/vgel_kl_params.h>
 #include <vgel/vgel_kl.h>
 #include <vgel/vgel_multi_view_data_vertex_sptr.h>
 #include <vgel/vgel_multi_view_data.h>
+*/
 
 //: Derived video process class for computing frame difference
 class vidpro1_kl_process : public bpro1_process {
@@ -43,8 +49,14 @@ public:
   bool finish();
 
 private:
+/*
+  XXX This will not compile with latest VXL because vgel has been terminated
+  There is a copy of it in lemsvxl/old/contrib/gel/vgel
+  If you need this, you must first modernize vgel and make it build
+
     vgel_kl_params kl_params;
     vgel_kl * kl_points;
+*/
 
 };
 

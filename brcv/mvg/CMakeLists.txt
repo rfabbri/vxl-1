@@ -28,6 +28,10 @@ add_subdirectory( dbrkf )
 add_subdirectory( dbirl )
 
 # Brown Registered Camera Computation Library
+# 
+# TODO This will not compile with latest VXL because vgel has been terminated
+# There is a copy of it in lemsvxl/old/contrib/gel/vgel
+# If you need this, you must first modernize vgel and make it build
 add_subdirectory( dbrcl )
 
 # Brown Multiview Differential Geometry Library

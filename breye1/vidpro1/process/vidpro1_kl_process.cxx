@@ -19,7 +19,14 @@
 #include<vtol/vtol_vertex_2d_sptr.h>
 
 //: Constructor
-vidpro1_kl_process::vidpro1_kl_process(void): bpro1_process(),kl_params(),kl_points(NULL)
+vidpro1_kl_process::vidpro1_kl_process(void)
+/*
+  XXX This will not compile with latest VXL because vgel has been terminated
+  There is a copy of it in lemsvxl/old/contrib/gel/vgel
+  If you need this, you must first modernize vgel and make it build
+
+  : bpro1_process(),kl_params(),kl_points(NULL)
+*/
 {
     
     if( !parameters()->add( "No of Points" , "-klnumpoints" , (int)100) ||
@@ -36,7 +43,9 @@ vidpro1_kl_process::vidpro1_kl_process(void): bpro1_process(),kl_params(),kl_poi
 //: Destructor
 vidpro1_kl_process::~vidpro1_kl_process()
 {
-    delete(kl_points);
+  /* TODO */
+  std::cout << std::cerr << "In ~vidpro1_kl_process() - IMPORTANT: This will not work with the latest VXL because vgel has been terminated\nThere is a copy of it in lemsvxl/old/contrib/gel/vgel\nIf you need this, you must first modernize vgel and make it build\n\n";
+/*    delete(kl_points); */
 }
 
 
@@ -100,7 +109,17 @@ vidpro1_kl_process::execute()
 
   vil_image_resource_sptr image1_sptr = frame_image1->get_image();
   vil_image_resource_sptr image2_sptr = frame_image2->get_image();
-  
+
+  /* TODO */
+  std::cout << std::cerr << "In vidpro1_kl_process::execute() - IMPORTANT: This will not work with the latest VXL because vgel has been terminated\nThere is a copy of it in lemsvxl/old/contrib/gel/vgel\nIf you need this, you must first modernize vgel and make it build\n\n";
+
+  return false;
+
+/*
+  TODO This will not compile with latest VXL because vgel has been terminated
+  There is a copy of it in lemsvxl/old/contrib/gel/vgel
+  If you need this, you must first modernize vgel and make it build
+
   parameters()->get_value("-klnumpoints",kl_params.numpoints);
   parameters()->get_value("-klrange",kl_params.search_range);
 
@@ -139,6 +158,7 @@ vidpro1_kl_process::execute()
   output_vsol->add_objects(klt_points, "KL feature point");
   output_data_[0].push_back(output_vsol);
   return true;  
+  */
 }
 //: Clone the process
 bpro1_process*
