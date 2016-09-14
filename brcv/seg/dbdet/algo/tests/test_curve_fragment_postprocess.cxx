@@ -80,18 +80,31 @@ detailed_test()
 
   vil_image_view <float> image(c,r,1);
 
+  // TODO make this an rgb image
   image.fill(1);
 
   image(2,3)=0;
   image(2,0)=0;
   image(0,0)=0;
+  image(3,2)=0;
   image(6,4)=0;
   DATA(image)[34]=0;
 
   std::cout << "Testing image:" << std::endl;
   vil_print_all(std::cout, image);
-  
 
+  // Build edge map
+  static unsigned const n_edgels = 2;
+  double xytheta[n_edgels][3] = {
+    {1, 3, vnl_math::pi},
+    {2, 1, vnl_math::pi/2}
+  };
+
+  dbdet_edgemap_sptr em = new dbdet_edgemap(image.ni(), image.nj());
+  for (unsigned i=0; i<n_edgels; i++)
+    em->insert(new dbdet_edgel(
+      vgl_point_2d<double>(xytheta[i][0], xytheta[i][1]), xytheta[i][2]));
+  
   // Compute the descriptor for a curve
 
   // Match the curve to itself by matching the SIFTs point-wise as a set.
@@ -100,10 +113,9 @@ detailed_test()
 
   // Curve to itself should have match cost equal to zero.
 
-  // TODO build edge map
 
   /*
-  dbdet_curve_fragment_cues cue_computer(image, edgemap);
+  dbdet_curve_fragment_cues cue_computer(image, em);
 
   dbdet_edgel_chain crv;
   y_feature_vector v;
