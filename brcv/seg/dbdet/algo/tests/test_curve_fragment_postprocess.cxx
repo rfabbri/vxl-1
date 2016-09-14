@@ -74,7 +74,7 @@ load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img, dbdet_curve_fragment_graph
 void
 detailed_test()
 {
-  /*// Generate a small image
+  // Generate a small image
   unsigned r=5,c=7;
 
   vil_image_view < float > image(r,c,1);
@@ -86,6 +86,7 @@ detailed_test()
   image(0,0)=0;
   image(4,4)=0;
   DATA(image)[34]=0;
+  
 
   // Compute the descriptor for a curve
 
@@ -97,6 +98,7 @@ detailed_test()
 
   // TODO build edge map
 
+  /*
   dbdet_curve_fragment_cues cue_computer(image, edgemap);
 
   dbdet_edgel_chain crv;
