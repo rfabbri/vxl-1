@@ -158,10 +158,6 @@ realistic_test()
   
   vnl_vector<double> gt_rank =
     static_cast<vnl_vector<double> > (vnl_file_vector<double>(rank_path.c_str()));
-  // ground truth rank
-  //double gt_rank_arr [] = { /* put comma separated ground truth rank from matlab for this dataset */ }; 
-  //unsigned n_gt = /* number of data points */;
-  //vnl_vector<double> gt_rank(gt_rank_arr, n_gt);
 
   TEST("rank size match", rank.size(), gt_rank.size());
   

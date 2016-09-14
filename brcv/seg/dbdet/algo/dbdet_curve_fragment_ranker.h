@@ -61,17 +61,30 @@ dbdet_curve_fragment_ranker(
   int nfrags = frags.size(); // list: expensive
   rank.set_size(nfrags);
   unsigned i = 0;
+
+  /**
+     fmean_2 = input_beta_2(1,:);
+     fstd_2 = input_beta_2(2,:);
+     beta_2 = input_beta_2(3,:);
+     beta_2 = beta_2./fstd_2;
+  **/
   vnl_vector<double> fmean2 = beta.get_row(0);
-  vnl_vector<double> beta_2 = beta.get_row(2);
+  vnl_vector<double> fstd2 = beta.get_row(1);
+  vnl_vector<double> beta2 = beta.get_row(2);
+  
+  for (int j = 0; j < beta2.size(); ++j)
+  {
+     beta2[j] /= fstd2[j];
+  }
 
   for (dbdet_edgel_chain_list_const_iter it=frags.begin(); it != frags.end(); it++, i++) {
     cues.compute_all_cues(*(*it), &fv);
 
     // rank[i] =  1 / (1 + exp(-([1, bg_grad, sat_grad, hue_grad, abs_k, edge_sparsity, wigg, len]-fmean_2)*beta_2'));
     rank[i] = 0;
-    for (unsigned f=0; f < Y_NUM_FEATURES; ++f)
+    for (unsigned f=0; f < fmean2.size(); ++f)
     {
-      rank[i] += (fmean2[f] - fv[f]) * beta_2[f];
+      rank[i] += (fmean2[f] - fv[f]) * beta2[f];
     }   
     rank[i] = 1.0 / (1.0 + exp(rank[i]));
   }
