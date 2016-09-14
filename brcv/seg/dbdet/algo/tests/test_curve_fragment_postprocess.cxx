@@ -170,7 +170,7 @@ realistic_test()
 //: Test the dbdet_curve_fragment_* functions
 MAIN( test_curve_fragment_postprocess )
 { 
-  START ("Test dbdet curve framgment post-processing");
+  START ("Test dbdet curve framgment post-processing (Depends of compute_cues test)");
 
   detailed_test();
   realistic_test();
