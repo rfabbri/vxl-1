@@ -7,6 +7,7 @@
 #include <vil/vil_image_view.h>
 #include <vil/vil_load.h>
 #include <vil/vil_rgb.h>
+#include <vil/vil_print.h>
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_file_matrix.h>
 #include <dbdet/algo/dbdet_sel.h>
@@ -77,15 +78,18 @@ detailed_test()
   // Generate a small image
   unsigned r=5,c=7;
 
-  vil_image_view < float > image(r,c,1);
+  vil_image_view <float> image(c,r,1);
 
   image.fill(1);
 
-  image(3,2)=0;
-  image(0,2)=0;
+  image(2,3)=0;
+  image(2,0)=0;
   image(0,0)=0;
-  image(4,4)=0;
+  image(6,4)=0;
   DATA(image)[34]=0;
+
+  std::cout << "Testing image:" << std::endl;
+  vil_print_all(std::cout, image);
   
 
   // Compute the descriptor for a curve
@@ -171,6 +175,6 @@ MAIN( test_curve_fragment_postprocess )
   START ("Test dbdet curve framgment post-processing");
 
   detailed_test();
-  realistic_test();
+//  realistic_test();
   SUMMARY();
 }
