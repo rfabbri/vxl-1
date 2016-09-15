@@ -17,8 +17,8 @@ compute_all_cues(
   features[Y_ONE] = 1;
 
   cuvature_cues(c, features_ptr);
-//  hsv_gradient_cues(c, features_ptr);
-//  features[Y_EDGE_SPARSITY] = lateral_edge_sparsity_cue(c, features_ptr);
+  hsv_gradient_cues(c, features_ptr);
+  features[Y_EDGE_SPARSITY] = lateral_edge_sparsity_cue(c, features_ptr);
   //mean_conf = mean(cfrag(:,4));
 
   // compute average edge strength (mean_conf)
@@ -77,15 +77,15 @@ hsv_gradient_cues(
 {
   // examine local_dist neighborhood around curve along normals
   unsigned const npts = c.edgels.size();
+  if (!npts) return;
   vcl_vector< vnl_vector_fixed<double, 2> > n;
   n.reserve(npts);
   vcl_vector<vgl_point_2d<double> > points;
+  points.reserve(npts);
 
   //to vector of points..
   for (unsigned i = 0; i < npts; ++i)
-  {
     points.push_back(c.edgels[i]->pt);
-  }
   dbgl_compute_normals(points, &n);
 
   // get neighborhood points to be examined
