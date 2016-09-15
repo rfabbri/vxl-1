@@ -17,17 +17,17 @@ compute_all_cues(
   features[Y_ONE] = 1;
 
   cuvature_cues(c, features_ptr);
-  hsv_gradient_cues(c, features_ptr);
-  features[Y_EDGE_SPARSITY] = lateral_edge_sparsity_cue(c, features_ptr);
+//  hsv_gradient_cues(c, features_ptr);
+//  features[Y_EDGE_SPARSITY] = lateral_edge_sparsity_cue(c, features_ptr);
   //mean_conf = mean(cfrag(:,4));
 
   // compute average edge strength (mean_conf)
 
   double conf=0;
-  for (dbdet_edgel_list_const_iter eit=c.edgels.begin(); eit != c.edgels.end(); eit++) {
+  for (dbdet_edgel_list_const_iter eit=c.edgels.begin(); eit != c.edgels.end(); eit++)
     conf += (*eit)->strength;
-  }
-  features[Y_MEAN_CONF] = conf / npts;
+  if (npts)
+    features[Y_MEAN_CONF] = conf / npts;
 }
 
 void
@@ -37,35 +37,31 @@ cuvature_cues(
       y_feature_vector *features_ptr // indexed by the enum
       )
 {
-  y_feature_vector &features = *features_ptr;
   unsigned const npts = c.edgels.size();
+  if (npts < 2) // curvature is only computed for two samples
+    return;
+  y_feature_vector &features = *features_ptr;
   // curvature
   vnl_vector<double> k;
   vcl_vector<vgl_point_2d<double> > points;
+  points.reserve(npts);
 
   //to vector of points..
   for (unsigned i = 0; i < npts; ++i)
-  {
     points.push_back(c.edgels[i]->pt);
-  } 
+
   dbgl_compute_curvature(points, &k);
   assert(k.size() == npts);
 
   for (unsigned i=0; i < npts; ++i)
-  {
     //Need to check if k=0 when inf works
     if (vnl_math::isnan(k[i]) || vnl_math::isinf(k[i]))
-    {
       k[i] = 0;
-    }
-  }
 
   { // wiggliness is the number of times curvature changes sign
     features[Y_WIGG] = 0;
     for (unsigned i=0; i + 1 < npts; ++i)
-    {
       features[Y_WIGG] += ( (k[i+1] >= 0) == (k[i] >= 0) );
-    }
     features[Y_WIGG] /= npts;
   }
  

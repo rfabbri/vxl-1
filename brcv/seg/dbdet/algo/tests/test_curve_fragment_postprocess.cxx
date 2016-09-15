@@ -79,7 +79,7 @@ detailed_test()
   // Generate a small image
   unsigned r=5,c=7;
 
-  vil_image_view <float> image(c,r,1);
+  vil_image_view <vil_rgb<vxl_byte> > image(c,r,1);
 
   // TODO make this an rgb image
   image.fill(1);
@@ -115,8 +115,7 @@ detailed_test()
   // Curve to itself should have match cost equal to zero.
 
 
-  /*
-  dbdet_curve_fragment_cues cue_computer(image, em);
+  dbdet_curve_fragment_cues cue_computer(image, *em);
 
   dbdet_edgel_chain crv;
   y_feature_vector v;
@@ -127,6 +126,7 @@ detailed_test()
   cue_computer.compute_all_cues(crv, &v);
 
   vcl_cout << "\n--- Testing 3-edgel curve case ---\n";
+  /*
 
   dbdet_edgel e1;
   e1.pt.set(3.,3.);
@@ -189,6 +189,6 @@ MAIN( test_curve_fragment_postprocess )
   START ("Test dbdet curve framgment post-processing (Depends of compute_cues test)");
 
   detailed_test();
-  realistic_test();
+//  realistic_test();
   SUMMARY();
 }
