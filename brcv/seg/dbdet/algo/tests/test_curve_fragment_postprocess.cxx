@@ -96,37 +96,31 @@ detailed_test()
 
   // Build edge map
   static unsigned const n_edgels = 2;
-  double xytheta[n_edgels][3] = {
-    {1, 3, vnl_math::pi},
-    {2, 1, vnl_math::pi/2}
+  const double xytheta[n_edgels][3] = {
+    {2.5, 3.5, vnl_math::pi/4},
+    {3.5, 2.5, vnl_math::pi/3}
   };
 
   dbdet_edgemap_sptr em = new dbdet_edgemap(image.ni(), image.nj());
-  for (unsigned i=0; i<n_edgels; i++)
+  for (unsigned i=0; i < n_edgels; i++)
     em->insert(new dbdet_edgel(
       vgl_point_2d<double>(xytheta[i][0], xytheta[i][1]), xytheta[i][2]));
   
   // Compute the descriptor for a curve
 
-  // Match the curve to itself by matching the SIFTs point-wise as a set.
-  // Dynamic programming may be used to speed this up by making use of the
-  // ordering along the curve.
-
-  // Curve to itself should have match cost equal to zero.
-
-
   dbdet_curve_fragment_cues cue_computer(image, *em);
 
+  {
   dbdet_edgel_chain crv;
   y_feature_vector v;
 
-  // corner case: empty curve -- should work
   vcl_cout << "\n--- Testing empty curve case ---\n";
-
   cue_computer.compute_all_cues(crv, &v);
+  }
 
-  vcl_cout << "\n--- Testing 3-edgel curve case ---\n";
-  /*
+  { vcl_cout << "\n--- Testing 3-edgel curve case ---\n";
+  dbdet_edgel_chain crv;
+  y_feature_vector v;
 
   dbdet_edgel e1;
   e1.pt.set(3.,3.);
@@ -139,11 +133,12 @@ detailed_test()
   crv.push_back(&e2);
 
   dbdet_edgel e3;
-  e3.pt.set(5.5,0.8); //< out of bounds
+  e3.pt.set(5.5,0.8);
   e3.tangent = vnl_math::pi/4.;
   crv.push_back(&e3);
 
-  cue_computer.compute(crv, &v);
+  cue_computer.compute_all_cues(crv, &v);
+  }
 
   // Compute all curves at the same time. 
 
@@ -151,6 +146,7 @@ detailed_test()
 
 
   //--------------------------------------------------------------
+  /*
   vnl_vector<double> rank;
   dbdet_curve_fragment_ranker(frags, img, beta, &rank);*/
 }

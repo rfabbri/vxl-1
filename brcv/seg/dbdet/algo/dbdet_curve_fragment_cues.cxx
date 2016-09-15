@@ -163,15 +163,17 @@ lateral_edge_sparsity_cue(
   } else { // no dt
   }
   */
-  // assert(!use_dt());
+  assert(!use_dt());
 
   const dbdet_edgel_list &e = c.edgels;
   for (unsigned i=0; i < npts; ++i) {
-    unsigned p_i = static_cast<unsigned>(e[i]->pt.x()+0.5);
-    unsigned p_j = static_cast<unsigned>(e[i]->pt.y()+0.5);
+    unsigned px = static_cast<unsigned>(e[i]->pt.x()+0.5);
+    unsigned py = static_cast<unsigned>(e[i]->pt.y()+0.5);
     //Need to check if it should be sum here
-    total_edges += em_.edge_cells(p_i,p_j).size();
-    mark_visited(p_i, p_j);
+    std::cout << e[i]->pt.x() << "," << e[i]->pt.y() << " / " << px << "," << py << std::endl;
+
+    total_edges += em_.cell(px,py).size();
+    mark_visited(px, py);
   }
 
   for (unsigned i=0; i < npts; ++i) {
@@ -188,7 +190,7 @@ lateral_edge_sparsity_cue(
         if (not_visited(p_i + d_i, p_j + d_j)) {
           unsigned nh_x = static_cast<unsigned>(p_i + d_i);
           unsigned nh_y = static_cast<unsigned>(p_j + d_j);
-          total_edges += em_.edge_cells(nh_x,nh_y).size();
+          total_edges += em_.cell(nh_x,nh_y).size();
           mark_visited(nh_x,nh_y);
         }
       }

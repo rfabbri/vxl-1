@@ -50,8 +50,8 @@ public:
     visited_(vil_border_create_accessor(visited_img_, vil_border_create_constant(visited_img_, dbdet_curve_fragment_cues_unvisited))),
     img_(img),
     //    dt_(dt),
-    em_(em)
-    //dt_(NULL)
+    em_(em),
+    dt_(NULL)
   {
     /*if (img.nplanes() != 3){
       std::cerr << "Input must be 3-plane RGB images!" << std::endl;
@@ -87,7 +87,7 @@ public:
         const dbdet_edgel_chain &c, 
         y_feature_vector *features_ptr // indexed by the enum
       );
-double lateral_edge_sparsity_cue(
+  double lateral_edge_sparsity_cue(
       const dbdet_edgel_chain &c,
       y_feature_vector *features_ptr // indexed by the enum
     );
@@ -99,12 +99,12 @@ double lateral_edge_sparsity_cue(
     return len;
   }
 private:
-//  bool use_dt() const { return dt_ != NULL; }
+  bool use_dt() const { return dt_ != NULL; }
   bool visited(int i, int j) const { return visited_(i,j) == visited_id_; }
   bool not_visited(int i, int j) const { return visited_(i,j) != visited_id_; }
   void mark_visited(int i, int j) { visited_img_(i,j) = visited_id_; }
   const vil_image_view<vil_rgb<vxl_byte> > &img_; // color RGB image
-  //  vil_image_view<vxl_uint_32> *dt_;
+  vil_image_view<vxl_uint_32> *dt_;
   // visited(i,j) = c marks pixels(i,j) as visited by curve c's nhood tube
   // visited(i,j) = UIHNT_MAX marks pixels(i,j) as not visited
   vil_image_view<vxl_uint_32> visited_img_;
