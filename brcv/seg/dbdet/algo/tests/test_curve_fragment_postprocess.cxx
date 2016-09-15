@@ -10,6 +10,7 @@
 #include <vil/vil_print.h>
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_file_matrix.h>
+#include <vnl/vnl_file_vector.h>
 #include <dbdet/algo/dbdet_sel.h>
 #include <dbdet/algo/dbdet_curve_fragment_cues.h>
 #include <dbdet/algo/dbdet_curve_fragment_ranker.h>
@@ -168,25 +169,26 @@ realistic_test()
   vnl_vector<double> rank;
   dbdet_curve_fragment_ranker(curve_fragment_graph.frags, edgemap_sptr, img, beta, &rank);
 
-  // ground truth rank
-  //double gt_rank_arr [] = { /* put comma separated ground truth rank from matlab for this dataset */ }; 
-  //unsigned n_gt = /* number of data points */;
-  //vnl_vector<double> gt_rank(gt_rank_arr, n_gt);
-
-  //TEST("rank size match", rank.size(), n_gt);
+  vcl_string root = dbtest_root_dir();
+  vcl_string rank_path = root + "/brcv/seg/dbdet/algo/tests/test_data/rank.txt";
   
-  //for (unsigned i=0; i < n_gt; ++i) {
-    //TEST_NEAR(rank[i], gt_rank[i], tolerance);
-  //}
+  vnl_vector<double> gt_rank =
+    static_cast<vnl_vector<double> > (vnl_file_vector<double>(rank_path.c_str()));
+
+  TEST("rank size match", rank.size(), gt_rank.size());
+  
+  for (unsigned i=0; i < gt_rank.size(); ++i) {
+    TEST_NEAR("Test rank[i]",rank[i], gt_rank[i], tolerance);
+  }
 
 }
 
 //: Test the dbdet_curve_fragment_* functions
 MAIN( test_curve_fragment_postprocess )
 { 
-  START ("Test dbdet curve framgment post-processing");
+  START ("Test dbdet curve framgment post-processing (Depends of compute_cues test)");
 
   detailed_test();
-//  realistic_test();
+  realistic_test();
   SUMMARY();
 }
