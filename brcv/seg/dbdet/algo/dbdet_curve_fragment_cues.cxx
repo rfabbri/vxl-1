@@ -56,14 +56,18 @@ cuvature_cues(
   assert(k.size() == npts);
 
   for (unsigned i=0; i < npts; ++i)
-    //Need to check if k=0 when inf works
-    if (vnl_math::isnan(k[i]) || vnl_math::isinf(k[i]))
+    if (vnl_math::isnan(k[i]))
       k[i] = 0;
 
-  { // wiggliness is the number of times curvature changes sign
+  { // wiggliness is the time curvature change sign
     features[Y_WIGG] = 0;
     for (unsigned i=0; i + 1 < npts; ++i)
-      features[Y_WIGG] += ( (k[i+1] >= 0) == (k[i] >= 0) );
+    {
+      if ((k[i+1] < 0) != (k[i] < 0))
+      {
+        features[Y_WIGG] += i + 1;
+      }
+    }
     features[Y_WIGG] /= npts;
   }
  
