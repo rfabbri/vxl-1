@@ -66,8 +66,8 @@ load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img, dbdet_curve_fragment_graph
 
   img = vil_convert_to_component_order(vil_convert_to_n_planes(3,
         vil_convert_stretch_range (vxl_byte(), vil_load(image_path.c_str()))));
-  dbdet_load_cem(frags_path, frags);
   dbdet_load_edg(edge_path, true, 1.0, edgemap);
+  dbdet_load_cem(frags_path, frags);
 
   // debug XXX
   //  dbdet_save_edg("tes-edg", edgemap); /*WORKS*/
