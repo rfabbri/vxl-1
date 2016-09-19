@@ -102,10 +102,10 @@ hsv_gradient_cues(
   features[Y_BG_GRAD]  = 0;
 
   for (unsigned i=0; i < npts; ++i) {
-    double left_x  = points[i].x() - local_dist_ * n[i][0];
-    double left_y  = points[i].y() - local_dist_ * n[i][1];
-    double right_x = points[i].x() + local_dist_ * n[i][0];
-    double right_y = points[i].y() + local_dist_ * n[i][1];
+    unsigned left_x  = static_cast<unsigned>(points[i].x() - local_dist_ * n[i][0] + 0.5);
+    unsigned left_y  = static_cast<unsigned>(points[i].y() - local_dist_ * n[i][1] + 0.5);
+    unsigned right_x = static_cast<unsigned>(points[i].x() + local_dist_ * n[i][0] + 0.5);
+    unsigned right_y = static_cast<unsigned>(points[i].y() + local_dist_ * n[i][1] + 0.5);
 
     // make sure image clamps to within bounds
     vil_border_accessor<vil_image_view<vil_rgb<vxl_byte> > >
