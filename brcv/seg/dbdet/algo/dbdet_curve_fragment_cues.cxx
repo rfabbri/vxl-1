@@ -123,10 +123,10 @@ hsv_gradient_cues(
         &hue_right, &sat_right, &bg_right);
 
     // TODO test if imae indexing is (x,y) or (y,x)
-    features[Y_SAT_GRAD] += vcl_abs(sat_left - sat_right);
-    features[Y_BG_GRAD]  += vcl_abs(bg_left - bg_right) / 255.;
+    features[Y_SAT_GRAD] += /*vcl_abs*/(sat_left - sat_right);
+    features[Y_BG_GRAD]  += /*vcl_abs*/(bg_left - bg_right) / 255.;
     // TODO need to make angle difference to make sense
-    features[Y_HUE_GRAD] += vcl_abs(hue_left - hue_right)/360.;
+    features[Y_HUE_GRAD] += /*vcl_abs*/(hue_left - hue_right)/360.;
   }
   features[Y_HUE_GRAD] /= npts;
   features[Y_SAT_GRAD] /= npts;
