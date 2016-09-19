@@ -115,7 +115,7 @@ private:
   // that way we reuse the buffer without clearing it
   vxl_uint_32 visited_id_;
   const dbdet_edgemap &em_;
-  static unsigned const local_dist_ = 1; // distance used for local sampling
+  static unsigned const local_dist_ = 2; // distance used for local sampling
   static unsigned const nbr_width_ = 3;  // distance used for lateral edge sparsity
 };
 
