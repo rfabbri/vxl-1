@@ -174,6 +174,8 @@ lateral_edge_sparsity_cue(
     //Need to check if it should be sum here
     std::cout << e[i]->pt.x() << "," << e[i]->pt.y() << " / " << px << "," << py << std::endl;
 
+    assert (px < ni());
+    assert (py < nj());
     total_edges += em_.cell(px,py).size();
     mark_visited(px, py);
   }

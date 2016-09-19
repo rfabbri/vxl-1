@@ -99,6 +99,8 @@ public:
     return len;
   }
 private:
+  unsigned ni() const { assert(visited_img_.ni() == em_.ncols()); return visited_img_.ni(); }
+  unsigned nj() const { assert(visited_img_.nj() == em_.nrows()); return visited_img_.nj(); }
   bool use_dt() const { return dt_ != NULL; }
   bool visited(int i, int j) const { return visited_(i,j) == visited_id_; }
   bool not_visited(int i, int j) const { return visited_(i,j) != visited_id_; }
