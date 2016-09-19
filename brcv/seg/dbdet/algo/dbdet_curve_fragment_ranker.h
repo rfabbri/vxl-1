@@ -46,7 +46,7 @@ typedef vnl_matrix_fixed<double, Y_PARAMS_NROWS, Y_PARAMS_NCOLS> y_trained_param
 void
 dbdet_curve_fragment_ranker(
     const dbdet_edgel_chain_list &frags,
-    const dbdet_edgemap_sptr edgemap_sptr,
+    const dbdet_edgemap_sptr &edgemap_sptr,
     const vil_image_view<vil_rgb<vxl_byte> > &img,
     const y_trained_parameters &beta,
 //    const texton_data &txdata,
@@ -56,7 +56,7 @@ dbdet_curve_fragment_ranker(
   vnl_vector<double> &rank = *rank_ptr;
   y_feature_vector fv;
 
-  dbdet_curve_fragment_cues cues(img, (*edgemap_sptr));
+  dbdet_curve_fragment_cues cues(img, *edgemap_sptr);
 
   int nfrags = frags.size(); // list: expensive
   rank.set_size(nfrags);

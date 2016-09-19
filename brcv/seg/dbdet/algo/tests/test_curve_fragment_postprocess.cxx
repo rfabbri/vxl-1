@@ -68,6 +68,10 @@ load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img, dbdet_curve_fragment_graph
         vil_convert_stretch_range (vxl_byte(), vil_load(image_path.c_str()))));
   dbdet_load_cem(frags_path, frags);
   dbdet_load_edg(edge_path, true, 1.0, edgemap);
+
+  // debug XXX
+  //  dbdet_save_edg("tes-edg", edgemap); /*WORKS*/
+  //  dbdet_save_cem("tes-cem", edgemap, frags); /* FAILS */
   vnl_matrix<double> tmp_beta =
     static_cast<vnl_matrix<double> > (vnl_file_matrix<double>(beta_path.c_str()));
   beta = y_trained_parameters(tmp_beta.data_block());
