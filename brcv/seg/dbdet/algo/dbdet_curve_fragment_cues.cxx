@@ -172,15 +172,12 @@ lateral_edge_sparsity_cue(
   assert(!use_dt());
 
   const dbdet_edgel_list &e = c.edgels;
-  for (unsigned i=0; i < npts; ++i) {
+  /*for (unsigned i=0; i < npts; ++i) {
     unsigned px = static_cast<unsigned>(e[i]->pt.x()+0.5);
     unsigned py = static_cast<unsigned>(e[i]->pt.y()+0.5);
-    //Need to check if it should be sum here
-    std::cout << e[i]->pt.x() << "," << e[i]->pt.y() << " / " << px << "," << py << std::endl;
 
     assert (px < ni());
     assert (py < nj());
-    total_edges += em_.cell(px,py).size();
     mark_visited(px, py);
   }
 
@@ -198,14 +195,48 @@ lateral_edge_sparsity_cue(
         if (not_visited(p_i + d_i, p_j + d_j)) {
           unsigned nh_x = static_cast<unsigned>(p_i + d_i);
           unsigned nh_y = static_cast<unsigned>(p_j + d_j);
-          total_edges += em_.cell(nh_x,nh_y).size();
+          total_edges += (em_.cell(nh_x,nh_y).size() > 0 ? 1 : 0);
           mark_visited(nh_x,nh_y);
         }
       }
     }
   }
-  visited_id_++;
+  visited_id_++;*/
   
+
+  //naive implementation
+  int w = ni();
+  int h = nj();
+  char * mask = new char[w * h];
+
+  for(int k = 0; k < w * h; ++k) mask[k] = 0;
+
+  for(int k = 0; k < npts; ++k)
+  {
+    int px = static_cast<int>(e[k]->pt.x()+0.5);
+    int py = static_cast<int>(e[k]->pt.y()+0.5);
+    for(int i = vcl_max(px - static_cast<int>(nbr_width_), 0); i < vcl_min(w, 1 + px + static_cast<int>(nbr_width_)); i++)
+      for(int j = vcl_max(py - static_cast<int>(nbr_width_), 0); j < vcl_min(h, 1 + py + static_cast<int>(nbr_width_)); j++)
+        mask[i * h + j] = 1;
+  }
+
+  for(int k = 0; k < npts; ++k)
+  {
+    unsigned px = static_cast<unsigned>(e[k]->pt.x()+0.5);
+    unsigned py = static_cast<unsigned>(e[k]->pt.y()+0.5);
+    mask[px * h + py] = 0;
+  }
+
+  for(int i = 0; i < w; ++i)
+  {
+    for(int j = 0; j < h; ++j)
+    {
+      (em_.cell(i, j).size() > 0 && mask[i * h + j]) ? total_edges++ : 0;
+    }
+  }
+
+  delete[] mask;
+
   features[Y_LEN] = euclidean_length(c);
   return total_edges / (features[Y_LEN] == 0 ? 1.0 : features[Y_LEN]);
 }
