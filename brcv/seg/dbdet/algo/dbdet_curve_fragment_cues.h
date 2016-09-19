@@ -26,7 +26,7 @@ enum yuliang_features {
   Y_ONE, Y_BG_GRAD, Y_SAT_GRAD, Y_HUE_GRAD, Y_ABS_K, Y_EDGE_SPARSITY, Y_WIGG, Y_LEN, Y_MEAN_CONF
 };
 
-#define Y_NUM_FEATURES 8
+#define Y_NUM_FEATURES 9
 
 typedef vnl_vector_fixed<double, Y_NUM_FEATURES> y_feature_vector;
 

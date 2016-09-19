@@ -16,16 +16,18 @@ compute_all_cues(
   y_feature_vector &features = *features_ptr;
   features[Y_ONE] = 1;
 
-  cuvature_cues(c, features_ptr);
-  hsv_gradient_cues(c, features_ptr);
-  features[Y_EDGE_SPARSITY] = lateral_edge_sparsity_cue(c, features_ptr);
+//  cuvature_cues(c, features_ptr);
+//  hsv_gradient_cues(c, features_ptr);
+//  features[Y_EDGE_SPARSITY] = lateral_edge_sparsity_cue(c, features_ptr);
   //mean_conf = mean(cfrag(:,4));
 
   // compute average edge strength (mean_conf)
 
   double conf=0;
-  for (dbdet_edgel_list_const_iter eit=c.edgels.begin(); eit != c.edgels.end(); eit++)
+  for (dbdet_edgel_list_const_iter eit=c.edgels.begin(); eit != c.edgels.end(); eit++) {
+    assert(*eit);
     conf += (*eit)->strength;
+  }
   if (npts)
     features[Y_MEAN_CONF] = conf / npts;
 }

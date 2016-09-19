@@ -172,11 +172,8 @@ realistic_test()
     static_cast<vnl_vector<double> > (vnl_file_vector<double>(rank_path.c_str()));
 
   TEST("rank size match", rank.size(), gt_rank.size());
-  
-  for (unsigned i=0; i < gt_rank.size(); ++i) {
+  for (unsigned i=0; i < gt_rank.size(); ++i)
     TEST_NEAR("Test rank[i]",rank[i], gt_rank[i], tolerance);
-  }
-
 }
 
 //: Test the dbdet_curve_fragment_* functions
@@ -185,6 +182,6 @@ MAIN( test_curve_fragment_postprocess )
   START ("Test dbdet curve framgment post-processing (Depends of compute_cues test)");
 
   detailed_test();
-//  realistic_test();
+  realistic_test();
   SUMMARY();
 }
