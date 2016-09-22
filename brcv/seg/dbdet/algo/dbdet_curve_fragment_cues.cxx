@@ -207,9 +207,10 @@ lateral_edge_sparsity_cue(
   //naive implementation
   int w = ni();
   int h = nj();
-  char * mask = new char[w * h];
 
-  for(int k = 0; k < w * h; ++k) mask[k] = 0;
+  for(int i = 0; i < w; ++i)
+    for(int j = 0; j < h; ++j)
+      mask(i, j) = 0;
 
   for(int k = 0; k < npts; ++k)
   {
@@ -217,25 +218,23 @@ lateral_edge_sparsity_cue(
     int py = static_cast<int>(e[k]->pt.y()+0.5);
     for(int i = vcl_max(px - static_cast<int>(nbr_width_), 0); i < vcl_min(w, 1 + px + static_cast<int>(nbr_width_)); i++)
       for(int j = vcl_max(py - static_cast<int>(nbr_width_), 0); j < vcl_min(h, 1 + py + static_cast<int>(nbr_width_)); j++)
-        mask[i * h + j] = 1;
+        mask(i, j) = 1;
   }
 
   for(int k = 0; k < npts; ++k)
   {
     unsigned px = static_cast<unsigned>(e[k]->pt.x()+0.5);
     unsigned py = static_cast<unsigned>(e[k]->pt.y()+0.5);
-    mask[px * h + py] = 0;
+    mask(px, py) = 0;
   }
 
   for(int i = 0; i < w; ++i)
   {
     for(int j = 0; j < h; ++j)
     {
-      (em_.cell(i, j).size() > 0 && mask[i * h + j]) ? total_edges++ : 0;
+      (em_.cell(i, j).size() > 0 && mask(i, j)) ? total_edges++ : 0;
     }
   }
-
-  delete[] mask;
 
   features[Y_LEN] = euclidean_length(c);
   return total_edges / (features[Y_LEN] == 0 ? 1.0 : features[Y_LEN]);

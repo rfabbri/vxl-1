@@ -1,4 +1,5 @@
 #include <vnl/vnl_vector_fixed.h>
+#include <vbl/vbl_array_2d.h>
 #include <vxl_config.h>
 #include <vcl_limits.h>
 #include <vil/vil_image_view.h>
@@ -30,7 +31,7 @@ enum yuliang_features {
 
 typedef vnl_vector_fixed<double, Y_NUM_FEATURES> y_feature_vector;
 
-static const vxl_uint_32 dbdet_curve_fragment_cues_unvisited = vcl_numeric_limits<vxl_uint_32>::max();
+//static const vxl_uint_32 dbdet_curve_fragment_cues_unvisited = vcl_numeric_limits<vxl_uint_32>::max();
 
 //: Compute curve fragment cues for many curves.
 // Holds state information such as distance transform and auxiliary buffers,
@@ -45,10 +46,11 @@ public:
     const dbdet_edgemap &em
     )
     :
-    visited_img_(img.ni(), img.nj()),
-    visited_id_(0),
-    visited_(vil_border_create_accessor(visited_img_, vil_border_create_constant(visited_img_, dbdet_curve_fragment_cues_unvisited))),
+    //visited_img_(img.ni(), img.nj()),
+    //visited_id_(0),
+    //visited_(vil_border_create_accessor(visited_img_, vil_border_create_constant(visited_img_, dbdet_curve_fragment_cues_unvisited))),
     img_(img),
+    mask(img.ni(), img.nj()),
     //    dt_(dt),
     em_(em),
     dt_(NULL)
@@ -58,7 +60,7 @@ public:
       abort();
     }*/
 
-    visited_img_.fill(dbdet_curve_fragment_cues_unvisited);
+    //visited_img_.fill(dbdet_curve_fragment_cues_unvisited);
     // outside indices return false (visited)
     //visited_ = vil_border_create_accessor(visited_img_, vil_border_create_constant(visited_img_, dbdet_curve_fragment_cues_unvisited));
   }
@@ -99,21 +101,22 @@ public:
     return len;
   }
 private:
-  unsigned ni() const { assert(visited_img_.ni() == em_.ncols()); return visited_img_.ni(); }
-  unsigned nj() const { assert(visited_img_.nj() == em_.nrows()); return visited_img_.nj(); }
+  unsigned ni() const { return em_.ncols(); }
+  unsigned nj() const { return em_.nrows(); }
   bool use_dt() const { return dt_ != NULL; }
-  bool visited(int i, int j) const { return visited_(i,j) == visited_id_; }
-  bool not_visited(int i, int j) const { return visited_(i,j) != visited_id_; }
-  void mark_visited(int i, int j) { visited_img_(i,j) = visited_id_; }
+  //bool visited(int i, int j) const { return visited_(i,j) == visited_id_; }
+  //bool not_visited(int i, int j) const { return visited_(i,j) != visited_id_; }
+  //void mark_visited(int i, int j) { visited_img_(i,j) = visited_id_; }
   const vil_image_view<vil_rgb<vxl_byte> > &img_; // color RGB image
   vil_image_view<vxl_uint_32> *dt_;
   // visited(i,j) = c marks pixels(i,j) as visited by curve c's nhood tube
   // visited(i,j) = UIHNT_MAX marks pixels(i,j) as not visited
-  vil_image_view<vxl_uint_32> visited_img_;
-  vil_border_accessor<vil_image_view<vxl_uint_32> > visited_;
+  //vil_image_view<vxl_uint_32> visited_img_;
+  //vil_border_accessor<vil_image_view<vxl_uint_32> > visited_;
   // each compute_cues() run increments the id to mark traversals in scrap buffer visited_
   // that way we reuse the buffer without clearing it
-  vxl_uint_32 visited_id_;
+  //vxl_uint_32 visited_id_;
+  vbl_array_2d<bool> mask;
   const dbdet_edgemap &em_;
   static unsigned const local_dist_ = 2; // distance used for local sampling
   static unsigned const nbr_width_ = 3;  // distance used for lateral edge sparsity

@@ -69,7 +69,6 @@ void cues_test()
     TEST_NEAR("Y_LEN", fv[Y_LEN], gt_cues.get(j, Y_LEN), tolerance);
     TEST_NEAR("Y_MEAN_CONF", fv[Y_MEAN_CONF], gt_cues.get(j, Y_MEAN_CONF), tolerance);
     //for now tests just for the first iter
-    break;
   }
 }
 
