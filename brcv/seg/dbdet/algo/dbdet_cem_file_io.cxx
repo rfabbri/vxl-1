@@ -210,7 +210,7 @@ dbdet_edgemap_sptr dbdet_load_cem(vcl_string filename, dbdet_curve_fragment_grap
     vcl_cout << " Error opening file  " << filename.c_str() << vcl_endl;
     return NULL;
   }
-
+  
   //determine the version of this file
   infp.getline(lineBuffer,1024); //read in the first line
   if (!vcl_strncmp(lineBuffer, ".CEM v2.0", sizeof(".CEM v2.0")-1))
@@ -310,7 +310,9 @@ dbdet_edgemap_sptr dbdet_load_cem_v2(vcl_ifstream &infp, dbdet_curve_fragment_gr
         infp >> e_id;
         
         while (!infp.fail()){ //read in all the ids until the end bracket is reached
-          chain->push_back(edgemap->edgels[e_id]);
+          //Duplicate edgels, CFG should not depend on the edgemap itself?
+          dbdet_edgel * e =  new dbdet_edgel(*edgemap->edgels[e_id]);
+          chain->push_back(e);
           infp >> e_id;
         }
         infp.clear(); //clear the fail bit
