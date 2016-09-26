@@ -221,11 +221,14 @@ lateral_edge_sparsity_cue(
         mask(i, j) = 1;
   }
 
-  for(int k = 0; k < npts; ++k)
+  for(int i = 0; i < npts; ++i)
   {
-    unsigned px = static_cast<unsigned>(e[k]->pt.x()+0.5);
-    unsigned py = static_cast<unsigned>(e[k]->pt.y()+0.5);
-    mask(px, py) = 0;
+    unsigned px = static_cast<unsigned>(e[i]->pt.x()+0.5);
+    for(int j = 0; j < npts; ++j)
+    {
+      unsigned py = static_cast<unsigned>(e[j]->pt.y()+0.5);
+      mask(px, py) = 0;
+    }
   }
 
   for(int i = 0; i < w; ++i)
