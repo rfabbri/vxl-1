@@ -34,7 +34,7 @@ void load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img, dbdet_curve_fragment_
   img = vil_convert_to_component_order(vil_convert_to_n_planes(3,
         vil_convert_stretch_range (vxl_byte(), vil_load(image_path.c_str()))));
 
-  dbdet_load_cem(frags_path, frags);
+  dbdet_load_cem(frags_path, frags, true);
   dbdet_load_edg(edge_path, true, 1.0, edgemap);
 }
 
@@ -57,10 +57,8 @@ void cues_test()
   
   unsigned j = 0;
   for (dbdet_edgel_chain_list_const_iter it=frags.begin(); it != frags.end(); it++, j++) {
-
     y_feature_vector fv;
     cues.compute_all_cues(*(*it), &fv);
-
     TEST_NEAR("Y_BG_GRAD", fv[Y_BG_GRAD], gt_cues.get(j, Y_BG_GRAD), tolerance);
     TEST_NEAR("Y_SAT_GRAD", fv[Y_SAT_GRAD], gt_cues.get(j, Y_SAT_GRAD), tolerance);
     TEST_NEAR("Y_HUE_GRAD", fv[Y_HUE_GRAD], gt_cues.get(j, Y_HUE_GRAD), tolerance);

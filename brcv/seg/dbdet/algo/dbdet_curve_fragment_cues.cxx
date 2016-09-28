@@ -63,7 +63,8 @@ cuvature_cues(
     features[Y_WIGG] = 0;
     for (unsigned i=0; i + 1 < npts; ++i)
     {
-      if ((k[i+1] < 0) != (k[i] < 0))
+      double val = k[i+1] * k[i];
+      if (val < 0.0 && vnl_math::abs(val) > epsilon)
       {
         features[Y_WIGG] += i + 1;
       }
