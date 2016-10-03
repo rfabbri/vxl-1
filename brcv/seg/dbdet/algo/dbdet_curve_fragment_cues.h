@@ -120,7 +120,7 @@ private:
   const dbdet_edgemap &em_;
   static unsigned const local_dist_ = 2; // distance used for local sampling
   static unsigned const nbr_width_ = 3;  // distance used for lateral edge sparsity
-  static double const epsilon = 1e-16;
+  static double const epsilon = 1e-10;
 };
 
 

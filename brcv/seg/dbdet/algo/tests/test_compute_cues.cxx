@@ -59,6 +59,7 @@ void cues_test()
   for (dbdet_edgel_chain_list_const_iter it=frags.begin(); it != frags.end(); it++, j++) {
     y_feature_vector fv;
     cues.compute_all_cues(*(*it), &fv);
+
     TEST_NEAR("Y_BG_GRAD", fv[Y_BG_GRAD], gt_cues.get(j, Y_BG_GRAD), tolerance);
     TEST_NEAR("Y_SAT_GRAD", fv[Y_SAT_GRAD], gt_cues.get(j, Y_SAT_GRAD), tolerance);
     TEST_NEAR("Y_HUE_GRAD", fv[Y_HUE_GRAD], gt_cues.get(j, Y_HUE_GRAD), tolerance);
