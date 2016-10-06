@@ -24,13 +24,13 @@
 bool dbdet_save_cem(vcl_string filename, dbdet_edgemap_sptr EM, dbdet_curve_fragment_graph& CFG);
 
 //: Loads an ascii file containing a graph of edgel chains (the contour fragment graph)
-dbdet_edgemap_sptr dbdet_load_cem(vcl_string filename, dbdet_curve_fragment_graph& CFG, bool duplicate_edgel = false);
+dbdet_edgemap_sptr dbdet_load_cem(vcl_string filename, dbdet_curve_fragment_graph& CFG);
 
 //: load cem file version 2
-dbdet_edgemap_sptr dbdet_load_cem_v2(vcl_ifstream &infp, dbdet_curve_fragment_graph& CFG, bool duplicate_edgel = false);
+dbdet_edgemap_sptr dbdet_load_cem_v2(vcl_ifstream &infp, dbdet_curve_fragment_graph& CFG);
 
 //: load the older version (aka version 1) of the cem file (for backward compatibility)
-dbdet_edgemap_sptr dbdet_load_cem_v1(vcl_ifstream &infp, dbdet_curve_fragment_graph& CFG, int width = 1000, int height = 1000, bool convert_degrees_to_radians = true, bool duplicate_edgel = false);
+dbdet_edgemap_sptr dbdet_load_cem_v1(vcl_ifstream &infp, dbdet_curve_fragment_graph& CFG, int width = 1000, int height = 1000, bool convert_degrees_to_radians = true);
 
 #endif // dbdet_cem_file_io_h
 

@@ -203,6 +203,7 @@ lateral_edge_sparsity_cue(
     }
   }
   visited_id_++;*/
+  
 
   //naive implementation
   int w = ni();

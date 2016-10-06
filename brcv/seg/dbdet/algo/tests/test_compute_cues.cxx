@@ -34,8 +34,8 @@ void load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img, dbdet_curve_fragment_
   img = vil_convert_to_component_order(vil_convert_to_n_planes(3,
         vil_convert_stretch_range (vxl_byte(), vil_load(image_path.c_str()))));
 
-  dbdet_load_cem(frags_path, frags, true);
   dbdet_load_edg(edge_path, true, 1.0, edgemap);
+  dbdet_load_cem(frags_path, frags);
 }
 
 void cues_test()
@@ -68,6 +68,7 @@ void cues_test()
     TEST_NEAR("Y_WIGG", fv[Y_WIGG], gt_cues.get(j, Y_WIGG), tolerance);
     TEST_NEAR("Y_LEN", fv[Y_LEN], gt_cues.get(j, Y_LEN), tolerance);
     TEST_NEAR("Y_MEAN_CONF", fv[Y_MEAN_CONF], gt_cues.get(j, Y_MEAN_CONF), tolerance);
+    //for now tests just for the first iter
   }
 }
 
