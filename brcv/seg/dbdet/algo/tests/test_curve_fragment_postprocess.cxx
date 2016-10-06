@@ -25,7 +25,7 @@
 static const double tolerance=1e-3;
 
 void
-load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img, dbdet_curve_fragment_graph &frags, dbdet_edgemap_sptr &edgemap, y_trained_parameters &beta)
+load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img, dbdet_curve_fragment_graph &frags, dbdet_edgemap_sptr &edgemap_edg, dbdet_edgemap_sptr &edgemap_cem, y_trained_parameters &beta)
 {
   // Perform all operations Yuliang does:
   //
@@ -66,12 +66,9 @@ load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img, dbdet_curve_fragment_graph
 
   img = vil_convert_to_component_order(vil_convert_to_n_planes(3,
         vil_convert_stretch_range (vxl_byte(), vil_load(image_path.c_str()))));
-  dbdet_load_edg(edge_path, true, 1.0, edgemap);
-  dbdet_load_cem(frags_path, frags, true);
+  dbdet_load_edg(edge_path, true, 1.0, edgemap_edg);
+  edgemap_cem = dbdet_load_cem(frags_path, frags);
 
-  // debug XXX
-  //  dbdet_save_edg("tes-edg", edgemap); /*WORKS*/
-  //  dbdet_save_cem("tes-cem", edgemap, frags); /* FAILS */
   vnl_matrix<double> tmp_beta =
     static_cast<vnl_matrix<double> > (vnl_file_matrix<double>(beta_path.c_str()));
   beta = y_trained_parameters(tmp_beta.data_block());
@@ -162,9 +159,10 @@ realistic_test()
 {
   vil_image_view<vil_rgb<vxl_byte> > img;
   dbdet_curve_fragment_graph curve_fragment_graph;
-  dbdet_edgemap_sptr edgemap_sptr;
+  //Need to carry the cem edgemap or CFG edgels are deleted
+  dbdet_edgemap_sptr edgemap_sptr, edgemap_cem_sptr;
   y_trained_parameters beta;
-  load_dataset(img, curve_fragment_graph, edgemap_sptr, beta);
+  load_dataset(img, curve_fragment_graph, edgemap_sptr, edgemap_cem_sptr, beta);
 
   vnl_vector<double> rank;
   dbdet_curve_fragment_ranker(curve_fragment_graph.frags, edgemap_sptr, img, beta, &rank);
