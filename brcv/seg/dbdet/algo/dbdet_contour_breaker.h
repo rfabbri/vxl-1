@@ -30,6 +30,9 @@ dbdet_curve_fragment_graph dbdet_contour_breaker_geom(dbdet_curve_fragment_graph
 dbdet_curve_fragment_graph dbdet_contour_breaker_semantic(dbdet_curve_fragment_graph & CFG, y_feature_vector beta1, y_feature_vector fmean);
 
 private:
+
+void compute_break_point(vcl_vector<*dbdet_edgel_chain> & frags, unsigned frag_id, vcl_vector<unsigned> ids, vcl_set<unsigned> unique_ids, bool front, vcl_vector<unisgned> break_ids);
+
   unsigned ni() const { return em_.ncols(); }
   unsigned nj() const { return em_.nrows(); }
   bool use_dt() const { return dt_ != NULL; }
