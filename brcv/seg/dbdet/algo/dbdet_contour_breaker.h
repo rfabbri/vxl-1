@@ -25,13 +25,15 @@ public:
   nbr_num_edges = vcl_max(static_cast<unsigned>((nbr_num_edges_ * diag / diag_of_train) + 0.5), nbr_len_th);
   diag_ratio = diag / diag_of_train;
 };
-dbdet_curve_fragment_graph dbdet_contour_breaker_geom(dbdet_curve_fragment_graph & CFG, y_feature_vector beta1, y_feature_vector fmean);
+dbdet_curve_fragment_graph dbdet_contour_breaker_geom(dbdet_curve_fragment_graph & CFG, double[2] beta1, double[2] fmean);
 
-dbdet_curve_fragment_graph dbdet_contour_breaker_semantic(dbdet_curve_fragment_graph & CFG, y_feature_vector beta1, y_feature_vector fmean);
+dbdet_curve_fragment_graph dbdet_contour_breaker_semantic(dbdet_curve_fragment_graph & CFG, double[2] beta1, double[2] fmean);
 
 private:
 
 void compute_break_point(vcl_vector<*dbdet_edgel_chain> & frags, unsigned frag_id, vcl_vector<unsigned> ids, vcl_set<unsigned> unique_ids, bool front, vcl_vector<unisgned> break_ids);
+
+void compute_merge_probability(dbdet_edgel_chain & chain, unsigned nbr_range_th, double[2] beta1, double[2] fmean, vcl_vector<double> & prob);
 
   unsigned ni() const { return em_.ncols(); }
   unsigned nj() const { return em_.nrows(); }
