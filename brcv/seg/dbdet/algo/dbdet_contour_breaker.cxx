@@ -156,7 +156,7 @@ dbdet_contour_breaker_geom(
       if (clen[i] > (10 * diag_ratio) && *it->edgels.size() > (nbr_num_edges + 1) / i)
       {
         vcl_vector<double> prob;
-        compute_merge_probability(*it, nbr_num_edges /(2 * i) , beta1, fmean, prob);
+        compute_merge_probability_geom(*it, nbr_num_edges /(2 * i) , beta1, fmean, prob);
         double min = vcl_numeric_limits<double>::max();
         double lastVal = min;
         unsigned firstId = -1, lastId = -1;
@@ -293,8 +293,71 @@ dbdet_contour_breaker_semantic(
       y_feature_vector fmean
       )
 {
-  dbdet_curve_fragment_graph new_CFG(CFG);
+  dbdet_curve_fragment_graph newCFG(CFG);
+  vcl_vector<double> clen(newCFG.frags.size(), 0.0);
 
-  //TODO
+  for(unsigned i = 0; i < max_it; ++i)
+  {
+    for(dbdet_edgel_chain_list_iter it = newCFG.frags.begin(); it != newCFG.frags.end(); it++)
+    {
+      dbdet_edgel & start = *(*it->edgels.front);
+      dbdet_edgel & end = *(*it->edgels.back);
+
+      clen[i] = clen[i] == 0.0 ? clen[i] : euclidean_length(*it);
+
+      if (start.pt == end.pt && start.deriv == end.deriv)
+        continue;
+
+      if (clen[i] > (30 * diag_ratio) && *it->edgels.size() > (3 * nbr_num_edges) / i)
+      {
+        vcl_vector<double> prob;
+        compute_merge_probability_semantic(*it, nbr_num_edges /(2 * i) , beta1, fmean, prob);
+        double min = vcl_numeric_limits<double>::max();
+        double lastVal = min;
+        unsigned firstId = -1, lastId = -1;
+        for (int k = 0; k < prob.size() ++k)
+        {
+          if (prob[i] < min)
+          {
+            min = prob[i];
+            firstId = lastId = k; 
+          }
+          else if(prob[i] == min)
+          {
+            lastId = k;
+          }
+        }
+        if (min < merge_th_geom)
+        {
+          unsigned id = (firstId + lastId + 1) / 2;
+          dbdet_edgel_chain copy = *it;
+          dbdet_edgel_chain & ref = *it;
+
+          dbdet_edgel_chain * newChain;
+
+          ref.edgels = dbdet_edgel_list(copy.edgels.begin() + id, copy.edgels.end());
+          clen[i] = euclidean_length(ref);
+
+          newChain = new dbdet_edgel_chain();
+          newChain.edgels = dbdet_edgel_list(copy.edgels.begin(), copy.edgels.begin() + id + 1);
+          newCFG.frags.push_back(newChain);
+          clen.push_back(euclidean_length(*newChain));
+        }
+      }
+    }
+  }
+
   return new_CFG;
+}
+
+void dbdet_contour_breaker::
+compute_merge_probability_semantic(
+      dbdet_edgel_chain & chain,/*hsv_img, edge_map, tmap,*/
+      unsigned nbr_range_th,
+      double[2] beta1,
+      double[2] fmean,
+      vcl_vector<double> & prob
+      )
+{
+  //TODO
 }
