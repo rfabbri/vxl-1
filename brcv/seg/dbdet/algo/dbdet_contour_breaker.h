@@ -34,7 +34,7 @@ private:
 void compute_break_point(dbdet_edgel_chain & chain, unsigned frag_id, vcl_vector<unsigned> ids, vcl_set<unsigned> unique_ids, bool front, vcl_vector<unisgned> break_ids);
 
 void compute_merge_probability_geom(dbdet_edgel_chain & chain, unsigned nbr_range_th, double[2] beta1, double[2] fmean, vcl_vector<double> & prob);
-void compute_merge_probability_semantic(dbdet_edgel_chain & chain,/*hsv_img, edge_map, tmap,*/ nbr_range_th unsigned nbr_range_th, double[2] beta1, double[2] fmean, vcl_vector<double> & prob);
+void compute_merge_probability_semantic(dbdet_edgel_chain & chain,/*hsv_img, edge_map, tmap,*/ nbr_range_th unsigned nbr_range_th, yuliang_features beta1, yuliang_features fmean, vcl_vector<double> & prob);
 
   unsigned ni() const { return em_.ncols(); }
   unsigned nj() const { return em_.nrows(); }
@@ -51,6 +51,7 @@ void compute_merge_probability_semantic(dbdet_edgel_chain & chain,/*hsv_img, edg
   static unsigned const nbr_len_th = 5; // short curve under this length will be grouped due to geometry.
   static double const merge_th = 0.2;
   static double const merge_th_geom = 0.5;
+  static double const epsilon = 1e-10;
 }
 #endif dbdet_contour_breaker_h
 
