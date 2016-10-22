@@ -15,6 +15,8 @@ add_executable ( dbdet_algo_test_all
 
    test_edgemap.cxx
 
+   test_compute_cues.cxx
+
    test_curve_fragment_postprocess.cxx
 )
 
@@ -27,6 +29,8 @@ add_test( dbdet_algo_test_sel   dbdet_algo_test_all test_sel )
 add_test ( dbdet_algo_test_edgemap dbdet_algo_test_all test_edgemap )
 
 add_test ( dbdet_algo_test_curve_fragment_postprocess dbdet_algo_test_all test_curve_fragment_postprocess )
+
+add_test ( dbdet_algo_test_compute_cues dbdet_algo_test_all test_compute_cues )
 
 add_executable( dbdet_algo_test_include test_include.cxx )
 

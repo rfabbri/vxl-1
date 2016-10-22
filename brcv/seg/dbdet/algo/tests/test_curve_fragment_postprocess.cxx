@@ -7,8 +7,10 @@
 #include <vil/vil_image_view.h>
 #include <vil/vil_load.h>
 #include <vil/vil_rgb.h>
+#include <vil/vil_print.h>
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_file_matrix.h>
+#include <vnl/vnl_file_vector.h>
 #include <dbdet/algo/dbdet_sel.h>
 #include <dbdet/algo/dbdet_curve_fragment_cues.h>
 #include <dbdet/algo/dbdet_curve_fragment_ranker.h>
@@ -66,6 +68,10 @@ load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img, dbdet_curve_fragment_graph
         vil_convert_stretch_range (vxl_byte(), vil_load(image_path.c_str()))));
   dbdet_load_cem(frags_path, frags);
   dbdet_load_edg(edge_path, true, 1.0, edgemap);
+
+  // debug XXX
+  //  dbdet_save_edg("tes-edg", edgemap); /*WORKS*/
+  //  dbdet_save_cem("tes-cem", edgemap, frags); /* FAILS */
   vnl_matrix<double> tmp_beta =
     static_cast<vnl_matrix<double> > (vnl_file_matrix<double>(beta_path.c_str()));
   beta = y_trained_parameters(tmp_beta.data_block());
@@ -77,39 +83,48 @@ detailed_test()
   // Generate a small image
   unsigned r=5,c=7;
 
-  vil_image_view < float > image(r,c,1);
+  vil_image_view <vil_rgb<vxl_byte> > image(c,r,1);
 
+  // TODO make this an rgb image
   image.fill(1);
 
-  image(3,2)=0;
-  image(0,2)=0;
+  image(2,3)=0;
+  image(2,0)=0;
   image(0,0)=0;
-  image(4,4)=0;
+  image(3,2)=0;
+  image(6,4)=0;
   DATA(image)[34]=0;
-  
 
+  std::cout << "Testing image:" << std::endl;
+  vil_print_all(std::cout, image);
+
+  // Build edge map
+  static unsigned const n_edgels = 2;
+  const double xytheta[n_edgels][3] = {
+    {2.5, 3.5, vnl_math::pi/4},
+    {3.5, 2.5, vnl_math::pi/3}
+  };
+
+  dbdet_edgemap_sptr em = new dbdet_edgemap(image.ni(), image.nj());
+  for (unsigned i=0; i < n_edgels; i++)
+    em->insert(new dbdet_edgel(
+      vgl_point_2d<double>(xytheta[i][0], xytheta[i][1]), xytheta[i][2]));
+  
   // Compute the descriptor for a curve
 
-  // Match the curve to itself by matching the SIFTs point-wise as a set.
-  // Dynamic programming may be used to speed this up by making use of the
-  // ordering along the curve.
+  dbdet_curve_fragment_cues cue_computer(image, *em);
 
-  // Curve to itself should have match cost equal to zero.
-
-  // TODO build edge map
-
-  /*
-  dbdet_curve_fragment_cues cue_computer(image, edgemap);
-
+  {
   dbdet_edgel_chain crv;
   y_feature_vector v;
 
-  // corner case: empty curve -- should work
   vcl_cout << "\n--- Testing empty curve case ---\n";
-
   cue_computer.compute_all_cues(crv, &v);
+  }
 
-  vcl_cout << "\n--- Testing 3-edgel curve case ---\n";
+  { vcl_cout << "\n--- Testing 3-edgel curve case ---\n";
+  dbdet_edgel_chain crv;
+  y_feature_vector v;
 
   dbdet_edgel e1;
   e1.pt.set(3.,3.);
@@ -122,11 +137,12 @@ detailed_test()
   crv.push_back(&e2);
 
   dbdet_edgel e3;
-  e3.pt.set(5.5,0.8); //< out of bounds
+  e3.pt.set(5.5,0.8);
   e3.tangent = vnl_math::pi/4.;
   crv.push_back(&e3);
 
-  cue_computer.compute(crv, &v);
+  cue_computer.compute_all_cues(crv, &v);
+  }
 
   // Compute all curves at the same time. 
 
@@ -134,6 +150,7 @@ detailed_test()
 
 
   //--------------------------------------------------------------
+  /*
   vnl_vector<double> rank;
   dbdet_curve_fragment_ranker(frags, img, beta, &rank);*/
 }
@@ -152,23 +169,21 @@ realistic_test()
   vnl_vector<double> rank;
   dbdet_curve_fragment_ranker(curve_fragment_graph.frags, edgemap_sptr, img, beta, &rank);
 
-  // ground truth rank
-  //double gt_rank_arr [] = { /* put comma separated ground truth rank from matlab for this dataset */ }; 
-  //unsigned n_gt = /* number of data points */;
-  //vnl_vector<double> gt_rank(gt_rank_arr, n_gt);
-
-  //TEST("rank size match", rank.size(), n_gt);
+  vcl_string root = dbtest_root_dir();
+  vcl_string rank_path = root + "/brcv/seg/dbdet/algo/tests/test_data/rank.txt";
   
-  //for (unsigned i=0; i < n_gt; ++i) {
-    //TEST_NEAR(rank[i], gt_rank[i], tolerance);
-  //}
+  vnl_vector<double> gt_rank =
+    static_cast<vnl_vector<double> > (vnl_file_vector<double>(rank_path.c_str()));
 
+  TEST("rank size match", rank.size(), gt_rank.size());
+  for (unsigned i=0; i < gt_rank.size(); ++i)
+    TEST_NEAR("Test rank[i]",rank[i], gt_rank[i], tolerance);
 }
 
 //: Test the dbdet_curve_fragment_* functions
 MAIN( test_curve_fragment_postprocess )
 { 
-  START ("Test dbdet curve framgment post-processing");
+  START ("Test dbdet curve framgment post-processing (Depends of compute_cues test)");
 
   detailed_test();
   realistic_test();

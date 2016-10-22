@@ -46,7 +46,7 @@ typedef vnl_matrix_fixed<double, Y_PARAMS_NROWS, Y_PARAMS_NCOLS> y_trained_param
 void
 dbdet_curve_fragment_ranker(
     const dbdet_edgel_chain_list &frags,
-    const dbdet_edgemap_sptr edgemap_sptr,
+    const dbdet_edgemap_sptr &edgemap_sptr,
     const vil_image_view<vil_rgb<vxl_byte> > &img,
     const y_trained_parameters &beta,
 //    const texton_data &txdata,
@@ -56,23 +56,33 @@ dbdet_curve_fragment_ranker(
   vnl_vector<double> &rank = *rank_ptr;
   y_feature_vector fv;
 
-  dbdet_curve_fragment_cues cues(img, (*edgemap_sptr));
+  dbdet_curve_fragment_cues cues(img, *edgemap_sptr);
 
   int nfrags = frags.size(); // list: expensive
   rank.set_size(nfrags);
-  unsigned i = 0;
-  vnl_vector<double> fmean2 = beta.get_row(0);
-  vnl_vector<double> beta_2 = beta.get_row(2);
 
+  /**
+     fmean_2 = input_beta_2(1,:);
+     fstd_2 = input_beta_2(2,:);
+     beta_2 = input_beta_2(3,:);
+     beta_2 = beta_2./fstd_2;
+  **/
+  vnl_vector<double> fmean2 = beta.get_row(0);
+  vnl_vector<double> fstd2 = beta.get_row(1);
+  vnl_vector<double> beta2 = beta.get_row(2);
+  
+  for (int j = 0; j < beta2.size(); ++j)
+     beta2[j] /= fstd2[j];
+
+  unsigned i = 0;
   for (dbdet_edgel_chain_list_const_iter it=frags.begin(); it != frags.end(); it++, i++) {
+    assert(*it);
     cues.compute_all_cues(*(*it), &fv);
 
     // rank[i] =  1 / (1 + exp(-([1, bg_grad, sat_grad, hue_grad, abs_k, edge_sparsity, wigg, len]-fmean_2)*beta_2'));
     rank[i] = 0;
-    for (unsigned f=0; f < Y_NUM_FEATURES; ++f)
-    {
-      rank[i] += (fmean2[f] - fv[f]) * beta_2[f];
-    }   
+    for (unsigned f=0; f < fmean2.size(); ++f)
+      rank[i] += (fmean2[f] - fv[f]) * beta2[f];
     rank[i] = 1.0 / (1.0 + exp(rank[i]));
   }
 }

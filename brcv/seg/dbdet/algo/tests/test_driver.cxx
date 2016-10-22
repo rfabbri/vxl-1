@@ -3,6 +3,7 @@
 DECLARE( test_load_edg );
 DECLARE( test_sel );
 DECLARE( test_edgemap );
+DECLARE( test_compute_cues );
 DECLARE( test_curve_fragment_postprocess );
 
 void
@@ -11,6 +12,7 @@ register_tests()
   REGISTER( test_load_edg );
   REGISTER( test_sel );
   REGISTER( test_edgemap );
+  REGISTER( test_compute_cues );
   REGISTER( test_curve_fragment_postprocess );
 }
 

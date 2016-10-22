@@ -91,7 +91,7 @@ public:
   unsigned num_edgels() const { return edgels.size(); } ///< number of edgels in the edgemap
 
   //: read only access
-  const vcl_vector<dbdet_edgel*>& cell(int x, int y){ return edge_cells(y, x); }
+  const vcl_vector<dbdet_edgel*>& cell(int x, int y) const { return edge_cells(y, x); }
 
   //: put an edgel into the edgemap at the prescribed cell
   void insert(dbdet_edgel* e, int xx, int yy)

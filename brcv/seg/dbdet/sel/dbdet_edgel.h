@@ -48,7 +48,7 @@ public:
   int id;                  ///< unique id
 
   vgl_point_2d<double> pt; ///< the location of the edgel
-  double tangent;          ///< the orientation of the edgel
+  double tangent;          ///< the orientation of the edgel in radians
 
   //: the strength of the edgel (typically gradient magnitude)
   double strength;         

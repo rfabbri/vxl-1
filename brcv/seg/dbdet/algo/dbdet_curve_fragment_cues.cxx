@@ -25,9 +25,11 @@ compute_all_cues(
 
   double conf=0;
   for (dbdet_edgel_list_const_iter eit=c.edgels.begin(); eit != c.edgels.end(); eit++) {
+    assert(*eit);
     conf += (*eit)->strength;
   }
-  features[Y_MEAN_CONF] = conf / npts;
+  if (npts)
+    features[Y_MEAN_CONF] = conf / npts;
 }
 
 void
@@ -37,35 +39,31 @@ cuvature_cues(
       y_feature_vector *features_ptr // indexed by the enum
       )
 {
-  y_feature_vector &features = *features_ptr;
   unsigned const npts = c.edgels.size();
+  if (npts < 2) // curvature is only computed for two samples
+    return;
+  y_feature_vector &features = *features_ptr;
   // curvature
   vnl_vector<double> k;
   vcl_vector<vgl_point_2d<double> > points;
+  points.reserve(npts);
 
   //to vector of points..
   for (unsigned i = 0; i < npts; ++i)
-  {
     points.push_back(c.edgels[i]->pt);
-  } 
+
   dbgl_compute_curvature(points, &k);
   assert(k.size() == npts);
 
   for (unsigned i=0; i < npts; ++i)
-  {
     //Need to check if k=0 when inf works
     if (vnl_math::isnan(k[i]) || vnl_math::isinf(k[i]))
-    {
       k[i] = 0;
-    }
-  }
 
   { // wiggliness is the number of times curvature changes sign
     features[Y_WIGG] = 0;
     for (unsigned i=0; i + 1 < npts; ++i)
-    {
       features[Y_WIGG] += ( (k[i+1] >= 0) == (k[i] >= 0) );
-    }
     features[Y_WIGG] /= npts;
   }
  
@@ -81,15 +79,15 @@ hsv_gradient_cues(
 {
   // examine local_dist neighborhood around curve along normals
   unsigned const npts = c.edgels.size();
+  if (!npts) return;
   vcl_vector< vnl_vector_fixed<double, 2> > n;
   n.reserve(npts);
   vcl_vector<vgl_point_2d<double> > points;
+  points.reserve(npts);
 
   //to vector of points..
   for (unsigned i = 0; i < npts; ++i)
-  {
     points.push_back(c.edgels[i]->pt);
-  }
   dbgl_compute_normals(points, &n);
 
   // get neighborhood points to be examined
@@ -167,15 +165,19 @@ lateral_edge_sparsity_cue(
   } else { // no dt
   }
   */
-  // assert(!use_dt());
+  assert(!use_dt());
 
   const dbdet_edgel_list &e = c.edgels;
   for (unsigned i=0; i < npts; ++i) {
-    unsigned p_i = static_cast<unsigned>(e[i]->pt.x()+0.5);
-    unsigned p_j = static_cast<unsigned>(e[i]->pt.y()+0.5);
+    unsigned px = static_cast<unsigned>(e[i]->pt.x()+0.5);
+    unsigned py = static_cast<unsigned>(e[i]->pt.y()+0.5);
     //Need to check if it should be sum here
-    total_edges += em_.edge_cells(p_i,p_j).size();
-    mark_visited(p_i, p_j);
+    std::cout << e[i]->pt.x() << "," << e[i]->pt.y() << " / " << px << "," << py << std::endl;
+
+    assert (px < ni());
+    assert (py < nj());
+    total_edges += em_.cell(px,py).size();
+    mark_visited(px, py);
   }
 
   for (unsigned i=0; i < npts; ++i) {
@@ -192,7 +194,7 @@ lateral_edge_sparsity_cue(
         if (not_visited(p_i + d_i, p_j + d_j)) {
           unsigned nh_x = static_cast<unsigned>(p_i + d_i);
           unsigned nh_y = static_cast<unsigned>(p_j + d_j);
-          total_edges += em_.edge_cells(nh_x,nh_y).size();
+          total_edges += em_.cell(nh_x,nh_y).size();
           mark_visited(nh_x,nh_y);
         }
       }

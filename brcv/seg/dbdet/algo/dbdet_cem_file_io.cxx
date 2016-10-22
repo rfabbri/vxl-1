@@ -208,7 +208,7 @@ dbdet_edgemap_sptr dbdet_load_cem(vcl_string filename, dbdet_curve_fragment_grap
 
   if (!infp){
     vcl_cout << " Error opening file  " << filename.c_str() << vcl_endl;
-    return false;
+    return NULL;
   }
 
   //determine the version of this file
@@ -275,7 +275,8 @@ dbdet_edgemap_sptr dbdet_load_cem_v2(vcl_ifstream &infp, dbdet_curve_fragment_gr
       for (int i=0; i<num_edges; i++){
         infp.getline(lineBuffer,1024);
 
-        sscanf(lineBuffer,"(%lf, %lf)\t%lf\t%lf\t%lf",&x, &y, &dir, &conf, &d2f);
+        if (sscanf(lineBuffer,"(%100lf, %100lf)\t%100lf\t%100lf\t%100lf",&x, &y, &dir, &conf, &d2f) != 5)
+          std::cerr << "dbdet_load_cem_v2: input error for edgel #" << i << std::endl;
 
         //construct a new edgel and add it to the edgemap
         dbdet_edgel* e = new dbdet_edgel(vgl_point_2d<double>(x,y), dir, conf, d2f);
