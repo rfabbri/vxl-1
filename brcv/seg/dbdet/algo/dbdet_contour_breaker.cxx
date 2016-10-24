@@ -424,8 +424,9 @@ compute_merge_probability_semantic(
     wigg_cum[i] = last_wigg;
   }
 
+  vcl_vector<double> edge_sparsity_cum(npts, 0.0);
+  compute_edge_sparsity_integral(chain, n, nbr_width, edge_sparsity_cum);
 /**
-[~, edge_sparsity_cum] = compute_edge_sparsity_integral(x,y,N, nbr_width, edge_map);
 [~, ~, texton_hist_left_cum, texton_hist_right_cum] = compute_texture_hist_integral(x,y,N, nbr_width, tmap);
 **/
   yuliang_features features;
@@ -466,4 +467,38 @@ compute_merge_probability_semantic(
     prob[i] = 1.0 / (1.0 + exp(-sum));
   }
   //TODO: Work in progress
+}
+
+void dbdet_contour_breaker::
+compute_edge_sparcity_integral(
+      dbdet_edgel_chain & chain,
+      vcl_vector< vnl_vector_fixed<double, 2> > n,
+      unsigned nbr_width,
+      vcl_vector<double> & edge_sparcity
+      )
+{
+  unsigned npts =  chain.edgels.size();
+  points.resize(npts);
+  double last = 0;
+  for (unsigned k = 0; k < npts; ++k)
+  {
+    vgl_point_2d<double> & cur_pt = chain.edgels[k]->pt; 
+    unsigned xi = static_cast<unsigned>(vcl_max(0, vcl_min(ni(), cur_pt.x() - n[k][0] * nbr_width)));
+    unsigned xf = static_cast<unsigned>(vcl_max(0, vcl_min(ni(), cur_pt.x() + n[k][0] * nbr_width)));
+    unsigned yi = static_cast<unsigned>(vcl_max(0, vcl_min(nj(), cur_pt.x() - n[k][1] * nbr_width)));
+    unsigned yf = static_cast<unsigned>(vcl_max(0, vcl_min(nj(), cur_pt.x() + n[k][1] * nbr_width)));
+    if(xi > xf) vcl_swap(xi, xf);
+    if(yi > yf) vcl_swap(yi, yf);
+
+    double sum = 0;
+    for (unsigned i = xi; i < xf; ++i)
+    {
+      for (unsigned j = yi; yi < yf; ++j)
+      {
+        sum = em_.cell(i, j).size() > 0 ? sum + 1.0: sum;
+      }
+    }
+    last += sum;
+    edge_sparcity[k] = last;
+  }
 }
