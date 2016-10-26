@@ -27,8 +27,8 @@ MAIN( test_texton_classify )
 
   bool loadIn = loadFromTabSpaced((base_path + "/in.txt").c_str(), in);
   bool loadRef = loadFromTabSpaced((base_path + "/out.txt").c_str(), reference);
-  FilterBank fb(base_path);
-  TextonClassifier tex((base_path + "/tex/tex.txt").c_str());
+  dbdet_filter_bank fb(base_path);
+  dbdet_texton_classifier tex((base_path + "/tex/tex.txt").c_str());
 	
   if(loadIn && loadRef && fb.numFilters() > 0 && tex.numClasses() > 0)
   {
