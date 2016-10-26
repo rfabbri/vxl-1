@@ -478,7 +478,7 @@ compute_edge_sparcity_integral(
       )
 {
   unsigned npts =  chain.edgels.size();
-  points.resize(npts);
+  edge_sparcity.resize(npts);
   double last = 0;
   for (unsigned k = 0; k < npts; ++k)
   {
@@ -500,5 +500,48 @@ compute_edge_sparcity_integral(
     }
     last += sum;
     edge_sparcity[k] = last;
+  }
+}
+
+void dbdet_contour_breaker::
+compute_texture_hist_integral(
+      dbdet_edgel_chain & chain,
+      vcl_vector< vnl_vector_fixed<double, 2> > n,
+      unsigned nbr_width,
+      vcl_vector<y_hist_vector> & texton_hist_left,
+      vcl_vector<y_hist_vector> & texton_hist_right,
+      )
+{
+  unsigned npts =  chain.edgels.size();
+  texton_hist_left.resize(npts);
+  texton_hist_right.resize(npts);
+  
+  y_hist_left last_left = texton_hist_left[0], last_right = texton_hist_right[0];
+
+  for (unsigned i = 0; i < y_hist_size; ++i)
+    last_left[i] = last_right[i] = 0;
+
+  for (unsigned k = 0; k < npts; ++k)
+  {
+    vgl_point_2d<double> & cur_pt = chain.edgels[k]->pt; 
+    unsigned xi = static_cast<unsigned>(vcl_max(0, vcl_min(ni(), cur_pt.x() - n[k][0] * nbr_width)));
+    unsigned xf = static_cast<unsigned>(vcl_max(0, vcl_min(ni(), cur_pt.x() + n[k][0] * nbr_width)));
+    unsigned yi = static_cast<unsigned>(vcl_max(0, vcl_min(nj(), cur_pt.x() - n[k][1] * nbr_width)));
+    unsigned yf = static_cast<unsigned>(vcl_max(0, vcl_min(nj(), cur_pt.x() + n[k][1] * nbr_width)));
+    if(xi > xf) vcl_swap(xi, xf);
+    if(yi > yf) vcl_swap(yi, yf);
+
+    texton_hist_left[i] = last_left;
+    texton_hist_right[i] = last_right;
+
+    for (unsigned i = xi; i < xf; ++i)
+    {
+      for (unsigned j = yi; yi < yf; ++j)
+      {
+          //TODO 
+      }
+    }
+    last_left = texton_hist_left[i];
+    last_right = texton_hist_right[i];
   }
 }

@@ -7,6 +7,10 @@
 #include <vcl_cassert.h>
 #include "dbdet_curve_fragment_cues.h"
 
+#define y_hist_size 64
+
+typedef vnl_vector_fixed<unsigned, y_hist_size> y_hist_vector;
+
 class dbdet_contour_breaker {
 
 public:
@@ -38,6 +42,8 @@ private:
   void compute_merge_probability_semantic(dbdet_edgel_chain & chain,/*hsv_img, edge_map, tmap,*/ nbr_range_th unsigned nbr_range_th, yuliang_features beta1, yuliang_features fmean, vcl_vector<double> & prob);
 
   void compute_edge_sparcity_integral(dbdet_edgel_chain & chain, vcl_vector< vnl_vector_fixed<double, 2> > n, unsigned nbr_width, vcl_vector<double> & edge_sparcity);
+
+  void compute_texture_hist_integral(dbdet_edgel_chain & chain, vcl_vector< vnl_vector_fixed<double, 2> > n, unsigned nbr_width, vcl_vector<y_hist_vector> & texton_hist_left, vcl_vector<y_hist_vector> & texton_hist_right);
 
   unsigned ni() const { return em_.ncols(); }
   unsigned nj() const { return em_.nrows(); }
