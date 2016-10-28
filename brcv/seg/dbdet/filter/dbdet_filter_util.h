@@ -1,4 +1,5 @@
 #include <vcl_vector.h>
+#include <vil/vil_image_view.h>
 #include <vnl/vnl_matrix.h>
 #include <vcl_fstream.h>
 #include <vcl_string.h>
@@ -45,19 +46,19 @@ bool loadFromTabSpaced(const char * fileName, vnl_matrix<T> & out)
 }
 
 template<typename T>
-vnl_matrix<T> padReflect(vnl_matrix<T> m, int border)
+vil_image_view<T> padReflect(vil_image_view<T> m, int border)
 {
-  vnl_matrix<T> ret = vnl_matrix<T>(m.rows() + 2 * border, m.cols() + 2 * border);
+  vil_image_view<T> ret = vil_image_view<T>(m.ni() + 2 * border, m.nj() + 2 * border);
   border--;
 
-  for (int i = 0; i < ret.rows(); ++i)
+  for (int i = 0; i < ret.ni(); ++i)
   {
     int ii = i <= border ? border - i : i - border - 1;
-    ii = ii < m.rows() ? ii : 2 * m.rows() - ii - 1;
-    for (int j = 0; j < ret.cols(); ++j)
+    ii = ii < m.ni() ? ii : 2 * m.ni() - ii - 1;
+    for (int j = 0; j < ret.nj(); ++j)
     {
       int jj = j <= border ? border - j : j - border - 1;
-      jj = jj < m.rows() ? jj : 2 * m.cols() - jj - 1;
+      jj = jj < m.ni() ? jj : 2 * m.nj() - jj - 1;
       ret(i, j) = m(ii, jj);
     }
   }

@@ -2,14 +2,15 @@
 #include <vcl_fstream.h>
 #include <vcl_sstream.h>
 #include <vcl_cassert.h>
+#include <vnl/vnl_file_matrix.h>
+#include <vil/vil_convert.h>
 
 #include "dbdet_filter_util.h"
 #include "dbdet_filter_bank.h"
 
 dbdet_filter_2d::dbdet_filter_2d(const char * fname) {
-  m = vnl_matrix<double>(1,1);
-        bool load = loadFromTabSpaced(fname, m);
-  assert(load && m.cols() % 2 == 1 && m.rows() % 2 == 1);
+  m = static_cast<vnl_matrix<double> > (vnl_file_matrix<double>(fname));
+  assert(m.cols() % 2 == 1 && m.rows() % 2 == 1);
 }
 
 bool dbdet_filter_2d::isEmpty()
@@ -27,17 +28,17 @@ double dbdet_filter_2d::flipped(int i, int j)
   return m(m.rows() - i - 1, m.cols() - j - 1);
 }
 
-vnl_matrix<double> dbdet_filter_2d::applyPadded(vnl_matrix<double> image, int border)
+vil_image_view<double> dbdet_filter_2d::applyPadded(vil_image_view<double> image, int border)
 {
-  vnl_matrix<double> ret = vnl_matrix<double>(image.rows() - 2 * border, image.cols() - 2 * border);
+  vil_image_view<double> ret = vil_image_view<double>(image.ni() - 2 * border, image.nj() - 2 * border);
 
   int halfC = m.cols() / 2;
   int halfR = m.rows() / 2;
 
-  for (int i = 0; i < ret.rows(); ++i)
+  for (int i = 0; i < ret.ni(); ++i)
   {
     int ib = i + border;
-    for (int j = 0; j < ret.cols(); ++j)
+    for (int j = 0; j < ret.nj(); ++j)
     {
       int jb = j + border;
       ret(i, j) = 0.0;
@@ -49,17 +50,17 @@ vnl_matrix<double> dbdet_filter_2d::applyPadded(vnl_matrix<double> image, int bo
   return ret;
 }
 
-vnl_matrix<double> dbdet_filter_2d::applyPadded13(vnl_matrix<double> image, int border)
+vil_image_view<double> dbdet_filter_2d::applyPadded13(vil_image_view<double> image, int border)
 {
-  vnl_matrix<double> ret = vnl_matrix<double>(image.rows() - 2 * border, image.cols() - 2 * border);
+  vil_image_view<double> ret = vil_image_view<double>(image.ni() - 2 * border, image.nj() - 2 * border);
 
   const int halfC = 6;
   const int halfR = 6;
 
-  for (int i = 0; i < ret.rows(); ++i)
+  for (int i = 0; i < ret.ni(); ++i)
   {
     int ib = i + border;
-    for (int j = 0; j < ret.cols(); ++j)
+    for (int j = 0; j < ret.nj(); ++j)
     {
       int jb = j + border;
       ret(i, j) = 0.0;
@@ -71,17 +72,17 @@ vnl_matrix<double> dbdet_filter_2d::applyPadded13(vnl_matrix<double> image, int 
   return ret;
 }
 
-vnl_matrix<double> dbdet_filter_2d::applyPadded19(vnl_matrix<double> image, int border)
+vil_image_view<double> dbdet_filter_2d::applyPadded19(vil_image_view<double> image, int border)
 {
-  vnl_matrix<double> ret = vnl_matrix<double>(image.rows() - 2 * border, image.cols() - 2 * border);
+  vil_image_view<double> ret = vil_image_view<double>(image.ni() - 2 * border, image.nj() - 2 * border);
 
   const int halfC = 9;
   const int halfR = 9;
 
-  for (int i = 0; i < ret.rows(); ++i)
+  for (int i = 0; i < ret.ni(); ++i)
   {
     int ib = i + border;
-    for (int j = 0; j < ret.cols(); ++j)
+    for (int j = 0; j < ret.nj(); ++j)
     {
       int jb = j + border;
       ret(i, j) = 0.0;
@@ -125,25 +126,27 @@ int dbdet_filter_bank::numFilters()
   return filters.size();
 }
 
-vcl_vector<vnl_matrix<double> > dbdet_filter_bank::decompose(vnl_matrix<double> image)
+vcl_vector<vil_image_view<double> > dbdet_filter_bank::decompose(vil_image_view<vil_rgb<vxl_byte> > image)
 {
-  vcl_vector<vnl_matrix<double> > ret;
+  vcl_vector<vil_image_view<double> > ret;
   ret.resize(filters.size());
   int padSize = filtersMaxSize / 2;
-  vnl_matrix<double> padded = padReflect(image, padSize);
+  vil_image_view<double> grey_img;
+  vil_convert_rgb_to_grey(image, grey_img);
+  grey_img = padReflect(grey_img, padSize);
 
   for (int i = 0; i < filters.size(); ++i)
   {
     switch (filters[i].size())
     {
     case 13:
-      ret[i] = filters[i].applyPadded13(padded, padSize);
+      ret[i] = filters[i].applyPadded13(grey_img, padSize);
       break;
     case 19:
-      ret[i] = filters[i].applyPadded19(padded, padSize);
+      ret[i] = filters[i].applyPadded19(grey_img, padSize);
       break;
     default:
-      ret[i] = filters[i].applyPadded(padded, padSize);
+      ret[i] = filters[i].applyPadded(grey_img, padSize);
     }
   }
   return ret;

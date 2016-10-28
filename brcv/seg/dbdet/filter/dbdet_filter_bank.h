@@ -1,4 +1,5 @@
 #include <vnl/vnl_matrix.h>
+#include <vil/vil_image_view.h>
 #include <vcl_vector.h>
 #include <vcl_string.h>
 
@@ -9,7 +10,7 @@ class dbdet_filter_2d {
 
   vnl_matrix<double> m;
 
-        double flipped(int i, int j);
+  double flipped(int i, int j);
 public:
 
   dbdet_filter_2d(const char * fname);
@@ -18,11 +19,11 @@ public:
 
   int size();
 
-  vnl_matrix<double> applyPadded(vnl_matrix<double> image, int border);
+  vil_image_view<double> applyPadded(vil_image_view<double> image, int border);
 
-  vnl_matrix<double> applyPadded13(vnl_matrix<double> image, int border);
+  vil_image_view<double> applyPadded13(vil_image_view<double> image, int border);
 
-  vnl_matrix<double> applyPadded19(vnl_matrix<double> image, int border);
+  vil_image_view<double> applyPadded19(vil_image_view<double> image, int border);
 
 
 };
@@ -37,7 +38,7 @@ public:
 
   int numFilters();
 
-  vcl_vector<vnl_matrix<double> > decompose(vnl_matrix<double> image);
+  vcl_vector<vil_image_view<double> > decompose(vil_image_view<vil_rgb<vxl_byte> > image);
 };
 
 #endif
