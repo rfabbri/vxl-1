@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Functions to create multiview datasets 
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date Sat May 13 18:41:53 EDT 2006
 //
 

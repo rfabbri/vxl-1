@@ -3,7 +3,7 @@
 //:
 // \file
 // \brief Smart pointer to a view spanning tree
-// \author Ricardo Fabbri (rfabbri@gmail.com)
+// \author Ricardo Fabbri (rfabbri.github.io)
 // \date 12/2006
 //
 

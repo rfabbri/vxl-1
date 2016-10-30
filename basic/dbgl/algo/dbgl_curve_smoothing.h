@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Smoothing of digital curves
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date 02/05/07 14:52:58 EST
 //
 

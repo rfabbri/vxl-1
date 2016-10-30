@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Utility functions for edge input
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date 01/11/07 15:56:05 EST
 //
 //\verbatim

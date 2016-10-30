@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Smart ptr to contour tracer
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date 10/28/2005 12:59:33 PM EDT
 //
 

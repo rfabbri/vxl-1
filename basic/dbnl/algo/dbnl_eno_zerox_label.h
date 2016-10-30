@@ -11,7 +11,7 @@
 //:
 //\file
 //\brief ENO zero-crossing labeling code
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date 10/26/2005 03:38:02 PM EDT
 //
 

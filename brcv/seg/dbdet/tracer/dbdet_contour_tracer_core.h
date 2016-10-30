@@ -5,7 +5,7 @@
 //:
 //\file
 //\brief Defns of old C-based contour tracer by Tek, TBS, Chris, et. al.
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date 10/28/2005 03:09:20 PM EDT
 //
 

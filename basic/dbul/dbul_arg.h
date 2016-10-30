@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Extensions to vul_arg
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date 04/19/09 11:39:24 EDT
 //
 

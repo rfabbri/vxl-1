@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Compute class for GENO interpolation 
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date 03/02/2005 11:55:39 AM EST
 //
 

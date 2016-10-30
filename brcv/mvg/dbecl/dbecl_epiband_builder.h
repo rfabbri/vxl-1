@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Code to generate epipolar lines with confidence band
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date Thu Nov  2 23:55:07 EST 2006
 //
 #include <vcl_vector.h>

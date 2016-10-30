@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Subpixel ENO contour tracer 
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date 10/28/2005 09:36:41 AM EDT
 //
 //\verbatim

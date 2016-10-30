@@ -4,7 +4,7 @@
 //:
 //\file Analytic objects useful for testing algorithms
 //
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date 02/24/2006 11:31:09 AM EST
 //
 

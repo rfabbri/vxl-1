@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Stores a sequence of 2D point-tangent-curvature-kderivative
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date 04/24/2006 02:32:22 PM EDT
 //
 

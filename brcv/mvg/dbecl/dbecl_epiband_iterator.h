@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Iterator to go over all integer coordinates of an epipolar band
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date 10/01/06 17:33:09 EDT
 //
 

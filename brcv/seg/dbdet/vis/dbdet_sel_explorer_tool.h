@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Tool for querying/exploring an existing SEL storage object
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date Sun Apr 23 13:25:40 EDT 2006
 //
 // \verbatim

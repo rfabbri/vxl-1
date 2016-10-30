@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Various Utilities
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date 05/14/2008 03:19:50 AM EDT
 //
 #include <vcl_string.h>

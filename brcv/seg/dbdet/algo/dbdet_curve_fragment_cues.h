@@ -15,7 +15,7 @@
 //:
 //\file
 //\brief Compute several geometric and appearance cues of a curve fragment
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date 05/25/2016 21:57:40 BRT
 //
 

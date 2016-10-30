@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Explicit camera as in my paper
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date 05/23/2005 06:25:57 PM EDT
 //
 

@@ -3,7 +3,7 @@
 // "High-Order Differential geometry of Curves for Multiview Reconstruction 
 // and Matching", Ricardo Fabbri & Benjamin Kimia, EMMCVPR'05
 //
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //
 #include <testlib/testlib_test.h>
 #include <vcl_limits.h>

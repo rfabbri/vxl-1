@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Algorithms that act on dbgl_arcs
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 // Some content is based on C code by Kwun Han (kwh@lems.brown.edu)
 //\date 03/08/2005 07:31:18 PM EST
 //

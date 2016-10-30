@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Methods for image-based reprojection/transfer
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date 05/15/2008 07:22:40 AM EDT
 //
 

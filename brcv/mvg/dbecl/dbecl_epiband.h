@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Epipolar error search region for matching
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date 10/01/06 16:37:39 EDT
 //
 

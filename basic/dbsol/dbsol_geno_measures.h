@@ -7,7 +7,7 @@
 // dbgl_param_curve's 
 //
 // \author Ricardo Fabbri (RFabbri), Brown University
-// (rfabbri@gmail.com)
+// (rfabbri.github.io)
 //\date Wed Mar  2 20:04:27 EST 2005
 //
 

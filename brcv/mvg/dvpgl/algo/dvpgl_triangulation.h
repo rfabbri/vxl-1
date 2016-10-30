@@ -8,7 +8,7 @@
 // Other triangulation algorithms should go in here, such as triangulate_3d_point in
 // vpgl_proj_camera, and this file should become vpgl_triangulation in vpgl.
 //
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date 04/16/2009 04:52:51 AM EDT
 //
 

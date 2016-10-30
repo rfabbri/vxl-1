@@ -4,7 +4,7 @@
 //:
 // \file
 // \brief Essentially Non-Oscillatory 1D interpolation of an image
-// \author Ricardo Fabbri, LEMS, Brown University (rfabbri@gmail.com)
+// \author Ricardo Fabbri, LEMS, Brown University (rfabbri.github.io)
 // \date Feb 2005
 // \version 1.0
 //
