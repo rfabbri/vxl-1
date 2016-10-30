@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Simple Frenet frame datastructures
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 05/22/2005 02:21:06 PM EDT
 //
 #include <dbdif/dbdif_util.h>

@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Curve that has been interpolated with GENO
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 03/03/2005 09:45:01 AM EST
 //
 

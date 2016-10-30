@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Class to run mw_*_curve_stereo in a multiview sequence
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 08/12/2009 02:19:28 PM PDT
 //
 

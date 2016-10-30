@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Tool to generate a projective reconstruction from n frames
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 11/20/06 04:10:52 EST
 //
 

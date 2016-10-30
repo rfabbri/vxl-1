@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Utilities to represent sets of sub-sequences, similar to boost's ranges
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 09/02/2009 08:10:03 AM PDT
 //
 

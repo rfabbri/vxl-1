@@ -1,7 +1,7 @@
 //: 
 //\file
 //\brief Evaluation two-view curve fragment matching
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 10/14/2009 08:59:24 PM PDT
 //
 //

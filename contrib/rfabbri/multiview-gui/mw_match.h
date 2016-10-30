@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Multivew sparse correspondence code
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 04/25/2005 10:03:34 AM EDT
 //
 

@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Process to perform edge detection + linking + smoothing on the fly
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 02/02/2009 11:40:51 PM EST
 //
 

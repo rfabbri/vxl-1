@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Bundle adjustment using distance tranforms.
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 11/05/2009 09:52:56 PM PST
 //
 

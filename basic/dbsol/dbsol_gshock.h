@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief GENO shock structure
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 03/09/2005 06:59:04 PM EST
 //
 #include <dbgl/dbgl_arc.h>

@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Code supporting SIFT descriptors attached to curve fragments
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 11/30/08 20:48:48 EST
 //
 

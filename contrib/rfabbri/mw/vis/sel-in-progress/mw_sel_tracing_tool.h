@@ -5,7 +5,7 @@
 //\file
 //\brief Tool for exploring multiview correspondences between edge linking
 // hypotheses
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 07/19/2005 12:09:14 AM EDT
 //
 

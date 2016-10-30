@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Functions to integrate distance costs along a curve
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 04/28/2009 03:56:36 PM EDT
 //
 

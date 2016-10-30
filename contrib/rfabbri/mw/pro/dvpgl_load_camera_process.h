@@ -6,7 +6,7 @@
 //:
 //\file
 //\brief Process to load a camera from Ascii files
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 05/05/2005 06:13:38 PM EDT
 //
 

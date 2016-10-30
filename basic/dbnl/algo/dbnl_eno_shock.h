@@ -4,7 +4,7 @@
 //:
 // \file
 // \brief Essential Non-Oscillatory 1D Interpolation with Shocks
-// \author Ricardo Fabbri, LEMS, Brown University (rfabbri@lems.brown.edu)
+// \author Ricardo Fabbri, LEMS, Brown University (rfabbri@gmail.com)
 // \date Feb 2005
 //
 // This file contains class declarations regarding ENO interpolation with shocks.

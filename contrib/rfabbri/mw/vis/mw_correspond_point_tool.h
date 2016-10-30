@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Tool for exploring multiview correspondences between edgels
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date Mon Apr 24 22:36:01 EDT 2006
 //
 

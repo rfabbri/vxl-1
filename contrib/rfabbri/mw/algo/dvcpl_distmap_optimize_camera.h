@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Optimizes camera given 3D points and 2D edgemaps
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 06/07/10 20:01:59 EDT
 //
 

@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief  Zerocrossings for dbnl_eno_image
-////\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+////\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 10/27/2005 10:03:47 PM EDT
 //
 

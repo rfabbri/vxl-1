@@ -3,7 +3,7 @@
 //:
 //\file
 //\brief Multiview curve matching process
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 05/05/2005 08:38:20 PM EDT
 //
 

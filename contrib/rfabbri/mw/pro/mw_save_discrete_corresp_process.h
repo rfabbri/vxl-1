@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Process to load correspondence files into storage
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date Mon Apr 24 15:04:41 EDT 2006
 //
 

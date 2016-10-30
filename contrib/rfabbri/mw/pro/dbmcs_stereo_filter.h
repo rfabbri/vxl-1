@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Dbpro process for curve stereo
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 09/01/2009 08:31:17 AM PDT
 //
 #include <dbpro/dbpro_process.h>

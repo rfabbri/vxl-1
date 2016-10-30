@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief File to hold 3D curves and attributes
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 11/11/09 18:24:24 EST
 //
 

@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Functions to create / load datasets into GUI
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 03/03/2006 04:56:20 PM EST
 //
 

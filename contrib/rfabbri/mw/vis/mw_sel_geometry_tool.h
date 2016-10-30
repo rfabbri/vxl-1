@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Extension of sel_explorer tool to deal with ground-truth geometry
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date Thu May 11 15:14:44 EDT 2006
 //
 

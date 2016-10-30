@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Compute camera matrix from 3D-2D point correspondences and RANSAC
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 12/06
 //
 

@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Class that deals with storage and querying of geno-interpolated curves
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 04/25/2005 12:21:35 PM EDT
 //
 

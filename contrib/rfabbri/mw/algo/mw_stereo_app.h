@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Toplevel stereo application class similar to commandline
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 11/08/06 02:31:09 EST
 //
 

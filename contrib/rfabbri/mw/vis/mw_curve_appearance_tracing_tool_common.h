@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief common headers for curve_tracing_tool cxx files. NOT TO BE INSTALLED 
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 03/16/2006 03:46:47 PM EST
 //
 

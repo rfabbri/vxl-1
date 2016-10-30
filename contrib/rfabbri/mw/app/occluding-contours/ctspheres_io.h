@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Routines for reading, writing, and defining parameters for CT spheres dataset
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 02/24/2006 11:42:31 AM EST
 //
 

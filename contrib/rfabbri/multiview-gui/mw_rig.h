@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief This structure aids programming based on global coordinates as in notation of the paper
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 05/04/2005 06:26:54 PM EDT
 //
 

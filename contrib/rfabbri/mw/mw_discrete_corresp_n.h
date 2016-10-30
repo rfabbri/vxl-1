@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Class for storing n-view correspondences.
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 
 //
 

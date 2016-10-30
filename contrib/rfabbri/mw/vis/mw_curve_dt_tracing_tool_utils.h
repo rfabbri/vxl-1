@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Utility components of mw_curve_dt_tracing_tool
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 03/16/2006 01:07:28 PM EST
 //
 

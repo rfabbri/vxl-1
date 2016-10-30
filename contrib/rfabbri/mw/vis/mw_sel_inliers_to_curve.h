@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Tool to plot inlier linking hypotheses to a vsol curve
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date Wed May  6 09:11:33 EDT 2009
 //
 

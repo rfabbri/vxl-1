@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Dbpro process for curve bundle adjustment
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //
 #include <dbpro/dbpro_process.h>
 #include <mw/algo/dvcpl_distmap_bundle_adjust.h>

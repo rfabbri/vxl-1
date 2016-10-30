@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Code to limit epipolar geometry from point correspondences
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date Thu Nov  2 23:55:07 EST 2006
 //
 #include <vcl_vector.h>

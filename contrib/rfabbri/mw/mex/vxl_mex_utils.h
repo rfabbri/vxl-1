@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Utilities to help interface vxl and matlab.
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 11/06/2008 06:06:11 PM EST
 //
 

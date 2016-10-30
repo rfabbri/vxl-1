@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Parameter set for evaluating two-view multiview stereo
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 10/15/2009 05:51:22 PM PDT
 //
 

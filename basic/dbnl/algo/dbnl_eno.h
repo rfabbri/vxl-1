@@ -4,7 +4,7 @@
 //:
 // \file
 // \brief Essentially Non-Oscillatory 1D interpolation
-// \author Ricardo Fabbri, LEMS, Brown University (rfabbri@lems.brown.edu)
+// \author Ricardo Fabbri, LEMS, Brown University (rfabbri@gmail.com)
 // \date Feb 2005
 // \version 1.0
 //

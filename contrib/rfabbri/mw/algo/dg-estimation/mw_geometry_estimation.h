@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Estimation of differential geometry by many methods
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date Wed May 09 21:00:07 EDT 2006
 //
 

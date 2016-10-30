@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Smart pointer on a dbsol_interp_curve_2d
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 02/23/2005 06:29:12 PM EST
 //
 #include <vbl/vbl_smart_ptr.h>

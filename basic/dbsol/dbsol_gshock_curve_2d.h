@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Curve that has been interpolated with shock-placing GENO
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 03/02/2005 02:38:37 PM EST
 //
 

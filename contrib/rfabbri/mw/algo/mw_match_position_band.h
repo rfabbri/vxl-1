@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Code to generate n-tuplets satisfying pairwise epipolar band constraints
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date Thu Nov  2 23:55:07 EST 2006
 //
 #include <vsol/vsol_point_2d_sptr.h>

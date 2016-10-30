@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Ranking of edge curve fragments per tained distributions
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 // Original author: Yuliang Guo (matlab)
 //\date 05/26/2016 10:51:10 BRT
 //

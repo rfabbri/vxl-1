@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Tool to show corresponding epipolar lines
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 04/21/2005 04:53:53 PM EDT
 //
 

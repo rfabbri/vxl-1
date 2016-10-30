@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Matching small curve hypotheses from the symbolic edge linker
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 05/09/2008 01:22:59 AM EDT
 //
 

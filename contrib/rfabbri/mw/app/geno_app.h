@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief GENO interactive application
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 03/24/2005 09:45:40 PM EST
 //
 

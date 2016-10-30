@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Functions to integrate distance/grouping costs along a curve
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 05/06/2009 02:13:37 PM EDT
 //
 

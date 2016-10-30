@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Storage for perspective camera
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 05/05/2005 02:57:40 PM EDT
 //
 #include <bpro1/bpro1_storage.h>

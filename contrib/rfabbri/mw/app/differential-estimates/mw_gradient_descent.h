@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Gradient descent optimization of point properties for geometry estimation
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 09/23/2005 04:43:29 PM EDT
 //
 

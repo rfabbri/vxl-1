@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Tool for displaying epipolar lines across frames
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 07/19/2005 12:09:14 AM EDT
 //
 

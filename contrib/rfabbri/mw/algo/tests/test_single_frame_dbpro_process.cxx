@@ -1,7 +1,7 @@
 //:
 //\file
 //\brief File for me to experiment with dbpro.
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //
 #include <testlib/testlib_test.h>
 #include <dbpro/dbpro_process.h>

@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Specific code to deal with the CT spheres calibrating artifact dataset
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date Sun Jan 15 14:09:27 EST 2006
 //
 

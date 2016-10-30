@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Shock-placing GENO interpolation and related classes 
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 03/02/2005 03:10:08 PM EST
 //
 #include <dbsol/algo/dbsol_geno.h> 

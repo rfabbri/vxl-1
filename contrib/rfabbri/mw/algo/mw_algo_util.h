@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Misc. Utilities for photogrammetry library
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 01/15/07 14:00:30 EST
 //
 

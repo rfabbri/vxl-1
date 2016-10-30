@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief A keypoint with attached Frenet frame (tangent,normal,curvature,etc)
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 01/17/07 14:16:09 EST
 //
 

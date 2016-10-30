@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Dataset handling for multiview stereo
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 08/29/2009 01:54:15 PM PDT
 //
 

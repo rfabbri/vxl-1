@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief class for efficient query of points within an image domain
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date Wed Apr 26 22:12:55 EDT 2006
 //
 

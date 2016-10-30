@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Code to generate n-tuplets satisfying multifocal orientation constraints
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date Fri May 16 12:47:18 EDT 2008
 //
 #include <vsol/vsol_point_2d_sptr.h>

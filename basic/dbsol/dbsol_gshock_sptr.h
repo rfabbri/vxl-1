@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Smart pointer to GENO shock
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 03/09/2005 06:50:55 PM EST
 //
 

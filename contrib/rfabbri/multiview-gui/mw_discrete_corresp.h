@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Data structure representing correspondence between two point sets
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 04/25/2005 06:41:03 PM EDT
 //
 

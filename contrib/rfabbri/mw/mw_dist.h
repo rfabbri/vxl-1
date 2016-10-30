@@ -4,7 +4,7 @@
 //:
 //\file
 //\brief Distance-related utilities
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date 03/14/2006 10:38:39 AM EST
 //
 

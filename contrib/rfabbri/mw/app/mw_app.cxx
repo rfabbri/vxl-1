@@ -1,7 +1,7 @@
 //:
 //\file
 //\brief multiview interactive application
-//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@lems.brown.edu)
+//\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //\date Sat Apr 16 22:49:07 EDT 2005
 //
 
