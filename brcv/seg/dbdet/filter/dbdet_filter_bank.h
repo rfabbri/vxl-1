@@ -1,43 +1,44 @@
 #include <vnl/vnl_matrix.h>
+#include <vil/vil_image_view.h>
 #include <vcl_vector.h>
 #include <vcl_string.h>
 
 #ifndef _DBDET_FILTER_BANK_H_
 #define _DBDET_FILTER_BANK_H_
 
-class Filter2d {
+class dbdet_filter_2d {
 
-	vnl_matrix<double> m;
+  vnl_matrix<double> m;
 
-        double flipped(int i, int j);
+  double flipped(int i, int j);
 public:
 
-	Filter2d(const char * fname);
+  dbdet_filter_2d(const char * fname);
 
-	bool isEmpty();
+  bool isEmpty();
 
-	int size();
+  int size();
 
-	vnl_matrix<double> applyPadded(vnl_matrix<double> image, int border);
+  vil_image_view<double> applyPadded(vil_image_view<double> image, int border);
 
-	vnl_matrix<double> applyPadded13(vnl_matrix<double> image, int border);
+  vil_image_view<double> applyPadded13(vil_image_view<double> image, int border);
 
-	vnl_matrix<double> applyPadded19(vnl_matrix<double> image, int border);
+  vil_image_view<double> applyPadded19(vil_image_view<double> image, int border);
 
 
 };
 
-class FilterBank {
+class dbdet_filter_bank {
 
-	vcl_vector<Filter2d> filters;
-	int filtersMaxSize;
+  vcl_vector<dbdet_filter_2d> filters;
+  int filtersMaxSize;
 public:
 
-	FilterBank(vcl_string baseDir);
+  dbdet_filter_bank(vcl_string baseDir);
 
-	int numFilters();
+  int numFilters();
 
-	vcl_vector<vnl_matrix<double> > decompose(vnl_matrix<double> image);
+  vcl_vector<vil_image_view<double> > decompose(vil_image_view<vil_rgb<vxl_byte> > image);
 };
 
 #endif

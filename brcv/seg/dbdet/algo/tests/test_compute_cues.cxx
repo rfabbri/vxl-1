@@ -21,7 +21,7 @@
 
 static const double tolerance=1e-3;
 
-void load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img, dbdet_curve_fragment_graph &frags, dbdet_edgemap_sptr &edgemap)
+void load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img, dbdet_curve_fragment_graph &frags, dbdet_edgemap_sptr &edgemap_edg, dbdet_edgemap_sptr &edgemap_cem)
 {
 
   vcl_string root = dbtest_root_dir();
@@ -33,16 +33,18 @@ void load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img, dbdet_curve_fragment_
 
   img = vil_convert_to_component_order(vil_convert_to_n_planes(3,
         vil_convert_stretch_range (vxl_byte(), vil_load(image_path.c_str()))));
-  dbdet_load_cem(frags_path, frags);
-  dbdet_load_edg(edge_path, true, 1.0, edgemap);
+
+  dbdet_load_edg(edge_path, true, 1.0, edgemap_edg);
+  edgemap_cem = dbdet_load_cem(frags_path, frags);
 }
 
 void cues_test()
 {
   vil_image_view<vil_rgb<vxl_byte> > img;
   dbdet_curve_fragment_graph curve_fragment_graph;
-  dbdet_edgemap_sptr edgemap_sptr;
-  load_dataset(img, curve_fragment_graph, edgemap_sptr);
+  //Need to carry the cem edgemap or CFG edgels are deleted
+  dbdet_edgemap_sptr edgemap_sptr, edgemap_cem_sptr;
+  load_dataset(img, curve_fragment_graph, edgemap_sptr, edgemap_cem_sptr);
 
   dbdet_curve_fragment_cues cues(img, (*edgemap_sptr));
 
@@ -56,15 +58,18 @@ void cues_test()
   
   unsigned j = 0;
   for (dbdet_edgel_chain_list_const_iter it=frags.begin(); it != frags.end(); it++, j++) {
-
     y_feature_vector fv;
     cues.compute_all_cues(*(*it), &fv);
 
-    for (unsigned i=0; i < fv.size(); ++i) {
-      TEST_NEAR("", fv[i], gt_cues.get(j, i), tolerance);
-    }
+    TEST_NEAR("Y_BG_GRAD", fv[Y_BG_GRAD], gt_cues.get(j, Y_BG_GRAD), tolerance);
+    TEST_NEAR("Y_SAT_GRAD", fv[Y_SAT_GRAD], gt_cues.get(j, Y_SAT_GRAD), tolerance);
+    TEST_NEAR("Y_HUE_GRAD", fv[Y_HUE_GRAD], gt_cues.get(j, Y_HUE_GRAD), tolerance);
+    TEST_NEAR("Y_ABS_K", fv[Y_ABS_K], gt_cues.get(j, Y_ABS_K), tolerance);
+    TEST_NEAR("Y_EDGE_SPARSITY", fv[Y_EDGE_SPARSITY], gt_cues.get(j, Y_EDGE_SPARSITY), tolerance);
+    TEST_NEAR("Y_WIGG", fv[Y_WIGG], gt_cues.get(j, Y_WIGG), tolerance);
+    TEST_NEAR("Y_LEN", fv[Y_LEN], gt_cues.get(j, Y_LEN), tolerance);
+    TEST_NEAR("Y_MEAN_CONF", fv[Y_MEAN_CONF], gt_cues.get(j, Y_MEAN_CONF), tolerance);
     //for now tests just for the first iter
-    break;
   }
 }
 
