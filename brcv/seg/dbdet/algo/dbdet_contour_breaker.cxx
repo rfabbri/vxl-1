@@ -429,6 +429,9 @@ compute_merge_probability_semantic(
 /**
 [~, ~, texton_hist_left_cum, texton_hist_right_cum] = compute_texture_hist_integral(x,y,N, nbr_width, tmap);
 **/
+  vcl_vector<y_hist_vector> texton_hist_left, texton_hist_right;
+  compute_texture_hist_integral(chain, n, nbr_width, texton_hist_left, texton_hist_right);
+
   yuliang_features features;
 //Y_ONE, Y_BG_GRAD, Y_SAT_GRAD, Y_HUE_GRAD, Y_ABS_K, Y_EDGE_SPARSITY, Y_WIGG, Y_LEN, Y_MEAN_CONF
   features[Y_ONE] = 1.0;
@@ -451,7 +454,26 @@ compute_merge_probability_semantic(
     right_dist = pdist2(hist_1_right',hist_2_right','chisq');    
     
     texture_diff = left_dist + right_dist;
+
+     'chisq'
+%   The chi-squared distance between two vectors is defined as:
+%    d(x,y) = sum( (xi-yi)^2 / (xi+yi) ) / 2;
+%   The chi-squared distance is useful when comparing histograms.
     **/
+    
+    //texture_diff
+    features[Y_MEAN_CONF] = 0.0;
+    for (unsigned k = 0; k < y_hist_size; ++k)
+    {
+      double v1 = texton_hist_left[i][k] - texton_hist_left[i-nbr_range_th][k];
+      double v2 = texton_hist_left[i][k+nbr_range_th] - texton_hist_left[i][k];
+      features[Y_MEAN_CONF] += (v1 - v2) * (v1 - v2) / (v1 + v2);
+
+      v1 = texton_hist_right[i][k] - texton_hist_right[i-nbr_range_th][k];
+      v2 = texton_hist_right[i][k+nbr_range_th] - texton_hist_right[i][k];
+      features[Y_MEAN_CONF] += (v1 - v2) * (v1 - v2) / (v1 + v2);
+    }
+    features[Y_MEAN_CONF] /= (2 * nbr_range_th);
 
     vgl_point_2d<double> a = chain.edgels[i]->pt - chain.edgels[i-nbr_range_th]->pt;
     vgl_point_2d<double> b = chain.edgels[i+nbr_range_th]->pt - chain.edgels[i]->pt;
@@ -466,7 +488,6 @@ compute_merge_probability_semantic(
     }
     prob[i] = 1.0 / (1.0 + exp(-sum));
   }
-  //TODO: Work in progress
 }
 
 void dbdet_contour_breaker::
@@ -515,6 +536,7 @@ compute_texture_hist_integral(
   unsigned npts =  chain.edgels.size();
   texton_hist_left.resize(npts);
   texton_hist_right.resize(npts);
+  double nbr_width_inv = 1.0 / nbr_width;
   
   y_hist_left last_left = texton_hist_left[0], last_right = texton_hist_right[0];
 
@@ -524,21 +546,27 @@ compute_texture_hist_integral(
   for (unsigned k = 0; k < npts; ++k)
   {
     vgl_point_2d<double> & cur_pt = chain.edgels[k]->pt; 
-    unsigned xi = static_cast<unsigned>(vcl_max(0, vcl_min(ni(), cur_pt.x() - n[k][0] * nbr_width)));
-    unsigned xf = static_cast<unsigned>(vcl_max(0, vcl_min(ni(), cur_pt.x() + n[k][0] * nbr_width)));
-    unsigned yi = static_cast<unsigned>(vcl_max(0, vcl_min(nj(), cur_pt.x() - n[k][1] * nbr_width)));
-    unsigned yf = static_cast<unsigned>(vcl_max(0, vcl_min(nj(), cur_pt.x() + n[k][1] * nbr_width)));
-    if(xi > xf) vcl_swap(xi, xf);
-    if(yi > yf) vcl_swap(yi, yf);
+    unsigned xl = static_cast<unsigned>(vcl_max(0, vcl_min(ni(), cur_pt.x() - n[k][0] * nbr_width)));
+    unsigned xr = static_cast<unsigned>(vcl_max(0, vcl_min(ni(), cur_pt.x() + n[k][0] * nbr_width)));
+    unsigned yl = static_cast<unsigned>(vcl_max(0, vcl_min(nj(), cur_pt.x() - n[k][1] * nbr_width)));
+    unsigned yr = static_cast<unsigned>(vcl_max(0, vcl_min(nj(), cur_pt.x() + n[k][1] * nbr_width)));
+    unsigned x = static_cast<unsigned>(vcl_max(0, vcl_min(ni(), cur_pt.x()));
+    unsigned y = static_cast<unsigned>(vcl_max(0, vcl_min(nj(), cur_pt.y()));
 
     texton_hist_left[i] = last_left;
     texton_hist_right[i] = last_right;
+    
 
-    for (unsigned i = xi; i < xf; ++i)
+    for (unsigned i = 0; i < nbr_width; ++i)
     {
-      for (unsigned j = yi; yi < yf; ++j)
+      unsigned il = static_cast<unsigned>(x + i * (x - xl) * nbr_width_inv + 0.5);
+      unsigned ir = static_cast<unsigned>(x + i * (xr - x) * nbr_width_inv + 0.5);
+      for (unsigned j = 0; j < nbr_width; ++j)
       {
-          //TODO 
+        unsigned jl = static_cast<unsigned>(y + j * (y - yl) * nbr_width_inv + 0.5);
+        unsigned jr = static_cast<unsigned>(y + j * (yr - y) * nbr_width_inv + 0.5);
+        texton_hist_left[i][tmap_(il, jl)]++;
+        texton_hist_right[i][tmap_(ir, jr)]++;
       }
     }
     last_left = texton_hist_left[i];

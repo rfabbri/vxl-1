@@ -16,15 +16,17 @@ class dbdet_contour_breaker {
 public:
   dbdet_contour_breaker(
     const vil_image_view<vil_rgb<vxl_byte> > &img,
-    const dbdet_edgemap &em
+    const dbdet_edgemap &em,
+    const vnl_matrix<unsigned> & tmap
     )
     :
     img_(img),
     em_(em),
+    tmap_(tmap),
     ref_start_pts(img.ni(), img.nj()),
     ref_end_pts(img.ni(), img.nj()),
   {
-    assert(em.ncols() == img.ni() && em.nrows() == img.nj());
+    assert(em.ncols() == img.ni() && em.nrows() == img.nj() && tmap.rows() == img.ni() && tmap.cols() == img.nj() && tmap.max_value() < y_hist_size);
     double diag = vcl_sqrt(ni() * ni() + nj() * nj());
     nbr_num_edges = vcl_max(static_cast<unsigned>((nbr_num_edges_ * diag / diag_of_train) + 0.5), nbr_len_th);
     diag_ratio = diag / diag_of_train;
@@ -50,6 +52,7 @@ private:
   bool use_dt() const { return dt_ != NULL; }
   const vil_image_view<vil_rgb<vxl_byte> > &img_; // color RGB image
   const dbdet_edgemap &em_;
+  const vnl_matrix<unsigned> tmap_;
   vbl_array_2d<bool> ref_start_pts;
   vbl_array_2d<bool> ref_end_pts;
   double nbr_num_edges;
