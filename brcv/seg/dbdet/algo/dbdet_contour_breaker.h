@@ -24,32 +24,39 @@ public:
     em_(em),
     tmap_(tmap),
     ref_start_pts(img.ni(), img.nj()),
-    ref_end_pts(img.ni(), img.nj()),
+    ref_end_pts(img.ni(), img.nj())
   {
     assert(em.ncols() == img.ni() && em.nrows() == img.nj() && tmap.rows() == img.ni() && tmap.cols() == img.nj() && tmap.max_value() < y_hist_size);
     double diag = vcl_sqrt(ni() * ni() + nj() * nj());
     nbr_num_edges = vcl_max(static_cast<unsigned>((nbr_num_edges_ * diag / diag_of_train) + 0.5), nbr_len_th);
     diag_ratio = diag / diag_of_train;
   };
-  dbdet_curve_fragment_graph dbdet_contour_breaker_geom(dbdet_curve_fragment_graph & CFG, double[2] beta1, double[2] fmean);
 
-  dbdet_curve_fragment_graph dbdet_contour_breaker_semantic(dbdet_curve_fragment_graph & CFG, double[2] beta1, double[2] fmean);
+  dbdet_curve_fragment_graph dbdet_contour_breaker_geom(dbdet_curve_fragment_graph & CFG, double beta1[2], double fmean[2]);
+
+  dbdet_curve_fragment_graph dbdet_contour_breaker_semantic(dbdet_curve_fragment_graph & CFG, y_feature_vector beta1, y_feature_vector fmean);
+  
+  static double euclidean_length(const dbdet_edgel_chain &c) {
+    double len=0;
+    for (unsigned i=0; i+1 < c.edgels.size(); ++i)
+      len += vgl_distance(c.edgels[i]->pt, c.edgels[i+1]->pt);
+    return len;
+  }
 
 private:
 
-  void compute_break_point(dbdet_edgel_chain & chain, unsigned frag_id, vcl_vector<unsigned> ids, vcl_set<unsigned> unique_ids, bool front, vcl_vector<unisgned> break_ids);
+  void compute_break_point(vcl_vector<dbdet_edgel_chain*> & frags, unsigned frag_id, vcl_vector<unsigned> & ids, vcl_set<unsigned> & unique_ids, bool front, vcl_vector<unsigned> break_e_ids);
 
-  void compute_merge_probability_geom(dbdet_edgel_chain & chain, unsigned nbr_range_th, double[2] beta1, double[2] fmean, vcl_vector<double> & prob);
+  void compute_merge_probability_geom(dbdet_edgel_chain & chain, unsigned nbr_range_th, double beta1[2], double fmean[2], vcl_vector<double> & prob);
 
-  void compute_merge_probability_semantic(dbdet_edgel_chain & chain,/*hsv_img, edge_map, tmap,*/ nbr_range_th unsigned nbr_range_th, yuliang_features beta1, yuliang_features fmean, vcl_vector<double> & prob);
+  void compute_merge_probability_semantic(dbdet_edgel_chain & chain,/*hsv_img, edge_map, tmap,*/unsigned nbr_range_th, y_feature_vector beta1, y_feature_vector fmean, vcl_vector<double> & prob);
 
-  void compute_edge_sparcity_integral(dbdet_edgel_chain & chain, vcl_vector< vnl_vector_fixed<double, 2> > n, unsigned nbr_width, vcl_vector<double> & edge_sparcity);
+  void compute_edge_sparsity_integral(dbdet_edgel_chain & chain, vcl_vector< vnl_vector_fixed<double, 2> > n, unsigned nbr_width, vcl_vector<double> & edge_sparcity);
 
   void compute_texture_hist_integral(dbdet_edgel_chain & chain, vcl_vector< vnl_vector_fixed<double, 2> > n, unsigned nbr_width, vcl_vector<y_hist_vector> & texton_hist_left, vcl_vector<y_hist_vector> & texton_hist_right);
 
   unsigned ni() const { return em_.ncols(); }
   unsigned nj() const { return em_.nrows(); }
-  bool use_dt() const { return dt_ != NULL; }
   const vil_image_view<vil_rgb<vxl_byte> > &img_; // color RGB image
   const dbdet_edgemap &em_;
   const vnl_matrix<unsigned> tmap_;
@@ -64,6 +71,6 @@ private:
   static double const merge_th = 0.2;
   static double const merge_th_geom = 0.5;
   static double const epsilon = 1e-10;
-}
-#endif dbdet_contour_breaker_h
+};
+#endif //dbdet_contour_breaker_h
 
