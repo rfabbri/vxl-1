@@ -4,12 +4,21 @@
 #include <vcl_limits.h>
 #include <dbgl/algo/dbgl_diffgeom.h>
 #include <vil/algo/vil_colour_space.h>
+#include <vil/vil_border.h>
+
+double const dbdet_contour_breaker::diag_of_train = 578.275; // ???
+unsigned const dbdet_contour_breaker::nbr_num_edges_ = 15;  // # of edges close to connecting points
+unsigned const dbdet_contour_breaker::max_it = 2;
+unsigned const dbdet_contour_breaker::nbr_len_th = 5; // short curve under this length will be grouped due to geometry.
+double const dbdet_contour_breaker::merge_th = 0.2;
+double const dbdet_contour_breaker::merge_th_geom = 0.5;
+double const dbdet_contour_breaker::epsilon = 1e-10;
 
 dbdet_curve_fragment_graph dbdet_contour_breaker::
 dbdet_contour_breaker_geom(
       dbdet_curve_fragment_graph & CFG,
-      double beta1[2],
-      double fmean[2]
+      y_params_1_vector beta,
+      y_params_1_vector fmean
       )
 {
   int const ref_tabel_nbr_range = 2;
@@ -166,7 +175,7 @@ dbdet_contour_breaker_geom(
       if (clen[i] > (10 * diag_ratio) && (*it)->edgels.size() > (nbr_num_edges + 1) / i)
       {
         vcl_vector<double> prob;
-        compute_merge_probability_geom(*(*it), nbr_num_edges /(2 * i) , beta1, fmean, prob);
+        compute_merge_probability_geom(*(*it), nbr_num_edges /(2 * i) , beta, fmean, prob);
         double min = vcl_numeric_limits<double>::max();
         double lastVal = min;
         unsigned firstId = -1, lastId = -1;
@@ -274,8 +283,8 @@ void dbdet_contour_breaker::
 compute_merge_probability_geom(
       dbdet_edgel_chain & chain,
       unsigned nbr_range_th,
-      double beta1[2],
-      double fmean[2],
+      y_params_1_vector beta,
+      y_params_1_vector fmean,
       vcl_vector<double> & prob
       )
 {
@@ -293,15 +302,15 @@ compute_merge_probability_geom(
     double cos_diff = (a.x() * b.x() + a.y() + b.y()) / 
                       (vcl_sqrt(a.x() * a.x() + a.y() * a.y()) * vcl_sqrt(b.x() * b.x() + b.y() * b.y()));
     //prob(i) = 1 / (1 + exp(-([1 geom_diff] - fmean_1)*beta_1'));
-    prob[i] =  1.0 / (1.0 + exp(-((1.0 - fmean[0]) * beta1[0] + (cos_diff - fmean[1]) * beta1[1])));
+    prob[i] =  1.0 / (1.0 + exp(-((1.0 - fmean[0]) * beta[0] + (cos_diff - fmean[1]) * beta[1])));
   }
 }
 
 dbdet_curve_fragment_graph dbdet_contour_breaker::
 dbdet_contour_breaker_semantic(
       dbdet_curve_fragment_graph & CFG,
-      y_feature_vector beta1,
-      y_feature_vector fmean
+      y_params_0_vector beta,
+      y_params_0_vector fmean
       )
 {
   dbdet_curve_fragment_graph newCFG(CFG);
@@ -322,7 +331,7 @@ dbdet_contour_breaker_semantic(
       if (clen[i] > (30 * diag_ratio) && (*it)->edgels.size() > (3 * nbr_num_edges) / i)
       {
         vcl_vector<double> prob;
-        compute_merge_probability_semantic(*(*it), static_cast<unsigned>(nbr_num_edges /(2 * i) + 0.5) , beta1, fmean, prob);
+        compute_merge_probability_semantic(*(*it), static_cast<unsigned>(nbr_num_edges /(2 * i) + 0.5) , beta, fmean, prob);
         double min = vcl_numeric_limits<double>::max();
         double lastVal = min;
         unsigned firstId = -1, lastId = -1;
@@ -365,8 +374,8 @@ void dbdet_contour_breaker::
 compute_merge_probability_semantic(
       dbdet_edgel_chain & chain,/*hsv_img, edge_map, tmap,*/
       unsigned nbr_range_th,
-      y_feature_vector beta1,
-      y_feature_vector fmean,
+      y_params_0_vector beta,
+      y_params_0_vector fmean,
       vcl_vector<double> & prob
       )
 {
@@ -441,17 +450,17 @@ compute_merge_probability_semantic(
   vcl_vector<y_hist_vector> texton_hist_left, texton_hist_right;
   compute_texture_hist_integral(chain, n, nbr_width, texton_hist_left, texton_hist_right);
 
-  y_feature_vector features;
-//Y_ONE, Y_BG_GRAD, Y_SAT_GRAD, Y_HUE_GRAD, Y_ABS_K, Y_EDGE_SPARSITY, Y_WIGG, Y_LEN, Y_MEAN_CONF
-  features[Y_ONE] = 1.0;
+  y_params_0_vector features;
+//Y_ONE, Y_BG_GRAD, Y_SAT_GRAD, Y_HUE_GRAD, Y_ABS_K, Y_EDGE_SPARSITY, Y_WIGG, Y_GEOM, Y_TEXTURE
+  features[y_params_0::Y_ONE] = 1.0;
   for (unsigned i = nbr_range_th; i < npts - nbr_range_th; ++i)
   {
-    features[Y_BG_GRAD] = (2.0 * bg_cum[i] - bg_cum[i-nbr_range_th] - bg_cum[i+nbr_range_th]) / nbr_range_th;
-    features[Y_SAT_GRAD] = (2.0 * sat_cum[i] - sat_cum[i-nbr_range_th] - sat_cum[i+nbr_range_th]) / nbr_range_th;
-    features[Y_HUE_GRAD] = (2.0 * hue_cum[i] - hue_cum[i-nbr_range_th] - hue_cum[i+nbr_range_th]) / nbr_range_th;
-    features[Y_ABS_K] = (2.0 * k_cum[i] - k_cum[i-nbr_range_th] - k_cum[i+nbr_range_th]) / nbr_range_th;
-    features[Y_EDGE_SPARSITY] = (2.0 * edge_sparsity_cum[i] - edge_sparsity_cum[i-nbr_range_th] - edge_sparsity_cum[i+nbr_range_th]) / nbr_range_th;
-    features[Y_WIGG] = (2.0 * wigg_cum[i] - wigg_cum[i-nbr_range_th] - wigg_cum[i+nbr_range_th]) / nbr_range_th;
+    features[y_params_0::Y_BG_GRAD] = (2.0 * bg_cum[i] - bg_cum[i-nbr_range_th] - bg_cum[i+nbr_range_th]) / nbr_range_th;
+    features[y_params_0::Y_SAT_GRAD] = (2.0 * sat_cum[i] - sat_cum[i-nbr_range_th] - sat_cum[i+nbr_range_th]) / nbr_range_th;
+    features[y_params_0::Y_HUE_GRAD] = (2.0 * hue_cum[i] - hue_cum[i-nbr_range_th] - hue_cum[i+nbr_range_th]) / nbr_range_th;
+    features[y_params_0::Y_ABS_K] = (2.0 * k_cum[i] - k_cum[i-nbr_range_th] - k_cum[i+nbr_range_th]) / nbr_range_th;
+    features[y_params_0::Y_EDGE_SPARSITY] = (2.0 * edge_sparsity_cum[i] - edge_sparsity_cum[i-nbr_range_th] - edge_sparsity_cum[i+nbr_range_th]) / nbr_range_th;
+    features[y_params_0::Y_WIGG] = (2.0 * wigg_cum[i] - wigg_cum[i-nbr_range_th] - wigg_cum[i+nbr_range_th]) / nbr_range_th;
 
    /**
     hist_1_left = (texton_hist_left_cum(:,i) - texton_hist_left_cum(:,i-nbr_range_th))/nbr_range_th;
@@ -471,29 +480,29 @@ compute_merge_probability_semantic(
     **/
     
     //texture_diff
-    features[Y_MEAN_CONF] = 0.0;
+    features[y_params_0::Y_TEXTURE] = 0.0;
     for (unsigned k = 0; k < y_hist_size; ++k)
     {
       double v1 = texton_hist_left[i][k] - texton_hist_left[i-nbr_range_th][k];
       double v2 = texton_hist_left[i][k+nbr_range_th] - texton_hist_left[i][k];
-      features[Y_MEAN_CONF] += (v1 - v2) * (v1 - v2) / (v1 + v2);
+      features[y_params_0::Y_TEXTURE] += (v1 - v2) * (v1 - v2) / (v1 + v2);
 
       v1 = texton_hist_right[i][k] - texton_hist_right[i-nbr_range_th][k];
       v2 = texton_hist_right[i][k+nbr_range_th] - texton_hist_right[i][k];
-      features[Y_MEAN_CONF] += (v1 - v2) * (v1 - v2) / (v1 + v2);
+      features[y_params_0::Y_TEXTURE] += (v1 - v2) * (v1 - v2) / (v1 + v2);
     }
-    features[Y_MEAN_CONF] /= (2 * nbr_range_th);
+    features[y_params_0::Y_TEXTURE] /= (2 * nbr_range_th);
 
     vgl_vector_2d<double> a = chain.edgels[i]->pt - chain.edgels[i-nbr_range_th]->pt;
     vgl_vector_2d<double> b = chain.edgels[i+nbr_range_th]->pt - chain.edgels[i]->pt;
 
     //geom_diff
-    features[Y_LEN] = (a.x() * b.x() + a.y() + b.y()) / 
+    features[y_params_0::Y_GEOM] = (a.x() * b.x() + a.y() + b.y()) / 
                       (vcl_sqrt(a.x() * a.x() + a.y() * a.y()) * vcl_sqrt(b.x() * b.x() + b.y() * b.y()));
     double sum = 0.0;
-    for (unsigned j = 0; j < Y_NUM_FEATURES; ++j)
+    for (unsigned j = 0; j < y_params_0_size; ++j)
     {
-      sum += (features[j] - fmean[j]) * beta1[j];
+      sum += (features[j] - fmean[j]) * beta[j];
     }
     prob[i] = 1.0 / (1.0 + exp(-sum));
   }

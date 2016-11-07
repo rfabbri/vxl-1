@@ -5,6 +5,7 @@ DECLARE( test_sel );
 DECLARE( test_edgemap );
 DECLARE( test_compute_cues );
 DECLARE( test_curve_fragment_postprocess );
+DECLARE( test_contour_breaker );
 
 void
 register_tests()
@@ -14,6 +15,7 @@ register_tests()
   REGISTER( test_load_edg );
   REGISTER( test_sel );
   REGISTER( test_edgemap );
+  REGISTER( test_contour_breaker );
 }
 
 DEFINE_MAIN;
