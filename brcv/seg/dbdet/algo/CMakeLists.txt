@@ -57,6 +57,8 @@ set( dbdet_algo_sources
   dbdet_resize_edgemap.h      dbdet_resize_edgemap.cxx
 # Curve Cues
   dbdet_curve_fragment_cues.h dbdet_curve_fragment_cues.cxx
+# Contour breaker
+  dbdet_contour_breaker.h     dbdet_contour_breaker.cxx
 )
 
 if(OCTAVE_FOUND)
