@@ -44,8 +44,8 @@ void load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img,
   vcl_string frags_sem_path = base_path + "2018_sem.cem";
   vcl_string edge_path = base_path + "2018.edg";
   vcl_string tmap_path = base_path + "2018_tmap.txt";
-  vcl_string params_geom_path = base_path + "gPb_SEL_beta_of_cues_for_merging.txt";
-  vcl_string params_sem_path = base_path + "gPb_SEL_beta_of_geomcon_cue_for_merging.txt";
+  vcl_string params_geom_path = base_path + "gPb_SEL_beta_of_geomcon_cue_for_merging.txt";
+  vcl_string params_sem_path = base_path + "gPb_SEL_beta_of_cues_for_merging.txt";
 
   img = vil_convert_to_component_order(vil_convert_to_n_planes(3,
         vil_convert_stretch_range (vxl_byte(), vil_load(image_path.c_str()))));
@@ -73,7 +73,10 @@ void contour_breaker_test()
   dbdet_edgemap_sptr edgemap_sptr, edgemap_cem_ref_sptr, edgemap_cem_geom_sptr, edgemap_cem_sem_sptr;
   load_dataset(img, cfg_ref, cfg_geom, cfg_sem, edgemap_sptr, edgemap_cem_ref_sptr, edgemap_cem_geom_sptr, edgemap_cem_sem_sptr, tmap, params_geom, params_sem);
 
+  tmap.inplace_transpose();
   dbdet_contour_breaker cb(img, *edgemap_sptr, tmap);
+
+  
   
   y_params_1_vector fmean_geom = y_params_1_vector(params_geom.get_row(0));
   y_params_1_vector fstd_geom = y_params_1_vector(params_geom.get_row(1));
@@ -89,10 +92,9 @@ void contour_breaker_test()
   for (unsigned i = 0; i < y_params_0_size; ++i)
     beta_sem[i] /= fstd_sem[i];
 
-  dbdet_curve_fragment_graph geom = cb.dbdet_contour_breaker_geom(cfg_ref, beta_geom, fmean_geom);  
-  dbdet_curve_fragment_graph sem = cb.dbdet_contour_breaker_semantic(cfg_ref, beta_sem, fmean_sem);
-
-  //TODO
+  dbdet_curve_fragment_graph geom, sem;
+  cb.dbdet_contour_breaker_geom(cfg_ref, beta_geom, fmean_geom, geom);  
+  cb.dbdet_contour_breaker_semantic(cfg_ref, beta_sem, fmean_sem, sem);
 }
 
 

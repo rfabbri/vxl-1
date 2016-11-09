@@ -5,6 +5,7 @@
 #include <dbgl/algo/dbgl_diffgeom.h>
 #include <vil/algo/vil_colour_space.h>
 #include <vil/vil_border.h>
+#include <vcl_iostream.h>
 
 double const dbdet_contour_breaker::diag_of_train = 578.275; // ???
 unsigned const dbdet_contour_breaker::nbr_num_edges_ = 15;  // # of edges close to connecting points
@@ -14,17 +15,19 @@ double const dbdet_contour_breaker::merge_th = 0.2;
 double const dbdet_contour_breaker::merge_th_geom = 0.5;
 double const dbdet_contour_breaker::epsilon = 1e-10;
 
-dbdet_curve_fragment_graph dbdet_contour_breaker::
+void dbdet_contour_breaker::
 dbdet_contour_breaker_geom(
       dbdet_curve_fragment_graph & CFG,
-      y_params_1_vector beta,
-      y_params_1_vector fmean
+      y_params_1_vector & beta,
+      y_params_1_vector & fmean,
+      dbdet_curve_fragment_graph newCFG
       )
 {
   int const ref_tabel_nbr_range = 2;
   unsigned const not_assigned = -1;
 
-  dbdet_curve_fragment_graph newCFG(CFG);
+  //dbdet_curve_fragment_graph newCFG(CFG);
+  deep_copy_cfg(CFG, newCFG);
   
   vcl_vector <dbdet_edgel_chain*> frags(newCFG.frags.size());
   {
@@ -83,7 +86,6 @@ dbdet_contour_breaker_geom(
           ref_end_pts(l, m) = i;
     }  
   }
-
 
   for (unsigned i = 0; i < frags.size(); ++i)
   {
@@ -210,8 +212,6 @@ dbdet_contour_breaker_geom(
       }
     }
   }
-
-  return newCFG;
 }
 
 void dbdet_contour_breaker::
@@ -221,7 +221,7 @@ compute_break_point(
       vcl_vector<unsigned> & ids,
       vcl_set<unsigned> & unique_ids,
       bool front,
-      vcl_vector<unsigned> break_e_ids)
+      vcl_vector<unsigned> & break_e_ids)
 {
       unsigned prev_id = 0;
       for (vcl_set<unsigned>::iterator set_it = unique_ids.begin(); set_it != unique_ids.end(); ++set_it)
@@ -283,8 +283,8 @@ void dbdet_contour_breaker::
 compute_merge_probability_geom(
       dbdet_edgel_chain & chain,
       unsigned nbr_range_th,
-      y_params_1_vector beta,
-      y_params_1_vector fmean,
+      y_params_1_vector & beta,
+      y_params_1_vector & fmean,
       vcl_vector<double> & prob
       )
 {
@@ -306,14 +306,17 @@ compute_merge_probability_geom(
   }
 }
 
-dbdet_curve_fragment_graph dbdet_contour_breaker::
+void dbdet_contour_breaker::
 dbdet_contour_breaker_semantic(
       dbdet_curve_fragment_graph & CFG,
-      y_params_0_vector beta,
-      y_params_0_vector fmean
+      y_params_0_vector & beta,
+      y_params_0_vector & fmean,
+      dbdet_curve_fragment_graph newCFG
       )
 {
-  dbdet_curve_fragment_graph newCFG(CFG);
+  //dbdet_curve_fragment_graph newCFG(CFG);
+  deep_copy_cfg(CFG, newCFG);
+
   vcl_vector<double> clen(newCFG.frags.size(), 0.0);
 
   for(unsigned i = 0; i < max_it; ++i)
@@ -366,16 +369,14 @@ dbdet_contour_breaker_semantic(
       }
     }
   }
-
-  return newCFG;
 }
 
 void dbdet_contour_breaker::
 compute_merge_probability_semantic(
       dbdet_edgel_chain & chain,/*hsv_img, edge_map, tmap,*/
       unsigned nbr_range_th,
-      y_params_0_vector beta,
-      y_params_0_vector fmean,
+      y_params_0_vector & beta,
+      y_params_0_vector & fmean,
       vcl_vector<double> & prob
       )
 {
@@ -511,7 +512,7 @@ compute_merge_probability_semantic(
 void dbdet_contour_breaker::
 compute_edge_sparsity_integral(
       dbdet_edgel_chain & chain,
-      vcl_vector< vnl_vector_fixed<double, 2> > n,
+      vcl_vector< vnl_vector_fixed<double, 2> > & n,
       unsigned nbr_width,
       vcl_vector<double> & edge_sparsity
       )
@@ -545,7 +546,7 @@ compute_edge_sparsity_integral(
 void dbdet_contour_breaker::
 compute_texture_hist_integral(
       dbdet_edgel_chain & chain,
-      vcl_vector< vnl_vector_fixed<double, 2> > n,
+      vcl_vector< vnl_vector_fixed<double, 2> > & n,
       unsigned nbr_width,
       vcl_vector<y_hist_vector> & texton_hist_left,
       vcl_vector<y_hist_vector> & texton_hist_right
@@ -590,4 +591,16 @@ compute_texture_hist_integral(
     last_left = texton_hist_left[k];
     last_right = texton_hist_right[k];
   }
+}
+
+void dbdet_contour_breaker::
+deep_copy_cfg(
+      dbdet_curve_fragment_graph & CFG,
+      dbdet_curve_fragment_graph & newCFG
+      )
+{
+  newCFG.clear();
+  newCFG.resize(CFG.cFrags.size());
+  for (dbdet_edgel_chain_list_const_iter it=newCFG.frags.begin(); it != newCFG.frags.end(); it++)
+    newCFG.insert_fragment(new dbdet_edgel_chain(*(*it)));
 }
