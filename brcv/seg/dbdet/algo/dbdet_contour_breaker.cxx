@@ -20,7 +20,7 @@ dbdet_contour_breaker_geom(
       dbdet_curve_fragment_graph & CFG,
       y_params_1_vector & beta,
       y_params_1_vector & fmean,
-      dbdet_curve_fragment_graph newCFG
+      dbdet_curve_fragment_graph & newCFG
       )
 {
   int const ref_tabel_nbr_range = 2;
@@ -28,7 +28,7 @@ dbdet_contour_breaker_geom(
 
   //dbdet_curve_fragment_graph newCFG(CFG);
   deep_copy_cfg(CFG, newCFG);
-  
+
   vcl_vector <dbdet_edgel_chain*> frags(newCFG.frags.size());
   {
     unsigned i = 0;
@@ -104,10 +104,12 @@ dbdet_contour_breaker_geom(
       vcl_vector <unsigned> end_ids(npts);
       vcl_set <unsigned> unique_end_ids;
 
+      dbdet_edgel_list edgels = frags[i]->edgels;
+
       for (unsigned k = 0; k < npts; ++k)
       {
-        int xx = static_cast<int>(end.pt.x() + 0.5);
-        int yy = static_cast<int>(end.pt.y() + 0.5);
+        int xx = static_cast<int>(edgels[k]->pt.x() + 0.5);
+        int yy = static_cast<int>(edgels[k]->pt.y() + 0.5);
         unsigned x = vcl_max(vcl_min(xx, static_cast<int>(ni()) - 1), 0);
         unsigned y = vcl_max(vcl_min(yy, static_cast<int>(nj()) - 1), 0);
           
@@ -139,6 +141,7 @@ dbdet_contour_breaker_geom(
         newChain->edgels = dbdet_edgel_list(copy.edgels.begin(), copy.edgels.begin() + cur_break_e_id[0] + 1);
         newCFG.frags.push_back(newChain);
         clen.push_back(euclidean_length(*newChain));
+        frags.push_back(newChain);
 
         unsigned xi, xf, yi, yf;
         int x, y;
@@ -151,7 +154,7 @@ dbdet_contour_breaker_geom(
         
         for (unsigned l = xi; l < xf; ++l)
           for (unsigned m = yi; m < yf; ++m)
-            ref_start_pts(l, m) = newCFG.frags.size();
+            ref_start_pts(l, m) = newCFG.frags.size()-1;
 
         for (unsigned k = 1; k < cur_break_e_id.size(); ++k)
         {
@@ -159,6 +162,7 @@ dbdet_contour_breaker_geom(
           newChain->edgels = dbdet_edgel_list(copy.edgels.begin() + cur_break_e_id[k-1], copy.edgels.begin() + cur_break_e_id[k]);
           newCFG.frags.push_back(newChain);
           clen.push_back(euclidean_length(*newChain));
+          frags.push_back(newChain);
         }   
       }
     }  
@@ -311,7 +315,7 @@ dbdet_contour_breaker_semantic(
       dbdet_curve_fragment_graph & CFG,
       y_params_0_vector & beta,
       y_params_0_vector & fmean,
-      dbdet_curve_fragment_graph newCFG
+      dbdet_curve_fragment_graph & newCFG
       )
 {
   //dbdet_curve_fragment_graph newCFG(CFG);
@@ -601,6 +605,6 @@ deep_copy_cfg(
 {
   newCFG.clear();
   newCFG.resize(CFG.cFrags.size());
-  for (dbdet_edgel_chain_list_const_iter it=newCFG.frags.begin(); it != newCFG.frags.end(); it++)
+  for (dbdet_edgel_chain_list_const_iter it=CFG.frags.begin(); it != CFG.frags.end(); it++)
     newCFG.insert_fragment(new dbdet_edgel_chain(*(*it)));
 }

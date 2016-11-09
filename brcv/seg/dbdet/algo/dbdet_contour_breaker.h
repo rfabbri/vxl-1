@@ -47,9 +47,9 @@ public:
     diag_ratio = diag / diag_of_train;
   };
 
-  void dbdet_contour_breaker_geom(dbdet_curve_fragment_graph & CFG, y_params_1_vector & beta, y_params_1_vector & fmean, dbdet_curve_fragment_graph newCFG);
+  void dbdet_contour_breaker_geom(dbdet_curve_fragment_graph & CFG, y_params_1_vector & beta, y_params_1_vector & fmean, dbdet_curve_fragment_graph & newCFG);
 
-  void dbdet_contour_breaker_semantic(dbdet_curve_fragment_graph & CFG, y_params_0_vector & beta, y_params_0_vector & fmean, dbdet_curve_fragment_graph newCFG);
+  void dbdet_contour_breaker_semantic(dbdet_curve_fragment_graph & CFG, y_params_0_vector & beta, y_params_0_vector & fmean, dbdet_curve_fragment_graph & newCFG);
   
   static double euclidean_length(const dbdet_edgel_chain &c) {
     double len=0;
@@ -78,8 +78,8 @@ private:
   const vil_image_view<vil_rgb<vxl_byte> > &img_; // color RGB image
   const dbdet_edgemap &em_;
   const vnl_matrix<unsigned> tmap_;
-  vbl_array_2d<bool> ref_start_pts;
-  vbl_array_2d<bool> ref_end_pts;
+  vbl_array_2d<int> ref_start_pts;
+  vbl_array_2d<int> ref_end_pts;
   double nbr_num_edges;
   double diag_ratio;
   static double const diag_of_train; // ???

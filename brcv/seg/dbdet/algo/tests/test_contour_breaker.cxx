@@ -95,6 +95,10 @@ void contour_breaker_test()
   dbdet_curve_fragment_graph geom, sem;
   cb.dbdet_contour_breaker_geom(cfg_ref, beta_geom, fmean_geom, geom);  
   cb.dbdet_contour_breaker_semantic(cfg_ref, beta_sem, fmean_sem, sem);
+
+  TEST("Contour Breaker Geometric: #contours == reference", cfg_geom.frags.size() == geom.frags.size(), true);
+  TEST("Contour Breaker Semantic: #contours == reference", cfg_sem.frags.size() == sem.frags.size(), true);
+  
 }
 
 
