@@ -60,7 +60,7 @@ public:
 
 private:
 
-  void compute_break_point(vcl_vector<dbdet_edgel_chain*> & frags, unsigned frag_id, vcl_vector<unsigned> & ids, vcl_set<unsigned> & unique_ids, bool front, vcl_vector<unsigned> & break_e_ids);
+  void compute_break_point(vcl_vector<dbdet_edgel_chain*> & frags, unsigned frag_id, vcl_vector<int> & ids, vcl_set<unsigned> & unique_ids, bool front, vcl_vector<unsigned> & break_e_ids);
 
   void compute_merge_probability_geom(dbdet_edgel_chain & chain, unsigned nbr_range_th, y_params_1_vector & beta, y_params_1_vector & fmean, vcl_vector<double> & prob);
 

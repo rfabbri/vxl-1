@@ -26,7 +26,6 @@ dbdet_contour_breaker_geom(
   int const ref_tabel_nbr_range = 2;
   unsigned const not_assigned = -1;
 
-  //dbdet_curve_fragment_graph newCFG(CFG);
   deep_copy_cfg(CFG, newCFG);
 
   vcl_vector <dbdet_edgel_chain*> frags(newCFG.frags.size());
@@ -66,9 +65,9 @@ dbdet_contour_breaker_geom(
       x = static_cast<int>(start.pt.x() + 0.5);
       y = static_cast<int>(start.pt.y() + 0.5);
       xi = static_cast<unsigned>(vcl_max(x - ref_tabel_nbr_range, 0));
-      xf = static_cast<unsigned>(vcl_min(x + ref_tabel_nbr_range, static_cast<int>(ni())));
+      xf = static_cast<unsigned>(vcl_min(x + ref_tabel_nbr_range + 1, static_cast<int>(ni())));
       yi = static_cast<unsigned>(vcl_max(y - ref_tabel_nbr_range, 0));
-      yf = static_cast<unsigned>(vcl_min(y + ref_tabel_nbr_range, static_cast<int>(nj())));
+      yf = static_cast<unsigned>(vcl_min(y + ref_tabel_nbr_range + 1, static_cast<int>(nj())));
       
       for (unsigned l = xi; l < xf; ++l)
         for (unsigned m = yi; m < yf; ++m)
@@ -77,9 +76,9 @@ dbdet_contour_breaker_geom(
       x = static_cast<int>(end.pt.x() + 0.5);
       y = static_cast<int>(end.pt.y() + 0.5);
       xi = static_cast<unsigned>(vcl_max(x - ref_tabel_nbr_range, 0));
-      xf = static_cast<unsigned>(vcl_min(x + ref_tabel_nbr_range, static_cast<int>(ni())));
+      xf = static_cast<unsigned>(vcl_min(x + ref_tabel_nbr_range + 1, static_cast<int>(ni())));
       yi = static_cast<unsigned>(vcl_max(y - ref_tabel_nbr_range, 0));
-      yf = static_cast<unsigned>(vcl_min(y + ref_tabel_nbr_range, static_cast<int>(nj())));
+      yf = static_cast<unsigned>(vcl_min(y + ref_tabel_nbr_range + 1, static_cast<int>(nj())));
       
       for (unsigned l = xi; l < xf; ++l)
         for (unsigned m = yi; m < yf; ++m)
@@ -96,12 +95,13 @@ dbdet_contour_breaker_geom(
       continue;
 
     unsigned npts = frags[i]->edgels.size();
+
     if(clen[i] > (10 * diag_ratio) && npts > nbr_num_edges + 1)
     {
       vcl_vector<unsigned> cur_break_e_id;
-      vcl_vector <unsigned> start_ids(npts);
+      vcl_vector <int> start_ids(npts);
       vcl_set <unsigned> unique_start_ids;
-      vcl_vector <unsigned> end_ids(npts);
+      vcl_vector <int> end_ids(npts);
       vcl_set <unsigned> unique_end_ids;
 
       dbdet_edgel_list edgels = frags[i]->edgels;
@@ -167,7 +167,9 @@ dbdet_contour_breaker_geom(
       }
     }  
   }
-
+ 
+//Break geom working as intended until here
+//TODO FIX
   for(unsigned i = 0; i < max_it; ++i)
   {
     for(dbdet_edgel_chain_list_iter it = newCFG.frags.begin(); it != newCFG.frags.end(); it++)
@@ -222,7 +224,7 @@ void dbdet_contour_breaker::
 compute_break_point(
       vcl_vector<dbdet_edgel_chain*> & frags,
       unsigned frag_id,
-      vcl_vector<unsigned> & ids,
+      vcl_vector<int> & ids,
       vcl_set<unsigned> & unique_ids,
       bool front,
       vcl_vector<unsigned> & break_e_ids)
@@ -233,11 +235,22 @@ compute_break_point(
         dbdet_edgel_chain & chain = (*frags[frag_id]);
         double min = vcl_numeric_limits<double>::max();
         unsigned e_id = -1;
+
+        vgl_point_2d<double> set_pt;
+        if(front)
+        {
+          set_pt = (*frags[(*set_it)]).edgels.front()->pt;
+        }
+        else
+        {
+          set_pt = (*frags[(*set_it)]).edgels.back()->pt;
+        }
+
         for (int k = 0; k < ids.size(); ++k)
         {
           if((*set_it) == ids[k])
           {
-            double dist = vgl_distance(chain.edgels[k]->pt, (*frags[(*set_it)]).edgels[0]->pt);
+            double dist = vgl_distance(chain.edgels[k]->pt, set_pt);
             if (dist < min)
             {
               min = dist;
