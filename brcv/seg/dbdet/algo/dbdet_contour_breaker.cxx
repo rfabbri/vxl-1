@@ -167,38 +167,40 @@ dbdet_contour_breaker_geom(
       }
     }  
   }
- 
-//Break geom working as intended until here
-//TODO FIX
+
   for(unsigned i = 0; i < max_it; ++i)
   {
-    for(dbdet_edgel_chain_list_iter it = newCFG.frags.begin(); it != newCFG.frags.end(); it++)
+    int end_j = newCFG.frags.size();
+    unsigned j = 0;
+ 
+    for(dbdet_edgel_chain_list_iter it = newCFG.frags.begin(); (it != newCFG.frags.end() && j < end_j); it++,++j)
     {
       dbdet_edgel & start = *((*it)->edgels.front());
       dbdet_edgel & end = *((*it)->edgels.back());
-
+      
       if (start.pt == end.pt && start.deriv == end.deriv)
         continue;
 
-      if (clen[i] > (10 * diag_ratio) && (*it)->edgels.size() > (nbr_num_edges + 1) / i)
+      if (clen[j] > (10 * diag_ratio) && (*it)->edgels.size() > nbr_num_edges / (i + 1.0))
       {
         vcl_vector<double> prob;
-        compute_merge_probability_geom(*(*it), nbr_num_edges /(2 * i) , beta, fmean, prob);
+        compute_merge_probability_geom(*(*it), vcl_ceil(nbr_num_edges /(2.0 * (i + 1.0))) , beta, fmean, prob);
         double min = vcl_numeric_limits<double>::max();
         double lastVal = min;
         unsigned firstId = -1, lastId = -1;
         for (int k = 0; k < prob.size(); ++k)
         {
-          if (prob[i] < min)
+          if (prob[k] < min)
           {
-            min = prob[i];
+            min = prob[k];
             firstId = lastId = k; 
           }
-          else if(prob[i] == min)
+          else if(prob[k] == min)
           {
             lastId = k;
           }
         }
+
         if (min < merge_th_geom)
         {
           unsigned id = (firstId + lastId + 1) / 2;
@@ -311,12 +313,12 @@ compute_merge_probability_geom(
   for (unsigned i = 0; i < prob.size(); ++i)
     prob[i] = 1.0;
 
-  for (unsigned i = nbr_range_th; i < prob.size() - 1 - nbr_range_th; ++i)
+  for (unsigned i = nbr_range_th; i < prob.size() - nbr_range_th; ++i)
   {
     vgl_vector_2d<double> a = chain.edgels[i]->pt - chain.edgels[i-nbr_range_th]->pt;
     vgl_vector_2d<double> b = chain.edgels[i+nbr_range_th]->pt - chain.edgels[i]->pt;
-    
-    double cos_diff = (a.x() * b.x() + a.y() + b.y()) / 
+
+    double cos_diff = (a.x() * b.x() + a.y() * b.y()) / 
                       (vcl_sqrt(a.x() * a.x() + a.y() * a.y()) * vcl_sqrt(b.x() * b.x() + b.y() * b.y()));
     //prob(i) = 1 / (1 + exp(-([1 geom_diff] - fmean_1)*beta_1'));
     prob[i] =  1.0 / (1.0 + exp(-((1.0 - fmean[0]) * beta[0] + (cos_diff - fmean[1]) * beta[1])));

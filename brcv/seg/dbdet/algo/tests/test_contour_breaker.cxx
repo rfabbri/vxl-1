@@ -96,9 +96,32 @@ void contour_breaker_test()
   cb.dbdet_contour_breaker_geom(cfg_ref, beta_geom, fmean_geom, geom);  
   cb.dbdet_contour_breaker_semantic(cfg_ref, beta_sem, fmean_sem, sem);
 
-  TEST("Contour Breaker Geometric: #contours == reference", cfg_geom.frags.size() == geom.frags.size(), true);
-  TEST("Contour Breaker Semantic: #contours == reference", cfg_sem.frags.size() == sem.frags.size(), true);
-  
+  TEST("Contour Breaker Geometric: #contours", cfg_geom.frags.size(), geom.frags.size());
+  //TEST("Contour Breaker Semantic: #contours", cfg_sem.frags.size(), sem.frags.size());
+
+  bool status = true;
+  dbdet_edgel_chain_list_iter ref_it = geom.frags.begin();
+  for(dbdet_edgel_chain_list_iter it = cfg_geom.frags.begin(); (it != cfg_geom.frags.end() && ref_it != geom.frags.end()); it++, ref_it++)
+  {
+    if((*it)->edgels.size() != (*ref_it)->edgels.size())
+    {
+      status == false;
+      break;
+    }
+  }
+  TEST("Contour Breaker Geometric: contours #edgels", status, true);
+
+  /*status = true;
+  ref_it = sem.frags.begin();
+  for(dbdet_edgel_chain_list_iter it = cfg_sem.frags.begin(); (it != cfg_sem.frags.end() && ref_it != sem.frags.end()); it++, ref_it++)
+  {
+    if((*it)->edgels.size() != (*ref_it)->edgels.size())
+    {
+      status == false;
+      break;
+    }
+  }
+  TEST("Contour Breaker Semantic: contours #edgels", status, true);*/
 }
 
 
