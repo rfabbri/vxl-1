@@ -23,6 +23,7 @@ import bpy
 import bpy_extras
 import numpy
 from mathutils import Matrix
+import os
 
 # Create a spline/bezier from a list of points
 def new_curve_from_points(p0,name_prefix):
@@ -79,7 +80,7 @@ def test1():
     loft(pts)
     bpy.ops.export_mesh.ply(filepath='loftsurf.ply')
 
-def loft(p0, p1):
+def loft(pts):
     os = []
     npts = len(pts)
     for i in range(npts):
