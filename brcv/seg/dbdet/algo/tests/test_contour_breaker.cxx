@@ -97,31 +97,71 @@ void contour_breaker_test()
   cb.dbdet_contour_breaker_semantic(cfg_ref, beta_sem, fmean_sem, sem);
 
   TEST("Contour Breaker Geometric: #contours", cfg_geom.frags.size(), geom.frags.size());
-  //TEST("Contour Breaker Semantic: #contours", cfg_sem.frags.size(), sem.frags.size());
+  TEST("Contour Breaker Semantic: #contours", cfg_sem.frags.size(), sem.frags.size());
 
-  bool status = true;
+  bool s_status = true, e_status = true;
   dbdet_edgel_chain_list_iter ref_it = geom.frags.begin();
   for(dbdet_edgel_chain_list_iter it = cfg_geom.frags.begin(); (it != cfg_geom.frags.end() && ref_it != geom.frags.end()); it++, ref_it++)
   {
     if((*it)->edgels.size() != (*ref_it)->edgels.size())
     {
-      status == false;
+      s_status = e_status = false;
       break;
     }
+    
+    dbdet_edgel_list & el1 = (*it)->edgels;
+    dbdet_edgel_list & el2 = (*ref_it)->edgels; 
+    for(unsigned i = 0; i < el1.size(); ++i)
+    {
+      double x_diff = vcl_abs(el1[i]->pt.x() - el2[i]->pt.x());
+      double y_diff = vcl_abs(el1[i]->pt.y() - el2[i]->pt.y());
+      double t1 = el1[i]->tangent;
+      double t2 = el2[i]->tangent;
+      double t_diff = vcl_abs(t1 - t2);
+      t1 = t1 > vnl_math::pi ? t1 - 2.0 * vnl_math::pi : t1;
+      t2 = t2 > vnl_math::pi ? t2 - 2.0 * vnl_math::pi : t2;
+      t_diff = vcl_min(t_diff, t1 - t2);
+      if(x_diff > tolerance || y_diff > tolerance || t_diff > tolerance)
+      {
+        e_status = false;
+        break;
+      }
+    }
   }
-  TEST("Contour Breaker Geometric: contours #edgels", status, true);
+  TEST("Contour Breaker Geometric: contours #edgels", s_status, true);
+  TEST("Contour Breaker Geometric: contours (x,y,dir)", e_status, true);
 
-  /*status = true;
+  s_status = e_status = true;
   ref_it = sem.frags.begin();
   for(dbdet_edgel_chain_list_iter it = cfg_sem.frags.begin(); (it != cfg_sem.frags.end() && ref_it != sem.frags.end()); it++, ref_it++)
   {
     if((*it)->edgels.size() != (*ref_it)->edgels.size())
     {
-      status == false;
+      s_status = e_status = false;
       break;
     }
+
+    dbdet_edgel_list & el1 = (*it)->edgels;
+    dbdet_edgel_list & el2 = (*ref_it)->edgels; 
+    for(unsigned i = 0; i < el1.size(); ++i)
+    {
+      double x_diff = vcl_abs(el1[i]->pt.x() - el2[i]->pt.x());
+      double y_diff = vcl_abs(el1[i]->pt.y() - el2[i]->pt.y());
+      double t1 = el1[i]->tangent;
+      double t2 = el2[i]->tangent;
+      double t_diff = vcl_abs(t1 - t2);
+      t1 = t1 > vnl_math::pi ? t1 - 2.0 * vnl_math::pi : t1;
+      t2 = t2 > vnl_math::pi ? t2 - 2.0 * vnl_math::pi : t2;
+      t_diff = vcl_min(t_diff, t1 - t2);
+      if(x_diff > tolerance || y_diff > tolerance || t_diff > tolerance)
+      {
+        e_status = false;
+        break;
+      }
+    }
   }
-  TEST("Contour Breaker Semantic: contours #edgels", status, true);*/
+  TEST("Contour Breaker Semantic: contours #edgels", s_status, true);
+  TEST("Contour Breaker Semantic: contours (x,y,dir)", e_status, true);
 }
 
 
