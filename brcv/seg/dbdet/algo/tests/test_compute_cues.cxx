@@ -61,14 +61,14 @@ void cues_test()
     y_feature_vector fv;
     cues.compute_all_cues(*(*it), &fv);
 
-    TEST_NEAR("Y_BG_GRAD", fv[Y_BG_GRAD], gt_cues.get(j, Y_BG_GRAD), tolerance);
-    TEST_NEAR("Y_SAT_GRAD", fv[Y_SAT_GRAD], gt_cues.get(j, Y_SAT_GRAD), tolerance);
-    TEST_NEAR("Y_HUE_GRAD", fv[Y_HUE_GRAD], gt_cues.get(j, Y_HUE_GRAD), tolerance);
-    TEST_NEAR("Y_ABS_K", fv[Y_ABS_K], gt_cues.get(j, Y_ABS_K), tolerance);
-    TEST_NEAR("Y_EDGE_SPARSITY", fv[Y_EDGE_SPARSITY], gt_cues.get(j, Y_EDGE_SPARSITY), tolerance);
-    TEST_NEAR("Y_WIGG", fv[Y_WIGG], gt_cues.get(j, Y_WIGG), tolerance);
-    TEST_NEAR("Y_LEN", fv[Y_LEN], gt_cues.get(j, Y_LEN), tolerance);
-    TEST_NEAR("Y_MEAN_CONF", fv[Y_MEAN_CONF], gt_cues.get(j, Y_MEAN_CONF), tolerance);
+    TEST_NEAR("Y_BG_GRAD", fv[y_features::Y_BG_GRAD], gt_cues.get(j, y_features::Y_BG_GRAD), tolerance);
+    TEST_NEAR("Y_SAT_GRAD", fv[y_features::Y_SAT_GRAD], gt_cues.get(j, y_features::Y_SAT_GRAD), tolerance);
+    TEST_NEAR("Y_HUE_GRAD", fv[y_features::Y_HUE_GRAD], gt_cues.get(j, y_features::Y_HUE_GRAD), tolerance);
+    TEST_NEAR("Y_ABS_K", fv[y_features::Y_ABS_K], gt_cues.get(j, y_features::Y_ABS_K), tolerance);
+    TEST_NEAR("Y_EDGE_SPARSITY", fv[y_features::Y_EDGE_SPARSITY], gt_cues.get(j, y_features::Y_EDGE_SPARSITY), tolerance);
+    TEST_NEAR("Y_WIGG", fv[y_features::Y_WIGG], gt_cues.get(j, y_features::Y_WIGG), tolerance);
+    TEST_NEAR("Y_LEN", fv[y_features::Y_LEN], gt_cues.get(j, y_features::Y_LEN), tolerance);
+    TEST_NEAR("Y_MEAN_CONF", fv[y_features::Y_MEAN_CONF], gt_cues.get(j, y_features::Y_MEAN_CONF), tolerance);
     //for now tests just for the first iter
   }
 }

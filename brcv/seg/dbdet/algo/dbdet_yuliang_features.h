@@ -5,20 +5,30 @@
 
 
 #define y_params_1_size 2
-#define y_params_1_vector vnl_vector_fixed<double, y_params_1_size>
+typedef vnl_vector_fixed<double, y_params_1_size> y_params_1_vector;
 
 #define y_params_0_size 9
-#define y_params_0_vector vnl_vector_fixed<double, y_params_0_size>
+typedef vnl_vector_fixed<double, y_params_0_size> y_params_0_vector;
+typedef vnl_vector_fixed<double, y_params_0_size> y_feature_vector;
 
 #define y_hist_size 64
 
 typedef vnl_vector_fixed<unsigned, y_hist_size> y_hist_vector;
 
 //hackish solution to not use scoped enums and enforce c++11
+// just to make it easier and more descriptive to index the feature vector
+// rarely used since we just process the feature vec. generically
+// Y_ONE is just always 1
 namespace y_params_0 {
 
   enum {
     Y_ONE, Y_BG_GRAD, Y_SAT_GRAD, Y_HUE_GRAD, Y_ABS_K, Y_EDGE_SPARSITY, Y_WIGG, Y_GEOM, Y_TEXTURE
+  };
+}
+namespace y_features {
+
+  enum {
+    Y_ONE, Y_BG_GRAD, Y_SAT_GRAD, Y_HUE_GRAD, Y_ABS_K, Y_EDGE_SPARSITY, Y_WIGG, Y_LEN, Y_MEAN_CONF
   };
 }
 
