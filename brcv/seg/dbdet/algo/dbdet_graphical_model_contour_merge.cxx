@@ -93,11 +93,118 @@ private:
 void dbdet_graphical_model_contour_merge::
 dbdet_merge_contour(
       dbdet_curve_fragment_graph & CFG,
-      y_params_1_vector & beta,
-      y_params_1_vector & fmean,
-      y_params_0_vector & beta,
-      y_params_0_vector & fmean
+      y_params_1_vector & beta1,
+      y_params_1_vector & fmean1,
+      y_params_0_vector & beta0,
+      y_params_0_vector & fmean0
       )
 {
+  factor_graph g(CFG);
 
+  for (unsigned k = 0; k < g.var.size(); ++k)
+  {
+    var_node & cur_node = g.var[k];
+    if (cur_node.dim == 2)
+    {
+      unsigned c1_id = cur_node.n_facs.front();
+      unsigned c2_id = cur_node.n_facs.back();
+      if (c1_id == c2_id)
+        continue;
+
+      dbdet_edgel_chain * c1 = g.fac[c1_id].chain;
+      dbdet_edgel_chain * c2 = g.fac[c2_id].chain;
+
+      dbdet_edgel_chain c1_cut, c2_cut;
+      
+
+      //always make directions c1 -> node -> c2
+
+      unsigned cut_size = vcl_min(nbr_num_edges, c1->edgels.size());
+      c1_cut.edgels.resize(cut_size);
+      if (c1->edgels.front()->id == cur_node.edgel_id)
+      {
+        for (unsigned i = 0; i < cut_size; ++i)
+        {
+          c1_cut.edgels[i] = c1->edgels[cut_size - i - 1];
+        }
+      }
+      else if(c1->edgels.back()->id == cur_node.edgel_id)
+      {
+        unsigned start_i = c1->edgels.size() - cut_size;
+        for (unsigned i = 0; i < cut_size; ++i)
+        {
+          c1_cut.edgels[i] = c1->edgels[start_i + i];
+        }
+      }
+
+      cut_size = vcl_min(nbr_num_edges, c2->edgels.size());
+      c2_cut.edgels.resize(cut_size);
+      if (c2->edgels.front()->id == cur_node.edgel_id)
+      {
+        for (unsigned i = 0; i < cut_size; ++i)
+        {
+          c2_cut.edgels[i] = c2->edgels[i];
+        }
+      }
+      else if(c2->edgels.back()->id == cur_node.edgel_id)
+      {
+        unsigned start_i = c2->edgels.size() - 1;
+        for (unsigned i = 0; i < cut_size; ++i)
+        {
+          c1_cut.edgels[i] = c1->edgels[start_i - i];
+        }
+      }
+
+      y_feature_vector c1_features, c2_features;
+      cues_computer.compute_all_cues(c1, &c1_features);
+      cues_computer.compute_all_cues(c2, &c2_features);
+
+      y_params_0_vector cues;
+      cues[y_params_0::Y_ONE] = 1.0;
+      for (unsigned i = 1; i < abs_diff.size(); ++i)
+      {
+        cues[i] = vcl_abs(c1_features[i] - c2_features[i]);
+      }
+
+      double geom_diff, texture_diff;
+      dbdet_degree_2_node_cues(c1, c2, geom_diff, texture_diff);
+
+      cues[y_params_0::Y_GEOM] = geom_diff;
+      cues[y_params_0::Y_TEXTURE] = texture_diff;
+
+      bool merge = false;
+
+      //for very short curve, just decide merging based on geometry;
+      if (c1->edgels.size() < dbdet_yuliang_const::nbr_len_th || c2->edgels.size() < dbdet_yuliang_const::nbr_len_th)
+      {
+        double p = 1.0 / (1.0 + exp(-((1.0 - fmean1[0]) * beta1[0] + (geom_diff - fmean1[1]) * beta1[1])));
+        merge = p > dbdet_yuliang_const::merge_th_geom ? true : false;
+      }
+      else
+      {
+        double sum = 0.0; 
+        for (unsigned i = 0; i < cues.size(); ++i)
+        {
+          sum += (cues[i] - fmean0[i]) * beta0[i];
+        }
+        double p = 1.0 / (1.0 + exp(-sum));
+        merge = p > dbdet_yuliang_const::merge_th_sem ? true : false;
+      }
+
+      if (merge)
+      {
+        merge_at_degree_2_node(/*G, merged_cem, merged_cf_idx, v, actual_edge, nbrs_fac, c1_ids, c2_ids*/);
+      }
+    }
+  }
+
+  //dim 3 node should be dealt with after all dim 2 node are solved 
+  for (unsigned k = 0; k < g.var.size(); ++k)
+  {
+    var_node & cur_node = g.var[k];
+    if (cur_node.dim == 3)
+    {
+      //TODO
+    }
+  }
 }
