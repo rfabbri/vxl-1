@@ -26,7 +26,7 @@ public:
   {
     assert(em.ncols() == img.ni() && em.nrows() == img.nj() && tmap.rows() == img.ni() && tmap.cols() == img.nj() && tmap.max_value() < y_hist_size);
     double diag = vcl_sqrt(ni() * ni() + nj() * nj());
-    nbr_num_edges = vcl_max(static_cast<unsigned>((dbdet_yuliang_const::nbr_num_edges_ * diag / dbdet_yuliang_const::diag_of_train) + 0.5), dbdet_yuliang_const::nbr_len_th);
+    nbr_num_edges = vcl_max(static_cast<unsigned>((dbdet_yuliang_const::nbr_num_edges * diag / dbdet_yuliang_const::diag_of_train) + 0.5), dbdet_yuliang_const::nbr_len_th);
     diag_ratio = diag / dbdet_yuliang_const::diag_of_train;
   };
 

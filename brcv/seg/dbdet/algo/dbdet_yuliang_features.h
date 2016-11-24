@@ -26,7 +26,7 @@ class dbdet_yuliang_const {
 
 public:
   static double const diag_of_train = 578.275; // ???
-  static unsigned const nbr_num_edges_ = 15;  // # of edges close to connecting points
+  static unsigned const nbr_num_edges = 15;  // # of edges close to connecting points
   static unsigned const nbr_len_th = 5; // short curve under this length will be grouped due to geometry.
   static double const merge_th_sem = 0.2;
   static double const merge_th_geom = 0.5;
