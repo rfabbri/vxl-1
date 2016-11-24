@@ -7,14 +7,6 @@
 #include <vil/vil_border.h>
 #include <vcl_iostream.h>
 
-double const dbdet_contour_breaker::diag_of_train = 578.275; // ???
-unsigned const dbdet_contour_breaker::nbr_num_edges_ = 15;  // # of edges close to connecting points
-unsigned const dbdet_contour_breaker::max_it = 2;
-unsigned const dbdet_contour_breaker::nbr_len_th = 5; // short curve under this length will be grouped due to geometry.
-double const dbdet_contour_breaker::merge_th = 0.2;
-double const dbdet_contour_breaker::merge_th_geom = 0.5;
-double const dbdet_contour_breaker::epsilon = 1e-10;
-
 void dbdet_contour_breaker::
 dbdet_contour_breaker_geom(
       dbdet_curve_fragment_graph & CFG,
@@ -37,7 +29,7 @@ dbdet_contour_breaker_geom(
 
   vcl_vector<double> clen(frags.size(), 0.0);
 
-  double min_contour_len = nbr_len_th * diag_ratio;
+  double min_contour_len = dbdet_yuliang_const::dbdet_yuliang_const::nbr_len_th * diag_ratio;
 
   for (unsigned i = 0; i < ni(); ++i)
   {
@@ -58,7 +50,7 @@ dbdet_contour_breaker_geom(
     if (start.pt == end.pt && start.deriv == end.deriv)
       continue;
 
-    if (clen[i] > min_contour_len && frags[i]->edgels.size() > nbr_len_th)
+    if (clen[i] > min_contour_len && frags[i]->edgels.size() > dbdet_yuliang_const::nbr_len_th)
     {
       unsigned xi, xf, yi, yf;
       int x, y;
@@ -201,7 +193,7 @@ dbdet_contour_breaker_geom(
           }
         }
 
-        if (min < merge_th_geom)
+        if (min < dbdet_yuliang_const::merge_th_geom)
         {
           unsigned id = (firstId + lastId + 1) / 2;
           dbdet_edgel_chain copy = *(*it);
@@ -261,7 +253,7 @@ compute_break_point(
           }
         }
 
-        if (e_id < nbr_len_th - 1 || e_id > chain.edgels.size() - nbr_len_th || (e_id - prev_id) < nbr_len_th)
+        if (e_id < dbdet_yuliang_const::dbdet_yuliang_const::nbr_len_th - 1 || e_id > chain.edgels.size() - dbdet_yuliang_const::dbdet_yuliang_const::nbr_len_th || (e_id - prev_id) < dbdet_yuliang_const::dbdet_yuliang_const::nbr_len_th)
           continue;
 
         if(min == 0)
@@ -277,13 +269,13 @@ compute_break_point(
         unsigned a_id1, a_id2;
         if (front)
         {
-          a_id1 = vcl_min(nbr_len_th, static_cast<unsigned>(frags[(*set_it)]->edgels.size() - 1));
+          a_id1 = vcl_min(dbdet_yuliang_const::dbdet_yuliang_const::nbr_len_th, static_cast<unsigned>(frags[(*set_it)]->edgels.size() - 1));
           a_id2 = 0;
         }
         else
         {
           a_id1 = frags[(*set_it)]->edgels.size() - 1;
-          a_id2 = static_cast<unsigned>(vcl_max(static_cast<int>(frags[(*set_it)]->edgels.size()) - 1 - static_cast<int>(nbr_len_th), 0));
+          a_id2 = static_cast<unsigned>(vcl_max(static_cast<int>(frags[(*set_it)]->edgels.size()) - 1 - static_cast<int>(dbdet_yuliang_const::nbr_len_th), 0));
         }
         vgl_vector_2d<double> a_ori = (*frags[(*set_it)]).edgels[a_id1]->pt - (*frags[(*set_it)]).edgels[a_id2]->pt;
 
@@ -307,7 +299,7 @@ compute_merge_probability_geom(
       vcl_vector<double> & prob
       )
 {
-  nbr_range_th = vcl_min(nbr_range_th, nbr_len_th);
+  nbr_range_th = vcl_min(nbr_range_th, dbdet_yuliang_const::nbr_len_th);
   prob.resize(chain.edgels.size());
   
   for (unsigned i = 0; i < prob.size(); ++i)
@@ -371,7 +363,7 @@ dbdet_contour_breaker_semantic(
             lastId = k;
           }
         }
-        if (min < merge_th_geom)
+        if (min < dbdet_yuliang_const::merge_th_sem)
         {
           unsigned id = (firstId + lastId + 1) / 2;
           dbdet_edgel_chain copy = *(*it);
@@ -466,7 +458,7 @@ compute_merge_probability_semantic(
     k_cum[i] = last_k;
     
     double sign = k[i] * (i+1 < npts ? k[i+1] : 0.0);
-    last_wigg += (sign < 0 && vcl_abs(sign) > epsilon) ? 1.0 : 0.0;
+    last_wigg += (sign < 0 && vcl_abs(sign) > dbdet_yuliang_const::epsilon) ? 1.0 : 0.0;
     wigg_cum[i] = last_wigg;
   }
 

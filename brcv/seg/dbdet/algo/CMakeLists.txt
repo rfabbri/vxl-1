@@ -58,6 +58,7 @@ set( dbdet_algo_sources
 # Curve Cues
   dbdet_curve_fragment_cues.h dbdet_curve_fragment_cues.cxx
 # Contour breaker
+  dbdet_yuliang_features.h    dbdet_yuliang_features.cxx
   dbdet_contour_breaker.h     dbdet_contour_breaker.cxx
 )
 
