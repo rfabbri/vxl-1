@@ -90,6 +90,15 @@ private:
   }
 };
 
+double compute_merge_prob_sem(y_feature_vector cues, y_params_0_vector & beta0, y_params_0_vector & fmean0)
+{
+  double sum = 0.0; 
+  for (unsigned i = 0; i < cues.size(); ++i)
+    sum += (cues[i] - fmean0[i]) * beta0[i];
+
+  return 1.0 / (1.0 + exp(-sum));
+}
+
 void dbdet_graphical_model_contour_merge::
 dbdet_merge_contour(
       dbdet_curve_fragment_graph & CFG,
@@ -117,24 +126,21 @@ dbdet_merge_contour(
       dbdet_edgel_chain c1_cut, c2_cut;
       
 
-      //always make directions c1 -> node -> c2
+      //Original direction c1 -> node -> c2
+      //Our directions c1 -> node <- c2
 
       unsigned cut_size = vcl_min(nbr_num_edges, c1->edgels.size());
       c1_cut.edgels.resize(cut_size);
       if (c1->edgels.front()->id == cur_node.edgel_id)
       {
         for (unsigned i = 0; i < cut_size; ++i)
-        {
-          c1_cut.edgels[i] = c1->edgels[cut_size - i - 1];
-        }
+          c1_cut.edgels[i] = c1->edgels[i];
       }
-      else if(c1->edgels.back()->id == cur_node.edgel_id)
+      else /*if(c1->edgels.back()->id == cur_node.edgel_id)*/
       {
-        unsigned start_i = c1->edgels.size() - cut_size;
+        unsigned start_i = c2->edgels.size() - 1;
         for (unsigned i = 0; i < cut_size; ++i)
-        {
-          c1_cut.edgels[i] = c1->edgels[start_i + i];
-        }
+          c1_cut.edgels[i] = c1->edgels[start_i - i];
       }
 
       cut_size = vcl_min(nbr_num_edges, c2->edgels.size());
@@ -142,17 +148,13 @@ dbdet_merge_contour(
       if (c2->edgels.front()->id == cur_node.edgel_id)
       {
         for (unsigned i = 0; i < cut_size; ++i)
-        {
           c2_cut.edgels[i] = c2->edgels[i];
-        }
       }
-      else if(c2->edgels.back()->id == cur_node.edgel_id)
+      else /*if(c2->edgels.back()->id == cur_node.edgel_id)*/
       {
         unsigned start_i = c2->edgels.size() - 1;
         for (unsigned i = 0; i < cut_size; ++i)
-        {
           c1_cut.edgels[i] = c1->edgels[start_i - i];
-        }
       }
 
       y_feature_vector c1_features, c2_features;
@@ -182,19 +184,12 @@ dbdet_merge_contour(
       }
       else
       {
-        double sum = 0.0; 
-        for (unsigned i = 0; i < cues.size(); ++i)
-        {
-          sum += (cues[i] - fmean0[i]) * beta0[i];
-        }
-        double p = 1.0 / (1.0 + exp(-sum));
+        double p = compute_merge_prob_sem(cues, fmean0, beta0);
         merge = p > dbdet_yuliang_const::merge_th_sem ? true : false;
       }
 
       if (merge)
-      {
-        merge_at_degree_2_node(/*G, merged_cem, merged_cf_idx, v, actual_edge, nbrs_fac, c1_ids, c2_ids*/);
-      }
+        merge_at_degree_2_node(G, c1, c2, cur_node.edgel_id);
     }
   }
 
@@ -204,7 +199,110 @@ dbdet_merge_contour(
     var_node & cur_node = g.var[k];
     if (cur_node.dim == 3)
     {
-      //TODO
+      unsigned c1_id = cur_node.n_facs[0];
+      unsigned c2_id = cur_node.n_facs[1];
+      unsigned c3_id = cur_node.n_facs[2];
+      if (c1_id == c2_id || c1_id == c3_id || c2_id == c3_id)
+        continue;
+
+      dbdet_edgel_chain c1_cut, c2_cut, c3_cut;
+
+      // always make directions c1 -> node <- c2
+      //                               ^
+      //                               |
+      //                               c3
+
+      unsigned cut_size = vcl_min(nbr_num_edges, c1->edgels.size());
+      c1_cut.edgels.resize(cut_size);
+      if (c1->edgels.front()->id == cur_node.edgel_id)
+      {
+        for (unsigned i = 0; i < cut_size; ++i)
+          c1_cut.edgels[i] = c1->edgels[cut_size - i - 1];
+      }
+      else /*if(c1->edgels.back()->id == cur_node.edgel_id)*/
+      {
+        unsigned start_i = c1->edgels.size() - cut_size;
+        for (unsigned i = 0; i < cut_size; ++i)
+          c1_cut.edgels[i] = c1->edgels[start_i + i];
+      }
+
+      cut_size = vcl_min(nbr_num_edges, c2->edgels.size());
+      c2_cut.edgels.resize(cut_size);
+      if (c2->edgels.front()->id == cur_node.edgel_id)
+      {
+        for (unsigned i = 0; i < cut_size; ++i)
+          c2_cut.edgels[i] = c2->edgels[cut_size - i - 1];
+      }
+      else /*if(c2->edgels.back()->id == cur_node.edgel_id)*/
+      {
+        unsigned start_i = c2->edgels.size() - cut_size;
+        for (unsigned i = 0; i < cut_size; ++i)
+          c2_cut.edgels[i] = c2->edgels[start_i + i];
+      }
+
+      cut_size = vcl_min(nbr_num_edges, c3->edgels.size());
+      c3_cut.edgels.resize(cut_size);
+      if (c3->edgels.front()->id == cur_node.edgel_id)
+      {
+        for (unsigned i = 0; i < cut_size; ++i)
+          c3_cut.edgels[i] = c3->edgels[cut_size - i - 1];
+      }
+      else /*if(c3->edgels.back()->id == cur_node.edgel_id)*/
+      {
+        unsigned start_i = c3->edgels.size() - cut_size;
+        for (unsigned i = 0; i < cut_size; ++i)
+          c3_cut.edgels[i] = c3->edgels[start_i + i];
+      }
+
+      y_feature_vector c1_features, c2_features, c3_features;
+      cues_computer.compute_all_cues(c1, &c1_features);
+      cues_computer.compute_all_cues(c2, &c2_features);
+      cues_computer.compute_all_cues(c3, &c3_features);
+
+      y_params_0_vector cues_12, cues_13, cues_23;
+      cues_12[y_params_0::Y_ONE] = cues_13[y_params_0::Y_ONE] = cues_23[y_params_0::Y_ONE] = 1.0;
+      for (unsigned i = 1; i < abs_diff.size(); ++i)
+      {
+        cues_12[i] = vcl_abs(c1_features[i] - c2_features[i]);
+        cues_13[i] = vcl_abs(c1_features[i] - c3_features[i]);
+        cues_23[i] = vcl_abs(c2_features[i] - c3_features[i]);
+      }
+
+      double gd_12, gd_13, dg_23, td_12, td_13, td_23;
+      dbdet_degree_2_node_cues(c1, c2, gd_12, td_12);
+      dbdet_degree_2_node_cues(c1, c3, gd_12, td_12);
+      dbdet_degree_2_node_cues(c2, c3, gd_12, td_12);
+
+      cues_12[y_params_0::Y_GEOM] = gd_12;
+      cues_12[y_params_0::Y_TEXTURE] = td_12;
+
+      cues_13[y_params_0::Y_GEOM] = gd_13;
+      cues_13[y_params_0::Y_TEXTURE] = td_13;
+
+      cues_23[y_params_0::Y_GEOM] = gd_23;
+      cues_23[y_params_0::Y_TEXTURE] = td_23;
+
+      double p_12 = compute_merge_prob_sem(cues_12, fmean0, beta0);
+      double p_13 = compute_merge_prob_sem(cues_13, fmean0, beta0);
+      double p_23 = compute_merge_prob_sem(cues_23, fmean0, beta0);
+
+      double max = p_12 > p_13 ? (p_12 > p_23 ? p_12 : p_23) : (p_13 > p_23 ? p_13 : p_23);
+
+      if(max > dbdet_yuliang_const::merge_th_sem)
+      {
+        if (max == p_12)
+        {
+          merge_at_degree_2_node(G, c1, c2, cur_node.edgel_id);
+        }
+        else if (max == p_13)
+        {
+          merge_at_degree_2_node(G, c1, c3, cur_node.edgel_id);
+        }
+        else
+        {
+          merge_at_degree_2_node(G, c2, c3, cur_node.edgel_id);
+        }
+      }
     }
   }
 }

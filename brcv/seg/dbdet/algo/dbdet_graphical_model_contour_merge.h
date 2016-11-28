@@ -29,7 +29,7 @@ private:
 
   void dbdet_degree_2_node_cues(dbdet_edgel_chain & c1, dbdet_edgel_chain & c2, double & geom_diff, double & tex_diff);
 
-  void dbdet_merge_at_degree_2_node(dbdet_factor_graph G, dbdet_curve_fragment_graph & newCFG, v, actual_edge, nbrs_fac, c1_ids, c2_ids);
+  void dbdet_merge_at_degree_2_node(dbdet_factor_graph G, dbdet_curve_fragment_graph & CFG, v, actual_edge, nbrs_fac, c1_ids, c2_ids);
 
   unsigned ni() const { return em_.ncols(); }
   unsigned nj() const { return em_.nrows(); }
