@@ -90,7 +90,11 @@ private:
   }
 };
 
-double compute_merge_prob_sem(y_feature_vector cues, y_params_0_vector & beta0, y_params_0_vector & fmean0)
+double compute_merge_prob_sem(
+      y_feature_vector cues,
+      y_params_0_vector & beta0,
+      y_params_0_vector & fmean0
+      )
 {
   double sum = 0.0; 
   for (unsigned i = 0; i < cues.size(); ++i)
@@ -268,19 +272,9 @@ dbdet_merge_contour(
         cues_23[i] = vcl_abs(c2_features[i] - c3_features[i]);
       }
 
-      double gd_12, gd_13, dg_23, td_12, td_13, td_23;
-      dbdet_degree_2_node_cues(c1, c2, gd_12, td_12);
-      dbdet_degree_2_node_cues(c1, c3, gd_12, td_12);
-      dbdet_degree_2_node_cues(c2, c3, gd_12, td_12);
-
-      cues_12[y_params_0::Y_GEOM] = gd_12;
-      cues_12[y_params_0::Y_TEXTURE] = td_12;
-
-      cues_13[y_params_0::Y_GEOM] = gd_13;
-      cues_13[y_params_0::Y_TEXTURE] = td_13;
-
-      cues_23[y_params_0::Y_GEOM] = gd_23;
-      cues_23[y_params_0::Y_TEXTURE] = td_23;
+      dbdet_degree_2_node_cues(c1, c2, cues_12[y_params_0::Y_GEOM], cues_12[y_params_0::Y_TEXTURE]);
+      dbdet_degree_2_node_cues(c1, c3, cues_13[y_params_0::Y_GEOM], cues_13[y_params_0::Y_TEXTURE]);
+      dbdet_degree_2_node_cues(c2, c3, cues_23[y_params_0::Y_GEOM], cues_23[y_params_0::Y_TEXTURE]);
 
       double p_12 = compute_merge_prob_sem(cues_12, fmean0, beta0);
       double p_13 = compute_merge_prob_sem(cues_13, fmean0, beta0);
@@ -305,4 +299,85 @@ dbdet_merge_contour(
       }
     }
   }
+}
+
+void dbdet_graphical_model_contour_merge::
+dbdet_degree_2_node_cues(
+      dbdet_edgel_chain & c1,
+      dbdet_edgel_chain & c2,
+      double & geom_diff,
+      double & tex_diff
+      )
+{
+  unsigned nbr_range_th = vcl_min(c1.edgels.size(), c2.edgels.size());
+  vgl_vector_2d<double> a_ori = c1.edgels.back()->pt - c1.edgels[c1.edgels.size() - nbr_range_th]->pt;
+  vgl_vector_2d<double> b_ori = c2.edgels.back()->pt - c2.edgels[c2.edgels.size() - nbr_range_th]->pt;
+  
+  geom_diff = (b_ori.x() * a_ori.x() + b_ori.y() + a_ori.y()) / 
+        (vcl_sqrt(b_ori.x() * b_ori.x() + b_ori.y() * b_ori.y()) * vcl_sqrt(a_ori.x() * a_ori.x() + a_ori.y() * a_ori.y()));
+
+  y_hist_vector left_1, left_2, right_1, right_2;
+  dbgl_compute_normals(c1, &temp_n);
+  compute_texture_hist(c1, temp_n, nbr_range_th, left_1, right_1);
+  
+  dbgl_compute_normals(c2, &temp_n);
+  compute_texture_hist(c2, temp_n, nbr_range_th, left_2, right_2);
+  
+  tex_diff = 0.0;
+
+  //chisq dist
+  for (unsigned k = 0; k < y_hist_size; ++k)
+  {
+    double v1 = left_1[k];
+    double v2 = left_2[k];
+    tex_diff += (v1 - v2) * (v1 - v2) / (v1 + v2);
+
+    v1 = right_1[k];
+    v2 = right_2[k];
+    tex_diff += (v1 - v2) * (v1 - v2) / (v1 + v2);
+  }
+}
+
+void
+compute_texture_hist(
+      dbdet_edgel_chain & chain,
+      vcl_vector< vnl_vector_fixed<double, 2> > & n,
+      unsigned local_dist,
+      y_hist_vector & left, 
+      y_hist_vector & right
+      )
+{
+  unsigned npts =  chain.edgels.size();
+  double local_dist_inv = 1.0 / (local_dist + 1);
+
+  for (unsigned i = 0; i < y_hist_size; ++i)
+    left[i] = right[i] = 0;
+
+  for (unsigned k = 0; k < npts; ++k)
+  {
+    vgl_point_2d<double> & cur_pt = chain.edgels[k]->pt; 
+    int xl = vcl_max(0, vcl_min(static_cast<int>(ni()), static_cast<int>(cur_pt.x() - n[k][0] * local_dist + 0.5)));
+    int xr = vcl_max(0, vcl_min(static_cast<int>(ni()), static_cast<int>(cur_pt.x() + n[k][0] * local_dist + 0.5)));
+    int yl = vcl_max(0, vcl_min(static_cast<int>(nj()), static_cast<int>(cur_pt.y() - n[k][1] * local_dist + 0.5)));
+    int yr = vcl_max(0, vcl_min(static_cast<int>(nj()), static_cast<int>(cur_pt.y() + n[k][1] * local_dist + 0.5)));
+    int x = vcl_max(0, vcl_min(static_cast<int>(ni()), static_cast<int>(cur_pt.x() + 0.5)));
+    int y = vcl_max(0, vcl_min(static_cast<int>(nj()), static_cast<int>(cur_pt.y() + 0.5)));
+
+    for (int i = 1; i <= local_dist; ++i)
+    {
+      unsigned il = static_cast<unsigned>(x + i * (x - xl) * local_dist_inv + 0.5);
+      unsigned ir = static_cast<unsigned>(x + i * (xr - x) * local_dist_inv + 0.5);
+
+      unsigned jl = static_cast<unsigned>(y + i * (y - yl) * local_dist_inv + 0.5);
+      unsigned jr = static_cast<unsigned>(y + i * (yr - y) * local_dist_inv + 0.5);
+
+      left[tmap_(il, jl)]++;
+      right[tmap_(ir, jr)]++;
+    }
+  }
+
+  //TODO
+  /*
+    make histograms compatible with its size, (left right) / (local_dist * npts)
+  */
 }
