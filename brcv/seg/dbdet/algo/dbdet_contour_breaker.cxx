@@ -602,14 +602,11 @@ compute_texture_hist_integral(
       unsigned il = static_cast<unsigned>(x + i * (x - xl) * nbr_width_inv + 0.5);
       unsigned ir = static_cast<unsigned>(x + i * (xr - x) * nbr_width_inv + 0.5);
 
-      for (int j = 0; j < nbr_width; ++j)
-      {
-        unsigned jl = static_cast<unsigned>(y + j * (y - yl) * nbr_width_inv + 0.5);
-        unsigned jr = static_cast<unsigned>(y + j * (yr - y) * nbr_width_inv + 0.5);
+      unsigned jl = static_cast<unsigned>(y + i * (y - yl) * nbr_width_inv + 0.5);
+      unsigned jr = static_cast<unsigned>(y + i * (yr - y) * nbr_width_inv + 0.5);
 
-        texton_hist_left[i][tmap_(il, jl)]++;
-        texton_hist_right[i][tmap_(ir, jr)]++;
-      }
+      texton_hist_left[k][tmap_(il, jl)]++;
+      texton_hist_right[k][tmap_(ir, jr)]++;
     }
     last_left = texton_hist_left[k];
     last_right = texton_hist_right[k];
