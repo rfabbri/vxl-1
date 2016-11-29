@@ -38,4 +38,4 @@ add_test( dbgl_algo_test_diffgeom dbgl_algo_test_all test_diffgeom )
 
 add_executable( dbgl_algo_test_include test_include.cxx )
 
-target_link_libraries( dbgl_algo_test_include dbgl_algo dbgl dbnl ray_tri )
+target_link_libraries( dbgl_algo_test_include dbgl_algo dbgl dbnl ray_tri dbdet)
