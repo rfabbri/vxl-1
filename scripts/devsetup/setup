@@ -11,11 +11,19 @@ cd "$(dirname "$0")/../.."
 echo '==> Seting up sub remotes. All readonly for now (bulk of workflow).'
 git remote add vxl	https://github.com/vxl/vxl.git
 git remote add vxd	https://github.com/rfabbri/vxd.git
+git remote add vpe	git@github.com:rfabbri/vpe.git
 git remote add utils git://git.code.sf.net/p/labmacambira/utils
+# for collaborating inside LEMS
+git remote add lemsvxl git@visionserver.lems.brown.edu:kimia_group/lemsvxl.git
+# for collaborating outside of LEMS
+git remote add lemsvxl-bb git@bitbucket.org:rfabbri2/lemsvxl.git
 
 # Fetch in parallel
 git fetch vxl &
 git fetch vxd &
+git fetch vpe &
+git fetch lemsvxl &
+git fetch lemsvxl-bb &
 git fetch utils &
 
 # Basic deps
@@ -24,9 +32,10 @@ scripts/devsetup/bootstrap
 
 # Setup branches
 echo '==> Setting up branches and symlinks.'
-git branch utils-master origin/utils-master
-git branch vxl-master origin/vxl-master
-git branch vxd-master origin/vxd-master
+git branch --track utils-master origin/utils-master
+git branch --track vxl-master origin/vxl-master
+git branch --track vxd-master origin/vxd-master
+git branch --track lemsvxl-new-master origin/lemsvxl-new-master
 
 echo '==> Setting up hardlinked clones for each subpackage.'
 # Setup separate hardlinked clones for each sub package, for history searching,

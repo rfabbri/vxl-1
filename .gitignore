@@ -40,9 +40,11 @@ CMakeLists.txt.user*
 vxl-orig
 vxd-orig
 utils-orig
+lemsvxl-orig
 # you may have vxl-bin-dbg and vxl-bin-rel etc
 vxl-bin*
 vxd-bin*
+lemsvxl-bin*
 
 # Ctags
 tags
