@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# script/bootstrap: Resolve all dependencies that the application requires to
+#                   run.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+
+#if [[ "`uname`" != Linux ]]; then
+  # MYOS="OSX"
+  # Install macports or homebrew packages
+#else
+  # MYOS="Linux"
+  # Attempt to install Ubuntu packages or other distro packages
+#fi

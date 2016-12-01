@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# script/update: Update application to run for its current checkout.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+git fetch vxl &
+git fetch vxd &
+git fetch utils &
+
+cd vxl-orig
+git fetch
+git merge origin/vxl-master
+
+cd vxd-orig
+git fetch
+git merge origin/vxd-master

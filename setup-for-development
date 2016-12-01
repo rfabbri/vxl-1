@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# script/setup-for-development: 
+# Start a new vxl programming environment (VPE), after a new git clone
+#
+
+set -e
+
+if test "`git remote | grep vxl`" = 'vxl'; then
+  echo 'Looks like this repository has already been setup for programming.'
+  exit
+fi
+
+# Install dependencies,
+# scripts/devsetup/bootstrap
+
+# Add user-independent branches, remotes etc
+scripts/devsetup/setup
+
+#echo '==> enter password for updatedb (updating file search)'
+#sudo -v   # prompts for password
+#sudo updatedb&
+
+# User-dependent settings: git email, etc
+scripts/devsetup/setup-user
+
+# Last thing: tips and suggestions
+scripts/devsetup/tips | less
+
+echo '==> Waiting for unfinished jobs. Scroll up and read the above tips meanwhile.'
+wait
+
+echo "==>"
+echo "==> VPE is now ready to go!"
+echo "==>"
