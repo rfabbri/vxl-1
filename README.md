@@ -22,7 +22,7 @@ homogeneous among a team. Advantages:
 
 The basic idea is to replicate a repo hierarchy most VXD developers would have:
 ```
-    vpe/
+    lemsvpe/
       vxl
       vxd
       lemsvxl
