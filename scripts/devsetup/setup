@@ -35,6 +35,7 @@ echo '==> Setting up branches and symlinks.'
 git branch --track utils-master origin/utils-master
 git branch --track vxl-master origin/vxl-master
 git branch --track vxd-master origin/vxd-master
+git branch --track vpe-master origin/vpe-master
 git branch --track lemsvxl-new-master origin/lemsvxl-new-master
 
 echo '==> Setting up hardlinked clones for each subpackage.'
@@ -42,6 +43,7 @@ echo '==> Setting up hardlinked clones for each subpackage.'
 # Or for those who prefer it. This should not consume more space (hardlinks).
 git clone $PWD vxl-orig &
 git clone $PWD vxd-orig &
+git clone $PWD lemsvxl-orig &
 
 # wait fetches and clones to finish
 wait
@@ -53,6 +55,11 @@ git remote add vxl	https://github.com/vxl/vxl.git
 cd ../vxd-orig
 git checkout -b vxd-master origin/vxd-master
 git remote add vxd	https://github.com/rfabbri/vxd.git
+
+cd ../lemsvxl-orig
+git checkout -b lemsvxl-new-master origin/lemsvxl-new-master
+git remote add lemsvxl git@visionserver.lems.brown.edu:kimia_group/lemsvxl.git
+git remote add lemsvxl-bb git@bitbucket.org:rfabbri2/lemsvxl.git
 
 cd ..
 
