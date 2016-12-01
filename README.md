@@ -1,22 +1,22 @@
-# VPE: Vision Programming Environment
+# LEMSVPE: LEMS Vision Programming Environment
 
-VPE (the Vision Programming Environment) is a monolithic superproject (a.k.a.
+LEMS VPE (the LEMS Vision Programming Environment) is a monolithic superproject (a.k.a.
 monorepo) for tightly
 coupled projects based on [VXL](http://vxl.sourceforge.net) and
-[VXD](http://github.com/rfabbri/vxd).  It bundles VXL, VXD, project code and
+[VXD](http://github.com/rfabbri/vxd).  It bundles VXL, VXD, LEMSVXL, project code and
 related utilities into a unified programming environment, making the setup more
 homogeneous among a team. Advantages:
 
 - **No dependency mess:** everyone in the team use the same VXL and VXD versions when working on master.
-- **Plain old Git:** most of the time, updating to/from VXL or VXD within VPE is tracked in VPE.
+- **Plain old Git:** most of the time, updating to/from LEMSVXL, VXL or VXD within VPE is tracked in VPE.
   Only the VPE team sees these changes, uniformly.
 - **Separate repositories for upstream sharing:** subrepos are simultaneously kept in their own upstream repositories.
 - **Harder to break things:** Propagating changes to/from upstream subrepos
-  requires a specific git procedure; this creates a buffer between VPE and
-  upstream VXL/VXD.  While it is seamless to share VXL or VXD changes with the
-  team through VPE, one has to be disciplined to share with upstream, which
+  requires a specific git procedure; this creates a buffer between LEMSVPE and
+  upstream LEMSVXL/VXL/VXD.  While it is seamless to share VXL or VXD changes with the
+  team through LEMSVPE, one has to be disciplined to share with upstream, which
   should only occur when needed, with proper branches and code quality.
-- **Promoting across VXL/VXD is tracked:** If you promote code across the
+- **Promoting across LEMSVXL/VXL/VXD is tracked:** If you promote code across the
   different VXL-based projects, these operations will get documented and tracked
   as commits within VPE.
 
@@ -25,28 +25,32 @@ The basic idea is to replicate a repo hierarchy most VXD developers would have:
     vpe/
       vxl
       vxd
+      lemsvxl
       scripts
       vxl-bin
       vxd-bin
+      lemsvxl-bin
 ```
 Within `scripts/` one can find general VXL development scripts, such as scripts to aid
 switching between build '-bin' and source folders, and general developer
 scripts for searching code, configuring your Ubuntu or Mac OS system for
 programming, etc.
   
-The technique for building VPE is a variant of *git subtree*, mainly for the
+The technique for building LEMSVPE is a variant of *git subtree*, mainly for the
 above advantages. If we had many submodules, git submodules would be used.
 
 ## First steps: bootstrapping the environment
 
+First, ask to have access to the LEMSVPE repository. Currently, it resides as a
+private repository on Bitbucket:
 ```
-git clone http://github.com/rfabbri/vpe
-cd vpe/
+git clone git@bitbucket.org:rfabbri2/lemsvpe.git
+cd lemsvpe/
 ```
 
-### If you just want to build and use VPE
+### If you just want to build and use LEMSVPE
 
-Run the following script within vpe:
+Run the following script within lemsvpe:
 ```
 ./setup-for-use
 ```
@@ -57,14 +61,14 @@ Run the following script within vpe:
 ```
 ./setup-for-development
 ```
-This will create useful `vxl-bin` and `vxd-bin` symlinks,
+This will create useful `vxl-bin`, `vxd-bin` and `lemsvxl-bin` symlinks,
 establish useful remotes and branches.
 
 ### A tour of VPE
 Once bootstrapped for development, you will get the following files
 
 ```bash
-doc/                        # Other possible workflows for VPE, maintenance, etc
+doc/                        # Other possible workflows for LEMSVPE, maintenance, etc
 
 scripts/devsetup/           # Scripts used by ./setup-for-development
 
@@ -80,7 +84,13 @@ vxd/                        # VXD folder tracked within VPE
 vxd-bin -> vxd-bin-dbg      # Default VXL build folder pointing to possible debug version
 vxd-bin-dbg/                # VXD build folder with debug flags
 vxd-bin-rel/                # VXD build folder without debug flags.
-vxl-orig/                   # Original VXD as a separate repository (mostly for history)
+vxd-orig/                   # Original VXD as a separate repository (mostly for history)
+
+lemsvxl/                        # LEMSVXL folder tracked within VPE
+lemsvxl-bin -> lemsvxl-bin-dbg  # Default VXL build folder pointing to possible debug version
+lemsvxl-bin-dbg/                # LEMSVXL build folder with debug flags
+lemsvxl-bin-rel/                # LEMSVXL build folder without debug flags.
+lemsvxl-orig/                   # Original LEMSVXL as a separate repository (mostly for history)
 ```
 
 You will also have remotes and branches setup for you
@@ -90,9 +100,10 @@ git remote
 ```
 
 ```
-    origin	https://github.com/rfabbri/vpe.git
+    origin git@bitbucket.org:rfabbri2/lemsvpe.git
     vxl	https://github.com/vxl/vxl.git
     vxd	https://github.com/rfabbri/vxd.git
+    lemsvxl	git@visionserver.lems.brown.edu:kimia_group/lemsvxl.git (fetch)
     utils	git://git.code.sf.net/p/labmacambira/utils
 ```
 
@@ -113,7 +124,7 @@ then inspect the `vxl/master` branch instead of `vxl-master`.
 
 ## Building VPE
 
-### Compile VXL
+### 1. Compile VXL
 ```
 
   cd ./vxl-bin
@@ -121,12 +132,19 @@ then inspect the `vxl/master` branch instead of `vxl-master`.
   make   # use mymake from scripts/utils/vxl to run it from from both vxl-bin and vxl
 ```
 
-### Compile VXD
+### 2. Compile VXD
 ```
   cd ../vxd-bin
   ccmake ../vxd
-  make'
+  make
 ```
+### 3. Compile LEMSVXL
+```
+  cd ../lemsvxl-bin
+  ccmake ../lemsvxl
+  make
+```
+
 For further information on building each of these libraries and the best CMake flags to
 use, see http://wiki.nosdigitais.teia.org.br/VXL.
 
@@ -176,15 +194,17 @@ cd vgl/algo
 cd vpgl
 cd vxl
 cd vxd
+cd seg/dbdet
 ```
 
 ### Switching builds between Debug/Release
 
 ```
-ls -ld vxl-bin vxd-bin
+ls -ld vxl-bin vxd-bin lemsvxl-bin
 
     vxd-bin -> vxd-bin-dbg
     vxl-bin -> vxl-bin-dbg
+    lemsvxl-bin -> lemsvxl-bin-dbg
 ```
 ```
 switchbuild rel
@@ -197,6 +217,7 @@ ls -ld vxl-bin vxd-bin
 
     vxd-bin -> vxd-bin-rel
     vxl-bin -> vxl-bin-rel
+    lemsvxl-bin -> lemsvxl-bin-rel
 ```
 
 It is up to the programmer to configure CMAKE to be consistent with DBG or REL naming.
@@ -207,9 +228,10 @@ You will want relink by hand if you have different builds with different compile
 flags. The following command is equivalent to `switchbuild rel`
 
 ```bash
-rm vxl-bin vxd-bin
+rm vxl-bin vxd-bin lemsvxl-bin
 ln -s vxl-bin-rel vxl-bin
 ln -s vxd-bin-rel vxd-bin
+ln -s lemsvxl-bin-rel lemsvxl-bin
 ```
 
 I myself have something like this:
@@ -217,7 +239,7 @@ I myself have something like this:
 vxl-bin -> vxl-bin-clang-libstdcxx-c11-dbg-new
 ```
 
-As long as you use the `vxl-bin/vxd-bin` symlinks, you are good to go with the
+As long as you use the `vxl-bin/vxd-bin/lemsvxl-bin` symlinks, you are good to go with the
 `sw` and `mymake` scripts.
 
 ### Inspecting history
@@ -235,47 +257,51 @@ gitk --all
 
 See `scripts/devsetup/tips`.
 
-# Use a recent Git
+## Use a recent Git
 Always use Git version >= 2 when working with monorepos.
 
 
 ## Workflow Usage Patterns
 
-### VPE
+### LEMSVPE
 #### Basic usage (99% of the time)
 Edit pattern
 
-  - heavy edits to VXD
+  - heavy edits to LEMSVXL
+  - moderate edits to VXD
   - small edits or tweaks to VXL
 
 Share pattern
   
-  - VXD edits and pushes done in agreed upon feature branches (eg, `curve-cues`),
+  - LEMSVXL edits and pushes done in feature branches (eg, `curve-cues`),
     merged often into `master`
-  - VXL small edits shared on VXL branches inside VPE 
+  - VXD edits and pushes done in agreed upon feature branches (eg, `vxd-curve-cues`),
+    merged often into `master`
+  - VXL small edits shared on VXL branches inside LEMSVPE (prefix the branches with vxl-)
 
 New collab working with the team needs to know
 
   - Most of the time: nothing. The master branch already has proper VXD and VXL merged in.
   - If new collab wants to work on a feature, he needs to know the feature
-    branch to work on VPE
+    branch to work on LEMSVPE
 
 #### About once a week
-  - Integrate to VXD upstream done by more experienced/more active peer
+  - Integrate to LEMSVXL and VXD upstream done by more experienced/more active peer
 
 #### About once a month
-  - Pull changes from VXL and integrate into VPE
+  - Pull changes from VXL and integrate into LEMSVPE
 
 #### Very rare
   - Integrate to VXL upstream done by more experienced/more active peer
+  - Useful changes to programming environment from the original VPE upstream can be merged/pushed
   
-## Subtree maintenance for VPE
+## Subtree maintenance for LEMSVPE
 This is an improvement to the alternative process proposed in a [stackoverflow answer](http://stackoverflow.com/questions/10918244/git-subtree-without-squash-view-log/40349121#40349121).
 
 For the curious, the procedure we used to create the VPE monorepo initially is
 in the file [additional-maintenance](./doc/additional-maintenance.md). 
 
-### Pulling in changes from VXL/VXD
+### Pulling in changes from VXL/VXD/LEMSVXL
 ```bash
 # do it in steps to make sure whats going on
 git fetch vxl
@@ -299,8 +325,8 @@ git push origin vxl-master
 # git merge -s recursive -Xsubtree=vxl vxl/master
 ```
 
-### Pushing to VXL/VXD upstream from VPE
-#### 1. Make edits to VXL/VXD in an organized way
+### Pushing to VXL/VXD/LEMSVXL upstream from VPE
+#### 1. Make edits to VXL/VXD/LEMSVXL in an organized way
 ```bash
 # Edit vxl/ normally (best to organize your commits in a separate branch)
 #
@@ -351,7 +377,7 @@ git checkout vxl-integration
 git merge master-reb
 ```
 
-#### 3. Push edits to VXL/VXD
+#### 3. Push edits to VXL/VXD/LEMSVXL
 
 ```bash
 # double-check your future vxl-master commits will look good and linear
@@ -377,7 +403,8 @@ remove them (weeding out bad or otherwise unwanted patches).
 ## Internal projects based on VPE 
 
 For creating a new internal project based on VPE (possibly private),
-or for migrating an existing VXL/VXD internal project to a workflow based on
-VPE, see [Internal Projects and VPE](./doc/internal-projects.md).
-You may want to do this in case your internal project is tightly coupled with
-VXL/VXD, and will be constantly moving code to/from these packages.
+similar to LEMSVPE, or for migrating an existing VXL/VXD internal project to a
+workflow based on VPE (as in LEMSVXL), see [Internal Projects and
+VPE](./doc/internal-projects.md).  You may want to do this in case your internal
+project is tightly coupled with VXL/VXD, and will be constantly moving code
+to/from these packages.

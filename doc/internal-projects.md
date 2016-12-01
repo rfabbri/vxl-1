@@ -124,3 +124,10 @@ change in how the programming environment works.
 ### Updating the other subrepos
 For updating to/from VXL, VXD, utils, and your internal project,
 proceed regularly as in [VPE Instructions](../README.md).
+
+### Additional Steps
+
+When I create my own VPE-based internal project, say, LEMSVPE,
+I update the README.md and other documentation by substituting LEMSVPE
+wherever I find VPE, and adding information that is specific to this internal
+project.
