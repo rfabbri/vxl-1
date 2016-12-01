@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Sets up VPE for users who just want to compile and use something
+# Sets up LEMSVPE for users who just want to compile and use something
 
 if test -e "vxl-bin"; then
   echo 'Looks like this repository has already been setup for users.'
@@ -9,8 +9,9 @@ fi
 
 ln -s vxl-bin-dbg vxl-bin
 ln -s vxd-bin-dbg vxd-bin
+ln -s lemsvxl-bin-dbg lemsvxl-bin
 
-echo '==> VPE all set for basic compilation. '
+echo '==> LEMSVPE all set for basic compilation. '
 
 scripts/devsetup/usertips
 

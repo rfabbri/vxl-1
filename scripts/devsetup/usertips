@@ -12,4 +12,10 @@ echo 'You can compile VPE as follows:
 
   cd ../vxd-bin
   ccmake ../vxd
+  make
+  
+#3 Compile LEMSVXL
+
+  cd ../lemsvxl-bin
+  ccmake ../lemsvxl
   make'
