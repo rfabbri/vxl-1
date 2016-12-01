@@ -13,7 +13,7 @@ typedef vnl_vector_fixed<double, y_params_0_size> y_feature_vector;
 
 #define y_hist_size 64
 
-typedef vnl_vector_fixed<unsigned, y_hist_size> y_hist_vector;
+typedef vnl_vector_fixed<double, y_hist_size> y_hist_vector;
 
 //hackish solution to not use scoped enums and enforce c++11
 // just to make it easier and more descriptive to index the feature vector

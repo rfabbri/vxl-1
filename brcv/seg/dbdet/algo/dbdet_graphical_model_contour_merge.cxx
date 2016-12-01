@@ -193,7 +193,7 @@ dbdet_merge_contour(
       }
 
       if (merge)
-        merge_at_degree_2_node(G, c1, c2, cur_node.edgel_id);
+        merge_at_degree_2_node(G, c1, c2, k, cur_node.edgel_id);
     }
   }
 
@@ -209,8 +209,11 @@ dbdet_merge_contour(
       if (c1_id == c2_id || c1_id == c3_id || c2_id == c3_id)
         continue;
 
-      dbdet_edgel_chain c1_cut, c2_cut, c3_cut;
+      dbdet_edgel_chain * c1 = g.fac[c1_id].chain;
+      dbdet_edgel_chain * c2 = g.fac[c2_id].chain;
+      dbdet_edgel_chain * c3 = g.fac[c3_id].chain;
 
+      dbdet_edgel_chain c1_cut, c2_cut, c3_cut;
       // always make directions c1 -> node <- c2
       //                               ^
       //                               |
@@ -286,15 +289,15 @@ dbdet_merge_contour(
       {
         if (max == p_12)
         {
-          merge_at_degree_2_node(G, c1, c2, cur_node.edgel_id);
+          merge_at_degree_2_node(G, c1, c2, k, cur_node.edgel_id);
         }
         else if (max == p_13)
         {
-          merge_at_degree_2_node(G, c1, c3, cur_node.edgel_id);
+          merge_at_degree_2_node(G, c1, c3, k, cur_node.edgel_id);
         }
         else
         {
-          merge_at_degree_2_node(G, c2, c3, cur_node.edgel_id);
+          merge_at_degree_2_node(G, c2, c3, k, cur_node.edgel_id);
         }
       }
     }
@@ -338,6 +341,74 @@ dbdet_degree_2_node_cues(
   }
 }
 
+void dbdet_graphical_model_contour_merge::
+dbdet_merge_at_degree_2_node(
+      dbdet_factor_graph G,
+      unsigned c1_id,
+      unsigned c2_id,
+      unsigned g_idx,
+      unsigned edgel_id
+      )
+{
+
+  dbdet_edgel_chain * c1 = G.fac[c1_id].chain;
+  dbdet_edgel_chain * c2 = G.fac[c2_id].chain;
+
+  if (c1->edgels.back()->id == edgel_id)
+  {
+    if (c2->edgels.front()->id == edgel_id)
+      c1->edgels.insert(c1->edgels.end(), c2->edgels.begin(), c2->edgels.end());
+    else (c2->edgels.back()->id == edgel_id)
+      c1->edgels.insert(c1->edgels.end(), c2->edgels.rbegin(), c2->edgels.rend());
+  }
+  else if (c1->edgels.front()->id == edgel_id)
+  {
+    if (c2->edgels.front()->id == edgel_id)
+      c1->edgels.insert(c1->edgels.begin(), c2->edgels.rbegin(), c2->edgels.rend());
+    else (c2->edgels.back()->id == edgel_id)
+      c1->edgels.insert(c1->edgels.begin(), c2->edgels.begin(), c2->edgels.end());
+  }
+
+  c2->edgels.clear();
+  G.var[g_idx].n_facs.clear();
+  G.var[g_idx].merged = true;
+
+  for (vcl_vector<unsigned>::iterator it = G.fac[c1_id].n_vars.begin(); it != G.fac[c1_id].n_vars.end(); it++)
+  {
+    if(*it == g_idx)
+    {
+      G.fac[c1_id].n_vars.erase(it);
+      break;
+    }
+  }
+
+  for (vcl_vector<unsigned>::iterator it = G.fac[c2_id].n_vars.begin(); it != G.fac[c2_id].n_vars.end(); it++)
+  {
+    if(*it == g_idx)
+    {
+      G.fac[c2_id].n_vars.erase(it);
+      break;
+    }
+  }
+
+  for (unsiged i = 0; i < G.fac[c2_id].n_vars.size(); ++i)
+  {
+    for (unsigned j = 0; j < G.var[G.fac[c2_id].n_vars[i]].n_facs.size(); ++j)
+    {
+      if(G.var[G.fac[c2_id].n_vars[i]].n_facs[j] == c2_id)
+      {
+        G.var[G.fac[c2_id].n_vars[i]].n_facs[j] = c1_id;
+        break;
+      }
+    }
+  }
+
+  G.fac[c1_id].n_vars.insert(G.fac[c1_id].n_vars.end(), G.fac[c2_id].n_vars.begin(), G.fac[c2_id].n_vars.end());
+  G.fac[c2_id].removed = true;
+
+  //TODO make it more readable and clean CFG from empty chains
+}
+
 void
 compute_texture_hist(
       dbdet_edgel_chain & chain,
@@ -376,8 +447,9 @@ compute_texture_hist(
     }
   }
 
-  //TODO
-  /*
-    make histograms compatible with its size, (left right) / (local_dist * npts)
-  */
+  for (unsigned i = 0; i < y_hist_size; ++i)
+  {
+    left[i] /= npts * local_dist;
+    right[i] /= npts * local_dist;
+  }
 }
