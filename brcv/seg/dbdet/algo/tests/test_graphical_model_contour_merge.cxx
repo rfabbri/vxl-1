@@ -36,6 +36,7 @@ void load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img,
   vcl_string root = dbtest_root_dir();
   vcl_string base_path = root + "/brcv/seg/dbdet/algo/tests/test_data/";
 
+  //TODO Gen test data, using wrong test data atm
   vcl_string image_path = base_path + "2018.jpg";
   vcl_string frags_ref_path = base_path + "2018.cem";
   vcl_string frags_ori_path = base_path + "2018_geom.cem";
@@ -85,7 +86,43 @@ void graphical_model_contour_merge_test()
   for (unsigned i = 0; i < y_params_0_size; ++i)
     beta_sem[i] /= fstd_sem[i];
 
-  TEST("Contour merge test", true, true);
+  dbdet_graphical_model_contour_merge cm(img, *edgemap_sptr, tmap);
+
+  cm.dbdet_merge_contour(cfg_ori, beta_geom, fmean_geom, beta_sem, fmean_sem);
+
+  TEST("Graphical Model Contour Merge: #chains", cfg_ori.frags.size(), cfg_ref.frags.size());
+
+  bool s_status = true, e_status = true;
+  dbdet_edgel_chain_list_iter ref_it = cfg_ref.frags.begin();
+  for(dbdet_edgel_chain_list_iter it = cfg_ori.frags.begin(); (it != cfg_ori.frags.end() && ref_it != cfg_ref.frags.end()); it++, ref_it++)
+  {
+    if((*it)->edgels.size() != (*ref_it)->edgels.size())
+    {
+      s_status = e_status = false;
+      break;
+    }
+    
+    dbdet_edgel_list & el1 = (*it)->edgels;
+    dbdet_edgel_list & el2 = (*ref_it)->edgels; 
+    for(unsigned i = 0; i < el1.size(); ++i)
+    {
+      double x_diff = vcl_abs(el1[i]->pt.x() - el2[i]->pt.x());
+      double y_diff = vcl_abs(el1[i]->pt.y() - el2[i]->pt.y());
+      double t1 = el1[i]->tangent;
+      double t2 = el2[i]->tangent;
+      double t_diff = vcl_abs(t1 - t2);
+      t1 = t1 > vnl_math::pi ? t1 - 2.0 * vnl_math::pi : t1;
+      t2 = t2 > vnl_math::pi ? t2 - 2.0 * vnl_math::pi : t2;
+      t_diff = vcl_min(t_diff, t1 - t2);
+      if(x_diff > tolerance || y_diff > tolerance || t_diff > tolerance)
+      {
+        e_status = false;
+        break;
+      }
+    }
+  }
+  TEST("Graphical Model Contour Merge: contours #edgels", s_status, true);
+  TEST("Graphical Model Contour Merge: contours (x,y,dir)", e_status, true);
 }
 
 
