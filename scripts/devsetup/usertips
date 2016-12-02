@@ -5,17 +5,17 @@ echo 'You can compile VPE as follows:
 #1 Compile VXL
 
   cd ./vxl-bin
-  ccmake ../vxl
+  ccmake -C ../config/DefaultVXL.cmake ../vxl   # loads default CMake config for this project
   make   # use mymake from scripts/utils/vxl to run it from from both vxl-bin and vxl
 
 #2 Compile VXD
 
   cd ../vxd-bin
-  ccmake ../vxd
+  ccmake -C ../config/DefaultVXD.cmake ../vxd   # loads our default CMake config for this project
   make
   
 #3 Compile LEMSVXL
 
   cd ../lemsvxl-bin
-  ccmake ../lemsvxl
+  ccmake  -C ../config/DefaultLEMSVXL.cmake ../lemsvxl
   make'

@@ -63,18 +63,27 @@ programming.
 * Remember to add script/utils/vxl to your PATH
 
 * Basic workflow:
-  cd ./vxl-bin
-  ccmake ../vxl
-  make   # use mymake from scripts/utils/vxl to run it from from both vxl-bin and vxl
 
-  cd ../vxd-bin
-  ccmake ../vxd
-  make
+      #1 Compile VXL
 
-  cd ../lemsvxl-bin
-  ccmake ../lemsvxl
-  make
+        cd ./vxl-bin
+        ccmake -C ../config/DefaultVXL.cmake ../vxl   # loads default CMake config for this project
+        make   # use mymake from scripts/utils/vxl to run it from from both vxl-bin and vxl
 
+      #2 Compile VXD
+
+        cd ../vxd-bin
+        ccmake -C ../config/DefaultVXD.cmake ../vxd   # loads our default CMake config for this project
+        make
+        
+      #3 Compile LEMSVXL
+
+        cd ../lemsvxl-bin
+        ccmake  -C ../config/DefaultLEMSVXL.cmake ../lemsvxl
+        make
+
+  You can get better instructions on the README.md, which describes how to
+  compile incrementally to isolate errors.
 
   # Test
   scripts/test

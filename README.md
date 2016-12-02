@@ -128,21 +128,58 @@ then inspect the `vxl/master` branch instead of `vxl-master`.
 ```
 
   cd ./vxl-bin
-  ccmake ../vxl
+  ccmake -C ../config/DefaultVXL.cmake ../vxl   # loads default CMake config for this project
+  # press 'c' (configure) multiple times until 'g' (generate) appears
+  cd core
   make   # use mymake from scripts/utils/vxl to run it from from both vxl-bin and vxl
+
+  # recompile core with VGUI ON
+  cd ..   # now we're in vxl-bin
+  ccmake ../vxl
+  # reconfigure to USE_VGUI = ON
+  # press 'c' (configure) multiple times until 'g' (generate) appears
+  cd core
+  make
+
+  # if success, compile as much of vxl as you can
+
+  cd ..         # now we're in vxl-bin
+  make -j9 -k   # compile in parallel and keep going past errors
+
+  # Don't worry about the errors at this point. We will not use everything.
 ```
 
 ### 2. Compile VXD
 ```
   cd ../vxd-bin
-  ccmake ../vxd
-  make
+  ccmake -C ../config/DefaultVXD.cmake ../vxd   # loads our default CMake config for this project
+  make -j9 -k
+  # you can try compiling core/basic libs first, in case you get errors, as we
+  # did above
 ```
 ### 3. Compile LEMSVXL
 ```
   cd ../lemsvxl-bin
-  ccmake ../lemsvxl
+  ccmake  -C ../config/DefaultLEMSVXL.cmake ../lemsvxl
+
+  cd basic/
   make
+
+  # For any project that uses edge detection, you can try building the edge
+  # stuff first
+  cd ../seg/dbdet/tests
+  make
+
+  cd ../algo/tests        # dbdet/algo/tests
+  make
+
+  # $LEMSVPE will be set if you followed scripts/devsetup/tips
+  cd $LEMSVPE/contrib/edge_det
+  make
+
+  # now build the rest
+  cd $LEMSVPE
+  make -j9 -k
 ```
 
 For further information on building each of these libraries and the best CMake flags to
