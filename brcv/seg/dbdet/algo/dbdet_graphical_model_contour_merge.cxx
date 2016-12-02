@@ -72,6 +72,7 @@ public:
       {
         var_ids.push_back((ret.first)->second);
       }
+      add_fac_node(*it, var_ids);
     }
   }
 
@@ -119,8 +120,11 @@ dbdet_merge_contour(
   for (unsigned k = 0; k < g.var.size(); ++k)
   {
     var_node & cur_node = g.var[k];
+
+    vcl_cout << "Cur Node: " << cur_node.dim << " " << cur_node.n_facs.size() << " " << cur_node.edgel_id  << vcl_endl;
     if (cur_node.dim == 2)
     {
+      vcl_cout << "Node 2" << vcl_endl;
       unsigned c1_id = cur_node.n_facs.front();
       unsigned c2_id = cur_node.n_facs.back();
       if (c1_id == c2_id)
@@ -205,6 +209,7 @@ dbdet_merge_contour(
     var_node & cur_node = g.var[k];
     if (cur_node.dim == 3)
     {
+      vcl_cout << "Node 3" << vcl_endl;
       unsigned c1_id = cur_node.n_facs[0];
       unsigned c2_id = cur_node.n_facs[1];
       unsigned c3_id = cur_node.n_facs[2];
