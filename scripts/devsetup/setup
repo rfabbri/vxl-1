@@ -51,15 +51,19 @@ wait
 cd vxl-orig
 git checkout -b vxl-master origin/vxl-master
 git remote add vxl	https://github.com/vxl/vxl.git
+git fetch vxl
 
 cd ../vxd-orig
 git checkout -b vxd-master origin/vxd-master
 git remote add vxd	https://github.com/rfabbri/vxd.git
+git fetch vxd
 
 cd ../lemsvxl-orig
 git checkout -b lemsvxl-new-master origin/lemsvxl-new-master
 git remote add lemsvxl git@visionserver.lems.brown.edu:kimia_group/lemsvxl.git
 git remote add lemsvxl-bb git@bitbucket.org:rfabbri2/lemsvxl.git
+git fetch lemsvxl
+git fetch lemsvxl-bb
 
 cd ..
 
