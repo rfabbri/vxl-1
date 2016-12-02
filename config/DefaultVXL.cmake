@@ -1,0 +1,6 @@
+if(APPLE)
+  set( CMAKE_CXX_FLAGS "-Wno-gnu-static-float-init -stdlib=libstdc++" CACHE STRING "C++ build flags for LEMSVPE under OSX" )
+endif()
+set( BUILD_NONDEPRECATED_ONLY OFF CACHE BOOL "Build deprecated needed for LEMSVPE")
+set( BUILD_SHARED_LIBS ON CACHE BOOL "Reduce link time by using shared libs")
+set( CMAKE_BUILD_TYPE CACHE STRING "Debug")
