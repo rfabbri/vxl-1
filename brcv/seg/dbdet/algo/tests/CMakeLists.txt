@@ -20,6 +20,8 @@ add_executable ( dbdet_algo_test_all
    test_curve_fragment_postprocess.cxx
 
    test_contour_breaker.cxx
+
+   test_graphical_model_contour_merge.cxx
 )
 
 target_link_libraries( dbdet_algo_test_all dbdet_algo sdet testlib dbtest)
@@ -35,6 +37,8 @@ add_test ( dbdet_algo_test_curve_fragment_postprocess dbdet_algo_test_all test_c
 add_test ( dbdet_algo_test_compute_cues dbdet_algo_test_all test_compute_cues )
 
 add_test ( dbdet_algo_test_contour_breaker dbdet_algo_test_all test_contour_breaker )
+
+add_test ( dbdet_algo_test_graphical_models_contour_merge dbdet_algo_test_all test_graphical_model_contour_merge )
 
 add_executable( dbdet_algo_test_include test_include.cxx )
 
