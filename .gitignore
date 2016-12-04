@@ -11,6 +11,7 @@ contrib/brl/bseg/bvxm/pyscripts/*pyc
 *.bak
 # vim swp files
 *.swp
+*.swn
 ## Ignore files that are used for auto_completion with clang
 *.clang_complete
 ## YouCompleteMe vim plugin configuration file
@@ -48,3 +49,5 @@ lemsvxl-bin*
 
 # Ctags
 tags
+
+
