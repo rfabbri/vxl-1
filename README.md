@@ -410,6 +410,7 @@ git cherry-pick -x --strategy=subtree -Xsubtree=vxl/ master
 
 git branch master-reb master # master or any other branch tip to rebase
 git rebase -s subtree -Xsubtree=vxl --onto vxl-integration feature-in-progress master-reb
+# git rebase -s subtree -Xsubtree=vxd --onto vxd-integration vxd-additions-begin  vxd-additions
 git checkout vxl-integration
 git merge master-reb
 ```
