@@ -6,6 +6,7 @@
 #include <vil/algo/vil_colour_space.h>
 #include <vil/vil_border.h>
 #include <vcl_iostream.h>
+#include <vcl_cassert.h>
 
 void dbdet_contour_breaker::
 dbdet_contour_breaker_geom(
@@ -130,7 +131,7 @@ dbdet_contour_breaker_geom(
         clen[i] = euclidean_length(ref);
 
         newChain = new dbdet_edgel_chain();
-        newChain->edgels = dbdet_edgel_list(copy.edgels.begin(), copy.edgels.begin() + cur_break_e_id[0] + 1);
+        newChain->edgels = dbdet_edgel_list(copy.edgels.begin(), copy.edgels.begin() + cur_break_e_id[0] + 1);    
         newCFG.frags.push_back(newChain);
         clen.push_back(euclidean_length(*newChain));
         frags.push_back(newChain);
@@ -151,7 +152,7 @@ dbdet_contour_breaker_geom(
         for (unsigned k = 1; k < cur_break_e_id.size(); ++k)
         {
           newChain = new dbdet_edgel_chain();
-          newChain->edgels = dbdet_edgel_list(copy.edgels.begin() + cur_break_e_id[k-1], copy.edgels.begin() + cur_break_e_id[k]);
+          newChain->edgels = dbdet_edgel_list(copy.edgels.begin() + cur_break_e_id[k-1], copy.edgels.begin() + cur_break_e_id[k] + 1);
           newCFG.frags.push_back(newChain);
           clen.push_back(euclidean_length(*newChain));
           frags.push_back(newChain);
