@@ -141,7 +141,7 @@ dbdet_merge_contour(
       if (c1->edgels.front()->id == cur_node.edgel_id)
       {
         for (unsigned i = 0; i < cut_size; ++i)
-          c1_cut.edgels[i] = c1->edgels[i];
+          c1_cut.edgels[i] = c1->edgels[cut_size - i - 1];
       }
       else /*if(c1->edgels.back()->id == cur_node.edgel_id)*/
       {
@@ -154,7 +154,7 @@ dbdet_merge_contour(
       if (c2->edgels.front()->id == cur_node.edgel_id)
       {
         for (unsigned i = 0; i < cut_size; ++i)
-          c2_cut.edgels[i] = c2->edgels[i];
+          c2_cut.edgels[i] = c2->edgels[cut_size - i - 1];
       }
       else /*if(c2->edgels.back()->id == cur_node.edgel_id)*/
       {
@@ -179,20 +179,30 @@ dbdet_merge_contour(
       cues[y_params_0::Y_TEXTURE] = texture_diff;
       bool merge = false;
 
+      vcl_cout << "CUES: ";
+      for(unsigned i=0;i<cues.size();++i)
+        vcl_cout << cues[i] << " ";
+      vcl_cout<<vcl_endl;
+
       //for very short curve, just decide merging based on geometry;
       if (c1->edgels.size() < dbdet_yuliang_const::nbr_len_th || c2->edgels.size() < dbdet_yuliang_const::nbr_len_th)
       {
         double p = 1.0 / (1.0 + exp(-((1.0 - fmean1[0]) * beta1[0] + (geom_diff - fmean1[1]) * beta1[1])));
+        vcl_cout << "Prob(G): " << p << vcl_endl;
         merge = p > dbdet_yuliang_const::merge_th_geom ? true : false;
       }
       else
       {
         double p = compute_merge_prob_sem(cues, fmean0, beta0);
+        vcl_cout << "Prob(S): " << p << " Size: " << c1_cut.edgels.size() << " " << c2_cut.edgels.size() << vcl_endl;
         merge = p > dbdet_yuliang_const::merge_th_sem ? true : false;
       }
 
       if (merge)
-        dbdet_merge_at_degree_2_node(g, c1_id, c2_id, k, cur_node.edgel_id);
+      {
+        vcl_cout << "Merged: " << c1_id << " " << c2_id << vcl_endl;
+        //dbdet_merge_at_degree_2_node(g, c1_id, c2_id, k, cur_node.edgel_id);
+      }
     }
   }
 
@@ -301,6 +311,15 @@ dbdet_merge_contour(
       }
     }
   }
+
+  for (dbdet_edgel_chain_list_iter it=CFG.frags.begin(); it != CFG.frags.end(); it++)
+  {
+    if((*it)->edgels.size() == 0)
+    {
+      vcl_cout << "Zero sized: " << *it << vcl_endl;
+      //CFG.frags.erase(it);
+    }
+  }
 }
 
 void dbdet_graphical_model_contour_merge::
@@ -314,6 +333,10 @@ dbdet_degree_2_node_cues(
   unsigned nbr_range_th = vcl_min(c1.edgels.size(), c2.edgels.size());
   vgl_vector_2d<double> a_ori = c1.edgels.back()->pt - c1.edgels[c1.edgels.size() - nbr_range_th]->pt;
   vgl_vector_2d<double> b_ori = c2.edgels.back()->pt - c2.edgels[c2.edgels.size() - nbr_range_th]->pt;
+
+  //vcl_cout << c1.edgels.back()->pt << " " << c1.edgels[c1.edgels.size() - nbr_range_th]->pt << " " <<
+  //c2.edgels.back()->pt << " " << c2.edgels[c2.edgels.size() - nbr_range_th]->pt << vcl_endl;
+
   
   geom_diff = (b_ori.x() * a_ori.x() + b_ori.y() + a_ori.y()) / 
         (vcl_sqrt(b_ori.x() * b_ori.x() + b_ori.y() * b_ori.y()) * vcl_sqrt(a_ori.x() * a_ori.x() + a_ori.y() * a_ori.y()));
@@ -332,11 +355,13 @@ dbdet_degree_2_node_cues(
   {
     double v1 = left_1[k];
     double v2 = left_2[k];
-    tex_diff += (v1 - v2) * (v1 - v2) / (v1 + v2);
+    double den = v1 + v2 == 0.0 ? 1e-16 : v1 + v2;
+    tex_diff += (v1 - v2) * (v1 - v2) / den;
 
     v1 = right_1[k];
     v2 = right_2[k];
-    tex_diff += (v1 - v2) * (v1 - v2) / (v1 + v2);
+    den = v1 + v2 == 0.0 ? 1e-10 : v1 + v2;
+    tex_diff += (v1 - v2) * (v1 - v2) / den;
   }
 }
 
