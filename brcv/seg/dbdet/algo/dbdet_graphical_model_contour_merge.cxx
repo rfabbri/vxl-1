@@ -84,7 +84,7 @@ private:
 
   void add_fac_node(dbdet_edgel_chain * c, vcl_vector<unsigned> vars)
   {
-    unsigned id = var.size();
+    unsigned id = fac.size();
     fac.push_back(fac_node(c, id, vars));
     for (unsigned i = 0; i < vars.size(); ++i)
     {
@@ -121,10 +121,8 @@ dbdet_merge_contour(
   {
     var_node & cur_node = g.var[k];
 
-    vcl_cout << "Cur Node: " << cur_node.dim << " " << cur_node.n_facs.size() << " " << cur_node.edgel_id  << vcl_endl;
     if (cur_node.dim == 2)
     {
-      vcl_cout << "Node 2" << vcl_endl;
       unsigned c1_id = cur_node.n_facs.front();
       unsigned c2_id = cur_node.n_facs.back();
       if (c1_id == c2_id)
@@ -135,7 +133,6 @@ dbdet_merge_contour(
 
       dbdet_edgel_chain c1_cut, c2_cut;
       
-
       //Original direction c1 -> node -> c2
       //Our directions c1 -> node <- c2
 
@@ -148,11 +145,10 @@ dbdet_merge_contour(
       }
       else /*if(c1->edgels.back()->id == cur_node.edgel_id)*/
       {
-        unsigned start_i = c2->edgels.size() - 1;
+        unsigned start_i = c1->edgels.size() - 1;
         for (unsigned i = 0; i < cut_size; ++i)
           c1_cut.edgels[i] = c1->edgels[start_i - i];
       }
-
       cut_size = vcl_min(nbr_num_edges, static_cast<unsigned>(c2->edgels.size()));
       c2_cut.edgels.resize(cut_size);
       if (c2->edgels.front()->id == cur_node.edgel_id)
@@ -164,13 +160,11 @@ dbdet_merge_contour(
       {
         unsigned start_i = c2->edgels.size() - 1;
         for (unsigned i = 0; i < cut_size; ++i)
-          c1_cut.edgels[i] = c1->edgels[start_i - i];
+          c2_cut.edgels[i] = c2->edgels[start_i - i];
       }
-
       y_feature_vector c1_features, c2_features;
-      cues_computer.compute_all_cues(*c1, &c1_features);
-      cues_computer.compute_all_cues(*c2, &c2_features);
-
+      cues_computer.compute_all_cues(c1_cut, &c1_features);
+      cues_computer.compute_all_cues(c2_cut, &c2_features);
       y_params_0_vector cues;
       cues[y_params_0::Y_ONE] = 1.0;
       for (unsigned i = 1; i < cues.size(); ++i)
@@ -179,11 +173,10 @@ dbdet_merge_contour(
       }
 
       double geom_diff, texture_diff;
-      dbdet_degree_2_node_cues(*c1, *c2, geom_diff, texture_diff);
+      dbdet_degree_2_node_cues(c1_cut, c2_cut, geom_diff, texture_diff);
 
       cues[y_params_0::Y_GEOM] = geom_diff;
       cues[y_params_0::Y_TEXTURE] = texture_diff;
-
       bool merge = false;
 
       //for very short curve, just decide merging based on geometry;
@@ -209,7 +202,6 @@ dbdet_merge_contour(
     var_node & cur_node = g.var[k];
     if (cur_node.dim == 3)
     {
-      vcl_cout << "Node 3" << vcl_endl;
       unsigned c1_id = cur_node.n_facs[0];
       unsigned c2_id = cur_node.n_facs[1];
       unsigned c3_id = cur_node.n_facs[2];
@@ -269,9 +261,9 @@ dbdet_merge_contour(
       }
 
       y_feature_vector c1_features, c2_features, c3_features;
-      cues_computer.compute_all_cues(*c1, &c1_features);
-      cues_computer.compute_all_cues(*c2, &c2_features);
-      cues_computer.compute_all_cues(*c3, &c3_features);
+      cues_computer.compute_all_cues(c1_cut, &c1_features);
+      cues_computer.compute_all_cues(c2_cut, &c2_features);
+      cues_computer.compute_all_cues(c3_cut, &c3_features);
 
       y_params_0_vector cues_12, cues_13, cues_23;
       cues_12[y_params_0::Y_ONE] = cues_13[y_params_0::Y_ONE] = cues_23[y_params_0::Y_ONE] = 1.0;
@@ -282,9 +274,9 @@ dbdet_merge_contour(
         cues_23[i] = vcl_abs(c2_features[i] - c3_features[i]);
       }
 
-      dbdet_degree_2_node_cues(*c1, *c2, cues_12[y_params_0::Y_GEOM], cues_12[y_params_0::Y_TEXTURE]);
-      dbdet_degree_2_node_cues(*c1, *c3, cues_13[y_params_0::Y_GEOM], cues_13[y_params_0::Y_TEXTURE]);
-      dbdet_degree_2_node_cues(*c2, *c3, cues_23[y_params_0::Y_GEOM], cues_23[y_params_0::Y_TEXTURE]);
+      dbdet_degree_2_node_cues(c1_cut, c2_cut, cues_12[y_params_0::Y_GEOM], cues_12[y_params_0::Y_TEXTURE]);
+      dbdet_degree_2_node_cues(c1_cut, c3_cut, cues_13[y_params_0::Y_GEOM], cues_13[y_params_0::Y_TEXTURE]);
+      dbdet_degree_2_node_cues(c2_cut, c3_cut, cues_23[y_params_0::Y_GEOM], cues_23[y_params_0::Y_TEXTURE]);
 
       double p_12 = compute_merge_prob_sem(cues_12, fmean0, beta0);
       double p_13 = compute_merge_prob_sem(cues_13, fmean0, beta0);
@@ -434,12 +426,13 @@ compute_texture_hist(
   for (unsigned k = 0; k < npts; ++k)
   {
     vgl_point_2d<double> & cur_pt = chain.edgels[k]->pt; 
-    int xl = vcl_max(0, vcl_min(static_cast<int>(ni()), static_cast<int>(cur_pt.x() - n[k][0] * local_dist + 0.5)));
-    int xr = vcl_max(0, vcl_min(static_cast<int>(ni()), static_cast<int>(cur_pt.x() + n[k][0] * local_dist + 0.5)));
-    int yl = vcl_max(0, vcl_min(static_cast<int>(nj()), static_cast<int>(cur_pt.y() - n[k][1] * local_dist + 0.5)));
-    int yr = vcl_max(0, vcl_min(static_cast<int>(nj()), static_cast<int>(cur_pt.y() + n[k][1] * local_dist + 0.5)));
-    int x = vcl_max(0, vcl_min(static_cast<int>(ni()), static_cast<int>(cur_pt.x() + 0.5)));
-    int y = vcl_max(0, vcl_min(static_cast<int>(nj()), static_cast<int>(cur_pt.y() + 0.5)));
+    int xl = vcl_max(0, vcl_min(static_cast<int>(ni()) - 1, static_cast<int>(cur_pt.x() - n[k][0] * local_dist + 0.5)));
+    int xr = vcl_max(0, vcl_min(static_cast<int>(ni()) - 1, static_cast<int>(cur_pt.x() + n[k][0] * local_dist + 0.5)));
+    int yl = vcl_max(0, vcl_min(static_cast<int>(nj()) - 1, static_cast<int>(cur_pt.y() - n[k][1] * local_dist + 0.5)));
+    int yr = vcl_max(0, vcl_min(static_cast<int>(nj()) - 1, static_cast<int>(cur_pt.y() + n[k][1] * local_dist + 0.5)));
+    int x = vcl_max(0, vcl_min(static_cast<int>(ni()) - 1, static_cast<int>(cur_pt.x() + 0.5)));
+    int y = vcl_max(0, vcl_min(static_cast<int>(nj()) - 1, static_cast<int>(cur_pt.y() + 0.5)));
+
 
     for (int i = 1; i <= local_dist; ++i)
     {
