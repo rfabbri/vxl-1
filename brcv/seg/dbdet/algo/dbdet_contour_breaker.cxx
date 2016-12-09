@@ -280,7 +280,7 @@ compute_break_point(
         }
         vgl_vector_2d<double> a_ori = (*frags[(*set_it)]).edgels[a_id1]->pt - (*frags[(*set_it)]).edgels[a_id2]->pt;
 
-        double cos_diff = (c_ori.x() * a_ori.x() + c_ori.y() + a_ori.y()) / 
+        double cos_diff = (c_ori.x() * a_ori.x() + c_ori.y() * a_ori.y()) / 
         (vcl_sqrt(c_ori.x() * c_ori.x() + c_ori.y() * c_ori.y()) * vcl_sqrt(a_ori.x() * a_ori.x() + a_ori.y() * a_ori.y()));
 
         if(cos_diff > vcl_cos(vnl_math::pi / 6.0))
