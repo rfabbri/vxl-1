@@ -179,29 +179,21 @@ dbdet_merge_contour(
       cues[y_params_0::Y_TEXTURE] = texture_diff;
       bool merge = false;
 
-      vcl_cout << "CUES: ";
-      for(unsigned i=0;i<cues.size();++i)
-        vcl_cout << cues[i] << " ";
-      vcl_cout<<vcl_endl;
-
       //for very short curve, just decide merging based on geometry;
       if (c1->edgels.size() < dbdet_yuliang_const::nbr_len_th || c2->edgels.size() < dbdet_yuliang_const::nbr_len_th)
       {
         double p = 1.0 / (1.0 + exp(-((1.0 - fmean1[0]) * beta1[0] + (geom_diff - fmean1[1]) * beta1[1])));
-        vcl_cout << "Prob(G): " << p << vcl_endl;
         merge = p > dbdet_yuliang_const::merge_th_geom ? true : false;
       }
       else
       {
         double p = compute_merge_prob_sem(cues, fmean0, beta0);
-        vcl_cout << "Prob(S): " << p << " Size: " << c1_cut.edgels.size() << " " << c2_cut.edgels.size() << vcl_endl;
         merge = p > dbdet_yuliang_const::merge_th_sem ? true : false;
       }
 
       if (merge)
       {
-        vcl_cout << "Merged: " << c1_id << " " << c2_id << vcl_endl;
-        //dbdet_merge_at_degree_2_node(g, c1_id, c2_id, k, cur_node.edgel_id);
+        dbdet_merge_at_degree_2_node(g, c1_id, c2_id, k, cur_node.edgel_id);
       }
     }
   }
@@ -312,14 +304,14 @@ dbdet_merge_contour(
     }
   }
 
-  for (dbdet_edgel_chain_list_iter it=CFG.frags.begin(); it != CFG.frags.end(); it++)
+//TODO
+  /*for (dbdet_edgel_chain_list_iter it=CFG.frags.begin(); it != CFG.frags.end(); it++)
   {
     if((*it)->edgels.size() == 0)
     {
-      vcl_cout << "Zero sized: " << *it << vcl_endl;
       //CFG.frags.erase(it);
     }
-  }
+  }*/
 }
 
 void dbdet_graphical_model_contour_merge::
@@ -333,20 +325,16 @@ dbdet_degree_2_node_cues(
   unsigned nbr_range_th = vcl_min(c1.edgels.size(), c2.edgels.size());
   vgl_vector_2d<double> a_ori = c1.edgels.back()->pt - c1.edgels[c1.edgels.size() - nbr_range_th]->pt;
   vgl_vector_2d<double> b_ori = c2.edgels.back()->pt - c2.edgels[c2.edgels.size() - nbr_range_th]->pt;
-
-  //vcl_cout << c1.edgels.back()->pt << " " << c1.edgels[c1.edgels.size() - nbr_range_th]->pt << " " <<
-  //c2.edgels.back()->pt << " " << c2.edgels[c2.edgels.size() - nbr_range_th]->pt << vcl_endl;
-
   
-  geom_diff = (b_ori.x() * a_ori.x() + b_ori.y() + a_ori.y()) / 
+  geom_diff = (b_ori.x() * a_ori.x() + b_ori.y() * a_ori.y()) / 
         (vcl_sqrt(b_ori.x() * b_ori.x() + b_ori.y() * b_ori.y()) * vcl_sqrt(a_ori.x() * a_ori.x() + a_ori.y() * a_ori.y()));
 
   y_hist_vector left_1, left_2, right_1, right_2;
   dbgl_compute_normals(c1, &temp_n);
-  compute_texture_hist(c1, temp_n, nbr_range_th, left_1, right_1);
+  compute_texture_hist(c1, temp_n, left_1, right_1);
   
   dbgl_compute_normals(c2, &temp_n);
-  compute_texture_hist(c2, temp_n, nbr_range_th, left_2, right_2);
+  compute_texture_hist(c2, temp_n, left_2, right_2);
   
   tex_diff = 0.0;
 
@@ -360,9 +348,10 @@ dbdet_degree_2_node_cues(
 
     v1 = right_1[k];
     v2 = right_2[k];
-    den = v1 + v2 == 0.0 ? 1e-10 : v1 + v2;
+    den = v1 + v2 == 0.0 ? 1e-16 : v1 + v2;
     tex_diff += (v1 - v2) * (v1 - v2) / den;
   }
+  tex_diff /= 2.0;
 }
 
 void dbdet_graphical_model_contour_merge::
@@ -437,13 +426,13 @@ void dbdet_graphical_model_contour_merge::
 compute_texture_hist(
       dbdet_edgel_chain & chain,
       vcl_vector< vnl_vector_fixed<double, 2> > & n,
-      unsigned local_dist,
       y_hist_vector & left, 
       y_hist_vector & right
       )
 {
+  unsigned const tex_nbr_dist = 3;
   unsigned npts =  chain.edgels.size();
-  double local_dist_inv = 1.0 / (local_dist + 1);
+
 
   for (unsigned i = 0; i < y_hist_size; ++i)
     left[i] = right[i] = 0;
@@ -451,21 +440,13 @@ compute_texture_hist(
   for (unsigned k = 0; k < npts; ++k)
   {
     vgl_point_2d<double> & cur_pt = chain.edgels[k]->pt; 
-    int xl = vcl_max(0, vcl_min(static_cast<int>(ni()) - 1, static_cast<int>(cur_pt.x() - n[k][0] * local_dist + 0.5)));
-    int xr = vcl_max(0, vcl_min(static_cast<int>(ni()) - 1, static_cast<int>(cur_pt.x() + n[k][0] * local_dist + 0.5)));
-    int yl = vcl_max(0, vcl_min(static_cast<int>(nj()) - 1, static_cast<int>(cur_pt.y() - n[k][1] * local_dist + 0.5)));
-    int yr = vcl_max(0, vcl_min(static_cast<int>(nj()) - 1, static_cast<int>(cur_pt.y() + n[k][1] * local_dist + 0.5)));
-    int x = vcl_max(0, vcl_min(static_cast<int>(ni()) - 1, static_cast<int>(cur_pt.x() + 0.5)));
-    int y = vcl_max(0, vcl_min(static_cast<int>(nj()) - 1, static_cast<int>(cur_pt.y() + 0.5)));
-
-
-    for (int i = 1; i <= local_dist; ++i)
+    for (int l = 1; l <= tex_nbr_dist; ++l)
     {
-      unsigned il = static_cast<unsigned>(x + i * (x - xl) * local_dist_inv + 0.5);
-      unsigned ir = static_cast<unsigned>(x + i * (xr - x) * local_dist_inv + 0.5);
+      unsigned il = vcl_max(0, vcl_min(static_cast<int>(ni()) - 1, static_cast<int>(cur_pt.x() - n[k][0] * l + 0.5)));
+      unsigned ir = vcl_max(0, vcl_min(static_cast<int>(ni()) - 1, static_cast<int>(cur_pt.x() + n[k][0] * l + 0.5)));
 
-      unsigned jl = static_cast<unsigned>(y + i * (y - yl) * local_dist_inv + 0.5);
-      unsigned jr = static_cast<unsigned>(y + i * (yr - y) * local_dist_inv + 0.5);
+      unsigned jl = vcl_max(0, vcl_min(static_cast<int>(nj()) - 1, static_cast<int>(cur_pt.y() - n[k][1] * l + 0.5)));
+      unsigned jr = vcl_max(0, vcl_min(static_cast<int>(nj()) - 1, static_cast<int>(cur_pt.y() + n[k][1] * l + 0.5)));
 
       left[tmap_(il, jl)]++;
       right[tmap_(ir, jr)]++;
@@ -474,7 +455,7 @@ compute_texture_hist(
 
   for (unsigned i = 0; i < y_hist_size; ++i)
   {
-    left[i] /= npts * local_dist;
-    right[i] /= npts * local_dist;
+    left[i] /= npts * tex_nbr_dist;
+    right[i] /= npts * tex_nbr_dist;
   }
 }

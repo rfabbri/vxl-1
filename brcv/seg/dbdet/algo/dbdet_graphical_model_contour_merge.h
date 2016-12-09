@@ -39,7 +39,7 @@ private:
 
   void dbdet_merge_at_degree_2_node(dbdet_factor_graph G, unsigned c1_id, unsigned c2_id, unsigned g_idx, unsigned edgel_id);
 
-  void compute_texture_hist(dbdet_edgel_chain & chain, vcl_vector< vnl_vector_fixed<double, 2> > & n, unsigned local_dist, y_hist_vector & left, y_hist_vector & right);
+  void compute_texture_hist(dbdet_edgel_chain & chain, vcl_vector< vnl_vector_fixed<double, 2> > & n, y_hist_vector & left, y_hist_vector & right);
 
   unsigned ni() const { return em_.ncols(); }
   unsigned nj() const { return em_.nrows(); }
