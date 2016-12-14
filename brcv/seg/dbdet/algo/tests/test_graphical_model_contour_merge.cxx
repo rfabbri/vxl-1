@@ -87,11 +87,10 @@ void graphical_model_contour_merge_test()
     beta_sem[i] /= fstd_sem[i];
 
   dbdet_graphical_model_contour_merge cm(img, *edgemap_sptr, tmap);
-
   cm.dbdet_merge_contour(cfg_ori, beta_geom, fmean_geom, beta_sem, fmean_sem);
 
   TEST("Graphical Model Contour Merge: #chains", cfg_ori.frags.size(), cfg_ref.frags.size());
-  vcl_cout << "size: " << cfg_ori.frags.size() << vcl_endl;
+  //vcl_cout << "size: " << cfg_ori.frags.size() << vcl_endl;
 
   bool s_status = true, e_status = true;
   dbdet_edgel_chain_list_iter ref_it = cfg_ref.frags.begin();

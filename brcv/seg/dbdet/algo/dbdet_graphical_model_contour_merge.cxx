@@ -1,6 +1,7 @@
 #include <vcl_map.h>
 #include <dbgl/algo/dbgl_diffgeom.h>
 #include "dbdet_graphical_model_contour_merge.h"
+#include <vcl_algorithm.h>
 
 struct var_node {
   enum label { UNDETERMINED, BREAK, MERGE };
@@ -42,7 +43,7 @@ public:
     fac.reserve(CFG.frags.size());
     typedef vcl_pair<vcl_map<unsigned, unsigned>::iterator, bool> insert_ret;
     vcl_map<unsigned, unsigned> used_edgels;// edgel_id, var_node_id
-    //used_edgels.reserve(2 * CFG.frags.size());
+
     for (dbdet_edgel_chain_list_const_iter it=CFG.frags.begin(); it != CFG.frags.end(); it++)
     {
       dbdet_edgel * e1 = (*it)->edgels.front();
@@ -95,14 +96,13 @@ private:
 
 double compute_merge_prob_sem(
       y_feature_vector cues,
-      y_params_0_vector & beta0,
-      y_params_0_vector & fmean0
+      const y_params_0_vector & beta0,
+      const y_params_0_vector & fmean0
       )
 {
   double sum = 0.0; 
   for (unsigned i = 0; i < cues.size(); ++i)
     sum += (cues[i] - fmean0[i]) * beta0[i];
-
   return 1.0 / (1.0 + exp(-sum));
 }
 
@@ -125,6 +125,7 @@ dbdet_merge_contour(
     {
       unsigned c1_id = cur_node.n_facs.front();
       unsigned c2_id = cur_node.n_facs.back();
+
       if (c1_id == c2_id)
         continue;
 
@@ -145,12 +146,13 @@ dbdet_merge_contour(
       }
       else /*if(c1->edgels.back()->id == cur_node.edgel_id)*/
       {
-        unsigned start_i = c1->edgels.size() - 1;
+        unsigned start_i = c1->edgels.size() - cut_size;
         for (unsigned i = 0; i < cut_size; ++i)
-          c1_cut.edgels[i] = c1->edgels[start_i - i];
+          c1_cut.edgels[i] = c1->edgels[start_i + i];
       }
       cut_size = vcl_min(nbr_num_edges, static_cast<unsigned>(c2->edgels.size()));
       c2_cut.edgels.resize(cut_size);
+
       if (c2->edgels.front()->id == cur_node.edgel_id)
       {
         for (unsigned i = 0; i < cut_size; ++i)
@@ -158,36 +160,47 @@ dbdet_merge_contour(
       }
       else /*if(c2->edgels.back()->id == cur_node.edgel_id)*/
       {
-        unsigned start_i = c2->edgels.size() - 1;
+        unsigned start_i = c2->edgels.size() - cut_size;
         for (unsigned i = 0; i < cut_size; ++i)
-          c2_cut.edgels[i] = c2->edgels[start_i - i];
+          c2_cut.edgels[i] = c2->edgels[start_i + i];
       }
       y_feature_vector c1_features, c2_features;
       cues_computer.compute_all_cues(c1_cut, &c1_features);
       cues_computer.compute_all_cues(c2_cut, &c2_features);
+
+      double c1_len = c1_features[y_features::Y_LEN];
+      double c2_len = c2_features[y_features::Y_LEN];
+
       y_params_0_vector cues;
-      cues[y_params_0::Y_ONE] = 1.0;
+      cues[y_features::Y_ONE] = 1.0;
+
+      //Change sign because of inverted (converging) direction
+      c2_features[y_features::Y_BG_GRAD] *= -1.;
+      c2_features[y_features::Y_SAT_GRAD] *= -1.;
+      c2_features[y_features::Y_HUE_GRAD] *= -1.;
+
       for (unsigned i = 1; i < cues.size(); ++i)
       {
         cues[i] = vcl_abs(c1_features[i] - c2_features[i]);
       }
 
       double geom_diff, texture_diff;
-      dbdet_degree_2_node_cues(c1_cut, c2_cut, geom_diff, texture_diff);
 
+      dbdet_degree_2_node_cues(c1_cut, c2_cut, geom_diff, texture_diff);
       cues[y_params_0::Y_GEOM] = geom_diff;
       cues[y_params_0::Y_TEXTURE] = texture_diff;
+
       bool merge = false;
 
       //for very short curve, just decide merging based on geometry;
-      if (c1->edgels.size() < dbdet_yuliang_const::nbr_len_th || c2->edgels.size() < dbdet_yuliang_const::nbr_len_th)
+      if (c1_len < dbdet_yuliang_const::nbr_len_th || c2_len < dbdet_yuliang_const::nbr_len_th)
       {
-        double p = 1.0 / (1.0 + exp(-((1.0 - fmean1[0]) * beta1[0] + (geom_diff - fmean1[1]) * beta1[1])));
+        double p = 1.0 / (1.0 + exp(-((1.0 - fmean1[0]) * beta1[0] + (cues[y_params_0::Y_GEOM] - fmean1[1]) * beta1[1])));
         merge = p > dbdet_yuliang_const::merge_th_geom ? true : false;
       }
       else
       {
-        double p = compute_merge_prob_sem(cues, fmean0, beta0);
+        double p = compute_merge_prob_sem(cues, beta0, fmean0);
         merge = p > dbdet_yuliang_const::merge_th_sem ? true : false;
       }
 
@@ -269,20 +282,30 @@ dbdet_merge_contour(
 
       y_params_0_vector cues_12, cues_13, cues_23;
       cues_12[y_params_0::Y_ONE] = cues_13[y_params_0::Y_ONE] = cues_23[y_params_0::Y_ONE] = 1.0;
-      for (unsigned i = 1; i < cues_12.size(); ++i)
+
+      for (unsigned i = y_params_0::Y_ABS_K; i < cues_12.size(); ++i)
       {
         cues_12[i] = vcl_abs(c1_features[i] - c2_features[i]);
         cues_13[i] = vcl_abs(c1_features[i] - c3_features[i]);
         cues_23[i] = vcl_abs(c2_features[i] - c3_features[i]);
       }
 
+      //Sums because of inverted (converging) direction
+      for (unsigned i = y_params_0::Y_BG_GRAD; i <= y_params_0::Y_HUE_GRAD; ++i)
+      {
+        cues_12[i] = vcl_abs(c1_features[i] + c2_features[i]);
+        cues_13[i] = vcl_abs(c1_features[i] + c3_features[i]);
+        cues_23[i] = vcl_abs(c2_features[i] + c3_features[i]);
+      }
+
+
       dbdet_degree_2_node_cues(c1_cut, c2_cut, cues_12[y_params_0::Y_GEOM], cues_12[y_params_0::Y_TEXTURE]);
       dbdet_degree_2_node_cues(c1_cut, c3_cut, cues_13[y_params_0::Y_GEOM], cues_13[y_params_0::Y_TEXTURE]);
       dbdet_degree_2_node_cues(c2_cut, c3_cut, cues_23[y_params_0::Y_GEOM], cues_23[y_params_0::Y_TEXTURE]);
 
-      double p_12 = compute_merge_prob_sem(cues_12, fmean0, beta0);
-      double p_13 = compute_merge_prob_sem(cues_13, fmean0, beta0);
-      double p_23 = compute_merge_prob_sem(cues_23, fmean0, beta0);
+      double p_12 = compute_merge_prob_sem(cues_12, beta0, fmean0);
+      double p_13 = compute_merge_prob_sem(cues_13, beta0, fmean0);
+      double p_23 = compute_merge_prob_sem(cues_23, beta0, fmean0);
 
       double max = p_12 > p_13 ? (p_12 > p_23 ? p_12 : p_23) : (p_13 > p_23 ? p_13 : p_23);
 
@@ -304,14 +327,13 @@ dbdet_merge_contour(
     }
   }
 
-//TODO
-  /*for (dbdet_edgel_chain_list_iter it=CFG.frags.begin(); it != CFG.frags.end(); it++)
+  for (dbdet_edgel_chain_list_iter it=CFG.frags.begin(); it != CFG.frags.end();)
   {
     if((*it)->edgels.size() == 0)
-    {
-      //CFG.frags.erase(it);
-    }
-  }*/
+      CFG.frags.erase(it++);
+    else
+      it++;
+  }
 }
 
 void dbdet_graphical_model_contour_merge::
@@ -319,7 +341,8 @@ dbdet_degree_2_node_cues(
       dbdet_edgel_chain & c1,
       dbdet_edgel_chain & c2,
       double & geom_diff,
-      double & tex_diff
+      double & tex_diff,
+      bool invert
       )
 {
   unsigned nbr_range_th = vcl_min(c1.edgels.size(), c2.edgels.size());
@@ -329,13 +352,20 @@ dbdet_degree_2_node_cues(
   geom_diff = (b_ori.x() * a_ori.x() + b_ori.y() * a_ori.y()) / 
         (vcl_sqrt(b_ori.x() * b_ori.x() + b_ori.y() * b_ori.y()) * vcl_sqrt(a_ori.x() * a_ori.x() + a_ori.y() * a_ori.y()));
 
+  if(invert)
+    geom_diff *= -1.0;
+
   y_hist_vector left_1, left_2, right_1, right_2;
   dbgl_compute_normals(c1, &temp_n);
   compute_texture_hist(c1, temp_n, left_1, right_1);
-  
+
   dbgl_compute_normals(c2, &temp_n);
-  compute_texture_hist(c2, temp_n, left_2, right_2);
-  
+
+  if (invert)
+    compute_texture_hist(c2, temp_n, right_2, left_2);
+  else
+    compute_texture_hist(c2, temp_n, left_2, right_2);
+
   tex_diff = 0.0;
 
   //chisq dist
@@ -343,20 +373,20 @@ dbdet_degree_2_node_cues(
   {
     double v1 = left_1[k];
     double v2 = left_2[k];
-    double den = v1 + v2 == 0.0 ? 1e-16 : v1 + v2;
-    tex_diff += (v1 - v2) * (v1 - v2) / den;
+    double den = ((v1 + v2) == 0.0) ? 1e-16 : v1 + v2;
+    tex_diff += ((v1 - v2) * (v1 - v2)) / den;
 
     v1 = right_1[k];
     v2 = right_2[k];
-    den = v1 + v2 == 0.0 ? 1e-16 : v1 + v2;
-    tex_diff += (v1 - v2) * (v1 - v2) / den;
+    den = ((v1 + v2) == 0.0) ? 1e-16 : v1 + v2;
+    tex_diff += ((v1 - v2) * (v1 - v2)) / den;
   }
   tex_diff /= 2.0;
 }
 
 void dbdet_graphical_model_contour_merge::
 dbdet_merge_at_degree_2_node(
-      dbdet_factor_graph G,
+      dbdet_factor_graph & G,
       unsigned c1_id,
       unsigned c2_id,
       unsigned g_idx,
@@ -370,16 +400,16 @@ dbdet_merge_at_degree_2_node(
   if (c1->edgels.back()->id == edgel_id)
   {
     if (c2->edgels.front()->id == edgel_id)
-      c1->edgels.insert(c1->edgels.end(), c2->edgels.begin(), c2->edgels.end());
+      c1->edgels.insert(c1->edgels.end(), ++(c2->edgels.begin()), c2->edgels.end());
     else if(c2->edgels.back()->id == edgel_id)
-      c1->edgels.insert(c1->edgels.end(), c2->edgels.rbegin(), c2->edgels.rend());
+      c1->edgels.insert(c1->edgels.end(), ++(c2->edgels.rbegin()), c2->edgels.rend());
   }
   else if (c1->edgels.front()->id == edgel_id)
   {
     if (c2->edgels.front()->id == edgel_id)
-      c1->edgels.insert(c1->edgels.begin(), c2->edgels.rbegin(), c2->edgels.rend());
+      c1->edgels.insert(c1->edgels.begin(), c2->edgels.rbegin(), --(c2->edgels.rend()));
     else if(c2->edgels.back()->id == edgel_id)
-      c1->edgels.insert(c1->edgels.begin(), c2->edgels.begin(), c2->edgels.end());
+      c1->edgels.insert(c1->edgels.begin(), c2->edgels.begin(), --(c2->edgels.end()));
   }
 
   c2->edgels.clear();

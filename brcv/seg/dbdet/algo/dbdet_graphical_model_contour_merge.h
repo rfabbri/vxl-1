@@ -35,9 +35,9 @@ public:
   void dbdet_merge_contour(dbdet_curve_fragment_graph & CFG, y_params_1_vector & beta1, y_params_1_vector & fmean1, y_params_0_vector & beta0, y_params_0_vector & fmean0);
 private:
 
-  void dbdet_degree_2_node_cues(dbdet_edgel_chain & c1, dbdet_edgel_chain & c2, double & geom_diff, double & tex_diff);
+  void dbdet_degree_2_node_cues(dbdet_edgel_chain & c1, dbdet_edgel_chain & c2, double & geom_diff, double & tex_diff, bool invert = true);
 
-  void dbdet_merge_at_degree_2_node(dbdet_factor_graph G, unsigned c1_id, unsigned c2_id, unsigned g_idx, unsigned edgel_id);
+  void dbdet_merge_at_degree_2_node(dbdet_factor_graph & G, unsigned c1_id, unsigned c2_id, unsigned g_idx, unsigned edgel_id);
 
   void compute_texture_hist(dbdet_edgel_chain & chain, vcl_vector< vnl_vector_fixed<double, 2> > & n, y_hist_vector & left, y_hist_vector & right);
 
