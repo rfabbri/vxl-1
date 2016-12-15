@@ -4,16 +4,16 @@
 #include <vcl_algorithm.h>
 
 struct var_node {
-  enum label { UNDETERMINED, BREAK, MERGE };
-  unsigned id;
+  /*enum label { UNDETERMINED, BREAK, MERGE };
+  unsigned id;*/
   unsigned dim;
   unsigned edgel_id;
   vcl_vector<unsigned> n_facs;
-  bool merged;
+  /*bool merged;
   double p;
-  label gt_label;
+  label gt_label;*/
 
-  var_node(unsigned uid, unsigned e_id) : id(uid), dim(0), edgel_id(e_id), merged(false), p(0.0), gt_label(UNDETERMINED) {} 
+  var_node(/*unsigned uid,*/ unsigned e_id) : /*id(uid),*/ dim(0), edgel_id(e_id)/*, merged(false), p(0.0), gt_label(UNDETERMINED)*/ {} 
 
   void push_fac(unsigned fac_id)
   {
@@ -24,11 +24,11 @@ struct var_node {
 
 struct fac_node {
   dbdet_edgel_chain * chain;
-  unsigned id;
+  //unsigned id;
   vcl_vector<unsigned> n_vars;
-  bool removed;
+  //bool removed;
 
-  fac_node(dbdet_edgel_chain * c, unsigned uid, vcl_vector<unsigned> vars) : chain(c), n_vars(vars), id(uid), removed(false) {}
+  fac_node(dbdet_edgel_chain * c, /*unsigned uid,*/ vcl_vector<unsigned> vars) : chain(c), n_vars(vars)/*, id(uid), removed(false) */{}
 };
 
 class dbdet_graphical_model_contour_merge::dbdet_factor_graph {
@@ -80,13 +80,13 @@ public:
 private:
   void add_var_node(unsigned edgel_id)
   {
-    var.push_back(var_node(var.size() + 1, edgel_id));
+    var.push_back(var_node(/*var.size() + 1, */edgel_id));
   }
 
   void add_fac_node(dbdet_edgel_chain * c, vcl_vector<unsigned> vars)
   {
     unsigned id = fac.size();
-    fac.push_back(fac_node(c, id, vars));
+    fac.push_back(fac_node(c,/* id,*/ vars));
     for (unsigned i = 0; i < vars.size(); ++i)
     {
        var[vars[i]].push_fac(id);
@@ -414,7 +414,7 @@ dbdet_merge_at_degree_2_node(
 
   c2->edgels.clear();
   G.var[g_idx].n_facs.clear();
-  G.var[g_idx].merged = true;
+  //G.var[g_idx].merged = true;
 
   for (vcl_vector<unsigned>::iterator it = G.fac[c1_id].n_vars.begin(); it != G.fac[c1_id].n_vars.end(); it++)
   {
@@ -447,9 +447,7 @@ dbdet_merge_at_degree_2_node(
   }
 
   G.fac[c1_id].n_vars.insert(G.fac[c1_id].n_vars.end(), G.fac[c2_id].n_vars.begin(), G.fac[c2_id].n_vars.end());
-  G.fac[c2_id].removed = true;
-
-  //TODO make it more readable and clean CFG from empty chains
+  //G.fac[c2_id].removed = true;
 }
 
 void dbdet_graphical_model_contour_merge::

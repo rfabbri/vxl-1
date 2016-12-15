@@ -36,6 +36,8 @@ class dbdet_curvelet;
 typedef vcl_deque<dbdet_edgel* > dbdet_edgel_list;
 typedef vcl_deque<dbdet_edgel* >::iterator dbdet_edgel_list_iter;
 typedef vcl_deque<dbdet_edgel* >::const_iterator dbdet_edgel_list_const_iter;
+typedef vcl_deque<dbdet_edgel* >::reverse_iterator dbdet_edgel_list_reverse_iter;
+typedef vcl_deque<dbdet_edgel* >::const_reverse_iterator dbdet_edgel_list_const_reverse_iter;
 
 typedef vcl_list<dbdet_curvelet* > curvelet_list;
 typedef vcl_list<dbdet_curvelet* >::iterator curvelet_list_iter;

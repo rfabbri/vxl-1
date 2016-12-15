@@ -21,6 +21,19 @@
 
 static const double tolerance=1e-3;
 
+bool not_equivalent_edgel(dbdet_edgel * e1, dbdet_edgel * e2)
+{
+  double x_diff = vcl_abs(e1->pt.x() - e2->pt.x());
+  double y_diff = vcl_abs(e1->pt.y() - e2->pt.y());
+  double t1 = e1->tangent;
+  double t2 = e2->tangent;
+  double t_diff = vcl_abs(t1 - t2);
+  t1 = t1 > vnl_math::pi ? t1 - 2.0 * vnl_math::pi : t1;
+  t2 = t2 > vnl_math::pi ? t2 - 2.0 * vnl_math::pi : t2;
+  t_diff = vcl_min(t_diff, t1 - t2);
+  return (x_diff > tolerance || y_diff > tolerance || t_diff > tolerance || e1->id != e2->id);
+}
+
 void load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img, 
       dbdet_curve_fragment_graph &frags_ref,
       dbdet_curve_fragment_graph &frags_ori,
@@ -38,7 +51,7 @@ void load_dataset(vil_image_view<vil_rgb<vxl_byte> > &img,
 
   //TODO Gen test data, using wrong test data atm
   vcl_string image_path = base_path + "2018.jpg";
-  vcl_string frags_ref_path = base_path + "2018.cem";
+  vcl_string frags_ref_path = base_path + "2018_merged.cem";
   vcl_string frags_ori_path = base_path + "2018_geom.cem";
   vcl_string edge_path = base_path + "2018.edg";
   vcl_string tmap_path = base_path + "2018_tmap.txt";
@@ -90,11 +103,11 @@ void graphical_model_contour_merge_test()
   cm.dbdet_merge_contour(cfg_ori, beta_geom, fmean_geom, beta_sem, fmean_sem);
 
   TEST("Graphical Model Contour Merge: #chains", cfg_ori.frags.size(), cfg_ref.frags.size());
-  //vcl_cout << "size: " << cfg_ori.frags.size() << vcl_endl;
 
   bool s_status = true, e_status = true;
   dbdet_edgel_chain_list_iter ref_it = cfg_ref.frags.begin();
-  for(dbdet_edgel_chain_list_iter it = cfg_ori.frags.begin(); (it != cfg_ori.frags.end() && ref_it != cfg_ref.frags.end()); it++, ref_it++)
+  unsigned j = 0;
+  for(dbdet_edgel_chain_list_iter it = cfg_ori.frags.begin(); (it != cfg_ori.frags.end() && ref_it != cfg_ref.frags.end()); it++, ref_it++, j++)
   {
     if((*it)->edgels.size() != (*ref_it)->edgels.size())
     {
@@ -102,24 +115,33 @@ void graphical_model_contour_merge_test()
       break;
     }
     
-    dbdet_edgel_list & el1 = (*it)->edgels;
-    dbdet_edgel_list & el2 = (*ref_it)->edgels; 
-    for(unsigned i = 0; i < el1.size(); ++i)
+    dbdet_edgel_list_const_iter it_a;
+    it_a = (*it)->edgels.begin();
+
+    if ((*it)->edgels.front()->id == (*ref_it)->edgels.front()->id)
     {
-      double x_diff = vcl_abs(el1[i]->pt.x() - el2[i]->pt.x());
-      double y_diff = vcl_abs(el1[i]->pt.y() - el2[i]->pt.y());
-      double t1 = el1[i]->tangent;
-      double t2 = el2[i]->tangent;
-      double t_diff = vcl_abs(t1 - t2);
-      t1 = t1 > vnl_math::pi ? t1 - 2.0 * vnl_math::pi : t1;
-      t2 = t2 > vnl_math::pi ? t2 - 2.0 * vnl_math::pi : t2;
-      t_diff = vcl_min(t_diff, t1 - t2);
-      if(x_diff > tolerance || y_diff > tolerance || t_diff > tolerance)
+      for(dbdet_edgel_list_const_iter it_b = (*ref_it)->edgels.begin(); it_b != (*ref_it)->edgels.end(); it_a++, it_b++)
       {
-        e_status = false;
-        break;
+        if(not_equivalent_edgel((*it_a), (*it_b)))
+        {
+          e_status = false;
+          break;break;
+        }
       }
     }
+    else
+    {
+      for(dbdet_edgel_list_const_reverse_iter it_b = (*ref_it)->edgels.rbegin(); it_b != (*ref_it)->edgels.rend(); it_a++, it_b++)
+      {
+        if(not_equivalent_edgel((*it_a), (*it_b)))
+        {
+          e_status = false;
+          break;break;
+        }
+      }
+    }
+ 
+    
   }
   TEST("Graphical Model Contour Merge: contours #edgels", s_status, true);
   TEST("Graphical Model Contour Merge: contours (x,y,dir)", e_status, true);
