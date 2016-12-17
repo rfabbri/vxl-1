@@ -7,6 +7,7 @@
 #include <vil/vil_border.h>
 #include <sel/dbdet_edgel.h>
 #include <edge/dbdet_edgemap.h>
+#include "dbdet_yuliang_features.h"
 
 
 // This is dbdet_curve_fragment_cues.h
@@ -18,18 +19,6 @@
 //\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri.github.io)
 //\date 05/25/2016 21:57:40 BRT
 //
-
-
-// just to make it easier and more descriptive to index the feature vector
-// rarely used since we just process the feature vec. generically
-// Y_ONE is just always 1
-enum yuliang_features {
-  Y_ONE, Y_BG_GRAD, Y_SAT_GRAD, Y_HUE_GRAD, Y_ABS_K, Y_EDGE_SPARSITY, Y_WIGG, Y_LEN, Y_MEAN_CONF
-};
-
-#define Y_NUM_FEATURES 9
-
-typedef vnl_vector_fixed<double, Y_NUM_FEATURES> y_feature_vector;
 
 //static const vxl_uint_32 dbdet_curve_fragment_cues_unvisited = vcl_numeric_limits<vxl_uint_32>::max();
 

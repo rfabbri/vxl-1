@@ -14,11 +14,11 @@ compute_all_cues(
   const dbdet_edgel_list e = c.edgels;
   //const vil_image_view<vxl_uint_32> dt = *dt_;
   y_feature_vector &features = *features_ptr;
-  features[Y_ONE] = 1;
+  features[y_features::Y_ONE] = 1;
 
   cuvature_cues(c, features_ptr);
   hsv_gradient_cues(c, features_ptr);
-  features[Y_EDGE_SPARSITY] = lateral_edge_sparsity_cue(c, features_ptr);
+  features[y_features::Y_EDGE_SPARSITY] = lateral_edge_sparsity_cue(c, features_ptr);
   //mean_conf = mean(cfrag(:,4));
 
   // compute average edge strength (mean_conf)
@@ -29,7 +29,7 @@ compute_all_cues(
     conf += (*eit)->strength;
   }
   if (npts)
-    features[Y_MEAN_CONF] = conf / npts;
+    features[y_features::Y_MEAN_CONF] = conf / npts;
 }
 
 void
@@ -60,19 +60,19 @@ cuvature_cues(
       k[i] = 0;
 
   { // wiggliness is the time curvature change sign
-    features[Y_WIGG] = 0;
+    features[y_features::Y_WIGG] = 0;
     for (unsigned i=0; i + 1 < npts; ++i)
     {
       double val = k[i+1] * k[i];
       if (val < 0.0 && vnl_math::abs(val) > epsilon)
       {
-        features[Y_WIGG] += i + 1;
+        features[y_features::Y_WIGG] += i + 1;
       }
     }
-    features[Y_WIGG] /= npts;
+    features[y_features::Y_WIGG] /= npts;
   }
  
-  features[Y_ABS_K] = k.one_norm() / npts;
+  features[y_features::Y_ABS_K] = k.one_norm() / npts;
 }
 
 void
@@ -98,9 +98,9 @@ hsv_gradient_cues(
   // get neighborhood points to be examined
   y_feature_vector &features = *features_ptr;
 
-  features[Y_HUE_GRAD] = 0;
-  features[Y_SAT_GRAD] = 0;
-  features[Y_BG_GRAD]  = 0;
+  features[y_features::Y_HUE_GRAD] = 0;
+  features[y_features::Y_SAT_GRAD] = 0;
+  features[y_features::Y_BG_GRAD]  = 0;
 
   for (unsigned i=0; i < npts; ++i) {
     unsigned left_x  = static_cast<unsigned>(points[i].x() - local_dist_ * n[i][0] + 0.5);
@@ -124,14 +124,14 @@ hsv_gradient_cues(
         &hue_right, &sat_right, &bg_right);
 
     // TODO test if imae indexing is (x,y) or (y,x)
-    features[Y_SAT_GRAD] += /*vcl_abs*/(sat_left - sat_right);
-    features[Y_BG_GRAD]  += /*vcl_abs*/(bg_left - bg_right) / 255.;
+    features[y_features::Y_SAT_GRAD] += /*vcl_abs*/(sat_left - sat_right);
+    features[y_features::Y_BG_GRAD]  += /*vcl_abs*/(bg_left - bg_right) / 255.;
     // TODO need to make angle difference to make sense
-    features[Y_HUE_GRAD] += /*vcl_abs*/(hue_left - hue_right)/360.;
+    features[y_features::Y_HUE_GRAD] += /*vcl_abs*/(hue_left - hue_right)/360.;
   }
-  features[Y_HUE_GRAD] /= npts;
-  features[Y_SAT_GRAD] /= npts;
-  features[Y_BG_GRAD]  /= npts;
+  features[y_features::Y_HUE_GRAD] /= npts;
+  features[y_features::Y_SAT_GRAD] /= npts;
+  features[y_features::Y_BG_GRAD]  /= npts;
 }
 
 double dbdet_curve_fragment_cues::
@@ -240,6 +240,6 @@ lateral_edge_sparsity_cue(
     }
   }
 
-  features[Y_LEN] = euclidean_length(c);
-  return total_edges / (features[Y_LEN] == 0 ? 1.0 : features[Y_LEN]);
+  features[y_features::Y_LEN] = euclidean_length(c);
+  return total_edges / (features[y_features::Y_LEN] == 0 ? 1.0 : features[y_features::Y_LEN]);
 }

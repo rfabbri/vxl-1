@@ -57,8 +57,10 @@ set( dbdet_algo_sources
   dbdet_resize_edgemap.h      dbdet_resize_edgemap.cxx
 # Curve Cues
   dbdet_curve_fragment_cues.h dbdet_curve_fragment_cues.cxx
-# Contour breaker
+# Contour breaker/merge
+  dbdet_yuliang_features.h    dbdet_yuliang_features.cxx
   dbdet_contour_breaker.h     dbdet_contour_breaker.cxx
+  dbdet_graphical_model_contour_merge.h     dbdet_graphical_model_contour_merge.cxx
 )
 
 if(OCTAVE_FOUND)
@@ -73,6 +75,8 @@ aux_source_directory(Templates dbdet_algo_sources)
 
 add_library(dbdet_algo ${dbdet_algo_sources})
 target_link_libraries( dbdet_algo dbdet )
+
+#target_compile_features(dbdet_algo PRIVATE cxx_strong_enums)
 
 if(OCTAVE_FOUND)
     target_link_libraries( dbdet_algo dbil_algo )

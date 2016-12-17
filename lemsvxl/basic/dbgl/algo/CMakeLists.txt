@@ -17,6 +17,7 @@ add_definitions(-DDBGL_WHERE_LEMSVXL_LIB_DIR_H_EXISTS)
 
 include_directories( ${lems_BINARY_DIR}/basic/dbgl/algo/ )
 include_directories( ${lems_BINARY_DIR}/basic/dbgl/ )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg/ )
 
 set( dbgl_algo_sources
   dbgl_where_lemsvxl_lib_dir.h.in
@@ -52,7 +53,7 @@ set( dbgl_algo_sources
 
 add_library( dbgl_algo ${dbgl_algo_sources} )
 
-target_link_libraries( dbgl_algo vnl_algo vsl vgl_algo dbnl dbgl vul ray_tri)
+target_link_libraries( dbgl_algo vnl_algo vsl vgl_algo dbnl dbgl vul ray_tri dbdet)
 
 if( BUILD_TESTING )
   add_subdirectory(tests)

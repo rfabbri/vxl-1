@@ -4,19 +4,23 @@
 #include <vcl_limits.h>
 #include <dbgl/algo/dbgl_diffgeom.h>
 #include <vil/algo/vil_colour_space.h>
+#include <vil/vil_border.h>
+#include <vcl_iostream.h>
+#include <vcl_cassert.h>
 
-dbdet_curve_fragment_graph dbdet_contour_breaker::
+void dbdet_contour_breaker::
 dbdet_contour_breaker_geom(
       dbdet_curve_fragment_graph & CFG,
-      double beta1[2],
-      double fmean[2]
+      y_params_1_vector & beta,
+      y_params_1_vector & fmean,
+      dbdet_curve_fragment_graph & newCFG
       )
 {
   int const ref_tabel_nbr_range = 2;
   unsigned const not_assigned = -1;
 
-  dbdet_curve_fragment_graph newCFG(CFG);
-  
+  deep_copy_cfg(CFG, newCFG);
+
   vcl_vector <dbdet_edgel_chain*> frags(newCFG.frags.size());
   {
     unsigned i = 0;
@@ -26,7 +30,7 @@ dbdet_contour_breaker_geom(
 
   vcl_vector<double> clen(frags.size(), 0.0);
 
-  double min_contour_len = nbr_len_th * diag_ratio;
+  double min_contour_len = dbdet_yuliang_const::dbdet_yuliang_const::nbr_len_th * diag_ratio;
 
   for (unsigned i = 0; i < ni(); ++i)
   {
@@ -47,16 +51,16 @@ dbdet_contour_breaker_geom(
     if (start.pt == end.pt && start.deriv == end.deriv)
       continue;
 
-    if (clen[i] > min_contour_len && frags[i]->edgels.size() > nbr_len_th)
+    if (clen[i] > min_contour_len && frags[i]->edgels.size() > dbdet_yuliang_const::nbr_len_th)
     {
       unsigned xi, xf, yi, yf;
       int x, y;
       x = static_cast<int>(start.pt.x() + 0.5);
       y = static_cast<int>(start.pt.y() + 0.5);
       xi = static_cast<unsigned>(vcl_max(x - ref_tabel_nbr_range, 0));
-      xf = static_cast<unsigned>(vcl_min(x + ref_tabel_nbr_range, static_cast<int>(ni())));
+      xf = static_cast<unsigned>(vcl_min(x + ref_tabel_nbr_range + 1, static_cast<int>(ni())));
       yi = static_cast<unsigned>(vcl_max(y - ref_tabel_nbr_range, 0));
-      yf = static_cast<unsigned>(vcl_min(y + ref_tabel_nbr_range, static_cast<int>(nj())));
+      yf = static_cast<unsigned>(vcl_min(y + ref_tabel_nbr_range + 1, static_cast<int>(nj())));
       
       for (unsigned l = xi; l < xf; ++l)
         for (unsigned m = yi; m < yf; ++m)
@@ -65,16 +69,15 @@ dbdet_contour_breaker_geom(
       x = static_cast<int>(end.pt.x() + 0.5);
       y = static_cast<int>(end.pt.y() + 0.5);
       xi = static_cast<unsigned>(vcl_max(x - ref_tabel_nbr_range, 0));
-      xf = static_cast<unsigned>(vcl_min(x + ref_tabel_nbr_range, static_cast<int>(ni())));
+      xf = static_cast<unsigned>(vcl_min(x + ref_tabel_nbr_range + 1, static_cast<int>(ni())));
       yi = static_cast<unsigned>(vcl_max(y - ref_tabel_nbr_range, 0));
-      yf = static_cast<unsigned>(vcl_min(y + ref_tabel_nbr_range, static_cast<int>(nj())));
+      yf = static_cast<unsigned>(vcl_min(y + ref_tabel_nbr_range + 1, static_cast<int>(nj())));
       
       for (unsigned l = xi; l < xf; ++l)
         for (unsigned m = yi; m < yf; ++m)
           ref_end_pts(l, m) = i;
     }  
   }
-
 
   for (unsigned i = 0; i < frags.size(); ++i)
   {
@@ -85,18 +88,21 @@ dbdet_contour_breaker_geom(
       continue;
 
     unsigned npts = frags[i]->edgels.size();
+
     if(clen[i] > (10 * diag_ratio) && npts > nbr_num_edges + 1)
     {
       vcl_vector<unsigned> cur_break_e_id;
-      vcl_vector <unsigned> start_ids(npts);
+      vcl_vector <int> start_ids(npts);
       vcl_set <unsigned> unique_start_ids;
-      vcl_vector <unsigned> end_ids(npts);
+      vcl_vector <int> end_ids(npts);
       vcl_set <unsigned> unique_end_ids;
+
+      dbdet_edgel_list edgels = frags[i]->edgels;
 
       for (unsigned k = 0; k < npts; ++k)
       {
-        int xx = static_cast<int>(end.pt.x() + 0.5);
-        int yy = static_cast<int>(end.pt.y() + 0.5);
+        int xx = static_cast<int>(edgels[k]->pt.x() + 0.5);
+        int yy = static_cast<int>(edgels[k]->pt.y() + 0.5);
         unsigned x = vcl_max(vcl_min(xx, static_cast<int>(ni()) - 1), 0);
         unsigned y = vcl_max(vcl_min(yy, static_cast<int>(nj()) - 1), 0);
           
@@ -125,9 +131,10 @@ dbdet_contour_breaker_geom(
         clen[i] = euclidean_length(ref);
 
         newChain = new dbdet_edgel_chain();
-        newChain->edgels = dbdet_edgel_list(copy.edgels.begin(), copy.edgels.begin() + cur_break_e_id[0] + 1);
+        newChain->edgels = dbdet_edgel_list(copy.edgels.begin(), copy.edgels.begin() + cur_break_e_id[0] + 1);    
         newCFG.frags.push_back(newChain);
         clen.push_back(euclidean_length(*newChain));
+        frags.push_back(newChain);
 
         unsigned xi, xf, yi, yf;
         int x, y;
@@ -140,14 +147,15 @@ dbdet_contour_breaker_geom(
         
         for (unsigned l = xi; l < xf; ++l)
           for (unsigned m = yi; m < yf; ++m)
-            ref_start_pts(l, m) = newCFG.frags.size();
+            ref_start_pts(l, m) = newCFG.frags.size()-1;
 
         for (unsigned k = 1; k < cur_break_e_id.size(); ++k)
         {
           newChain = new dbdet_edgel_chain();
-          newChain->edgels = dbdet_edgel_list(copy.edgels.begin() + cur_break_e_id[k-1], copy.edgels.begin() + cur_break_e_id[k]);
+          newChain->edgels = dbdet_edgel_list(copy.edgels.begin() + cur_break_e_id[k-1], copy.edgels.begin() + cur_break_e_id[k] + 1);
           newCFG.frags.push_back(newChain);
           clen.push_back(euclidean_length(*newChain));
+          frags.push_back(newChain);
         }   
       }
     }  
@@ -155,34 +163,38 @@ dbdet_contour_breaker_geom(
 
   for(unsigned i = 0; i < max_it; ++i)
   {
-    for(dbdet_edgel_chain_list_iter it = newCFG.frags.begin(); it != newCFG.frags.end(); it++)
+    unsigned end_j = newCFG.frags.size();
+    unsigned j = 0;
+ 
+    for(dbdet_edgel_chain_list_iter it = newCFG.frags.begin(); (it != newCFG.frags.end() && j < end_j); it++,++j)
     {
       dbdet_edgel & start = *((*it)->edgels.front());
       dbdet_edgel & end = *((*it)->edgels.back());
-
+      
       if (start.pt == end.pt && start.deriv == end.deriv)
         continue;
 
-      if (clen[i] > (10 * diag_ratio) && (*it)->edgels.size() > (nbr_num_edges + 1) / i)
+      if (clen[j] > (10 * diag_ratio) && (*it)->edgels.size() > nbr_num_edges / (i + 1.0))
       {
         vcl_vector<double> prob;
-        compute_merge_probability_geom(*(*it), nbr_num_edges /(2 * i) , beta1, fmean, prob);
+        compute_merge_probability_geom(*(*it), vcl_ceil(nbr_num_edges /(2.0 * (i + 1.0))) , beta, fmean, prob);
         double min = vcl_numeric_limits<double>::max();
         double lastVal = min;
         unsigned firstId = -1, lastId = -1;
         for (int k = 0; k < prob.size(); ++k)
         {
-          if (prob[i] < min)
+          if (prob[k] < min)
           {
-            min = prob[i];
+            min = prob[k];
             firstId = lastId = k; 
           }
-          else if(prob[i] == min)
+          else if(prob[k] == min)
           {
             lastId = k;
           }
         }
-        if (min < merge_th_geom)
+
+        if (min < dbdet_yuliang_const::merge_th_geom)
         {
           unsigned id = (firstId + lastId + 1) / 2;
           dbdet_edgel_chain copy = *(*it);
@@ -201,18 +213,16 @@ dbdet_contour_breaker_geom(
       }
     }
   }
-
-  return newCFG;
 }
 
 void dbdet_contour_breaker::
 compute_break_point(
       vcl_vector<dbdet_edgel_chain*> & frags,
       unsigned frag_id,
-      vcl_vector<unsigned> & ids,
+      vcl_vector<int> & ids,
       vcl_set<unsigned> & unique_ids,
       bool front,
-      vcl_vector<unsigned> break_e_ids)
+      vcl_vector<unsigned> & break_e_ids)
 {
       unsigned prev_id = 0;
       for (vcl_set<unsigned>::iterator set_it = unique_ids.begin(); set_it != unique_ids.end(); ++set_it)
@@ -220,11 +230,22 @@ compute_break_point(
         dbdet_edgel_chain & chain = (*frags[frag_id]);
         double min = vcl_numeric_limits<double>::max();
         unsigned e_id = -1;
+
+        vgl_point_2d<double> set_pt;
+        if(front)
+        {
+          set_pt = (*frags[(*set_it)]).edgels.front()->pt;
+        }
+        else
+        {
+          set_pt = (*frags[(*set_it)]).edgels.back()->pt;
+        }
+
         for (int k = 0; k < ids.size(); ++k)
         {
           if((*set_it) == ids[k])
           {
-            double dist = vgl_distance(chain.edgels[k]->pt, (*frags[(*set_it)]).edgels[0]->pt);
+            double dist = vgl_distance(chain.edgels[k]->pt, set_pt);
             if (dist < min)
             {
               min = dist;
@@ -233,7 +254,7 @@ compute_break_point(
           }
         }
 
-        if (e_id < nbr_len_th - 1 || e_id > chain.edgels.size() - nbr_len_th || (e_id - prev_id) < nbr_len_th)
+        if (e_id < dbdet_yuliang_const::dbdet_yuliang_const::nbr_len_th - 1 || e_id > chain.edgels.size() - dbdet_yuliang_const::dbdet_yuliang_const::nbr_len_th || (e_id - prev_id) < dbdet_yuliang_const::dbdet_yuliang_const::nbr_len_th)
           continue;
 
         if(min == 0)
@@ -249,17 +270,17 @@ compute_break_point(
         unsigned a_id1, a_id2;
         if (front)
         {
-          a_id1 = vcl_min(nbr_len_th, static_cast<unsigned>(frags[(*set_it)]->edgels.size() - 1));
+          a_id1 = vcl_min(dbdet_yuliang_const::dbdet_yuliang_const::nbr_len_th, static_cast<unsigned>(frags[(*set_it)]->edgels.size() - 1));
           a_id2 = 0;
         }
         else
         {
           a_id1 = frags[(*set_it)]->edgels.size() - 1;
-          a_id2 = static_cast<unsigned>(vcl_max(static_cast<int>(frags[(*set_it)]->edgels.size()) - 1 - static_cast<int>(nbr_len_th), 0));
+          a_id2 = static_cast<unsigned>(vcl_max(static_cast<int>(frags[(*set_it)]->edgels.size()) - 1 - static_cast<int>(dbdet_yuliang_const::nbr_len_th), 0));
         }
         vgl_vector_2d<double> a_ori = (*frags[(*set_it)]).edgels[a_id1]->pt - (*frags[(*set_it)]).edgels[a_id2]->pt;
 
-        double cos_diff = (c_ori.x() * a_ori.x() + c_ori.y() + a_ori.y()) / 
+        double cos_diff = (c_ori.x() * a_ori.x() + c_ori.y() * a_ori.y()) / 
         (vcl_sqrt(c_ori.x() * c_ori.x() + c_ori.y() * c_ori.y()) * vcl_sqrt(a_ori.x() * a_ori.x() + a_ori.y() * a_ori.y()));
 
         if(cos_diff > vcl_cos(vnl_math::pi / 6.0))
@@ -274,71 +295,76 @@ void dbdet_contour_breaker::
 compute_merge_probability_geom(
       dbdet_edgel_chain & chain,
       unsigned nbr_range_th,
-      double beta1[2],
-      double fmean[2],
+      y_params_1_vector & beta,
+      y_params_1_vector & fmean,
       vcl_vector<double> & prob
       )
 {
-  nbr_range_th = vcl_min(nbr_range_th, nbr_len_th);
+  nbr_range_th = vcl_min(nbr_range_th, dbdet_yuliang_const::nbr_len_th);
   prob.resize(chain.edgels.size());
   
   for (unsigned i = 0; i < prob.size(); ++i)
     prob[i] = 1.0;
 
-  for (unsigned i = nbr_range_th; i < prob.size() - 1 - nbr_range_th; ++i)
+  for (unsigned i = nbr_range_th; i < prob.size() - nbr_range_th; ++i)
   {
     vgl_vector_2d<double> a = chain.edgels[i]->pt - chain.edgels[i-nbr_range_th]->pt;
     vgl_vector_2d<double> b = chain.edgels[i+nbr_range_th]->pt - chain.edgels[i]->pt;
-    
-    double cos_diff = (a.x() * b.x() + a.y() + b.y()) / 
+
+    double cos_diff = (a.x() * b.x() + a.y() * b.y()) / 
                       (vcl_sqrt(a.x() * a.x() + a.y() * a.y()) * vcl_sqrt(b.x() * b.x() + b.y() * b.y()));
     //prob(i) = 1 / (1 + exp(-([1 geom_diff] - fmean_1)*beta_1'));
-    prob[i] =  1.0 / (1.0 + exp(-((1.0 - fmean[0]) * beta1[0] + (cos_diff - fmean[1]) * beta1[1])));
+    prob[i] =  1.0 / (1.0 + exp(-((1.0 - fmean[0]) * beta[0] + (cos_diff - fmean[1]) * beta[1])));
   }
 }
 
-dbdet_curve_fragment_graph dbdet_contour_breaker::
+void dbdet_contour_breaker::
 dbdet_contour_breaker_semantic(
       dbdet_curve_fragment_graph & CFG,
-      y_feature_vector beta1,
-      y_feature_vector fmean
+      y_params_0_vector & beta,
+      y_params_0_vector & fmean,
+      dbdet_curve_fragment_graph & newCFG
       )
 {
-  dbdet_curve_fragment_graph newCFG(CFG);
+  //dbdet_curve_fragment_graph newCFG(CFG);
+  deep_copy_cfg(CFG, newCFG);
+
   vcl_vector<double> clen(newCFG.frags.size(), 0.0);
 
   for(unsigned i = 0; i < max_it; ++i)
   {
-    for(dbdet_edgel_chain_list_iter it = newCFG.frags.begin(); it != newCFG.frags.end(); it++)
+    unsigned end_j = newCFG.frags.size();
+    unsigned j = 0;
+    for(dbdet_edgel_chain_list_iter it = newCFG.frags.begin(); (it != newCFG.frags.end() && j < end_j); it++, ++j)
     {
       dbdet_edgel & start = *((*it)->edgels.front());
       dbdet_edgel & end = *((*it)->edgels.back());
 
-      clen[i] = clen[i] == 0.0 ? clen[i] : euclidean_length(*(*it));
+      clen[j] = (clen[j] != 0.0 ? clen[j] : euclidean_length(*(*it)));
 
       if (start.pt == end.pt && start.deriv == end.deriv)
         continue;
 
-      if (clen[i] > (30 * diag_ratio) && (*it)->edgels.size() > (3 * nbr_num_edges) / i)
+      if (clen[j] > (30 * diag_ratio) && (*it)->edgels.size() > (3 * nbr_num_edges) / i)
       {
         vcl_vector<double> prob;
-        compute_merge_probability_semantic(*(*it), static_cast<unsigned>(nbr_num_edges /(2 * i) + 0.5) , beta1, fmean, prob);
+        compute_merge_probability_semantic(*(*it), static_cast<unsigned>(nbr_num_edges /(2 * i) + 0.5) , beta, fmean, prob);
         double min = vcl_numeric_limits<double>::max();
         double lastVal = min;
         unsigned firstId = -1, lastId = -1;
         for (int k = 0; k < prob.size(); ++k)
         {
-          if (prob[i] < min)
+          if (prob[k] < min)
           {
-            min = prob[i];
+            min = prob[k];
             firstId = lastId = k; 
           }
-          else if(prob[i] == min)
+          else if(prob[k] == min)
           {
             lastId = k;
           }
         }
-        if (min < merge_th_geom)
+        if (min < dbdet_yuliang_const::merge_th_sem)
         {
           unsigned id = (firstId + lastId + 1) / 2;
           dbdet_edgel_chain copy = *(*it);
@@ -347,7 +373,7 @@ dbdet_contour_breaker_semantic(
           dbdet_edgel_chain * newChain;
 
           ref.edgels = dbdet_edgel_list(copy.edgels.begin() + id, copy.edgels.end());
-          clen[i] = euclidean_length(ref);
+          clen[j] = euclidean_length(ref);
 
           newChain = new dbdet_edgel_chain();
           newChain->edgels = dbdet_edgel_list(copy.edgels.begin(), copy.edgels.begin() + id + 1);
@@ -357,16 +383,14 @@ dbdet_contour_breaker_semantic(
       }
     }
   }
-
-  return newCFG;
 }
 
 void dbdet_contour_breaker::
 compute_merge_probability_semantic(
       dbdet_edgel_chain & chain,/*hsv_img, edge_map, tmap,*/
       unsigned nbr_range_th,
-      y_feature_vector beta1,
-      y_feature_vector fmean,
+      y_params_0_vector & beta,
+      y_params_0_vector & fmean,
       vcl_vector<double> & prob
       )
 {
@@ -379,6 +403,10 @@ compute_merge_probability_semantic(
   vcl_vector< vnl_vector_fixed<double, 2> > n;
   vcl_vector<vgl_point_2d<double> > points;
   points.reserve(npts);
+
+  prob.resize(npts);
+  for (unsigned i = 0; i < npts; ++i)
+    prob[i] = 1.0;
 
   //to vector of points..
   for (unsigned i = 0; i < npts; ++i)
@@ -395,15 +423,17 @@ compute_merge_probability_semantic(
   double last_k, last_hue, last_sat, last_bg, last_wigg;
   last_k = last_hue = last_sat = last_bg = last_wigg = 0;
 
+  // make sure image clamps to within bounds
+  vil_border_accessor<vil_image_view<vil_rgb<vxl_byte> > >
+      im = vil_border_create_accessor(img_,vil_border_create_geodesic(img_));
+
   for (unsigned i=0; i < npts; ++i) {
     unsigned left_x  = static_cast<unsigned>(points[i].x() - local_dist * n[i][0] + 0.5);
     unsigned left_y  = static_cast<unsigned>(points[i].y() - local_dist * n[i][1] + 0.5);
     unsigned right_x = static_cast<unsigned>(points[i].x() + local_dist * n[i][0] + 0.5);
     unsigned right_y = static_cast<unsigned>(points[i].y() + local_dist * n[i][1] + 0.5);
 
-    // make sure image clamps to within bounds
-    vil_border_accessor<vil_image_view<vil_rgb<vxl_byte> > >
-      im = vil_border_create_accessor(img_,vil_border_create_geodesic(img_));
+    
 
     double hue_left, hue_right,
            sat_left, sat_right,
@@ -429,29 +459,31 @@ compute_merge_probability_semantic(
     k_cum[i] = last_k;
     
     double sign = k[i] * (i+1 < npts ? k[i+1] : 0.0);
-    last_wigg += (sign < 0 && vcl_abs(sign) > epsilon) ? 1.0 : 0.0;
+    last_wigg += (sign < 0 && vcl_abs(sign) > dbdet_yuliang_const::epsilon) ? 1.0 : 0.0;
     wigg_cum[i] = last_wigg;
   }
 
   vcl_vector<double> edge_sparsity_cum(npts, 0.0);
   compute_edge_sparsity_integral(chain, n, nbr_width, edge_sparsity_cum);
+
 /**
 [~, ~, texton_hist_left_cum, texton_hist_right_cum] = compute_texture_hist_integral(x,y,N, nbr_width, tmap);
 **/
+
   vcl_vector<y_hist_vector> texton_hist_left, texton_hist_right;
   compute_texture_hist_integral(chain, n, nbr_width, texton_hist_left, texton_hist_right);
 
-  y_feature_vector features;
-//Y_ONE, Y_BG_GRAD, Y_SAT_GRAD, Y_HUE_GRAD, Y_ABS_K, Y_EDGE_SPARSITY, Y_WIGG, Y_LEN, Y_MEAN_CONF
-  features[Y_ONE] = 1.0;
+  y_params_0_vector features;
+  features[y_params_0::Y_ONE] = 1.0;
+
   for (unsigned i = nbr_range_th; i < npts - nbr_range_th; ++i)
   {
-    features[Y_BG_GRAD] = (2.0 * bg_cum[i] - bg_cum[i-nbr_range_th] - bg_cum[i+nbr_range_th]) / nbr_range_th;
-    features[Y_SAT_GRAD] = (2.0 * sat_cum[i] - sat_cum[i-nbr_range_th] - sat_cum[i+nbr_range_th]) / nbr_range_th;
-    features[Y_HUE_GRAD] = (2.0 * hue_cum[i] - hue_cum[i-nbr_range_th] - hue_cum[i+nbr_range_th]) / nbr_range_th;
-    features[Y_ABS_K] = (2.0 * k_cum[i] - k_cum[i-nbr_range_th] - k_cum[i+nbr_range_th]) / nbr_range_th;
-    features[Y_EDGE_SPARSITY] = (2.0 * edge_sparsity_cum[i] - edge_sparsity_cum[i-nbr_range_th] - edge_sparsity_cum[i+nbr_range_th]) / nbr_range_th;
-    features[Y_WIGG] = (2.0 * wigg_cum[i] - wigg_cum[i-nbr_range_th] - wigg_cum[i+nbr_range_th]) / nbr_range_th;
+    features[y_params_0::Y_BG_GRAD] = (2.0 * bg_cum[i] - bg_cum[i-nbr_range_th] - bg_cum[i+nbr_range_th]) / nbr_range_th;
+    features[y_params_0::Y_SAT_GRAD] = (2.0 * sat_cum[i] - sat_cum[i-nbr_range_th] - sat_cum[i+nbr_range_th]) / nbr_range_th;
+    features[y_params_0::Y_HUE_GRAD] = (2.0 * hue_cum[i] - hue_cum[i-nbr_range_th] - hue_cum[i+nbr_range_th]) / nbr_range_th;
+    features[y_params_0::Y_ABS_K] = (2.0 * k_cum[i] - k_cum[i-nbr_range_th] - k_cum[i+nbr_range_th]) / nbr_range_th;
+    features[y_params_0::Y_EDGE_SPARSITY] = (2.0 * edge_sparsity_cum[i] - edge_sparsity_cum[i-nbr_range_th] - edge_sparsity_cum[i+nbr_range_th]) / nbr_range_th;
+    features[y_params_0::Y_WIGG] = (2.0 * wigg_cum[i] - wigg_cum[i-nbr_range_th] - wigg_cum[i+nbr_range_th]) / nbr_range_th;
 
    /**
     hist_1_left = (texton_hist_left_cum(:,i) - texton_hist_left_cum(:,i-nbr_range_th))/nbr_range_th;
@@ -471,29 +503,29 @@ compute_merge_probability_semantic(
     **/
     
     //texture_diff
-    features[Y_MEAN_CONF] = 0.0;
+    features[y_params_0::Y_TEXTURE] = 0.0;
     for (unsigned k = 0; k < y_hist_size; ++k)
     {
       double v1 = texton_hist_left[i][k] - texton_hist_left[i-nbr_range_th][k];
       double v2 = texton_hist_left[i][k+nbr_range_th] - texton_hist_left[i][k];
-      features[Y_MEAN_CONF] += (v1 - v2) * (v1 - v2) / (v1 + v2);
+      features[y_params_0::Y_TEXTURE] += (v1 - v2) * (v1 - v2) / (v1 + v2);
 
       v1 = texton_hist_right[i][k] - texton_hist_right[i-nbr_range_th][k];
       v2 = texton_hist_right[i][k+nbr_range_th] - texton_hist_right[i][k];
-      features[Y_MEAN_CONF] += (v1 - v2) * (v1 - v2) / (v1 + v2);
+      features[y_params_0::Y_TEXTURE] += (v1 - v2) * (v1 - v2) / (v1 + v2);
     }
-    features[Y_MEAN_CONF] /= (2 * nbr_range_th);
+    features[y_params_0::Y_TEXTURE] /= (2 * nbr_range_th);
 
     vgl_vector_2d<double> a = chain.edgels[i]->pt - chain.edgels[i-nbr_range_th]->pt;
     vgl_vector_2d<double> b = chain.edgels[i+nbr_range_th]->pt - chain.edgels[i]->pt;
 
     //geom_diff
-    features[Y_LEN] = (a.x() * b.x() + a.y() + b.y()) / 
+    features[y_params_0::Y_GEOM] = (a.x() * b.x() + a.y() * b.y()) / 
                       (vcl_sqrt(a.x() * a.x() + a.y() * a.y()) * vcl_sqrt(b.x() * b.x() + b.y() * b.y()));
     double sum = 0.0;
-    for (unsigned j = 0; j < Y_NUM_FEATURES; ++j)
+    for (unsigned j = 0; j < y_params_0_size; ++j)
     {
-      sum += (features[j] - fmean[j]) * beta1[j];
+      sum += (features[j] - fmean[j]) * beta[j];
     }
     prob[i] = 1.0 / (1.0 + exp(-sum));
   }
@@ -502,14 +534,15 @@ compute_merge_probability_semantic(
 void dbdet_contour_breaker::
 compute_edge_sparsity_integral(
       dbdet_edgel_chain & chain,
-      vcl_vector< vnl_vector_fixed<double, 2> > n,
+      vcl_vector< vnl_vector_fixed<double, 2> > & n,
       unsigned nbr_width,
       vcl_vector<double> & edge_sparsity
       )
 {
   unsigned npts =  chain.edgels.size();
   edge_sparsity.resize(npts);
-  double last = 0;
+  double last = 0.0;
+
   for (unsigned k = 0; k < npts; ++k)
   {
     vgl_point_2d<double> & cur_pt = chain.edgels[k]->pt; 
@@ -523,9 +556,9 @@ compute_edge_sparsity_integral(
     double sum = 0;
     for (unsigned i = xi; i < xf; ++i)
     {
-      for (unsigned j = yi; yi < yf; ++j)
+      for (unsigned j = yi; j < yf; ++j)
       {
-        sum = em_.cell(i, j).size() > 0 ? sum + 1.0: sum;
+        sum = (em_.cell(i, j).size() > 0 ? sum + 1.0: sum);
       }
     }
     last += sum;
@@ -536,7 +569,7 @@ compute_edge_sparsity_integral(
 void dbdet_contour_breaker::
 compute_texture_hist_integral(
       dbdet_edgel_chain & chain,
-      vcl_vector< vnl_vector_fixed<double, 2> > n,
+      vcl_vector< vnl_vector_fixed<double, 2> > & n,
       unsigned nbr_width,
       vcl_vector<y_hist_vector> & texton_hist_left,
       vcl_vector<y_hist_vector> & texton_hist_right
@@ -555,30 +588,40 @@ compute_texture_hist_integral(
   for (unsigned k = 0; k < npts; ++k)
   {
     vgl_point_2d<double> & cur_pt = chain.edgels[k]->pt; 
-    unsigned xl = static_cast<unsigned>(vcl_max(0, vcl_min(static_cast<int>(ni()), static_cast<int>(cur_pt.x() - n[k][0] * nbr_width + 0.5))));
-    unsigned xr = static_cast<unsigned>(vcl_max(0, vcl_min(static_cast<int>(ni()), static_cast<int>(cur_pt.x() + n[k][0] * nbr_width + 0.5))));
-    unsigned yl = static_cast<unsigned>(vcl_max(0, vcl_min(static_cast<int>(nj()), static_cast<int>(cur_pt.x() - n[k][1] * nbr_width + 0.5))));
-    unsigned yr = static_cast<unsigned>(vcl_max(0, vcl_min(static_cast<int>(nj()), static_cast<int>(cur_pt.x() + n[k][1] * nbr_width + 0.5))));
-    unsigned x = static_cast<unsigned>(vcl_max(0u, vcl_min(ni(), static_cast<unsigned>(cur_pt.x() + 0.5))));
-    unsigned y = static_cast<unsigned>(vcl_max(0u, vcl_min(nj(), static_cast<unsigned>(cur_pt.y() + 0.5))));
+    int xl = vcl_max(0, vcl_min(static_cast<int>(ni()), static_cast<int>(cur_pt.x() - n[k][0] * nbr_width + 0.5)));
+    int xr = vcl_max(0, vcl_min(static_cast<int>(ni()), static_cast<int>(cur_pt.x() + n[k][0] * nbr_width + 0.5)));
+    int yl = vcl_max(0, vcl_min(static_cast<int>(nj()), static_cast<int>(cur_pt.y() - n[k][1] * nbr_width + 0.5)));
+    int yr = vcl_max(0, vcl_min(static_cast<int>(nj()), static_cast<int>(cur_pt.y() + n[k][1] * nbr_width + 0.5)));
+    int x = vcl_max(0, vcl_min(static_cast<int>(ni()), static_cast<int>(cur_pt.x() + 0.5)));
+    int y = vcl_max(0, vcl_min(static_cast<int>(nj()), static_cast<int>(cur_pt.y() + 0.5)));
 
     texton_hist_left[k] = last_left;
     texton_hist_right[k] = last_right;
-    
 
-    for (unsigned i = 0; i < nbr_width; ++i)
+    for (int i = 0; i < nbr_width; ++i)
     {
       unsigned il = static_cast<unsigned>(x + i * (x - xl) * nbr_width_inv + 0.5);
       unsigned ir = static_cast<unsigned>(x + i * (xr - x) * nbr_width_inv + 0.5);
-      for (unsigned j = 0; j < nbr_width; ++j)
-      {
-        unsigned jl = static_cast<unsigned>(y + j * (y - yl) * nbr_width_inv + 0.5);
-        unsigned jr = static_cast<unsigned>(y + j * (yr - y) * nbr_width_inv + 0.5);
-        texton_hist_left[i][tmap_(il, jl)]++;
-        texton_hist_right[i][tmap_(ir, jr)]++;
-      }
+
+      unsigned jl = static_cast<unsigned>(y + i * (y - yl) * nbr_width_inv + 0.5);
+      unsigned jr = static_cast<unsigned>(y + i * (yr - y) * nbr_width_inv + 0.5);
+
+      texton_hist_left[k][tmap_(il, jl)]++;
+      texton_hist_right[k][tmap_(ir, jr)]++;
     }
     last_left = texton_hist_left[k];
     last_right = texton_hist_right[k];
   }
+}
+
+void dbdet_contour_breaker::
+deep_copy_cfg(
+      dbdet_curve_fragment_graph & CFG,
+      dbdet_curve_fragment_graph & newCFG
+      )
+{
+  newCFG.clear();
+  newCFG.resize(CFG.cFrags.size());
+  for (dbdet_edgel_chain_list_const_iter it=CFG.frags.begin(); it != CFG.frags.end(); it++)
+    newCFG.insert_fragment(new dbdet_edgel_chain(*(*it)));
 }
