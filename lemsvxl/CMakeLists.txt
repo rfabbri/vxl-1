@@ -96,12 +96,6 @@ if(BUILD_LEMS)
     add_subdirectory( breye )
   endif(BUILD_BREYE)
 
-  # Brown Eyes Code
-  option(BUILD_BREYE1 "Build Old Brown Eyes" YES)
-  if(BUILD_BREYE1)
-    add_subdirectory( breye1 )
-  endif(BUILD_BREYE1)
-
   #Apps
   option(BUILD_APPS "Build Apps" NO)
   if(BUILD_APPS)
