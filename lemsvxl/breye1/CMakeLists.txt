@@ -8,24 +8,8 @@ include_directories( ${lems_SOURCE_DIR}/algo )
 include_directories( ${lems_SOURCE_DIR}/breye1 )
 include_directories( ${lems_SOURCE_DIR}/basic )
 
-# Brown Process Library
-add_subdirectory( bpro1 )
-
-# Video Process Library
-add_subdirectory( vidpro1 )
-
-# Visualizer (will move to brl someday)
-add_subdirectory( bvis1 )
-
 # Development Visualizer
-add_subdirectory( dbvis1 )
+add_subdirectory(dbvis1)
 
 # Virtual Object Recognition Lab
-add_subdirectory( vorl1 )
-
-# To be compatible with latest verison of vxl we have copied over obsolete vidl1
-# FIXME This lib is deprecated and must be removed from lemsvxl.
-# Old code still compiles but may have video functionality disabled.
-# Either rewrite the old code to use vxl's vidl (which is way more efficient),
-# or comment out if you need to use vidl1
-# add_subdirectory( vidl1 )
+add_subdirectory(vorl1)
