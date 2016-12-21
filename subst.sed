@@ -1,1 +1,1 @@
-s/rfabbri@gmail.com/rfabbri.github.io/g
+s/bpro1d/bpro1/g
