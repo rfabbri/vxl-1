@@ -75,7 +75,7 @@ vcl_vector<dbecl_episeg_sptr>
 dbecl_episeg_from_curve_converter::convert_curve_using_tangents(
     vsol_digital_curve_2d_sptr curve,
     vcl_vector<double> tangents,
-    dbbl_subsequence_set *partition,
+    bbld_subsequence_set *partition,
     unsigned curve_id
     )
 {
@@ -87,13 +87,13 @@ dbecl_episeg_from_curve_converter::convert_curve_using_tangents(
   if (curve->size() < 1)
     return to_return;
 
-  dbbl_subsequence_set &ss = *partition;
-  dbbl_subsequence original_seq(0, curve->size(), curve_id);
+  bbld_subsequence_set &ss = *partition;
+  bbld_subsequence original_seq(0, curve->size(), curve_id);
 
   dbecl_delta_angle_predicate 
     is_angle_acceptable(curve, tangents, epipole_, delta_theta_);
 
-  dbbl_contiguous_partition(original_seq, is_angle_acceptable, &ss);
+  bbld_contiguous_partition(original_seq, is_angle_acceptable, &ss);
   assert(!curve->size() || ss.num_subsequences());
 
   for (unsigned i=0; i < ss.num_subsequences(); ++i) {

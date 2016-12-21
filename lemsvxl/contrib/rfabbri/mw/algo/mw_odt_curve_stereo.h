@@ -194,7 +194,7 @@ public:
   // the epipolar line. Such angle is set in set_min_epiangle().
   virtual void break_curves_into_episegs_pairwise(
       vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > *broken_vsols,
-      vcl_vector<dbbl_subsequence_set> *ss_ptr
+      vcl_vector<bbld_subsequence_set> *ss_ptr
       ) const;
 
   //: Stand-alone episeg breaker using tangent angle information.
@@ -205,11 +205,11 @@ public:
     double min_epiangle,
     vcl_vector<vsol_polyline_2d_sptr> *vsols2,
     const vgl_homg_point_2d<double> &e,
-    dbbl_subsequence_set *ss_ptr);
+    bbld_subsequence_set *ss_ptr);
 
   //: Precondition: set_tangents and set_curve must have been called.
   virtual void break_into_episegs_and_replace_curve(
-      vcl_vector<dbbl_subsequence_set> *curves_ss);
+      vcl_vector<bbld_subsequence_set> *curves_ss);
 
   bool has_sels() { return !sels_.empty(); }
 

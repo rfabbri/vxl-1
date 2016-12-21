@@ -1247,7 +1247,7 @@ void mw_util::
 prune_curves(
     unsigned min_num_samples, 
     vcl_vector< vsol_polyline_2d_sptr > *pcurves,
-    dbbl_subsequence_set *ss
+    bbld_subsequence_set *ss
     )
 {
   vcl_vector< vsol_polyline_2d_sptr > &old_curves = *pcurves;
@@ -1259,7 +1259,7 @@ prune_curves(
     if (old_curves[i]->size() > min_num_samples) {
       new_curves.push_back(old_curves[i]);
 
-      dbbl_subsequence s(0, old_curves[i]->size());
+      bbld_subsequence s(0, old_curves[i]->size());
       s.set_orig_id(i);
       ss->push_back(s);
     }
@@ -1273,7 +1273,7 @@ void mw_util::
 prune_curves_by_length(
     double min_length, 
     vcl_vector< vsol_polyline_2d_sptr > *pcurves,
-    dbbl_subsequence_set *ss
+    bbld_subsequence_set *ss
     )
 {
   vcl_vector< vsol_polyline_2d_sptr > &old_curves = *pcurves;
@@ -1285,7 +1285,7 @@ prune_curves_by_length(
     if (old_curves[i]->length() > min_length) {
       new_curves.push_back(old_curves[i]);
 
-      dbbl_subsequence s(0, old_curves[i]->size());
+      bbld_subsequence s(0, old_curves[i]->size());
       s.set_orig_id(i);
       ss->push_back(s);
     }

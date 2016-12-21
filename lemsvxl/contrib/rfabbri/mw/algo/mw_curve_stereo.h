@@ -9,7 +9,7 @@
 //
 
 #include <vsol/vsol_polyline_2d_sptr.h>
-#include <dbbl/dbbl_subsequence.h>
+#include <bbld/bbld_subsequence.h>
 #include <dbdif/dbdif_rig.h>
 
 #include <mw/mw_util.h>
@@ -326,7 +326,7 @@ public:
   // \todo find a true multiview way of breaking the curves
   virtual void break_curves_into_episegs_pairwise(
       vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > *broken_vsols,
-      vcl_vector<dbbl_subsequence_set> *ss_ptr) const;
+      vcl_vector<bbld_subsequence_set> *ss_ptr) const;
 
   //: Stand-alone episeg breaker.
   // \see break_curves_into_episegs_pairwise
@@ -334,7 +334,7 @@ public:
     const vcl_vector< vsol_polyline_2d_sptr >  &vsols,
     vcl_vector<vsol_polyline_2d_sptr> *vsols2,
     const vgl_homg_point_2d<double> &e,
-    dbbl_subsequence_set *ss_ptr);
+    bbld_subsequence_set *ss_ptr);
 
   //: Same as set_curves, then break_curves_into_episegs_pairwise, prune, then
   // set_curves again. 
@@ -344,7 +344,7 @@ public:
   // \param[out] curves_ss : Represents a subset of subcurves from the pool of
   // original curves. This allows us to go back to the original curves after
   // breaking them into episegs and/or after pruning them.
-  virtual void break_into_episegs_and_replace_curve(vcl_vector<dbbl_subsequence_set> *curves_ss);
+  virtual void break_into_episegs_and_replace_curve(vcl_vector<bbld_subsequence_set> *curves_ss);
 
   //: Grow the selected curve in view[v0()] by advancing the endpoint once. 
   // \return NULL if the result would be out of bounds, o.w. the new endpoint.

@@ -60,7 +60,8 @@ add_subdirectory( dbul )
 add_subdirectory( dbdp ) 
 
 # The Development Brown Basic (templates) Library
-add_subdirectory( dbbl ) 
+# Moved most code to VXD. Uncomment to add code
+# add_subdirectory( dbbl ) 
 
 # The Development Brown Testing Library
 add_subdirectory( dbtest ) 

@@ -417,13 +417,13 @@ reconstruct_one_candidate(
 void mw_curve_stereo::
 break_curves_into_episegs_pairwise(
     vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > *broken_vsols,
-    vcl_vector<dbbl_subsequence_set> *ss_ptr
+    vcl_vector<bbld_subsequence_set> *ss_ptr
     ) const
 {
 #ifndef NDEBUG
   vcl_cout << "mw_curve_stereo::break_curves_into_episegs_pairwise" << vcl_endl;
 #endif
-  vcl_vector<dbbl_subsequence_set> &ss = *ss_ptr;
+  vcl_vector<bbld_subsequence_set> &ss = *ss_ptr;
   broken_vsols->resize(nviews_);
   ss.resize(nviews_);
   vgl_homg_point_2d<double> e, e_prime;
@@ -445,10 +445,10 @@ break_curves_into_episegs(
   const vcl_vector< vsol_polyline_2d_sptr >  &vsols,
   vcl_vector<vsol_polyline_2d_sptr> *vsols2,
   const vgl_homg_point_2d<double> &e,
-  dbbl_subsequence_set *ss_ptr
+  bbld_subsequence_set *ss_ptr
   )
 {
-  dbbl_subsequence_set &ss = *ss_ptr;
+  bbld_subsequence_set &ss = *ss_ptr;
   // ----------------------------------------------------------------------
   // Break curve
 
@@ -476,7 +476,7 @@ break_curves_into_episegs(
         itr != eps.end();  ++itr) {
       all_episegs.push_back(*itr);
 
-      dbbl_subsequence sub((unsigned) vcl_ceil((*itr)->min_index()),
+      bbld_subsequence sub((unsigned) vcl_ceil((*itr)->min_index()),
                          (unsigned)((*itr)->max_index()) + 1);
       sub.set_orig_id(i);
       ss.push_back(sub);
@@ -704,10 +704,10 @@ set_curves(const vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > &curves)
 }
 
 void mw_curve_stereo::
-break_into_episegs_and_replace_curve(vcl_vector<dbbl_subsequence_set> *pcurves_ss)
+break_into_episegs_and_replace_curve(vcl_vector<bbld_subsequence_set> *pcurves_ss)
 {
   vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > curves;
-  vcl_vector<dbbl_subsequence_set> ss_break;
+  vcl_vector<bbld_subsequence_set> ss_break;
 
   vcl_cout << "Orig   #curves in view 0: " << num_curves(0) << vcl_endl;
   vcl_cout << "Orig   #curves in view 1: " << num_curves(1) << vcl_endl;
@@ -720,7 +720,7 @@ break_into_episegs_and_replace_curve(vcl_vector<dbbl_subsequence_set> *pcurves_s
   const unsigned num_curve_sets = curves.size();
   assert(ss_break.size() == num_curve_sets);
 
-  vcl_vector<dbbl_subsequence_set> &curves_ss = *pcurves_ss;
+  vcl_vector<bbld_subsequence_set> &curves_ss = *pcurves_ss;
   curves_ss.resize(num_curve_sets);
 
   for (unsigned i=0; i < num_curve_sets; ++i) {

@@ -16,7 +16,7 @@
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_digital_curve_2d.h>
 #include <vsol/vsol_digital_curve_2d_sptr.h>
-#include <dbbl/dbbl_subsequence.h>
+#include <bbld/bbld_subsequence.h>
 #include <dbgl/dbgl_dist.h>
 
 #include <dbecl/dbecl_epipole.h>
@@ -52,17 +52,17 @@ public:
       vsol_digital_curve_2d_sptr curve,
       vcl_vector<double> tangents)
   {
-    dbbl_subsequence_set partition;
+    bbld_subsequence_set partition;
     return convert_curve_using_tangents(curve, tangents, &partition);
   }
 
-  //: Overloaded version to output a dbbl_subsequence representation of the
+  //: Overloaded version to output a bbld_subsequence representation of the
   // episegs which is solely based on indexing.
   vcl_vector<dbecl_episeg_sptr>
   convert_curve_using_tangents(
       vsol_digital_curve_2d_sptr curve,
       vcl_vector<double> tangents,
-      dbbl_subsequence_set *partition,
+      bbld_subsequence_set *partition,
       unsigned curve_id=0);
   
 protected:

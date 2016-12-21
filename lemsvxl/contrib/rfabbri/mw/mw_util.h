@@ -34,7 +34,7 @@
 #include <vsol/vsol_polyline_2d_sptr.h>
 #include <vsol/vsol_polyline_2d.h>
 #include <dbdif/dbdif_frenet.h>
-#include <dbbl/dbbl_subsequence.h>
+#include <bbld/bbld_subsequence.h>
 
 
 #define mw_vector_3d vnl_vector_fixed<double,3>
@@ -206,11 +206,11 @@ public:
 
   static void prune_curves(
       unsigned min_num_samples, vcl_vector< vsol_polyline_2d_sptr > *pcurves,
-      dbbl_subsequence_set *ss);
+      bbld_subsequence_set *ss);
 
   static void prune_curves_by_length(
       double min_length, vcl_vector< vsol_polyline_2d_sptr > *pcurves,
-      dbbl_subsequence_set *ss);
+      bbld_subsequence_set *ss);
 
   //: parses a vcl_string of ther form "listname val1 val2 val3..." into a vcl_string
   // with the listname, and a list of numbers of type T.

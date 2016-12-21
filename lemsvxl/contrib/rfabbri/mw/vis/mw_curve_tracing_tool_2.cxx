@@ -904,7 +904,7 @@ break_curves_into_episegs()
 {
   vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > broken_vsols;
   {
-    vcl_vector<dbbl_subsequence_set> sseq;
+    vcl_vector<bbld_subsequence_set> sseq;
     s_->break_curves_into_episegs_pairwise(&broken_vsols, &sseq);
   }
   assert(broken_vsols.size() == nviews());

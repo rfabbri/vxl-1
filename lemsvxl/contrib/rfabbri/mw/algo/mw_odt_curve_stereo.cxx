@@ -389,20 +389,20 @@ ready_for_oriented_matching()
 void mw_odt_curve_stereo::
 break_curves_into_episegs_pairwise(
     vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > *broken_vsols,
-    vcl_vector<dbbl_subsequence_set> *ss_ptr
+    vcl_vector<bbld_subsequence_set> *ss_ptr
     ) const
 {
   vcl_cout << "Called ODT episeg breaker with tau_min_epiangle = " 
     << tau_min_epiangle_*180.0/vnl_math::pi << " degrees" << vcl_endl;
   assert(has_curve_tangents());
-  vcl_vector<dbbl_subsequence_set> &ss = *ss_ptr;
+  vcl_vector<bbld_subsequence_set> &ss = *ss_ptr;
   broken_vsols->resize(nviews());
   ss.resize(nviews());
   vgl_homg_point_2d<double> e, e_prime;
   fm_[v0()][v1()].get_epipoles(e, e_prime);
 
   {
-  dbbl_subsequence_set s_a;
+  bbld_subsequence_set s_a;
   vcl_vector<vsol_polyline_2d_sptr> vsols_broken_at_turns;
 
   break_curves_into_episegs(vsols_[v0()], &vsols_broken_at_turns, e, &s_a);
@@ -416,7 +416,7 @@ break_curves_into_episegs_pairwise(
   }
   
   {
-  dbbl_subsequence_set s_a;
+  bbld_subsequence_set s_a;
   vcl_vector<vsol_polyline_2d_sptr> vsols_broken_at_turns;
 
   break_curves_into_episegs(vsols_[v1()], &vsols_broken_at_turns, e_prime, &s_a);
@@ -435,7 +435,7 @@ break_curves_into_episegs_pairwise(
       continue;
     fm_[v0()][v].get_epipoles(e, e_prime);
 
-    dbbl_subsequence_set s_a;
+    bbld_subsequence_set s_a;
     vcl_vector<vsol_polyline_2d_sptr> vsols_broken_at_turns;
 
     break_curves_into_episegs(vsols_[v], &vsols_broken_at_turns, e_prime, &s_a);
@@ -456,10 +456,10 @@ break_curves_into_episegs_angle(
   double min_epiangle,
   vcl_vector<vsol_polyline_2d_sptr> *vsols2,
   const vgl_homg_point_2d<double> &e,
-  dbbl_subsequence_set *ss_ptr
+  bbld_subsequence_set *ss_ptr
   )
 {
-  dbbl_subsequence_set &ss = *ss_ptr;
+  bbld_subsequence_set &ss = *ss_ptr;
   // ----------------------------------------------------------------------
   // Break curve
 
@@ -482,7 +482,7 @@ break_curves_into_episegs_angle(
 
     vsol_digital_curve_2d_sptr dc = new vsol_digital_curve_2d(samples);
     // A2 - apply episeg
-    dbbl_subsequence_set ss_partition;
+    bbld_subsequence_set ss_partition;
     vcl_vector<dbecl_episeg_sptr> eps = 
       factory.convert_curve_using_tangents(
           dc,
@@ -522,9 +522,9 @@ break_curves_into_episegs_angle(
 
 void mw_odt_curve_stereo::
 break_into_episegs_and_replace_curve(
-    vcl_vector<dbbl_subsequence_set> *pcurves_ss)
+    vcl_vector<bbld_subsequence_set> *pcurves_ss)
 {
-  vcl_vector<dbbl_subsequence_set> &sseq = *pcurves_ss;
+  vcl_vector<bbld_subsequence_set> &sseq = *pcurves_ss;
 
   mw_curve_stereo::break_into_episegs_and_replace_curve(pcurves_ss);
 

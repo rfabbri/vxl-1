@@ -1,7 +1,7 @@
 #include "dbmcs_stereo_filter.h"
 
 #include <mw/dbmcs_view_set.h>
-#include <dbbl/dbbl_subsequence.h>
+#include <bbld/bbld_subsequence.h>
 
 void dbmcs_stereo_filter::
 setup_inputs(
@@ -139,7 +139,7 @@ get_curves_and_tangents()
   tangents[0] = input< view_tangents >(TGT_ID0);
   tangents[1] = input< view_tangents >(TGT_ID1);
 
-  vcl_vector<dbbl_subsequence_set> sseq;
+  vcl_vector<bbld_subsequence_set> sseq;
   s_.set_curves(curves);
   s_.set_tangents(tangents);
   s_.break_into_episegs_and_replace_curve(&sseq);
