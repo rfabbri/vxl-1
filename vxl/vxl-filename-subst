@@ -1,0 +1,1 @@
+for i in *; do git mv $i `echo $i|sed s/dbgl/bgld/g`; done
