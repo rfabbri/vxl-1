@@ -1,1 +1,1 @@
-s/dbbl/bbld/g
+s/dbgl/bgld/g
