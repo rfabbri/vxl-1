@@ -4,7 +4,7 @@
 case `uname` in Darwin*) mysed=gsed ;;
   *) mysed=sed ;; esac
 
-for i in `grep -l '\\author' $* | grep -v 'original code' |uniq`; do
+for i in `grep --with-filename '\\author' $* | grep -v 'original code' |cut -f 1 -d :|uniq`; do
 echo doing $i
   ow $i $mysed 's/\\author/\\author Based on original code by /g
 s/[a-zA-Z0-9][a-zA-Z0-9._]*\(@[a-zA-Z0-9][a-zA-Z0-9_.]*\)/\1/g' $i
