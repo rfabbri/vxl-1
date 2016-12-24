@@ -10,9 +10,7 @@
 
 # OpenGL to PostScript Converter
 add_subdirectory( gl2ps )
-#add_subdirectory( expatpp )
 #add_subdirectory( rply )
 add_subdirectory( mesh_tri )
-add_subdirectory( ray_tri )
 add_subdirectory( brent )
 
