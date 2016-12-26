@@ -11,7 +11,7 @@ include_directories( ${basic_BINARY_DIR} )
 add_subdirectory( dbpro )
 
 # The Development Brown Numerical Library
-add_subdirectory( dbnl )
+#add_subdirectory( dbnl )
 
 # The Development Brown Geometry Library
 add_subdirectory( dbgl ) 

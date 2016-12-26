@@ -12,5 +12,4 @@
 add_subdirectory( gl2ps )
 #add_subdirectory( rply )
 add_subdirectory( mesh_tri )
-add_subdirectory( brent )
 
