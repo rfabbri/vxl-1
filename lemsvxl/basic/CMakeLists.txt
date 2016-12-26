@@ -20,7 +20,7 @@ add_subdirectory( dbgl )
 add_subdirectory( dbgrl ) 
 
 # The Development Brown Spatial Objects Library
-add_subdirectory( dbsol ) 
+#add_subdirectory( dbsol ) 
 
 # The Development Brown Spatial Indexing Library
 add_subdirectory( dbspi )
