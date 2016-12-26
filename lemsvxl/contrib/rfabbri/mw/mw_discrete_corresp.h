@@ -276,34 +276,6 @@ public:
   void
   number_of_pts1_with_gt_among_any_candidates(unsigned &n_w_gt, const mw_discrete_corresp *gt) const;
 
-  //: computes ROC statistics (TP, FP, TN, FN, etc) on the space of
-  // correspondences being (i,k) with i=0,...,n0()-1 and k=0,...,n1()-1.
-  // Let c be (*this). Then, given a correspondence (i,k) in this space, then:
-  //
-  // if (i,k) in c[i] and in gt[i], it is a true positive.
-  // if (i,k) in c[i] and _not_ in gt[i], it is a false positive.
-  // if (i,k) not in c[i] and not in gt[i], it is a true negative.
-  // if (i,k) not in c[i] and in gt[i], it is a false negative.
-  //
-  // \remarks we treat infinite correspondence as non-existent.
-  void exp_stats(dborl_exp_stat &s, const mw_discrete_corresp *gt) const;
-
-
-  //: This is a variant of exp_stats where, if c[i] contained in gt[i], then it
-  // is as if all remaining gt[i] are also in c[i]. That is, c[i] needs to hit
-  // a subset of gt[i]. 
-  //
-  // This is useful when gt[i] provide equally good alternatives for
-  // correspondences (i,k), so that we're happy if c[i] hits the ground 
-  // truth gt[i], but we don't penalize if not all gt[i] have been hit.
-  //
-  // The problem is that we will be giving more weight for the correspondences
-  // having multiple alternatives. If \p c misses that, it is penalized multiple
-  // times.
-  //
-  // \remarks We treat infinite cost correspondences as non-existent
-  void exp_stats_hitmiss(dborl_exp_stat &s, const mw_discrete_corresp *gt) const;
-
   bool is_gt_among_top5(unsigned p1_idx, const mw_discrete_corresp *gt) const;
 
   //: \todo functional access
