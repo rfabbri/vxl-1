@@ -22,8 +22,8 @@ add_subdirectory( dbgrl )
 # The Development Brown Spatial Objects Library
 #add_subdirectory( dbsol ) 
 
-# The Development Brown Spatial Indexing Library
-add_subdirectory( dbspi )
+# The Development Brown Spatial Indexing Library: moved to VXD
+# add_subdirectory( dbspi ) 
 
 # The Development Brown Image Library
 add_subdirectory( dbil ) 
