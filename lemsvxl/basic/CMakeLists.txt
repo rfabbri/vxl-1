@@ -53,8 +53,8 @@ add_subdirectory( dbxml )
 # The Development Brown Statistics Library
 add_subdirectory( dbsta )
 
-# The Development Brown Utility Library
-add_subdirectory( dbul )
+# The Development Brown Utility Library (moved to vxd)
+#add_subdirectory( dbul )
 
 # The Development Brown Dynamic Programming Library
 add_subdirectory( dbdp ) 
