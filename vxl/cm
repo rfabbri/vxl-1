@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd `vxl-rootdir bin`
+echo ccmake ../`vxl-rootdir src`
