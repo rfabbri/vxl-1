@@ -39,7 +39,7 @@ aux_source_directory(Templates bvis1_sources)
 
 add_library(mw ${mw_sources})
 
-target_link_libraries(mw dborl vpgl dbsol_algo dbnl vil dbul vbl_io)
+target_link_libraries(mw vpgl dbsol_algo dbnl vil dbul vbl_io)
 
 if( BUILD_TESTING )
   add_subdirectory(tests)
