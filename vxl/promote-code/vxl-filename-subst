@@ -1,1 +1,2 @@
-for i in *; do git mv $i `echo $i|sed s/dbgl/bgld/g`; done
+#!/bin/sh
+for i in `lsc -r`; do git mv $i `echo $i|sed s/dbmcs/bmcsd/g`; done

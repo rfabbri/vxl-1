@@ -7,7 +7,7 @@
 
 case $# in
 #       0)  ls *.c *.h *.cpp *.cxx *.txx *.m *.sci *.sce *.sh 2>/tmp/my---null;;
-       0)  MYMAKEOPTS="-j9" ;;
+       0)  MYMAKEOPTS="-j9 -k" ;;
        *)  MYMAKEOPTS="" ;;
 esac
 
@@ -25,7 +25,7 @@ if test `echo $mypwd|grep /pet/`; then
   # TODO cd root
   mvn test $*
 elif test -e `getswitchpath`/Makefile; then
-  echo $0: In vxl-source area.
+  echo $0: In vxl-like source area.
   $makecmd -C `getswitchpath` $*
 else
   echo $0: Running make in current directory.

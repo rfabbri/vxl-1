@@ -1,0 +1,19 @@
+#!/bin/sh
+rootdir=`echo $PWD | sed '
+s/\/vxd$/\/vxd/g
+s/\/vxd\/.*/\/vxd\//g
+s/\/vxd-bin$/\/vxd-bin/g
+s/\/vxd-bin\/.*/\/vxd-bin\//g
+#
+s/\/vxl$/\/vxl/g
+s/\/vxl\/.*/\/vxl\//g
+s/\/vxl-bin$/\/vxl-bin/g
+s/\/vxl-bin\/.*/\/vxl-bin\//g
+#
+s/\/lemsvxl$/\/lemsvxl/g
+s/\/lemsvxl\/.*/\/lemsvxl\//g
+s/\/lemsvxl-bin$/\/lemsvxl-bin/g
+s/\/lemsvxl-bin\/.*/\/lemsvxl-bin\//g'
+`
+
+echo $rootdir
