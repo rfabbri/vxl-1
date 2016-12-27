@@ -7,8 +7,8 @@ include_directories( ${lems_SOURCE_DIR}/basic )
 include_directories( ${lems_SOURCE_DIR}/db3p )
 include_directories( ${basic_BINARY_DIR} )
 
-# The Development Brown Process Library
-add_subdirectory( dbpro )
+# The Development Brown Process Library : moved to VXD
+# add_subdirectory( dbpro )
 
 # The Development Brown Numerical Library
 #add_subdirectory( dbnl )
