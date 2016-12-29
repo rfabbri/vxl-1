@@ -26,9 +26,22 @@ s/dbmcs/bmcsd/g
 s/DBMCS/BMCSD/g
 s/rfabbri\/bmcsd/bmvgd\/bmcsd/g
 #
-s/mw_/bmcsd_/g
-s/rfabbri\/bmcsd/bmvgd\/bmcsd/g
-s/MW_/BMCSD_/g
+#s/mw_/bmcsd_/g
+#s/rfabbri\/bmcsd/bmvgd\/bmcsd/g
+#s/MW_/BMCSD_/g
 # Less safe:
-s/rfabbri\/bmcsd/bmvgd\/bmcsd/g
-s/MW/BMCSD/g
+#s/mw/bmcsd/g
+#s/rfabbri\/bmcsd/bmvgd\/bmcsd/g
+#s/MW/BMCSD/g
+#
+s/dbspi/bspid/g
+s/DBSPI/BSPID/g
+s/rfabbri\/bspid/bbasd\/bspid/g
+#
+s/dbil/bild/g
+s/DBIL/BILD/g
+s/rfabbri\/bild/bbasd\/bild/g
+#
+s/dbpro/bprod/g
+s/DBPRO/BPROD/g
+s/rfabbri\/bprod/bbasd\/bprod/g
