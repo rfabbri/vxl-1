@@ -34,5 +34,5 @@ add_subdirectory( dbirl )
 # If you need this, you must first modernize vgel and make it build
 add_subdirectory( dbrcl )
 
-# Brown Multiview Differential Geometry Library
-add_subdirectory( dbdif )
+# Brown Multiview Differential Geometry Library (moved to vxd)
+# add_subdirectory( dbdif )
