@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# - git mv source dest
+
+# - rename the lib name, eg, git mv dbnl bnld
+
+# - Run vxl-filename-subst:
+#   edit vxl-filename-subst, put the right subst rule
+   vxl-filename-subst
+
+# - vxl-fixup-athors
+   lsc -r | xargs vxl-fixup-authors
+   find . -name '*.txt' | xargs vxl-fixup-authors
+   find . -name '*.in' | xargs vxl-fixup-authors
+#   git diff # check the changes are OK
+
+# - subst
+#    Edit ~/bin/subst.sed  # accumulate with the contents onto bigsubst.sed
+    lsc -r | xargs subst
+    find . -name '*.txt' | xargs subst 
+    find . -name '*.in' | xargs subst 
+# - Add the new lib into the toplevel CMakeLists.txt
+
+# - Remove the lib from the old CMakeLists.txt
+
+
+# - Make
+
+# Modify old repository to work with new code (yikes!)
