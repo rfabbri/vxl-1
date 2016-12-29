@@ -45,3 +45,12 @@ s/rfabbri\/bild/bbasd\/bild/g
 s/dbpro/bprod/g
 s/DBPRO/BPROD/g
 s/rfabbri\/bprod/bbasd\/bprod/g
+#
+s/dbecl/becld/g
+s/DBECL/BECLD/g
+s/bmvgd\/becld/bbasd\/becld/g
+#
+s/mw_intersection_sets/becld_intersection_sets/g
+s/mw_epi_interceptor/becld_epiline_interceptor/g
+#
+s/becld_epi_interceptor/becld_epiline_interceptor/g
