@@ -9,8 +9,8 @@ add_subdirectory( bmvl )
 # Brown Camera Calibration Library
 #add_subdirectory( dbcal )
 
-# Photogrammetry Library
-add_subdirectory( dvpgl )
+# Photogrammetry Library (moved to VXD)
+# add_subdirectory( dvpgl )
 
 # Brown Epipolar Curve Library (moved to VXD)
 # add_subdirectory( dbecl )
