@@ -12,8 +12,8 @@ add_subdirectory( bmvl )
 # Photogrammetry Library
 add_subdirectory( dvpgl )
 
-# Brown Epipolar Curve Library
-add_subdirectory( dbecl )
+# Brown Epipolar Curve Library (moved to VXD)
+# add_subdirectory( dbecl )
 
 # Brown Video Registration Library
 add_subdirectory( dbvrl )
