@@ -32,5 +32,5 @@ add_subdirectory( dber )
 # Brown ORL - Object Recognition Library - web database to store datasets and cluster management via MPI
 add_subdirectory( dborl )
 
-# Brown Curve-based Spatial Indexing Library
-add_subdirectory( dbcsi )
+# Brown Curve-based Spatial Indexing Library (moved to VXD)
+# add_subdirectory( dbcsi )
