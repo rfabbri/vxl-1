@@ -16,8 +16,8 @@ include_directories( ${basic_BINARY_DIR} )
 # The Development Brown Geometry Library
 add_subdirectory( dbgl ) 
 
-# The Development Brown Graph/Hypergraph Library
-add_subdirectory( dbgrl ) 
+# The Development Brown Graph/Hypergraph Library: moved to VXD
+# add_subdirectory( dbgrl ) 
 
 # The Development Brown Spatial Objects Library
 #add_subdirectory( dbsol ) 
