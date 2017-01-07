@@ -35,7 +35,7 @@ add_library(mw ${mw_sources})
 target_link_libraries(mw vpgl dbsol_algo dbnl vil dbul vbl_io)
 
 if( BUILD_TESTING )
-  add_subdirectory(tests)
+  #  add_subdirectory(tests)
 endif( BUILD_TESTING )
 
 add_subdirectory(algo)
