@@ -294,7 +294,7 @@ bool dbdet_load_edg_ascii(vcl_string input_file, bool bSubPixel, double scale, d
 
     //there are two variations of this file in existence
     if (ver<3){
-       int a = 0;
+      int a = 0;
       if (!vcl_strncmp(lineBuffer, "EDGE : ", sizeof("EDGE : ")-1)){
         a=sscanf(lineBuffer,"EDGE :  [%d, %d]    %lf %lf   [%lf, %lf]   %lf %lf",&(ix), &(iy),
           &(idir), &(iconf), &(x), &(y), &(dir), &(conf));
@@ -302,9 +302,7 @@ bool dbdet_load_edg_ascii(vcl_string input_file, bool bSubPixel, double scale, d
         a=sscanf(lineBuffer," [%d, %d]   %lf %lf  [%lf, %lf]  %lf %lf",&(ix), &(iy),
           &(idir), &(iconf), &(x), &(y), &(dir), &(conf));}
       if(a!=8) {
-         vcl_cout << "Failed to scan argument " << a << " from line: \"" << lineBuffer << "\"" << vcl_endl;
-         vcl_cout << __FILE__ << vcl_endl; 
-         abort();
+         vcl_cout << "dbdet_load_edg_ascii: input error argument" << a << " from line: \"" << lineBuffer << "\"" << vcl_endl;
       }
     }
     else {
@@ -312,9 +310,7 @@ bool dbdet_load_edg_ascii(vcl_string input_file, bool bSubPixel, double scale, d
           &(idir), &(iconf), &(x), &(y), &(dir), &(conf), &(uncer));
 
       if (a!=9) {
-        vcl_cout << "Failed to scan argument " << a << " from line: \"" << lineBuffer << "\"" << vcl_endl;
-        vcl_cout << __FILE__ << vcl_endl; 
-        abort();
+        vcl_cout << "dbdet_load_edg_ascii: input error argument" << a << " from line: \"" << lineBuffer << "\"" << vcl_endl;
       }
     }
 
@@ -446,16 +442,28 @@ bool dbdet_load_edg_gzip(vcl_string input_file, bool bSubPixel, double scale, db
 
     //there are two variations of this file in existence
     if (ver<3){
+      int a = 0;
       if (!vcl_strncmp(lineBuffer, "EDGE : ", sizeof("EDGE : ")-1))
-        sscanf(lineBuffer,"EDGE :  [%d, %d]    %lf %lf   [%lf, %lf]   %lf %lf",&(ix), &(iy),
+      {
+        a = sscanf(lineBuffer,"EDGE :  [%d, %d]    %lf %lf   [%lf, %lf]   %lf %lf",&(ix), &(iy),
           &(idir), &(iconf), &(x), &(y), &(dir), &(conf));
+      }
       else
-        sscanf(lineBuffer," [%d, %d]   %lf %lf  [%lf, %lf]  %lf %lf",&(ix), &(iy),
+      {
+        a = sscanf(lineBuffer," [%d, %d]   %lf %lf  [%lf, %lf]  %lf %lf",&(ix), &(iy),
           &(idir), &(iconf), &(x), &(y), &(dir), &(conf));
+      }
+      if (a!=8) {
+        vcl_cout << "dbdet_load_edg_ascii: input error argument" << a << " from line: \"" << lineBuffer << "\"" << vcl_endl;
+      }
     }
-    else {
-      sscanf(lineBuffer," [%d, %d]   %lf %lf  [%lf, %lf]  %lf %lf %lf",&(ix), &(iy),
+    else
+    {
+      int a = sscanf(lineBuffer," [%d, %d]   %lf %lf  [%lf, %lf]  %lf %lf %lf",&(ix), &(iy),
           &(idir), &(iconf), &(x), &(y), &(dir), &(conf), &(uncer));
+      if (a!=9) {
+        vcl_cout << "dbdet_load_edg_ascii: input error argument" << a << " from line: \"" << lineBuffer << "\"" << vcl_endl;
+      }
     }
 
     //scale the edges

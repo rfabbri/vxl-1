@@ -211,6 +211,11 @@ dbdet_edgemap_sptr dbdet_load_cem(vcl_string filename, dbdet_curve_fragment_grap
     return NULL;
   }
 
+  char * cur_locale, * dup_locale;
+  cur_locale = setlocale(LC_NUMERIC, NULL);
+  dup_locale = strdup(cur_locale);
+  setlocale(LC_NUMERIC, "C");
+
   //determine the version of this file
   infp.getline(lineBuffer,1024); //read in the first line
   if (!vcl_strncmp(lineBuffer, ".CEM v2.0", sizeof(".CEM v2.0")-1))
@@ -218,13 +223,16 @@ dbdet_edgemap_sptr dbdet_load_cem(vcl_string filename, dbdet_curve_fragment_grap
     version =2;
     edgemap = dbdet_load_cem_v2(infp, CFG);
     vcl_cout << "Loaded: " << filename.c_str() << ".\n";
-    return edgemap;
   }
   else {
     edgemap = dbdet_load_cem_v1(infp, CFG);
-    vcl_cout << "Loaded: " << filename.c_str() << ".\n";
-    return edgemap;
-  }  
+    vcl_cout << "Loaded: " << filename.c_str() << ".\n";  
+  }
+
+  setlocale(LC_NUMERIC, dup_locale);
+  free(dup_locale);
+
+  return edgemap; 
 }
 
 
