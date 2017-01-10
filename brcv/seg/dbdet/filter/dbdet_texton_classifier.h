@@ -6,9 +6,9 @@
 #define _DBDET_TEXTON_CLASSIFIER_H_
 
 class dbdet_texton_classifier {
-
-  vnl_matrix<double> classes;
 public:
+  vnl_matrix<double> classes;
+
 
   dbdet_texton_classifier(const char * filename);
 
