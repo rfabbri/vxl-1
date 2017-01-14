@@ -335,15 +335,18 @@ dbdet_contour_breaker_semantic(
   {
     unsigned end_j = newCFG.frags.size();
     unsigned j = 0;
+
     for(dbdet_edgel_chain_list_iter it = newCFG.frags.begin(); (it != newCFG.frags.end() && j < end_j); it++, ++j)
     {
       dbdet_edgel & start = *((*it)->edgels.front());
       dbdet_edgel & end = *((*it)->edgels.back());
 
+
       clen[j] = (clen[j] != 0.0 ? clen[j] : euclidean_length(*(*it)));
 
       if (start.pt == end.pt && start.deriv == end.deriv)
         continue;
+
 
       if (clen[j] > (30 * diag_ratio) && (*it)->edgels.size() > (3 * nbr_num_edges) / i)
       {
@@ -465,14 +468,12 @@ compute_merge_probability_semantic(
 
   vcl_vector<double> edge_sparsity_cum(npts, 0.0);
   compute_edge_sparsity_integral(chain, n, nbr_width, edge_sparsity_cum);
-
 /**
 [~, ~, texton_hist_left_cum, texton_hist_right_cum] = compute_texture_hist_integral(x,y,N, nbr_width, tmap);
 **/
 
   vcl_vector<y_hist_vector> texton_hist_left, texton_hist_right;
   compute_texture_hist_integral(chain, n, nbr_width, texton_hist_left, texton_hist_right);
-
   y_params_0_vector features;
   features[y_params_0::Y_ONE] = 1.0;
 
@@ -587,23 +588,25 @@ compute_texture_hist_integral(
 
   for (unsigned k = 0; k < npts; ++k)
   {
-    vgl_point_2d<double> & cur_pt = chain.edgels[k]->pt; 
-    int xl = vcl_max(0, vcl_min(static_cast<int>(ni()), static_cast<int>(cur_pt.x() - n[k][0] * nbr_width + 0.5)));
-    int xr = vcl_max(0, vcl_min(static_cast<int>(ni()), static_cast<int>(cur_pt.x() + n[k][0] * nbr_width + 0.5)));
-    int yl = vcl_max(0, vcl_min(static_cast<int>(nj()), static_cast<int>(cur_pt.y() - n[k][1] * nbr_width + 0.5)));
-    int yr = vcl_max(0, vcl_min(static_cast<int>(nj()), static_cast<int>(cur_pt.y() + n[k][1] * nbr_width + 0.5)));
-    int x = vcl_max(0, vcl_min(static_cast<int>(ni()), static_cast<int>(cur_pt.x() + 0.5)));
-    int y = vcl_max(0, vcl_min(static_cast<int>(nj()), static_cast<int>(cur_pt.y() + 0.5)));
+
+    vgl_point_2d<double> & cur_pt = chain.edgels[k]->pt;
+
+    int xl = vcl_max(0, vcl_min(static_cast<int>(ni()) - 1, static_cast<int>(cur_pt.x() - n[k][0] * nbr_width + 0.5)));
+    int xr = vcl_max(0, vcl_min(static_cast<int>(ni()) - 1, static_cast<int>(cur_pt.x() + n[k][0] * nbr_width + 0.5)));
+    int yl = vcl_max(0, vcl_min(static_cast<int>(nj()) - 1, static_cast<int>(cur_pt.y() - n[k][1] * nbr_width + 0.5)));
+    int yr = vcl_max(0, vcl_min(static_cast<int>(nj()) - 1, static_cast<int>(cur_pt.y() + n[k][1] * nbr_width + 0.5)));
+    int x = vcl_max(0, vcl_min(static_cast<int>(ni()) - 1, static_cast<int>(cur_pt.x() + 0.5)));
+    int y = vcl_max(0, vcl_min(static_cast<int>(nj()) -1, static_cast<int>(cur_pt.y() + 0.5)));
 
     texton_hist_left[k] = last_left;
     texton_hist_right[k] = last_right;
 
-    for (int i = 0; i < nbr_width; ++i)
+    for (int i = 0; i <= nbr_width; ++i)
     {
-      unsigned il = static_cast<unsigned>(x + i * (x - xl) * nbr_width_inv + 0.5);
+      unsigned il = static_cast<unsigned>(x + i * (xl - x) * nbr_width_inv + 0.5);
       unsigned ir = static_cast<unsigned>(x + i * (xr - x) * nbr_width_inv + 0.5);
 
-      unsigned jl = static_cast<unsigned>(y + i * (y - yl) * nbr_width_inv + 0.5);
+      unsigned jl = static_cast<unsigned>(y + i * (yl - y) * nbr_width_inv + 0.5);
       unsigned jr = static_cast<unsigned>(y + i * (yr - y) * nbr_width_inv + 0.5);
 
       texton_hist_left[k][tmap_(il, jl)]++;
