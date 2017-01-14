@@ -184,6 +184,9 @@ sel_gui_menu::setup_menu()
 
     MENU_ADD_PROCESS_NAME( "Correlate Edgemaps", edge_detection_group_menu );
 
+    MENU_ADD_PROCESS_NAME( "Geometric Contour Breaker", edge_detection_group_menu );
+    MENU_ADD_PROCESS_NAME( "Semantic Contour Breaker", edge_detection_group_menu );
+
   vgui_menu  other_group_menu; // Other
     MENU_ADD_PROCESS_NAME( "Harris Corners", other_group_menu );
 

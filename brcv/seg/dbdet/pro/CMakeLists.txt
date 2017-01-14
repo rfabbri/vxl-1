@@ -3,6 +3,7 @@
 
 include_directories( ${lems_SOURCE_DIR}/breye1 )
 include_directories( ${lems_SOURCE_DIR}/basic )
+include_directories( ${lems_SOURCE_DIR}/brcv/seg/dbdet )
 
 set(dbdet_pro_sources
    dbdet_lowe_keypoint_process.cxx    dbdet_lowe_keypoint_process.h
@@ -102,6 +103,11 @@ set(dbdet_pro_sources
    
    dbdet_save_edg_seq_process.h dbdet_save_edg_seq_process.cxx
    dbdet_save_cem_seq_process.h dbdet_save_cem_seq_process.cxx
+
+# caio changes
+   dbdet_contour_breaker_geometric_process.cxx dbdet_contour_breaker_geometric_process.h
+   dbdet_contour_breaker_semantic_process.cxx dbdet_contour_breaker_semantic_process.h
+
 )
 
 if(OCTAVE_FOUND)
@@ -116,7 +122,7 @@ endif(OCTAVE_FOUND)
 
 add_library(dbdet_pro ${dbdet_pro_sources})
 
-target_link_libraries(dbdet_pro dbdet_algo dbdet_xio vidpro1 bvis1 vgui bil)
+target_link_libraries(dbdet_pro dbdet_algo dbdet_xio vidpro1 bvis1 vgui bil dbtest)
 
 #if(BUILD_TESTING)
 #  add_subdirectory(tests)

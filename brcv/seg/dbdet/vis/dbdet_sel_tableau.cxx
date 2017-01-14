@@ -206,7 +206,6 @@ bool dbdet_sel_tableau::handle( const vgui_event & e )
 
     if (display_prune_contours_)
       draw_prune_contours();
-
     return true;
   }
 
