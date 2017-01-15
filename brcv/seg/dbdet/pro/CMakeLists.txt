@@ -107,7 +107,7 @@ set(dbdet_pro_sources
 # caio changes
    dbdet_contour_breaker_geometric_process.cxx dbdet_contour_breaker_geometric_process.h
    dbdet_contour_breaker_semantic_process.cxx dbdet_contour_breaker_semantic_process.h
-
+   dbdet_graphical_model_contour_merge_process.cxx dbdet_graphical_model_contour_merge_process.h
 )
 
 if(OCTAVE_FOUND)
