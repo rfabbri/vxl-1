@@ -78,7 +78,7 @@ void graphical_model_contour_merge_test()
   vnl_matrix<double> params_sem = vnl_matrix<double>(1,1);
 
   vil_image_view<vil_rgb<vxl_byte> > img;
-  dbdet_curve_fragment_graph cfg_ref, cfg_ori;
+  dbdet_curve_fragment_graph cfg_ref, cfg_ori, cfg_merged;
   //Need to carry the cem edgemap or CFG edgels are deleted
   dbdet_edgemap_sptr edgemap_sptr, edgemap_cem_ref_sptr, edgemap_cem_ori_sptr, edgemap_cem_sem_sptr;
   load_dataset(img, cfg_ref, cfg_ori, edgemap_sptr, edgemap_cem_ref_sptr, edgemap_cem_ori_sptr, tmap, params_geom, params_sem);
@@ -100,14 +100,14 @@ void graphical_model_contour_merge_test()
     beta_sem[i] /= fstd_sem[i];
 
   dbdet_graphical_model_contour_merge cm(img, *edgemap_sptr, tmap);
-  cm.dbdet_merge_contour(cfg_ori, beta_geom, fmean_geom, beta_sem, fmean_sem);
+  cm.dbdet_merge_contour(cfg_ori, beta_geom, fmean_geom, beta_sem, fmean_sem, cfg_merged);
 
-  TEST("Graphical Model Contour Merge: #chains", cfg_ori.frags.size(), cfg_ref.frags.size());
+  TEST("Graphical Model Contour Merge: #chains", cfg_merged.frags.size(), cfg_ref.frags.size());
 
   bool s_status = true, e_status = true;
   dbdet_edgel_chain_list_iter ref_it = cfg_ref.frags.begin();
   unsigned j = 0;
-  for(dbdet_edgel_chain_list_iter it = cfg_ori.frags.begin(); (it != cfg_ori.frags.end() && ref_it != cfg_ref.frags.end()); it++, ref_it++, j++)
+  for(dbdet_edgel_chain_list_iter it = cfg_merged.frags.begin(); (it != cfg_merged.frags.end() && ref_it != cfg_ref.frags.end()); it++, ref_it++, j++)
   {
     if((*it)->edgels.size() != (*ref_it)->edgels.size())
     {

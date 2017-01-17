@@ -1,5 +1,6 @@
 #include "dbdet_load_edg.h"
 #include <vcl_cstring.h>
+#include <vcl_locale.h>
 
 #include <vul/vul_file.h>
 #include <vsol/vsol_line_2d.h>
@@ -150,29 +151,51 @@ static bool dbdet_save_edg_ascii(vcl_string filename, dbdet_edgemap_sptr edgemap
 bool dbdet_load_edg(vcl_string input_file, bool bSubPixel, double scale, dbdet_edgemap_sptr &edge_map)
 {
   vcl_string ext = vul_file::extension(input_file);
+  bool ret;
+
+  char * cur_locale, * dup_locale;
+  cur_locale = setlocale(LC_NUMERIC, NULL);
+  dup_locale = strdup(cur_locale);
+  setlocale(LC_NUMERIC, "C");
 
   if (ext == ".gz") {
 #ifdef HAS_BOOST
-    return dbdet_load_edg_gzip(input_file, bSubPixel, scale, edge_map);
+    ret = dbdet_load_edg_gzip(input_file, bSubPixel, scale, edge_map);
 #else
     vcl_cerr << "Error: .gz compressed edg file was provided, but boost wasn't found\n";
 #endif
   } else
-    return dbdet_load_edg_ascii(input_file, bSubPixel, scale, edge_map);
+    ret = dbdet_load_edg_ascii(input_file, bSubPixel, scale, edge_map);
+
+  setlocale(LC_NUMERIC, dup_locale);
+  free(dup_locale);
+
+  return ret;
 }
 
 bool dbdet_save_edg(vcl_string filename, dbdet_edgemap_sptr edgemap)
 {
   vcl_string ext = vul_file::extension(filename);
+  bool ret;
+
+  char * cur_locale, * dup_locale;
+  cur_locale = setlocale(LC_NUMERIC, NULL);
+  dup_locale = strdup(cur_locale);
+  setlocale(LC_NUMERIC, "C");
 
   if (ext == ".gz") {
 #ifdef HAS_BOOST
-    return dbdet_save_edg_gzip(filename, edgemap);
+    ret = dbdet_save_edg_gzip(filename, edgemap);
 #else
     vcl_cerr << "Error: .gz compressed output edg file requested, but boost wasn't found\n";
 #endif
   } else
-    return dbdet_save_edg_ascii(filename, edgemap);
+    ret = dbdet_save_edg_ascii(filename, edgemap);
+
+  setlocale(LC_NUMERIC, dup_locale);
+  free(dup_locale);
+
+  return ret;
 }
 
 bool dbdet_load_edg_ascii(vcl_string input_file, bool bSubPixel, double scale, dbdet_edgemap_sptr &edge_map)
@@ -271,16 +294,24 @@ bool dbdet_load_edg_ascii(vcl_string input_file, bool bSubPixel, double scale, d
 
     //there are two variations of this file in existence
     if (ver<3){
-      if (!vcl_strncmp(lineBuffer, "EDGE : ", sizeof("EDGE : ")-1))
-        sscanf(lineBuffer,"EDGE :  [%d, %d]    %lf %lf   [%lf, %lf]   %lf %lf",&(ix), &(iy),
+      int a = 0;
+      if (!vcl_strncmp(lineBuffer, "EDGE : ", sizeof("EDGE : ")-1)){
+        a=sscanf(lineBuffer,"EDGE :  [%d, %d]    %lf %lf   [%lf, %lf]   %lf %lf",&(ix), &(iy),
           &(idir), &(iconf), &(x), &(y), &(dir), &(conf));
-      else
-        sscanf(lineBuffer," [%d, %d]   %lf %lf  [%lf, %lf]  %lf %lf",&(ix), &(iy),
-          &(idir), &(iconf), &(x), &(y), &(dir), &(conf));
+      }else{
+        a=sscanf(lineBuffer," [%d, %d]   %lf %lf  [%lf, %lf]  %lf %lf",&(ix), &(iy),
+          &(idir), &(iconf), &(x), &(y), &(dir), &(conf));}
+      if(a!=8) {
+         vcl_cout << "dbdet_load_edg_ascii: input error argument" << a << " from line: \"" << lineBuffer << "\"" << vcl_endl;
+      }
     }
     else {
-      sscanf(lineBuffer," [%d, %d]   %lf %lf  [%lf, %lf]  %lf %lf %lf",&(ix), &(iy),
+      int a=sscanf(lineBuffer," [%d, %d]   %lf %lf  [%lf, %lf]  %lf %lf %lf",&(ix), &(iy),
           &(idir), &(iconf), &(x), &(y), &(dir), &(conf), &(uncer));
+
+      if (a!=9) {
+        vcl_cout << "dbdet_load_edg_ascii: input error argument" << a << " from line: \"" << lineBuffer << "\"" << vcl_endl;
+      }
     }
 
     //scale the edges
@@ -411,16 +442,28 @@ bool dbdet_load_edg_gzip(vcl_string input_file, bool bSubPixel, double scale, db
 
     //there are two variations of this file in existence
     if (ver<3){
+      int a = 0;
       if (!vcl_strncmp(lineBuffer, "EDGE : ", sizeof("EDGE : ")-1))
-        sscanf(lineBuffer,"EDGE :  [%d, %d]    %lf %lf   [%lf, %lf]   %lf %lf",&(ix), &(iy),
+      {
+        a = sscanf(lineBuffer,"EDGE :  [%d, %d]    %lf %lf   [%lf, %lf]   %lf %lf",&(ix), &(iy),
           &(idir), &(iconf), &(x), &(y), &(dir), &(conf));
+      }
       else
-        sscanf(lineBuffer," [%d, %d]   %lf %lf  [%lf, %lf]  %lf %lf",&(ix), &(iy),
+      {
+        a = sscanf(lineBuffer," [%d, %d]   %lf %lf  [%lf, %lf]  %lf %lf",&(ix), &(iy),
           &(idir), &(iconf), &(x), &(y), &(dir), &(conf));
+      }
+      if (a!=8) {
+        vcl_cout << "dbdet_load_edg_ascii: input error argument" << a << " from line: \"" << lineBuffer << "\"" << vcl_endl;
+      }
     }
-    else {
-      sscanf(lineBuffer," [%d, %d]   %lf %lf  [%lf, %lf]  %lf %lf %lf",&(ix), &(iy),
+    else
+    {
+      int a = sscanf(lineBuffer," [%d, %d]   %lf %lf  [%lf, %lf]  %lf %lf %lf",&(ix), &(iy),
           &(idir), &(iconf), &(x), &(y), &(dir), &(conf), &(uncer));
+      if (a!=9) {
+        vcl_cout << "dbdet_load_edg_ascii: input error argument" << a << " from line: \"" << lineBuffer << "\"" << vcl_endl;
+      }
     }
 
     //scale the edges

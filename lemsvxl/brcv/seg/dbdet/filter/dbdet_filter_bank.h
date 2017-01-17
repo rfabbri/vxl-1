@@ -7,11 +7,11 @@
 #define _DBDET_FILTER_BANK_H_
 
 class dbdet_filter_2d {
-
+public:
   vnl_matrix<double> m;
 
   double flipped(int i, int j);
-public:
+
 
   dbdet_filter_2d(const char * fname);
 
@@ -19,11 +19,11 @@ public:
 
   int size();
 
-  vil_image_view<double> applyPadded(vil_image_view<double> image, int border);
+  vil_image_view<double> applyPadded(vil_image_view<vxl_byte> image, int border);
 
-  vil_image_view<double> applyPadded13(vil_image_view<double> image, int border);
+  vil_image_view<double> applyPadded13(vil_image_view<vxl_byte> image, int border);
 
-  vil_image_view<double> applyPadded19(vil_image_view<double> image, int border);
+  vil_image_view<double> applyPadded19(vil_image_view<vxl_byte> image, int border);
 
 
 };

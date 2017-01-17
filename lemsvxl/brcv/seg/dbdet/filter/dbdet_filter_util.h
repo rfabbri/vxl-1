@@ -58,7 +58,7 @@ vil_image_view<T> padReflect(vil_image_view<T> m, int border)
     for (int j = 0; j < ret.nj(); ++j)
     {
       int jj = j <= border ? border - j : j - border - 1;
-      jj = jj < m.ni() ? jj : 2 * m.nj() - jj - 1;
+      jj = jj < m.nj() ? jj : 2 * m.nj() - jj - 1;
       ret(i, j) = m(ii, jj);
     }
   }

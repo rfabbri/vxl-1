@@ -38,12 +38,12 @@ vnl_matrix<unsigned> dbdet_texton_classifier::classify(vcl_vector<vil_image_view
       y2[j] += classes(i, j) * classes(i, j);
 
   vnl_matrix<unsigned> classified(decomposed[0].ni(), decomposed[0].nj());
-
   for (unsigned i = 0; i < xs; ++i)
   {
     vcl_vector<double> d(ys, 0);
-    unsigned idxi = i / classified.rows();
-    unsigned idxj = i % classified.rows();
+    unsigned idxj = i / classified.rows();
+    unsigned idxi = i % classified.rows();
+
 
     for (unsigned k = 0; k < dec.rows(); ++k)
       for (unsigned j = 0; j < ys; ++j)
@@ -56,10 +56,10 @@ vnl_matrix<unsigned> dbdet_texton_classifier::classify(vcl_vector<vil_image_view
       if (tmp < dist)
       {
         dist = tmp;
+        
         classified(idxi, idxj) = j;
       }
     }
   }
-
   return classified;
 }

@@ -112,10 +112,12 @@ dbdet_merge_contour(
       y_params_1_vector & beta1,
       y_params_1_vector & fmean1,
       y_params_0_vector & beta0,
-      y_params_0_vector & fmean0
+      y_params_0_vector & fmean0,
+      dbdet_curve_fragment_graph & newCFG
       )
 {
-  dbdet_factor_graph g(CFG);
+  deep_copy_cfg(CFG, newCFG);
+  dbdet_factor_graph g(newCFG);
 
   for (unsigned k = 0; k < g.var.size(); ++k)
   {
@@ -327,10 +329,10 @@ dbdet_merge_contour(
     }
   }
 
-  for (dbdet_edgel_chain_list_iter it=CFG.frags.begin(); it != CFG.frags.end();)
+  for (dbdet_edgel_chain_list_iter it=newCFG.frags.begin(); it != newCFG.frags.end();)
   {
     if((*it)->edgels.size() == 0)
-      CFG.frags.erase(it++);
+      newCFG.frags.erase(it++);
     else
       it++;
   }
@@ -486,4 +488,16 @@ compute_texture_hist(
     left[i] /= npts * tex_nbr_dist;
     right[i] /= npts * tex_nbr_dist;
   }
+}
+
+void dbdet_graphical_model_contour_merge::
+deep_copy_cfg(
+      dbdet_curve_fragment_graph & CFG,
+      dbdet_curve_fragment_graph & newCFG
+      )
+{
+  newCFG.clear();
+  newCFG.resize(CFG.cFrags.size());
+  for (dbdet_edgel_chain_list_const_iter it=CFG.frags.begin(); it != CFG.frags.end(); it++)
+    newCFG.insert_fragment(new dbdet_edgel_chain(*(*it)));
 }

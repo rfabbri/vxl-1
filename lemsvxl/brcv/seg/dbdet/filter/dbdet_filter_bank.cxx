@@ -28,7 +28,7 @@ double dbdet_filter_2d::flipped(int i, int j)
   return m(m.rows() - i - 1, m.cols() - j - 1);
 }
 
-vil_image_view<double> dbdet_filter_2d::applyPadded(vil_image_view<double> image, int border)
+vil_image_view<double> dbdet_filter_2d::applyPadded(vil_image_view<vxl_byte> image, int border)
 {
   vil_image_view<double> ret = vil_image_view<double>(image.ni() - 2 * border, image.nj() - 2 * border);
 
@@ -50,7 +50,7 @@ vil_image_view<double> dbdet_filter_2d::applyPadded(vil_image_view<double> image
   return ret;
 }
 
-vil_image_view<double> dbdet_filter_2d::applyPadded13(vil_image_view<double> image, int border)
+vil_image_view<double> dbdet_filter_2d::applyPadded13(vil_image_view<vxl_byte> image, int border)
 {
   vil_image_view<double> ret = vil_image_view<double>(image.ni() - 2 * border, image.nj() - 2 * border);
 
@@ -72,7 +72,7 @@ vil_image_view<double> dbdet_filter_2d::applyPadded13(vil_image_view<double> ima
   return ret;
 }
 
-vil_image_view<double> dbdet_filter_2d::applyPadded19(vil_image_view<double> image, int border)
+vil_image_view<double> dbdet_filter_2d::applyPadded19(vil_image_view<vxl_byte> image, int border)
 {
   vil_image_view<double> ret = vil_image_view<double>(image.ni() - 2 * border, image.nj() - 2 * border);
 
@@ -111,11 +111,9 @@ dbdet_filter_bank::dbdet_filter_bank(vcl_string baseDir)
       {
         line = baseDir + "/" + line;
         dbdet_filter_2d f = dbdet_filter_2d(line.c_str());
-        if (!f.isEmpty())
-        {
-          filters.push_back(f);
-          filtersMaxSize = f.size() > filtersMaxSize ? f.size() : filtersMaxSize;
-        }
+        assert(!f.isEmpty());
+        filters.push_back(f);
+        filtersMaxSize = f.size() > filtersMaxSize ? f.size() : filtersMaxSize;
       }
     }
   }
@@ -131,8 +129,9 @@ vcl_vector<vil_image_view<double> > dbdet_filter_bank::decompose(vil_image_view<
   vcl_vector<vil_image_view<double> > ret;
   ret.resize(filters.size());
   int padSize = filtersMaxSize / 2;
-  vil_image_view<double> grey_img;
-  vil_convert_rgb_to_grey(image, grey_img);
+  vil_image_view<vxl_byte> grey_img;
+  //Using luma weights to match matlab
+  vil_convert_rgb_to_grey(image, grey_img, 0.2989, 0.5870, 0.1140);
   grey_img = padReflect(grey_img, padSize);
 
   for (int i = 0; i < filters.size(); ++i)

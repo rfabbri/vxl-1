@@ -15,6 +15,7 @@
 #include <vil/vil_load.h>
 #include <vil/vil_rgb.h>
 #include <vil/vil_convert.h>
+#include <vil/vil_crop.h>
 
 MAIN( test_texton_classify )
 { 
@@ -25,14 +26,14 @@ MAIN( test_texton_classify )
   START ("Texton classifier test");
 
   vcl_string root = dbtest_root_dir();
-  vcl_string base_path = root + "/brcv/seg/dbdet/tests/filter_bank";
+  vcl_string base_path = root + "/brcv/seg/dbdet/tests/test_data";
 
   //vxl has no instance of vnl_file_matrix<int/unsigned>
   vnl_matrix<unsigned> reference = vnl_matrix<unsigned>(1,1); 
   bool status = loadFromTabSpaced((base_path + "/out.txt").c_str(), reference);
 
   vil_image_view<vil_rgb<vxl_byte> > in = vil_convert_to_component_order(vil_convert_to_n_planes(3,
-        vil_convert_stretch_range (vxl_byte(), vil_load((base_path + "/in.png").c_str()))));
+        vil_convert_stretch_range (vxl_byte(), vil_load((base_path + "/in.jpg").c_str()))));
 
   dbdet_filter_bank fb(base_path);
   dbdet_texton_classifier tex((base_path + "/tex/tex.txt").c_str());
@@ -48,9 +49,46 @@ MAIN( test_texton_classify )
 	  
 
 	  vcl_vector<vil_image_view<double> > decomposed = fb.decompose(in);
-	  
-	  //vnl_matrix<unsigned> classified = tex.classify(decomposed);
-	  //TEST("Test Classification", classified == reference, true);
+	  vnl_matrix<unsigned> classified = tex.classify(decomposed);
+int counter = 0;
+double dist2 = 0;
+for(int i = 0; i < classified.rows(); ++i)
+{
+  for(int j = 0; j < classified.cols(); ++j)
+  {
+    if(classified(i,j) != reference(i,j))
+    { 
+      ++counter;
+      double sum1 = 0.0, sum2 = 0.0;
+      for(int k=0; k < tex.classes.rows();++k)
+      {
+        sum1 += (tex.classes(k, reference(i,j)) - decomposed[k](i,j)) * (tex.classes(k, reference(i,j)) - decomposed[k](i,j));
+        sum2 += (tex.classes(k, classified(i,j)) - decomposed[k](i,j)) * (tex.classes(k, classified(i,j)) - decomposed[k](i,j));
+      }
+      dist2 += (vcl_sqrt(sum1) - vcl_sqrt(sum2)) * (vcl_sqrt(sum1) - vcl_sqrt(sum2));
+    }
+  }
+}
+
+double maxd2 = 0;
+for(int i = 0; i < tex.classes.cols(); ++i)
+{
+  for(int j = 0; j < tex.classes.cols(); ++j)
+  {
+    double sum1 = 0.0;
+    for(int k=0; k < tex.classes.rows();++k)
+    {
+      sum1 += (tex.classes(k,i) - tex.classes(k,j)) * (tex.classes(k,i) - tex.classes(k,j));
+    }
+    maxd2 = maxd2 < sum1 ? sum1 : maxd2;  
+  }
+}
+
+dist2 /= (classified.rows()*classified.cols());
+dist2 = 10.0 * vcl_log10(maxd2*maxd2 / dist2);
+
+    TEST("Test Classification", counter, 0);
+    vcl_cout << "Difference(diff pixels / total pixels): " << (double)counter/(classified.rows()*classified.cols()) * 100 << "%\t" << "PSNR: " << dist2 << "dB" << vcl_endl;
   }
   else
   {
