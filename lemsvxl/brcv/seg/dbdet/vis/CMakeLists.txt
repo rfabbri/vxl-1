@@ -5,6 +5,9 @@ include_directories( ${lems_SOURCE_DIR}/breye1 )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
 
+if (VXL_VGUI_FOUND)
+find_package(OpenGL)
+
 set(dbdet_vis_sources
    
    dbdet_livewire_tool.cxx                dbdet_livewire_tool.h 
@@ -37,6 +40,5 @@ set(dbdet_vis_sources
 )
 
 add_library(dbdet_vis ${dbdet_vis_sources})
-
-target_link_libraries(dbdet_vis dbdet_pro bgld_algo brip)
-
+target_link_libraries(dbdet_vis dbdet_pro bgui bgld_algo brip bvis1 ${OPENGL_LIBRARIES})
+endif (VXL_VGUI_FOUND)
