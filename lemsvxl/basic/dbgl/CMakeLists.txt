@@ -26,8 +26,8 @@ if( BUILD_TESTING )
   add_subdirectory(tests)
 endif( BUILD_TESTING )
 
-# see bgld in VXD
-#add_subdirectory( algo )
+# see also bgld in VXD
+add_subdirectory( algo )
 
 #if( BUILD_EXAMPLES )
 #  add_subdirectory( examples )
