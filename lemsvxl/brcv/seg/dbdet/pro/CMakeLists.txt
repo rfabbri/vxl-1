@@ -122,7 +122,7 @@ endif(OCTAVE_FOUND)
 
 add_library(dbdet_pro ${dbdet_pro_sources})
 
-target_link_libraries(dbdet_pro dbdet_algo dbdet_xio vidpro1 bvis1 vgui bil dbtest)
+target_link_libraries(dbdet_pro dbdet_algo dbdet_xio vidpro1 bvis1 bpro1 bsold_algo bsold sdet vgui bil dbtest)
 
 #if(BUILD_TESTING)
 #  add_subdirectory(tests)

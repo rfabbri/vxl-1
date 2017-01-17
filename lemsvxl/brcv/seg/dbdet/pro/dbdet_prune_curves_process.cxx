@@ -18,6 +18,7 @@
 #include <bsold/algo/bsold_img_curve_algs.h>
 #include <bsold/algo/bsold_curve_algs.h>
 #include <bsold/bsold_interp_curve_2d.h>
+#include <bsold/bsold_interp_curve_2d_sptr.h>
 
 
 dbdet_prune_curves_process::dbdet_prune_curves_process() : bpro1_process()
