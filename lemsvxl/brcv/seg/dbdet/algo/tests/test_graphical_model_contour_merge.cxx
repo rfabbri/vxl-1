@@ -150,7 +150,7 @@ void graphical_model_contour_merge_test()
 
 MAIN( test_graphical_model_contour_merge )
 { 
-  START ("Test dbdet contour breaker");
+  START ("Test dbdet Graphical Model Contour Merge");
   graphical_model_contour_merge_test();
   SUMMARY();
 }
