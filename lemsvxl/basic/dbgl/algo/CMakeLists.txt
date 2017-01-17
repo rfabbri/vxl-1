@@ -11,11 +11,11 @@ set( dbgl_algo_sources
 
 add_library( dbgl_algo ${dbgl_algo_sources} )
 
-target_link_libraries(dbgl_algo dbdet bgld)
+target_link_libraries(dbgl_algo dbdet bgld_algo)
 
-# if( BUILD_TESTING )
-#   add_subdirectory(tests)
-# endif( BUILD_TESTING )
+if( BUILD_TESTING )
+  add_subdirectory(tests)
+endif( BUILD_TESTING )
 # 
 # if( BUILD_EXAMPLES )
 #   add_subdirectory( examples )
