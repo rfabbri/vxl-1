@@ -39,19 +39,18 @@ set( BUILD_LEMS "NO" )
 
 
 # We are building Brown Eyes interleaved with VXL
+# XXX NOT CURRENTLY SUPPORTED
 if (EXISTS ${vxl_SOURCE_DIR}/contrib/brl/blem/CMakeLists.txt)
   #Import cmake variable used by external projects
   include(${vxl_BINARY_DIR}/VXLConfig.cmake)
   set( BUILD_BROWN_INTERLEAVED "YES" )
   set( BUILD_LEMS "YES" )
-
-
-# Else, we are building Brown Eyes as a stand alone project 
+# Else, we are building Brown Eyes as a stand alone project  (currently supported)
 else (EXISTS ${vxl_SOURCE_DIR}/contrib/brl/blem/CMakeLists.txt)
 
   set (LIBRARY_OUTPUT_PATH ${lems_BINARY_DIR}/lib CACHE PATH "Single output directory for building all libraries.")
 
-  find_package(VXL)
+  find_package(VXL PATHS "../vxl-bin")
   if(VXL_FOUND)
     # include the standard stuff, such as Dart test
     set(VXL_PROVIDE_STANDARD_OPTIONS 1)
@@ -63,7 +62,7 @@ else (EXISTS ${vxl_SOURCE_DIR}/contrib/brl/blem/CMakeLists.txt)
     endif( VXL_BINARY_PATH )
   endif(VXL_FOUND)
 
-  find_package(VXD)
+  find_package(VXD PATHS "../vxd-bin")
   if(VXD_FOUND)
     # include the standard stuff, such as Dart test
     set(VXD_PROVIDE_STANDARD_OPTIONS 1)
