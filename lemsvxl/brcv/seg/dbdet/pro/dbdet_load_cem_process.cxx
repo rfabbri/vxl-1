@@ -28,7 +28,7 @@
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
 #include <vsol/vsol_point_2d.h>
-#include <dbsol/dbsol_file_io.h>
+#include <bsold/bsold_file_io.h>
 
 dbdet_load_cem_process::dbdet_load_cem_process() : bpro1_process(), num_frames_(0)
 {
@@ -125,7 +125,7 @@ bool dbdet_load_cem_process::load_CEM(vcl_string input_file)
 
   if (bvsol){
     vcl_vector< vsol_spatial_object_2d_sptr > contours;
-    bool retval = dbsol_load_cem(contours, input_file);
+    bool retval = bsold_load_cem(contours, input_file);
 
     if (!retval) return false;
 

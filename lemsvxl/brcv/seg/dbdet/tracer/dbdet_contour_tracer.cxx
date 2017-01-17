@@ -4,8 +4,8 @@
 #include <vil/vil_convert.h>
 #include <vil/vil_print.h>
 #include <bil/algo/bil_edt.h>
-#include <dbnl/algo/dbnl_eno_image.h>
-#include <dbnl/algo/dbnl_eno_zerox_image.h>
+#include <bnld/algo/bnld_eno_image.h>
+#include <bnld/algo/bnld_eno_zerox_image.h>
 #include <bdgl/bdgl_curve_algs.h>
 
 //#include <vcl_stdio.h>
@@ -31,7 +31,7 @@ trace(const vil_image_view<bool> &img)
   bool stat;
 
   if (!img.is_contiguous() || img.istep() != 1) {
-    vcl_cerr << "dbnl_eno_image: only contigous row-wise (col,row) images supported\n";
+    vcl_cerr << "bnld_eno_image: only contigous row-wise (col,row) images supported\n";
     return false;
   }
 
@@ -187,10 +187,10 @@ trace_eno_zero_xings(const vil_image_view<double> &img /*surface*/, Tracer *ptra
     label.set_size(width,height);
     label.fill(15);
 
-    dbnl_eno_image *eno_image = new dbnl_eno_image();
+    bnld_eno_image *eno_image = new bnld_eno_image();
     eno_image->interpolate(&img);
 
-    dbnl_eno_zerox_image eno_zeros(*eno_image);
+    bnld_eno_zerox_image eno_zeros(*eno_image);
     eno_zeros.assign_labels(img,label);
 
     label.clear();
@@ -200,7 +200,7 @@ trace_eno_zero_xings(const vil_image_view<double> &img /*surface*/, Tracer *ptra
     xings.horiz = (XingsLoc *) calloc(height*width,sizeof(XingsLoc));
     
 
-    // Copy zero crossing info from dbnl_eno_zerox_image to Xings structure
+    // Copy zero crossing info from bnld_eno_zerox_image to Xings structure
     i=0; 
     for (x=0; x<width; ++x) {
       for (y=0; y<height; ++y) {
@@ -212,7 +212,7 @@ trace_eno_zero_xings(const vil_image_view<double> &img /*surface*/, Tracer *ptra
         xings.vert[pos].loc[0]  = NOXING;
 
 #define label_assign(xinglabel,enolabel) xinglabel = \
-        (enolabel==dbnl_eno_zerox_label::unlabeled)? (int)UNLABELLED:(int)enolabel;
+        (enolabel==bnld_eno_zerox_label::unlabeled)? (int)UNLABELLED:(int)enolabel;
 
         if ( (x < width-1) && eno_zeros.horiz(x,y).number()) {
           xings.horiz[pos].loc[0]   =  eno_zeros.horiz(x,y).location(0);

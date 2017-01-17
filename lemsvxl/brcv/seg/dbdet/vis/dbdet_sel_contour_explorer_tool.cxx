@@ -16,7 +16,7 @@
 #include <bpro1/bpro1_storage_sptr.h>
 #include <dbdet/vis/dbdet_sel_tableau.h>
 
-#include <dbgl/algo/dbgl_arc_algo.h>
+#include <bgld/algo/bgld_arc_algo.h>
 
 class dbdet_sel_tableau_set_display_params_double_command : public vgui_command
 {
@@ -230,7 +230,7 @@ void dbdet_sel_contour_explorer_tool::graph_parameters_along_chain(dbdet_edgel_c
         else                                k1 = j-1;
 
         //compute curvature
-        lvals[j] = 1/dbgl_arc_algo::compute_arc_radius_from_three_points(chain->edgels[k1]->pt, chain->edgels[k1+1]->pt, chain->edgels[k1+2]->pt);
+        lvals[j] = 1/bgld_arc_algo::compute_arc_radius_from_three_points(chain->edgels[k1]->pt, chain->edgels[k1+1]->pt, chain->edgels[k1+2]->pt);
         rvals[j] = lvals[j];
       }
     }

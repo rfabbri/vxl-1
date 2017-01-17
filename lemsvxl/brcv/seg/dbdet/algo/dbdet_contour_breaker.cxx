@@ -2,7 +2,7 @@
 #include <sel/dbdet_edgel.h>
 #include <vcl_algorithm.h>
 #include <vcl_limits.h>
-#include <dbgl/algo/dbgl_diffgeom.h>
+#include <bgld/algo/bgld_diffgeom.h>
 #include <vil/algo/vil_colour_space.h>
 
 dbdet_curve_fragment_graph dbdet_contour_breaker::
@@ -384,8 +384,8 @@ compute_merge_probability_semantic(
   for (unsigned i = 0; i < npts; ++i)
     points.push_back(chain.edgels[i]->pt);
 
-  dbgl_compute_curvature(points, &k);
-  dbgl_compute_normals(points, &n);
+  bgld_compute_curvature(points, &k);
+  bgld_compute_normals(points, &n);
 
   for (unsigned i=0; i < npts; ++i)
     if (vnl_math::isnan(k[i]))

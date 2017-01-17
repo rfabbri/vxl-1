@@ -15,9 +15,9 @@
 
 #include <vil/vil_convert.h>
 #include <bil/algo/bil_color_conversions.h>
-#include <dbsol/algo/dbsol_img_curve_algs.h>
-#include <dbsol/algo/dbsol_curve_algs.h>
-#include <dbsol/dbsol_interp_curve_2d.h>
+#include <bsold/algo/bsold_img_curve_algs.h>
+#include <bsold/algo/bsold_curve_algs.h>
+#include <bsold/bsold_interp_curve_2d.h>
 
 
 dbdet_prune_curves_process::dbdet_prune_curves_process() : bpro1_process()
@@ -128,8 +128,8 @@ bool dbdet_prune_curves_process::execute()
           pts.push_back(poly->vertex(i));
       }
     }
-    dbsol_interp_curve_2d_sptr c = new dbsol_interp_curve_2d();
-    dbsol_curve_algs::interpolate_linear(c.ptr(), pts, closed);
+    bsold_interp_curve_2d_sptr c = new bsold_interp_curve_2d();
+    bsold_curve_algs::interpolate_linear(c.ptr(), pts, closed);
     double dist = 1000000.0;
     if (LAB)
       dist = get_color_distance_of_curve_regions(c, region_width, L_, A_, B_, color_gamma);

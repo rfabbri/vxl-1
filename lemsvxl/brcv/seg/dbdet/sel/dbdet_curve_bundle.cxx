@@ -82,7 +82,7 @@ bool dbdet_ES_curve_bundle::edgel_pair_legal(dbdet_int_params &params, double ta
   double k, gamma, len;
   double k0_max_error, gamma_max_error, len_max_error; //other params (unimportant)
   // read the ES solutions from the table and scale appropriately
-  dbgl_eulerspiral_lookup_table::instance()->look_up( params.t1, params.t2, 
+  bgld_eulerspiral_lookup_table::instance()->look_up( params.t1, params.t2, 
                                                       &k, &gamma, &len, 
                                                       &k0_max_error, &gamma_max_error, &len_max_error );
   k = k/params.d; gamma= gamma/(params.d*params.d);
@@ -123,7 +123,7 @@ bool dbdet_ES_curve_bundle::edgel_pair_legal1(dbdet_edgel* e1, dbdet_edgel* e2,
   double k, gamma, len;
   double k0_max_error, gamma_max_error, len_max_error; //other params (unimportant)
   // read the ES solutions from the table and scale appropriately
-  dbgl_eulerspiral_lookup_table::instance()->look_up( dbdet_CCW(ref_dir, dir1), dbdet_CCW(ref_dir, dir2), 
+  bgld_eulerspiral_lookup_table::instance()->look_up( dbdet_CCW(ref_dir, dir1), dbdet_CCW(ref_dir, dir2), 
                                                       &k, &gamma, &len, 
                                                       &k0_max_error, &gamma_max_error, &len_max_error );
   k = k/d; gamma= gamma/(d*d);
@@ -238,13 +238,13 @@ vgl_polygon<double> dbdet_ES_curve_bundle::compute_curve_bundle(dbdet_int_params
   double k0_max_error, gamma_max_error, len_max_error; //other params (unimportant)
 
   // read the ES solutions from the table and scale appropriately
-  dbgl_eulerspiral_lookup_table::instance()->look_up( t1_1, t2_1, &k1, &gamma1, &len1, 
+  bgld_eulerspiral_lookup_table::instance()->look_up( t1_1, t2_1, &k1, &gamma1, &len1, 
                                                       &k0_max_error, &gamma_max_error, &len_max_error );
-  dbgl_eulerspiral_lookup_table::instance()->look_up( t1_2, t2_2, &k2, &gamma2, &len2, 
+  bgld_eulerspiral_lookup_table::instance()->look_up( t1_2, t2_2, &k2, &gamma2, &len2, 
                                                       &k0_max_error, &gamma_max_error, &len_max_error );
-  dbgl_eulerspiral_lookup_table::instance()->look_up( t1_3, t2_3, &k3, &gamma3, &len3, 
+  bgld_eulerspiral_lookup_table::instance()->look_up( t1_3, t2_3, &k3, &gamma3, &len3, 
                                                       &k0_max_error, &gamma_max_error, &len_max_error );
-  dbgl_eulerspiral_lookup_table::instance()->look_up( t1_4, t2_4, &k4, &gamma4, &len4, 
+  bgld_eulerspiral_lookup_table::instance()->look_up( t1_4, t2_4, &k4, &gamma4, &len4, 
                                                       &k0_max_error, &gamma_max_error, &len_max_error );
 
   //if reference is the second edgel we need to compute the curvature at that point

@@ -12,7 +12,7 @@
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
 
 #include <bpro1/bpro1_parameters.h>
-#include <dbsol/dbsol_file_io.h>
+#include <bsold/bsold_file_io.h>
 #include <dbdet/xio/dbdet_xio_seg3d_info.h>
 #include <dbdet/pro/dbdet_seg3d_info_storage.h>
 #include <dbdet/pro/dbdet_seg3d_info_storage_sptr.h>
@@ -163,7 +163,7 @@ execute()
         "/" + frame.contour_file_list[k];
 
       // load the contour
-      vsol_spatial_object_2d_sptr contour = dbsol_load_con_file(
+      vsol_spatial_object_2d_sptr contour = bsold_load_con_file(
         contour_filename.c_str());
 
       if (! contour)

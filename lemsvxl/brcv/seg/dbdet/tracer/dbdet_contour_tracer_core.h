@@ -10,7 +10,7 @@
 //
 
 
-#include <dbnl/algo/dbnl_eno_zerox_label.h>
+#include <bnld/algo/bnld_eno_zerox_label.h>
 
 #include <math.h>
 #include <stdio.h>

@@ -6,8 +6,8 @@
 #include "dbdet_postprocess_contours.h"
 
 #include <dbdet/algo/dbdet_EMD.h>
-#include <dbgl/algo/dbgl_arc_algo.h>
-#include <dbgl/algo/dbgl_curve_smoothing.h>
+#include <bgld/algo/bgld_arc_algo.h>
+#include <bgld/algo/bgld_curve_smoothing.h>
 #include <mbl/mbl_stats_1d.h>
 #include <vcl_algorithm.h>
 
@@ -42,7 +42,7 @@ void post_process_based_on_curvature(dbdet_curve_fragment_graph& curve_frag_grap
         else                                k1 = j-1;
 
         //compute curvature
-        ks[j] = 1/dbgl_arc_algo::compute_arc_radius_from_three_points(chain->edgels[k1]->pt, chain->edgels[k1+1]->pt, chain->edgels[k1+2]->pt);
+        ks[j] = 1/bgld_arc_algo::compute_arc_radius_from_three_points(chain->edgels[k1]->pt, chain->edgels[k1+1]->pt, chain->edgels[k1+2]->pt);
         
         if (vcl_fabs(ks[j])>k_thresh) 
           break_pts.push_back(j); //needs to be broken here
@@ -313,7 +313,7 @@ void compute_curvatures(dbdet_edgel_chain* chain, mbl_stats_1d &ks)
     pts.push_back(chain->edgels[j]->pt);
 
   // smooth this contour
-  dbgl_csm(pts, 1.0, 1);
+  bgld_csm(pts, 1.0, 1);
 
   //compute curvatures
   for (unsigned j=0; j<pts.size(); j++)
@@ -324,7 +324,7 @@ void compute_curvatures(dbdet_edgel_chain* chain, mbl_stats_1d &ks)
     else                      k1 = j-1;
 
     //compute curvature
-    ks.obs(vcl_fabs(1/dbgl_arc_algo::compute_arc_radius_from_three_points(pts[k1], pts[k1+1], pts[k1+2])));
+    ks.obs(vcl_fabs(1/bgld_arc_algo::compute_arc_radius_from_three_points(pts[k1], pts[k1+1], pts[k1+2])));
   }
 }
 
@@ -494,7 +494,7 @@ void prune_contours(dbdet_curve_fragment_graph& curve_frag_graph,
       pts.push_back(chain->edgels[j]->pt);
 
     // smooth this contour
-    dbgl_csm(pts, 1.0, 1);
+    bgld_csm(pts, 1.0, 1);
 
     vcl_vector<double> ks;
     ks.resize(pts.size());
@@ -508,7 +508,7 @@ void prune_contours(dbdet_curve_fragment_graph& curve_frag_graph,
       else                      k1 = j-1;
 
       //compute curvature
-      ks[j] = 1/dbgl_arc_algo::compute_arc_radius_from_three_points(pts[k1], pts[k1+1], pts[k1+2]);
+      ks[j] = 1/bgld_arc_algo::compute_arc_radius_from_three_points(pts[k1], pts[k1+1], pts[k1+2]);
     }
 
     // F) Apply curvature threshold

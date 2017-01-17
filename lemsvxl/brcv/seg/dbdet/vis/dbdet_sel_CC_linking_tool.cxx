@@ -17,9 +17,9 @@
 #include <bpro1/bpro1_storage_sptr.h>
 #include <dbdet/vis/dbdet_sel_tableau.h>
 
-#include <dbgl/algo/dbgl_arc_algo.h>
-#include <dbgl/algo/dbgl_circ_arc.h>
-#include <dbgl/algo/dbgl_fit_circ_arc_spline.h>
+#include <bgld/algo/bgld_arc_algo.h>
+#include <bgld/algo/bgld_circ_arc.h>
+#include <bgld/algo/bgld_fit_circ_arc_spline.h>
 
 #include <dbdet/algo/dbdet_sel.h>
 
@@ -403,8 +403,8 @@ void dbdet_sel_CC_linking_tool::draw_arc_spline(vcl_vector<dbdet_edgel*>& edgel_
   for (unsigned i=0; i<edgel_chain.size(); i++)
     pts.push_back(edgel_chain[i]->pt);
 
-  vcl_vector<dbgl_circ_arc > arc_list;
-  dbgl_fit_circ_arc_spline_to_polyline(arc_list, pts, tolerance);
+  vcl_vector<bgld_circ_arc > arc_list;
+  bgld_fit_circ_arc_spline_to_polyline(arc_list, pts, tolerance);
 
   pts.clear(); tans.clear();
   for (unsigned i=0; i<arc_list.size(); i++)

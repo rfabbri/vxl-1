@@ -11,7 +11,7 @@
 #include <vsol/vsol_polygon_2d_sptr.h>
 
 #include <bpro1/bpro1_parameters.h>
-#include <dbsol/dbsol_file_io.h>
+#include <bsold/bsold_file_io.h>
 #include <dbdet/xio/dbdet_xio_seg3d_info.h>
 #include <dbdet/pro/dbdet_seg3d_info_storage.h>
 #include <dbdet/pro/dbdet_seg3d_info_storage_sptr.h>
@@ -169,7 +169,7 @@ execute()
 
           // save the contour
           vcl_string file_fullname = seg3d_info->contour_folder() + "/" + contour_name;
-          dbsol_save_con_file(file_fullname.c_str(), polyline);
+          bsold_save_con_file(file_fullname.c_str(), polyline);
 
           // update to cur_frame
           cur_frame->contour_file_list.push_back(contour_name);
@@ -185,7 +185,7 @@ execute()
           
           // save the contour
           vcl_string file_fullname = seg3d_info->contour_folder() + "/" + contour_name;
-          dbsol_save_con_file(file_fullname.c_str(), polygon);
+          bsold_save_con_file(file_fullname.c_str(), polygon);
 
           // update to cur_frame
           cur_frame->contour_file_list.push_back(contour_name);

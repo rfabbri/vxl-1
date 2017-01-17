@@ -25,8 +25,8 @@
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
 
-#include <dbgl/algo/dbgl_curve_smoothing.h>
-#include <dbgl/algo/dbgl_arc_algo.h>
+#include <bgld/algo/bgld_curve_smoothing.h>
+#include <bgld/algo/bgld_arc_algo.h>
 #include <vgl/algo/vgl_conic_2d_regression.h>
 
 #include <mbl/mbl_stats_1d.h>
@@ -206,7 +206,7 @@ bool dbdet_sel_extract_contours_process::execute()
 
     // smooth this contour
     if (smooth_con)
-      dbgl_csm(pts, psi, num_times);
+      bgld_csm(pts, psi, num_times);
 
     // F) Apply curvature threshold
     if (apply_k_thresh)
@@ -227,7 +227,7 @@ bool dbdet_sel_extract_contours_process::execute()
         //reg.fit();
 
         //compute curvature
-        ks[j] = 1/dbgl_arc_algo::compute_arc_radius_from_three_points(pts[k1], pts[k1+1], pts[k1+2]);
+        ks[j] = 1/bgld_arc_algo::compute_arc_radius_from_three_points(pts[k1], pts[k1+1], pts[k1+2]);
       }
 
       //TODO: smooth the curvature function slightly

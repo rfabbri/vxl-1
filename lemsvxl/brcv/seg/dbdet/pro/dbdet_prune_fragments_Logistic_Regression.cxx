@@ -15,10 +15,10 @@
 #include <bbas/bsol/bsol_algs.h>
 #include <vil/vil_convert.h>
 #include <bil/algo/bil_color_conversions.h>
-#include <dbsol/algo/dbsol_img_curve_algs.h>
-#include <dbsol/algo/dbsol_img_curve_algs_two.h>
-#include <dbsol/algo/dbsol_curve_algs.h>
-#include <dbsol/dbsol_interp_curve_2d.h>
+#include <bsold/algo/bsold_img_curve_algs.h>
+#include <bsold/algo/bsold_img_curve_algs_two.h>
+#include <bsold/algo/bsold_curve_algs.h>
+#include <bsold/bsold_interp_curve_2d.h>
 
 #include <dbdet/pro/dbdet_sel_storage.h>
 #include <dbdet/pro/dbdet_sel_storage_sptr.h>
@@ -136,10 +136,10 @@ bool dbdet_prune_fragments_Logistic_Regression::execute()
   		vbl_array_2d<double> firsthist,secondhist;
 		vcl_vector<vsol_point_2d_sptr> point_samples;
 		for(int i=0;i<c1->edgels.size();i++) point_samples.push_back(new vsol_point_2d(c1->edgels[i]->pt.x(),c1->edgels[i]->pt.y()));
-		dbsol_interp_curve_2d_sptr curve = new dbsol_interp_curve_2d();
-		dbsol_curve_algs::interpolate_linear(curve.ptr(),point_samples,false);
+		bsold_interp_curve_2d_sptr curve = new bsold_interp_curve_2d();
+		bsold_curve_algs::interpolate_linear(curve.ptr(),point_samples,false);
 		vcl_vector<vsol_point_2d_sptr > region_pts;                                                     
- 		dbsol_curve_algs::sample_region_along_curve(*curve, region_pts, 0.5f, curve->length(), 3, false);
+ 		bsold_curve_algs::sample_region_along_curve(*curve, region_pts, 0.5f, curve->length(), 3, false);
 		//Total Number of Neighborhood Edges
 		double Total_Edges=0;
 		for(int q=0;q<new_chain4->edgels.size();q++)

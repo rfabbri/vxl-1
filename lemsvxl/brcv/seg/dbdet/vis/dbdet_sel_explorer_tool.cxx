@@ -356,7 +356,7 @@ void dbdet_sel_explorer_tool::draw_ES_ft(dbdet_curvelet* /*cvlet*/, dbdet_edgel*
   //      double edgel_tangent;
   //      sel_->compute_perturbed_position_of_an_edgel(eA, pos, edgel_pt, edgel_tangent);
 
-  //      dbgl_eulerspiral es_fit(edgel_pt, edgel_tangent, k_est, gamma_est, 3);
+  //      bgld_eulerspiral es_fit(edgel_pt, edgel_tangent, k_est, gamma_est, 3);
 
   //      // compute length on the minus and plus sides
   //      bool before_eA = true;
@@ -388,7 +388,7 @@ void dbdet_sel_explorer_tool::draw_ES_ft(dbdet_curvelet* /*cvlet*/, dbdet_edgel*
 
   //      //  sel_->compute_perturbed_position_of_an_edgel(eA, pos, edgel_pt, edgel_tangent);
 
-  //      //  dbgl_eulerspiral es_fit(edgel_pt, edgel_tangent, 
+  //      //  bgld_eulerspiral es_fit(edgel_pt, edgel_tangent, 
   //      //    cvlet->curve_bundles[k]->cv_bundle[pos][0][p].x(), 
   //      //    cvlet->curve_bundles[k]->cv_bundle[pos][0][p].y(), 3);
 

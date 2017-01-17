@@ -12,7 +12,7 @@
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 
-#include <dbgl/algo/dbgl_eulerspiral.h>
+#include <bgld/algo/bgld_eulerspiral.h>
 
 //Constructor
 dbdet_query_linking_tool::dbdet_query_linking_tool()
@@ -279,7 +279,7 @@ dbdet_query_linking_tool::handle( const vgui_event & e, const bvis1_view_tableau
 
         if (fit_spline_){
           for (unsigned i=0; i<p_int[0].size(); i++){
-            dbgl_eulerspiral es_fit(sel_pt_, sel_tan_, p_int[0][i].x(), p_int[0][i].y(), 3);
+            bgld_eulerspiral es_fit(sel_pt_, sel_tan_, p_int[0][i].x(), p_int[0][i].y(), 3);
 
             glColor3f(1.0f,0.0f,0.0f);
             glBegin(GL_LINE_STRIP);

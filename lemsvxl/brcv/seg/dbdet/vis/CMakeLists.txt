@@ -38,5 +38,5 @@ set(dbdet_vis_sources
 
 add_library(dbdet_vis ${dbdet_vis_sources})
 
-target_link_libraries(dbdet_vis dbdet_pro dbgl_algo brip)
+target_link_libraries(dbdet_vis dbdet_pro bgld_algo brip)
 
