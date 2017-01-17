@@ -5,8 +5,7 @@
 # include directories into here if needed
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
-include_directories( ${lems_SOURCE_DIR}/breye1)
-include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories(${VXD_BRLD_INCLUDE_DIR})
 
 set(dbsta_pro_sources
    dbsta_model_image_process.cxx             dbsta_model_image_process.h
