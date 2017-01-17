@@ -28,7 +28,7 @@ dbgui_soview2D_circ_arc(float start_x, float start_y, float end_x, float end_y, 
 void dbgui_soview2D_circ_arc::
 draw() const
 {
-  dbgl_circ_arc arc = this->circ_arc();
+  bgld_circ_arc arc = this->circ_arc();
 
   // decide the number of segments to draw based on the chord length of the arc
   // use at least 5 line segments

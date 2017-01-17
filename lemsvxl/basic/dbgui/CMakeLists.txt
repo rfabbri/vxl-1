@@ -2,6 +2,7 @@
 # Development Brown GUI Library
 
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
+include_directories(${VXD_BRLD_INCLUDE_DIR})
 
 if (VXL_VGUI_FOUND)
 
@@ -16,7 +17,7 @@ aux_source_directory(Templates dbgui_sources)
 
 add_library(dbgui  ${dbgui_sources})
 
-target_link_libraries(dbgui vgui gl2ps dbgl_algo vpgl_algo )
+target_link_libraries(dbgui vgui gl2ps bgld_algo vpgl_algo )
 
 if( BUILD_EXAMPLES )
   add_subdirectory( examples )
