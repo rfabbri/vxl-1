@@ -9,6 +9,8 @@
 //
 
 #include <dbdet/sel/dbdet_edgel.h>
+#include <vnl/vnl_vector.h>
+#include <vnl/vnl_vector_fixed.h>
 
 //: Same as the vxd/bgld version, but for dbdet_edgel_chain
 void 
