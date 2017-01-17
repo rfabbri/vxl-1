@@ -74,7 +74,7 @@ endif(OCTAVE_FOUND)
 aux_source_directory(Templates dbdet_algo_sources)
 
 add_library(dbdet_algo ${dbdet_algo_sources})
-target_link_libraries( dbdet_algo dbdet )
+target_link_libraries( dbdet_algo dbdet dbgl_algo)
 
 #target_compile_features(dbdet_algo PRIVATE cxx_strong_enums)
 
