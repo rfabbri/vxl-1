@@ -9,7 +9,7 @@ add_executable( dbdet_test_all
   test_texton_classify.cxx
 )
 
-target_link_libraries( dbdet_test_all dbdet dbgl_algo testlib dbtest )
+target_link_libraries( dbdet_test_all dbdet bgld_algo testlib dbtest )
 
 add_test( dbdet_test_texton_classify dbdet_test_all test_texton_classify )
 

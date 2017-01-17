@@ -9,11 +9,11 @@ add_subdirectory( bmvl )
 # Brown Camera Calibration Library
 #add_subdirectory( dbcal )
 
-# Photogrammetry Library
-add_subdirectory( dvpgl )
+# Photogrammetry Library (moved to VXD)
+# add_subdirectory( dvpgl )
 
-# Brown Epipolar Curve Library
-add_subdirectory( dbecl )
+# Brown Epipolar Curve Library (moved to VXD)
+# add_subdirectory( dbecl )
 
 # Brown Video Registration Library
 add_subdirectory( dbvrl )
@@ -34,5 +34,5 @@ add_subdirectory( dbirl )
 # If you need this, you must first modernize vgel and make it build
 add_subdirectory( dbrcl )
 
-# Brown Multiview Differential Geometry Library
-add_subdirectory( dbdif )
+# Brown Multiview Differential Geometry Library (moved to vxd)
+# add_subdirectory( dbdif )

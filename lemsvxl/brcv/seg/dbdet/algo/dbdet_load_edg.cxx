@@ -341,7 +341,7 @@ bool dbdet_load_edg_ascii(vcl_string input_file, bool bSubPixel, double scale, d
 #ifdef HAS_BOOST
 //: Load .edg.gz file compressed with zlib, gzip style.
 // TODO: use templating and/or istream inheritance to avoid duplicating almost
-// identical code to dbsol_load_cem_ascii
+// identical code to bsold_load_cem_ascii
 bool dbdet_load_edg_gzip(vcl_string input_file, bool bSubPixel, double scale, dbdet_edgemap_sptr &edge_map)
 {
   double x, y;

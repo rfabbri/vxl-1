@@ -12,5 +12,5 @@
 #include <vgl/vgl_area.h>
 
 #include "dbdet_sel_utils.h"
-#include <dbgl/algo/dbgl_eulerspiral.h>
+#include <bgld/algo/bgld_eulerspiral.h>
 

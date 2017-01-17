@@ -1,0 +1,8 @@
+// The following text is included in the main documentation page by doxygen
+/*! \mainpage bgld : Development Brown Geometry Library (VXD version)
+* A collection of routines augmenting vgl
+*
+* \section Interpolate a curve between 2 point-tangents
+* - bgld_biarc: interpolate using 2 circular arc
+* - bgld_eulerspiral: interpolate using an Euler spiral, which has linear curvature
+*/

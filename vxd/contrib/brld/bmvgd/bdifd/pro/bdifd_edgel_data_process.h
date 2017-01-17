@@ -1,4 +1,4 @@
-// This is brcv/seg/dbdet/pro/bdifd_edgel_data_process.h
+// This is brcv/seg/sdetd/pro/bdifd_edgel_data_process.h
 #ifndef bdifd_edgel_data_process_h_
 #define bdifd_edgel_data_process_h_
 
@@ -12,11 +12,11 @@
 //  Modifications
 // \endverbatim
 
-#include <bpro1d/bpro1d_process.h>
-#include <bpro1d/bpro1d_parameters.h>
+#include <bpro1/bpro1_process.h>
+#include <bpro1/bpro1_parameters.h>
 
 //: Process generates subpixel edgels sampled along some analytic curves
-class bdifd_edgel_data_process : public bpro1d_process 
+class bdifd_edgel_data_process : public bpro1_process 
 {
 public:
 
@@ -24,7 +24,7 @@ public:
   virtual ~bdifd_edgel_data_process();
 
   //: Clone the process
-  virtual bpro1d_process* clone() const;
+  virtual bpro1_process* clone() const;
 
   vcl_string name();
 

@@ -28,7 +28,7 @@
 
 #include <vgl/vgl_point_2d.h>
 
-#include "sdet_appearance.h"
+#include <sdet/sdet_appearance.h>
 
 //forward class definitions
 class sdet_edgel;
@@ -39,10 +39,6 @@ typedef std::deque<sdet_edgel* > sdet_edgel_list;
 typedef std::deque<sdet_edgel* >::iterator sdet_edgel_list_iter;
 typedef std::deque<sdet_edgel* >::const_iterator sdet_edgel_list_const_iter;
 
-typedef std::list<sdet_curvelet* > sdet_curvelet_list;
-typedef std::list<sdet_curvelet* >::iterator sdet_curvelet_list_iter;
-typedef std::list<sdet_curvelet* >::const_iterator sdet_curvelet_list_const_iter;
-
 //: edgel class: contains pt, tangent and collection of all the groupings around it
 class sdet_edgel
 {
@@ -50,7 +46,7 @@ public:
   int id;                  ///< unique id
 
   vgl_point_2d<double> pt; ///< the location of the edgel
-  double tangent;          ///< the orientation of the edgel
+  double tangent;          ///< the orientation of the edgel in radians
 
   //: the strength of the edgel (typically gradient magnitude)
   double strength;

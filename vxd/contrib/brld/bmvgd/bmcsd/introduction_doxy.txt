@@ -1,0 +1,12 @@
+// The following text is included in the main documentation page by doxygen
+/*! \mainpage bmcsd: Brown Multiview Curve Stereo (VXD Version)
+*
+* This library contains the basis for experimental research code originated by
+*  Ricardo Fabbri.
+*
+* More mature parts are routinely migrated to: 
+*   - bdifd: multiview differential geometry lib
+*   - vpgl: traditional photogrammetry/MVG algorithms,
+*   - becld: Epipolar curve library
+*   - dbkpr: key point recognition, matching & reconstruction
+*/

@@ -30,7 +30,7 @@
 #include <vgl/vgl_clip.h>
 #include <vgl/vgl_area.h>
 
-#include <dbgl/algo/dbgl_eulerspiral.h>
+#include <bgld/algo/bgld_eulerspiral.h>
 #include "dbdet_edgel.h"
 #include "dbdet_curve_model.h"
 

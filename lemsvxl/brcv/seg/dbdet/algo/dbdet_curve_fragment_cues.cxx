@@ -1,5 +1,5 @@
 #include "dbdet_curve_fragment_cues.h"
-#include <dbgl/algo/dbgl_diffgeom.h>
+#include <bgld/algo/bgld_diffgeom.h>
 #include <vil/algo/vil_colour_space.h>
 #include <vcl_cmath.h>
 #include <vcl_iostream.h>
@@ -52,7 +52,7 @@ cuvature_cues(
   for (unsigned i = 0; i < npts; ++i)
     points.push_back(c.edgels[i]->pt);
 
-  dbgl_compute_curvature(points, &k);
+  bgld_compute_curvature(points, &k);
   assert(k.size() == npts);
 
   for (unsigned i=0; i < npts; ++i)
@@ -93,7 +93,7 @@ hsv_gradient_cues(
   //to vector of points..
   for (unsigned i = 0; i < npts; ++i)
     points.push_back(c.edgels[i]->pt);
-  dbgl_compute_normals(points, &n);
+  bgld_compute_normals(points, &n);
 
   // get neighborhood points to be examined
   y_feature_vector &features = *features_ptr;

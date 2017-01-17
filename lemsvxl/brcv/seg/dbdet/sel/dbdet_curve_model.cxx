@@ -13,7 +13,7 @@
 
 #include <dbdet/dbdet_config.h>
 #include "dbdet_sel_utils.h"
-#include <dbgl/algo/dbgl_eulerspiral.h>
+#include <bgld/algo/bgld_eulerspiral.h>
 
 //*****************************************************************************//
 // A simple Linear curve model
@@ -3018,7 +3018,7 @@ bool dbdet_ES_curve_model::edgel_pair_legal(dbdet_int_params &params, double /*t
   double k, gamma, len;
   double k0_max_error, gamma_max_error, len_max_error; //other params (unimportant)
   // read the ES solutions from the table and scale appropriately
-  dbgl_eulerspiral_lookup_table::instance()->look_up( params.t1, params.t2, 
+  bgld_eulerspiral_lookup_table::instance()->look_up( params.t1, params.t2, 
                                                       &k, &gamma, &len, 
                                                       &k0_max_error, &gamma_max_error, &len_max_error );
   k = k/params.d; gamma= gamma/(params.d*params.d);
@@ -3059,7 +3059,7 @@ bool dbdet_ES_curve_model::edgel_pair_legal(dbdet_int_params &params, double /*t
 //  double k, gamma, len;
 //  double k0_max_error, gamma_max_error, len_max_error; //other params (unimportant)
 //  // read the ES solutions from the table and scale appropriately
-//  dbgl_eulerspiral_lookup_table::instance()->look_up( dbdet_CCW(ref_dir, dir1), dbdet_CCW(ref_dir, dir2), 
+//  bgld_eulerspiral_lookup_table::instance()->look_up( dbdet_CCW(ref_dir, dir1), dbdet_CCW(ref_dir, dir2), 
 //                                                      &k, &gamma, &len, 
 //                                                      &k0_max_error, &gamma_max_error, &len_max_error );
 //  k = k/d; gamma= gamma/(d*d);
@@ -3182,13 +3182,13 @@ compute_curve_bundle(vgl_polygon<double>& bundle,
   double k0_max_error, gamma_max_error, len_max_error; //other params (unimportant)
 
   // read the ES solutions from the table and scale appropriately
-  dbgl_eulerspiral_lookup_table::instance()->look_up( t1_1, t2_1, &k1, &gamma1, &len1, 
+  bgld_eulerspiral_lookup_table::instance()->look_up( t1_1, t2_1, &k1, &gamma1, &len1, 
                                                       &k0_max_error, &gamma_max_error, &len_max_error );
-  dbgl_eulerspiral_lookup_table::instance()->look_up( t1_2, t2_2, &k2, &gamma2, &len2, 
+  bgld_eulerspiral_lookup_table::instance()->look_up( t1_2, t2_2, &k2, &gamma2, &len2, 
                                                       &k0_max_error, &gamma_max_error, &len_max_error );
-  dbgl_eulerspiral_lookup_table::instance()->look_up( t1_3, t2_3, &k3, &gamma3, &len3, 
+  bgld_eulerspiral_lookup_table::instance()->look_up( t1_3, t2_3, &k3, &gamma3, &len3, 
                                                       &k0_max_error, &gamma_max_error, &len_max_error );
-  dbgl_eulerspiral_lookup_table::instance()->look_up( t1_4, t2_4, &k4, &gamma4, &len4, 
+  bgld_eulerspiral_lookup_table::instance()->look_up( t1_4, t2_4, &k4, &gamma4, &len4, 
                                                       &k0_max_error, &gamma_max_error, &len_max_error );
 
   //if reference is the second edgel we need to compute the curvature at that point
@@ -3243,7 +3243,7 @@ bool dbdet_ES_curve_model::curve_fit_is_reasonable(vcl_deque<dbdet_edgel*> &edge
   compute_best_fit(edgel_chain);
 
   //initialize an ES corresponding to the centroid
-  dbgl_eulerspiral es_fit(pt, theta, k, gamma, 1);
+  bgld_eulerspiral es_fit(pt, theta, k, gamma, 1);
 
   //Compute the polygon lengths
   bool before_ref = true;
@@ -3270,7 +3270,7 @@ double dbdet_ES_curve_model::compute_distance(vcl_deque<dbdet_edgel*> &edgel_cha
                                               double k, double gamma)
 {
   //form an ES from the parameters
-  dbgl_eulerspiral es_fit(pt, theta, k, gamma, 1);
+  bgld_eulerspiral es_fit(pt, theta, k, gamma, 1);
 
   //compute distance from each of the edgels to the curve
   double dist = 0;

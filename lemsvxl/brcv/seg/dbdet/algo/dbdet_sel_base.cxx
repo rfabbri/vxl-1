@@ -674,7 +674,7 @@ void dbdet_sel_base::construct_naive_link_graph(double proximity_threshold, doub
           double kk, gamma, len;
           double k0_max_error, gamma_max_error, len_max_error; //other params (unimportant)
           // read the ES solutions from the table and scale appropriately
-          dbgl_eulerspiral_lookup_table::instance()->look_up( params.t1, params.t2, 
+          bgld_eulerspiral_lookup_table::instance()->look_up( params.t1, params.t2, 
                                                               &kk, &gamma, &len, 
                                                               &k0_max_error, &gamma_max_error, &len_max_error );
           kk = kk/params.d; gamma= gamma/(params.d*params.d);

@@ -22,7 +22,7 @@
 
 #include <vgl/vgl_point_2d.h>
 #include <vsol/vsol_point_2d.h>
-#include <dbgl/algo/dbgl_eulerspiral.h>     
+#include <bgld/algo/bgld_eulerspiral.h>     
 #include <brip/brip_vil_float_ops.h>
 
 //: Constructor - protected
@@ -458,7 +458,7 @@ dbdet_livewire_tool::handle( const vgui_event & e,
       
       //vcl_cout << "Cut out " << end_ind - start_ind << " number of points from contour\n";
 
-      dbgl_eulerspiral es_curve;
+      bgld_eulerspiral es_curve;
 
       //Point2D<double> start_pt, end_pt;
       double start_angle, end_angle;
@@ -516,7 +516,7 @@ dbdet_livewire_tool::handle( const vgui_event & e,
       }
   
       // set euler spiral properties
-      es_curve = dbgl_eulerspiral(point1, start_angle, point2, end_angle);
+      es_curve = bgld_eulerspiral(point1, start_angle, point2, end_angle);
 
       vcl_vector<vgl_point_2d<double> > point_samples;
       es_curve.compute_spiral(point_samples, 1.0);

@@ -24,7 +24,7 @@
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_point_2d_sptr.h>
 
-#include <dbsol/algo/dbsol_curve_algs.h>
+#include <bsold/algo/bsold_curve_algs.h>
 
 //: Constructor
 dbdet_contour_tracer_process::dbdet_contour_tracer_process()
@@ -195,9 +195,9 @@ dbdet_contour_tracer_process::execute()
 
       if (bSub_con){
         if (bSmart)
-          newContour = dbsol_subsample_contour_smart(newContour, c_ds);
+          newContour = bsold_subsample_contour_smart(newContour, c_ds);
         else
-          newContour = dbsol_subsample_contour(newContour, c_ds);
+          newContour = bsold_subsample_contour(newContour, c_ds);
       }
 
       // If area normalization is desired on the contours, equalize all the contour areas to the provided value

@@ -17,7 +17,7 @@
 #include <bpro1/bpro1_storage_sptr.h>
 #include <dbdet/vis/dbdet_sel_tableau.h>
 
-#include <dbgl/algo/dbgl_arc_algo.h>
+#include <bgld/algo/bgld_arc_algo.h>
 #include <dbdet/algo/dbdet_sel.h>
 
 #include "dbdet_sel_tableau_commands.h"

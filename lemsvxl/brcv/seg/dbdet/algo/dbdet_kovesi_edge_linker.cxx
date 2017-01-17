@@ -16,9 +16,9 @@
 #include <dbdet/sel/dbdet_edgel.h>
 #include <dbdet/algo/dbdet_cem_file_io.h>
 
-#include <dbil/algo/dbil_octave.h>
+#include <bild/algo/bild_octave.h>
 
-#include <dbul/dbul_random.h>
+#include <buld/buld_random.h>
 
 #include<vcl_vector.h>
 
@@ -27,7 +27,7 @@
 #define DBDET_CONVERT_EDGEMAP_TO_STH_OCTAVE_ARRAY(sth)\
         vcl_vector<int> sizes(2);\
         sizes[0] = in_EM->height(); sizes[1] = in_EM->width();\
-        dbul_octave_double_array sth_array = dbul_octave_get_empty_double_array(sizes);\
+        buld_octave_double_array sth_array = buld_octave_get_empty_double_array(sizes);\
         vcl_vector<dbdet_edgel*> edgels = in_EM->edgels;\
         for(int i = 0; i < edgels.size(); i++)\
         {\
@@ -37,12 +37,12 @@
         }\
         return sth_array;
 
-dbul_octave_double_array dbdet_convert_edgemap_to_orientation_octave_array(dbdet_edgemap_sptr& in_EM)
+buld_octave_double_array dbdet_convert_edgemap_to_orientation_octave_array(dbdet_edgemap_sptr& in_EM)
 {
     DBDET_CONVERT_EDGEMAP_TO_STH_OCTAVE_ARRAY(tangent)
 }
 
-dbul_octave_double_array dbdet_convert_edgemap_to_strength_octave_array(dbdet_edgemap_sptr& in_EM)
+buld_octave_double_array dbdet_convert_edgemap_to_strength_octave_array(dbdet_edgemap_sptr& in_EM)
 {
     DBDET_CONVERT_EDGEMAP_TO_STH_OCTAVE_ARRAY(strength)
 }
@@ -52,7 +52,7 @@ dbdet_kovesi_edge_linker::dbdet_kovesi_edge_linker(const vcl_string& temp_dir)
     temp_dir_ = temp_dir;
     dbdet_extract_embedded_kovesi_files(temp_dir_.c_str());
     temp_cem_file_ = temp_dir + "/";
-    temp_cem_file_ += dbul_get_random_alphanumeric_string(10) + "_temp.cem";
+    temp_cem_file_ += buld_get_random_alphanumeric_string(10) + "_temp.cem";
 }
 
 dbdet_kovesi_edge_linker::~dbdet_kovesi_edge_linker()
@@ -62,11 +62,11 @@ dbdet_kovesi_edge_linker::~dbdet_kovesi_edge_linker()
 
 void dbdet_kovesi_edge_linker::link_and_prune_edges(dbdet_edgemap_sptr& in_EM, int edge_threshold, int link_edge_length_threshold, dbdet_edgemap_sptr& out_EM, dbdet_curve_fragment_graph& out_CFG)
 {
-    dbul_octave_value edgemap_octave_value = dbdet_convert_edgemap_to_strength_octave_array(in_EM);
-    dbul_octave_value orient_octave_value = dbdet_convert_edgemap_to_orientation_octave_array(in_EM);
+    buld_octave_value edgemap_octave_value = dbdet_convert_edgemap_to_strength_octave_array(in_EM);
+    buld_octave_value orient_octave_value = dbdet_convert_edgemap_to_orientation_octave_array(in_EM);
 
-    dbul_octave_argument_list inargs;
-    dbul_octave_argument_list outargs;
+    buld_octave_argument_list inargs;
+    buld_octave_argument_list outargs;
 
     inargs(0) = edgemap_octave_value;
     inargs(1) = orient_octave_value;
@@ -74,7 +74,7 @@ void dbdet_kovesi_edge_linker::link_and_prune_edges(dbdet_edgemap_sptr& in_EM, i
     inargs(3) = link_edge_length_threshold;
     inargs(4) = temp_cem_file_.c_str();
 
-    dbul_octave.run(temp_dir_,"kovesi_main", inargs, outargs);
+    buld_octave.run(temp_dir_,"kovesi_main", inargs, outargs);
 
     vcl_ifstream cems(temp_cem_file_.c_str());
     out_EM = dbdet_load_cem_v1(cems, out_CFG, in_EM->width(), in_EM->height(), false);

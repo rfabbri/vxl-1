@@ -12,6 +12,7 @@ include_directories( ${VXL_MUL_INCLUDE_DIR} )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas/bil/algo )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+include_directories(${VXD_BRLD_INCLUDE_DIR})
 
 
 option(DBDET_USE_APPROX_SINE "Use approximate sines in dbdet_curve_model for faster edge linking" NO)
@@ -78,7 +79,7 @@ aux_source_directory(sel/Templates dbdet_sources)
 add_library(dbdet ${dbdet_sources})
 
 # add the required libraries into this list
-target_link_libraries( dbdet vil1 vil bil_algo dbnl_algo osl vepl vepl vdgl vnl_io bdgl dbgl_algo brip pdf1d mbl)
+target_link_libraries( dbdet vil1 vil bil_algo bnld_algo osl vepl vepl vdgl vnl_io bdgl bgld_algo brip pdf1d mbl)
 
 
 if(BUILD_TESTING)

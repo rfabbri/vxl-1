@@ -1,4 +1,4 @@
-// This is brcv/seg/dbdet/pro/bdifd_edgel_data_process.cxx
+// This is brcv/seg/sdetd/pro/bdifd_edgel_data_process.cxx
 
 //:
 // \file
@@ -45,7 +45,7 @@ bdifd_edgel_data_process::~bdifd_edgel_data_process()
 
 
 //: Clone the process
-bpro1d_process*
+bpro1_process*
 bdifd_edgel_data_process::clone() const
 {
   return new bdifd_edgel_data_process(*this);

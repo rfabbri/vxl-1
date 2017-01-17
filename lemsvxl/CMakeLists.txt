@@ -33,32 +33,40 @@ if( POLICY CMP0033 )
   # and https://github.com/vxl/vxl/pull/122
   cmake_policy(SET CMP0033 OLD)
 endif()
-# TODO perhaps copy over the remaining ones from vxl
+# Use @rpath on OS X
+if( POLICY CMP0042 )
+  cmake_policy(SET CMP0042 NEW)
+endif()
+# Honor visibility properties for all target
+if( POLICY CMP0063 )
+  cmake_policy(SET CMP0063 NEW)
+endif()
+# Honor visibility properties for static libraries
+if( POLICY CMP0063 )
+  cmake_policy(SET CMP0063 NEW)
+endif()
+
 
 set( BUILD_LEMS "NO" )
 
 
 # We are building Brown Eyes interleaved with VXL
+# XXX NOT CURRENTLY SUPPORTED
 if (EXISTS ${vxl_SOURCE_DIR}/contrib/brl/blem/CMakeLists.txt)
   #Import cmake variable used by external projects
   include(${vxl_BINARY_DIR}/VXLConfig.cmake)
   set( BUILD_BROWN_INTERLEAVED "YES" )
   set( BUILD_LEMS "YES" )
-
-
-# Else, we are building Brown Eyes as a stand alone project 
+# Else, we are building Brown Eyes as a stand alone project  (currently supported)
 else (EXISTS ${vxl_SOURCE_DIR}/contrib/brl/blem/CMakeLists.txt)
 
   set (LIBRARY_OUTPUT_PATH ${lems_BINARY_DIR}/lib CACHE PATH "Single output directory for building all libraries.")
 
-  find_package(VXL)
+  find_package(VXL PATHS "../vxl-bin")
   if(VXL_FOUND)
     # include the standard stuff, such as Dart test
     set(VXL_PROVIDE_STANDARD_OPTIONS 1)
     include(${VXL_CMAKE_DIR}/UseVXL.cmake)
-
-    set( BUILD_LEMS "YES" )
-
   else(VXL_FOUND)
     if( VXL_BINARY_PATH )
       set( VXL_DIR ${VXL_BINARY_PATH} )
@@ -66,8 +74,19 @@ else (EXISTS ${vxl_SOURCE_DIR}/contrib/brl/blem/CMakeLists.txt)
     endif( VXL_BINARY_PATH )
   endif(VXL_FOUND)
 
+  find_package(VXD PATHS "../vxd-bin")
+  if(VXD_FOUND)
+    # include the standard stuff, such as Dart test
+    set(VXD_PROVIDE_STANDARD_OPTIONS 1)
+    include(${VXD_CMAKE_DIR}/UseVXD.cmake)
+    set( BUILD_LEMS "YES" )
+  else(VXD_FOUND)
+    if( VXD_BINARY_PATH )
+      set( VXD_DIR ${VXD_BINARY_PATH} )
+      message( "Use preferred VXD_DIR in place of VXD_BINARY_PATH" )
+    endif( VXD_BINARY_PATH )
+  endif(VXD_FOUND)
 endif (EXISTS ${vxl_SOURCE_DIR}/contrib/brl/blem/CMakeLists.txt)
-
 
 
 # If LEMS code is built (either stand-alone or interleaved)
@@ -125,7 +144,6 @@ if(BUILD_LEMS)
 endif(BUILD_LEMS)
 
 if(VXL_FOUND)
-
   # This is required on some platforms because various libraries
   # include OpenGL indirectly even when it is not used
   include_directories( ${VXL_VGUI_INCLUDE_DIR} )
@@ -162,9 +180,7 @@ if(VXL_FOUND)
   
   #required by dbul library
   include( ${LEMS_CMAKE_DIR}/Modules/UseOctave.cmake )
-
 endif(VXL_FOUND)
-
 
 if(NOT BUILD_BROWN_INTERLEAVED)
   # This SUBDIRS command must be the last SUBDIRS command in this file

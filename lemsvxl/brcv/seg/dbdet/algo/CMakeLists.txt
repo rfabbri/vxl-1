@@ -79,7 +79,7 @@ target_link_libraries( dbdet_algo dbdet )
 #target_compile_features(dbdet_algo PRIVATE cxx_strong_enums)
 
 if(OCTAVE_FOUND)
-    target_link_libraries( dbdet_algo dbil_algo )
+    target_link_libraries( dbdet_algo bild_algo )
 endif(OCTAVE_FOUND)
 
 if ( Boost_FOUND )

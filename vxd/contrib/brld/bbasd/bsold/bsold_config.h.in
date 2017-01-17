@@ -1,0 +1,17 @@
+// This is bsold_config.h
+#ifndef bsold_config_h
+#define bsold_config_h
+//:
+//\file
+//\brief 
+//\author Ricardo Fabbri (rfabbri.github.io)
+//\date 09/16/2009 01:38:11 PM PDT
+//
+
+#cmakedefine Boost_FOUND
+#ifdef Boost_FOUND
+#define HAS_BOOST 1
+#endif
+
+#endif // bsold_config_h
+

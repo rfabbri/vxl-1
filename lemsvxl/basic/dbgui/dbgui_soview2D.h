@@ -15,7 +15,7 @@
 
 
 #include <vgui/vgui_soview2D.h>
-#include <dbgl/algo/dbgl_circ_arc.h>
+#include <bgld/algo/bgld_circ_arc.h>
 
 
 //: display a circular arc object
@@ -23,7 +23,7 @@ class dbgui_soview2D_circ_arc : public vgui_soview2D
 {
  public:
    //: Constructor
-   dbgui_soview2D_circ_arc(const dbgl_circ_arc& circ_arc) : circ_arc_(circ_arc){};
+   dbgui_soview2D_circ_arc(const bgld_circ_arc& circ_arc) : circ_arc_(circ_arc){};
 
    //: Constructor
    dbgui_soview2D_circ_arc(float start_x, float start_y, float end_x, float end_y, float k);
@@ -50,10 +50,10 @@ class dbgui_soview2D_circ_arc : public vgui_soview2D
   virtual vcl_ostream& print(vcl_ostream& os) const;
 
   //: Return a smart pointer to the node
-  dbgl_circ_arc circ_arc() const {return this->circ_arc_; }
+  bgld_circ_arc circ_arc() const {return this->circ_arc_; }
  
 protected:
-  dbgl_circ_arc circ_arc_;
+  bgld_circ_arc circ_arc_;
 
 };
 

@@ -827,7 +827,7 @@ void dbdet_sel_tableau::draw_ES_fit(dbdet_curvelet* cvlet, float r, float g, flo
   dbdet_ES_curve_model* cm = (dbdet_ES_curve_model*)cvlet->curve_model;
 
   //compute the ES
-  dbgl_eulerspiral es_fit(cm->pt, cm->theta, cm->k, cm->gamma, 1);
+  bgld_eulerspiral es_fit(cm->pt, cm->theta, cm->k, cm->gamma, 1);
 
   //length on the minus side
   double Lm = vgl_distance(cvlet->edgel_chain[0]->pt, cvlet->ref_edgel->pt);
