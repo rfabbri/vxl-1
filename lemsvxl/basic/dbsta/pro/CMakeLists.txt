@@ -16,7 +16,7 @@ aux_source_directory(Templates dbsta_pro_sources)
 
 add_library(dbsta_pro ${dbsta_pro_sources})
 
-target_link_libraries(dbsta_pro dbsta dbsta_algo)
+target_link_libraries(dbsta_pro dbsta dbsta_algo bpro1 vidpro1 bsol vil vgl)
 
 
 
