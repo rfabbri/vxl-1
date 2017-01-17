@@ -63,10 +63,10 @@
 #include <vidpro1/process/vidpro1_load_vsol_process.h>
 #include <vidpro1/process/vidpro1_save_vsol_process.h>
 //#include <vidpro1/process/vidpro1_smoothcem_process.h>
-#include <dbsol/pro/dbsol_smooth_contours_process.h>
+#include <bsold/pro/bsold_smooth_contours_process.h>
 
 
-#include <dbil/pro/dbil_wshed2d_process.h>
+#include <bild/pro/bild_wshed2d_process.h>
 
 #include <dbdet/pro/dbdet_contour_tracer_process.h>
 #include <dbdet/pro/dbdet_image_gradient_process.h>
@@ -164,7 +164,7 @@ int main(int argc, char** argv)
   REG_PROCESS( vidpro1_edgeprune_process );
   REG_PROCESS( vidpro1_load_vsol_process );
   REG_PROCESS( vidpro1_save_vsol_process );
-  REG_PROCESS( dbsol_smooth_contours_process );
+  REG_PROCESS( bsold_smooth_contours_process );
 
   // --- other processes ---
   REG_PROCESS( dbdet_contour_tracer_process );
@@ -198,7 +198,7 @@ int main(int argc, char** argv)
   REG_PROCESS( dbdet_load_cvlet_map_process );
   REG_PROCESS( dbdet_save_cvlet_map_process );
   REG_PROCESS( dbdet_sel_process );
-  REG_PROCESS( dbil_wshed2d_process );
+  REG_PROCESS( bild_wshed2d_process );
   REG_PROCESS( dbdet_sel_extract_contours_process );
   REG_PROCESS( dbdet_generic_linker_process );
   REG_PROCESS( dbdet_hybrid_linker_process );

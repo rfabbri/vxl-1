@@ -17,4 +17,4 @@ set(edge_det_vis_sources
 
 add_library(edge_det_vis ${edge_det_vis_sources})
 
-target_link_libraries(edge_det_vis bvis1 dbdet)
+target_link_libraries(edge_det_vis bvis1 dbdet dbdet_vis)

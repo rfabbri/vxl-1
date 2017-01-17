@@ -1,10 +1,11 @@
 # contrib/edge_det/pro/CMakeLists.txt
 
-include_directories( ${lems_SOURCE_DIR}/breye1 )
 include_directories( ${lems_SOURCE_DIR}/basic )
 include_directories( ${lems_SOURCE_DIR}/brcv/seg )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bseg )
+
+
 
 set(edge_det_pro_sources
    
@@ -17,4 +18,4 @@ set(edge_det_pro_sources
 
 add_library(edge_det_pro ${edge_det_pro_sources})
 
-target_link_libraries(edge_det_pro csa bpro1 dbpro dbdet)
+target_link_libraries(edge_det_pro csa bpro1 bprod dbdet)
