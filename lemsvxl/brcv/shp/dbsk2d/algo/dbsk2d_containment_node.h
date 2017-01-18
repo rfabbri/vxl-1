@@ -15,7 +15,7 @@
 // \endverbatim 
 
 
-#include <dbsk2d/dbsk2d_containment_node_sptr.h>
+#include <dbsk2d/algo/dbsk2d_containment_node_sptr.h>
 #include <dbsk2d/algo/dbsk2d_ishock_transform_sptr.h>
 #include <dbsk2d/algo/dbsk2d_ishock_transform.h>
 

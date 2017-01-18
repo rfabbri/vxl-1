@@ -3,7 +3,7 @@
 //:
 // \file
 
-#include <dbsk2d/dbsk2d_containment_node.h>
+#include <dbsk2d/algo/dbsk2d_containment_node.h>
 #include <dbsk2d/algo/dbsk2d_ishock_transform.h>
 #include <dbsk2d/algo/dbsk2d_ishock_gap_detector.h>
 #include <dbsk2d/algo/dbsk2d_ishock_gap_transform.h>

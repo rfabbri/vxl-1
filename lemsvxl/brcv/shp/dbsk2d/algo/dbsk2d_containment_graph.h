@@ -14,8 +14,8 @@
 //
 // \endverbatim 
 
-#include <dbsk2d/dbsk2d_containment_node_sptr.h>
-#include <dbsk2d/dbsk2d_ishock_graph_sptr.h>
+#include <dbsk2d/algo/dbsk2d_containment_node_sptr.h>
+#include <dbsk2d/algo/dbsk2d_ishock_graph_sptr.h>
 #include <vgl/vgl_polygon.h>
 
 #include <vcl_map.h>

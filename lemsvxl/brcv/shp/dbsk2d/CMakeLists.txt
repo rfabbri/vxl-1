@@ -132,10 +132,6 @@ dbsk2d_rich_map_sptr.h
 
 dbsk2d_lagrangian_cell_bnd.h           dbsk2d_lagrangian_cell_bnd.cxx
 dbsk2d_lagrangian_cell_bnd_sptr.h
-dbsk2d_containment_node.h dbsk2d_containment_node.cxx
-dbsk2d_containment_graph.h dbsk2d_containment_graph.cxx
-dbsk2d_containment_node_sptr.h
-dbsk2d_transform_manager.h dbsk2d_transform_manager.cxx
 )
 
 aux_source_directory(Templates dbsk2d_sources)

@@ -2,7 +2,7 @@
 
 //:
 // \file
-#include <dbsk2d/dbsk2d_transform_manager.h>
+#include <dbsk2d/algo/dbsk2d_transform_manager.h>
 #include <vil3d/vil3d_load.h>
 #include <vil/vil_load.h>
 #include <vil/vil_bilin_interp.h>
