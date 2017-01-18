@@ -4,7 +4,7 @@
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_point_2d.h>
 
-#include <dbsol/dbsol_interp_curve_2d.h>
+#include <bsold/bsold_interp_curve_2d.h>
 
 #define EPSILON         (1.0E-8)
 #define SMALL           (1.0E-5)
@@ -13,8 +13,8 @@
 #define APPROX_INT(X)   ( vcl_fabs((X)-ROUND(X)) < SMALL ? ROUND(X) : (X) )
 
 
-dbcvr_interp_cvmatch::dbcvr_interp_cvmatch(dbsol_interp_curve_2d_sptr c1, 
-                                           dbsol_interp_curve_2d_sptr c2, 
+dbcvr_interp_cvmatch::dbcvr_interp_cvmatch(bsold_interp_curve_2d_sptr c1, 
+                                           bsold_interp_curve_2d_sptr c2, 
                                            double R, 
                                            double delta_ksi, double delta_eta) {
     

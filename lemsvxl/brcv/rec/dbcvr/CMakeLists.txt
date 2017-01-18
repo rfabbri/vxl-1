@@ -63,7 +63,7 @@ aux_source_directory(Templates dbcvr_sources)
 
 add_library(dbcvr  ${dbcvr_sources})
 
-target_link_libraries(dbcvr bsol dbsol dbdp dbnl_algo vdgl)
+target_link_libraries(dbcvr bsol bsold dbdp bnld_algo vdgl)
 
 # Processing Library
 add_subdirectory(pro)

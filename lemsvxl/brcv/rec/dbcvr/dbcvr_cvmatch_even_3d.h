@@ -16,7 +16,7 @@
 //
 //-------------------------------------------------------------------------
 
-#include <dbsol/dbsol_interp_curve_3d_sptr.h>
+#include <bsold/bsold_interp_curve_3d_sptr.h>
 #include "dbcvr_cvmatch.h"
 #include "dbcvr_cvmatch_even_3d.h"
 
@@ -33,8 +33,8 @@ class dbcvr_cvmatch_even_3d : public vbl_ref_count
 {
 protected:
   // curves
-  dbsol_interp_curve_3d *curve1_;
-  dbsol_interp_curve_3d *curve2_;
+  bsold_interp_curve_3d *curve1_;
+  bsold_interp_curve_3d *curve2_;
   // number of sample points
   int n1_;
   int n2_;
@@ -105,8 +105,8 @@ public:
   }
 
   vcl_string    _fileName1, _fileName2;
-  dbsol_interp_curve_3d_sptr curve1() { return curve1_; }
-  dbsol_interp_curve_3d_sptr curve2() { return curve2_; }
+  bsold_interp_curve_3d_sptr curve1() { return curve1_; }
+  bsold_interp_curve_3d_sptr curve2() { return curve2_; }
   void setFinalMap (FinalMapType map) { finalMap_ = map; }
   void setFinalMap (int i, int first, int second) 
   {
@@ -117,8 +117,8 @@ public:
   void setTemplateSize(int size);
 
   dbcvr_cvmatch_even_3d();
-  dbcvr_cvmatch_even_3d(dbsol_interp_curve_3d *c1, 
-                        dbsol_interp_curve_3d *c2, 
+  dbcvr_cvmatch_even_3d(bsold_interp_curve_3d *c1, 
+                        bsold_interp_curve_3d *c2, 
                         int n1, int n2, 
                         double R1, double R2, 
                         int template_size, int formula_type,

@@ -19,7 +19,7 @@
 #define _dbcvr_clsd_cvmatch_even_h
 
 #include <vcl_ctime.h>
-#include <dbsol/dbsol_interp_curve_2d_sptr.h>
+#include <bsold/bsold_interp_curve_2d_sptr.h>
 
 #include "dbcvr_cvmatch.h"
 
@@ -28,8 +28,8 @@ class dbcvr_clsd_cvmatch_even : public vbl_ref_count
 
 protected:
   //Data
-  dbsol_interp_curve_2d_sptr _curve1;
-  dbsol_interp_curve_2d_sptr _curve2;
+  bsold_interp_curve_2d_sptr _curve1;
+  bsold_interp_curve_2d_sptr _curve2;
 
   DPCostType _cost; //Temporary array for each match (2_n x _m)
   vcl_vector<int> _leftMask;
@@ -73,8 +73,8 @@ protected:
 
 public:
   dbcvr_clsd_cvmatch_even();
-  dbcvr_clsd_cvmatch_even(const dbsol_interp_curve_2d_sptr c1, 
-                          const dbsol_interp_curve_2d_sptr c2, 
+  dbcvr_clsd_cvmatch_even(const bsold_interp_curve_2d_sptr c1, 
+                          const bsold_interp_curve_2d_sptr c2, 
                           int n1,
                           int n2,
                           double R, 
@@ -102,8 +102,8 @@ public:
   
   void Match();  
 
-  dbsol_interp_curve_2d_sptr curve1() { return _curve1; }
-  dbsol_interp_curve_2d_sptr curve2() { return _curve2; }
+  bsold_interp_curve_2d_sptr curve1() { return _curve1; }
+  bsold_interp_curve_2d_sptr curve2() { return _curve2; }
 
 };
 

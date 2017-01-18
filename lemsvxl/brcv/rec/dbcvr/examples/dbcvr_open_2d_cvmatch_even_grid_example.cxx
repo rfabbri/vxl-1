@@ -11,13 +11,13 @@
 #include <vcl_vector.h>
 #include <vcl_cstring.h>
 #include <vsol/vsol_point_2d.h>
-#include <dbsol/dbsol_interp_curve_2d.h>
-#include <dbsol/algo/dbsol_curve_algs.h>
+#include <bsold/bsold_interp_curve_2d.h>
+#include <bsold/algo/bsold_curve_algs.h>
 #include <dbcvr/dbcvr_open_2d_cvmatch_even_grid.h>
-#include <dbgl/dbgl_eno_curve.h>
+#include <bgld/bgld_eno_curve.h>
 
 // Can says: In the future, it would be better to write an I/O class 
-// for dbsol curve class. I am re-using these functions for the time-being.
+// for bsold curve class. I am re-using these functions for the time-being.
 
 void loadCON(vcl_string fileName, vcl_vector<vsol_point_2d_sptr> &points)
 {
@@ -57,7 +57,7 @@ void loadCON(vcl_string fileName, vcl_vector<vsol_point_2d_sptr> &points)
   infp.close();
 }
 
-void writeCON(vcl_string fileName, dbsol_interp_curve_2d &c, int numpoints)
+void writeCON(vcl_string fileName, bsold_interp_curve_2d &c, int numpoints)
 {
   vcl_ofstream outfp(fileName.c_str());
   assert(outfp != NULL);
@@ -124,16 +124,16 @@ int main(int argc, char** argv)
     // construct the first curve
     vcl_vector<vsol_point_2d_sptr> points1;
     loadCON(inp1, points1);
-    dbsol_interp_curve_2d curve1;
+    bsold_interp_curve_2d curve1;
     vnl_vector<double> samples1;
-    dbsol_curve_algs::interpolate_eno(&curve1,points1,samples1);
+    bsold_curve_algs::interpolate_eno(&curve1,points1,samples1);
 
     // construct the second curve
     vcl_vector<vsol_point_2d_sptr> points2;
     loadCON(inp2, points2);
-    dbsol_interp_curve_2d curve2;
+    bsold_interp_curve_2d curve2;
     vnl_vector<double> samples2;
-    dbsol_curve_algs::interpolate_eno(&curve2,points2,samples2);
+    bsold_curve_algs::interpolate_eno(&curve2,points2,samples2);
 
     double R1 = 0.7;
     int template_size = 3;
@@ -142,7 +142,7 @@ int main(int argc, char** argv)
 //    vcl_fprintf(fp, "intervals: %d\n", curve1.size());
     for(unsigned i=0; i < curve1.size(); i++)
     {
-      dbgl_eno_curve *p = (dbgl_eno_curve *) curve1.interval(i);
+      bgld_eno_curve *p = (bgld_eno_curve *) curve1.interval(i);
 //      vcl_fprintf(fp, "tstart: %f pstart: %f %f\n", p->start_t(), p->point_at(p->start_t()).x(), p->point_at(p->start_t()).y());
 //      vcl_fprintf(fp, "%.10f %.10f\n", p->point_at(p->start_t()).x(), p->point_at(p->start_t()).y());
 //      vcl_fprintf(fp, "tend: %f pend: %f %f\n", p->end_t(), p->point_at(p->end_t()).x(), p->point_at(p->end_t()).y());
@@ -224,8 +224,8 @@ int main(int argc, char** argv)
   vcl_ifstream infp(batch_fname.c_str());
 
   vcl_vector<vcl_string> curve_names;
-  vcl_vector<dbsol_interp_curve_2d> curves;
-  vcl_vector<dbsol_interp_curve_2d> curves_inv;
+  vcl_vector<bsold_interp_curve_2d> curves;
+  vcl_vector<bsold_interp_curve_2d> curves_inv;
 
   vcl_string in_folder;
   infp >> in_folder;
@@ -258,8 +258,8 @@ int main(int argc, char** argv)
     
     vnl_vector<double> samples1;
     vnl_vector<double> samples2;
-    dbsol_curve_algs::interpolate_eno(&(curves[j]),points,samples1);
-    dbsol_curve_algs::interpolate_eno(&(curves_inv[j]),points_inv,samples2);
+    bsold_curve_algs::interpolate_eno(&(curves[j]),points,samples1);
+    bsold_curve_algs::interpolate_eno(&(curves_inv[j]),points_inv,samples2);
   }
 
   vcl_fprintf(fp, "        ");
@@ -300,8 +300,8 @@ int main(int argc, char** argv)
 //        double cost3 = result3.first;
 //        double cost4 = result4.first;
 
-        dbsol_interp_curve_2d *write_curve_1;
-        dbsol_interp_curve_2d *write_curve_2;
+        bsold_interp_curve_2d *write_curve_1;
+        bsold_interp_curve_2d *write_curve_2;
         FinalMapType* fmap;
         /*int which_pair;
 

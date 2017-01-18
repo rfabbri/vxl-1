@@ -9,6 +9,8 @@ include_directories( ${lems_SOURCE_DIR}/basic)
 include_directories( ${lems_SOURCE_DIR}/brcv/shp )
 include_directories( ${lems_SOURCE_DIR}/brcv/rec )
 include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories(${VXD_BRLD_INCLUDE_DIR})
+
 
 
 set( dbsksp_sources

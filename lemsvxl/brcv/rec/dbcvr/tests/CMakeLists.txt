@@ -10,7 +10,7 @@ add_executable( dbcvr_test_all
   test_interp_cvmatch.cxx
   test_cvmatch_even.cxx
 )
-target_link_libraries( dbcvr_test_all dbcvr bsol testlib dbsol)
+target_link_libraries( dbcvr_test_all dbcvr bsol testlib bsold)
 
 add_test( dbcvr_cvmatch              dbcvr_test_all test_cvmatch ${CMAKE_CURRENT_SOURCE_DIR}/file_read_data)
 add_test( dbcvr_cvmatch_even         dbcvr_test_all test_cvmatch_even)

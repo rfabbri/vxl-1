@@ -1,7 +1,7 @@
 #include "dbcvr_open_space_cvmatch_even_grid.h"
 
 dbcvr_open_space_cvmatch_even_grid::
-dbcvr_open_space_cvmatch_even_grid(dbsol_interp_curve_3d *c1, dbsol_interp_curve_3d *c2, 
+dbcvr_open_space_cvmatch_even_grid(bsold_interp_curve_3d *c1, bsold_interp_curve_3d *c2, 
                                    int grid_w, int grid_h, 
                                    double R1, double R2,
                                    char *cost_formula_comput_type,

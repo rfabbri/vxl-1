@@ -19,7 +19,7 @@
 //----------------------------------------------------------------------
 
 #include <dbdp/dbdp_cost.h>
-#include <dbsol/dbsol_interp_curve_3d.h>
+#include <bsold/bsold_interp_curve_3d.h>
 
 class dbcvr_open_space_cvmatch_even_grid_cost : public dbdp_cost
 {
@@ -34,7 +34,7 @@ public:
   //  If angle_der_comput_type is "geometric-formulas" / "eno-scheme", 
   //  the angle derivatives are computed by using geometric formulas / ENO
   //  interpolation scheme.
-  dbcvr_open_space_cvmatch_even_grid_cost(dbsol_interp_curve_3d *c1, dbsol_interp_curve_3d *c2, 
+  dbcvr_open_space_cvmatch_even_grid_cost(bsold_interp_curve_3d *c1, bsold_interp_curve_3d *c2, 
                                           int num_samples_c1, int num_samples_c2, 
                                           double R1, double R2,
                                           char *cost_formula_comput_type,
@@ -55,8 +55,8 @@ public:
 
 protected:
   // pointers to curves
-  dbsol_interp_curve_3d *c1_;
-  dbsol_interp_curve_3d *c2_;
+  bsold_interp_curve_3d *c1_;
+  bsold_interp_curve_3d *c2_;
   // number of sampling points on each curve
   // also determines the DP grid size
   int num_samples_c1_, num_samples_c2_;

@@ -17,7 +17,7 @@
 //
 //-------------------------------------------------------------------------
 
-#include <dbsol/dbsol_interp_curve_2d_sptr.h>
+#include <bsold/bsold_interp_curve_2d_sptr.h>
 #include "dbcvr_cvmatch.h"
 
 #include <vbl/vbl_ref_count.h>
@@ -26,8 +26,8 @@ class dbcvr_cvmatch_even : public vbl_ref_count
 {
 protected:
 
-  dbsol_interp_curve_2d_sptr    _curve1;
-  dbsol_interp_curve_2d_sptr    _curve2;
+  bsold_interp_curve_2d_sptr    _curve1;
+  bsold_interp_curve_2d_sptr    _curve2;
 
   int _n1;
   int _n2;
@@ -77,8 +77,8 @@ public:
   }
 
   vcl_string    _fileName1, _fileName2;
-  dbsol_interp_curve_2d_sptr curve1() { return _curve1; }
-  dbsol_interp_curve_2d_sptr curve2() { return _curve2; }
+  bsold_interp_curve_2d_sptr curve1() { return _curve1; }
+  bsold_interp_curve_2d_sptr curve2() { return _curve2; }
   void setFinalMap (FinalMapType map) {
     _finalMap = map;
   }
@@ -92,8 +92,8 @@ public:
   void setTemplateSize (int size);
 
   dbcvr_cvmatch_even ();
-  dbcvr_cvmatch_even (dbsol_interp_curve_2d_sptr c1, 
-                      dbsol_interp_curve_2d_sptr c2, 
+  dbcvr_cvmatch_even (bsold_interp_curve_2d_sptr c1, 
+                      bsold_interp_curve_2d_sptr c2, 
                       int n1, 
                       int n2, 
                       double R, 

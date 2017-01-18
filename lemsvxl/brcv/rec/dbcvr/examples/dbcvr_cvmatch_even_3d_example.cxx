@@ -10,8 +10,8 @@
 #include <vcl_vector.h>
 
 #include <vsol/vsol_point_3d.h>
-#include <dbsol/dbsol_interp_curve_3d.h>
-#include <dbsol/algo/dbsol_curve_3d_algs.h>
+#include <bsold/bsold_interp_curve_3d.h>
+#include <bsold/algo/bsold_curve_3d_algs.h>
 #include <dbcvr/dbcvr_cvmatch_even_3d.h>
 
 void loadCON(vcl_string fileName, vcl_vector<vsol_point_3d_sptr> &points)
@@ -52,7 +52,7 @@ void loadCON(vcl_string fileName, vcl_vector<vsol_point_3d_sptr> &points)
   infp.close();
 }
 
-void writeCON(vcl_string fileName, dbsol_interp_curve_3d &c, int numpoints)
+void writeCON(vcl_string fileName, bsold_interp_curve_3d &c, int numpoints)
 {
   vcl_ofstream outfp(fileName.c_str());
   assert(outfp != NULL);
@@ -124,16 +124,16 @@ int main(int argc, char** argv)
     // construct the first curve
     vcl_vector<vsol_point_3d_sptr> points1;
     loadCON(inp1, points1);
-    dbsol_interp_curve_3d curve1;
+    bsold_interp_curve_3d curve1;
     vcl_vector<double> samples1;
-    dbsol_curve_3d_algs::interpolate_eno_3d(&curve1,points1,samples1);
+    bsold_curve_3d_algs::interpolate_eno_3d(&curve1,points1,samples1);
 
     // construct the second curve
     vcl_vector<vsol_point_3d_sptr> points2;
     loadCON(inp2, points2);
-    dbsol_interp_curve_3d curve2;
+    bsold_interp_curve_3d curve2;
     vcl_vector<double> samples2;
-    dbsol_curve_3d_algs::interpolate_eno_3d(&curve2,points2,samples2);
+    bsold_curve_3d_algs::interpolate_eno_3d(&curve2,points2,samples2);
 
     // match curve1 and curve2
     dbcvr_cvmatch_even_3d curvematch(&curve1, &curve2, curve1.size()+1, curve2.size()+1, R1, R2, 3, FORMULA_TYPE, ANG_DER_COMP);
@@ -200,8 +200,8 @@ int main(int argc, char** argv)
   vcl_ifstream infp(batch_fname.c_str());
 
   vcl_vector<vcl_string> curve_names;
-  vcl_vector<dbsol_interp_curve_3d> curves;
-  vcl_vector<dbsol_interp_curve_3d> curves_inv;
+  vcl_vector<bsold_interp_curve_3d> curves;
+  vcl_vector<bsold_interp_curve_3d> curves_inv;
 
   vcl_string in_folder;
   infp >> in_folder;
@@ -233,8 +233,8 @@ int main(int argc, char** argv)
       points_inv.push_back(points[i]);
     
     vcl_vector<double> samples;
-    dbsol_curve_3d_algs::interpolate_eno_3d(&(curves[j]),points,samples);
-    dbsol_curve_3d_algs::interpolate_eno_3d(&(curves_inv[j]),points_inv,samples);
+    bsold_curve_3d_algs::interpolate_eno_3d(&(curves[j]),points,samples);
+    bsold_curve_3d_algs::interpolate_eno_3d(&(curves_inv[j]),points_inv,samples);
   }
 
   vcl_fprintf(fp, "        ");
@@ -268,8 +268,8 @@ int main(int argc, char** argv)
         double cost3 = curvematch3.finalCost()/*/(curves_inv[i].length() + curves_inv[j].length())*20*/;
         double cost4 = curvematch4.finalCost()/*/(curves_inv[i].length() + curves[j].length())*20*/;
 
-        dbsol_interp_curve_3d *write_curve_1;
-        dbsol_interp_curve_3d *write_curve_2;
+        bsold_interp_curve_3d *write_curve_1;
+        bsold_interp_curve_3d *write_curve_2;
         FinalMapType* fmap;
         int which_pair;
 

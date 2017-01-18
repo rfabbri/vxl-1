@@ -10,10 +10,10 @@
 #include <vsol/vsol_region_2d.h>
 #include <vsol/vsol_polygon_2d.h>
 
-#include <dbsol/dbsol_interp_curve_2d.h>
-#include <dbsol/dbsol_interp_curve_2d_sptr.h>
-#include <dbsol/algo/dbsol_curve_algs.h>
-#include <dbsol/algo/dbsol_geno.h>
+#include <bsold/bsold_interp_curve_2d.h>
+#include <bsold/bsold_interp_curve_2d_sptr.h>
+#include <bsold/algo/bsold_curve_algs.h>
+#include <bsold/algo/bsold_geno.h>
 
 #include <vil/vil_convert.h>
 //required because strk still uses vil1
@@ -426,19 +426,19 @@ bool dbcvr_mutual_info_process::execute()
 
   if (even_matching && !shock_matching) {
   
-    dbsol_interp_curve_2d_sptr curve1;
-    dbsol_interp_curve_2d_sptr curve2;
+    bsold_interp_curve_2d_sptr curve1;
+    bsold_interp_curve_2d_sptr curve2;
 
     if (!geno_interpolation) {
-      curve1 = new dbsol_interp_curve_2d();
-      curve2 = new dbsol_interp_curve_2d();
-      dbsol_curve_algs::interpolate_linear(curve1.ptr(), inp1, true);  // removed closed1, I want closed curves always
-      dbsol_curve_algs::interpolate_linear(curve2.ptr(), inp2, true);  // removed closed2
+      curve1 = new bsold_interp_curve_2d();
+      curve2 = new bsold_interp_curve_2d();
+      bsold_curve_algs::interpolate_linear(curve1.ptr(), inp1, true);  // removed closed1, I want closed curves always
+      bsold_curve_algs::interpolate_linear(curve2.ptr(), inp2, true);  // removed closed2
     } else { // geno
-      curve1 = new dbsol_geno_curve_2d();
-      curve2 = new dbsol_geno_curve_2d();
-      dbsol_geno::interpolate((dbsol_geno_curve_2d *)curve1.ptr(),inp1, true);
-      dbsol_geno::interpolate((dbsol_geno_curve_2d *)curve2.ptr(),inp2, true);
+      curve1 = new bsold_geno_curve_2d();
+      curve2 = new bsold_geno_curve_2d();
+      bsold_geno::interpolate((bsold_geno_curve_2d *)curve1.ptr(),inp1, true);
+      bsold_geno::interpolate((bsold_geno_curve_2d *)curve2.ptr(),inp2, true);
     }   
 
     int n1 = inp1.size();
@@ -545,10 +545,10 @@ bool dbcvr_mutual_info_process::execute()
   if (distance_transform) {
     //vcl_cout << "Using distance transform to find region correspondences!\n";
     //: use interpolated curves for interpolation based on arclength
-    dbsol_interp_curve_2d_sptr curve1 = new dbsol_interp_curve_2d();
-    dbsol_interp_curve_2d_sptr curve2 = new dbsol_interp_curve_2d();
-    dbsol_curve_algs::interpolate_linear(curve1.ptr(), inp1, true);  // removed closed1, I want closed curves always
-    dbsol_curve_algs::interpolate_linear(curve2.ptr(), inp2, true);  // removed closed2   
+    bsold_interp_curve_2d_sptr curve1 = new bsold_interp_curve_2d();
+    bsold_interp_curve_2d_sptr curve2 = new bsold_interp_curve_2d();
+    bsold_curve_algs::interpolate_linear(curve1.ptr(), inp1, true);  // removed closed1, I want closed curves always
+    bsold_curve_algs::interpolate_linear(curve2.ptr(), inp2, true);  // removed closed2   
 
     if (!rcor.find_correspondence_dt(curve1, curve2, pts1, pts2, lambda)) {
       vcl_cout << "Region correspondence based on distance transform could not be found!\n";

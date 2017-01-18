@@ -3,11 +3,11 @@
 #include <vcl_cstring.h>
 #include <vnl/vnl_math.h>
 #include <vcl_cstdlib.h>
-#include <dbnl/algo/dbnl_eno_third_order.h>
+#include <bnld/algo/bnld_eno_third_order.h>
 
 dbcvr_open_space_cvmatch_even_grid_cost::
-dbcvr_open_space_cvmatch_even_grid_cost(dbsol_interp_curve_3d *c1, 
-                                        dbsol_interp_curve_3d *c2, 
+dbcvr_open_space_cvmatch_even_grid_cost(bsold_interp_curve_3d *c1, 
+                                        bsold_interp_curve_3d *c2, 
                                         int num_samples_c1, 
                                         int num_samples_c2,
                                         double R1, double R2,
@@ -119,7 +119,7 @@ void dbcvr_open_space_cvmatch_even_grid_cost::compute_properties()
       for(int i=0; i < num_samples_c1_-1; i++)
       {
         interval_index = pick_points_for_eno(curve1_phis_, points, curve1_lengths_, arclengths, i);
-        dbnl_eno_third_order eno;
+        bnld_eno_third_order eno;
         eno.interpolate(arclengths, points);
         a0 = eno.coefficient(interval_index, 0);
         a1 = eno.coefficient(interval_index, 1);
@@ -138,7 +138,7 @@ void dbcvr_open_space_cvmatch_even_grid_cost::compute_properties()
       for(int i = 0; i < num_samples_c1_-1; i++)
       {
         interval_index = pick_points_for_eno(curve1_thetas_, points, curve1_lengths_, arclengths, i);
-        dbnl_eno_third_order eno;
+        bnld_eno_third_order eno;
         eno.interpolate(arclengths, points);
         a0 = eno.coefficient(interval_index, 0);
         a1 = eno.coefficient(interval_index, 1);
@@ -157,7 +157,7 @@ void dbcvr_open_space_cvmatch_even_grid_cost::compute_properties()
       for(int i = 0; i < num_samples_c2_-1; i++)
       {
         interval_index = pick_points_for_eno(curve2_phis_, points, curve2_lengths_, arclengths, i);
-        dbnl_eno_third_order eno;
+        bnld_eno_third_order eno;
         eno.interpolate(arclengths, points);
         a0 = eno.coefficient(interval_index, 0);
         a1 = eno.coefficient(interval_index, 1);
@@ -176,7 +176,7 @@ void dbcvr_open_space_cvmatch_even_grid_cost::compute_properties()
       for(int i = 0; i < num_samples_c2_-1; i++)
       {
         interval_index = pick_points_for_eno(curve2_thetas_, points, curve2_lengths_, arclengths, i);
-        dbnl_eno_third_order eno;
+        bnld_eno_third_order eno;
         eno.interpolate(arclengths, points);
         a0 = eno.coefficient(interval_index, 0);
         a1 = eno.coefficient(interval_index, 1);

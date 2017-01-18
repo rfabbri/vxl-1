@@ -28,7 +28,7 @@
 #include <assert.h>
 
 #include <vsol/vsol_point_2d_sptr.h>
-#include <dbsol/dbsol_interp_curve_2d_sptr.h>
+#include <bsold/bsold_interp_curve_2d_sptr.h>
 
 // dynamic programming table cell
 struct dpt_cell
@@ -49,8 +49,8 @@ class dbcvr_interp_cvmatch : public vbl_ref_count
 
 protected:
   //Data
-  dbsol_interp_curve_2d_sptr _curve1;
-  dbsol_interp_curve_2d_sptr _curve2;
+  bsold_interp_curve_2d_sptr _curve1;
+  bsold_interp_curve_2d_sptr _curve2;
 
   //: cells up for positive eta
   //  cells down for negative eta,  we need two cost arrays since we cannot use negative indices.
@@ -94,8 +94,8 @@ protected:
 
 public:
   dbcvr_interp_cvmatch() {}
-  dbcvr_interp_cvmatch(dbsol_interp_curve_2d_sptr c1, 
-                       dbsol_interp_curve_2d_sptr c2, 
+  dbcvr_interp_cvmatch(bsold_interp_curve_2d_sptr c1, 
+                       bsold_interp_curve_2d_sptr c2, 
                        double R, 
                        double delta_ksi, double delta_eta);   // only the curves and the original number of samples are given
   virtual ~dbcvr_interp_cvmatch() {};
@@ -105,8 +105,8 @@ public:
   //: return the cost of optimum alignment corresponding to kth starting point
   double finalCost();
   
-  dbsol_interp_curve_2d_sptr curve1() { return _curve1; }
-  dbsol_interp_curve_2d_sptr curve2() { return _curve2; }
+  bsold_interp_curve_2d_sptr curve1() { return _curve1; }
+  bsold_interp_curve_2d_sptr curve2() { return _curve2; }
 
   vcl_vector<vsol_point_2d_sptr> output_curve1() { return out_curve1_; }
   vcl_vector<vsol_point_2d_sptr> output_curve2() { return out_curve2_; }

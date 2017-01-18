@@ -2,7 +2,7 @@
 #include <vcl_cmath.h>
 #include <vcl_cstdio.h>
 
-#include <dbsol/dbsol_interp_curve_2d.h>
+#include <bsold/bsold_interp_curve_2d.h>
 
 dbcvr_clsd_cvmatch_even::dbcvr_clsd_cvmatch_even(){
   _n1 = 0;
@@ -10,8 +10,8 @@ dbcvr_clsd_cvmatch_even::dbcvr_clsd_cvmatch_even(){
   setTemplateSize(3);  
 }
 
-dbcvr_clsd_cvmatch_even::dbcvr_clsd_cvmatch_even(const dbsol_interp_curve_2d_sptr c1, 
-                                                 const dbsol_interp_curve_2d_sptr c2, 
+dbcvr_clsd_cvmatch_even::dbcvr_clsd_cvmatch_even(const bsold_interp_curve_2d_sptr c1, 
+                                                 const bsold_interp_curve_2d_sptr c2, 
                                                  int n1, 
                                                  int n2, 
                                                  double R, 
@@ -60,7 +60,7 @@ dbcvr_clsd_cvmatch_even::dbcvr_clsd_cvmatch_even(const dbsol_interp_curve_2d_spt
                                      // _n1*_delta_s1 = L1
                                      
   // CAUTION!!:
-  // curves are closed and dbsol_interp_curve_2d assumes that the angle of the point
+  // curves are closed and bsold_interp_curve_2d assumes that the angle of the point
   // for s = 0 is read from s = L, due to the interval structure used in that class.
   
   // NO NEED for duplication

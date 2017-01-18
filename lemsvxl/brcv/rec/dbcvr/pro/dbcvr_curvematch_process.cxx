@@ -24,7 +24,7 @@
 #include <vsol/vsol_polyline_2d_sptr.h>
 #include <vsol/vsol_region_2d.h>
 #include <vsol/vsol_polygon_2d.h>
-#include <dbsol/dbsol_file_io.h>
+#include <bsold/bsold_file_io.h>
 
 /*************************************************************************
 * Function Name: dbcvr_curvematch_process::dbcvr_curvematch_process
@@ -95,7 +95,7 @@ bool dbcvr_curvematch_process::execute()
   vsol_spatial_object_2d_sptr out1;
 
   if(load1){
-    out1 = dbsol_load_con_file(con_file1.c_str());
+    out1 = bsold_load_con_file(con_file1.c_str());
 
 //    poly1 = out1->cast_to_region()->cast_to_polygon();
   }
@@ -112,7 +112,7 @@ bool dbcvr_curvematch_process::execute()
   vidpro1_vsol2D_storage_sptr input_vsol2;
   vsol_spatial_object_2d_sptr out2;
   if(load2){
-    out2 = dbsol_load_con_file(con_file2.c_str());
+    out2 = bsold_load_con_file(con_file2.c_str());
 //    poly2 = out2->cast_to_region()->cast_to_polygon();
   }
   else{

@@ -6,7 +6,7 @@
 // \file
 // \brief This class matches two open 2d curves using an even DP grid
 //        The curves (c1 and c2) have to be constructed as 
-//        dbsol_interp_curve_2d objects.
+//        bsold_interp_curve_2d objects.
 //        See dbcvr_open_2d_cvmatch_even_grid_example.cxx for an 
 //        example of using this class.
 //
@@ -20,7 +20,7 @@
 //
 //----------------------------------------------------------------------
 
-#include <dbsol/dbsol_interp_curve_2d.h>
+#include <bsold/bsold_interp_curve_2d.h>
 #include <dbcvr/dbcvr_open_2d_cvmatch_even_grid_cost.h>
 #include <dbdp/dbdp_engine.h>
 
@@ -33,7 +33,7 @@ public:
   //  on c1 and c2, respectively)
   //  R1: bending cost weight coefficient
   //  template_size : for dynamic programming algorithm
-  dbcvr_open_2d_cvmatch_even_grid(dbsol_interp_curve_2d *c1, dbsol_interp_curve_2d *c2, 
+  dbcvr_open_2d_cvmatch_even_grid(bsold_interp_curve_2d *c1, bsold_interp_curve_2d *c2, 
                                   int grid_w, int grid_h, 
                                   double R1 = 0.7,
                                   int template_size = 3);
@@ -48,8 +48,8 @@ public:
 
 protected:
   // pointers to curves
-  dbsol_interp_curve_2d *c1_;
-  dbsol_interp_curve_2d *c2_;
+  bsold_interp_curve_2d *c1_;
+  bsold_interp_curve_2d *c2_;
   // number of sampling points on each curve
   // also determines the DP grid size
   int grid_w_, grid_h_;

@@ -2,7 +2,7 @@
 # brcv/rec/dbcvr/examples/CMakeLists.txt
 
 add_executable(dbcvr_open_space_cvmatch_even_grid_example dbcvr_open_space_cvmatch_even_grid_example.cxx )
-target_link_libraries(dbcvr_open_space_cvmatch_even_grid_example dbcvr dbsol dbsol_algo dbdp)
+target_link_libraries(dbcvr_open_space_cvmatch_even_grid_example dbcvr bsold bsold_algo dbdp)
 
 add_executable(dbcvr_open_2d_cvmatch_even_grid_example dbcvr_open_2d_cvmatch_even_grid_example.cxx )
-target_link_libraries(dbcvr_open_2d_cvmatch_even_grid_example dbcvr dbsol dbsol_algo dbdp)
+target_link_libraries(dbcvr_open_2d_cvmatch_even_grid_example dbcvr bsold bsold_algo dbdp)

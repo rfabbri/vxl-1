@@ -4,7 +4,7 @@
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_point_2d.h>
 
-#include <dbsol/dbsol_interp_curve_2d.h>
+#include <bsold/bsold_interp_curve_2d.h>
 
 #define EPSILON         (1.0E-8)
 #define SMALL           (1.0E-5)
@@ -12,7 +12,7 @@
 #define ROUND(X)        ((int)((X)+0.5))
 #define APPROX_INT(X)   ( vcl_fabs((X)-ROUND(X)) < SMALL ? ROUND(X) : (X) )
 
-// curves are closed and dbsol_interp_curve_2d assumes that the angle of the point
+// curves are closed and bsold_interp_curve_2d assumes that the angle of the point
 // for s = 0 is read from s = L, due to the interval structure used in that class.
 
 //: return real arclength along second curve, s2 should never exceed L2 in fact
@@ -29,8 +29,8 @@ double dbcvr_clsd_interp_cvmatch::get_s1(double s) {
   return (vcl_abs(s) < SMALL ? L1 : s);
 }
 
-dbcvr_clsd_interp_cvmatch::dbcvr_clsd_interp_cvmatch(dbsol_interp_curve_2d_sptr c1, 
-                                                     dbsol_interp_curve_2d_sptr c2, 
+dbcvr_clsd_interp_cvmatch::dbcvr_clsd_interp_cvmatch(bsold_interp_curve_2d_sptr c1, 
+                                                     bsold_interp_curve_2d_sptr c2, 
                                                      double R, 
                                                      double delta_ksi, double delta_eta) {
     

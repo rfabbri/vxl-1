@@ -22,8 +22,8 @@ set(dbcvr_pro_sources
 
 add_library(dbcvr_pro ${dbcvr_pro_sources})
 
-#target_link_libraries(dbcvr_pro dbcvr dbru vidpro1 brip strk bsta vtol dbsol_algo dbsk2d_pro)
-target_link_libraries(dbcvr_pro dbcvr vidpro1 brip vtol dbsol_algo dbsk2d_pro)
+#target_link_libraries(dbcvr_pro dbcvr dbru vidpro1 brip strk bsta vtol bsold_algo dbsk2d_pro)
+target_link_libraries(dbcvr_pro dbcvr vidpro1 brip vtol bsold_algo dbsk2d_pro)
 
 
 

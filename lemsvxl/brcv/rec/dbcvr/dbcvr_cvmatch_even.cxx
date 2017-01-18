@@ -1,6 +1,6 @@
 #include "dbcvr_cvmatch_even.h"
 
-#include <dbsol/dbsol_interp_curve_2d.h>
+#include <bsold/bsold_interp_curve_2d.h>
 
 #include <vcl_cmath.h>
 #include <vcl_string.h>
@@ -18,8 +18,8 @@ dbcvr_cvmatch_even::dbcvr_cvmatch_even()
   setTemplateSize(3);
 }
 
-dbcvr_cvmatch_even::dbcvr_cvmatch_even (dbsol_interp_curve_2d_sptr c1, 
-                                        dbsol_interp_curve_2d_sptr c2, 
+dbcvr_cvmatch_even::dbcvr_cvmatch_even (bsold_interp_curve_2d_sptr c1, 
+                                        bsold_interp_curve_2d_sptr c2, 
                                         int n1, 
                                         int n2, 
                                         double R,

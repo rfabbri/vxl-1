@@ -9,9 +9,9 @@
 #include <vsol/vsol_region_2d.h>
 #include <vsol/vsol_polygon_2d.h>
 
-#include <dbsol/algo/dbsol_curve_algs.h>
-#include <dbsol/dbsol_interp_curve_2d.h>
-#include <dbsol/algo/dbsol_geno.h>
+#include <bsold/algo/bsold_curve_algs.h>
+#include <bsold/bsold_interp_curve_2d.h>
+#include <bsold/algo/bsold_geno.h>
 
 #include <dbcvr/dbcvr_interp_cvmatch.h>
 #include <dbcvr/dbcvr_interp_cvmatch_sptr.h>
@@ -148,20 +148,20 @@ bool dbcvr_interp_cvmatch_process::execute()
   else
     vcl_cout << "Original curve2 is a polyline, i.e. an open curve\n";
 
-  //dbsol_interp_curve_2d_sptr curve1 = new dbsol_interp_curve_2d();
-  //dbsol_interp_curve_2d_sptr curve2 = new dbsol_interp_curve_2d();
+  //bsold_interp_curve_2d_sptr curve1 = new bsold_interp_curve_2d();
+  //bsold_interp_curve_2d_sptr curve2 = new bsold_interp_curve_2d();
 
-  dbsol_interp_curve_2d_sptr curve1;
-  dbsol_interp_curve_2d_sptr curve2;
+  bsold_interp_curve_2d_sptr curve1;
+  bsold_interp_curve_2d_sptr curve2;
 
   bool closed = closed_version_normal || closed_version_even;
 
   if (interpolation_type == 1) 
   {  // linear
-    curve1 = new dbsol_interp_curve_2d();
-    curve2 = new dbsol_interp_curve_2d();
-    dbsol_curve_algs::interpolate_linear(curve1.ptr(), inp1, closed);  // removed closed1, I want closed curves always
-    dbsol_curve_algs::interpolate_linear(curve2.ptr(), inp2, closed);  // removed closed2
+    curve1 = new bsold_interp_curve_2d();
+    curve2 = new bsold_interp_curve_2d();
+    bsold_curve_algs::interpolate_linear(curve1.ptr(), inp1, closed);  // removed closed1, I want closed curves always
+    bsold_curve_algs::interpolate_linear(curve2.ptr(), inp2, closed);  // removed closed2
   } 
   else if (interpolation_type == 2)
   {  // cubic
@@ -170,19 +170,19 @@ bool dbcvr_interp_cvmatch_process::execute()
   } 
   else if (interpolation_type == 3)
   {  // geno
-    curve1 = new dbsol_geno_curve_2d();
-    curve2 = new dbsol_geno_curve_2d();
-    dbsol_geno::interpolate((dbsol_geno_curve_2d *)curve1.ptr(),inp1, closed);
-    dbsol_geno::interpolate((dbsol_geno_curve_2d *)curve2.ptr(),inp2, closed);
+    curve1 = new bsold_geno_curve_2d();
+    curve2 = new bsold_geno_curve_2d();
+    bsold_geno::interpolate((bsold_geno_curve_2d *)curve1.ptr(),inp1, closed);
+    bsold_geno::interpolate((bsold_geno_curve_2d *)curve2.ptr(),inp2, closed);
   } 
   else if (interpolation_type == 4)
   {
     // eno
-    curve1 = new dbsol_interp_curve_2d();
-    curve2 = new dbsol_interp_curve_2d();
+    curve1 = new bsold_interp_curve_2d();
+    curve2 = new bsold_interp_curve_2d();
     vnl_vector<double> sample_pts;
-    dbsol_curve_algs::interpolate_eno(curve1.ptr(), inp1, sample_pts);
-    dbsol_curve_algs::interpolate_eno(curve2.ptr(), inp2, sample_pts);
+    bsold_curve_algs::interpolate_eno(curve1.ptr(), inp1, sample_pts);
+    bsold_curve_algs::interpolate_eno(curve2.ptr(), inp2, sample_pts);
   }
   else 
   {  //unknown

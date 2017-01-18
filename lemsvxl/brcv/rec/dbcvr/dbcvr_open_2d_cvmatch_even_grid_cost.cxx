@@ -4,8 +4,8 @@
 #include <vnl/vnl_math.h>
 
 dbcvr_open_2d_cvmatch_even_grid_cost::
-dbcvr_open_2d_cvmatch_even_grid_cost(dbsol_interp_curve_2d *c1, 
-                                        dbsol_interp_curve_2d *c2, 
+dbcvr_open_2d_cvmatch_even_grid_cost(bsold_interp_curve_2d *c1, 
+                                        bsold_interp_curve_2d *c2, 
                                         int num_samples_c1, 
                                         int num_samples_c2,
                                         double R1)
