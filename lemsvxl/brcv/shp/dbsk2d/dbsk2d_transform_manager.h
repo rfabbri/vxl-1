@@ -97,7 +97,7 @@ public:
             }
         }
 
-        diag_=vcl_sqrt(vcl_pow(image_->ni(),2)+vcl_pow(image_->nj(),2));
+        diag_=vcl_sqrt(vcl_pow((float)image_->ni(),2)+vcl_pow((float)image_->nj(),2));
 
 
         vil_image_view<vxl_byte> vv=image_->get_view();

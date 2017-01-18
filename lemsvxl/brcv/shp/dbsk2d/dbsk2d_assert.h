@@ -46,7 +46,7 @@ extern void dbsk2d_assert_failure(char const *, int, char const *);
 #if !VCL_CXX_HAS_HEADER_CASSERT
 # include <assert.h>
 #else
-# include "iso/vcl_cassert.h"
+# include <vcl_cassert.h>
 #endif
 
 //don't know how to handle this properly yet

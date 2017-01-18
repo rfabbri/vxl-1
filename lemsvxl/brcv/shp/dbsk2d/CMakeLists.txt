@@ -142,7 +142,7 @@ aux_source_directory(Templates dbsk2d_sources)
 
 add_library(dbsk2d ${dbsk2d_sources})
 
-target_link_libraries( dbsk2d bgrld vgl vcl vnl vbl vtol bsold bsold_algo )
+target_link_libraries( dbsk2d bgrld vgl vcl vnl vbl vtol bsold bsold_algo bgld_algo bsol bil_algo vil3d vil)
 
 # Processing Library
 add_subdirectory(pro)
