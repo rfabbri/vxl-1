@@ -28,7 +28,7 @@
 #include <dbru/pro/dbru_rcor_storage_sptr.h>
 #include <dbru/pro/dbru_rcor_storage.h>
 
-#include <dbsol/dbsol_interp_curve_2d_sptr.h>
+#include <bsold/bsold_interp_curve_2d_sptr.h>
 #include <dbcvr/dbcvr_cv_cor_sptr.h>
 
 //: A tool to query the region correspondence bwtween two observations
@@ -82,8 +82,8 @@ protected:
   
   // fix the rcor at initialization from active storage
   dbru_rcor_sptr rcor_;
-  dbsol_interp_curve_2d_sptr curve11_;
-  dbsol_interp_curve_2d_sptr curve22_;
+  bsold_interp_curve_2d_sptr curve11_;
+  bsold_interp_curve_2d_sptr curve22_;
   dbcvr_cv_cor_sptr sil_cor_;
 
 };

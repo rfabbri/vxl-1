@@ -17,8 +17,8 @@
 #include <dbinfo/dbinfo_match_optimizer.h>
 #include <dbinfo/dbinfo_feature_data.h>
 
-#include <dbsol/dbsol_interp_curve_2d.h>
-#include <dbsol/algo/dbsol_curve_algs.h>
+#include <bsold/bsold_interp_curve_2d.h>
+#include <bsold/algo/bsold_curve_algs.h>
 #include <bsol/bsol_algs.h>
 
 #include <dbskr/dbskr_tree.h>
@@ -107,10 +107,10 @@ vil_image_resource_sptr dbru_object_matcher::minfo_thomas_curve_matching(dbru_ob
     //vcl_cout << "Using distance transform to find region correspondences!\n";
     //: use interpolated curves for interpolation based on arclength
     
-    dbsol_interp_curve_2d_sptr curve11 = new dbsol_interp_curve_2d();
-    dbsol_interp_curve_2d_sptr curve22 = new dbsol_interp_curve_2d();
-    dbsol_curve_algs::interpolate_linear(curve11.ptr(), poly0);  // removed closed1, I want closed curves always
-    dbsol_curve_algs::interpolate_linear(curve22.ptr(), polyi);  // removed closed2   
+    bsold_interp_curve_2d_sptr curve11 = new bsold_interp_curve_2d();
+    bsold_interp_curve_2d_sptr curve22 = new bsold_interp_curve_2d();
+    bsold_curve_algs::interpolate_linear(curve11.ptr(), poly0);  // removed closed1, I want closed curves always
+    bsold_curve_algs::interpolate_linear(curve22.ptr(), polyi);  // removed closed2   
 
     rcor->clear_region_correspondence();
 
@@ -364,10 +364,10 @@ dbru_object_matcher::generate_rcor_curve_matching_dt(dbinfo_observation_sptr obs
   vsol_polygon_2d_sptr polyi = obsi->geometry()->poly(0);
 
   // use interpolated curves for interpolation based on arclength
-  dbsol_interp_curve_2d_sptr curve11 = new dbsol_interp_curve_2d();
-  dbsol_interp_curve_2d_sptr curve22 = new dbsol_interp_curve_2d();
-  dbsol_curve_algs::interpolate_linear(curve11.ptr(), poly0);
-  dbsol_curve_algs::interpolate_linear(curve22.ptr(), polyi);
+  bsold_interp_curve_2d_sptr curve11 = new bsold_interp_curve_2d();
+  bsold_interp_curve_2d_sptr curve22 = new bsold_interp_curve_2d();
+  bsold_curve_algs::interpolate_linear(curve11.ptr(), poly0);
+  bsold_curve_algs::interpolate_linear(curve22.ptr(), polyi);
   
   float scale = float((double)rcor->get_upper2_x()/(double)rcor->get_upper1_x());
   if (!dbru_rcor_generator::find_correspondence_dt(rcor, sil_cor, curve11, curve22, scale) ) {
@@ -464,10 +464,10 @@ dbru_object_matcher::generate_rcor_curve_matching_dt2(dbinfo_observation_sptr ob
   vsol_polygon_2d_sptr polyi = obsi->geometry()->poly(0);
 
   // use interpolated curves for interpolation based on arclength
-  dbsol_interp_curve_2d_sptr curve11 = new dbsol_interp_curve_2d();
-  dbsol_interp_curve_2d_sptr curve22 = new dbsol_interp_curve_2d();
-  dbsol_curve_algs::interpolate_linear(curve11.ptr(), poly0);
-  dbsol_curve_algs::interpolate_linear(curve22.ptr(), polyi);
+  bsold_interp_curve_2d_sptr curve11 = new bsold_interp_curve_2d();
+  bsold_interp_curve_2d_sptr curve22 = new bsold_interp_curve_2d();
+  bsold_curve_algs::interpolate_linear(curve11.ptr(), poly0);
+  bsold_curve_algs::interpolate_linear(curve22.ptr(), polyi);
   
   float scale = float((double)rcor->get_upper2_x()/(double)rcor->get_upper1_x());
   if (!dbru_rcor_generator::find_correspondence_dt2(rcor, sil_cor, curve11, curve22, scale, ratio) ) {

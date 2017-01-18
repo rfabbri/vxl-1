@@ -9,6 +9,8 @@ include_directories( ${VXL_RPL_INCLUDE_DIR})
 include_directories( ${lems_SOURCE_DIR}/brcv/trk )
 include_directories( ${lems_SOURCE_DIR}/brcv/shp )
 include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories(${VXD_BRLD_INCLUDE_DIR})
+
 
 set(dbru_sources  
 dbru_label.h                           dbru_label.cxx

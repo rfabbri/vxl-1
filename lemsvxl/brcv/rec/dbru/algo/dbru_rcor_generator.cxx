@@ -20,8 +20,8 @@
 
 #include <bdgl/bdgl_curve_algs.h>
 
-#include <dbsol/dbsol_interp_curve_2d.h>
-#include <dbsol/algo/dbsol_curve_algs.h>
+#include <bsold/bsold_interp_curve_2d.h>
+#include <bsold/algo/bsold_curve_algs.h>
 
 #include <dbskr/dbskr_scurve.h>
 
@@ -399,10 +399,10 @@ bool dbru_rcor_generator::find_correspondence_line2(dbru_rcor_sptr cor,
   vsol_polygon_2d_sptr polyi = sil_cor->get_poly2();
 
   // create interpolated curves from sil_cor's polygons
-  dbsol_interp_curve_2d_sptr curve0 = new dbsol_interp_curve_2d();
-  dbsol_interp_curve_2d_sptr curvei = new dbsol_interp_curve_2d();
-  dbsol_curve_algs::interpolate_linear(curve0.ptr(), poly0);
-  dbsol_curve_algs::interpolate_linear(curvei.ptr(), polyi);
+  bsold_interp_curve_2d_sptr curve0 = new bsold_interp_curve_2d();
+  bsold_interp_curve_2d_sptr curvei = new bsold_interp_curve_2d();
+  bsold_curve_algs::interpolate_linear(curve0.ptr(), poly0);
+  bsold_curve_algs::interpolate_linear(curvei.ptr(), polyi);
 
   // check if lengths of curves are the same
   vcl_cout << "length1 from sil_cor: " << sil_cor->get_length1() << " length2: " << sil_cor->get_length2() << vcl_endl;
@@ -703,10 +703,10 @@ bool dbru_rcor_generator::find_correspondence_line4(dbru_rcor_sptr cor,
   vdgl_interpolator_sptr interp2 = new vdgl_interpolator_linear(chain2);
   vdgl_digital_curve_sptr dc2 = new vdgl_digital_curve(interp2);
 
-  dbsol_interp_curve_2d_sptr curve11 = new dbsol_interp_curve_2d();
-  dbsol_interp_curve_2d_sptr curve22 = new dbsol_interp_curve_2d();
-  dbsol_curve_algs::interpolate_linear(curve11.ptr(), poly0);  // removed closed1, I want closed curves always
-  dbsol_curve_algs::interpolate_linear(curve22.ptr(), polyi);
+  bsold_interp_curve_2d_sptr curve11 = new bsold_interp_curve_2d();
+  bsold_interp_curve_2d_sptr curve22 = new bsold_interp_curve_2d();
+  bsold_curve_algs::interpolate_linear(curve11.ptr(), poly0);  // removed closed1, I want closed curves always
+  bsold_curve_algs::interpolate_linear(curve22.ptr(), polyi);
 
   //: prepare a vector to hold corresponding (x,y) in the second region and count
   //                                                     x2 , y2    cnt
@@ -932,8 +932,8 @@ vcl_pair<double, double> dbru_rcor_generator::dt(vgl_polygon<double> const& poly
 
 //: find region correspondence based on distance transform
 bool dbru_rcor_generator::find_correspondence_dt(dbru_rcor_sptr cor,
-                                                 dbsol_interp_curve_2d_sptr curve1,
-                                                 dbsol_interp_curve_2d_sptr curve2,
+                                                 bsold_interp_curve_2d_sptr curve1,
+                                                 bsold_interp_curve_2d_sptr curve2,
                                                  float scale) 
 {
   if (!cor || cor->halt_) {
@@ -1124,8 +1124,8 @@ bool dbru_rcor_generator::find_correspondence_dt(dbru_rcor_sptr cor,
 //  defined uniquely at exact sample points of the polygon
 //  3) Also find correspondences going from region2 into region1 and add to the correspondence set
 bool dbru_rcor_generator::find_correspondence_dt2(dbru_rcor_sptr cor,
-                                                  dbsol_interp_curve_2d_sptr curve1,
-                                                  dbsol_interp_curve_2d_sptr curve2,
+                                                  bsold_interp_curve_2d_sptr curve1,
+                                                  bsold_interp_curve_2d_sptr curve2,
                                                   float scale, float ratio)
 {
   if (!cor || cor->halt_) {
@@ -1545,8 +1545,8 @@ bool dbru_rcor_generator::find_correspondence_line4(dbru_rcor_sptr cor, dbcvr_cv
 
 //: find region correspondence based on distance transform 
 bool dbru_rcor_generator::find_correspondence_dt(dbru_rcor_sptr cor, dbcvr_cv_cor_sptr sil_cor,
-                                                 dbsol_interp_curve_2d_sptr curve1,
-                                                 dbsol_interp_curve_2d_sptr curve2,
+                                                 bsold_interp_curve_2d_sptr curve1,
+                                                 bsold_interp_curve_2d_sptr curve2,
                                                  float scale) 
 {
   cor->set_sil_cor(sil_cor);
@@ -1554,8 +1554,8 @@ bool dbru_rcor_generator::find_correspondence_dt(dbru_rcor_sptr cor, dbcvr_cv_co
 }
 
 bool dbru_rcor_generator::find_correspondence_dt2(dbru_rcor_sptr cor, dbcvr_cv_cor_sptr sil_cor,
-                                                  dbsol_interp_curve_2d_sptr curve1,
-                                                  dbsol_interp_curve_2d_sptr curve2,
+                                                  bsold_interp_curve_2d_sptr curve1,
+                                                  bsold_interp_curve_2d_sptr curve2,
                                                   float scale, float ratio) 
 {
   cor->set_sil_cor(sil_cor);

@@ -31,7 +31,7 @@
 #include <vgl/vgl_polygon.h>
 #include <vgl/algo/vgl_norm_trans_2d.h>
 
-#include <dbsol/dbsol_interp_curve_2d_sptr.h>
+#include <bsold/bsold_interp_curve_2d_sptr.h>
 #include <dbru/dbru_rcor_sptr.h>
 
 #include <dbcvr/dbcvr_cv_cor_sptr.h>
@@ -99,20 +99,20 @@ public:
 
   //: find region correspondence based on distance transform 
   static bool find_correspondence_dt(dbru_rcor_sptr cor,
-                              dbsol_interp_curve_2d_sptr curve1,
-                              dbsol_interp_curve_2d_sptr curve2,
+                              bsold_interp_curve_2d_sptr curve1,
+                              bsold_interp_curve_2d_sptr curve2,
                               float scale);
 
   //: find region correspondence based on distance transform 
   static bool find_correspondence_dt(dbru_rcor_sptr cor, dbcvr_cv_cor_sptr sil_cor,
-                                     dbsol_interp_curve_2d_sptr curve1,
-                                     dbsol_interp_curve_2d_sptr curve2,
+                                     bsold_interp_curve_2d_sptr curve1,
+                                     bsold_interp_curve_2d_sptr curve2,
                                      float scale);
 
   
   static bool find_correspondence_dt2(dbru_rcor_sptr cor, dbcvr_cv_cor_sptr sil_cor,
-                                      dbsol_interp_curve_2d_sptr curve1,
-                                      dbsol_interp_curve_2d_sptr curve2,
+                                      bsold_interp_curve_2d_sptr curve1,
+                                      bsold_interp_curve_2d_sptr curve2,
                                       float scale, float ratio);
 
   //: find region correspondence based on distance transform 
@@ -132,8 +132,8 @@ public:
   //  defined uniquely at exact sample points of the polygon
   //  3) Also find correspondences going from region2 into region1 and add to the correspondence set
   static bool find_correspondence_dt2(dbru_rcor_sptr cor,
-                                      dbsol_interp_curve_2d_sptr curve1,
-                                      dbsol_interp_curve_2d_sptr curve2,
+                                      bsold_interp_curve_2d_sptr curve1,
+                                      bsold_interp_curve_2d_sptr curve2,
                                       float scale, float ratio);
 
   //: return the distance to the nearest polygon edge, together with arclength 

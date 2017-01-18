@@ -18,8 +18,8 @@
 
 #include <dbru/algo/dbru_rcor_generator.h>
 
-#include <dbsol/dbsol_interp_curve_2d.h>
-#include <dbsol/algo/dbsol_curve_algs.h>
+#include <bsold/bsold_interp_curve_2d.h>
+#include <bsold/algo/bsold_curve_algs.h>
 #include <dbcvr/dbcvr_cv_cor.h>
 
 //: Constructor - protected
@@ -80,10 +80,10 @@ void dbru_rcor_tool::activate()
     rcor_ = storage_->get_rcor();
     sil_cor_ = rcor_->get_sil_cor();
 
-    curve11_ = new dbsol_interp_curve_2d();
-    curve22_ = new dbsol_interp_curve_2d();
-    dbsol_curve_algs::interpolate_linear(curve11_.ptr(), sil_cor_->get_poly1());
-    dbsol_curve_algs::interpolate_linear(curve22_.ptr(), sil_cor_->get_poly2());
+    curve11_ = new bsold_interp_curve_2d();
+    curve22_ = new bsold_interp_curve_2d();
+    bsold_curve_algs::interpolate_linear(curve11_.ptr(), sil_cor_->get_poly1());
+    bsold_curve_algs::interpolate_linear(curve22_.ptr(), sil_cor_->get_poly2());
   }
 
   bvis1_manager::instance()->post_redraw();

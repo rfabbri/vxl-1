@@ -6,7 +6,7 @@
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_closest_point.h>
 
-#include <dbsol/dbsol_interp_curve_2d.h>
+#include <bsold/bsold_interp_curve_2d.h>
 
 #include <dbskr/dbskr_scurve.h>
 
