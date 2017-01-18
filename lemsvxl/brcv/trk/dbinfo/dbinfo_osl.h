@@ -17,6 +17,7 @@
 //---------------------------------------------------------------------
 // A simple object signature library that stores a set of observations of
 // a given class. 
+#include <vcl_iostream.h>
 #include <vcl_vector.h>
 #include <vcl_string.h>
 #include <vcl_map.h>

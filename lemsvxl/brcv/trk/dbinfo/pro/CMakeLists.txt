@@ -22,7 +22,7 @@ set(dbinfo_pro_sources
 
 add_library(dbinfo_pro ${dbinfo_pro_sources})
 
-target_link_libraries(dbinfo_pro dbinfo vidpro1)
+target_link_libraries(dbinfo_pro dbinfo vidpro1 bvis1)
 
 #if(BUILD_TESTING)
 #  add_subdirectory(tests)

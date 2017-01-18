@@ -4,6 +4,8 @@
 include_directories(${VXL_GEL_INCLUDE_DIR} )
 include_directories(${VXL_BRL_INCLUDE_DIR}/bseg )
 include_directories(${VXL_BRL_INCLUDE_DIR}/bbas )
+include_directories(${VXD_BRLD_INCLUDE_DIR})
+
 
 set(dbinfo_sources
    dbinfo_region_geometry.h        dbinfo_region_geometry.cxx    
@@ -43,7 +45,7 @@ aux_source_directory(Templates dbinfo_sources)
 
 add_library(dbinfo ${dbinfo_sources})
 
-target_link_libraries(dbinfo sdet bsta brip bugl bsol btol bdgl vsol vil vgl_algo vnl vsl vbl_io vbl)
+target_link_libraries(dbinfo bpro1 sdet bsta brip bugl bsol btol bdgl vsol vil vgl_algo vnl vsl vbl_io vbl)
 
 # Processing Library
 add_subdirectory(pro)

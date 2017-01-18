@@ -16,7 +16,7 @@ set(dbinfo_vis_sources
 
 add_library(dbinfo_vis ${dbinfo_vis_sources})
 
-target_link_libraries(dbinfo_vis bvis1 dbinfo)
+target_link_libraries(dbinfo_vis dbinfo_pro dbinfo bvis1 vidpro1 bgui vgui )
 
 
 #if(BUILD_TESTING)
