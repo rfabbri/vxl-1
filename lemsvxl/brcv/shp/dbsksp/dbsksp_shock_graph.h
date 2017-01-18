@@ -13,7 +13,7 @@
 //  Modifications
 // \endverbatim
 
-#include <dbgrl/dbgrl_graph.h>
+#include <bgrld/bgrld_graph.h>
 
 #include <dbsksp/dbsksp_shock_node.h>
 #include <dbsksp/dbsksp_shock_node_descriptor.h>
@@ -23,7 +23,7 @@
 #include <vsol/vsol_box_2d_sptr.h>
 
 //: 
-class dbsksp_shock_graph : public dbgrl_graph<dbsksp_shock_node, dbsksp_shock_edge>
+class dbsksp_shock_graph : public bgrld_graph<dbsksp_shock_node, dbsksp_shock_edge>
 {
 public:
 

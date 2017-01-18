@@ -8,7 +8,7 @@
 #include <dbsksp/dbsksp_shapelet.h>
 #include <dbsksp/algo/dbsksp_interp_two_xnodes.h>
 #include <dbsksp/algo/dbsksp_interp_xshock_fragment.h>
-#include <dbnl/dbnl_math.h>
+#include <bnld/bnld_math.h>
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_distance.h>
 //#include <vcl_utility.h>
@@ -271,13 +271,13 @@ fit_shapelet_chain(const dbsksp_xshock_node_sptr& start_node,
       //dbsksp_xshock_node_sptr xv_not_leaf = (cur_xe->source()->degree() == 1) ?
       //  cur_xe->target() : cur_xe->source();
 
-      if (dbnl_math_near(prev_xdesc.phi(), vnl_math::pi, 1e-12)) // prev_xdesc is leaf node
+      if (bnld_math_near(prev_xdesc.phi(), vnl_math::pi, 1e-12)) // prev_xdesc is leaf node
       {
         dbsksp_shapelet_sptr terminal_xfrag = dbsksp_new_terminal_shapelet(cur_xdesc.x(), cur_xdesc.y(),
           cur_xdesc.shock_tangent_angle(), cur_xdesc.radius(), cur_xdesc.phi());
         list_shapelet.push_back(terminal_xfrag->reversed_dir());
       }
-      else if (dbnl_math_near(cur_xdesc.phi(), 0.0, 1e-12))
+      else if (bnld_math_near(cur_xdesc.phi(), 0.0, 1e-12))
       {
 
         dbsksp_shapelet_sptr terminal_xfrag = dbsksp_new_terminal_shapelet(prev_xdesc.x(), prev_xdesc.y(),
@@ -343,8 +343,8 @@ compute_xsamples(const dbsksp_xshock_node_sptr& start_node,
 
     // Approximate length as average of two boundary length
     dbsksp_xshock_fragment xfrag(cur_xdesc, next_xdesc);
-    dbgl_biarc left_bnd = xfrag.bnd_left_as_biarc();
-    dbgl_biarc right_bnd = xfrag.bnd_right_as_biarc();
+    bgld_biarc left_bnd = xfrag.bnd_left_as_biarc();
+    bgld_biarc right_bnd = xfrag.bnd_right_as_biarc();
 
     if (left_bnd.is_consistent() && right_bnd.is_consistent())
     {
@@ -360,7 +360,7 @@ compute_xsamples(const dbsksp_xshock_node_sptr& start_node,
 
     //// Approximate the length of the chordal curve (connecting mid-point of symmetric point-pairs)
     //// with the length of the biarc interpolating between two end chordal points
-    //dbgl_biarc chordal(cur_xdesc.bnd_mid_pt(), cur_xdesc.shock_tangent(), 
+    //bgld_biarc chordal(cur_xdesc.bnd_mid_pt(), cur_xdesc.shock_tangent(), 
     //  next_xdesc.bnd_mid_pt(), next_xdesc.shock_tangent());
 
     //if (chordal.is_consistent())
@@ -745,8 +745,8 @@ compute_xsamples_by_sampling_longer_bnd_arc(int num_intervals,
     dbsksp_xshock_node_descriptor end = list_xdesc[k];
 
     dbsksp_xshock_fragment xfrag(start, end);
-    dbgl_biarc left_bnd = xfrag.bnd_left_as_biarc();
-    dbgl_biarc right_bnd = xfrag.bnd_right_as_biarc();
+    bgld_biarc left_bnd = xfrag.bnd_left_as_biarc();
+    bgld_biarc right_bnd = xfrag.bnd_right_as_biarc();
 
     if (left_bnd.is_consistent() && right_bnd.is_consistent())
     {
@@ -755,7 +755,7 @@ compute_xsamples_by_sampling_longer_bnd_arc(int num_intervals,
     run_lengths.push_back(total_length);
 
     ////
-    //dbgl_biarc chordal(start.bnd_mid_pt(), start.shock_tangent(), end.bnd_mid_pt(), end.shock_tangent());
+    //bgld_biarc chordal(start.bnd_mid_pt(), start.shock_tangent(), end.bnd_mid_pt(), end.shock_tangent());
     //total_length += chordal.len();
   }
 
@@ -767,7 +767,7 @@ compute_xsamples_by_sampling_longer_bnd_arc(int num_intervals,
     dbsksp_xshock_node_descriptor end = list_xdesc[k];
 
     // number of intervals for this segment
-    //dbgl_biarc chordal(start.bnd_mid_pt(), start.shock_tangent(), end.bnd_mid_pt(), end.shock_tangent()); 
+    //bgld_biarc chordal(start.bnd_mid_pt(), start.shock_tangent(), end.bnd_mid_pt(), end.shock_tangent()); 
     //int num_segments = vnl_math::rnd(num_intervals * chordal.len() / total_length);
     //num_segments = vnl_math::max(1, num_segments);
 

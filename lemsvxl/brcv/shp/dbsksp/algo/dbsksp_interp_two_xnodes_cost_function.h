@@ -16,7 +16,7 @@
 
 #include <dbsksp/dbsksp_shapelet.h>
 #include <dbsksp/dbsksp_xshock_node.h>
-#include <dbgl/algo/dbgl_biarc.h>
+#include <bgld/algo/bgld_biarc.h>
 #include <vnl/vnl_least_squares_function.h>
 #include <vnl/vnl_cost_function.h>
 #include <vnl/vnl_matrix_fixed.h>
@@ -82,7 +82,7 @@ public:
   dbsksp_interp_two_xnodes_compute_phi1_given_alpha0(
     const dbsksp_xshock_node_descriptor& start_xnode,
     const dbsksp_xshock_node_descriptor& end_xnode,
-    const dbgl_biarc& shock_estimate
+    const bgld_biarc& shock_estimate
     ) : start_xnode_(start_xnode),
     end_xnode_(end_xnode),
     shock_estimate_(shock_estimate)
@@ -93,7 +93,7 @@ public:
 
   dbsksp_xshock_node_descriptor start_xnode() const { return this->start_xnode_; }
   dbsksp_xshock_node_descriptor end_xnode() const { return this->end_xnode_; }
-  dbgl_biarc shock_estimate() const {return this->shock_estimate_; }
+  bgld_biarc shock_estimate() const {return this->shock_estimate_; }
 
   //: Given alpha, optimize phi1 to fit to end_xnode by finding root of equation
   // vertical_discrepancy(phi1) = 0;
@@ -109,7 +109,7 @@ protected:
   //dbsksp_twoshapelet_sptr ss_;
   dbsksp_xshock_node_descriptor start_xnode_;
   dbsksp_xshock_node_descriptor end_xnode_;
-  dbgl_biarc shock_estimate_;
+  bgld_biarc shock_estimate_;
 };
 
 
@@ -134,7 +134,7 @@ public:
   dbsksp_interp_two_xnodes_curvature_variation_type1_cost_fnt(
     const dbsksp_xshock_node_descriptor& start_xnode,
     const dbsksp_xshock_node_descriptor& end_xnode,
-    const dbgl_biarc& shock_estimate
+    const bgld_biarc& shock_estimate
     );
 
   //: destructor
@@ -142,7 +142,7 @@ public:
 
   dbsksp_xshock_node_descriptor start_xnode() const { return this->start_xnode_; }
   dbsksp_xshock_node_descriptor end_xnode() const { return this->end_xnode_; }
-  dbgl_biarc shock_estimate() const {return this->shock_estimate_; }
+  bgld_biarc shock_estimate() const {return this->shock_estimate_; }
   
   //: Return alpha0 given a parameter t
   double alpha0_estimate(double t);
@@ -166,7 +166,7 @@ protected:
   //dbsksp_twoshapelet_sptr ss_;
   dbsksp_xshock_node_descriptor start_xnode_;
   dbsksp_xshock_node_descriptor end_xnode_;
-  dbgl_biarc shock_estimate_;
+  bgld_biarc shock_estimate_;
 };
 
 
@@ -185,7 +185,7 @@ public:
   dbsksp_interp_two_xnodes_min_k_variation_type2_cost_fnt(
     const dbsksp_xshock_node_descriptor& start_xnode,
     const dbsksp_xshock_node_descriptor& end_xnode,
-    const dbgl_biarc& shock_estimate
+    const bgld_biarc& shock_estimate
     );
 
   //: destructor
@@ -193,7 +193,7 @@ public:
 
   dbsksp_xshock_node_descriptor start_xnode() const { return this->start_xnode_; }
   dbsksp_xshock_node_descriptor end_xnode() const { return this->end_xnode_; }
-  dbgl_biarc shock_estimate() const {return this->shock_estimate_; }
+  bgld_biarc shock_estimate() const {return this->shock_estimate_; }
 
   //: Return alpha0 given a parameter t
   double alpha0_estimate(double t);
@@ -215,7 +215,7 @@ public:
 protected:
   dbsksp_xshock_node_descriptor start_xnode_;
   dbsksp_xshock_node_descriptor end_xnode_;
-  dbgl_biarc shock_estimate_;
+  bgld_biarc shock_estimate_;
 };
 
 

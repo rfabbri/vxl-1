@@ -19,7 +19,7 @@
 #include <dbsksp/algo/dbsksp_interp_xshock_fragment.h>
 #include <dbsksp/xio/dbsksp_xio_xshock_graph.h>
 
-#include <dbnl/dbnl_math.h>
+#include <bnld/bnld_math.h>
 #include <vnl/algo/vnl_levenberg_marquardt.h>
 #include <vnl/algo/vnl_amoeba.h>
 #include <vnl/algo/vnl_powell.h>
@@ -340,7 +340,7 @@ compute_edit_distance(const dbsksp_xshock_directed_tree_sptr& tree1,
 //      for (unsigned i =0; i < branch1.size(); ++i)
 //      {
 //        dbsksp_xshock_edge_sptr xe = branch1[i];
-//        map_num_nodes_to_add[xe] = dbnl_math_pow(2, exp_branch2 - exp_branch1) - 1;
+//        map_num_nodes_to_add[xe] = bnld_math_pow(2, exp_branch2 - exp_branch1) - 1;
 //      }
 //    }
 //    else if (exp_branch2 < exp_branch1)
@@ -349,7 +349,7 @@ compute_edit_distance(const dbsksp_xshock_directed_tree_sptr& tree1,
 //      for (unsigned i =0; i < branch2.size(); ++i)
 //      {
 //        dbsksp_xshock_edge_sptr xe = branch2[i];
-//        map_num_nodes_to_add[xe] = dbnl_math_pow(2, exp_branch1 - exp_branch2) - 1;
+//        map_num_nodes_to_add[xe] = bnld_math_pow(2, exp_branch1 - exp_branch2) - 1;
 //      }
 //    }
 //  } // for each pair of corresponding branches.

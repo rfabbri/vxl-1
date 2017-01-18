@@ -16,7 +16,7 @@
 
 #include <vbl/vbl_ref_count.h>
 #include <dbsksp/dbsksp_bnd_edge.h>
-#include <dbgl/algo/dbgl_circ_arc.h>
+#include <bgld/algo/bgld_circ_arc.h>
 
 //: A class to represent a shock branch - both geometry and dynamics
 class dbsksp_bnd_arc : public dbsksp_bnd_edge
@@ -25,7 +25,7 @@ public:
   // =============== CONSTRUCTORS/DESTRUCTORS/INITIALIZATION ===============
   //: constructor
   dbsksp_bnd_arc(){};
-  dbsksp_bnd_arc(const dbgl_circ_arc& arc):arc_(arc){};
+  dbsksp_bnd_arc(const bgld_circ_arc& arc):arc_(arc){};
 
   //: destructor
   virtual ~dbsksp_bnd_arc(){};
@@ -34,8 +34,8 @@ public:
   // ===============  DATA ACCESS =====================================
 
   //: Return and set the circular arc
-  dbgl_circ_arc arc() const {return this->arc_; }
-  void set_arc(const dbgl_circ_arc& arc)
+  bgld_circ_arc arc() const {return this->arc_; }
+  void set_arc(const bgld_circ_arc& arc)
   { this->arc_ = arc; }
   
 
@@ -51,7 +51,7 @@ public:
 
   // ============= MEMBER VARIABLES =====================================
 protected:
-  dbgl_circ_arc arc_;
+  bgld_circ_arc arc_;
   
 };
 #endif // shp/dbsksp/dbsksp_bnd_arc.h

@@ -86,7 +86,7 @@ protected:
   // Intermediate variables-----------------------------------------------------
   dbsksp_xshock_node_descriptor start_;
   dbsksp_xshock_node_descriptor end_;
-  dbgl_biarc bnd_biarc[2];
+  bgld_biarc bnd_biarc[2];
   vgl_point_2d<double > bnd_pt[2]; //0: left, 1: right
   double half_width; // half distance between two boundary points
 };
@@ -130,7 +130,7 @@ protected:
   // Intermediate variables-----------------------------------------------------
   dbsksp_xshock_node_descriptor start_;
   dbsksp_xshock_node_descriptor end_;
-  //dbgl_biarc bnd_biarc[2];
+  //bgld_biarc bnd_biarc[2];
   dbsksp_xshock_node_descriptor init_xsample_;
 };
 

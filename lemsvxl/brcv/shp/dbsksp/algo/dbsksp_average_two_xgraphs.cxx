@@ -20,7 +20,7 @@
 #include <dbsksp/xio/dbsksp_xio_xshock_graph.h>
 #include <dbsksp/algo/dbsksp_avg_xgraph_utils.h>
 
-#include <dbnl/dbnl_math.h>
+#include <bnld/bnld_math.h>
 #include <vnl/algo/vnl_levenberg_marquardt.h>
 #include <vnl/algo/vnl_amoeba.h>
 #include <vnl/algo/vnl_powell.h>
@@ -324,7 +324,7 @@ resample_to_match_fine_graph_topology(const dbsksp_xshock_graph_sptr& coarse_mat
       for (unsigned i =0; i < branch1.size(); ++i)
       {
         dbsksp_xshock_edge_sptr xe = branch1[i];
-        map_num_nodes_to_add[xe] = dbnl_math_pow(2, exp_branch2 - exp_branch1) - 1;
+        map_num_nodes_to_add[xe] = bnld_math_pow(2, exp_branch2 - exp_branch1) - 1;
       }
     }
     else if (exp_branch2 < exp_branch1)
@@ -333,7 +333,7 @@ resample_to_match_fine_graph_topology(const dbsksp_xshock_graph_sptr& coarse_mat
       for (unsigned i =0; i < branch2.size(); ++i)
       {
         dbsksp_xshock_edge_sptr xe = branch2[i];
-        map_num_nodes_to_add[xe] = dbnl_math_pow(2, exp_branch1 - exp_branch2) - 1;
+        map_num_nodes_to_add[xe] = bnld_math_pow(2, exp_branch1 - exp_branch2) - 1;
       }
     }
   } // for each pair of corresponding branches.

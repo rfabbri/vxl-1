@@ -18,7 +18,7 @@
 #include <vcl_string.h>
 #include <vbl/vbl_ref_count.h>
 #include <vgl/vgl_point_2d.h>
-#include <dbgrl/dbgrl_vertex.h>
+#include <bgrld/bgrld_vertex.h>
 #include <dbsksp/dbsksp_xshock_node_descriptor.h>
 
 
@@ -26,7 +26,7 @@ class dbsksp_xshock_edge;
 
 
 //: Class for a node in an extrinsic shock graph
-class dbsksp_xshock_node : public dbgrl_vertex<dbsksp_xshock_edge>
+class dbsksp_xshock_node : public bgrld_vertex<dbsksp_xshock_edge>
 {
 public:
   // CONSTRUCTORS / DESTRUCTORS / INITIALIZATION -------------------------------

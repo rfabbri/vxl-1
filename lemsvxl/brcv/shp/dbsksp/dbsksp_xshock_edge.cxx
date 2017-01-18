@@ -14,7 +14,7 @@
 //: constructor with two nodes
 dbsksp_xshock_edge::
 dbsksp_xshock_edge(const V_sptr& source, const V_sptr& target, unsigned id):
-  dbgrl_edge<dbsksp_xshock_node>(source, target), id_(id)
+  bgrld_edge<dbsksp_xshock_node>(source, target), id_(id)
 {
 }
 

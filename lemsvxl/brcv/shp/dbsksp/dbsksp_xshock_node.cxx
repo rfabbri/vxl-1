@@ -11,7 +11,7 @@
 #include <vcl_set.h>
 #include <dbsksp/dbsksp_xshock_edge.h>
 #include <dbsksp/dbsksp_xshock_edge_sptr.h>
-#include <dbnl/dbnl_angle.h>
+#include <bnld/bnld_angle.h>
 
 
 // =============================================================================
@@ -319,7 +319,7 @@ order_edge_list_by_shock_tangent()
     dbsksp_xshock_node_descriptor* xdesc = this->descriptor(xe);
 
     // tangent angle
-    double angle = dbnl_angle_0to2pi(xdesc->shock_tangent_angle());
+    double angle = bnld_angle_0to2pi(xdesc->shock_tangent_angle());
     map_angle_to_edge.insert(vcl_make_pair(angle, xe));
   }
 

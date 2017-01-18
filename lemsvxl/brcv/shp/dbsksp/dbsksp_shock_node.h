@@ -17,7 +17,7 @@
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
 
-#include <dbgrl/dbgrl_vertex.h>
+#include <bgrld/bgrld_vertex.h>
 
 #include <dbsksp/dbsksp_shock_node_sptr.h>
 #include <dbsksp/dbsksp_shock_edge_sptr.h>
@@ -27,7 +27,7 @@
 class dbsksp_shock_edge;
 
 //: Class for a shock node, meant to be on a planar graph
-class dbsksp_shock_node : public dbgrl_vertex<dbsksp_shock_edge>
+class dbsksp_shock_node : public bgrld_vertex<dbsksp_shock_edge>
 {
 public:
   // =============== CONSTRUCTORS / DESTRUCTORS / INITIALIZATION ==============

@@ -460,7 +460,7 @@ void dbsksp_terminal_twoshapelet_cost_fnt::
 {
   x0 = s->x0();
   y0 = s->y0();
-  dbgl_conic_arc shock_curve = s->shock_geom();
+  bgld_conic_arc shock_curve = s->shock_geom();
   psi0 = signed_angle(vgl_vector_2d<double >(1, 0), shock_curve.tangent_at(0));
   r0 = s->r0();
   phi0 = s->phi0();

@@ -27,7 +27,7 @@
 #include <dbsk2d/dbsk2d_xshock_edge_sptr.h>
 
 
-#include <dbgl/algo/dbgl_circ_arc.h>
+#include <bgld/algo/bgld_circ_arc.h>
 
 #include <vnl/vnl_vector.h>
 #include <vcl_map.h>

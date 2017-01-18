@@ -14,7 +14,7 @@
 //  Modifications
 // \endverbatim
 
-#include <dbgrl/dbgrl_edge.h>
+#include <bgrld/bgrld_edge.h>
 
 #include <dbsksp/dbsksp_xshock_fragment_sptr.h>
 
@@ -25,13 +25,13 @@
 class dbsksp_xshock_node;
 
 //: A class to represent an extrinsic shock edge
-class dbsksp_xshock_edge : public dbgrl_edge<dbsksp_xshock_node> 
+class dbsksp_xshock_edge : public bgrld_edge<dbsksp_xshock_node> 
 {
 public:
   // CONSTRUCTORS/DESTRUCTORS/INITIALIZATION -----------------------------------
 
   //: constructor
-  dbsksp_xshock_edge() : dbgrl_edge<dbsksp_xshock_node>(), id_(0){};
+  dbsksp_xshock_edge() : bgrld_edge<dbsksp_xshock_node>(), id_(0){};
 
   //: constructor with two nodes
   dbsksp_xshock_edge(const V_sptr& source, const V_sptr& target, unsigned id = 0);

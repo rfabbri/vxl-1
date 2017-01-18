@@ -5,10 +5,10 @@
 
 #include "dbsksp_interp_xfrag_cost_function.h"
 
-#include <dbgl/algo/dbgl_closest_point.h>
+#include <bgld/algo/bgld_closest_point.h>
 
-#include <dbnl/dbnl_math.h>
-#include <dbnl/dbnl_angle.h>
+#include <bnld/bnld_math.h>
+#include <bnld/bnld_angle.h>
 
 #include <vgl/vgl_distance.h>
 #include <vnl/vnl_math.h>
@@ -23,7 +23,7 @@ bool dbsksp_xfrag_coarse_interp_along_shock_curve(const dbsksp_xshock_node_descr
                                              dbsksp_xshock_node_descriptor& xsample)
 {
   // construct shock curve
-  dbgl_biarc shock_curve(start.pt(), start.shock_tangent(), 
+  bgld_biarc shock_curve(start.pt(), start.shock_tangent(), 
     end.pt(), end.shock_tangent());
 
   if (!shock_curve.is_consistent())
@@ -34,24 +34,24 @@ bool dbsksp_xfrag_coarse_interp_along_shock_curve(const dbsksp_xshock_node_descr
 
   // project the shock point to the two boundary biarcs
   dbsksp_xshock_fragment xfrag(start, end);
-  dbgl_biarc left_bnd = xfrag.bnd_left_as_biarc();
-  dbgl_biarc right_bnd = xfrag.bnd_right_as_biarc();
+  bgld_biarc left_bnd = xfrag.bnd_left_as_biarc();
+  bgld_biarc right_bnd = xfrag.bnd_right_as_biarc();
 
   // if something is wrong, then just take the first xdesc
   if (left_bnd.is_consistent() && right_bnd.is_consistent())
   {
     double left_s = 0;
-    dbgl_closest_point::point_to_biarc(shock_pt, left_bnd, left_s);
+    bgld_closest_point::point_to_biarc(shock_pt, left_bnd, left_s);
     vgl_point_2d<double > left_pt = left_bnd.point_at(left_s);
 
     double right_s = 0;
-    dbgl_closest_point::point_to_biarc(shock_pt, right_bnd, right_s);
+    bgld_closest_point::point_to_biarc(shock_pt, right_bnd, right_s);
     vgl_point_2d<double > right_pt = right_bnd.point_at(right_s);
 
     // compute phi
     //vgl_vector_2d<double > shock_tangent = rotated(right_pt-left_pt, vnl_math::pi_over_2);
     double twophi = signed_angle(right_pt-shock_pt, left_pt-shock_pt);
-    double phi = dbnl_angle_0to2pi(twophi) / 2;
+    double phi = bnld_angle_0to2pi(twophi) / 2;
 
     xsample.set(left_pt, right_pt, phi);
   }
@@ -135,8 +135,8 @@ f(const vnl_vector<double >& x, vnl_vector<double >& fx)
   for (int i =0; i < 2; ++i)
   {
     dbsksp_xshock_fragment::bnd_side side = dbsksp_xshock_fragment::bnd_side(i);
-    dbgl_biarc start_biarc = start_xfrag.bnd_as_biarc(side);
-    dbgl_biarc end_biarc = end_xfrag.bnd_as_biarc(side);
+    bgld_biarc start_biarc = start_xfrag.bnd_as_biarc(side);
+    bgld_biarc end_biarc = end_xfrag.bnd_as_biarc(side);
 
     if (start_biarc.flag() == -1 || end_biarc.flag() == -1)
     {
@@ -265,8 +265,8 @@ f(const vnl_vector<double >& x, vnl_vector<double >& fx)
   for (int i =0; i < 2; ++i)
   {
     dbsksp_xshock_fragment::bnd_side side = dbsksp_xshock_fragment::bnd_side(i);
-    dbgl_biarc start_biarc = start_xfrag.bnd_as_biarc(side);
-    dbgl_biarc end_biarc = end_xfrag.bnd_as_biarc(side);
+    bgld_biarc start_biarc = start_xfrag.bnd_as_biarc(side);
+    bgld_biarc end_biarc = end_xfrag.bnd_as_biarc(side);
 
     if (start_biarc.flag() == -1 || end_biarc.flag() == -1)
     {

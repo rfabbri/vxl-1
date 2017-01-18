@@ -14,7 +14,7 @@
 #include <dbsksp/dbsksp_shock_edge_sptr.h>
 #include <dbsksp/dbsksp_shock_fragment.h>
 #include <vgl/vgl_distance.h>
-#include <dbgl/algo/dbgl_closest_point.h>
+#include <bgld/algo/bgld_closest_point.h>
 
 const double dbsksp_epsilon = 1e-12;
 
@@ -22,7 +22,7 @@ const double dbsksp_epsilon = 1e-12;
 //: Constructor
 dbsksp_shock_graph::
 dbsksp_shock_graph(): 
-dbgrl_graph<dbsksp_shock_node, dbsksp_shock_edge>(), 
+bgrld_graph<dbsksp_shock_node, dbsksp_shock_edge>(), 
 i_traverse_flag_(0), 
 next_available_id_(0),
 ref_node_(0),
@@ -43,7 +43,7 @@ ref_node_radius_(-1)
 // "const dbsksp_shock_graph&"
 dbsksp_shock_graph::
 dbsksp_shock_graph(dbsksp_shock_graph& that):
-dbgrl_graph<dbsksp_shock_node, dbsksp_shock_edge>(), 
+bgrld_graph<dbsksp_shock_node, dbsksp_shock_edge>(), 
 i_traverse_flag_(0)
 {
   // 1. Create the nodes
@@ -767,7 +767,7 @@ insert_shock_node(const dbsksp_shock_edge_sptr& e, double t)
 
   // set the intrinsic properties for the new edges and nodes
   if (!e->fragment()) e->form_fragment();
-  dbgl_conic_arc conic = e->fragment()->shock_geom();
+  bgld_conic_arc conic = e->fragment()->shock_geom();
   v1->set_pt(conic.point_at(t));
   e1->set_chord_length(vgl_distance(v0->pt(), v1->pt()));
   vgl_vector_2d<double > chord_dir1 = v1->pt() - v0->pt();
@@ -791,12 +791,12 @@ insert_shock_node(const dbsksp_shock_edge_sptr& e, double t)
 
   // phi for v1
   // There need to be a better place to do this
-  dbgl_circ_arc left_bnd = e->fragment()->bnd(0)->arc();
-  dbgl_circ_arc right_bnd = e->fragment()->bnd(1)->arc();
+  bgld_circ_arc left_bnd = e->fragment()->bnd(0)->arc();
+  bgld_circ_arc right_bnd = e->fragment()->bnd(1)->arc();
 
   // contact shock
   double left_ratio = -1;
-  dbgl_closest_point::point_to_circular_arc(v1->pt(), 
+  bgld_closest_point::point_to_circular_arc(v1->pt(), 
     left_bnd.point1(), left_bnd.point2(), left_bnd.k(), left_ratio);
 
   // tangent of at v1
@@ -866,7 +866,7 @@ insert_shock_node_at_terminal_edge(const dbsksp_shock_edge_sptr& e)
 
   // set the intrinsic properties for the new edges and nodes
   if (!e->fragment()) e->form_fragment();
-  //dbgl_conic_arc conic = e->fragment()->shock_geom();
+  //bgld_conic_arc conic = e->fragment()->shock_geom();
   v1->set_pt(v2->pt());
   e1->set_chord_length(0);
   e1->set_chord_dir(e->chord_dir(v0), v0);
@@ -1762,7 +1762,7 @@ trace_boundary()
   {
     assert (cur_edge->fragment());
     
-    dbgl_circ_arc arc;
+    bgld_circ_arc arc;
     
     // always take the right arc
     if (cur_node == cur_edge->source())

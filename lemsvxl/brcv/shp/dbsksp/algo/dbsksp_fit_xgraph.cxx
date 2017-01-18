@@ -23,10 +23,10 @@
 #include <dbsk2d/dbsk2d_shock_graph.h>
 #include <dbsk2d/dbsk2d_xshock_edge.h>
 #include <dbsk2d/dbsk2d_xshock_edge_sptr.h>
-#include <dbgl/algo/dbgl_compute_symmetry_point.h>
-#include <dbgl/algo/dbgl_biarc.h>
-#include <dbgl/algo/dbgl_closest_point.h>
-#include <dbnl/dbnl_angle.h>
+#include <bgld/algo/bgld_compute_symmetry_point.h>
+#include <bgld/algo/bgld_biarc.h>
+#include <bgld/algo/bgld_closest_point.h>
+#include <bnld/bnld_angle.h>
 #include <vnl/algo/vnl_levenberg_marquardt.h>
 #include <vgl/vgl_distance.h>
 

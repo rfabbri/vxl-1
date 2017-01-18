@@ -35,7 +35,7 @@ dbsksp_shock_path_sptr dbsksp_compute_uniform_shock_path(const dbsksp_xshock_nod
   run_lengths.reserve(xsamples.size());
   
   ////
-  //vcl_vector<dbgl_biarc > chord_curves;
+  //vcl_vector<bgld_biarc > chord_curves;
   //chord_curves.clear();
   //chord_curves.reserve(xsamples.size());
 
@@ -118,7 +118,7 @@ dbsksp_shock_path_sptr dbsksp_compute_uniform_shock_path(const dbsksp_xshock_nod
 
       //// Approximate the length of the chordal curve (connecting mid-point of symmetric point-pairs)
       //// with the length of the biarc interpolating between two end chordal points
-      //dbgl_biarc chord_biarc(prev_xsample.bnd_mid_pt(), prev_xsample.shock_tangent(), 
+      //bgld_biarc chord_biarc(prev_xsample.bnd_mid_pt(), prev_xsample.shock_tangent(), 
       //                       cur_xsample.bnd_mid_pt(),  cur_xsample.shock_tangent());
 
       //chord_curves.push_back(chord_biarc); // save for later use
@@ -225,7 +225,7 @@ dbsksp_shock_path_sptr dbsksp_compute_uniform_shock_path(const dbsksp_xshock_nod
   //    double ratio  = (s - prev_s) / (cur_s - prev_s);
 
   //    // chordal point
-  //    dbgl_biarc& chord_curve        = chord_curves[prev_idx];
+  //    bgld_biarc& chord_curve        = chord_curves[prev_idx];
   //    vgl_point_2d<double > chord_pt = chord_curve.point_at(s-prev_s);
 
   //    // chord/shock tangent

@@ -6,7 +6,7 @@
 #include "dbsksp_xshock_graph.h"
 
 #include <dbsksp/dbsksp_xshock_fragment.h>
-#include <dbgl/algo/dbgl_biarc.h>
+#include <bgld/algo/bgld_biarc.h>
 #include <vnl/vnl_math.h>
 #include <vgl/algo/vgl_h_matrix_2d.h>
 #include <vsol/vsol_box_2d.h>
@@ -16,7 +16,7 @@
 // -----------------------------------------------------------------------------
 //: Constructor
 dbsksp_xshock_graph::
-dbsksp_xshock_graph(): dbgrl_graph<dbsksp_xshock_node, dbsksp_xshock_edge>(), 
+dbsksp_xshock_graph(): bgrld_graph<dbsksp_xshock_node, dbsksp_xshock_edge>(), 
 next_available_id_(0)
 {
 }
@@ -537,7 +537,7 @@ insert_xshock_node(const dbsksp_xshock_edge_sptr& xe, double t)
   dbsksp_xshock_node_descriptor xdesc2 = xv2->descriptor(xe)->opposite_xnode();
 
   // shock point
-  dbgl_biarc shock_geom(xdesc0.pt(), xdesc0.shock_tangent(), xdesc2.pt(), xdesc2.shock_tangent());
+  bgld_biarc shock_geom(xdesc0.pt(), xdesc0.shock_tangent(), xdesc2.pt(), xdesc2.shock_tangent());
   vgl_point_2d<double > xv1_pt = shock_geom.point_at(t * shock_geom.len());
   
   // shock tangent

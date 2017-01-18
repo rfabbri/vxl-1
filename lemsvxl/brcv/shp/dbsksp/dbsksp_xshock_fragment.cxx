@@ -8,8 +8,8 @@
 
 
 #include <vnl/vnl_math.h>
-#include <dbgl/algo/dbgl_biarc.h>
-#include <dbgl/algo/dbgl_circ_arc.h>
+#include <bgld/algo/bgld_biarc.h>
+#include <bgld/algo/bgld_circ_arc.h>
 #include <vgl/vgl_area.h>
 #include <vgl/vgl_polygon.h>
 #include <vgl/vgl_lineseg_test.h>
@@ -24,20 +24,20 @@ static double epsilon = 0.0001;
 
 // -----------------------------------------------------------------------------
 //: Interpolate the left boundary as a biarc
-dbgl_biarc dbsksp_xshock_fragment::
+bgld_biarc dbsksp_xshock_fragment::
 bnd_left_as_biarc() const
 {
-  return dbgl_biarc(this->start_.bnd_pt_left(), this->start_.bnd_tangent_left(), 
+  return bgld_biarc(this->start_.bnd_pt_left(), this->start_.bnd_tangent_left(), 
     this->end_.bnd_pt_left(), this->end_.bnd_tangent_left());
 }
 
 
 // -----------------------------------------------------------------------------
 //: Interploate the right boundary as a biarc
-dbgl_biarc dbsksp_xshock_fragment::
+bgld_biarc dbsksp_xshock_fragment::
 bnd_right_as_biarc() const
 {
-  return dbgl_biarc(this->start_.bnd_pt_right(), this->start_.bnd_tangent_right(), 
+  return bgld_biarc(this->start_.bnd_pt_right(), this->start_.bnd_tangent_right(), 
     this->end_.bnd_pt_right(), this->end_.bnd_tangent_right());
 }
 
@@ -113,7 +113,7 @@ area_approx_w_polygon(int num_pts) const
 
 
   // left boundary
-  dbgl_biarc left_biarc;
+  bgld_biarc left_biarc;
   if (left_biarc.compute_biarc_params(this->start_.bnd_pt_left(), this->start_.bnd_tangent_left(),
     this->end_.bnd_pt_left(), this->end_.bnd_tangent_left()) && left_biarc.is_consistent())
   {
@@ -134,7 +134,7 @@ area_approx_w_polygon(int num_pts) const
   pts.push_back(this->end_.pt());
 
   // right boundary
-  dbgl_biarc right_biarc;
+  bgld_biarc right_biarc;
   if (right_biarc.compute_biarc_params(this->start_.bnd_pt_right(), this->start_.bnd_tangent_right(),
     this->end_.bnd_pt_right(), this->end_.bnd_tangent_right()))
   {
@@ -203,7 +203,7 @@ compute_bounding_box() const
   // Sample 9 points on each boundary contour and compute bounding box for all of them
   int num_segs = 8;
   vgl_box_2d<double > bbox;
-  dbgl_biarc bnd_left = this->bnd_left_as_biarc();
+  bgld_biarc bnd_left = this->bnd_left_as_biarc();
   double len_left = bnd_left.len();
   for (int i =0; i <= num_segs; ++i)
   {
@@ -211,7 +211,7 @@ compute_bounding_box() const
     bbox.add(bnd_left.point_at(s));
   }
 
-  dbgl_biarc bnd_right = this->bnd_right_as_biarc();
+  bgld_biarc bnd_right = this->bnd_right_as_biarc();
   double len_right = bnd_right.len();
   for (int i =0; i <= num_segs; ++i)
   {
@@ -262,8 +262,8 @@ is_legal_new() const
 
 
   // 1 bi-arc model fragment can me decomposed into three singular-arc model fragments, check their legality in order
-  dbgl_biarc L_bnd = bnd_left_as_biarc();
-  dbgl_biarc R_bnd = bnd_right_as_biarc();
+  bgld_biarc L_bnd = bnd_left_as_biarc();
+  bgld_biarc R_bnd = bnd_right_as_biarc();
 
   vgl_point_2d< double > start_pt_L = L_bnd.start();
   vgl_point_2d< double > start_pt_R = R_bnd.start();

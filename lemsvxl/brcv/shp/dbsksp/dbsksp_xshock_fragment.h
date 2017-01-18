@@ -17,7 +17,7 @@
 #include <vbl/vbl_ref_count.h>
 #include <vgl/vgl_box_2d.h>
 #include <dbsksp/dbsksp_xshock_node_descriptor.h>
-#include <dbgl/algo/dbgl_biarc.h>
+#include <bgld/algo/bgld_biarc.h>
 #include <vgl/vgl_vector_2d.h>
 #include <vnl/vnl_vector.h>
 #include <dbsksp/dbsksp_xshock_fragment_sptr.h>
@@ -83,13 +83,13 @@ public:
 
 
   //: Interpolate the left boundary as a biarc
-  dbgl_biarc bnd_left_as_biarc() const;
+  bgld_biarc bnd_left_as_biarc() const;
 
   //: Interpolate the right boundary as a biarc
-  dbgl_biarc bnd_right_as_biarc() const;
+  bgld_biarc bnd_right_as_biarc() const;
 
   //: Interpolate a boundary contour using a biarc
-  dbgl_biarc bnd_as_biarc(bnd_side side) const
+  bgld_biarc bnd_as_biarc(bnd_side side) const
   {
     return (side == LEFT) ? this->bnd_left_as_biarc() :
       this->bnd_right_as_biarc();

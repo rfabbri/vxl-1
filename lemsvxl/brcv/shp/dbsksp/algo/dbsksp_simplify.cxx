@@ -15,7 +15,7 @@
 //#include <vcl_utility.h>
 #include <vnl/vnl_math.h>
 #include <vgl/vgl_distance.h>
-//#include <dbnl/dbnl_angle.h>
+//#include <bnld/bnld_angle.h>
 
 
 // -----------------------------------------------------------------------------
@@ -104,8 +104,8 @@ bool dbsksp_reduce_A12_Ainfty_nodes(const dbsksp_xshock_graph_sptr& xgraph,
     dbsksp_xshock_fragment_sptr new_xfrag2 = new dbsksp_xshock_fragment(new_xdesc, other_xdesc2);
 
     // the two boundary contours
-    dbgl_biarc new_bnd_right0 = new_xfrag0->bnd_right_as_biarc();
-    dbgl_biarc new_bnd_right2 = new_xfrag2->bnd_right_as_biarc();
+    bgld_biarc new_bnd_right0 = new_xfrag0->bnd_right_as_biarc();
+    bgld_biarc new_bnd_right2 = new_xfrag2->bnd_right_as_biarc();
 
     // sample the two new boundary contours with ds = 1 (chosen arbitrarily)
     vcl_vector<vgl_point_2d<double > > new_bnd_pts;

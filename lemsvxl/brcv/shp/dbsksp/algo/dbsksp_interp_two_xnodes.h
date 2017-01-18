@@ -15,7 +15,7 @@
 
 #include <dbsksp/dbsksp_shapelet.h>
 #include <dbsksp/dbsksp_xshock_node.h>
-#include <dbgl/algo/dbgl_biarc.h>
+#include <bgld/algo/bgld_biarc.h>
 
 
 
@@ -41,9 +41,9 @@ public:
   // --------------------------------------------------------------------------
   // DATA ACCESS
   // --------------------------------------------------------------------------
-  dbgl_biarc shock_estimate() const {return this->shock_estimate_; }
-  dbgl_biarc left_bnd_estimate() const {return this->left_bnd_estimate_; }
-  dbgl_biarc right_bnd_estimate() const {return this->right_bnd_estimate_; }
+  bgld_biarc shock_estimate() const {return this->shock_estimate_; }
+  bgld_biarc left_bnd_estimate() const {return this->left_bnd_estimate_; }
+  bgld_biarc right_bnd_estimate() const {return this->right_bnd_estimate_; }
 
   // Global optimum
 
@@ -81,9 +81,9 @@ protected:
   dbsksp_xshock_node_descriptor end_xnode_;
 
   // estimation of boundary and shocks
-  dbgl_biarc shock_estimate_;
-  dbgl_biarc left_bnd_estimate_;
-  dbgl_biarc right_bnd_estimate_;
+  bgld_biarc shock_estimate_;
+  bgld_biarc left_bnd_estimate_;
+  bgld_biarc right_bnd_estimate_;
 };
 
 

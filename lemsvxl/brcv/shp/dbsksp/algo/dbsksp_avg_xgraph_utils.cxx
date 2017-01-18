@@ -20,8 +20,8 @@
 // curvature dictated by radius at the node
 double dbsksp_compute_kmax_cost(const dbsksp_xshock_fragment& xfrag)
 {
-  dbgl_biarc left_bnd = xfrag.bnd_left_as_biarc();
-  dbgl_biarc right_bnd = xfrag.bnd_right_as_biarc();
+  bgld_biarc left_bnd = xfrag.bnd_left_as_biarc();
+  bgld_biarc right_bnd = xfrag.bnd_right_as_biarc();
 
   if (left_bnd.flag() == -1 || right_bnd.flag() == -1)
     return 1e6; //vnl_numeric_traits<double >::maxval;

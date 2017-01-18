@@ -99,7 +99,7 @@ void test_shock_graph_xio()
 
   e0->form_fragment();
   dbsksp_shapelet_sptr s = e0->fragment()->get_shapelet();
-  dbgl_conic_arc shock_curve = s->shock_geom();
+  bgld_conic_arc shock_curve = s->shock_geom();
 
   for (int i=1; i< num_pts ; ++i)
   { 

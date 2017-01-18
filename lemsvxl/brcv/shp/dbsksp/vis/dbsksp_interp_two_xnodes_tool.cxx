@@ -396,7 +396,7 @@ handle_draw_overlay()
 
   // draw the shock and boundary estimate
   // shock estimate
-  dbgl_circ_arc ss(this->shock_estimate_.start(), this->shock_estimate_.mid_pt(), 
+  bgld_circ_arc ss(this->shock_estimate_.start(), this->shock_estimate_.mid_pt(), 
     this->shock_estimate_.k1());
   dbsksp_soview_bnd_arc so_ss = dbsksp_soview_bnd_arc( new dbsksp_bnd_arc(ss));
   so_ss.set_colour(1.0f, 0.0f, 0.0f);
@@ -404,7 +404,7 @@ handle_draw_overlay()
   so_ss.draw();
 
 
-  dbgl_circ_arc se(this->shock_estimate_.mid_pt(), 
+  bgld_circ_arc se(this->shock_estimate_.mid_pt(), 
     this->shock_estimate_.point_at(this->shock_estimate_.len()), 
     this->shock_estimate_.k2());
   dbsksp_soview_bnd_arc so_se = dbsksp_soview_bnd_arc( new dbsksp_bnd_arc(se));
@@ -413,7 +413,7 @@ handle_draw_overlay()
   so_se.draw();
 
   // left boundary estimate
-  dbgl_circ_arc ls(this->left_bnd_estimate_.start(), this->left_bnd_estimate_.mid_pt(), 
+  bgld_circ_arc ls(this->left_bnd_estimate_.start(), this->left_bnd_estimate_.mid_pt(), 
     this->left_bnd_estimate_.k1());
   dbsksp_soview_bnd_arc so_ls = dbsksp_soview_bnd_arc( new dbsksp_bnd_arc(ls));
   so_ls.set_colour(0.0f, 0.0f, 1.0f);
@@ -421,7 +421,7 @@ handle_draw_overlay()
   so_ls.draw();
 
 
-  dbgl_circ_arc le(this->left_bnd_estimate_.mid_pt(), 
+  bgld_circ_arc le(this->left_bnd_estimate_.mid_pt(), 
     this->left_bnd_estimate_.point_at(this->left_bnd_estimate_.len()), 
     this->left_bnd_estimate_.k2());
   dbsksp_soview_bnd_arc so_le = dbsksp_soview_bnd_arc( new dbsksp_bnd_arc(le));
@@ -430,7 +430,7 @@ handle_draw_overlay()
   so_le.draw();
 
   // right boundary estimate
-  dbgl_circ_arc rs(this->right_bnd_estimate_.start(), this->right_bnd_estimate_.mid_pt(), 
+  bgld_circ_arc rs(this->right_bnd_estimate_.start(), this->right_bnd_estimate_.mid_pt(), 
     this->right_bnd_estimate_.k1());
   dbsksp_soview_bnd_arc so_rs = dbsksp_soview_bnd_arc( new dbsksp_bnd_arc(rs));
   so_rs.set_colour(0.0f, 0.0f, 1.0f);
@@ -438,7 +438,7 @@ handle_draw_overlay()
   so_rs.draw();
 
 
-  dbgl_circ_arc re(this->right_bnd_estimate_.mid_pt(), 
+  bgld_circ_arc re(this->right_bnd_estimate_.mid_pt(), 
     this->right_bnd_estimate_.point_at(this->right_bnd_estimate_.len()), 
     this->right_bnd_estimate_.k2());
   dbsksp_soview_bnd_arc so_re = dbsksp_soview_bnd_arc( new dbsksp_bnd_arc(re));

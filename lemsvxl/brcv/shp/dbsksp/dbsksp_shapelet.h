@@ -16,8 +16,8 @@
 
 #include <vbl/vbl_ref_count.h>
 #include <vnl/vnl_vector_fixed.h>
-#include <dbgl/algo/dbgl_conic_arc.h>
-#include <dbgl/algo/dbgl_circ_arc.h>
+#include <bgld/algo/bgld_conic_arc.h>
+#include <bgld/algo/bgld_circ_arc.h>
 #include <dbsksp/dbsksp_shapelet_sptr.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
 
@@ -160,16 +160,16 @@ public:
   vgl_point_2d<double > bnd_end(int side) const;
   
   //: Return boundary arcs: 0: left boundary, 1: right boundary
-  dbgl_circ_arc bnd_arc(int side) const;
+  bgld_circ_arc bnd_arc(int side) const;
 
   //: Return left boundary
-  dbgl_circ_arc bnd_arc_left() const {return this->bnd_arc(0); }
+  bgld_circ_arc bnd_arc_left() const {return this->bnd_arc(0); }
 
   //: Return right boundary
-  dbgl_circ_arc bnd_arc_right() const {return this->bnd_arc(1); }
+  bgld_circ_arc bnd_arc_right() const {return this->bnd_arc(1); }
 
   //: Return the shock curve (conic)
-  dbgl_conic_arc shock_geom() const;
+  bgld_conic_arc shock_geom() const;
 
   //: Return area bounded by the shapelet
   double area() const;
@@ -473,13 +473,13 @@ public:
   { return vgl_vector_2d<double >(vcl_cos(this->theta0()), vcl_sin(this->theta0()));}
     
   //: Return boundary arcs: 0: left boundary, 1: right boundary
-  dbgl_circ_arc bnd_arc(int i) const;
+  bgld_circ_arc bnd_arc(int i) const;
 
   //: Return left boundary
-  dbgl_circ_arc bnd_arc_left() const {return this->bnd_arc(0); }
+  bgld_circ_arc bnd_arc_left() const {return this->bnd_arc(0); }
 
   //: Return right boundary
-  dbgl_circ_arc bnd_arc_right() const {return this->bnd_arc(1); }
+  bgld_circ_arc bnd_arc_right() const {return this->bnd_arc(1); }
 
   //: Return area bounded by the shapelet
   double area() const;

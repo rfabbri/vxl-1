@@ -13,7 +13,7 @@
 //  Modifications
 // \endverbatim
 
-#include <dbgrl/dbgrl_graph.h>
+#include <bgrld/bgrld_graph.h>
 #include <vgl/vgl_box_2d.h>
 #include <dbsksp/dbsksp_xshock_node.h>
 #include <dbsksp/dbsksp_xshock_node_sptr.h>
@@ -25,7 +25,7 @@
 
 
 //: A class for a generative extrinsic shock graph
-class dbsksp_xshock_graph : public dbgrl_graph<dbsksp_xshock_node, dbsksp_xshock_edge>
+class dbsksp_xshock_graph : public bgrld_graph<dbsksp_xshock_node, dbsksp_xshock_edge>
 {
 public:
   // Constructors / Destructors ------------------------------------------------

@@ -57,15 +57,15 @@ void test_compute_biarc_given_k1()
   double s1 = 10;
   double k2 = 0.2;
   double s2 = 4;
-  dbgl_circ_arc gt_arc1;
+  bgld_circ_arc gt_arc1;
   gt_arc1.set_from(p0, t0, k1, s1);
-  dbgl_circ_arc gt_arc2;
+  bgld_circ_arc gt_arc2;
   gt_arc2.set_from(gt_arc1.end(), gt_arc1.tangent_at_end(), k2, s2);
 
   // Interpolation - recover the two arcs
 
-  dbgl_circ_arc arc1;
-  dbgl_circ_arc arc2;
+  bgld_circ_arc arc1;
+  bgld_circ_arc arc2;
   bool success = dbsksp_compute_biarc_given_k1(gt_arc1.start(), gt_arc1.tangent_at_start(),
     gt_arc2.end(), gt_arc2.tangent_at_end(),
     gt_arc1.k(),

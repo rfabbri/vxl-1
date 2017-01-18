@@ -7,7 +7,7 @@
 #include <vcl_algorithm.h>
 #include <vcl_utility.h>
 #include <vnl/vnl_math.h>
-#include <dbnl/dbnl_angle.h>
+#include <bnld/bnld_angle.h>
 #include <vgl/vgl_distance.h>
 
 #include <dbsksp/dbsksp_xshock_edge.h>
@@ -22,7 +22,7 @@ dbsksp_xshock_node_descriptor(double x, double y, double psi, double phi,
 pt_(x, y), psi_(psi), phi_(phi), radius_(radius)
 {
   // make sure psi is between [0, 2pi]
-  this->psi_ = dbnl_angle_0to2pi(psi);
+  this->psi_ = bnld_angle_0to2pi(psi);
   return;
 }
 
@@ -120,7 +120,7 @@ set_shock_tangent(vgl_vector_2d<double > t)
 void dbsksp_xshock_node_descriptor::
 set_shock_tangent(double psi)
 {
-  this->psi_ = dbnl_angle_0to2pi(psi);
+  this->psi_ = bnld_angle_0to2pi(psi);
 }
 
 

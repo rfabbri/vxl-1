@@ -45,7 +45,7 @@ aux_source_directory(Templates dbsksp_sources)
 
 add_library(dbsksp  ${dbsksp_sources})
 
-target_link_libraries(dbsksp vgl vbl vnl vnl_algo vsl vsol dbgl_algo bil_algo dbnl dbgrl )
+target_link_libraries(dbsksp vgl vbl vnl vnl_algo vsl vsol bgld_algo bil_algo bnld bgrld )
 
 if( BUILD_EXAMPLES )
   add_subdirectory( examples )

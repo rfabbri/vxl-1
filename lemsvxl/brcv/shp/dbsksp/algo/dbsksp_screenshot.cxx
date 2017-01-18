@@ -81,10 +81,10 @@ bool dbsksp_screenshot_in_place(const dbsksp_xshock_graph_sptr& xgraph,
     dbsksp_xshock_node_descriptor end = xe->target()->descriptor(xe)->opposite_xnode();
     dbsksp_xshock_fragment xfrag(start, end);
 
-    dbgl_biarc bnd[] = {xfrag.bnd_left_as_biarc(), xfrag.bnd_right_as_biarc()};
+    bgld_biarc bnd[] = {xfrag.bnd_left_as_biarc(), xfrag.bnd_right_as_biarc()};
     for (int i=0; i < 2; ++i)
     {
-      dbgl_biarc biarc = bnd[i];
+      bgld_biarc biarc = bnd[i];
       double len = biarc.len();
       for (double s = 0; s <= len; s = s+1)
       {
@@ -227,10 +227,10 @@ bool dbsksp_screenshot_binary(const dbsksp_xshock_graph_sptr& xgraph,
     dbsksp_xshock_node_descriptor end = xe->target()->descriptor(xe)->opposite_xnode();
     dbsksp_xshock_fragment xfrag(start, end);
 
-    dbgl_biarc bnd[] = {xfrag.bnd_left_as_biarc(), xfrag.bnd_right_as_biarc()};
+    bgld_biarc bnd[] = {xfrag.bnd_left_as_biarc(), xfrag.bnd_right_as_biarc()};
     for (int i=0; i < 2; ++i)
     {
-      dbgl_biarc biarc = bnd[i];
+      bgld_biarc biarc = bnd[i];
       double len = biarc.len();
       for (double s = 0; s <= len; s = s+1)
       {

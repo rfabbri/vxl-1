@@ -9,9 +9,9 @@
 #include <vgui/vgui_gl.h>
 #include <vgui/vgui_style.h>
 
-//#include <dbgl/algo/dbgl_closest_point.h>
+//#include <bgld/algo/bgld_closest_point.h>
 
-#include <dbgl/algo/dbgl_biarc.h>
+#include <bgld/algo/bgld_biarc.h>
 #include <dbsksp/dbsksp_xshock_edge.h>
 #include <dbsksp/dbsksp_xshock_edge_sptr.h>
 #include <dbsksp/dbsksp_xshock_node.h>
@@ -254,7 +254,7 @@ compute_geometry()
   dbsksp_xshock_node_descriptor end = xe->target()->descriptor(xe)->opposite_xnode();
   
   // approximate the xshock curve using biarc
-  dbgl_biarc shock_curve;
+  bgld_biarc shock_curve;
   bool success = shock_curve.compute_biarc_params(start.pt(), start.shock_tangent(),
                                                   end.pt(), end.shock_tangent()) &&
                  shock_curve.is_consistent();
@@ -447,7 +447,7 @@ compute_geometry()
   // draw left boundary
   if (this->is_left_bnd_)
   {
-    dbgl_biarc left_biarc;
+    bgld_biarc left_biarc;
     if (left_biarc.compute_biarc_params(xdesc_source->bnd_pt_left(), xdesc_source->bnd_tangent_left(),
       xdesc_target.bnd_pt_left(), xdesc_target.bnd_tangent_left()) &&
       left_biarc.is_consistent())
@@ -469,7 +469,7 @@ compute_geometry()
   else
   {
     // draw right boundary
-    dbgl_biarc right_biarc;
+    bgld_biarc right_biarc;
     if (right_biarc.compute_biarc_params(xdesc_source->bnd_pt_right(), xdesc_source->bnd_tangent_right(),
       xdesc_target.bnd_pt_right(), xdesc_target.bnd_tangent_right()))
     {
@@ -518,7 +518,7 @@ draw() const
   
   // draw left boundary
   this->bnd_style_->apply_all();
-  dbgl_biarc left_biarc = this->xfrag()->bnd_left_as_biarc();
+  bgld_biarc left_biarc = this->xfrag()->bnd_left_as_biarc();
   if (left_biarc.is_consistent())
   {
     double len = left_biarc.len();
@@ -536,7 +536,7 @@ draw() const
   
   // draw right boundary
   this->bnd_style_->apply_all();
-  dbgl_biarc right_biarc = this->xfrag()->bnd_right_as_biarc();
+  bgld_biarc right_biarc = this->xfrag()->bnd_right_as_biarc();
   if (right_biarc.is_consistent())
   {
     double len = right_biarc.len();

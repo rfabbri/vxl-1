@@ -19,7 +19,7 @@
 #include <dbsksp/pro/dbsksp_shock_storage_sptr.h>
 #include <dbsksp/vis/dbsksp_shock_tableau_sptr.h>
 #include <dbsksp/vis/dbsksp_shock_tableau.h>
-#include <dbgl/algo/dbgl_biarc.h>
+#include <bgld/algo/bgld_biarc.h>
 #include <dbsksp/dbsksp_xshock_node.h>
 
 
@@ -106,9 +106,9 @@ protected:
   // cache objects for drawing
   dbsksp_twoshapelet_sptr active_twoshapelet_;
   // estimation of boundary and shocks
-  dbgl_biarc shock_estimate_;
-  dbgl_biarc left_bnd_estimate_;
-  dbgl_biarc right_bnd_estimate_;
+  bgld_biarc shock_estimate_;
+  bgld_biarc left_bnd_estimate_;
+  bgld_biarc right_bnd_estimate_;
 
   /////////////////////////////////////////////////////
   // demo_type specific parameters

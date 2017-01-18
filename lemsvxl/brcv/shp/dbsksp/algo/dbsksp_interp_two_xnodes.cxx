@@ -32,20 +32,20 @@ dbsksp_optimal_interp_two_xnodes(
 {
   this->set(start_xnode, end_xnode);
   this->shock_estimate_ = 
-    dbgl_biarc(start_xnode.pt_, start_xnode.psi_,  
+    bgld_biarc(start_xnode.pt_, start_xnode.psi_,  
     end_xnode.pt_, end_xnode.psi_);
 
   vgl_vector_2d<double > x_axis(1, 0);
   
   // estimate the left and right boundary using biarcs
   this->left_bnd_estimate_ = 
-    dbgl_biarc(start_xnode.bnd_pt_left(), 
+    bgld_biarc(start_xnode.bnd_pt_left(), 
     signed_angle(x_axis, start_xnode.bnd_tangent_left()),
     end_xnode.bnd_pt_left(), 
     signed_angle(x_axis, end_xnode.bnd_tangent_left()) );
 
   this->right_bnd_estimate_ = 
-    dbgl_biarc(start_xnode.bnd_pt_right(), 
+    bgld_biarc(start_xnode.bnd_pt_right(), 
     signed_angle(x_axis, start_xnode.bnd_tangent_right()),
     end_xnode.bnd_pt_right(), 
     signed_angle(x_axis, end_xnode.bnd_tangent_right()) );

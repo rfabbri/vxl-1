@@ -149,7 +149,7 @@ f(const dbsksp_shock_graph_sptr& shock_graph)
     for (int i=0; i<2; ++i)
     {
       dbsksp_bnd_arc_sptr bnd = fragment->bnd(i);
-      dbgl_circ_arc arc = bnd->arc();
+      bgld_circ_arc arc = bnd->arc();
       for (double s = 0; s<arc.len(); s += this->sampling_length())
       {
         vgl_point_2d<double > pt = arc.point_at_length(s);
@@ -172,7 +172,7 @@ f(const dbsksp_shock_graph_sptr& shock_graph)
 //  double bnd_length = 0;
 //  for (int i=0; i<2; ++i)
 //  {
-//    dbgl_circ_arc arc = shapelet.bnd_arc(i);
+//    bgld_circ_arc arc = shapelet.bnd_arc(i);
 //    for (double s = 0; s<arc.len(); s += this->sampling_length())
 //    {
 //      vgl_point_2d<double > pt = arc.point_at_length(s);
@@ -204,7 +204,7 @@ f(const dbsksp_shapelet_sptr& shapelet)
   double chord_length = 0;
   for (int i=0; i<2; ++i)
   {
-    dbgl_circ_arc arc = shapelet->bnd_arc(i);
+    bgld_circ_arc arc = shapelet->bnd_arc(i);
     for (double s = this->sampling_length()/2 ; s<arc.len(); 
       s += this->sampling_length())
     {
@@ -240,7 +240,7 @@ f(const dbsksp_shapelet_sptr &shapelet)
   double chord_length = 0;
   for (int i=0; i<2; ++i)
   {
-    dbgl_circ_arc arc = shapelet->bnd_arc(i);
+    bgld_circ_arc arc = shapelet->bnd_arc(i);
     for (double s = this->sampling_length()/2 ; s<arc.len(); 
       s += this->sampling_length())
     {
@@ -303,7 +303,7 @@ f(const dbsksp_shock_graph_sptr& shock_graph)
     for (int i=0; i<2; ++i)
     {
       dbsksp_bnd_arc_sptr bnd = fragment->bnd(i);
-      dbgl_circ_arc arc = bnd->arc();
+      bgld_circ_arc arc = bnd->arc();
       for (double s = 0; s<arc.len(); s += this->sampling_length())
       {
         vgl_point_2d<double > pt = arc.point_at_length(s);
@@ -325,7 +325,7 @@ f(const dbsksp_shapelet_sptr& s)
   double sum = 0;
   for (int i=0; i<2; ++i)
   {
-    dbgl_circ_arc arc = s->bnd_arc(i);
+    bgld_circ_arc arc = s->bnd_arc(i);
     for (double s = this->sampling_length()/2 ; s<arc.len(); 
       s += this->sampling_length())
     {
@@ -345,7 +345,7 @@ f(const dbsksp_shapelet_sptr& s, int which_side)
 {
   // interate thru the boundary to sum up the potential
   double sum = 0; 
-  dbgl_circ_arc arc = s->bnd_arc(which_side);
+  bgld_circ_arc arc = s->bnd_arc(which_side);
   for (double s = this->sampling_length()/2 ; s < arc.len(); 
     s += this->sampling_length())
   {

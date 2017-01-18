@@ -17,17 +17,17 @@
 //#include <dbsksp/algo/dbsksp_compute_scurve.h>
 //#include <dbsksp/algo/dbsksp_xgraph_algos.h>
 #include <dbsksp/algo/dbsksp_fit_one_shock_branch_cost_function.h>
-#include <dbgl/algo/dbgl_biarc.h>
+#include <bgld/algo/bgld_biarc.h>
 //
 //#include <dbskr/dbskr_scurve.h>
 //
 //#include <dbsk2d/dbsk2d_shock_graph.h>
 //#include <dbsk2d/dbsk2d_xshock_edge.h>
 //#include <dbsk2d/dbsk2d_xshock_edge_sptr.h>
-//#include <dbgl/algo/dbgl_compute_symmetry_point.h>
-//#include <dbgl/algo/dbgl_biarc.h>
-#include <dbgl/algo/dbgl_closest_point.h>
-#include <dbnl/dbnl_angle.h>
+//#include <bgld/algo/bgld_compute_symmetry_point.h>
+//#include <bgld/algo/bgld_biarc.h>
+#include <bgld/algo/bgld_closest_point.h>
+#include <bnld/bnld_angle.h>
 
 #include <vnl/algo/vnl_levenberg_marquardt.h>
 #include <vnl/vnl_numeric_traits.h>
@@ -146,30 +146,30 @@ bool dbsksp_fit_one_shock_branch_with_power_of_2_intervals(const dbsksp_xshock_n
 
       // Method 1: Interpolation - Need improvements
       {
-        dbgl_biarc shock_curve(prev_xdesc.pt(), prev_xdesc.shock_tangent(), cur_xdesc.pt(), cur_xdesc.shock_tangent());
+        bgld_biarc shock_curve(prev_xdesc.pt(), prev_xdesc.shock_tangent(), cur_xdesc.pt(), cur_xdesc.shock_tangent());
         vgl_point_2d<double > shock_pt = shock_curve.point_at(t * shock_curve.len());
 
         // project the shock point to the two boundary biarcs
         dbsksp_xshock_fragment xfrag(prev_xdesc, cur_xdesc);
-        dbgl_biarc left_bnd = xfrag.bnd_left_as_biarc();
-        dbgl_biarc right_bnd = xfrag.bnd_right_as_biarc();
+        bgld_biarc left_bnd = xfrag.bnd_left_as_biarc();
+        bgld_biarc right_bnd = xfrag.bnd_right_as_biarc();
 
         // if something is wrong, then just take the first xdesc
         if (left_bnd.is_consistent() && right_bnd.is_consistent())
         {
 
           double left_s = 0;
-          dbgl_closest_point::point_to_biarc(shock_pt, left_bnd, left_s);
+          bgld_closest_point::point_to_biarc(shock_pt, left_bnd, left_s);
           vgl_point_2d<double > left_pt = left_bnd.point_at(left_s);
 
           double right_s = 0;
-          dbgl_closest_point::point_to_biarc(shock_pt, right_bnd, right_s);
+          bgld_closest_point::point_to_biarc(shock_pt, right_bnd, right_s);
           vgl_point_2d<double > right_pt = right_bnd.point_at(right_s);
 
           // compute phi
           //vgl_vector_2d<double > shock_tangent = rotated(right_pt-left_pt, vnl_math::pi_over_2);
           double twophi = signed_angle(right_pt-shock_pt, left_pt-shock_pt);
-          double phi = dbnl_angle_0to2pi(twophi) / 2;
+          double phi = bnld_angle_0to2pi(twophi) / 2;
 
           mid_xdesc.set(left_pt, right_pt, phi);
         }
@@ -425,30 +425,30 @@ dbsksp_xshock_node_descriptor dbsksp_coarse_interp_btw_xsamples(const dbsksp_xsh
   dbsksp_xshock_node_descriptor mid_xdesc;
 
   // Find the shock point by parametrizing the shock curve with biarc
-  dbgl_biarc shock_curve(xdesc0.pt(), xdesc0.shock_tangent(), 
+  bgld_biarc shock_curve(xdesc0.pt(), xdesc0.shock_tangent(), 
                          xdesc1.pt(), xdesc1.shock_tangent());
   vgl_point_2d<double > shock_pt = shock_curve.point_at(t * shock_curve.len());
 
   // Find boundary points by projecting shock point to two boundary curves (biarcs)
   dbsksp_xshock_fragment xfrag(xdesc0, xdesc1);
-  dbgl_biarc left_bnd = xfrag.bnd_left_as_biarc();
-  dbgl_biarc right_bnd = xfrag.bnd_right_as_biarc();
+  bgld_biarc left_bnd = xfrag.bnd_left_as_biarc();
+  bgld_biarc right_bnd = xfrag.bnd_right_as_biarc();
 
   // if something is wrong, then just take the first xdesc
   if (left_bnd.is_consistent() && right_bnd.is_consistent())
   {
     double left_s = 0;
-    dbgl_closest_point::point_to_biarc(shock_pt, left_bnd, left_s);
+    bgld_closest_point::point_to_biarc(shock_pt, left_bnd, left_s);
     vgl_point_2d<double > left_pt = left_bnd.point_at(left_s);
 
     double right_s = 0;
-    dbgl_closest_point::point_to_biarc(shock_pt, right_bnd, right_s);
+    bgld_closest_point::point_to_biarc(shock_pt, right_bnd, right_s);
     vgl_point_2d<double > right_pt = right_bnd.point_at(right_s);
 
     // compute phi
     //vgl_vector_2d<double > shock_tangent = rotated(right_pt-left_pt, vnl_math::pi_over_2);
     double twophi = signed_angle(right_pt-shock_pt, left_pt-shock_pt);
-    double phi = dbnl_angle_0to2pi(twophi) / 2;
+    double phi = bnld_angle_0to2pi(twophi) / 2;
 
     mid_xdesc.set(left_pt, right_pt, phi);
   }

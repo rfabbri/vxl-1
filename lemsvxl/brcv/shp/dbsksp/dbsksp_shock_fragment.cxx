@@ -147,8 +147,8 @@ build_from_degenerate_edge(const dbsksp_shock_edge_sptr& edge)
   vgl_point_2d<double > start = node->pt() + node->radius() * rotated(t, -phi);
   vgl_point_2d<double > end = node->pt() + node->radius() * rotated(t, phi);
 
-  dbgl_circ_arc left_arc(start, mid_point, 1/node->radius());
-  dbgl_circ_arc right_arc(end, mid_point, -1/node->radius());
+  bgld_circ_arc left_arc(start, mid_point, 1/node->radius());
+  bgld_circ_arc right_arc(end, mid_point, -1/node->radius());
 
   this->left_bnd()->set_arc(left_arc);
   this->right_bnd()->set_arc(right_arc);

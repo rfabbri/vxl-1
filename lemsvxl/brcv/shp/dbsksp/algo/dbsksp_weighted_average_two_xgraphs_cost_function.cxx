@@ -79,8 +79,8 @@ dbsksp_weighted_average_two_xgraphs_cost_base(
 //  //    dbsksp_xshock_node_descriptor end = xe->child_node()->descriptor(xe)->opposite_xnode();
 //  //    dbsksp_xshock_fragment xfrag(start, end);
 //
-//  //    dbgl_biarc left_bnd = xfrag.bnd_left_as_biarc();
-//  //    dbgl_biarc right_bnd = xfrag.bnd_right_as_biarc();
+//  //    bgld_biarc left_bnd = xfrag.bnd_left_as_biarc();
+//  //    bgld_biarc right_bnd = xfrag.bnd_right_as_biarc();
 //
 //  //    double kdiff = vnl_math::sqr(left_bnd.k1() - left_bnd.k2()) + 
 //  //      vnl_math::sqr(right_bnd.k1() - right_bnd.k2());
@@ -95,8 +95,8 @@ dbsksp_weighted_average_two_xgraphs_cost_base(
 //  //    dbsksp_xshock_node_descriptor end = xe->child_node()->descriptor(xe)->opposite_xnode();
 //  //    dbsksp_xshock_fragment xfrag(start, end);
 //
-//  //    dbgl_biarc left_bnd = xfrag.bnd_left_as_biarc();
-//  //    dbgl_biarc right_bnd = xfrag.bnd_right_as_biarc();
+//  //    bgld_biarc left_bnd = xfrag.bnd_left_as_biarc();
+//  //    bgld_biarc right_bnd = xfrag.bnd_right_as_biarc();
 //
 //  //    double kdiff = vnl_math::sqr(left_bnd.k1() - left_bnd.k2()) + 
 //  //      vnl_math::sqr(right_bnd.k1() - right_bnd.k2());
@@ -124,8 +124,8 @@ compute_kdiff_cost(unsigned eid, const dbsksp_xshock_fragment& xfrag)
 {
   return 0;
 
-  dbgl_biarc left_bnd = xfrag.bnd_left_as_biarc();
-  dbgl_biarc right_bnd = xfrag.bnd_right_as_biarc();
+  bgld_biarc left_bnd = xfrag.bnd_left_as_biarc();
+  bgld_biarc right_bnd = xfrag.bnd_right_as_biarc();
 
   double kdiff = vnl_math::sqr(left_bnd.k1() - left_bnd.k2()) + 
     vnl_math::sqr(right_bnd.k1() - right_bnd.k2());

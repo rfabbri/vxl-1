@@ -20,7 +20,7 @@
 
 //: Trace boundary of an xshock graph as an ordered-list of biarcs
 bool dbsksp_trace_xgraph_boundary_as_biarc_spline(const dbsksp_xshock_graph_sptr& xgraph, 
-                                                  vcl_vector<dbgl_biarc >& boundary)
+                                                  vcl_vector<bgld_biarc >& boundary)
 {
   // Preliminary checks
   boundary.clear();
@@ -45,7 +45,7 @@ bool dbsksp_trace_xgraph_boundary_as_biarc_spline(const dbsksp_xshock_graph_sptr
     dbsksp_xshock_fragment xfrag(xdesc_start, xdesc_end);
 
     // take the right boundary contour
-    dbgl_biarc right_biarc = xfrag.bnd_right_as_biarc();
+    bgld_biarc right_biarc = xfrag.bnd_right_as_biarc();
 
     // push the boundary contour to the ordered list
     boundary.push_back(right_biarc);
@@ -78,7 +78,7 @@ bool dbsksp_trace_xgraph_boundary_as_polygon(const dbsksp_xshock_graph_sptr& xgr
   }
 
   // a) Acquire the boundary as an ordered set of biarcs
-  vcl_vector<dbgl_biarc > biarc_list;
+  vcl_vector<bgld_biarc > biarc_list;
   if (!dbsksp_trace_xgraph_boundary_as_biarc_spline(xgraph, biarc_list))
   {
     return false;
@@ -87,7 +87,7 @@ bool dbsksp_trace_xgraph_boundary_as_polygon(const dbsksp_xshock_graph_sptr& xgr
   // b) sample each biarc to acquire the sample points for the polygon
   for (unsigned idx =0; idx < biarc_list.size(); ++idx)
   {
-    dbgl_biarc& biarc = biarc_list[idx];
+    bgld_biarc& biarc = biarc_list[idx];
     int num_segs = vnl_math::rnd(biarc.len() / approx_ds);
 
     // force at least 1 segment per biarc

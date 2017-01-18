@@ -8,7 +8,7 @@
 #include <vgl/vgl_distance.h>
 #include <vnl/vnl_math.h>
 #include <vnl/algo/vnl_levenberg_marquardt.h>
-#include <dbnl/algo/dbnl_brent_root.h>
+#include <bnld/algo/bnld_brent_root.h>
 #include <dbsksp/algo/dbsksp_twoshapelet_estimator.h>
 
 
@@ -110,7 +110,7 @@ compute_twoshapelet_via_vertical_discrepancy(double alpha0)
     this->start_xnode(), this->end_xnode(), 
     alpha0, dbsksp_property_of_twoshapelet_estimate::DET_A,
     dbsksp_property_of_twoshapelet_estimate::IGNORE_VERTICAL_DISCREPANCY);
-  dbnl_brent_root phi1_range_min_solver(detA_fnt, phi1_bound_tol);
+  bnld_brent_root phi1_range_min_solver(detA_fnt, phi1_bound_tol);
 
   phi1_range_min_solver.solve(0.01*vnl_math::pi, 0.99*vnl_math::pi,
     phi1_range_min);
@@ -126,7 +126,7 @@ compute_twoshapelet_via_vertical_discrepancy(double alpha0)
     this->start_xnode(), this->end_xnode(), 
     alpha0, dbsksp_property_of_twoshapelet_estimate::CHORD_LENGTH_0,
     dbsksp_property_of_twoshapelet_estimate::IGNORE_VERTICAL_DISCREPANCY);
-  dbnl_brent_root phi1_bound0_solver(len0_fnt, phi1_bound_tol);
+  bnld_brent_root phi1_bound0_solver(len0_fnt, phi1_bound_tol);
 
   // len0 should varying monotonically as phi1 changes from 0 to pi
   double phi1_bound0 = -1;
@@ -147,7 +147,7 @@ compute_twoshapelet_via_vertical_discrepancy(double alpha0)
     this->start_xnode(), this->end_xnode(), 
     alpha0, dbsksp_property_of_twoshapelet_estimate::CHORD_LENGTH_1,
     dbsksp_property_of_twoshapelet_estimate::IGNORE_VERTICAL_DISCREPANCY);
-  dbnl_brent_root phi1_bound1_solver(len1_fnt, phi1_bound_tol);
+  bnld_brent_root phi1_bound1_solver(len1_fnt, phi1_bound_tol);
 
   // len1 should varying monotonically, in an opposite direction from
   // len0, as phi1 changes from 0 to pi
@@ -185,7 +185,7 @@ compute_twoshapelet_via_vertical_discrepancy(double alpha0)
     this->start_xnode(), this->end_xnode(), 
     alpha0, dbsksp_property_of_twoshapelet_estimate::FIT_COST,
     dbsksp_property_of_twoshapelet_estimate::IGNORE_VERTICAL_DISCREPANCY);
-  dbnl_brent_root xnode_fit_solver(err_fnt, 1e-4);
+  bnld_brent_root xnode_fit_solver(err_fnt, 1e-4);
 
   // shrink the upper and lower bounds a little bit to make sure they're in bound
   double ax = phi1_bound0 + vnl_math::sgn(phi1_bound1 - phi1_bound0) * 2*phi1_bound_tol;
@@ -265,7 +265,7 @@ compute_twoshapelet_via_radius_discrepancy(double alpha0, double& fit_error)
     this->start_xnode(), this->end_xnode(), 
     alpha0, dbsksp_property_of_twoshapelet_estimate::FIT_COST,
     dbsksp_property_of_twoshapelet_estimate::IGNORE_RADIUS_DISCREPANCY);
-  dbnl_brent_root xnode_fit_solver(err_fnt, 1e-4);
+  bnld_brent_root xnode_fit_solver(err_fnt, 1e-4);
 
   // shrink the upper and lower bounds a little bit to make sure they're in bound
   double ax = phi1_bound0 + vnl_math::sgn(phi1_bound1 - phi1_bound0) * 2*phi1_bound_tol;
@@ -348,7 +348,7 @@ dbsksp_interp_two_xnodes_curvature_variation_type1_cost_fnt::
 dbsksp_interp_two_xnodes_curvature_variation_type1_cost_fnt(
   const dbsksp_xshock_node_descriptor& start_xnode,
   const dbsksp_xshock_node_descriptor& end_xnode,
-  const dbgl_biarc& shock_estimate) :
+  const bgld_biarc& shock_estimate) :
 vnl_least_squares_function(1, 3, no_gradient),
 start_xnode_(start_xnode), end_xnode_(end_xnode),
 shock_estimate_(shock_estimate)
@@ -501,7 +501,7 @@ dbsksp_interp_two_xnodes_min_k_variation_type2_cost_fnt::
 dbsksp_interp_two_xnodes_min_k_variation_type2_cost_fnt(
   const dbsksp_xshock_node_descriptor& start_xnode,
   const dbsksp_xshock_node_descriptor& end_xnode,
-  const dbgl_biarc& shock_estimate) : vnl_cost_function(1),
+  const bgld_biarc& shock_estimate) : vnl_cost_function(1),
 start_xnode_(start_xnode),
 end_xnode_(end_xnode),
 shock_estimate_(shock_estimate)

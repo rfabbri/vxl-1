@@ -7,7 +7,7 @@
 #include "dbsksp_soview_shock.h"
 
 #include <vgl/vgl_distance.h>
-#include <dbgl/algo/dbgl_closest_point.h>
+#include <bgld/algo/bgld_closest_point.h>
 #include <vnl/vnl_math.h>
 #include <vgui/vgui_gl.h>
 #include <vgui/vgui_style.h>
@@ -149,7 +149,7 @@ draw() const
   if (!this->edge()->fragment())
     this->edge()->form_fragment();
 
-  dbgl_conic_arc conic = this->edge()->fragment()->shock_geom();
+  bgld_conic_arc conic = this->edge()->fragment()->shock_geom();
 
   // decide the number of segments to draw based on the chord length of the conic
   int num_segments = (int) vnl_math::max(this->edge()->chord_length(), 5.0);
@@ -174,7 +174,7 @@ distance_squared(float x, float y) const
 {
   if (!this->edge()->fragment())
     this->edge()->form_fragment();
-  dbgl_conic_arc conic = this->edge()->fragment()->shock_geom();
+  bgld_conic_arc conic = this->edge()->fragment()->shock_geom();
   vgl_point_2d<double > mid_pt = conic.point_at(0.5);
   
   return (float) vnl_math::hypot(x-mid_pt.x(), y-mid_pt.y());
@@ -307,7 +307,7 @@ draw() const
 {
   if (!this->bnd_arc()) return;
 
-  dbgl_circ_arc arc = this->bnd_arc()->arc();
+  bgld_circ_arc arc = this->bnd_arc()->arc();
 
   // decide the number of segments to draw based on the chord length of the arc
   // use at least 5 line segments
@@ -342,9 +342,9 @@ draw() const
 float dbsksp_soview_bnd_arc::
 distance_squared(float x, float y) const
 {
-  dbgl_circ_arc arc = this->bnd_arc()->arc();
+  bgld_circ_arc arc = this->bnd_arc()->arc();
   double ret_ratio = 0;
-  return vnl_math::sqr( dbgl_closest_point::point_to_circular_arc(vgl_point_2d<double >(x, y), 
+  return vnl_math::sqr( bgld_closest_point::point_to_circular_arc(vgl_point_2d<double >(x, y), 
     arc.point_at(0.1), arc.point_at(0.9), arc.k(), ret_ratio));
 }
 
@@ -420,7 +420,7 @@ draw() const
 
   // draw the shock curve
   this->shock_geom_style_->apply_all();
-  dbgl_conic_arc conic = this->shapelet()->shock_geom();
+  bgld_conic_arc conic = this->shapelet()->shock_geom();
   // decide the number of segments to draw based on the chord length of the conic
   int num_segments = (int) vnl_math::max(this->shapelet()->chord_length(), 5.0);
   num_segments = vnl_math::min(num_segments, 100);
@@ -437,7 +437,7 @@ draw() const
   {
     // the boundary
     this->bnd_style_->apply_all();
-    dbgl_circ_arc arc = this->shapelet()->bnd_arc(k);
+    bgld_circ_arc arc = this->shapelet()->bnd_arc(k);
     // decide the number of segments to draw based on the chord length of the arc
     // use at least 5 line segments and maximum 100
     int num_segments = (int) vnl_math::max(arc.length(), 5.0);

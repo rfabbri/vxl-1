@@ -17,7 +17,7 @@ dbsksp_shock_edge::
 dbsksp_shock_edge(const dbsksp_shock_node_sptr& source, 
                   const dbsksp_shock_node_sptr& target,
                   unsigned int id) : 
-dbgrl_edge<dbsksp_shock_node>(source, target), i_visited_(0), id_(id)
+bgrld_edge<dbsksp_shock_node>(source, target), i_visited_(0), id_(id)
 {
 }
 
@@ -89,7 +89,7 @@ is_terminal_edge() const
 }
 
 
-// \NOTE may need to removed since the function has been implemented in dbgrl
+// \NOTE may need to removed since the function has been implemented in bgrld
 //: Determine if ``this'' edge shares a vertex with other edge
 // Return the shared node if so, otherwise return 0
 dbsksp_shock_node_sptr dbsksp_shock_edge::

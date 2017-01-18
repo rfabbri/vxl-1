@@ -15,14 +15,14 @@
 
 
 #include <dbsksp/dbsksp_xshock_graph_sptr.h>
-#include <dbgl/algo/dbgl_biarc.h>
+#include <bgld/algo/bgld_biarc.h>
 #include <vcl_vector.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
 
 
 //: Trace boundary of an xshock graph as an ordered-list of biarcs
 bool dbsksp_trace_xgraph_boundary_as_biarc_spline(const dbsksp_xshock_graph_sptr& xgraph, 
-                                            vcl_vector<dbgl_biarc >& boundary);
+                                            vcl_vector<bgld_biarc >& boundary);
 
 //: Trace boundary of an xshock graph as a polygon, 
 // Parameter: "approx_ds": approximate distance between adjacent vertices

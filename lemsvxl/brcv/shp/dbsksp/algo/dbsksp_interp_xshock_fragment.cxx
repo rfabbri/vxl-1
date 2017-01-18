@@ -7,7 +7,7 @@
 
 #include <dbsksp/dbsksp_shapelet.h>
 #include <dbsksp/dbsksp_xshock_fragment.h>
-#include <dbgl/algo/dbgl_compute_symmetry_point.h>
+#include <bgld/algo/bgld_compute_symmetry_point.h>
 #include <vgl/vgl_distance.h>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_cost_function.h>
@@ -16,8 +16,8 @@
 #include <vnl/vnl_least_squares_function.h>
 #include <vnl/vnl_matrix.h>
 #include <vnl/algo/vnl_levenberg_marquardt.h>
-#include <dbnl/dbnl_math.h>
-#include <dbnl/dbnl_angle.h>
+#include <bnld/bnld_math.h>
+#include <bnld/bnld_angle.h>
 
 #include <dbsksp/algo/dbsksp_interp_xfrag_cost_function.h>
 
@@ -35,20 +35,20 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
   // Interpolate each boundary with a biarc
   // Then form shapelets from the mid-points of the biarcs. There will be at most 3 shapelets formed.
   dbsksp_xshock_fragment xfrag(start, end);
-  dbgl_biarc left_bnd = xfrag.bnd_left_as_biarc();
-  dbgl_biarc right_bnd = xfrag.bnd_right_as_biarc();
+  bgld_biarc left_bnd = xfrag.bnd_left_as_biarc();
+  bgld_biarc right_bnd = xfrag.bnd_right_as_biarc();
 
   // determine the end point of the first fragment
-  dbgl_circ_arc left_arc1;
+  bgld_circ_arc left_arc1;
   left_arc1.set_from(left_bnd.start(), left_bnd.tangent_at(0), left_bnd.k1(), left_bnd.len1());
 
-  dbgl_circ_arc left_arc2;
+  bgld_circ_arc left_arc2;
   left_arc2.set_from(left_arc1.end(), left_arc1.tangent_at_end(), left_bnd.k2(), left_bnd.len2());
 
-  dbgl_circ_arc right_arc1;
+  bgld_circ_arc right_arc1;
   right_arc1.set_from(right_bnd.start(), right_bnd.tangent_at(0), right_bnd.k1(), right_bnd.len1());
   
-  dbgl_circ_arc right_arc2;
+  bgld_circ_arc right_arc2;
   right_arc2.set_from(right_arc1.end(), right_arc1.tangent_at_end(), right_bnd.k2(), right_bnd.len2());
 
   //re-estimate the biarc if each arc does not satisfy the max-curvature constraint
@@ -56,7 +56,7 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
   {
     // re-compute biarc, forcing right_arc1.k == 1 / start.radius
     double k1 = 1 / start.radius() * (1-1e-3); // avoid border values
-    dbgl_circ_arc arc1, arc2;
+    bgld_circ_arc arc1, arc2;
     bool success = dbsksp_compute_biarc_given_k1(right_arc1.start(), right_arc1.tangent_at_start(),
       right_arc2.end(), right_arc2.tangent_at_end(),
       k1, arc1, arc2);
@@ -73,7 +73,7 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
     // re-compute biarc, forcing right_arc2.k == 1 / end.radius
     double k2 = 1 / end.radius() * (1-1e-3); // avoid bordering values
     // reverse the biarc, for now
-    dbgl_circ_arc temp_arc1, temp_arc2;
+    bgld_circ_arc temp_arc1, temp_arc2;
     bool success = dbsksp_compute_biarc_given_k1(right_arc2.end(), -right_arc2.tangent_at_end(), 
       right_arc1.start(), -right_arc1.tangent_at_start(),
       -k2, temp_arc2, temp_arc1);
@@ -94,7 +94,7 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
   {
     // recompute left biarc, forcing curvature to be -1/start.radius
     double k1 = -1/start.radius()* (1-1e-3);
-    dbgl_circ_arc arc1, arc2;
+    bgld_circ_arc arc1, arc2;
     bool success = dbsksp_compute_biarc_given_k1(left_arc1.start(), left_arc1.tangent_at_start(),
       left_arc2.end(), left_arc2.tangent_at_end(),
       k1, arc1, arc2); 
@@ -112,7 +112,7 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
     // re-compute biarc, forcing right_arc2.k == -1 / end.radius
     double k2 = -1 / end.radius()* (1-1e-3);
     // reverse the biarc, for now
-    dbgl_circ_arc arc1, arc2;
+    bgld_circ_arc arc1, arc2;
     bool success = dbsksp_compute_biarc_given_k1(left_arc2.end(), -left_arc2.tangent_at_end(), 
       left_arc1.start(), -left_arc1.tangent_at_start(),
       -k2, arc2, arc1);
@@ -145,7 +145,7 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
 
 
   vcl_vector<double > s_along_right_arc1;
-  dbgl_compute_symmetry_point_on_circ_arc(right_arc1, 
+  bgld_compute_symmetry_point_on_circ_arc(right_arc1, 
     left_arc1.end(), -left_arc1.tangent_at_end(), // mid-point of left boundary
     s_along_right_arc1);
 
@@ -204,15 +204,15 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
     // descriptor 2: end point of right_arc1 and a middle point of left_arc2
     
     // only compute if the 1st descriptor does not fall exactly on the end point of right_arc1
-    if ((right_arc1.length() - right_s1) > dbgl_circ_arc::epsilon)
+    if ((right_arc1.length() - right_s1) > bgld_circ_arc::epsilon)
     {
       vgl_point_2d<double > right_pt2 = right_arc1.end();
       vgl_vector_2d<double > right_tangent2 = right_arc1.tangent_at_end();
 
       // (Imagine) a reverse shock direction, the left becomes right boundary and vice versa
-      dbgl_circ_arc left_arc2_inverted(left_arc2.end(), left_arc2.start(), -left_arc2.k());
+      bgld_circ_arc left_arc2_inverted(left_arc2.end(), left_arc2.start(), -left_arc2.k());
       vcl_vector<double > temp;
-      dbgl_compute_symmetry_point_on_circ_arc(left_arc2_inverted,
+      bgld_compute_symmetry_point_on_circ_arc(left_arc2_inverted,
         right_pt2, right_tangent2, // junction point of right boundary
         temp);
       if (temp.empty())
@@ -259,9 +259,9 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
     vgl_vector_2d<double > right_tangent1 = right_arc1.tangent_at_end();
 
     // (Imagine) rotate the fragment 180 degree
-    dbgl_circ_arc left_arc1_inverted(left_arc1.end(), left_arc1.start(), -left_arc1.k());
+    bgld_circ_arc left_arc1_inverted(left_arc1.end(), left_arc1.start(), -left_arc1.k());
     vcl_vector<double > temp;
-    dbgl_compute_symmetry_point_on_circ_arc(left_arc1_inverted, right_pt1, right_tangent1,
+    bgld_compute_symmetry_point_on_circ_arc(left_arc1_inverted, right_pt1, right_tangent1,
       temp);
 
     assert(temp.size() == 1);
@@ -317,12 +317,12 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
 
 
     // descriptor 2: end point of left_arc1 and a middle point of right_arc2
-    if (s_along_left_arc1 > dbgl_circ_arc::epsilon)
+    if (s_along_left_arc1 > bgld_circ_arc::epsilon)
     {
       vgl_point_2d<double > left_pt2 = left_arc1.end();
       vgl_vector_2d<double > left_tangent2 = -left_arc1.tangent_at_end();
       vcl_vector<double > temp;
-      dbgl_compute_symmetry_point_on_circ_arc(right_arc2, left_pt2, left_tangent2, temp);
+      bgld_compute_symmetry_point_on_circ_arc(right_arc2, left_pt2, left_tangent2, temp);
 
       assert(temp.size() == 1);
       vgl_point_2d<double > right_pt2 = right_arc2.point_at_length(temp[0]);
@@ -383,8 +383,8 @@ bool dbsksp_compute_biarc_given_k1(const vgl_point_2d<double >& pt1,
                                    const vgl_point_2d<double >& pt2,
                                    const vgl_vector_2d<double >& t2,
                                    double k1, // curvature of the first arc
-                                   dbgl_circ_arc& arc1,  // returned pair of circular arc
-                                   dbgl_circ_arc& arc2)
+                                   bgld_circ_arc& arc1,  // returned pair of circular arc
+                                   bgld_circ_arc& arc2)
 {
   double eps = 1e-8;
 
@@ -404,12 +404,12 @@ bool dbsksp_compute_biarc_given_k1(const vgl_point_2d<double >& pt1,
   }
   
   // construct a temporary arc
-  dbgl_circ_arc temp_arc;
+  bgld_circ_arc temp_arc;
   temp_arc.set_from(pt1, t1, k1, temp_s1);
 
   // the biarc-midpoint is the symmetry point of pt2 on temp_arc
   vcl_vector<double > s_along_temp_arc;
-  dbgl_compute_symmetry_point_on_circ_arc(temp_arc, pt2, t2, s_along_temp_arc);
+  bgld_compute_symmetry_point_on_circ_arc(temp_arc, pt2, t2, s_along_temp_arc);
 
   if (s_along_temp_arc.size() == 1)
   {
@@ -418,7 +418,7 @@ bool dbsksp_compute_biarc_given_k1(const vgl_point_2d<double >& pt1,
       return false;
     arc1.set_from(pt1, t1, k1, s1);
 
-    dbgl_circ_arc temp_arc2;
+    bgld_circ_arc temp_arc2;
     temp_arc2.set_from(pt2, -t2, arc1.end());
 
     arc2.set(temp_arc2.end(), temp_arc2.start(), -temp_arc2.k());
@@ -504,8 +504,8 @@ void dbsksp_compute_middle_xsamples_by_sampling_longer_bnd_biarc(int num_interva
   list_xsample.clear();
 
   dbsksp_xshock_fragment xfrag(start_xdesc, end_xdesc);
-  dbgl_biarc left_bnd = xfrag.bnd_left_as_biarc();
-  dbgl_biarc right_bnd = xfrag.bnd_right_as_biarc();
+  bgld_biarc left_bnd = xfrag.bnd_left_as_biarc();
+  bgld_biarc right_bnd = xfrag.bnd_right_as_biarc();
 
   if (left_bnd.len() >= right_bnd.len())
   {
@@ -552,14 +552,14 @@ void dbsksp_compute_middle_xsamples_by_sampling_left_bnd_biarc(int num_intervals
     return;
 
   dbsksp_xshock_fragment xfrag(start_xdesc, end_xdesc);
-  dbgl_biarc left_bnd = xfrag.bnd_left_as_biarc();
-  dbgl_biarc right_bnd = xfrag.bnd_right_as_biarc();
+  bgld_biarc left_bnd = xfrag.bnd_left_as_biarc();
+  bgld_biarc right_bnd = xfrag.bnd_right_as_biarc();
 
   // extract the two circular arcs of the biarc
-  dbgl_circ_arc right_arc1;
+  bgld_circ_arc right_arc1;
   right_arc1.set_from(right_bnd.start(), right_bnd.tangent_at(0), right_bnd.k1(), right_bnd.len1());
 
-  dbgl_circ_arc right_arc2(right_arc1.end(), right_bnd.end(), right_bnd.k2());
+  bgld_circ_arc right_arc2(right_arc1.end(), right_bnd.end(), right_bnd.k2());
 
   // special care when righ_bnd is degenerate
   if (vgl_distance(right_bnd.start(), right_bnd.end()) < 1e-8)
@@ -588,7 +588,7 @@ void dbsksp_compute_middle_xsamples_by_sampling_left_bnd_biarc(int num_intervals
 
     // first, check right arc1
     vcl_vector<double > s_along_right_arc1;
-    dbgl_compute_symmetry_point_on_circ_arc(right_arc1, left_pt, -left_tangent, s_along_right_arc1);
+    bgld_compute_symmetry_point_on_circ_arc(right_arc1, left_pt, -left_tangent, s_along_right_arc1);
     
     if (s_along_right_arc1.size() != 1)
       continue;
@@ -608,7 +608,7 @@ void dbsksp_compute_middle_xsamples_by_sampling_left_bnd_biarc(int num_intervals
     {
       // compute symmetry point on the right arc2 for this left point-tangent pair
       vcl_vector<double > s_along_right_arc2;
-      dbgl_compute_symmetry_point_on_circ_arc(right_arc2, left_pt, -left_tangent, s_along_right_arc2);
+      bgld_compute_symmetry_point_on_circ_arc(right_arc2, left_pt, -left_tangent, s_along_right_arc2);
     
       if (s_along_right_arc2.size() != 1)
         continue;
@@ -677,7 +677,7 @@ bool dbsksp_divide_xfrag_into_2_power_n_fragments(const dbsksp_xshock_fragment& 
   // temporary storage for sample list
   vcl_vector<dbsksp_xshock_node_descriptor > list_0;
   vcl_vector<dbsksp_xshock_node_descriptor > list_1;
-  int num_pts = dbnl_math_pow(2, n) + 1;
+  int num_pts = bnld_math_pow(2, n) + 1;
   list_0.reserve(num_pts);
   list_1.reserve(num_pts);
 

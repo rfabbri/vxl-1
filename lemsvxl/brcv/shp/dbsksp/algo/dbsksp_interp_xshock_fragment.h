@@ -15,7 +15,7 @@
 
 #include <dbsksp/dbsksp_shapelet_sptr.h>
 #include <dbsksp/dbsksp_xshock_node_descriptor.h>
-#include <dbgl/algo/dbgl_circ_arc.h>
+#include <bgld/algo/bgld_circ_arc.h>
 #include <dbsksp/dbsksp_xshock_fragment.h>
 
 
@@ -25,15 +25,15 @@ void dbsksp_interp_xfrag_with_max_three_shapelets(const dbsksp_xshock_node_descr
                                         vcl_vector<dbsksp_shapelet_sptr >& list_shapelet);
 
 
-// Should move this function to dbgl/algo
+// Should move this function to bgld/algo
 //: Compute a biarc from a two point-tangents. Assume the curvature of the first arc is known.
 bool dbsksp_compute_biarc_given_k1(const vgl_point_2d<double >& pt1, 
                                    const vgl_vector_2d<double >& t1,
                                    const vgl_point_2d<double >& pt2,
                                    const vgl_vector_2d<double >& t2,
                                    double k1, // curvature of the first arc
-                                   dbgl_circ_arc& arc1,  // returned pair of circular arc
-                                   dbgl_circ_arc& arc2);
+                                   bgld_circ_arc& arc1,  // returned pair of circular arc
+                                   bgld_circ_arc& arc2);
 
 //: Fit a shapelet between two descriptors with the same shock point
 // This is a degenerate case, often find is A1-A_\infty node

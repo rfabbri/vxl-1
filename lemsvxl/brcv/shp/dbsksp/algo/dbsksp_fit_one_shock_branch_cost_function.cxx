@@ -8,7 +8,7 @@
 #include <vnl/vnl_math.h>
 #include <dbsksp/dbsksp_xshock_fragment.h>
 #include <dbsksp/dbsksp_xshock_fragment_sptr.h>
-#include <dbgl/algo/dbgl_closest_point.h>
+#include <bgld/algo/bgld_closest_point.h>
 #include <vgl/vgl_distance.h>
 
 
@@ -68,8 +68,8 @@ compute_residual( vnl_vector<double >& fx )
   for (unsigned k =1; k < this->list_xdesc_.size(); ++k)
   {
     dbsksp_xshock_fragment xfrag(this->list_xdesc_[k-1], this->list_xdesc_[k]);
-    dbgl_biarc left = xfrag.bnd_left_as_biarc();
-    dbgl_biarc right = xfrag.bnd_right_as_biarc();
+    bgld_biarc left = xfrag.bnd_left_as_biarc();
+    bgld_biarc right = xfrag.bnd_right_as_biarc();
 
     // penalize for long boundary length
     double ds_left = left.len() - vnl_math::pi * vgl_distance(left.start(), left.end());
@@ -94,8 +94,8 @@ compute_residual( vnl_vector<double >& fx )
     {
       const dbsksp_xshock_node_descriptor* xdesc = interval_xsamples[i];
       double dummy;
-      double dist_left = dbgl_closest_point::point_to_biarc(xdesc->bnd_pt_left(), left, dummy);
-      double dist_right = dbgl_closest_point::point_to_biarc(xdesc->bnd_pt_right(), right, dummy);
+      double dist_left = bgld_closest_point::point_to_biarc(xdesc->bnd_pt_left(), left, dummy);
+      double dist_right = bgld_closest_point::point_to_biarc(xdesc->bnd_pt_right(), right, dummy);
 
       *(iter++) = multiplier * dist_left;
       *(iter++) = multiplier * dist_right;

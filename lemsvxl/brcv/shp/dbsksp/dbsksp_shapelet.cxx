@@ -11,8 +11,8 @@
 
 
 #include <vnl/vnl_math.h>
-#include <dbgl/algo/dbgl_closest_point.h>
-#include <dbnl/dbnl_sinc.h>
+#include <bgld/algo/bgld_closest_point.h>
+#include <bnld/bnld_sinc.h>
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_polygon_2d.h>
 #include <vgl/vgl_distance.h>
@@ -131,7 +131,7 @@ bnd_end(int side) const
 
 // ------------------------------------------------------------------
 //: Return boundary arcs: 0: left boundary, 1: right boundary
-dbgl_circ_arc dbsksp_shapelet::
+bgld_circ_arc dbsksp_shapelet::
 bnd_arc(int side) const
 {
   assert(side==0 || side==1);
@@ -155,13 +155,13 @@ bnd_arc(int side) const
   vgl_vector_2d<double > bnd_start_tangent = 
     rotated(this->chord_dir(), alpha_start+side_factor*(phi_start-vnl_math::pi_over_2));
 
-  dbgl_circ_arc bnd_arc;
+  bgld_circ_arc bnd_arc;
   bnd_arc.set_from(bnd_start, bnd_start_tangent, bnd_end);
   return bnd_arc;
 }
 
 // ------------------------------------------------------------------
-dbgl_conic_arc dbsksp_shapelet::
+bgld_conic_arc dbsksp_shapelet::
 shock_geom() const
 {
   // Compute the shock geometry ( a conic)
@@ -170,8 +170,8 @@ shock_geom() const
   vgl_vector_2d<double > shock_end_tangent = 
     -rotated(-this->chord_dir(), this->alpha_end());
 
-  dbgl_circ_arc left_bnd = this->bnd_arc(0);
-  dbgl_circ_arc right_bnd = this->bnd_arc(1);
+  bgld_circ_arc left_bnd = this->bnd_arc(0);
+  bgld_circ_arc right_bnd = this->bnd_arc(1);
 
   // curvature
   double kbar_right = right_bnd.k() / ( 1 - this->radius_start()*right_bnd.k());
@@ -179,7 +179,7 @@ shock_geom() const
 
   double shock_start_k = (-kbar_left + kbar_right) * vcl_sin(this->phi_start()) /2;
 
-  dbgl_conic_arc conic;
+  bgld_conic_arc conic;
   conic.set_from(this->start(), this->chord_dir(), this->chord_length(), 
     shock_start_tangent, shock_end_tangent, shock_start_k);
   return conic;
@@ -200,7 +200,7 @@ area() const
 double dbsksp_shapelet::
 area_left() const
 {
-  dbgl_circ_arc arc = this->bnd_arc_left();
+  bgld_circ_arc arc = this->bnd_arc_left();
   // area of the quadrilateral
   // let the central angle spanning the left arc be a = k * s
   // let R be the radius of the left arc
@@ -211,7 +211,7 @@ area_left() const
   double r2 = this->radius_end();
   double s = arc.length();
   double a = arc.k() * s; 
-  double area_quad = ( (r1+r2)*s* dbnl_sinc(a) + r1*r2*vcl_sin(a) ) / 2;
+  double area_quad = ( (r1+r2)*s* bnld_sinc(a) + r1*r2*vcl_sin(a) ) / 2;
 
   double area_arc_segment = arc.area();
   return area_quad - vnl_math::sgn(arc.k()) * area_arc_segment;
@@ -222,7 +222,7 @@ area_left() const
 double dbsksp_shapelet::
 area_right() const
 {
-  dbgl_circ_arc arc = this->bnd_arc_right();
+  bgld_circ_arc arc = this->bnd_arc_right();
   // area of the quadrilateral
   // let the central angle spanning the left arc be a = k * s
   // let R be the radius of the left arc
@@ -234,7 +234,7 @@ area_right() const
   double r2 = this->radius_end();
   double s = arc.length();
   double a = arc.k() * s; 
-  double area_quad = ( (r1+r2)*s* dbnl_sinc(a) - r1*r2*vcl_sin(a) ) / 2;
+  double area_quad = ( (r1+r2)*s* bnld_sinc(a) - r1*r2*vcl_sin(a) ) / 2;
   double area_arc_segment = arc.area();
   
   return area_quad + vnl_math::sgn(arc.k()) * area_arc_segment;
@@ -286,15 +286,15 @@ double dbsksp_shapelet::
 phi_at(double t) const
 {
   // shock curve (conic) and shock point
-  dbgl_conic_arc shock_curve = this->shock_geom();
+  bgld_conic_arc shock_curve = this->shock_geom();
   vgl_point_2d<double > shock_pt = shock_curve.point_at(t);
 
   // boundary arc
-  dbgl_circ_arc left_bnd = this->bnd_arc_left();
+  bgld_circ_arc left_bnd = this->bnd_arc_left();
 
   // contact shock
   double left_ratio = -1;
-  dbgl_closest_point::point_to_circular_arc(shock_pt, 
+  bgld_closest_point::point_to_circular_arc(shock_pt, 
     left_bnd.point1(), left_bnd.point2(), left_bnd.k(), left_ratio);
   vgl_point_2d<double > left_bnd_pt = left_bnd.point_at(left_ratio);
 
@@ -314,15 +314,15 @@ double dbsksp_shapelet::
 radius_at(double t) const
 {
   // shock curve (conic) and shock point
-  dbgl_conic_arc shock_curve = this->shock_geom();
+  bgld_conic_arc shock_curve = this->shock_geom();
   vgl_point_2d<double > shock_pt = shock_curve.point_at(t);
 
   // boundary arc
-  dbgl_circ_arc left_bnd = this->bnd_arc_left();
+  bgld_circ_arc left_bnd = this->bnd_arc_left();
 
   // contact shock
   double left_ratio = -1;
-  dbgl_closest_point::point_to_circular_arc(shock_pt, 
+  bgld_closest_point::point_to_circular_arc(shock_pt, 
     left_bnd.point1(), left_bnd.point2(), left_bnd.k(), left_ratio);
   vgl_point_2d<double > left_bnd_pt = left_bnd.point_at(left_ratio);
 
@@ -387,8 +387,8 @@ compute_xshock_samples(const vcl_vector<double >& ts,
     // we sample uniformly on the two boundary arcs instead of the degenerate shock curve
     
     // boundary arc
-    dbgl_circ_arc left_bnd = this->bnd_arc_left();
-    dbgl_circ_arc right_bnd = this->bnd_arc_right();
+    bgld_circ_arc left_bnd = this->bnd_arc_left();
+    bgld_circ_arc right_bnd = this->bnd_arc_right();
     vgl_point_2d<double > pt = this->start();
 
     // sample uniformly on the two arc
@@ -404,11 +404,11 @@ compute_xshock_samples(const vcl_vector<double >& ts,
   else
   {
     // shock curve (conic) and shock point
-    dbgl_conic_arc shock_curve = this->shock_geom();
+    bgld_conic_arc shock_curve = this->shock_geom();
 
     // boundary arc
-    dbgl_circ_arc left_bnd = this->bnd_arc_left();
-    dbgl_circ_arc right_bnd = this->bnd_arc_right();
+    bgld_circ_arc left_bnd = this->bnd_arc_left();
+    bgld_circ_arc right_bnd = this->bnd_arc_right();
 
     for (unsigned i =0; i < ts.size(); ++i)
     {
@@ -424,7 +424,7 @@ compute_xshock_samples(const vcl_vector<double >& ts,
       vgl_point_2d<double > shock_pt = shock_curve.point_at(t);
 
       double left_ratio = -1;
-      dbgl_closest_point::point_to_circular_arc(shock_pt, 
+      bgld_closest_point::point_to_circular_arc(shock_pt, 
         left_bnd.point1(), left_bnd.point2(), left_bnd.k(), left_ratio);
       vgl_point_2d<double > left_bnd_pt = left_bnd.point_at(left_ratio);
 
@@ -451,7 +451,7 @@ compute_xshock_samples(const vcl_vector<double >& ts,
 //  vcl_vector<vgl_point_2d<double > > pts;
 //  for (int i=0; i<2; ++i)
 //  {
-//    dbgl_circ_arc arc = this->bnd_arc(i);
+//    bgld_circ_arc arc = this->bnd_arc(i);
 //    // sample at the middle of the interval
 //    for (double s = ds/2; s<arc.len(); s += ds)
 //    {
@@ -586,14 +586,14 @@ is_legal() const
 
   // There has to be a better way to do this
   // For now, use the boundary explicitly
-  dbgl_circ_arc left_arc = this->bnd_arc(0);
-  dbgl_circ_arc right_arc = this->bnd_arc(1);
+  bgld_circ_arc left_arc = this->bnd_arc(0);
+  bgld_circ_arc right_arc = this->bnd_arc(1);
 
   vcl_vector<double > left_ratios;
   vcl_vector<double > right_ratios;
 
   legal = legal &&
-    ( dbgl_closest_point::circular_arc_to_circular_arc(
+    ( bgld_closest_point::circular_arc_to_circular_arc(
     left_arc.point1(), left_arc.point2(), left_arc.k(), 
     right_arc.point1(), right_arc.point2(), right_arc.k(), left_ratios, right_ratios)
     > 0);
@@ -699,7 +699,7 @@ dbsksp_twoshapelet(const dbsksp_shapelet_sptr& s, double t)
 
   // len0
   vgl_point_2d<double > pt0 = s->start();
-  dbgl_conic_arc conic = s->shock_geom();
+  bgld_conic_arc conic = s->shock_geom();
   vgl_point_2d<double > pt1 = conic.point_at(t);
   len0 = vgl_distance(pt0, pt1);
 
@@ -867,10 +867,10 @@ set(const vnl_vector<double >& params)
 
     
 //: Return boundary arcs: 0: left boundary, 1: right boundary
-dbgl_circ_arc dbsksp_terminal_shapelet::
+bgld_circ_arc dbsksp_terminal_shapelet::
 bnd_arc(int i) const
 {
-  dbgl_circ_arc arc;
+  bgld_circ_arc arc;
   //arc.set_from(
   return arc;
 }

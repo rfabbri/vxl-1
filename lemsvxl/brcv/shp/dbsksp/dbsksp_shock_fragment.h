@@ -16,9 +16,9 @@
 
 #include <vbl/vbl_ref_count.h>
 
-#include <dbgl/algo/dbgl_conic_arc.h>
+#include <bgld/algo/bgld_conic_arc.h>
 
-#include <dbgl/algo/dbgl_circ_arc.h>
+#include <bgld/algo/bgld_circ_arc.h>
 #include <dbsksp/dbsksp_shock_edge_sptr.h>
 #include <dbsksp/dbsksp_shock_node_sptr.h>
 #include <dbsksp/dbsksp_bnd_arc_sptr.h>
@@ -68,10 +68,10 @@ public:
   {this->bnd_[i] = arc; }
 
   //: Get and set the shock geometry (a conic)
-  dbgl_conic_arc shock_geom() const
+  bgld_conic_arc shock_geom() const
   { return this->shock_geom_; }
   
-  void set_shock_geom(const dbgl_conic_arc& conic_arc)
+  void set_shock_geom(const bgld_conic_arc& conic_arc)
   { this->shock_geom_ = conic_arc; }
   
   
@@ -121,7 +121,7 @@ protected:
 
   //: geometry of the shock of the fragment, starting from the source node 
   // of the fragment
-  dbgl_conic_arc shock_geom_;
+  bgld_conic_arc shock_geom_;
 };
 #endif // shp/dbsksp/dbsksp_shock_fragment.h
 

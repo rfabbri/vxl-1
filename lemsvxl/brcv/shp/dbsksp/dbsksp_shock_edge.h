@@ -13,7 +13,7 @@
 //  Modifications
 // \endverbatim
 
-#include <dbgrl/dbgrl_edge.h>
+#include <bgrld/bgrld_edge.h>
 #include <dbsksp/dbsksp_shock_node_sptr.h>
 #include <dbsksp/dbsksp_shock_fragment_sptr.h>
 #include <vgl/vgl_vector_2d.h>
@@ -23,12 +23,12 @@
 class dbsksp_shock_node;
 
 //: A class to represent a shock branch - both geometry and dynamics
-class dbsksp_shock_edge : public dbgrl_edge<dbsksp_shock_node> 
+class dbsksp_shock_edge : public bgrld_edge<dbsksp_shock_node> 
 {
 public:
   // CONSTRUCTORS/DESTRUCTORS/INITIALIZATION -----------------------------------
   //: constructor
-  dbsksp_shock_edge() : dbgrl_edge<dbsksp_shock_node>(), i_visited_(0), 
+  dbsksp_shock_edge() : bgrld_edge<dbsksp_shock_node>(), i_visited_(0), 
     fragment_(0), id_(0){};
 
   //: constructor
