@@ -1,4 +1,4 @@
-// This is brcv/shp/dbsk2d/algo/dbsk2d_containment_node.h
+// This is brcv/shp/dbsk2d/pro/dbsk2d_containment_node.h
 #ifndef dbsk2d_containment_node_h_
 #define dbsk2d_containment_node_h_
 //:
@@ -15,7 +15,7 @@
 // \endverbatim 
 
 
-#include <dbsk2d/algo/dbsk2d_containment_node_sptr.h>
+#include <dbsk2d/pro/dbsk2d_containment_node_sptr.h>
 #include <dbsk2d/algo/dbsk2d_ishock_transform_sptr.h>
 #include <dbsk2d/algo/dbsk2d_ishock_transform.h>
 

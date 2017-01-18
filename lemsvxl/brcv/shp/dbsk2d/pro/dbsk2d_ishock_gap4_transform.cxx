@@ -1,13 +1,13 @@
-// This is brcv/shp/dbsk2d/algo/dbsk2d_ishock_gap4_transform.cxx
+// This is brcv/shp/dbsk2d/pro/dbsk2d_ishock_gap4_transform.cxx
 
 //:
 // \file
 
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_image_resource.h>
-#include <dbsk2d/algo/dbsk2d_ishock_gap4_transform.h>
+#include <dbsk2d/pro/dbsk2d_ishock_gap4_transform.h>
 #include <dbsk2d/dbsk2d_bnd_utils.h>
-#include <dbsk2d/algo/dbsk2d_transform_manager.h>
+#include <dbsk2d/pro/dbsk2d_transform_manager.h>
 #include <vgl/vgl_closest_point.h>
 
 //: constructor

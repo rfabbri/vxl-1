@@ -4,7 +4,7 @@
 // \file
 
 #include <dbsk2d/pro/dbsk2d_ishock_gap_transform.h>
-#include <dbsk2d/algo/dbsk2d_transform_manager.h>
+#include <dbsk2d/pro/dbsk2d_transform_manager.h>
 #include <dbsk2d/dbsk2d_bnd_utils.h>
 #include <vgl/vgl_line_2d.h>
 #include <bgld/algo/bgld_eulerspiral.h>

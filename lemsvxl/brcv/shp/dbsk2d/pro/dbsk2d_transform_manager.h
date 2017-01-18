@@ -1,4 +1,4 @@
-// This is brcv/shp/dbsk2d/algo/dbsk2d_transform_manager.h
+// This is brcv/shp/dbsk2d/pro/dbsk2d_transform_manager.h
 #ifndef dbsk2d_transform_manager_h_
 #define dbsk2d_transform_manager_h_
 //:

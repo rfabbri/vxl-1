@@ -4,7 +4,7 @@
 // \file
 
 #include "dbsk2d_ishock_loop_transform_tool.h"
-#include <dbsk2d/algo/dbsk2d_ishock_loop_transform.h>
+#include <dbsk2d/pro/dbsk2d_ishock_loop_transform.h>
 #include <dbsk2d/algo/dbsk2d_lagrangian_ishock_detector.h>
 
 

@@ -4,8 +4,8 @@
 // \file
 
 #include "dbsk2d_ishock_gap_transform_tool.h"
-#include <dbsk2d/algo/dbsk2d_ishock_gap_transform.h>
-#include <dbsk2d/algo/dbsk2d_ishock_gap4_transform.h>
+#include <dbsk2d/pro/dbsk2d_ishock_gap_transform.h>
+#include <dbsk2d/pro/dbsk2d_ishock_gap4_transform.h>
 #include <dbsk2d/algo/dbsk2d_ishock_gap_detector.h>
 #include <dbsk2d/algo/dbsk2d_lagrangian_ishock_detector.h>
 

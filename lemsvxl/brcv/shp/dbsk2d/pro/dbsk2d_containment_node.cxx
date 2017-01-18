@@ -1,13 +1,13 @@
-// This is brcv/shp/dbsk2d/algo/dbsk2d_containment_node.cxx
+// This is brcv/shp/dbsk2d/pro/dbsk2d_containment_node.cxx
 
 //:
 // \file
 
-#include <dbsk2d/algo/dbsk2d_containment_node.h>
+#include <dbsk2d/pro/dbsk2d_containment_node.h>
 #include <dbsk2d/algo/dbsk2d_ishock_transform.h>
 #include <dbsk2d/algo/dbsk2d_ishock_gap_detector.h>
-#include <dbsk2d/algo/dbsk2d_ishock_gap_transform.h>
-#include <dbsk2d/algo/dbsk2d_ishock_grouping_transform.h>
+#include <dbsk2d/pro/dbsk2d_ishock_gap_transform.h>
+#include <dbsk2d/pro/dbsk2d_ishock_grouping_transform.h>
 
 //: constructor
 dbsk2d_containment_node::dbsk2d_containment_node(

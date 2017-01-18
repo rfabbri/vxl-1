@@ -9,16 +9,8 @@ include_directories(${VXL_BRL_INCLUDE_DIR}/bbas )
 set( dbsk2d_algo_sources
 
 # *********************************************************
-# further data structures for shock computation
-# *********************************************************
-
-dbsk2d_containment_node.h dbsk2d_containment_node.cxx
-dbsk2d_containment_node_sptr.h
-
-# *********************************************************
 #             Various Algorithms
 # *********************************************************
-
 
 # *********************************************************
 #             Utils (simplified usage) 

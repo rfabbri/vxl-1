@@ -9,7 +9,7 @@
 #include <dbsk2d/dbsk2d_ishock_bline.h>
 #include <dbsk2d/dbsk2d_ishock_graph.h>
 #include <dbsk2d/dbsk2d_file_io.h>
-#include <dbsk2d/algo/dbsk2d_transform_manager.h>
+#include <dbsk2d/pro/dbsk2d_transform_manager.h>
 #include <dbsk2d/algo/dbsk2d_lagrangian_ishock_detector.h>
 #include <dbsk2d/algo/dbsk2d_sample_ishock.h>
 // vsol headers

@@ -13,6 +13,9 @@ set(dbsk2d_pro_sources
 
 # further data structures and algorithms above algo/
 
+
+  dbsk2d_containment_node.h dbsk2d_containment_node.cxx
+  dbsk2d_containment_node_sptr.h
   dbsk2d_containment_graph.h dbsk2d_containment_graph.cxx
   dbsk2d_transform_manager.h dbsk2d_transform_manager.cxx
 
@@ -41,6 +44,6 @@ set(dbsk2d_pro_sources
 
 add_library(dbsk2d_pro ${dbsk2d_pro_sources})
 
-target_link_libraries(dbsk2d_pro dbsk2d_algo bpro1 vul)
+target_link_libraries(dbsk2d_pro dbsk2d_algo bpro1 vil1 vul)
 
 

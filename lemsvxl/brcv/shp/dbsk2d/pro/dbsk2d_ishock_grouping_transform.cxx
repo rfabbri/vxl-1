@@ -11,7 +11,7 @@
 #include <vgl/vgl_convex.h>
 #include <vcl_algorithm.h>
 #include <dbsk2d/algo/dbsk2d_ishock_transform.h>
-#include <dbsk2d/algo/dbsk2d_transform_manager.h>
+#include <dbsk2d/pro/dbsk2d_transform_manager.h>
 #include <dbsk2d/algo/dbsk2d_prune_ishock.h>
 
 #include <vil/vil_image_resource_sptr.h>
