@@ -1,6 +1,7 @@
 # basic/dbvidl2/pro/CMakeLists.txt
 # Development Brown Video Processing Extention Library
 
+include_directories(${VXD_BRLD_INCLUDE_DIR})
 
 set( dbvidl2_pro_sources
    dbvidl2_source.cxx              dbvidl2_source.h
