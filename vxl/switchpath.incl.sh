@@ -4,5 +4,5 @@
 
 
 sw () {
-  . switchpath
+  . switchpath $*
 }

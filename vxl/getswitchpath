@@ -2,6 +2,20 @@
 # This is just to make from a source directory 'path/foosrc', when the binary tree is in
 # another directory 'path/foo-bin'.
 
+case $1 in
+    -h | --help) 
+      echo 'Usage: getswitchpath [(orig)]' 1>&2; exit 2 
+    ;;
+    orig )
+      vxl-rootdir orig --full
+      exit
+    ;;
+    *)
+      tosrc=""
+      tobin="-bin"
+esac
+
+
 mypwd=$PWD'/'
 
 if test `echo $mypwd|grep /lemsvxl/`; then
@@ -45,7 +59,12 @@ else
   if [[ "$basename" = *-bin ]]; then
     newdir=`echo ${mypwd} | sed 's/-bin\/$/\//g'`
   else
-    newdir=`echo ${mypwd} | sed "s/$basename\/$/$basename-bin\//g"`
+    rootpath=`vxl-rootdir`
+    if [[ "`basename $rootpath`" = *-orig ]]; then
+      newdir=`vxl-rootdir src --full`
+    else
+      newdir=`echo ${mypwd} | sed "s/$basename\/$/$basename-bin\//g"`
+    fi
   fi
 
   if [[ -d "$newdir" ]]; then
