@@ -22,7 +22,7 @@
 #include <dbdet/tracer/dbdet_contour_tracer.h>
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
-#include <dbsol/dbsol_file_io.h>
+#include <bsold/bsold_file_io.h>
 
 #include <dbskr/dbskr_tree.h>
 #include <dbskr/dbskr_tree_edit.h>
@@ -110,7 +110,7 @@ bool dborl_categorization::parse(const char* param_file)
   } else {  // load the .con
     vcl_vector<vsol_point_2d_sptr> points;
     bool is_closed;
-    if (!dbsol_load_con_file(input_file.c_str(), points, is_closed) || !points.size()) {
+    if (!bsold_load_con_file(input_file.c_str(), points, is_closed) || !points.size()) {
       vcl_cout << "dborl_categorization::process() -- Problems in loading the con file: "<< input_file << vcl_endl;
       return false;
     }
@@ -257,7 +257,7 @@ bool dborl_categorization::process(vcl_string t1, float& f)
     //: load the con file
     vcl_vector<vsol_point_2d_sptr> points;
     bool is_closed;
-    if (!dbsol_load_con_file(t1.c_str(), points, is_closed) || !points.size()) {
+    if (!bsold_load_con_file(t1.c_str(), points, is_closed) || !points.size()) {
       vcl_cout << "dborl_categorization::process() -- Problems in loading the con file: "<< t1 << vcl_endl;
       return false;
     }

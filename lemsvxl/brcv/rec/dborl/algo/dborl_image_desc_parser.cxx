@@ -23,7 +23,7 @@
 #include <vsol/vsol_box_2d.h>
 #include <vsol/vsol_point_2d_sptr.h>
 #include <vsol/vsol_point_2d.h>
-#include <dbsol/dbsol_file_io.h>
+#include <bsold/bsold_file_io.h>
 
 //: a function used in the parsers
 template <typename T>
@@ -235,7 +235,7 @@ bool read_con_write_image_description_xml(vcl_string input_fname, vcl_string cat
 {
   vcl_vector<vsol_point_2d_sptr > points;
   bool is_closed;
-  if (dbsol_load_con_file(input_fname.c_str(), points, is_closed)) {
+  if (bsold_load_con_file(input_fname.c_str(), points, is_closed)) {
     vsol_polygon_2d_sptr poly = new vsol_polygon_2d(points);
     dborl_image_polygon_description_sptr ip = new dborl_image_polygon_description();
     ip->add_polygon(category, poly);

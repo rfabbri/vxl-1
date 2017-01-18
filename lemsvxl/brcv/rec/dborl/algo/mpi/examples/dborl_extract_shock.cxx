@@ -20,8 +20,8 @@
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
-#include <dbsol/dbsol_file_io.h>
-#include <dbsol/algo/dbsol_curve_algs.h>
+#include <bsold/bsold_file_io.h>
+#include <bsold/algo/bsold_curve_algs.h>
 //#include <dbskr/dbskr_utilities.h>
 #include <dbsk2d/algo/dbsk2d_xshock_graph_fileio.h>
 #include <dbsk2d/dbsk2d_file_io.h>
@@ -173,7 +173,7 @@ bool dborl_extract_shock::process(int t1, char& f)
 
     vcl_vector<vsol_point_2d_sptr> points;
     bool is_closed;
-    if (!dbsol_load_con_file(contour_name.c_str(), points, is_closed)) {
+    if (!bsold_load_con_file(contour_name.c_str(), points, is_closed)) {
       vcl_cout << "In dborl_extract_shock::process() -- contour: " << contour_name << " could not be loaded\n";
       f = 0;
       return false;
@@ -185,7 +185,7 @@ bool dborl_extract_shock::process(int t1, char& f)
   } else { // input is a .cem file
      // load the cem file
      
-     if (!dbsol_load_cem(conts_temp, contour_name)) {
+     if (!bsold_load_cem(conts_temp, contour_name)) {
       vcl_cout << "In dborl_extract_shock::process() -- contour cem: " << contour_name << " could not be loaded\n";
       f = 0;
       return false;

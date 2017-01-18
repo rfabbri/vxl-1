@@ -13,7 +13,7 @@ include_directories( ${lems_SOURCE_DIR}/contrib/Gregistration )
 
 
 include_directories( ${lems_SOURCE_DIR}/brcv/seg )
-include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
+include_directories( ${lems_SOURCE_DIR}/bmvgd )
 include_directories( ${lems_SOURCE_DIR}/brcv/rec )
 include_directories( ${lems_SOURCE_DIR}/brcv/trk )
 include_directories( ${lems_SOURCE_DIR}/basic )
@@ -27,6 +27,6 @@ set( dborl_multi_frame_fg_edge_sources
 )
 
 add_executable (dborl_multi_frame_fg_edge ${dborl_multi_frame_fg_edge_sources} )
-target_link_libraries (dborl_multi_frame_fg_edge dborl_algo dbdet_pro bpro1  vidpro1  bvis1 georegistration_pro dbgl_algo brip  georegistration_vis dbvidl_pro  dbvrl_pro dbgl_algo  vsl dbil_pro dbbgm_vis dbbgm_pro dbdet_pro dbinfo_pro dbinfo_vis dbacm_pro dbsol_pro dbsta_algo dbdet_vis dbru_pro)
+target_link_libraries (dborl_multi_frame_fg_edge dborl_algo dbdet_pro bpro1  vidpro1  bvis1 georegistration_pro bgld_algo brip  georegistration_vis dbvidl_pro  dbvrl_pro bgld_algo  vsl bild_pro dbbgm_vis dbbgm_pro dbdet_pro dbinfo_pro dbinfo_vis dbacm_pro bsold_pro dbsta_algo dbdet_vis dbru_pro)
 
 endif(VXL_FOUND)

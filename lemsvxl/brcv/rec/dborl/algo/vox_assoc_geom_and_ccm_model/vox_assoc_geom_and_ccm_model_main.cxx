@@ -22,7 +22,7 @@
 
 #include <dborl/algo/dborl_utilities.h>
 #include <vul/vul_timer.h>
-#include <dbul/dbul_dir_file.h>
+#include <buld/buld_dir_file.h>
 #include <vpl/vpl.h>
 
 int main(int argc, char *argv[]) {
@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
         vul_file::make_directory(params->output_ccm_dir_());
     }
     vcl_string dest_file_name = params->output_ccm_dir_() + "/object_ccm_overall_model.xml";
-    bool copy_status = dbul_copy_file(params->input_ccm_(), dest_file_name);
+    bool copy_status = buld_copy_file(params->input_ccm_(), dest_file_name);
     if(!copy_status)
     {
         vcl_cerr << "Association cannot be completed. Check paths:" << vcl_endl;
@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
         vul_file::make_directory(params->output_geom_dir_());
     }
     vcl_string dest_file_name2 = params->output_geom_dir_() + "/object_geom_model.xml";
-    copy_status = dbul_copy_file(params->input_geom_(), dest_file_name2);
+    copy_status = buld_copy_file(params->input_geom_(), dest_file_name2);
     if(!copy_status)
     {
         vcl_cerr << "Association cannot be completed. Check paths:" << vcl_endl;

@@ -27,7 +27,7 @@
 #include <dborl/dborl_index_query.h>
 #include <dborl/algo/dborl_utilities.h>
 #include <vul/vul_timer.h>
-#include <dbul/dbul_random.h>
+#include <buld/buld_random.h>
 #include <vpl/vpl.h>
 
 int main(int argc, char *argv[]) {

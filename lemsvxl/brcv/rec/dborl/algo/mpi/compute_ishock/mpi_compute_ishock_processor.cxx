@@ -23,7 +23,7 @@
 #include <dbdet/pro/dbdet_edgemap_storage_sptr.h>
 
 #include <dbdet/algo/dbdet_load_edg.h>
-#include <dbsol/dbsol_file_io.h>
+#include <bsold/bsold_file_io.h>
 #include <dbsk2d/algo/dbsk2d_sample_ishock.h>
 #include <dbsk2d/algo/dbsk2d_xshock_graph_fileio.h>
 #include <vil/vil_load.h>
@@ -429,7 +429,7 @@ link_edges(const vcl_string& input_file, const vcl_string& output_file)
   }
 
   vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = output_vsol->all_data();
-  if (!dbsol_save_cem(vsol_list, output_file)) 
+  if (!bsold_save_cem(vsol_list, output_file)) 
   {
     vcl_cout << "Problems in saving edge file: " << output_file << vcl_endl;
     return false;
@@ -459,7 +459,7 @@ compute_ishock(const vcl_string& input_file, const vcl_string& output_file)
 
   // Load the boundary from the boundary file
   vcl_vector< vsol_spatial_object_2d_sptr > vsol_list;
-  if (!dbsol_load_cem(vsol_list, input_file))
+  if (!bsold_load_cem(vsol_list, input_file))
   {
     vcl_cout << "Cannot load the boundary .cem file " << input_file;
     return false;

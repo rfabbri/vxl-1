@@ -22,7 +22,7 @@
 #include <dborl/dborl_index_query.h>
 #include <dborl/algo/dborl_utilities.h>
 #include <vul/vul_timer.h>
-#include <dbul/dbul_random.h>
+#include <buld/buld_random.h>
 #include <vpl/vpl.h>
 
 bool create_temporary_gt_list(vcl_vector<vcl_string> assoc_files, const vcl_string& temp_gt_file)
@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
 
     vcl_cout << "Number of groundtruth objects is " << number_of_gt << vcl_endl;
 
-    vcl_string temp_gt_file = params->temp_dir_() + "/temp_" + dbul_get_random_alphanumeric_string(10) + ".txt";
+    vcl_string temp_gt_file = params->temp_dir_() + "/temp_" + buld_get_random_alphanumeric_string(10) + ".txt";
     bool create_status = create_temporary_gt_list(assoc_files, temp_gt_file);
 
     if(!create_status)

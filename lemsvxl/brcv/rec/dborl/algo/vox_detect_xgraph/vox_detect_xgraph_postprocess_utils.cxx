@@ -29,7 +29,7 @@
 
 
 
-#include <dbul/dbul_parse_simple_file.h>
+#include <buld/buld_parse_simple_file.h>
 #include <bpro1/bpro1_parameters.h>
 #include <vsol/vsol_box_2d.h>
 
@@ -110,7 +110,7 @@ bool dbsks_recompute_cost_using_wcm()
 
   // Parse the list_xml_det_record file to get a list of filenames
   vcl_vector<vcl_string > list_xml_det_record;
-  dbul_parse_string_list(list_xml_det_record_file, list_xml_det_record);
+  buld_parse_string_list(list_xml_det_record_file, list_xml_det_record);
 
   //>> Load all detection records in the original experiments
   vcl_vector<dbsks_xshock_det_record_sptr > all_xshock_dets;

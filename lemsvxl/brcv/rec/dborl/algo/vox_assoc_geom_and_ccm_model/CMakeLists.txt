@@ -8,7 +8,7 @@
     )
     
     add_executable (vox_assoc_geom_and_ccm_model ${vox_assoc_geom_and_ccm_model_sources} )
-    target_link_libraries (vox_assoc_geom_and_ccm_model dborl_algo dbul)
+    target_link_libraries (vox_assoc_geom_and_ccm_model dborl_algo buld)
 
 
 

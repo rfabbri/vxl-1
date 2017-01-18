@@ -1,6 +1,6 @@
 //:
 // \file
-// \brief A tree implemented as a directed graph using dbgrl_class,
+// \brief A tree implemented as a directed graph using bgrld_class,
 //        The vertices only have out_edges()
 //
 // \author Ozge C Ozcanli (ozge@lems.brown.edu)
@@ -26,14 +26,14 @@ public:
   };
 };
 
-#include <dbgrl/dbgrl_graph.h>
+#include <bgrld/bgrld_graph.h>
 #include <dborl/dborl_index_node_base.h>
 #include <dborl/dborl_index_edge.h>
 #include <dborl/dborl_index_node_sptr.h>
 #include <dborl/dborl_index_node_base_sptr.h>
 #include <vcl_vector.h>
 
-class dborl_index : public dbgrl_graph<dborl_index_node_base , dborl_index_edge>
+class dborl_index : public bgrld_graph<dborl_index_node_base , dborl_index_edge>
 {
 public:
   int type_;

@@ -8,7 +8,7 @@
     )
     
     add_executable (vox_convert_and_associate_pb_output ${vox_convert_and_associate_pb_output_sources} )
-    target_link_libraries (vox_convert_and_associate_pb_output dborl_algo dbil_algo dbdet_algo)
+    target_link_libraries (vox_convert_and_associate_pb_output dborl_algo bild_algo dbdet_algo)
 
 
 

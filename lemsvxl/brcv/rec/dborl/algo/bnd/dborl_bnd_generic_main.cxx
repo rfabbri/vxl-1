@@ -29,7 +29,7 @@
 
 #include <dbdet/pro/dbdet_edgemap_storage.h>
 #include <dbdet/algo/dbdet_load_edg.h>
-#include <dbsol/dbsol_file_io.h>
+#include <bsold/bsold_file_io.h>
 
 int main(int argc, char *argv[]) {
 
@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
     output_file = output_file + params->input_object_name_() + params->output_extension_();
 
     vcl_vector< vsol_spatial_object_2d_sptr > vsol_list = output_vsol->all_data();
-    if (!dbsol_save_cem(vsol_list, output_file)) {
+    if (!bsold_save_cem(vsol_list, output_file)) {
       vcl_cout << "Problems in saving edge file: " << output_file << vcl_endl;
       return 0;
     }

@@ -79,7 +79,7 @@ aux_source_directory(Templates dborl_sources)
 
 add_library(dborl ${dborl_sources})
 
-target_link_libraries(dborl bsol vsol dbgrl bdgl vil vbl)
+target_link_libraries(dborl bsol vsol bgrld bdgl vil vbl)
 
 # Brown Recognition Tools to aid Testing
 #add_subdirectory( vis )

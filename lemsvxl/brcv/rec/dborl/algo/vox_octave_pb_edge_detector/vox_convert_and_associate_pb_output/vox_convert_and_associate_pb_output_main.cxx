@@ -20,16 +20,16 @@
 
 #include <dborl/algo/dborl_utilities.h>
 #include <vul/vul_timer.h>
-#include <dbul/dbul_dir_file.h>
+#include <buld/buld_dir_file.h>
 #include <vpl/vpl.h>
 
 #include <dbdet/algo/dbdet_load_edg.h>
 #include <dbdet/edge/dbdet_edgemap_sptr.h>
 
-#include <dbil/algo/dbil_octave.h>
+#include <bild/algo/bild_octave.h>
 #include <vil/vil_load.h>
 
-dbdet_edgemap_sptr vox_convert_pb_outputs_to_edgemap(dbul_octave_double_array& pb_array, dbul_octave_double_array& theta_array)
+dbdet_edgemap_sptr vox_convert_pb_outputs_to_edgemap(buld_octave_double_array& pb_array, buld_octave_double_array& theta_array)
 {
     dim_vector dv = pb_array.dims();
     int height = dv(0);
@@ -116,22 +116,22 @@ int main(int argc, char *argv[]) {
                         continue;
                     }
                     /////
-                    dbul_octave_argument_list conversion_inargs;
-                    dbul_octave_argument_list conversion_outargs;
+                    buld_octave_argument_list conversion_inargs;
+                    buld_octave_argument_list conversion_outargs;
 
-                    dbul_octave_value octave_image = dbil_convert_image_view_to_octave_value<vxl_byte>(edgemap_image);
+                    buld_octave_value octave_image = bild_convert_image_view_to_octave_value<vxl_byte>(edgemap_image);
                     conversion_inargs(0) = octave_image;
-                    dbul_octave.run("","im2double", conversion_inargs, conversion_outargs);
-                    dbul_octave_double_array pb_array = dbul_octave_value_to_octave_double_array(conversion_outargs(0));
+                    buld_octave.run("","im2double", conversion_inargs, conversion_outargs);
+                    buld_octave_double_array pb_array = buld_octave_value_to_octave_double_array(conversion_outargs(0));
                     /////
 
                     /////
-                    dbul_octave_argument_list inargs;
-                    dbul_octave_argument_list outargs;
+                    buld_octave_argument_list inargs;
+                    buld_octave_argument_list outargs;
 
                     inargs(0) = edgeorient_file;
-                    dbul_octave.run("","load", inargs, outargs);
-                    dbul_octave_double_array theta_array = dbul_octave_value_to_octave_double_array(outargs(0));
+                    buld_octave.run("","load", inargs, outargs);
+                    buld_octave_double_array theta_array = buld_octave_value_to_octave_double_array(outargs(0));
                     /////
                     dbdet_edgemap_sptr EM = vox_convert_pb_outputs_to_edgemap(pb_array, theta_array);
                     vcl_string dest_file_name = params->output_edgemap_dir_() + "/" + objname + params->output_edgemap_extension_();

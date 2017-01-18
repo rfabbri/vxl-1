@@ -26,12 +26,12 @@
 #include <dborl/dborl_index.h>
 #include <dborl/dborl_index_node.h>
 #include <bbas/bsol/bsol_algs.h>
-#include <dbsol/dbsol_file_io.h>
+#include <bsold/bsold_file_io.h>
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_curve_2d.h>
 #include <vsol/vsol_line_2d.h>
-#include <dbsol/algo/dbsol_curve_algs.h>
+#include <bsold/algo/bsold_curve_algs.h>
 
 #include <dbsk2d/algo/dbsk2d_compute_shocks.h>
 #include <dbsk2d/dbsk2d_boundary.h>

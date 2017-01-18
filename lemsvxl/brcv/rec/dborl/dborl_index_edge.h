@@ -1,6 +1,6 @@
 //:
 // \file
-// \brief  Just a dummy class to be able to use dbgrl_graph for the index. No data is saved in the index edges. 
+// \brief  Just a dummy class to be able to use bgrld_graph for the index. No data is saved in the index edges. 
 //
 // \author Ozge C Ozcanli (ozge@lems.brown.edu)
 // \date 17/03/07
@@ -15,13 +15,13 @@
 
 #include <dborl/dborl_index_node_base.h>
 #include <dborl/dborl_index_node_base_sptr.h>
-#include <dbgrl/dbgrl_edge.h>
+#include <bgrld/bgrld_edge.h>
 
-class dborl_index_edge : public dbgrl_edge<dborl_index_node_base> 
+class dborl_index_edge : public bgrld_edge<dborl_index_node_base> 
 {
 public:
 
-  dborl_index_edge(dborl_index_node_base_sptr v1, dborl_index_node_base_sptr v2) : dbgrl_edge<dborl_index_node_base>(v1, v2) {};
+  dborl_index_edge(dborl_index_node_base_sptr v1, dborl_index_node_base_sptr v2) : bgrld_edge<dborl_index_node_base>(v1, v2) {};
 };
 
 #endif  //_DBORL_INDEX_EDGE_H

@@ -28,7 +28,7 @@ target_link_libraries (vox_detect_xgraph vox_detect_xgraph_lib dborl_algo dbsks_
 #)
 
 #add_executable (vox_detect_xgraph_postprocess ${vox_detect_xgraph_postprocess_sources} )
-#target_link_libraries (vox_detect_xgraph_postprocess vox_detect_xgraph_lib dbul dborl_algo dbsks_algo dbsks_xio dbsks_pro dbsksp_xio vidpro1)
+#target_link_libraries (vox_detect_xgraph_postprocess vox_detect_xgraph_lib buld dborl_algo dbsks_algo dbsks_xio dbsks_pro dbsksp_xio vidpro1)
 
 
 

@@ -60,18 +60,18 @@
 //#include <dbdet/edge/dbdet_edgemap_sptr.h>
 #include <dbdet/tracer/dbdet_contour_tracer.h>
 
-#include <dbgl/algo/dbgl_curve_smoothing.h>
+#include <bgld/algo/bgld_curve_smoothing.h>
 #include <dbsk2d/dbsk2d_file_io.h>
-#include <dbsol/dbsol_file_io.h>
-#include <dbsol/algo/dbsol_curve_algs.h>
-#include <dbsol/dbsol_interp_curve_2d.h>
-#include <dbsol/algo/dbsol_img_curve_algs.h>
+#include <bsold/bsold_file_io.h>
+#include <bsold/algo/bsold_curve_algs.h>
+#include <bsold/bsold_interp_curve_2d.h>
+#include <bsold/algo/bsold_img_curve_algs.h>
 #include <dbsk2d/algo/dbsk2d_xshock_graph_fileio.h>
 #include <dbsk2d/dbsk2d_shock_graph.h>
 //#include <dbsk2d/dbsk2d_boundary_sptr.h>
 #include <dbskr/algo/dbskr_rec_algs.h>
 #include <dbskr/dbskr_utilities.h>
-#include <dbsol/algo/dbsol_curve_algs.h>
+#include <bsold/algo/bsold_curve_algs.h>
 #include <dbsk2d/algo/dbsk2d_shock_transforms.h>
 #include <dbskr/algo/io/dbskr_extract_bnd_params.h>
 #include <dbskr/algo/io/dbskr_extract_shock_params.h>
@@ -229,7 +229,7 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
             for (unsigned j=0; j<newContour->size(); j++)
               pts.push_back(newContour->vertex(j)->get_p());
             //smooth this contour
-            dbgl_csm(pts, 1.0f, bnd_params.smoothing_nsteps_);   // psi = 1.0f
+            bgld_csm(pts, 1.0f, bnd_params.smoothing_nsteps_);   // psi = 1.0f
             vcl_vector<vsol_point_2d_sptr> vsol_pts;
             vsol_pts.reserve(pts.size());
             for (unsigned i=0; i<pts.size(); ++i)
@@ -381,7 +381,7 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
 
       if (bnd_params.smooth_bnds_) {
         //smooth this contour
-        dbgl_csm(pts, 1.0f, bnd_params.smoothing_nsteps_);   // psi = 1.0f
+        bgld_csm(pts, 1.0f, bnd_params.smoothing_nsteps_);   // psi = 1.0f
       }
 
       vcl_vector<vsol_point_2d_sptr> vsol_pts;
@@ -411,8 +411,8 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
         else  
           fitted_poly = new_curve;
 
-        dbsol_interp_curve_2d_sptr c = new dbsol_interp_curve_2d();
-        dbsol_curve_algs::interpolate_linear(c.ptr(), fitted_poly); // open curve
+        bsold_interp_curve_2d_sptr c = new bsold_interp_curve_2d();
+        bsold_curve_algs::interpolate_linear(c.ptr(), fitted_poly); // open curve
         double dist;
         if (color_image)
           dist = get_color_distance_of_curve_regions(c, float(bnd_params.pruning_region_width_), L, A, B, 14.0f);  // color_gamma = 14
@@ -445,16 +445,16 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
     vsol_polygon_2d_sptr box_poly = bsol_algs::poly_from_box(bbox);
     image_curves.push_back(box_poly->cast_to_spatial_object());
 
-    dbsol_save_cem(image_curves_all, root->paths()[i] + root->names()[i]+"_all_boundary.cem");
-    dbsol_save_cem(image_curves_avg_mag_pruned, root->paths()[i] + root->names()[i]+"_after_avg_mag_pruned_boundary.cem");
-    dbsol_save_cem(image_curves_length_pruned, root->paths()[i] + root->names()[i]+"_after_length_pruned_boundary.cem");    
+    bsold_save_cem(image_curves_all, root->paths()[i] + root->names()[i]+"_all_boundary.cem");
+    bsold_save_cem(image_curves_avg_mag_pruned, root->paths()[i] + root->names()[i]+"_after_avg_mag_pruned_boundary.cem");
+    bsold_save_cem(image_curves_length_pruned, root->paths()[i] + root->names()[i]+"_after_length_pruned_boundary.cem");    
     }
 
     vcl_string bnd_name = root->paths()[i] + root->names()[i] + "_boundary.bnd";
     vcl_cout << bnd_name << vcl_endl;
     // save the boundary curves
     dbsk2d_file_io::save_bnd_v3_0(bnd_name, image_curves);
-    dbsol_save_cem(image_curves, root->paths()[i] + root->names()[i]+"_boundary.cem");
+    bsold_save_cem(image_curves, root->paths()[i] + root->names()[i]+"_boundary.cem");
     vcl_cout << "saved " << image_curves.size() << " polylines\n";
 
     //: save the bnd extraction params
@@ -536,7 +536,7 @@ bool prepare_ethz_boundaries(vcl_string index_file, vcl_string image_ext, vcl_st
       //use the generic linker in SEL instead
       
       dbsk2d_file_io::save_bnd_v3_0(out_shock_name+"_boundary_gaps.bnd", euler_sps);
-      dbsol_save_cem(euler_sps, out_shock_name+"_boundary_gaps.cem");
+      bsold_save_cem(euler_sps, out_shock_name+"_boundary_gaps.cem");
 
       //: save the shock extraction params
       bxml_document doc2;

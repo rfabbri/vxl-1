@@ -12,11 +12,11 @@
 #include <dborl/dborl_evaluation.h>
 #include <vcl_iostream.h>
 #include <vul/vul_file.h>
-#include <dbsol/dbsol_file_io.h>
+#include <bsold/bsold_file_io.h>
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_polyline_2d.h>
 
-#include <dbsol/algo/dbsol_curve_algs.h>
+#include <bsold/algo/bsold_curve_algs.h>
 #include <dborl/dborl_index.h>
 #include <dborl/dborl_index_node.h>
 #include <dborl/algo/dborl_index_parser.h>
@@ -100,7 +100,7 @@ bool dborl_curve_deletions_algo::process()
 
     vcl_vector<vsol_point_2d_sptr> points;
     bool is_closed;
-    if (!dbsol_load_con_file(con_file.c_str(), points, is_closed)) { 
+    if (!bsold_load_con_file(con_file.c_str(), points, is_closed)) { 
       vcl_cout << "dborl_curve_deletions_algo::process() -- cannot load: " << con_file << vcl_endl;
       return false;
     }
@@ -116,7 +116,7 @@ bool dborl_curve_deletions_algo::process()
         vcl_vector<vsol_polyline_2d_sptr> del_pieces;
 
         int counter = 0;
-        while (!dbsol_curve_algs::segment_addition_and_deletion(poly, vsol_list, del_pieces, 
+        while (!bsold_curve_algs::segment_addition_and_deletion(poly, vsol_list, del_pieces, 
           params_->perc_add_(), params_->sigma_add_(), params_->divident_add_(), 
           params_->perc_del_(), params_->sigma_del_(), params_->divident_del_()) ||
           !vsol_list.size() || !del_pieces.size()) {
@@ -134,7 +134,7 @@ bool dborl_curve_deletions_algo::process()
         vcl_vector<vsol_polyline_2d_sptr> pieces;
         vcl_vector<vsol_polyline_2d_sptr> del_pieces;
         int counter = 0;
-        while (!dbsol_curve_algs::segment_wise_deletion(poly, pieces, del_pieces, params_->perc_del_(), params_->sigma_del_(), params_->divident_del_()) ||
+        while (!bsold_curve_algs::segment_wise_deletion(poly, pieces, del_pieces, params_->perc_del_(), params_->sigma_del_(), params_->divident_del_()) ||
           !pieces.size() || !del_pieces.size()) {
           pieces.clear();
           del_pieces.clear();
@@ -156,7 +156,7 @@ bool dborl_curve_deletions_algo::process()
       if (params_->add_segments_()) {  // just add
 
         int counter = 0;
-        while (!dbsol_curve_algs::segment_addition(poly, vsol_list, params_->perc_add_(), params_->sigma_add_(), params_->divident_add_()) ||
+        while (!bsold_curve_algs::segment_addition(poly, vsol_list, params_->perc_add_(), params_->sigma_add_(), params_->divident_add_()) ||
                !vsol_list.size()) 
         {
             vsol_list.clear();
@@ -174,7 +174,7 @@ bool dborl_curve_deletions_algo::process()
 
    
     //output_filename = path + names_[i] + params_->output_file_postfix_ + ".cem";
-    dbsol_save_cem(vsol_list, output_filename);
+    bsold_save_cem(vsol_list, output_filename);
   }
 
   return true;

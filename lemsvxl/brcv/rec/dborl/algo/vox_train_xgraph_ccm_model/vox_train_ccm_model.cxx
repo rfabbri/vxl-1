@@ -11,7 +11,7 @@
 
 #include <dbsksp/dbsksp_xshock_graph.h>
 
-#include <dbul/dbul_parse_simple_file.h>
+#include <buld/buld_parse_simple_file.h>
 
 #include <vsol/vsol_box_2d.h>
 
@@ -77,7 +77,7 @@ set_training_data_info(const vox_train_ccm_model_params& p)
     dborl_index_query index_query;
 
     //> Parse the list of positive images
-    if (!dbul_parse_string_list(this->params.list_pos_objs, index_query.get_object_names()))
+    if (!buld_parse_string_list(this->params.list_pos_objs, index_query.get_object_names()))
     {
         vcl_cout << "\nERROR: couldn't load list of positive images:" << this->params.list_pos_objs << vcl_endl;
         return false;
@@ -88,7 +88,7 @@ set_training_data_info(const vox_train_ccm_model_params& p)
     dborl_index_query index_query2;
 
     //> Parse the list of negative images
-    if (!dbul_parse_string_list(this->params.list_neg_objs, index_query2.get_object_names()))
+    if (!buld_parse_string_list(this->params.list_neg_objs, index_query2.get_object_names()))
     {
         vcl_cout << "\nERROR: couldn't load list of negative images:" << this->params.list_neg_objs << vcl_endl;
         return false;
@@ -392,7 +392,7 @@ build_grouping_of_gt_xgraph_fnames(vcl_map<vcl_string, vcl_vector<vcl_string > >
 
     //> parse input file containing list of xshock graphs
 
-    if (!dbul_parse_string_list(this->params.list_gt_xgraph_objs, index_query.get_object_names()))
+    if (!buld_parse_string_list(this->params.list_gt_xgraph_objs, index_query.get_object_names()))
     {
         vcl_cout << "ERROR: couldn't load xgraph list file:" << this->params.list_gt_xgraph_objs << vcl_endl;
         return false;

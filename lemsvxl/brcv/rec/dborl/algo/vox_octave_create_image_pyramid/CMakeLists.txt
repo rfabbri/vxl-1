@@ -8,7 +8,7 @@ if(OCTAVE_FOUND)
     )
     
     add_executable (vox_octave_create_image_pyramid ${vox_octave_create_image_pyramid_sources} )
-    target_link_libraries (vox_octave_create_image_pyramid dborl_algo dbil_algo)
+    target_link_libraries (vox_octave_create_image_pyramid dborl_algo bild_algo)
 endif(OCTAVE_FOUND)
 
 

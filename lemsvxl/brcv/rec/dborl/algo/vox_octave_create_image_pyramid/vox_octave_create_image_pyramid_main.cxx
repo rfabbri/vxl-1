@@ -20,7 +20,7 @@
 #include <dborl/algo/dborl_utilities.h>
 #include <vul/vul_timer.h>
 
-#include <dbil/algo/dbil_octave.h>
+#include <bild/algo/bild_octave.h>
 
 int main(int argc, char *argv[]) {
 
@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
     double step = vcl_pow(params->step_base_(), params->step_power_());
 
     vcl_vector<vil_image_resource_sptr> vec =
-            dbil_octave_create_image_pyramid(image_view, params->interp_type_(), step, params->num_steps_());
+            bild_octave_create_image_pyramid(image_view, params->interp_type_(), step, params->num_steps_());
 
     int total_digits = vcl_floor(vcl_log10(params->num_steps_()));
 

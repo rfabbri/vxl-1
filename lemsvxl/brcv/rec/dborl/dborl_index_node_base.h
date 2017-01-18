@@ -14,14 +14,14 @@
 #define _DBORL_INDEX_NODE_BASE_H
 
 #include <vcl_string.h>
-#include <dbgrl/dbgrl_vertex.h>
+#include <bgrld/bgrld_vertex.h>
 
 class dborl_index_node;
 class dborl_index_leaf;
 
 class dborl_index_edge;
 
-class dborl_index_node_base : public dbgrl_vertex<dborl_index_edge>
+class dborl_index_node_base : public bgrld_vertex<dborl_index_edge>
 {
 public:
   vcl_string name_;

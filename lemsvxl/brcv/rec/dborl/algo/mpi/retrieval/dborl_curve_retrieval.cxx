@@ -16,7 +16,7 @@
 #include <dborl/dborl_image_description.h>
 #include <dbcvr/dbcvr_clsd_cvmatch.h>
 #include <dbcvr/dbcvr_clsd_cvmatch_sptr.h>
-#include <dbsol/dbsol_file_io.h>
+#include <bsold/bsold_file_io.h>
 #include <vcl_iostream.h>
 #include <vcl_fstream.h>
 #include <vcl_algorithm.h>
@@ -123,7 +123,7 @@ bool dborl_curve_retrieval::initialize(vcl_vector<dborl_curve_retrieval_input>& 
     }
     
     //: load con
-    vsol_spatial_object_2d_sptr ob = dbsol_load_con_file(con_file.c_str());
+    vsol_spatial_object_2d_sptr ob = bsold_load_con_file(con_file.c_str());
     vsol_polygon_2d_sptr poly;
     if (!ob) {
       vcl_cout << "In dborl_curve_retrieval::initialize() -- cannot load con file as a polygon: " << con_file << vcl_endl;

@@ -19,7 +19,7 @@
 #include <dbdet/tracer/dbdet_contour_tracer.h>
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
-#include <dbsol/dbsol_file_io.h>
+#include <bsold/bsold_file_io.h>
 #include <vil/vil_load.h>
 #include <vil/vil_new.h>
 #include <vil/vil_image_view.h>
@@ -189,7 +189,7 @@ bool dborl_extract_contour::process(int t1, char& f)
     output_name = root->paths()[t1] + "/" + root->names()[t1] + params_->image_extension();
   output_name = vul_file::strip_extension(output_name) + ".con";
 
-  if (!dbsol_save_con_file(output_name.c_str(), newContour)) {
+  if (!bsold_save_con_file(output_name.c_str(), newContour)) {
     vcl_cout << "In dborl_extract_contour::process() -- problems in saving con file: " << output_name << vcl_endl;
     f = 0;
     return false;

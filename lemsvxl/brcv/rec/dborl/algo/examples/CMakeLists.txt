@@ -22,7 +22,7 @@ set( dborl_curve_deletions_algo_sources
 )
 
 add_executable (dborl_curve_deletions_algo ${dborl_curve_deletions_algo_sources})
-target_link_libraries (dborl_curve_deletions_algo dborl_algo dbsol_algo)
+target_link_libraries (dborl_curve_deletions_algo dborl_algo bsold_algo)
     
 
 

@@ -25,7 +25,7 @@ aux_source_directory(Templates dborl_algo_sources)
 
 add_library( dborl_algo STATIC ${dborl_algo_sources} )
 
-target_link_libraries( dborl_algo dborl expatpp dbsol bxml bpro1 dbxml) 
+target_link_libraries( dborl_algo dborl expatpp bsold bxml bpro1 dbxml) 
 
 # Brown ORL Algo Testing
 add_subdirectory( tests )

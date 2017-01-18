@@ -22,7 +22,7 @@
 
 #include <dborl/algo/dborl_utilities.h>
 #include <vul/vul_timer.h>
-#include <dbul/dbul_dir_file.h>
+#include <buld/buld_dir_file.h>
 #include <vpl/vpl.h>
 
 int main(int argc, char *argv[]) {
@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
                 vcl_string dest_file_name = params->output_xgraph_dir_() + "/" + vul_file::strip_directory(xgraph_file);
                 vcl_cout << "Assoc file:" << dest_file_name << vcl_endl;
 
-                bool copy_status = dbul_copy_file(xgraph_file, dest_file_name);
+                bool copy_status = buld_copy_file(xgraph_file, dest_file_name);
                 if(!copy_status)
                 {
                     vcl_cerr << "Association cannot be completed. Check paths:" << vcl_endl;
