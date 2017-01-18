@@ -1,9 +1,9 @@
-// This is brcv/shp/dbsk2d/algo/dbsk2d_ishock_grouping_transform.cxx
+// This is brcv/shp/dbsk2d/pro/dbsk2d_ishock_grouping_transform.cxx
 
 //:
 // \file
 
-#include <dbsk2d/algo/dbsk2d_ishock_grouping_transform.h>
+#include <dbsk2d/pro/dbsk2d_ishock_grouping_transform.h>
 #include <vgl/vgl_polygon.h>
 #include <vgl/vgl_clip.h>
 #include <vgl/vgl_area.h>
@@ -11,7 +11,7 @@
 #include <vgl/vgl_convex.h>
 #include <vcl_algorithm.h>
 #include <dbsk2d/algo/dbsk2d_ishock_transform.h>
-#include <dbsk2d/dbsk2d_transform_manager.h>
+#include <dbsk2d/algo/dbsk2d_transform_manager.h>
 #include <dbsk2d/algo/dbsk2d_prune_ishock.h>
 
 #include <vil/vil_image_resource_sptr.h>

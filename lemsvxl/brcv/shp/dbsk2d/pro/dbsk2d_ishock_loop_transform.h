@@ -1,4 +1,4 @@
-// This is brcv/shp/dbsk2d/algo/dbsk2d_ishock_loop_transform.h
+// This is brcv/shp/dbsk2d/pro/dbsk2d_ishock_loop_transform.h
 #ifndef dbsk2d_ishock_loop_transform_h_
 #define dbsk2d_ishock_loop_transform_h_
 //:

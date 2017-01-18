@@ -35,7 +35,7 @@
 #include <dbsk2d/dbsk2d_shock_graph_sptr.h>
 #include <dbsk2d/dbsk2d_xshock_edge.h>
 #include <dbsk2d/algo/dbsk2d_sample_ishock.h>
-#include <dbsk2d/algo/dbsk2d_ishock_grouping_transform.h>
+#include <dbsk2d/pro/dbsk2d_ishock_grouping_transform.h>
 #include <bbas/bsta/bsta_histogram.h>
 
 #include <vgl/vgl_intersection.h>

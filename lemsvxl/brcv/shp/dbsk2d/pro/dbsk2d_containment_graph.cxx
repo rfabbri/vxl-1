@@ -3,13 +3,13 @@
 //:
 // \file
 
-#include <dbsk2d/dbsk2d_containment_graph.h>
-#include <dbsk2d/dbsk2d_containment_node.h>
-#include <dbsk2d/dbsk2d_transform_manager.h>
-#include <dbsk2d/algo/dbsk2d_ishock_grouping_transform.h>
-#include <dbsk2d/algo/dbsk2d_ishock_gap_transform.h>
+#include <dbsk2d/algo/dbsk2d_containment_graph.h>
+#include <dbsk2d/algo/dbsk2d_containment_node.h>
+#include <dbsk2d/algo/dbsk2d_transform_manager.h>
+#include <dbsk2d/pro/dbsk2d_ishock_grouping_transform.h>
+#include <dbsk2d/pro/dbsk2d_ishock_gap_transform.h>
 #include <dbsk2d/algo/dbsk2d_ishock_gap4_transform.h>
-#include <dbsk2d/algo/dbsk2d_ishock_loop_transform.h>
+#include <dbsk2d/pro/dbsk2d_ishock_loop_transform.h>
 #include <dbsk2d/algo/dbsk2d_ishock_gap_detector.h>
 
 #include <vcl_sstream.h>

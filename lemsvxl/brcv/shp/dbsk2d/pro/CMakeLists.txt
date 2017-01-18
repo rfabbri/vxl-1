@@ -11,6 +11,18 @@ set(dbsk2d_pro_sources
    dbsk2d_shock_storage.h              dbsk2d_shock_storage.cxx
    dbsk2d_shock_storage_sptr.h
 
+# further data structures and algorithms above algo/
+
+  dbsk2d_containment_graph.h dbsk2d_containment_graph.cxx
+  dbsk2d_transform_manager.h dbsk2d_transform_manager.cxx
+
+# further shock transforms above algo/
+  dbsk2d_ishock_gap_transform.h        dbsk2d_ishock_gap_transform.cxx
+  dbsk2d_ishock_grouping_transform.h dbsk2d_ishock_grouping_transform.cxx
+  dbsk2d_ishock_gap4_transform.h        dbsk2d_ishock_gap4_transform.cxx
+  dbsk2d_ishock_loop_transform.h        dbsk2d_ishock_loop_transform.cxx
+
+
 # processes
    dbsk2d_compute_ishock_process.h      dbsk2d_compute_ishock_process.cxx
    dbsk2d_prune_ishock_process.h        dbsk2d_prune_ishock_process.cxx

@@ -14,8 +14,6 @@ set( dbsk2d_algo_sources
 
 dbsk2d_containment_node.h dbsk2d_containment_node.cxx
 dbsk2d_containment_node_sptr.h
-dbsk2d_containment_graph.h dbsk2d_containment_graph.cxx
-dbsk2d_transform_manager.h dbsk2d_transform_manager.cxx
 
 # *********************************************************
 #             Various Algorithms
@@ -79,11 +77,7 @@ dbsk2d_prune_ishock.h                  dbsk2d_prune_ishock.cxx
 dbsk2d_shock_transforms.h              dbsk2d_shock_transforms.cxx
 dbsk2d_ishock_transform.h             dbsk2d_ishock_transform.cxx
 dbsk2d_ishock_transform_sptr.h
-dbsk2d_ishock_loop_transform.h        dbsk2d_ishock_loop_transform.cxx
-dbsk2d_ishock_gap_transform.h        dbsk2d_ishock_gap_transform.cxx
-dbsk2d_ishock_gap4_transform.h        dbsk2d_ishock_gap4_transform.cxx
 dbsk2d_ishock_gap_detector.h         dbsk2d_ishock_gap_detector.cxx
-dbsk2d_ishock_grouping_transform.h dbsk2d_ishock_grouping_transform.cxx
 # *********************************************************
 # * 4. Sample intrinsic shock
 # *********************************************************
@@ -124,7 +118,7 @@ dbsk2d_xshock_graph_loader_from_esg_sh_file.h dbsk2d_xshock_graph_loader_from_es
 
 add_library( dbsk2d_algo  ${dbsk2d_algo_sources} )
 
-target_link_libraries( dbsk2d_algo dbsk2d )
+target_link_libraries( dbsk2d_algo dbsk2d vidpro1 )
 
 if( BUILD_TESTING )
   add_subdirectory(tests)
