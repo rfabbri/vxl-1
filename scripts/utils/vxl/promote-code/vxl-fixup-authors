@@ -1,0 +1,17 @@
+#!/bin/sh
+# First edit subst.sed
+
+case `uname` in Darwin*) mysed=gsed ;;
+  *) mysed=sed ;; esac
+
+for i in `grep --with-filename '\\author' $* | grep -v 'original code' | grep -v 'Fabbri' |cut -f 1 -d :|uniq`; do
+  echo doing $i
+  ow $i $mysed 's/\\author\>/\\author Based on original code by /g
+s/\\authors\>/\\authors Based on original code by /g' $i
+done
+
+for i in $*;do
+  echo email stripping $i
+  ow $i $mysed 's/rfabbri@lems.brown.edu/rfabbri.github.io/g' $i
+  ow $i $mysed 's/[a-zA-Z0-9][a-zA-Z0-9._]*\(@[a-zA-Z0-9][a-zA-Z0-9_.]*\)/\1/g' $i
+done

@@ -1,0 +1,61 @@
+#!/bin/sh
+
+tosrc=""
+tobin="-bin"
+orig="-orig"
+
+for i in $@; do
+case $i in
+    -h | --help) 
+      echo 'Usage: vxl-rootdir [(bin|src)]' 1>&2; exit 2 
+    ;;
+    bin )
+      tosrc="-bin"
+      tobin="-bin"
+      orig="-bin"
+    ;;
+    src )
+      tobin=""
+      tosrc=""
+      orig=""
+    ;;
+    orig )
+      tobin="-orig"
+      tosrc="-orig"
+      orig="-orig"
+    ;;
+    -f | --full)
+      prefix=\\1
+    ;;
+    *)
+      tosrc=""
+      tobin="-bin"
+      orig="-orig"
+esac
+shift
+done
+
+rootdir=`echo $PWD | sed "
+s/\/vxd$/\/vxd$tosrc/g
+s/\/vxd\/\(.*\)/\/vxd$tosrc\/$prefix/g
+s/\/vxd-bin$/\/vxd$tobin/g
+s/\/vxd-bin\/\(.*\)/\/vxd$tobin\/$prefix/g
+s/\/vxd-orig$/\/vxd$orig/g
+s/\/vxd-orig\/\(.*\)/\/vxd$orig\/$prefix/g
+#
+s/\/vxl$/\/vxl$tosrc/g
+s/\/vxl\/\(.*\)/\/vxl$tosrc\/$prefix/g
+s/\/vxl-bin$/\/vxl$tobin/g
+s/\/vxl-bin\/\(.*\)/\/vxl$tobin\/$prefix/g
+s/\/vxl-orig$/\/vxl$orig/g
+s/\/vxl-orig\/\(.*\)/\/vxl$orig\/$prefix/g
+#
+s/\/lemsvxl$/\/lemsvxl$tosrc/g
+s/\/lemsvxl\/\(.*\)/\/lemsvxl$tosrc\/$prefix/g
+s/\/lemsvxl-bin$/\/lemsvxl$tobin/g
+s/\/lemsvxl-bin\/\(.*\)/\/lemsvxl$tobin\/$prefix/g
+s/\/lemsvxl-orig$/\/lemsvxl$orig/g
+s/\/lemsvxl-orig\/\(.*\)/\/lemsvxl$orig\/$prefix/g"
+`
+
+echo $rootdir

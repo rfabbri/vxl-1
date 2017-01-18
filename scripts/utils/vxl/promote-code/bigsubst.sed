@@ -81,8 +81,26 @@ s/dbcsi/bcsid/g
 s/DBCSI/BCSID/g
 s/bmvgd\/bcsid/bbasd\/bcsid/g
 #
-s/dbdet/sdet/g
+#XXX s/dbdet\/edge/sdet/g
+#s/dbdet\/sel/sdet/g
+#s/dbdet/sdetd/g
 #
-# sdet/dbdet:
-s/\<curvelet_list/sdet_curvelet_list/g
-s/cvlet_list/sdet_curvelet_list/g
+# sdet/dbdet: XXX
+#s/\<curvelet_list/sdet_curvelet_list/g
+#s/cvlet_list/sdet_curvelet_list/g
+#s/dbdet_curve_fragment_graph/sdet_curve_fragment_graph/g
+#
+s/mw_algo_util/bmcsd_algo_util/g
+s/mw\(_discrete_corresp\)/bmcsd\1/g
+#
+s/mw_discrete_corresp/bmcsd_discrete_corresp/g
+s/mw\(_attributed_object\)/bmcsd\1/g
+s/mw\(_dereference_equal\)/bmcsd\1/g
+s/mw\(_match_attribute\)/bmcsd\1/g
+s/mw\(_ntuplet\)/bmcsd\1/g
+#
+s/dbgrl/bgrld/g
+s/DBGRL/BGRLD/g
+s/basic\/bgrld/bbasd\/bgrld/g
+# Leave this last:
+s/mw\/bmcsd/bmcsd\/bmcsd/g
