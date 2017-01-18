@@ -15,11 +15,11 @@
 
 #include <vcl_string.h>
 #include <vcl_vector.h>
-#include <dbpro/dbpro_process.h>
+#include <bprod/bprod_process.h>
 #include <vidl/vidl_istream_sptr.h>
 
 //: A source that provides frames from multiple video streams in sync
-class dbvidl2_multi_source : public dbpro_source
+class dbvidl2_multi_source : public bprod_source
 {
  public:
 
@@ -42,7 +42,7 @@ class dbvidl2_multi_source : public dbpro_source
   vidl_istream_sptr stream(unsigned int idx) const { return istreams_[idx]; }
 
   //: Execute this process
-  dbpro_signal execute();
+  bprod_signal execute();
 
  private:
   vcl_vector<vidl_istream_sptr> istreams_;

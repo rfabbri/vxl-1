@@ -13,14 +13,14 @@
 // \endverbatim
 
 
-#include <dbpro/dbpro_process.h>
+#include <bprod/bprod_process.h>
 #include <vil/vil_pixel_format.h>
 #include <vidl/vidl_pixel_format.h>
 #include <vil/vil_image_resource.h>
 
 
 //: Convert a vidl_frame into a vil_image_resource
-class dbvidl2_frame_to_resource : public dbpro_filter
+class dbvidl2_frame_to_resource : public bprod_filter
 {
  public:
 
@@ -61,7 +61,7 @@ class dbvidl2_frame_to_resource : public dbpro_filter
   virtual ~dbvidl2_frame_to_resource(){}
 
   //: Execute this process
-  dbpro_signal execute();
+  bprod_signal execute();
 
  private:
   vil_image_resource_sptr image_rsc_;

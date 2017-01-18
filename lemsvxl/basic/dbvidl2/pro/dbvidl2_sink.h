@@ -14,11 +14,11 @@
 
 
 #include <vcl_string.h>
-#include <dbpro/dbpro_process.h>
+#include <bprod/bprod_process.h>
 #include <vidl/vidl_ostream_sptr.h>
 
-//: Convert a vidl_ostream into a dbpro_sink
-class dbvidl2_sink : public dbpro_sink
+//: Convert a vidl_ostream into a bprod_sink
+class dbvidl2_sink : public bprod_sink
 {
  public:
 
@@ -35,7 +35,7 @@ class dbvidl2_sink : public dbpro_sink
 
 
   //: Execute this process
-  dbpro_signal execute();
+  bprod_signal execute();
 
  private:
   vidl_ostream_sptr ostream_;

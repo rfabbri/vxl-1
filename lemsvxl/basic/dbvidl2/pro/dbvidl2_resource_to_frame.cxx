@@ -9,22 +9,22 @@
 
 
 //: Run the process on the current frame
-dbpro_signal
+bprod_signal
 dbvidl2_resource_to_frame::execute()
 {
   assert(input_type_id(0) == typeid(vil_image_resource_sptr));
   vil_image_resource_sptr image = input<vil_image_resource_sptr>(0);
   if(!image)
-    return DBPRO_INVALID;
+    return BPROD_INVALID;
 
   vidl_frame_sptr frame = vidl_convert_to_frame(image->get_view());
 
   if(!frame)
-    return DBPRO_INVALID;
+    return BPROD_INVALID;
 
   output(0,frame);
 
-  return DBPRO_VALID;
+  return BPROD_VALID;
 }
 
 

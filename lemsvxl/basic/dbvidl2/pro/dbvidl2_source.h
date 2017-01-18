@@ -14,11 +14,11 @@
 
 
 #include <vcl_string.h>
-#include <dbpro/dbpro_process.h>
+#include <bprod/bprod_process.h>
 #include <vidl/vidl_istream_sptr.h>
 
-//: Convert a vidl_istream into a dbpro_source
-class dbvidl2_source : public dbpro_source
+//: Convert a vidl_istream into a bprod_source
+class dbvidl2_source : public bprod_source
 {
  public:
 
@@ -35,7 +35,7 @@ class dbvidl2_source : public dbpro_source
   vidl_istream_sptr stream() const { return istream_; }
 
   //: Execute this process
-  dbpro_signal execute();
+  bprod_signal execute();
 
  private:
   vidl_istream_sptr istream_;

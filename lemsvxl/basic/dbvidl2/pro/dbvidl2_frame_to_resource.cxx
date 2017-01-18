@@ -9,13 +9,13 @@
 
 
 //: Run the process on the current frame
-dbpro_signal
+bprod_signal
 dbvidl2_frame_to_resource::execute()
 {
   assert(input_type_id(0) == typeid(vidl_frame_sptr));
   vidl_frame_sptr frame = input<vidl_frame_sptr>(0);
   if(!frame)
-    return DBPRO_INVALID;
+    return BPROD_INVALID;
 
   // try to wrap the frame in a view
   if( wrap_mode_ == REQUIRE_WRAP ||
@@ -30,11 +30,11 @@ dbvidl2_frame_to_resource::execute()
             color_ == vidl_pixel_format_color(frame->pixel_format()) ) )
       {
         output(0,image);
-        return DBPRO_VALID;
+        return BPROD_VALID;
       }
     }
     else if(wrap_mode_ == REQUIRE_WRAP)
-      return DBPRO_INVALID;
+      return BPROD_INVALID;
   }
 
   // create a new memory image and copy/convert the frame into this resource
@@ -56,11 +56,11 @@ dbvidl2_frame_to_resource::execute()
   }
 
   if(!vidl_convert_to_view(*frame,*image_rsc_->get_view(),color_))
-    return DBPRO_INVALID;
+    return BPROD_INVALID;
 
   output(0,image_rsc_);
 
-  return DBPRO_VALID;
+  return BPROD_VALID;
 }
 
 

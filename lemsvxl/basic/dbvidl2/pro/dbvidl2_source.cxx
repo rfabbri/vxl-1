@@ -8,20 +8,20 @@
 
 
 //: Run the process on the current frame
-dbpro_signal 
+bprod_signal 
 dbvidl2_source::execute()
 {
   if(!istream_->advance()){
-    return DBPRO_EOS;
+    return BPROD_EOS;
   }
 
   vidl_frame_sptr frame = istream_->current_frame();
   if(!frame)
-    return DBPRO_INVALID;
+    return BPROD_INVALID;
 
   output(0,frame);
 
-  return DBPRO_VALID;
+  return BPROD_VALID;
 }
 
 

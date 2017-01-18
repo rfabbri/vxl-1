@@ -8,7 +8,7 @@
 
 
 //: Run the process on the current frame
-dbpro_signal 
+bprod_signal 
 dbvidl2_multi_source::execute()
 {
   bool all_passed = true;
@@ -17,7 +17,7 @@ dbvidl2_multi_source::execute()
       all_passed = istreams_[i]->advance() && all_passed;
   }
   if(!all_passed)
-    return DBPRO_EOS;
+    return BPROD_EOS;
 
   vidl_frame_sptr frame = NULL;
   for(unsigned int i=0; i<istreams_.size(); ++i){
@@ -28,9 +28,9 @@ dbvidl2_multi_source::execute()
     }
   }
   if(!all_passed)
-    return DBPRO_INVALID;
+    return BPROD_INVALID;
 
-  return DBPRO_VALID;
+  return BPROD_VALID;
 }
 
 

@@ -11,5 +11,5 @@ set( dbvidl2_pro_sources
 )
 
 add_library(dbvidl2_pro  ${dbvidl2_pro_sources})
-target_link_libraries(dbvidl2_pro dbpro vidl)
+target_link_libraries(dbvidl2_pro bprod vidl)
 
