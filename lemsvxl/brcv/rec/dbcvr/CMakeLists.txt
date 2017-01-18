@@ -5,6 +5,8 @@ include_directories(${VXL_BRL_INCLUDE_DIR})
 include_directories(${VXL_BRL_INCLUDE_DIR}/bbas)
 include_directories(${VXL_BRL_INCLUDE_DIR}/bseg)
 include_directories(${VXL_GEL_INCLUDE_DIR})
+include_directories(${VXD_BRLD_INCLUDE_DIR})
+
 
 set(dbcvr_sources
 
@@ -63,7 +65,7 @@ aux_source_directory(Templates dbcvr_sources)
 
 add_library(dbcvr  ${dbcvr_sources})
 
-target_link_libraries(dbcvr bsol bsold dbdp bnld_algo vdgl)
+target_link_libraries(dbcvr bsol bsold bgld dbdp bnld_algo vdgl)
 
 # Processing Library
 add_subdirectory(pro)
