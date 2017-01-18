@@ -8,7 +8,7 @@
 
 #include <vtol/vtol_list_functions.h>
 
-#include <dbgl/algo/dbgl_circ_arc.h>
+#include <bgld/algo/bgld_circ_arc.h>
 
 #include <dbsk2d/dbsk2d_bnd_edge.h>
 #include <dbsk2d/dbsk2d_boundary.h>
@@ -84,7 +84,7 @@ new_arc_between(const dbsk2d_bnd_vertex_sptr& v1,
                 const dbsk2d_bnd_vertex_sptr& v2, double curvature, 
                 const dbsk2d_boundary_sptr& boundary)
 {
-  dbgl_circ_arc arc(v1->point(), v2->point(), curvature);
+  bgld_circ_arc arc(v1->point(), v2->point(), curvature);
   vgl_point_2d<double > center = arc.center();
   dbsk2d_ishock_barc* left = 
     new dbsk2d_ishock_barc(v1->bpoint(), v2->bpoint(),

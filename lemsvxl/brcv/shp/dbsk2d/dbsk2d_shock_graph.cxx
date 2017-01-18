@@ -15,7 +15,7 @@ void dbsk2d_shock_graph::clear()
   //delete the shock fragments before deleting the node and edges
   delete_shock_fragments();
 
-  dbgrl_graph<dbsk2d_shock_node , dbsk2d_shock_edge>::clear();
+  bgrld_graph<dbsk2d_shock_node , dbsk2d_shock_edge>::clear();
 }
 
 //: delete the shock fragments defined on this shock graph

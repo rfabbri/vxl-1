@@ -11,8 +11,8 @@
 // \verbatim
 //  Modifications
 //   Amir Tamrakar 02/02/2005    Initial version. Conversion to VXL standard.
-//   Amir Tamrakar 02/20/2005    Subclassed it from dbgrl_edge since the
-//                               shock graph was subclassed from dbgrl_graph
+//   Amir Tamrakar 02/20/2005    Subclassed it from bgrld_edge since the
+//                               shock graph was subclassed from bgrld_graph
 //   Amir Tamrakar 06/27/06      Subclassed it from the shock_edge because
 //                               an extrinsic edge is a specific type of shock edge.
 //

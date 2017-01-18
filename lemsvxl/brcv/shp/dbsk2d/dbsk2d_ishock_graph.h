@@ -4,7 +4,7 @@
 //:
 // \file
 // \brief Intrinsic shock graph class
-//        This class is temporary and is really supposed to be subclassed from dbgrl_graph class
+//        This class is temporary and is really supposed to be subclassed from bgrld_graph class
 // \author Amir Tamrakar
 // \date 05/04/05
 //

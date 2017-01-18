@@ -1,4 +1,4 @@
-// This is basic/dbgl/algo/dbsk2d_closest_point.h
+// This is bbasd/bgld/algo/dbsk2d_closest_point.h
 
 #ifndef dbsk2d_closest_point_h_
 #define dbsk2d_closest_point_h_

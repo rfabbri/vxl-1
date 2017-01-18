@@ -13,8 +13,8 @@
 
 #include <vtol/vtol_list_functions.h>
 
-#include <dbgl/algo/dbgl_circ_arc.h>
-#include <dbgl/algo/dbgl_closest_point.h>
+#include <bgld/algo/bgld_circ_arc.h>
+#include <bgld/algo/bgld_closest_point.h>
 #include <dbsk2d/dbsk2d_bnd_utils.h>
 #include <dbsk2d/dbsk2d_ishock_barc.h>
 
@@ -437,7 +437,7 @@ dissolve_vertices_into_curves(vcl_list<dbsk2d_bnd_edge_sptr >& tainted_edges,
           double arc_k = barc->curvature();
 
           double arc_ratio;
-          double d = dbgl_closest_point::point_to_circular_arc(pv, p1, p2, 
+          double d = bgld_closest_point::point_to_circular_arc(pv, p1, p2, 
             arc_k, arc_ratio);
 
           
@@ -454,7 +454,7 @@ dissolve_vertices_into_curves(vcl_list<dbsk2d_bnd_edge_sptr >& tainted_edges,
           // Strong link: merge the point into the line
 
           // find location on arc that is closest to the vertex
-          dbgl_circ_arc arc(p1, p2, arc_k);
+          bgld_circ_arc arc(p1, p2, arc_k);
           vgl_point_2d<double > pt = arc.point_at_length(arc_ratio*arc.len());
         
           // add to the target list
@@ -539,7 +539,7 @@ dissolve_vertices_into_curves(vcl_list<dbsk2d_bnd_edge_sptr >& tainted_edges,
           double arc_k = barc->curvature();
 
           double arc_ratio;
-          double d = dbgl_closest_point::point_to_circular_arc(pv, p1, p2, 
+          double d = bgld_closest_point::point_to_circular_arc(pv, p1, p2, 
             arc_k, arc_ratio);
 
           
@@ -549,7 +549,7 @@ dissolve_vertices_into_curves(vcl_list<dbsk2d_bnd_edge_sptr >& tainted_edges,
           // When distance is below threshold, merge vertex into the arc
 
           // find location on arc that is closest to the vertex
-          dbgl_circ_arc arc(p1, p2, arc_k);
+          bgld_circ_arc arc(p1, p2, arc_k);
           vgl_point_2d<double > pt = arc.point_at_length(arc_ratio*arc.len());
         
           // mark vertex to add to the arc at the end

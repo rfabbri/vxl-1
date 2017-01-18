@@ -28,7 +28,7 @@
 #include <dbsk2d/dbsk2d_ishock_bline.h>
 #include <vgl/vgl_distance.h>
 #include <vcl_set.h>
-#include <dbsol/dbsol_interp_curve_2d_sptr.h>
+#include <bsold/bsold_interp_curve_2d_sptr.h>
 #include <bbas/bil/algo/bil_color_conversions.h>
 #include <vil/vil_math.h>
 
@@ -351,7 +351,7 @@ private:
         vil_image_view<double>& channel,
         double min, double max,unsigned int nbins,bool flip=false);
 
-    double color_gradient(dbsol_interp_curve_2d_sptr c,
+    double color_gradient(bsold_interp_curve_2d_sptr c,
                           int region_width);
 
     // compute average LAB difference

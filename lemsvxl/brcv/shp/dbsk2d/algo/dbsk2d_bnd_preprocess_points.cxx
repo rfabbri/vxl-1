@@ -9,7 +9,7 @@
 
 #include <vgl/vgl_distance.h>
 
-#include <dbgl/algo/dbgl_closest_point.h>
+#include <bgld/algo/bgld_closest_point.h>
 #include <dbsk2d/dbsk2d_ishock_barc.h>
 
 
@@ -183,7 +183,7 @@ remove_points_close_to_arcs(vcl_list<dbsk2d_bnd_edge_sptr >& bnd_pts,
       
       // compute distance and closest points on arc
       double ratio_pt;
-      double d = dbgl_closest_point::point_to_circular_arc(pt, 
+      double d = bgld_closest_point::point_to_circular_arc(pt, 
         arc_p1, arc_p2, arc_k, ratio_pt);
 
       // if too close, remove the point

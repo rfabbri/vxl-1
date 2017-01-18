@@ -7,8 +7,8 @@
 
 #include "dbsk2d_bnd_preprocess.h"
 
-#include <dbgl/algo/dbgl_circ_arc.h>
-#include <dbgl/algo/dbgl_closest_point.h>
+#include <bgld/algo/bgld_circ_arc.h>
+#include <bgld/algo/bgld_closest_point.h>
 
 #include <dbsk2d/dbsk2d_bnd_utils.h>
 #include <dbsk2d/dbsk2d_ishock_barc.h>
@@ -69,7 +69,7 @@ intersect_lines_against_arcs(vcl_list<dbsk2d_bnd_edge_sptr >* tainted_edges,
       // potential intersecting locations
       vcl_vector<double > arc_ratios;
       vcl_vector<double > line_ratios;
-      double d = dbgl_closest_point::lineseg_to_circular_arc(
+      double d = bgld_closest_point::lineseg_to_circular_arc(
         p11, p12, p21, p22, k2, line_ratios, arc_ratios);
 
       
@@ -77,7 +77,7 @@ intersect_lines_against_arcs(vcl_list<dbsk2d_bnd_edge_sptr >* tainted_edges,
       if (d > dbsk2d_bnd_preprocess::distance_tol) continue;
 
       // form a geometric arc equivalent to barc2
-      dbgl_circ_arc arc2(p21, p22, k2);
+      bgld_circ_arc arc2(p21, p22, k2);
         
       // form junction at intersection. 
       // ignore intersection at endpoints. It is handled in a different fnct.
@@ -205,7 +205,7 @@ remove_arcs_duplicating_lines(vcl_list<dbsk2d_bnd_edge_sptr >& bnd_arcs,
       dbsk2d_assert(e1->left_bcurve()->is_an_arc());
       dbsk2d_ishock_barc* barc1 = 
         static_cast<dbsk2d_ishock_barc* >(e1->left_bcurve());
-      dbgl_circ_arc arc1(barc1->start(), barc1->end(), barc1->curvature());
+      bgld_circ_arc arc1(barc1->start(), barc1->end(), barc1->curvature());
 
    
       // computing max distance

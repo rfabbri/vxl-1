@@ -23,7 +23,7 @@
 #include <dbsk2d/dbsk2d_ishock_lineline_thirdorder.h>
 #include <dbsk2d/dbsk2d_ishock_arcarc_thirdorder.h> 
 
-#include <dbsol/algo/dbsol_curve_algs.h>
+#include <bsold/algo/bsold_curve_algs.h>
 #include <vsol/vsol_polyline_2d.h>
 
 #include <vil/vil_image_view.h>
@@ -304,7 +304,7 @@ void dbsk2d_shock_transforms::perform_all_gap_transforms(double thres_contour, d
       if (keep_eulerspirals) {
         gap_transform_contour_cost();
         if (es_)
-          ess_.push_back(new dbgl_eulerspiral(*es_));
+          ess_.push_back(new bgld_eulerspiral(*es_));
       }
     } //else
       //vcl_cout << "this transform had become OBSOLETE by a previous transform\n";
@@ -331,7 +331,7 @@ dbsk2d_shock_transforms::get_eulerspirals(vcl_vector< vsol_spatial_object_2d_spt
 
 //: degree 2 node has immediate neighbor points, we use the radius and the nearest boundary at those points to extend the region beyond degree 2's immediate shock edges
 double dbsk2d_shock_transforms::
-create_till_boundary_interpolators(dbsk2d_shock_edge_sptr sedge, dbsk2d_shock_node_sptr tgtn, dbsol_interp_curve_2d_sptr& c)
+create_till_boundary_interpolators(dbsk2d_shock_edge_sptr sedge, dbsk2d_shock_node_sptr tgtn, bsold_interp_curve_2d_sptr& c)
 {
   //dbsk2d_shock_node_sptr tgtn = (sedge.ptr())->opposite(srcn);
   dbsk2d_ishock_edge *grouped_edge = (dbsk2d_ishock_edge *)(sedge.ptr());
@@ -402,8 +402,8 @@ create_till_boundary_interpolators(dbsk2d_shock_edge_sptr sedge, dbsk2d_shock_no
   } 
   pts.push_back(pt);
  
-  c = new dbsol_interp_curve_2d();
-  dbsol_curve_algs::interpolate_linear(c.ptr(), pts, false);
+  c = new bsold_interp_curve_2d();
+  bsold_curve_algs::interpolate_linear(c.ptr(), pts, false);
   return c->length();
 }
 
@@ -412,7 +412,7 @@ create_till_boundary_interpolators(dbsk2d_shock_edge_sptr sedge, dbsk2d_shock_no
 // in semidegenerate case, we should continue all the way to the first degree three, merging all degree twos on the way if there are any 
 
 double dbsk2d_shock_transforms::
-create_shock_interpolators(dbsk2d_shock_edge_sptr sedge, dbsol_interp_curve_2d_sptr& c, dbsk2d_shock_edge_sptr& new_edge, dbsk2d_shock_node_sptr& new_node)
+create_shock_interpolators(dbsk2d_shock_edge_sptr sedge, bsold_interp_curve_2d_sptr& c, dbsk2d_shock_edge_sptr& new_edge, dbsk2d_shock_node_sptr& new_node)
 {
   vcl_vector<vgl_point_2d<double> > expts;
 
@@ -443,8 +443,8 @@ create_shock_interpolators(dbsk2d_shock_edge_sptr sedge, dbsol_interp_curve_2d_s
     current = shock_graph->cyclic_adj_succ(current, target);
   }
 
-  c = new dbsol_interp_curve_2d();
-  dbsol_curve_algs::interpolate_linear(c.ptr(), expts, false);
+  c = new bsold_interp_curve_2d();
+  bsold_curve_algs::interpolate_linear(c.ptr(), expts, false);
   return c->length();
 }
 
@@ -476,7 +476,7 @@ double dbsk2d_shock_transforms::gap_transform_contour_cost()
       dire = angle0To2Pi(end_angle);
     else
       dire = angle0To2Pi(end_angle+vnl_math::pi);
-    es_ = new dbgl_eulerspiral(start, dirs, end, dire);
+    es_ = new bgld_eulerspiral(start, dirs, end, dire);
 
     double len = es_->length();
     //double len_power = len < 1.0f ? len : vcl_pow(es_->length(), double(3.0f));
@@ -510,10 +510,10 @@ double dbsk2d_shock_transforms::gap_transform_contour_cost()
 #endif
 
     if (bpoint1_) 
-      es_ = new dbgl_eulerspiral(bpoint1_->pt(), angle0To2Pi(bpoint1_->tangent()+vnl_math::pi), 0, 0, len);
+      es_ = new bgld_eulerspiral(bpoint1_->pt(), angle0To2Pi(bpoint1_->tangent()+vnl_math::pi), 0, 0, len);
     else {
       if (bpoint2_)
-        es_ = new dbgl_eulerspiral(bpoint2_->pt(), angle0To2Pi(bpoint2_->tangent()+vnl_math::pi), 0, 0, len);
+        es_ = new bgld_eulerspiral(bpoint2_->pt(), angle0To2Pi(bpoint2_->tangent()+vnl_math::pi), 0, 0, len);
       else
         es_ = 0;
     }
@@ -550,7 +550,7 @@ double dbsk2d_shock_transforms::gap_transform_appearance_cost() {
     othersedge2 = 0;
   }
   
-  dbsol_interp_curve_2d_sptr shock_c1, shock_c2, shock_c3;
+  bsold_interp_curve_2d_sptr shock_c1, shock_c2, shock_c3;
   // merge edges till you hit a degree three node!! 
   // If we're at a degerate degree two node, immediate neighbors are degree threes
   // in semidegenerate case, we should continue all the way to the first degree three, merging all degree twos on the way if there are any
@@ -564,7 +564,7 @@ double dbsk2d_shock_transforms::gap_transform_appearance_cost() {
     return -1;
   
   // extend this region
-  dbsol_interp_curve_2d_sptr c1, c2, c3;
+  bsold_interp_curve_2d_sptr c1, c2, c3;
   double len3 = create_till_boundary_interpolators(new_edge1, new_node1, c1);
   double len4 = create_till_boundary_interpolators(new_edge2, new_node2, c2);
   double len6 = 100000000;
@@ -592,18 +592,18 @@ double dbsk2d_shock_transforms::gap_transform_appearance_cost() {
       total_length = len5 + len6*0.8f;
   }
     
-  dbsol_curve_algs::sample_region_along_curve(*shock_c1, region_plus_points_, 0.3f, total_length, (float)coarse_shock_graph_source_->radius(), true);
+  bsold_curve_algs::sample_region_along_curve(*shock_c1, region_plus_points_, 0.3f, total_length, (float)coarse_shock_graph_source_->radius(), true);
   if (len1 < total_length)
-    dbsol_curve_algs::sample_region_along_curve(*c1, region_plus_points_, 0.3f, total_length - len1, (float)coarse_shock_graph_source_->radius(), true);
+    bsold_curve_algs::sample_region_along_curve(*c1, region_plus_points_, 0.3f, total_length - len1, (float)coarse_shock_graph_source_->radius(), true);
   
-  dbsol_curve_algs::sample_region_along_curve(*shock_c2, region_minus_points_, 0.3f, total_length, (float)coarse_shock_graph_source_->radius(), true);
+  bsold_curve_algs::sample_region_along_curve(*shock_c2, region_minus_points_, 0.3f, total_length, (float)coarse_shock_graph_source_->radius(), true);
   if (len2 < total_length)
-    dbsol_curve_algs::sample_region_along_curve(*c2, region_minus_points_, 0.3f, total_length - len2, (float)coarse_shock_graph_source_->radius(), true);
+    bsold_curve_algs::sample_region_along_curve(*c2, region_minus_points_, 0.3f, total_length - len2, (float)coarse_shock_graph_source_->radius(), true);
 
   if (othersedge2) {
-    dbsol_curve_algs::sample_region_along_curve(*shock_c3, region_minus_points_, 0.3f, total_length, (float)coarse_shock_graph_source_->radius(), true);
+    bsold_curve_algs::sample_region_along_curve(*shock_c3, region_minus_points_, 0.3f, total_length, (float)coarse_shock_graph_source_->radius(), true);
     if (len5 < total_length)
-      dbsol_curve_algs::sample_region_along_curve(*c3, region_minus_points_, 0.3f, total_length - len5, (float)coarse_shock_graph_source_->radius(), true);
+      bsold_curve_algs::sample_region_along_curve(*c3, region_minus_points_, 0.3f, total_length - len5, (float)coarse_shock_graph_source_->radius(), true);
   }
 
   if (image_set_ && region_plus_points_.size() != 0 && region_minus_points_.size() != 0) {

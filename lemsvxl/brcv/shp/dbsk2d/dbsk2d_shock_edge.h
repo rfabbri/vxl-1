@@ -13,7 +13,7 @@
 //   Amir Tamrakar 06/08/2005    Initial version.
 // \endverbatim
 
-#include <dbgrl/dbgrl_edge.h>
+#include <bgrld/bgrld_edge.h>
 #include <dbsk2d/dbsk2d_base_gui_geometry.h>
 
 #include <dbsk2d/dbsk2d_shock_node.h>
@@ -24,7 +24,7 @@
 #include <dbsk2d/dbsk2d_shock_fragment_sptr.h>
 
 //: Base class for all shock edge classes
-class dbsk2d_shock_edge : public dbsk2d_base_gui_geometry, public dbgrl_edge<dbsk2d_shock_node> 
+class dbsk2d_shock_edge : public dbsk2d_base_gui_geometry, public bgrld_edge<dbsk2d_shock_node> 
 {
 public:
 

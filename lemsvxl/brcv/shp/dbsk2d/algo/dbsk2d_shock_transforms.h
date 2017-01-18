@@ -34,10 +34,10 @@
 
 #include <dbsk2d/dbsk2d_shock_graph_sptr.h>
 #include <dbsk2d/algo/dbsk2d_prune_ishock.h>
-#include <dbgl/algo/dbgl_eulerspiral.h>
+#include <bgld/algo/bgld_eulerspiral.h>
 #include <vsol/vsol_point_2d_sptr.h>
 #include <vsol/vsol_spatial_object_2d_sptr.h>
-#include <dbsol/dbsol_interp_curve_2d_sptr.h>
+#include <bsold/bsold_interp_curve_2d_sptr.h>
 #include <vil/vil_image_resource_sptr.h>
 #include <vil/vil_image_view.h>
 
@@ -111,7 +111,7 @@ public:
   void perform_all_gap_transforms(double thres_contour, double thres_app, 
                                   double alpha_contour, double alpha_app, bool keep_eulerspirals = false);
 
-  dbgl_eulerspiral* get_eulerspiral() { return es_; }
+  bgld_eulerspiral* get_eulerspiral() { return es_; }
 
   vcl_vector<vsol_point_2d_sptr>& get_region_plus_points() { return region_plus_points_; }
   vcl_vector<vsol_point_2d_sptr>& get_region_minus_points() { return region_minus_points_; }
@@ -119,10 +119,10 @@ public:
   // merge edges till you hit a degree three node!! 
   // If we're at a degerate degree two node, immediate neighbors are degree threes
   // in semidegenerate case, we should continue all the way to the first degree three, merging all degree twos on the way if there are any
-  double create_shock_interpolators(dbsk2d_shock_edge_sptr sedge, dbsol_interp_curve_2d_sptr& c, dbsk2d_shock_edge_sptr& new_edge, dbsk2d_shock_node_sptr& new_node);
+  double create_shock_interpolators(dbsk2d_shock_edge_sptr sedge, bsold_interp_curve_2d_sptr& c, dbsk2d_shock_edge_sptr& new_edge, dbsk2d_shock_node_sptr& new_node);
   
   //: degree 2 node has immediate neighbor points, we use the radius and the nearest boundary at those points to extend the region beyond degree 2's immediate shock edges
-  double create_till_boundary_interpolators(dbsk2d_shock_edge_sptr sedge, dbsk2d_shock_node_sptr srcn, dbsol_interp_curve_2d_sptr& c);
+  double create_till_boundary_interpolators(dbsk2d_shock_edge_sptr sedge, dbsk2d_shock_node_sptr srcn, bsold_interp_curve_2d_sptr& c);
   
   void set_image(vil_image_resource_sptr image);
 
@@ -145,7 +145,7 @@ public:
   void clear_eulerspirals() { ess_.clear(); }
 
 protected:
-  dbgl_eulerspiral* es_;
+  bgld_eulerspiral* es_;
   double valid_gap_node_radius_;
   vcl_vector<vsol_point_2d_sptr> region_plus_points_;
   vcl_vector<vsol_point_2d_sptr> region_minus_points_;
@@ -159,7 +159,7 @@ protected:
   double color_gamma_, curve_gamma_;
   double curve_power_, curve_offset_, curve_length_gamma_;
 
-  vcl_vector<dbgl_eulerspiral*> ess_;
+  vcl_vector<bgld_eulerspiral*> ess_;
 
   //: keep a list of degree two nodes which have become obsolete after performing a gap transform
   //  idea is to do "one closure per end node"

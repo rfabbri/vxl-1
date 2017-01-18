@@ -4,7 +4,7 @@
 //:
 // \file
 // \brief Shock graph class
-//        This class is temporary and is really supposed to be subclassed from dbgrl_graph class
+//        This class is temporary and is really supposed to be subclassed from bgrld_graph class
 // \author Amir Tamrakar
 // \date 06/08/05
 //
@@ -15,7 +15,7 @@
 // \endverbatim
 
 #include <vcl_set.h>
-#include <dbgrl/dbgrl_graph.h>
+#include <bgrld/bgrld_graph.h>
 
 #include <dbsk2d/dbsk2d_shock_node.h>
 #include <dbsk2d/dbsk2d_shock_edge.h>
@@ -27,7 +27,7 @@
 // to infinity for external shock branches. But this is not allowed for extrinsic
 // shock graphs because the graphs are sampled in a finite window. Thus the termination
 // nodes can be TERMINAL type.
-class dbsk2d_shock_graph : public dbgrl_graph<dbsk2d_shock_node , dbsk2d_shock_edge> 
+class dbsk2d_shock_graph : public bgrld_graph<dbsk2d_shock_node , dbsk2d_shock_edge> 
 {
 public:
 

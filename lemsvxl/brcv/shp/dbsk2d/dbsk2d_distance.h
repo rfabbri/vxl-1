@@ -1,4 +1,4 @@
-// This is basic/dbgl/algo/dbsk2d_distance.h
+// This is bbasd/bgld/algo/dbsk2d_distance.h
 
 #ifndef dbsk2d_distance_h_
 #define dbsk2d_distance_h_

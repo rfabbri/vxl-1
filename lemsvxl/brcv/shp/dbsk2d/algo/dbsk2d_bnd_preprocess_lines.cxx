@@ -12,7 +12,7 @@
 #include <vgl/vgl_closest_point.h>
 #include <vgl/vgl_distance.h>
 
-#include <dbgl/algo/dbgl_closest_point.h>
+#include <bgld/algo/bgld_closest_point.h>
 #include <dbsk2d/dbsk2d_bnd_utils.h>
 
 
@@ -97,7 +97,7 @@ intersect_bnd_lines(vcl_list<dbsk2d_bnd_edge_sptr >* tainted_lines,
       // when the two lines intersect, find the intersection 
       // and modify the edges
       double ratio1, ratio2;
-      double d = dbgl_closest_point::lineseg_lineseg(p11, p12, p21, p22, ratio1, ratio2);
+      double d = bgld_closest_point::lineseg_lineseg(p11, p12, p21, p22, ratio1, ratio2);
 
       //////////////////////////////////////
       // safety check

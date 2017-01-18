@@ -13,9 +13,9 @@
 #include <vsol/vsol_line_2d.h>
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_polygon_2d.h>
-#include <dbsol/dbsol_interp_curve_2d.h>
+#include <bsold/bsold_interp_curve_2d.h>
 
-#include <dbgl/algo/dbgl_circ_arc.h>
+#include <bgld/algo/bgld_circ_arc.h>
 
 #include <vtol/vtol_list_functions.h>
 
@@ -26,7 +26,7 @@
 #include <dbsk2d/dbsk2d_ishock_barc.h>
 #include <dbsk2d/dbsk2d_bnd_utils.h>
 
-#include <dbgl/algo/dbgl_closest_point.h>
+#include <bgld/algo/bgld_closest_point.h>
 
 // -----------------------------------------------------------
 //: Constructor
@@ -430,7 +430,7 @@ intersect_arc_with_cell_grids(const vgl_point_2d<double >& arc_p1,
   const vgl_point_2d<double >& arc_p2, double arc_k,
   vcl_list<double >& intersections) const
 {
-  dbgl_circ_arc arc(arc_p1, arc_p2, arc_k);
+  bgld_circ_arc arc(arc_p1, arc_p2, arc_k);
   double h = arc.height();
 
   // compute an over-estimated bounding box of this arc
@@ -466,7 +466,7 @@ intersect_arc_with_cell_grids(const vgl_point_2d<double >& arc_p1,
     {
       vcl_vector<double > line_ratios;
       vcl_vector<double > arc_ratios;
-      double d = dbgl_closest_point::lineseg_to_circular_arc(line_list[i], arc,
+      double d = bgld_closest_point::lineseg_to_circular_arc(line_list[i], arc,
         line_ratios, arc_ratios);
 
       if (d == 0) // INTERSECTION !!!!
@@ -788,7 +788,7 @@ break_long_arc_edges(double tol)
     dbsk2d_ishock_barc* left_barc = static_cast<dbsk2d_ishock_barc* >(e->left_bcurve());
     dbsk2d_ishock_barc* right_barc = static_cast<dbsk2d_ishock_barc* >(e->right_bcurve());
 
-    dbgl_circ_arc arc(left_barc->start(), left_barc->end(), left_barc->curvature());
+    bgld_circ_arc arc(left_barc->start(), left_barc->end(), left_barc->curvature());
 
 
     // intersection locations
@@ -1231,7 +1231,7 @@ add_a_polygon(const vsol_polygon_2d_sptr& polygon,
 // add in as a polyline
 //\TODO: use more advanced interpolation algorithm to interpolate as a polyarcs
 dbsk2d_bnd_contour_sptr dbsk2d_boundary::
-add_an_interp_curve_2d( const dbsol_interp_curve_2d_sptr& curve, 
+add_an_interp_curve_2d( const bsold_interp_curve_2d_sptr& curve, 
                              bool preproc_needed)
 {
   // check existence
@@ -1313,7 +1313,7 @@ add_connected_arcs( const vcl_vector<vgl_point_2d<double > > &vertices,
   vcl_vector<dbsk2d_bnd_edge_sptr > bnd_edges;
   for (unsigned int i=0; i<bv_list.size()-1; ++i)
   {
-    dbgl_circ_arc arc(bv_list[i]->point(), bv_list[i+1]->point(), curvatures[i]);
+    bgld_circ_arc arc(bv_list[i]->point(), bv_list[i+1]->point(), curvatures[i]);
     
     //if (vnl_math::abs(curvatures[i]) < MIN_ARC_CURVATURE)
     if (arc.height()<B_EPSILON)

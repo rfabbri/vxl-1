@@ -1,11 +1,11 @@
-// This is basic/dbgl/algo/dbsk2d_closest_point.cxx
+// This is bbasd/bgld/algo/dbsk2d_closest_point.cxx
 //:
 // \file
 
 #include "dbsk2d_closest_point.h"
 
 #include <vgl/vgl_closest_point.h>
-#include <dbgl/algo/dbgl_closest_point.h>
+#include <bgld/algo/bgld_closest_point.h>
 
 #include <dbsk2d/dbsk2d_bnd_edge.h>
 #include <dbsk2d/dbsk2d_bnd_contour.h>
@@ -164,7 +164,7 @@ bnd_line_to_bnd_line(const dbsk2d_bnd_edge_sptr& bnd_line1,
 {
   dbsk2d_assert(bnd_line1->left_bcurve()->is_a_line());
   dbsk2d_assert(bnd_line2->left_bcurve()->is_a_line());
-  return dbgl_closest_point::lineseg_lineseg(
+  return bgld_closest_point::lineseg_lineseg(
     bnd_line1->left_bcurve()->start(), bnd_line1->left_bcurve()->end(),
     bnd_line2->left_bcurve()->start(), bnd_line2->left_bcurve()->end(),
     ratio1, ratio2);

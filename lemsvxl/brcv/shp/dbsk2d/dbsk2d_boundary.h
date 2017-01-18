@@ -23,7 +23,7 @@
 #include <vsol/vsol_polyline_2d_sptr.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
 
-#include <dbsol/dbsol_interp_curve_2d_sptr.h>
+#include <bsold/bsold_interp_curve_2d_sptr.h>
 
 #include <dbsk2d/dbsk2d_bnd_contour.h>
 #include <dbsk2d/dbsk2d_bnd_contour_sptr.h>
@@ -359,7 +359,7 @@ public:
   // add in as a polyline
   // \TODO: use more advanced interpolation algorithm to interpolate as a polyarcs
   dbsk2d_bnd_contour_sptr add_an_interp_curve_2d(
-    const dbsol_interp_curve_2d_sptr& curve, bool preproc_needed = true);
+    const bsold_interp_curve_2d_sptr& curve, bool preproc_needed = true);
 
   //: Add a set of connected lines to the boundary. 
   // This is a common function for add_a_polyline and add_a_polygon

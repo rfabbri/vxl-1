@@ -16,7 +16,7 @@
 #include <vcl_list.h>
 #include <vbl/vbl_smart_ptr.h>
 
-#include <dbgrl/dbgrl_vertex.h>
+#include <bgrld/bgrld_vertex.h>
 #include <dbsk2d/dbsk2d_base_gui_geometry.h>
 #include <dbsk2d/dbsk2d_bnd_contour_sptr.h>
 #include <dbsk2d/dbsk2d_shock_fragment_sptr.h>
@@ -80,7 +80,7 @@ public:
 //  This is the class that is to be used by people who
 //  don't need to know the detailed workings of shock computation
 class dbsk2d_shock_node : public dbsk2d_base_gui_geometry, 
-                          public dbgrl_vertex<dbsk2d_shock_edge> 
+                          public bgrld_vertex<dbsk2d_shock_edge> 
 {
 public:
   enum shock_node_type { 

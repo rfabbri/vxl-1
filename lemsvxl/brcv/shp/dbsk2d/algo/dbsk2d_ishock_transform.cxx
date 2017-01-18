@@ -18,7 +18,7 @@
 // vnl random
 #include <vnl/vnl_random.h>
 // save cem
-#include <dbsol/dbsol_file_io.h>
+#include <bsold/bsold_file_io.h>
 
 //: constructor
 //: base class for shock transforms
@@ -460,7 +460,7 @@ void dbsk2d_ishock_transform::write_shock_boundary(vcl_string filename)
         vsol_list.push_back(obj);
     }
 
-    dbsol_save_cem(vsol_list, filename);
+    bsold_save_cem(vsol_list, filename);
 
 }
 

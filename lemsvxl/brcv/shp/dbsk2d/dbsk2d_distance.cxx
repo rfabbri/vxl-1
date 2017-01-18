@@ -1,4 +1,4 @@
-// This is basic/dbgl/algo/dbsk2d_distance.cxx
+// This is bbasd/bgld/algo/dbsk2d_distance.cxx
 //:
 // \file
 
@@ -11,7 +11,7 @@
 
 //#include <vgl/vgl_closest_point.h>
 //
-#include <dbgl/algo/dbgl_distance.h>
+#include <bgld/algo/bgld_distance.h>
 
 #include <dbsk2d/dbsk2d_bnd_edge.h>
 
@@ -82,7 +82,7 @@ bnd_line_to_bnd_line(const dbsk2d_bnd_edge_sptr& bnd_line1,
   dbsk2d_assert (bnd_line1->left_bcurve()->is_a_line());
   dbsk2d_assert (bnd_line2->left_bcurve()->is_a_line());
   // the start and end of left_bcurve coincide with the start and end of the bnd_edge
-  return dbgl_distance::lineseg_lineseg(bnd_line1->left_bcurve()->start(), bnd_line1->left_bcurve()->end(),
+  return bgld_distance::lineseg_lineseg(bnd_line1->left_bcurve()->start(), bnd_line1->left_bcurve()->end(),
     bnd_line2->left_bcurve()->start(), bnd_line2->left_bcurve()->end());
 }
 

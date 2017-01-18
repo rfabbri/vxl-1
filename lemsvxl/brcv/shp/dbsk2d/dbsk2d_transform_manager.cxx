@@ -30,7 +30,7 @@
 #include <vgl/algo/vgl_fit_lines_2d.h>
 #include <vsol/vsol_polyline_2d.h>
 
-#include <dbsol/algo/dbsol_curve_algs.h>
+#include <bsold/algo/bsold_curve_algs.h>
 
 #include <dbsk2d/dbsk2d_shock_graph_sptr.h>
 #include <dbsk2d/dbsk2d_xshock_edge.h>
@@ -1289,7 +1289,7 @@ void dbsk2d_transform_manager::grid_points(
 
 }
 
-double dbsk2d_transform_manager::color_gradient(dbsol_interp_curve_2d_sptr c,
+double dbsk2d_transform_manager::color_gradient(bsold_interp_curve_2d_sptr c,
                                                 int region_width)
 {
     double distance=0.0;
@@ -1297,7 +1297,7 @@ double dbsk2d_transform_manager::color_gradient(dbsol_interp_curve_2d_sptr c,
     double length_threshold=c->length();
     vcl_vector<double> tangents;
     vcl_vector<vsol_point_2d_sptr> curve_pts;
-    dbsol_curve_algs::sample(*c, delta, curve_pts, tangents, 
+    bsold_curve_algs::sample(*c, delta, curve_pts, tangents, 
                              length_threshold);  
 
     for (unsigned j = 0; j < curve_pts.size(); j++) 
@@ -1361,9 +1361,9 @@ double dbsk2d_transform_manager::likelihood(
     }
 
     vcl_vector<vsol_point_2d_sptr > region_pts;                 
-    dbsol_interp_curve_2d_sptr c = new dbsol_interp_curve_2d();
-    dbsol_curve_algs::interpolate_linear(c.ptr(), pts, false);
-    dbsol_curve_algs::sample_region_along_curve(*c, 
+    bsold_interp_curve_2d_sptr c = new bsold_interp_curve_2d();
+    bsold_curve_algs::interpolate_linear(c.ptr(), pts, false);
+    bsold_curve_algs::sample_region_along_curve(*c, 
                                                 region_pts, 
                                                 0.3f, 
                                                 c->length(), 
@@ -1444,9 +1444,9 @@ double dbsk2d_transform_manager::likelihood(
     }
 
     vcl_vector<vsol_point_2d_sptr > region_pts;                 
-    dbsol_interp_curve_2d_sptr c = new dbsol_interp_curve_2d();
-    dbsol_curve_algs::interpolate_linear(c.ptr(), pts, false);
-    dbsol_curve_algs::sample_region_along_curve(*c, 
+    bsold_interp_curve_2d_sptr c = new bsold_interp_curve_2d();
+    bsold_curve_algs::interpolate_linear(c.ptr(), pts, false);
+    bsold_curve_algs::sample_region_along_curve(*c, 
                                                 region_pts, 
                                                 0.3f, 
                                                 c->length(), 
@@ -1630,9 +1630,9 @@ double dbsk2d_transform_manager::transform_probability(
         pts.push_back(pt );
     }
 
-    dbsol_interp_curve_2d_sptr c = new dbsol_interp_curve_2d();
-    dbsol_curve_algs::interpolate_linear(c.ptr(), pts, false);
-    dbsol_curve_algs::sample(*c,100,pts);
+    bsold_interp_curve_2d_sptr c = new bsold_interp_curve_2d();
+    bsold_curve_algs::interpolate_linear(c.ptr(), pts, false);
+    bsold_curve_algs::sample(*c,100,pts);
 
     if ( gPb_image_ == 0 || c->size() == 0 )
     {
@@ -1690,9 +1690,9 @@ double dbsk2d_transform_manager::transform_probability(
         pts.push_back(input->vertex(i) );
     }
 
-    dbsol_interp_curve_2d_sptr c = new dbsol_interp_curve_2d();
-    dbsol_curve_algs::interpolate_linear(c.ptr(), pts, false);
-    dbsol_curve_algs::sample(*c,100,pts);
+    bsold_interp_curve_2d_sptr c = new bsold_interp_curve_2d();
+    bsold_curve_algs::interpolate_linear(c.ptr(), pts, false);
+    bsold_curve_algs::sample(*c,100,pts);
 
     if ( gPb_image_ == 0 || c->size() == 0 )
     {

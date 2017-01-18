@@ -43,7 +43,7 @@
 #include <vgl/algo/vgl_fit_lines_2d.h>
 #include <vul/vul_timer.h>
 
-#include <dbsol/dbsol_file_io.h>
+#include <bsold/bsold_file_io.h>
 //: Constructor
 dbsk2d_compute_containment_graph_process::
 dbsk2d_compute_containment_graph_process()
@@ -792,7 +792,7 @@ debug_frags(dbsk2d_ishock_graph_sptr ishock_graph,
 
     }
 
-    dbsol_save_cem(vsol_list, coarse_shock);
+    bsold_save_cem(vsol_list, coarse_shock);
 
 
     //then draw the node fragments

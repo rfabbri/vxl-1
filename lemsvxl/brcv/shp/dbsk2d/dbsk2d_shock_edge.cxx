@@ -8,7 +8,7 @@
 //: Constructor
 dbsk2d_shock_edge::dbsk2d_shock_edge(dbsk2d_shock_node_sptr src_node, 
                                      dbsk2d_shock_node_sptr tgt_node) : 
-  dbsk2d_base_gui_geometry(), dbgrl_edge<dbsk2d_shock_node>(src_node, tgt_node), 
+  dbsk2d_base_gui_geometry(), bgrld_edge<dbsk2d_shock_node>(src_node, tgt_node), 
   id_(-1), left_contour_(0), right_contour_(0),
   LsEta_(-1), LeEta_(-1), RsEta_(-1), ReEta_(-1), fragment_(0)
 {

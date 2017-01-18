@@ -7,7 +7,7 @@
 #include <dbsk2d/dbsk2d_shock_node.h>
 
 //: Constructor
-dbsk2d_shock_node::dbsk2d_shock_node() : dbsk2d_base_gui_geometry(), dbgrl_vertex<dbsk2d_shock_edge>(), 
+dbsk2d_shock_node::dbsk2d_shock_node() : dbsk2d_base_gui_geometry(), bgrld_vertex<dbsk2d_shock_edge>(), 
   id_(-1), pt_(-1.0, -1.0), radius_ (-1), descriptor_list_(0)
 {
 }

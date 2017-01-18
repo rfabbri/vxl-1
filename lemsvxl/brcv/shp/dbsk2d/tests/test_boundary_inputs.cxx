@@ -14,7 +14,7 @@
 
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_polygon_2d.h>
-#include <dbsol/algo/dbsol_curve_algs.h>
+#include <bsold/algo/bsold_curve_algs.h>
 
 #include <dbsk2d/dbsk2d_boundary.h>
 #include <dbsk2d/dbsk2d_boundary_sptr.h>
@@ -108,11 +108,11 @@ void test_boundary_inputs_interp_curve_2d()
   }
 
   // construct the LEMS curve
-  dbsol_interp_curve_2d_sptr curve_1 = new dbsol_interp_curve_2d();
-  dbsol_interp_curve_2d_sptr curve_2 = new dbsol_interp_curve_2d();
+  bsold_interp_curve_2d_sptr curve_1 = new bsold_interp_curve_2d();
+  bsold_interp_curve_2d_sptr curve_2 = new bsold_interp_curve_2d();
 
-  dbsol_curve_algs::interpolate_linear(curve_1.ptr(), pts_1);
-  dbsol_curve_algs::interpolate_linear(curve_2.ptr(), pts_2);
+  bsold_curve_algs::interpolate_linear(curve_1.ptr(), pts_1);
+  bsold_curve_algs::interpolate_linear(curve_2.ptr(), pts_2);
 
   //print out summary of the two curves
   curve_1->print_summary(vcl_cout);

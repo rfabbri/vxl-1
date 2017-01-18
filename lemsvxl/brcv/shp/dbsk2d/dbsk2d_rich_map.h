@@ -22,7 +22,7 @@
 // \verbatim
 //  Modifications
 //
-//  Amir Tamrakar 07/20/05  Adapted this class from dbspi_curve_map
+//  Amir Tamrakar 07/20/05  Adapted this class from bspid_curve_map
 //
 // \endverbatim
 

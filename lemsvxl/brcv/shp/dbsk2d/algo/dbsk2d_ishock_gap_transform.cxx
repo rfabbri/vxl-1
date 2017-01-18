@@ -7,7 +7,7 @@
 #include <dbsk2d/dbsk2d_transform_manager.h>
 #include <dbsk2d/dbsk2d_bnd_utils.h>
 #include <vgl/vgl_line_2d.h>
-#include <dbgl/algo/dbgl_eulerspiral.h>
+#include <bgld/algo/bgld_eulerspiral.h>
 #include <vgl/algo/vgl_fit_lines_2d.h>
 #include <vgl/vgl_lineseg_test.h>
 #include <vgl/vgl_distance.h>
@@ -470,7 +470,7 @@ void dbsk2d_ishock_gap_transform::determine_likelihood()
     vcl_pair<double,double> tangent_pair=this->get_tangent_pairs(bp1,
                                                                  bp2);
     // 2) Compute Euler Spiral
-    dbgl_eulerspiral es(
+    bgld_eulerspiral es(
         bp1->pt(),
         tangent_pair.first,
         bp2->pt(),

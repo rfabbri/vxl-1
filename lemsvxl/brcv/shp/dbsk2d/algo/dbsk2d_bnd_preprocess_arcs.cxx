@@ -10,8 +10,8 @@
 #include <vcl_algorithm.h>
 #include <vgl/vgl_distance.h>
 
-#include <dbgl/algo/dbgl_circ_arc.h>
-#include <dbgl/algo/dbgl_closest_point.h>
+#include <bgld/algo/bgld_circ_arc.h>
+#include <bgld/algo/bgld_closest_point.h>
 
 #include <dbsk2d/dbsk2d_bnd_utils.h>
 #include <dbsk2d/dbsk2d_ishock_barc.h>
@@ -99,7 +99,7 @@ intersect_bnd_arcs(vcl_list<dbsk2d_bnd_edge_sptr >* tainted_arcs,
       // potential intersecting locations
       vcl_vector<double > arc1_ratios;
       vcl_vector<double > arc2_ratios;
-      double d = dbgl_closest_point::circular_arc_to_circular_arc(
+      double d = bgld_closest_point::circular_arc_to_circular_arc(
         p11, p12, k1, p21, p22, k2, arc1_ratios, arc2_ratios);
 
       // ignore distance above threshold
@@ -110,8 +110,8 @@ intersect_bnd_arcs(vcl_list<dbsk2d_bnd_edge_sptr >* tainted_arcs,
       }
 
       // form two geometric arcs equivalent to the edges
-      dbgl_circ_arc arc1(p11, p12, k1);
-      dbgl_circ_arc arc2(p21, p22, k2);
+      bgld_circ_arc arc1(p11, p12, k1);
+      bgld_circ_arc arc2(p21, p22, k2);
 
       // form junction at intersection. 
       // ignore intersection at endpoints. It is handled in a different fnct.
@@ -186,7 +186,7 @@ remove_duplicate_arcs(vcl_list<dbsk2d_bnd_edge_sptr >& bnd_arcs)
 
     dbsk2d_ishock_barc* barc1 = 
       static_cast<dbsk2d_ishock_barc* >(e1->left_bcurve());
-    dbgl_circ_arc arc1(barc1->start(), barc1->end(), barc1->curvature());
+    bgld_circ_arc arc1(barc1->start(), barc1->end(), barc1->curvature());
 
 
     // iterate through the rest of the edges
@@ -217,7 +217,7 @@ remove_duplicate_arcs(vcl_list<dbsk2d_bnd_edge_sptr >& bnd_arcs)
       dbsk2d_ishock_barc* barc2 =
         (dir == 1) ? static_cast<dbsk2d_ishock_barc* >(e2->left_bcurve()) : 
         static_cast<dbsk2d_ishock_barc* >(e2->right_bcurve());
-      dbgl_circ_arc arc2(barc2->start(), barc2->end(), barc2->curvature());
+      bgld_circ_arc arc2(barc2->start(), barc2->end(), barc2->curvature());
 
       // computing max distance difference depending on signs of curvatures 
       // of two arcs, given they share same end points

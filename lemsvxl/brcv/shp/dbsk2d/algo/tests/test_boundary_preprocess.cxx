@@ -8,7 +8,7 @@
 
 #include <vsol/vsol_polyline_2d.h>
 //#include <vsol/vsol_polygon_2d.h>
-//#include <dbsol/algo/dbsol_curve_algs.h>
+//#include <bsold/algo/bsold_curve_algs.h>
 //
 #include <dbsk2d/dbsk2d_boundary.h>
 #include <dbsk2d/dbsk2d_boundary_sptr.h>

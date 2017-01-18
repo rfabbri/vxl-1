@@ -9,8 +9,8 @@
 
 #include <vgl/vgl_distance.h>
 
-#include <dbgl/algo/dbgl_distance.h>
-#include <dbgl/algo/dbgl_closest_point.h>
+#include <bgld/algo/bgld_distance.h>
+#include <bgld/algo/bgld_closest_point.h>
 #include <dbsk2d/dbsk2d_bnd_utils.h>
 
 
@@ -378,7 +378,7 @@ lines_need_preprocessing(const vcl_list<dbsk2d_bnd_edge_sptr >& bnd_lines)
       vgl_point_2d<double > p21 = e2->point1();
       vgl_point_2d<double > p22 = e2->point2();
 
-      double d = dbgl_distance::lineseg_lineseg(p11, p12, p21, p22);
+      double d = bgld_distance::lineseg_lineseg(p11, p12, p21, p22);
       if (d <= dbsk2d_bnd_preprocess ::distance_tol)
       {
         return true;

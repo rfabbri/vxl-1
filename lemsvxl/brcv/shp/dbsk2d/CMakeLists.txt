@@ -4,7 +4,7 @@
 include_directories( ${VXL_BRL_INCLUDE_DIR} )
 include_directories( ${VXL_GEL_INCLUDE_DIR} )
 include_directories( ${VXL_MUL_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/breye1 )
+include_directories(${VXD_BRLD_INCLUDE_DIR})
 
 
 project ( dbsk2d )
@@ -142,7 +142,7 @@ aux_source_directory(Templates dbsk2d_sources)
 
 add_library(dbsk2d ${dbsk2d_sources})
 
-target_link_libraries( dbsk2d dbgrl vgl vcl vnl vbl vtol dbsol dbsol_algo )
+target_link_libraries( dbsk2d bgrld vgl vcl vnl vbl vtol bsold bsold_algo )
 
 # Processing Library
 add_subdirectory(pro)
