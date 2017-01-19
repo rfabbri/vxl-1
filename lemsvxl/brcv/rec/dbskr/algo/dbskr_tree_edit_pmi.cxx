@@ -1,4 +1,4 @@
-#include <dbskr/dbskr_tree_edit_pmi.h>
+#include <dbskr/algo/dbskr_tree_edit_pmi.h>
 #include <dbskr/dbskr_tree.h>
 #include <dbskr/dbskr_dpmatch.h>
 #include <vcl_cstdlib.h>

@@ -14,6 +14,8 @@ include_directories( ${lems_SOURCE_DIR}/brcv/seg )
 include_directories( ${lems_SOURCE_DIR}/contrib )
 include_directories( ${VXL_MUL_INCLUDE_DIR} )
 include_directories( ${VXL_RPL_INCLUDE_DIR} )
+include_directories(${VXD_BRLD_INCLUDE_DIR})
+
 
 set(dbskr_sources
 dbskr_tree.h                dbskr_tree.cxx
@@ -21,7 +23,6 @@ dbskr_tree_sptr.h
 #dbskr_tree_edit_mi.h       dbskr_tree_edit_mi.cxx
 #dbskr_te_acost.h           dbskr_te_acost.cxx
 dbskr_tree_edit.h           dbskr_tree_edit.cxx
-dbskr_tree_edit_pmi.h       dbskr_tree_edit_pmi.cxx
 dbskr_tree_edit_coarse.h    dbskr_tree_edit_coarse.cxx
 dbskr_tree_edit_combined.h  dbskr_tree_edit_combined.cxx
 
@@ -61,7 +62,7 @@ aux_source_directory(Templates dbskr_sources)
 
 add_library(dbskr  ${dbskr_sources})
 
-target_link_libraries(dbskr dbsk2d_algo vnl bsold_algo dbcvr dbru dbdet_algo rgrl)
+target_link_libraries(dbskr dbsk2d_algo vnl bsold_algo dbcvr dbdet_algo dbinfo rgrl)
 #target_link_libraries(dbskr dbsk2d_algo vnl bsold_algo dbcvr dbru dbdet_algo brct rgrl)
 
 # algorithms library

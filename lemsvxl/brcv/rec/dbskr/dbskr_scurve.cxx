@@ -11,6 +11,7 @@
 #include <bgld/algo/bgld_eulerspiral.h>
 
 #include <vcl_cstdio.h>
+#include <vcl_cmath.h>
 #include <vcl_algorithm.h>
 #include <vcl_sstream.h>
 #include <dbsk2d/dbsk2d_geometry_utils.h>
@@ -33,16 +34,17 @@ double fixAngleMPiPi_new(double a) {
 double angleDiff_new(double a1, double  a2) {
   a1=fixAngleMPiPi_new(a1);
   a2=fixAngleMPiPi_new(a2);
-  if (a1 > a2)
+  if (a1 > a2) {
     if (a1-a2 > vnl_math::pi)
       return a1-a2-2*vnl_math::pi;
     else
       return a1-a2;
-  else if (a2 > a1)
+  } else if (a2 > a1) {
     if (a1-a2 < -vnl_math::pi)
       return a1-a2+2*vnl_math::pi;
     else
       return a1-a2;
+  }
   return 0.0;
 }
 
@@ -752,7 +754,7 @@ bool dbskr_scurve::intrinsinc_pt(vgl_point_2d<double> pt,
 
         double angle_ray = angle(start_ray.direction(),
                                  pt_ray.direction());
-        if ( isnan(angle_ray) )
+        if ( std::isnan(angle_ray) )
         {
             angle_ray=0.0;
         }
@@ -1637,7 +1639,7 @@ void dbskr_scurve::set_euler_spiral_completion_length()
     // vcl_cout<<"Es length: "<<es.length()<<vcl_endl;
 
     virtual_length_ = es.length();
-    if ( isinf(es.length()) || isnan(es.length()))
+    if ( std::isinf(es.length()) || std::isnan(es.length()))
     {
         virtual_length_=0.0;
     }

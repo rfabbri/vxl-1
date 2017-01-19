@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// This is brcv/rec/dbskr/dbskr_tree_edit_pmi.h
+// This is brcv/rec/dbskr/algo/dbskr_tree_edit_pmi.h
 //:
 // \file
 // \brief This version of edit distance algorithm derives from the original
