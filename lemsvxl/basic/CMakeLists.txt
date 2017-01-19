@@ -32,7 +32,9 @@ add_subdirectory( dbgl )
 add_subdirectory( dbil3d ) 
 
 # The Development Brown Video Library
-add_subdirectory( dbvidl )
+# Deprecated: use vidl2/dbvidl2
+# If you need it, build vidl1 in vxd/old
+# add_subdirectory( dbvidl )
 
 # The Development Brown Video Streaming Library
 add_subdirectory( dbvidl2 ) 
