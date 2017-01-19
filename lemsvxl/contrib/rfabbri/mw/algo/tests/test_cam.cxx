@@ -2,13 +2,13 @@
 
 #include <vcl_limits.h>
 #include <vcl_vector.h>
-#include <mw/mw_util.h>
+#include <bmcsd/bmcsd_util.h>
 #include <vnl/vnl_double_3x3.h>
 #include <vcl_algorithm.h>
 #include <vgl/vgl_homg_point_3d.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_point_2d.h>
-#include <dbdif/algo/dbdif_data.h>
+#include <bdifd/algo/bdifd_data.h>
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vpgl/vpgl_calibration_matrix.h>
 #include <vpgl/algo/vpgl_camera_compute.h>
@@ -168,16 +168,16 @@ synthesize_3d_2d_corresps()
 //  bool res; // return values
 
   vnl_double_3x3 Kmatrix;
-  dbdif_turntable::internal_calib_olympus(Kmatrix, x_max_scaled, crop_origin_x_, crop_origin_y_);
+  bdifd_turntable::internal_calib_olympus(Kmatrix, x_max_scaled, crop_origin_x_, crop_origin_y_);
   vpgl_calibration_matrix<double> K(Kmatrix);
 
 
   vpgl_perspective_camera<double> *P;
   // ground-truth cam
-  P = dbdif_turntable::camera_olympus(0, K);
+  P = bdifd_turntable::camera_olympus(0, K);
 
-  vcl_vector<vcl_vector<dbdif_3rd_order_point_3d> > crv3d;
-  dbdif_data::space_curves_olympus_turntable( crv3d );
+  vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > crv3d;
+  bdifd_data::space_curves_olympus_turntable( crv3d );
 
   unsigned npts=0;
   for (unsigned nc=0; nc < crv3d.size(); nc++)
@@ -208,11 +208,11 @@ synthesize_3d_2d_corresps()
 
   // Now project the 3D points
 
-  vcl_vector<dbdif_camera> cam_gt_(1);
+  vcl_vector<bdifd_camera> cam_gt_(1);
   cam_gt_[0].set_p(*P);
 
-  vcl_vector<vcl_vector<dbdif_3rd_order_point_2d> > crv2d_gt;
-  dbdif_data::project_into_cams(crv3d, cam_gt_, crv2d_gt);
+  vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > crv2d_gt;
+  bdifd_data::project_into_cams(crv3d, cam_gt_, crv2d_gt);
 
   vnl_matrix<double> pts2d(npts,2);
   for (unsigned i=0; i < crv2d_gt[0].size(); ++i) {

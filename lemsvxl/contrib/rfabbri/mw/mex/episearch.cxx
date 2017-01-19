@@ -2,7 +2,7 @@
 #include <vcl_streambuf.h>
 #include <math.h>
 #include <mw/algo/mw_qualitative_epipolar.h>
-#include <mw/mw_util.h>
+#include <bmcsd/bmcsd_util.h>
 #include <vgl/vgl_polygon.h>
 #include <vpgl/algo/vpgl_fm_compute_ransac.h>
 #include <vpgl/algo/vpgl_fm_compute_8_point.h>

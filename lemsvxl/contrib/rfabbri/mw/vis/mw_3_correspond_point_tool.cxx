@@ -17,7 +17,7 @@
 #include <bpro1/bpro1_storage_sptr.h>
 #define MANAGER bvis1_manager::instance()
 
-#include <dvpgl/pro/dvpgl_camera_storage.h>
+#include <vpgld/pro/vpgld_camera_storage.h>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_projection_inspector.h>
@@ -28,25 +28,25 @@
 #include <bvis1/bvis1_manager.h>
 #include <bvis1/bvis1_view_tableau.h>
 
-#include <mw/mw_util.h>
-#include <dbdif/dbdif_rig.h>
+#include <bmcsd/bmcsd_util.h>
+#include <bdifd/bdifd_rig.h>
 #include <mw/mw_subpixel_point_set.h>
-#include <mw/mw_epi_interceptor.h>
+#include <becld/becld_epiline_interceptor.h>
 //#include <mw/algo/mw_point_matcher.h>
 
-#include <dbdif/dbdif_rig.h>
-#include <dbdif/algo/dbdif_data.h>
-#include <dbdif/dbdif_rig.h>
+#include <bdifd/bdifd_rig.h>
+#include <bdifd/algo/bdifd_data.h>
+#include <bdifd/bdifd_rig.h>
 #include <mw/algo/mw_match_position_band.h>
 #include <mw/algo/mw_match_tangent_band.h>
 
-#include <mw/pro/mw_discrete_corresp_storage_3.h>
-#include <dbgl/algo/dbgl_eulerspiral.h>
+#include <mw/pro/bmcsd_discrete_corresp_storage_3.h>
+#include <bgld/algo/bgld_eulerspiral.h>
 
 
 // Just for running symmetric epipolar triplet builder:
-#include <mw/mw_discrete_corresp_n.h>
-#include <dbecl/dbecl_epiband_builder.h>
+#include <bmcsd/bmcsd_discrete_corresp_n.h>
+#include <becld/becld_epiband_builder.h>
 #include <mw/algo/mw_point_matcher.h>
 
 mw_3_correspond_point_tool::
@@ -148,12 +148,12 @@ activate()
     vcl_cout << "Generating curves..."; vcl_cout.flush();
 
     if (synthetic_) {
-      dbdif_data::space_curves_ctspheres( crv3d_gt_ );
+      bdifd_data::space_curves_ctspheres( crv3d_gt_ );
       // hardcode nrows, ncols:
       nrows_ = 314;
       ncols_ = 600;
     } else  {
-      dbdif_data::space_curves_olympus_turntable( crv3d_gt_ );
+      bdifd_data::space_curves_olympus_turntable( crv3d_gt_ );
       nrows_ = 400;
       ncols_ = 500;
       angle_cam_.resize(nviews_);
@@ -162,25 +162,25 @@ activate()
       angle_cam_[2] = 90;
       unsigned  crop_origin_x_ = 450;
       unsigned  crop_origin_y_ = 1750;
-      dbdif_turntable::internal_calib_olympus(srm_K_, ncols_, crop_origin_x_, crop_origin_y_);
+      bdifd_turntable::internal_calib_olympus(srm_K_, ncols_, crop_origin_x_, crop_origin_y_);
       vpgl_calibration_matrix<double> K(srm_K_);
       cam_gt_.resize(nviews_);
       for (unsigned i=0; i < nviews_; ++i) {
         vpgl_perspective_camera<double> *P = 
-              dbdif_turntable::camera_olympus(angle_cam_[i], K);
+              bdifd_turntable::camera_olympus(angle_cam_[i], K);
         cam_gt_[i].set_p(*P);
       }
     }
 
 
-    dbdif_data::project_into_cams_without_epitangency(crv3d_gt_, cam_gt_, crv2d_gt_, vnl_math::pi/6.0);
+    bdifd_data::project_into_cams_without_epitangency(crv3d_gt_, cam_gt_, crv2d_gt_, vnl_math::pi/6.0);
     vcl_cout << "done.\n";
 
     gt_3_.set_size(crv2d_gt_[0].size(), crv2d_gt_[1].size(), crv2d_gt_[2].size());
     assert (crv2d_gt_[0].size() == crv2d_gt_[1].size() && crv2d_gt_[1].size() == crv2d_gt_[2].size());
 
     for (unsigned i=0; i < crv2d_gt_[0].size(); ++i) {
-      gt_3_.l_.put(i,i,i,mw_match_attribute());
+      gt_3_.l_.put(i,i,i,bmcsd_match_attribute());
     }
 
     vcl_cout << "Hashing ground truth...";
@@ -258,7 +258,7 @@ get_corresp()
   corr_3_ = p_sto_3_->corresp();
   if(!corr_3_) {
     vcl_cerr << "Empty storage - allocating data" << vcl_endl;
-    corr_3_ = new mw_discrete_corresp_3(vsols_[0].size(),vsols_[1].size(),vsols_[2].size());
+    corr_3_ = new bmcsd_discrete_corresp_3(vsols_[0].size(),vsols_[1].size(),vsols_[2].size());
     p_sto_3_->set_corresp(corr_3_); // storage deletes it
   } else {
     if (corr_3_->n0() != vsols_[0].size() || corr_3_->n1() != vsols_[1].size() ||corr_3_->n2() != vsols_[2].size()) {
@@ -429,7 +429,7 @@ handle_key(vgui_key key)
           break;
 
         bool  stat = 
-          corr_3_->l_.put(p_query_id_[0],p_query_id_[1],p_query_id_[2], mw_match_attribute());
+          corr_3_->l_.put(p_query_id_[0],p_query_id_[1],p_query_id_[2], bmcsd_match_attribute());
 
         if (stat) {
           vcl_cout << "Inserting " 
@@ -587,10 +587,10 @@ handle_key(vgui_key key)
 
 //        vpgl_calibration_matrix<double> K(srm_K_);
 //        vpgl_perspective_camera<double> *P = 
-//              dbdif_turntable::camera_olympus(srm_angle_, K);
+//              bdifd_turntable::camera_olympus(srm_angle_, K);
         srm_cam_.set_p(cam_[2].Pr_);
 
-        dbdif_3rd_order_point_2d p1,p2;
+        bdifd_3rd_order_point_2d p1,p2;
         if (crv2d_gt_.size()) {
           // get hold of p1, theta1, k1, kdot1
           p1 = crv2d_gt_[0][p_query_id_[0]];
@@ -634,10 +634,10 @@ handle_key(vgui_key key)
           p2.valid = true;
         }
 
-        dbdif_3rd_order_point_2d p1_w, p2_w;
+        bdifd_3rd_order_point_2d p1_w, p2_w;
 
         // get hold of Prec
-        dbdif_rig rig(cam_[0].Pr_,cam_[1].Pr_);
+        bdifd_rig rig(cam_[0].Pr_,cam_[1].Pr_);
 
         rig.cam[0].img_to_world(&p1,&p1_w);
         rig.cam[1].img_to_world(&p2,&p2_w);
@@ -655,7 +655,7 @@ handle_key(vgui_key key)
         // theta1 = theta(view3) 
 
         bool valid;
-        dbdif_3rd_order_point_2d p_rec_reproj = srm_cam_.project_to_image(srm_Prec_,&valid);
+        bdifd_3rd_order_point_2d p_rec_reproj = srm_cam_.project_to_image(srm_Prec_,&valid);
 
 //        vcl_cout << "HERE: p_rec_reproj.K: " << p_rec_reproj.k
 //                 << " p_rec_reproj.T[0]: " << p_rec_reproj.t[0] 
@@ -665,13 +665,13 @@ handle_key(vgui_key key)
 //                 << " p_rec_reproj.Gama[1]: " << p_rec_reproj.gama[1]
 //                 << " p_rec_reproj.Gama[2]: " << p_rec_reproj.gama[2] << vcl_endl;
 
-        dbdif_3rd_order_point_3d gt_Prec;
-        dbdif_3rd_order_point_2d p_rec_reproj_gt;
+        bdifd_3rd_order_point_3d gt_Prec;
+        bdifd_3rd_order_point_2d p_rec_reproj_gt;
         if (synthetic_ || synthetic_olympus_) {
           // same for g-t cameras
           //
           // get hold of Prec
-          dbdif_rig rig_gt(cam_gt_[0].Pr_,cam_gt_[1].Pr_);
+          bdifd_rig rig_gt(cam_gt_[0].Pr_,cam_gt_[1].Pr_);
 
           rig_gt.cam[0].img_to_world(&p1,&p1_w);
           rig_gt.cam[1].img_to_world(&p2,&p2_w);
@@ -823,13 +823,13 @@ handle_mouse_event_at_view_1(
 
     /*
     if (synthetic_ || synthetic_olympus_) {
-      dbdif_3rd_order_point_2d &p1 = crv2d_gt_[0][p_query_id_[0]];
-      dbdif_3rd_order_point_2d &p2 = crv2d_gt_[1][idx];
+      bdifd_3rd_order_point_2d &p1 = crv2d_gt_[0][p_query_id_[0]];
+      bdifd_3rd_order_point_2d &p2 = crv2d_gt_[1][idx];
 
-      dbdif_3rd_order_point_2d p1_w, p2_w;
-      dbdif_3rd_order_point_3d P_rec;
+      bdifd_3rd_order_point_2d p1_w, p2_w;
+      bdifd_3rd_order_point_3d P_rec;
 
-      dbdif_rig rig(cam_[0].Pr_,cam_[1].Pr_);
+      bdifd_rig rig(cam_[0].Pr_,cam_[1].Pr_);
 
       rig.cam[0].img_to_world(&p1,&p1_w);
       rig.cam[1].img_to_world(&p2,&p2_w);
@@ -850,18 +850,18 @@ handle_mouse_event_at_view_1(
         bool found = find_crv3d_idx(idx, i_crv, i_pt);
         if (found) {
           assert(i_crv < crv3d_gt_.size() && i_pt < crv3d_gt_[i_crv].size());
-          dbdif_3rd_order_point_3d &P = crv3d_gt_[i_crv][i_pt];
+          bdifd_3rd_order_point_3d &P = crv3d_gt_[i_crv][i_pt];
           printf("gnd-truth      --  K: %8g\t(R=%8g),\tKdot:%8g,\tTau:%8g\tSpeed:%8g\tGamma3dot:%8g\n", P.K, 1./P.K, P.Kdot, P.Tau, 1.0/rig.cam[0].speed(P), P.Gamma_3dot_abs());
           double depth_gnd = dot_product(P.Gama - cam_[0].c, cam_[0].F);
           vcl_cout << "gnd-truth      --  Point(world coords): " << P.Gama << "\tnorm: "  << P.Gama.two_norm()<< "\tdepth: " << depth_gnd << vcl_endl;
 
           // angle of reprojection with the edgel in 3rd view
           bool valid;
-          dbdif_3rd_order_point_2d p3_reproj = cam_[2].project_to_image(P_rec,&valid);
+          bdifd_3rd_order_point_2d p3_reproj = cam_[2].project_to_image(P_rec,&valid);
           vcl_cout << "gnd-truth      --  reproj tangent: " << p3_reproj.t <<"\tview3 tangent: " << crv2d_gt_[2][p_query_id_[0]].t 
-            << "\tangle(rad): " << vcl_acos(mw_util::clump_to_acos(p3_reproj.t[0]*(crv2d_gt_[2][p_query_id_[0]].t[0]) + p3_reproj.t[1]*(crv2d_gt_[2][p_query_id_[0]].t[1]))) << vcl_endl;
+            << "\tangle(rad): " << vcl_acos(bmcsd_util::clump_to_acos(p3_reproj.t[0]*(crv2d_gt_[2][p_query_id_[0]].t[0]) + p3_reproj.t[1]*(crv2d_gt_[2][p_query_id_[0]].t[1]))) << vcl_endl;
           double dotprod = p3_reproj.t[0]*(crv2d_gt_[2][p_query_id_[0]].t[0]) + p3_reproj.t[1]*(crv2d_gt_[2][p_query_id_[0]].t[1]);
-          vcl_cout << "gnd-truth      --  dotprod tangent clumped: " << mw_util::clump_to_acos(dotprod) << "\t> one?" << ((dotprod > 1)?"yes":"no") << vcl_endl;
+          vcl_cout << "gnd-truth      --  dotprod tangent clumped: " << bmcsd_util::clump_to_acos(dotprod) << "\t> one?" << ((dotprod > 1)?"yes":"no") << vcl_endl;
           
         } else {
           vcl_cout << "WARNING: Not found among ground-truth!\n";
@@ -924,13 +924,13 @@ handle_mouse_event_at_view_2(
     query_is_corresp_ = true;
 
     if (synthetic_ || synthetic_olympus_) {
-      dbdif_3rd_order_point_2d &p1 = crv2d_gt_[0][p_query_id_[0]];
-      dbdif_3rd_order_point_2d &p2 = crv2d_gt_[1][idx];
+      bdifd_3rd_order_point_2d &p1 = crv2d_gt_[0][p_query_id_[0]];
+      bdifd_3rd_order_point_2d &p2 = crv2d_gt_[1][idx];
 
-      dbdif_3rd_order_point_2d p1_w, p2_w;
-      dbdif_3rd_order_point_3d P_rec;
+      bdifd_3rd_order_point_2d p1_w, p2_w;
+      bdifd_3rd_order_point_3d P_rec;
 
-      dbdif_rig rig(cam_[0].Pr_,cam_[1].Pr_);
+      bdifd_rig rig(cam_[0].Pr_,cam_[1].Pr_);
 
       rig.cam[0].img_to_world(&p1,&p1_w);
       rig.cam[1].img_to_world(&p2,&p2_w);
@@ -951,18 +951,18 @@ handle_mouse_event_at_view_2(
         bool found = find_crv3d_idx(idx, i_crv, i_pt);
         if (found) {
           assert(i_crv < crv3d_gt_.size() && i_pt < crv3d_gt_[i_crv].size());
-          dbdif_3rd_order_point_3d &P = crv3d_gt_[i_crv][i_pt];
+          bdifd_3rd_order_point_3d &P = crv3d_gt_[i_crv][i_pt];
           printf("gnd-truth      --  K: %8g\t(R=%8g),\tKdot:%8g,\tTau:%8g\tSpeed:%8g\tGamma3dot:%8g\n", P.K, 1./P.K, P.Kdot, P.Tau, 1.0/rig.cam[0].speed(P), P.Gamma_3dot_abs());
           double depth_gnd = dot_product(P.Gama - cam_[0].c, cam_[0].F);
           vcl_cout << "gnd-truth      --  Point(world coords): " << P.Gama << "\tnorm: "  << P.Gama.two_norm()<< "\tdepth: " << depth_gnd << vcl_endl;
 
           // angle of reprojection with the edgel in 3rd view
           bool valid;
-          dbdif_3rd_order_point_2d p3_reproj = cam_[2].project_to_image(P_rec,&valid);
+          bdifd_3rd_order_point_2d p3_reproj = cam_[2].project_to_image(P_rec,&valid);
           vcl_cout << "gnd-truth      --  reproj tangent: " << p3_reproj.t <<"\tview3 tangent: " << crv2d_gt_[2][p_query_id_[0]].t 
-            << "\tangle(rad): " << vcl_acos(mw_util::clump_to_acos(p3_reproj.t[0]*(crv2d_gt_[2][p_query_id_[0]].t[0]) + p3_reproj.t[1]*(crv2d_gt_[2][p_query_id_[0]].t[1]))) << vcl_endl;
+            << "\tangle(rad): " << vcl_acos(bmcsd_util::clump_to_acos(p3_reproj.t[0]*(crv2d_gt_[2][p_query_id_[0]].t[0]) + p3_reproj.t[1]*(crv2d_gt_[2][p_query_id_[0]].t[1]))) << vcl_endl;
           double dotprod = p3_reproj.t[0]*(crv2d_gt_[2][p_query_id_[0]].t[0]) + p3_reproj.t[1]*(crv2d_gt_[2][p_query_id_[0]].t[1]);
-          vcl_cout << "gnd-truth      --  dotprod tangent clumped: " << mw_util::clump_to_acos(dotprod) << "\t> one?" << ((dotprod > 1)?"yes":"no") << vcl_endl;
+          vcl_cout << "gnd-truth      --  dotprod tangent clumped: " << bmcsd_util::clump_to_acos(dotprod) << "\t> one?" << ((dotprod > 1)?"yes":"no") << vcl_endl;
           
         } else {
           vcl_cout << "WARNING: Not found among ground-truth!\n";
@@ -1036,10 +1036,10 @@ handle_corresp_query_at_view_0
 
   // show epipolar angle
   if (synthetic_ || synthetic_olympus_) {
-    dbdif_3rd_order_point_2d &p1 = crv2d_gt_[0][p_query_id_[0]];
+    bdifd_3rd_order_point_2d &p1 = crv2d_gt_[0][p_query_id_[0]];
 
-    dbdif_rig rig(cam_[0].Pr_,cam_[1].Pr_);
-    double epipolar_angle = dbdif_rig::angle_with_epipolar_line(p1.t,p1.gama,rig.f12);
+    bdifd_rig rig(cam_[0].Pr_,cam_[1].Pr_);
+    double epipolar_angle = bdifd_rig::angle_with_epipolar_line(p1.t,p1.gama,rig.f12);
     epipolar_angle *= 180.0/vnl_math::pi;
 
     vcl_cout << "epi angle: " << epipolar_angle << "deg" << vcl_endl;
@@ -1145,10 +1145,10 @@ handle_corresp_inspection_at_view_1
 
   // show epipolar angle
   if (synthetic_ || synthetic_olympus_) {
-    dbdif_3rd_order_point_2d &p1 = crv2d_gt_[1][p1_idx];
+    bdifd_3rd_order_point_2d &p1 = crv2d_gt_[1][p1_idx];
 
-    dbdif_rig rig(cam_[1].Pr_,cam_[0].Pr_);
-    double epipolar_angle = dbdif_rig::angle_with_epipolar_line(p1.t,p1.gama,rig.f12);
+    bdifd_rig rig(cam_[1].Pr_,cam_[0].Pr_);
+    double epipolar_angle = bdifd_rig::angle_with_epipolar_line(p1.t,p1.gama,rig.f12);
     epipolar_angle *= 180.0/vnl_math::pi;
 
     vcl_cout << "epi angle: " << epipolar_angle << "deg" << vcl_endl;
@@ -1201,7 +1201,7 @@ handle_corresp_inspection_at_view_1
 //: This fn. depends on the correspondence structure implementation.
 // TODO: sort contents of lists according to cost
 void mw_3_correspond_point_tool::
-get_candidates_from_p0(const mw_discrete_corresp_3 &c, unsigned idx, vcl_list<unsigned> &p1_l, vcl_list<unsigned> &p2_l)
+get_candidates_from_p0(const bmcsd_discrete_corresp_3 &c, unsigned idx, vcl_list<unsigned> &p1_l, vcl_list<unsigned> &p2_l)
 {
   vcl_vector<bool> p1_in,p2_in;
 
@@ -1261,12 +1261,12 @@ find_crv3d_idx(unsigned idx, unsigned &i_crv, unsigned &i_pt) const
   return false;
 }
 
-dbgl_eulerspiral * mw_3_correspond_point_tool::
-get_new_eulerspiral(const dbdif_3rd_order_point_2d &p) const
+bgld_eulerspiral * mw_3_correspond_point_tool::
+get_new_eulerspiral(const bdifd_3rd_order_point_2d &p) const
 {
   vgl_point_2d<double> start_pt(p.gama[0], p.gama[1]);
-  double start_angle = mw_util::angle0To2Pi (vcl_atan2 (p.t[1],p.t[0]));
-  return new dbgl_eulerspiral(start_pt, start_angle, p.k, p.kdot, 3);
+  double start_angle = bmcsd_util::angle0To2Pi (vcl_atan2 (p.t[1],p.t[0]));
+  return new bgld_eulerspiral(start_pt, start_angle, p.k, p.kdot, 3);
 }
 
 void mw_3_correspond_point_tool::
@@ -1285,11 +1285,11 @@ srm_draw_eulerspiral()
       // regenerate cam
       vpgl_calibration_matrix<double> K(srm_K_);
       vpgl_perspective_camera<double> *P = 
-            dbdif_turntable::camera_olympus(srm_angle_, K);
+            bdifd_turntable::camera_olympus(srm_angle_, K);
       srm_cam_.set_p(*P);
 
       bool valid;
-      dbdif_3rd_order_point_2d p_rec_reproj = srm_cam_.project_to_image(srm_Prec_,&valid);
+      bdifd_3rd_order_point_2d p_rec_reproj = srm_cam_.project_to_image(srm_Prec_,&valid);
 
       if (valid) {
         vcl_cout << "Angle: " << srm_angle_ << "deg\n";
@@ -1317,7 +1317,7 @@ srm_draw_eulerspiral()
         bool found = find_crv3d_idx(p_query_id_[0], i_crv, i_pt);
         if (found) {
           assert(i_crv < crv3d_gt_.size() && i_pt < crv3d_gt_[i_crv].size());
-          dbdif_3rd_order_point_3d &P = crv3d_gt_[i_crv][i_pt];
+          bdifd_3rd_order_point_3d &P = crv3d_gt_[i_crv][i_pt];
           printf("SRM: P gnd-truth   --  K: %8g\t(R=%8g),\tKdot:%8g,\tTau:%8g\tEnergy(Gama3dot):%8g\n", P.K, 1./P.K, P.Kdot, P.Tau, P.Gamma_3dot_abs());
           double depth_gnd = dot_product(P.Gama - cam_[0].c, cam_[0].F);
           vcl_cout << "SRM: P gnd-truth   --    Point(world coords): " << P.Gama << "\tnorm: "  << P.Gama.two_norm()<< "\tdepth: " << depth_gnd << vcl_endl;
@@ -1344,7 +1344,7 @@ srm_draw_eulerspiral()
           vp.reserve(crv3d_gt_[i_crv].size());
           for (unsigned i_pt=0; i_pt < crv3d_gt_[i_crv].size(); i_pt+=4) {
             bool valid;
-            dbdif_3rd_order_point_2d srm_p = srm_cam_.project_to_image(crv3d_gt_[i_crv][i_pt], &valid);
+            bdifd_3rd_order_point_2d srm_p = srm_cam_.project_to_image(crv3d_gt_[i_crv][i_pt], &valid);
             if (valid) {
               vp.push_back(new vsol_point_2d(srm_p.gama[0],srm_p.gama[1]));
             }
@@ -1367,7 +1367,7 @@ run_stereo_matcher_1pt(mw_point_matcher::trinocular_DG_constraint constr)
   // Apply symmetric tangential constraint
   mw_point_matcher m(cam_);
 
-  vcl_vector<vcl_vector<dbdif_3rd_order_point_2d> > crv2d;
+  vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > crv2d;
   build_point_tangents_from_edgels(crv2d,vsols_orig_cache_);
 
   m.trinocular_DG_costs_3(
@@ -1419,7 +1419,7 @@ trinocular_epipolar_candidates_1pt()
   vsols_1pt[0].clear();
   vsols_1pt[0].push_back(vsols_[0][p_idx_[0]]);
 
-  mw_discrete_corresp_n corr_1pt; // all triplets containing point p_idx_[0]
+  bmcsd_discrete_corresp_n corr_1pt; // all triplets containing point p_idx_[0]
   //: todo initialize 
   vcl_vector<unsigned> npts(nviews_);
   for (unsigned i=0; i < nviews_; ++i) {
@@ -1435,14 +1435,14 @@ trinocular_epipolar_candidates_1pt()
   //first point to the right index.
   
   delete corr_3_;
-  corr_3_ = new mw_discrete_corresp_3(vsols_[0].size(),vsols_[1].size(),vsols_[2].size());
+  corr_3_ = new bmcsd_discrete_corresp_3(vsols_[0].size(),vsols_[1].size(),vsols_[2].size());
   p_sto_3_->set_corresp(corr_3_);
 
   // convert to 3-corresp structure + right index of 1st point
-  vbl_sparse_array_base<mw_match_attribute,mw_ntuplet>::const_iterator p;
+  vbl_sparse_array_base<bmcsd_match_attribute,bmcsd_ntuplet>::const_iterator p;
 
   for (p = corr_1pt.l_.begin(); p != corr_1pt.l_.end(); ++p) {
-    const mw_ntuplet &tup = p->first;
+    const bmcsd_ntuplet &tup = p->first;
     assert(tup[0] == 0);
     corr_3_->l_.put(p_idx_[0],tup[1],tup[2],p->second);
   }
@@ -1493,7 +1493,7 @@ trinocular_epipolar_candidates_1pt_with_tangent_constraint()
 
 
 
-  vcl_vector<vcl_vector< dbdif_3rd_order_point_2d > > dg_points_1pt;
+  vcl_vector<vcl_vector< bdifd_3rd_order_point_2d > > dg_points_1pt;
   {
     vcl_vector<vcl_vector< vsol_line_2d_sptr > > vsols_line_1pt;
     vsols_line_1pt = vsols_orig_cache_;
@@ -1508,7 +1508,7 @@ trinocular_epipolar_candidates_1pt_with_tangent_constraint()
   vsols_1pt[0].clear();
   vsols_1pt[0].push_back(vsols_[0][p_idx_[0]]);
 
-  mw_discrete_corresp_n corr_1pt; // all triplets containing point p_idx_[0]
+  bmcsd_discrete_corresp_n corr_1pt; // all triplets containing point p_idx_[0]
   //: todo initialize 
   vcl_vector<unsigned> npts(nviews_);
   for (unsigned i=0; i < nviews_; ++i) {
@@ -1524,14 +1524,14 @@ trinocular_epipolar_candidates_1pt_with_tangent_constraint()
   //first point to the right index.
   
   delete corr_3_;
-  corr_3_ = new mw_discrete_corresp_3(vsols_[0].size(),vsols_[1].size(),vsols_[2].size());
+  corr_3_ = new bmcsd_discrete_corresp_3(vsols_[0].size(),vsols_[1].size(),vsols_[2].size());
   p_sto_3_->set_corresp(corr_3_);
 
   // convert to 3-corresp structure + right index of 1st point
-  vbl_sparse_array_base<mw_match_attribute,mw_ntuplet>::const_iterator p;
+  vbl_sparse_array_base<bmcsd_match_attribute,bmcsd_ntuplet>::const_iterator p;
 
   for (p = corr_1pt.l_.begin(); p != corr_1pt.l_.end(); ++p) {
-    const mw_ntuplet &tup = p->first;
+    const bmcsd_ntuplet &tup = p->first;
     assert(tup[0] == 0);
     corr_3_->l_.put(p_idx_[0],tup[1],tup[2],p->second);
   }
@@ -1568,7 +1568,7 @@ reproject_from_triplet()
 
   // - compute reprojections
 
-  vcl_vector<dbdif_3rd_order_point_2d> dg_pt(3);
+  vcl_vector<bdifd_3rd_order_point_2d> dg_pt(3);
 
   //    - TODO add reprojection objects like in eulerspiral case.
   
@@ -1590,20 +1590,20 @@ reproject_from_triplet()
     dg_pt[iv].valid = true;
   }
   
-  const dbdif_3rd_order_point_2d &pt_img1 = dg_pt[0];
-  const dbdif_3rd_order_point_2d &pt_img2 = dg_pt[1];
-  const dbdif_3rd_order_point_2d &pt_img3 = dg_pt[2];
+  const bdifd_3rd_order_point_2d &pt_img1 = dg_pt[0];
+  const bdifd_3rd_order_point_2d &pt_img2 = dg_pt[1];
+  const bdifd_3rd_order_point_2d &pt_img3 = dg_pt[2];
 
-  dbdif_rig rig12(cam_[0].Pr_, cam_[1].Pr_);
-  dbdif_rig rig13(cam_[0].Pr_, cam_[2].Pr_);
-  dbdif_rig rig23(cam_[1].Pr_, cam_[2].Pr_);
+  bdifd_rig rig12(cam_[0].Pr_, cam_[1].Pr_);
+  bdifd_rig rig13(cam_[0].Pr_, cam_[2].Pr_);
+  bdifd_rig rig23(cam_[1].Pr_, cam_[2].Pr_);
 
   // -- 3
   
-  dbdif_3rd_order_point_3d Prec;
-  dbdif_3rd_order_point_2d p_rep3; 
+  bdifd_3rd_order_point_3d Prec;
+  bdifd_3rd_order_point_2d p_rep3; 
   bool valid;
-  valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img2, p_rep3, Prec, cam_[2], rig12);
+  valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img2, p_rep3, Prec, cam_[2], rig12);
 
   // Output reconstruction from views 0,1
   vcl_cout << vcl_setprecision(20);
@@ -1613,20 +1613,20 @@ reproject_from_triplet()
 
   // -- 2
 
-  dbdif_3rd_order_point_2d p_rep2; 
-  valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img3, p_rep2, Prec, cam_[1], rig13);
+  bdifd_3rd_order_point_2d p_rep2; 
+  valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img3, p_rep2, Prec, cam_[1], rig13);
   
   // -- 1
 
-  dbdif_3rd_order_point_2d p_rep1; 
-  valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img2, pt_img3, p_rep1, Prec, cam_[0], rig23);
+  bdifd_3rd_order_point_2d p_rep1; 
+  valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img2, pt_img3, p_rep1, Prec, cam_[0], rig23);
   
   // compare p_rep and pt_img3
-  double dt3 = vcl_acos(mw_util::clump_to_acos(p_rep3.t[0]*pt_img3.t[0] + p_rep3.t[1]*pt_img3.t[1]));
+  double dt3 = vcl_acos(bmcsd_util::clump_to_acos(p_rep3.t[0]*pt_img3.t[0] + p_rep3.t[1]*pt_img3.t[1]));
   // compare p_rep and pt_img2
-  double dt2 = vcl_acos(mw_util::clump_to_acos(p_rep2.t[0]*pt_img2.t[0] + p_rep2.t[1]*pt_img2.t[1]));
+  double dt2 = vcl_acos(bmcsd_util::clump_to_acos(p_rep2.t[0]*pt_img2.t[0] + p_rep2.t[1]*pt_img2.t[1]));
   // compare p_rep and pt_img1
-  double dt1 = vcl_acos(mw_util::clump_to_acos(p_rep1.t[0]*pt_img1.t[0] + p_rep1.t[1]*pt_img1.t[1]));
+  double dt1 = vcl_acos(bmcsd_util::clump_to_acos(p_rep1.t[0]*pt_img1.t[0] + p_rep1.t[1]*pt_img1.t[1]));
 
   vcl_cout << "dt1, dt2, dt3 = " << dt1*(180./vnl_math::pi) << "\t" << dt2*(180./vnl_math::pi) << "\t" << dt3*(180./vnl_math::pi) << " (deg)" << vcl_endl;
 
@@ -1668,7 +1668,7 @@ reproject_from_triplet_allcorr()
     vcl_cout << "C: " << cam_[v].c << vcl_endl;
   }
 
-  vbl_sparse_array_3d<mw_match_attribute>::const_iterator p;
+  vbl_sparse_array_3d<bmcsd_match_attribute>::const_iterator p;
   for (p = corr_3_->l_.begin(); p != corr_3_->l_.end(); ++p) {
       vcl_cout   << '(' << (*p).first.first
           << ',' << (*p).first.second
@@ -1683,7 +1683,7 @@ reproject_from_triplet_allcorr()
       
       // Output image points and tangents
 
-      vcl_vector<dbdif_3rd_order_point_2d> dg_pt(3);
+      vcl_vector<bdifd_3rd_order_point_2d> dg_pt(3);
       for (unsigned iv=0; iv < nviews_; ++iv) {
         dg_pt[iv].gama[0]  = vsols_[iv][p_id[iv]]->x();
         dg_pt[iv].gama[1]  = vsols_[iv][p_id[iv]]->y();
@@ -1705,20 +1705,20 @@ reproject_from_triplet_allcorr()
         dg_pt[iv].kdot = 0;
         dg_pt[iv].valid = true;
       }
-      const dbdif_3rd_order_point_2d &pt_img1 = dg_pt[0];
-      const dbdif_3rd_order_point_2d &pt_img2 = dg_pt[1];
-      const dbdif_3rd_order_point_2d &pt_img3 = dg_pt[2];
+      const bdifd_3rd_order_point_2d &pt_img1 = dg_pt[0];
+      const bdifd_3rd_order_point_2d &pt_img2 = dg_pt[1];
+      const bdifd_3rd_order_point_2d &pt_img3 = dg_pt[2];
 
-      dbdif_rig rig12(cam_[0].Pr_, cam_[1].Pr_);
-      dbdif_rig rig13(cam_[0].Pr_, cam_[2].Pr_);
-      dbdif_rig rig23(cam_[1].Pr_, cam_[2].Pr_);
+      bdifd_rig rig12(cam_[0].Pr_, cam_[1].Pr_);
+      bdifd_rig rig13(cam_[0].Pr_, cam_[2].Pr_);
+      bdifd_rig rig23(cam_[1].Pr_, cam_[2].Pr_);
 
       // -- 3
       
-      dbdif_3rd_order_point_3d Prec;
-      dbdif_3rd_order_point_2d p_rep3; 
+      bdifd_3rd_order_point_3d Prec;
+      bdifd_3rd_order_point_2d p_rep3; 
       bool valid;
-      valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img2, p_rep3, Prec, cam_[2], rig12);
+      valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img2, p_rep3, Prec, cam_[2], rig12);
 
       // Output reconstruction from views 0,1
       vcl_cout << vcl_setprecision(20);
@@ -1728,20 +1728,20 @@ reproject_from_triplet_allcorr()
 
       // -- 2
 
-      dbdif_3rd_order_point_2d p_rep2; 
-      valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img3, p_rep2, Prec, cam_[1], rig13);
+      bdifd_3rd_order_point_2d p_rep2; 
+      valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img3, p_rep2, Prec, cam_[1], rig13);
       
       // -- 1
 
-      dbdif_3rd_order_point_2d p_rep1; 
-      valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img2, pt_img3, p_rep1, Prec, cam_[0], rig23);
+      bdifd_3rd_order_point_2d p_rep1; 
+      valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img2, pt_img3, p_rep1, Prec, cam_[0], rig23);
       
       // compare p_rep and pt_img3
-      double dt3 = vcl_acos(mw_util::clump_to_acos(p_rep3.t[0]*pt_img3.t[0] + p_rep3.t[1]*pt_img3.t[1]));
+      double dt3 = vcl_acos(bmcsd_util::clump_to_acos(p_rep3.t[0]*pt_img3.t[0] + p_rep3.t[1]*pt_img3.t[1]));
       // compare p_rep and pt_img2
-      double dt2 = vcl_acos(mw_util::clump_to_acos(p_rep2.t[0]*pt_img2.t[0] + p_rep2.t[1]*pt_img2.t[1]));
+      double dt2 = vcl_acos(bmcsd_util::clump_to_acos(p_rep2.t[0]*pt_img2.t[0] + p_rep2.t[1]*pt_img2.t[1]));
       // compare p_rep and pt_img1
-      double dt1 = vcl_acos(mw_util::clump_to_acos(p_rep1.t[0]*pt_img1.t[0] + p_rep1.t[1]*pt_img1.t[1]));
+      double dt1 = vcl_acos(bmcsd_util::clump_to_acos(p_rep1.t[0]*pt_img1.t[0] + p_rep1.t[1]*pt_img1.t[1]));
 
       vcl_cout << "dt1, dt2, dt3 = " << dt1*(180./vnl_math::pi) << "\t" << dt2*(180./vnl_math::pi) << "\t" << dt3*(180./vnl_math::pi) << " (deg)" << vcl_endl;
 
@@ -1790,7 +1790,7 @@ reproject_from_triplet_allcorr()
       
       // Output image points and tangents
 
-      vcl_vector<dbdif_3rd_order_point_2d> dg_pt(3);
+      vcl_vector<bdifd_3rd_order_point_2d> dg_pt(3);
       for (unsigned iv=0; iv < nviews_; ++iv) {
         dg_pt[iv].gama[0]  = vsols_[iv][p_id[iv]]->x();
         dg_pt[iv].gama[1]  = vsols_[iv][p_id[iv]]->y();
@@ -1812,20 +1812,20 @@ reproject_from_triplet_allcorr()
         dg_pt[iv].kdot = 0;
         dg_pt[iv].valid = true;
       }
-      const dbdif_3rd_order_point_2d &pt_img1 = dg_pt[0];
-      const dbdif_3rd_order_point_2d &pt_img2 = dg_pt[1];
-      const dbdif_3rd_order_point_2d &pt_img3 = dg_pt[2];
+      const bdifd_3rd_order_point_2d &pt_img1 = dg_pt[0];
+      const bdifd_3rd_order_point_2d &pt_img2 = dg_pt[1];
+      const bdifd_3rd_order_point_2d &pt_img3 = dg_pt[2];
 
-      dbdif_rig rig12(cam_[0].Pr_, cam_[1].Pr_);
-      dbdif_rig rig13(cam_[0].Pr_, cam_[2].Pr_);
-      dbdif_rig rig23(cam_[1].Pr_, cam_[2].Pr_);
+      bdifd_rig rig12(cam_[0].Pr_, cam_[1].Pr_);
+      bdifd_rig rig13(cam_[0].Pr_, cam_[2].Pr_);
+      bdifd_rig rig23(cam_[1].Pr_, cam_[2].Pr_);
 
       // -- 3
       
-      dbdif_3rd_order_point_3d Prec;
-      dbdif_3rd_order_point_2d p_rep3; 
+      bdifd_3rd_order_point_3d Prec;
+      bdifd_3rd_order_point_2d p_rep3; 
       bool valid;
-      valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img2, p_rep3, Prec, cam_[2], rig12);
+      valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img2, p_rep3, Prec, cam_[2], rig12);
 
       // Output reconstruction from views 0,1
       vcl_cout << Prec.Gama << vcl_endl;
@@ -1833,20 +1833,20 @@ reproject_from_triplet_allcorr()
 
       // -- 2
 
-      dbdif_3rd_order_point_2d p_rep2; 
-      valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img3, p_rep2, Prec, cam_[1], rig13);
+      bdifd_3rd_order_point_2d p_rep2; 
+      valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img3, p_rep2, Prec, cam_[1], rig13);
       
       // -- 1
 
-      dbdif_3rd_order_point_2d p_rep1; 
-      valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img2, pt_img3, p_rep1, Prec, cam_[0], rig23);
+      bdifd_3rd_order_point_2d p_rep1; 
+      valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img2, pt_img3, p_rep1, Prec, cam_[0], rig23);
       
       // compare p_rep and pt_img3
-      double dt3 = vcl_acos(mw_util::clump_to_acos(p_rep3.t[0]*pt_img3.t[0] + p_rep3.t[1]*pt_img3.t[1]));
+      double dt3 = vcl_acos(bmcsd_util::clump_to_acos(p_rep3.t[0]*pt_img3.t[0] + p_rep3.t[1]*pt_img3.t[1]));
       // compare p_rep and pt_img2
-      double dt2 = vcl_acos(mw_util::clump_to_acos(p_rep2.t[0]*pt_img2.t[0] + p_rep2.t[1]*pt_img2.t[1]));
+      double dt2 = vcl_acos(bmcsd_util::clump_to_acos(p_rep2.t[0]*pt_img2.t[0] + p_rep2.t[1]*pt_img2.t[1]));
       // compare p_rep and pt_img1
-      double dt1 = vcl_acos(mw_util::clump_to_acos(p_rep1.t[0]*pt_img1.t[0] + p_rep1.t[1]*pt_img1.t[1]));
+      double dt1 = vcl_acos(bmcsd_util::clump_to_acos(p_rep1.t[0]*pt_img1.t[0] + p_rep1.t[1]*pt_img1.t[1]));
 
       vcl_cout << dt1*(180./vnl_math::pi) << " " << dt2*(180./vnl_math::pi) << " " << dt3*(180./vnl_math::pi) << vcl_endl;
   }
@@ -1886,7 +1886,7 @@ color_pts0_with_correspondents()
 
 void mw_3_correspond_point_tool::
 build_point_tangents_from_edgels(
-    vcl_vector<vcl_vector<dbdif_3rd_order_point_2d> > &dg,
+    vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > &dg,
     const vcl_vector<vcl_vector<vsol_line_2d_sptr> > &v
     )
 {

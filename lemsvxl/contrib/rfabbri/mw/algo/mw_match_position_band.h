@@ -9,9 +9,9 @@
 //
 #include <vsol/vsol_point_2d_sptr.h>
 #include <vsol/vsol_box_2d_sptr.h>
-#include <dbecl/dbecl_epiband.h>
-#include <mw/mw_discrete_corresp_n.h>
-#include <dbecl/dbecl_epiband_iterator.h>
+#include <becld/becld_epiband.h>
+#include <bmcsd/bmcsd_discrete_corresp_n.h>
+#include <becld/becld_epiband_iterator.h>
 
 
 class mw_subpixel_point_set;
@@ -26,7 +26,7 @@ public:
 
   mw_match_position_band (
     const vcl_vector<vcl_vector< vsol_point_2d_sptr > > &points,
-    mw_discrete_corresp_n *corr,
+    bmcsd_discrete_corresp_n *corr,
     // --- the following params may be provided by the user if efficiency is
     // needed. However, they make this function implementation-dependent.
     //: fm[i][k] = fundamental matrix from view i to view k
@@ -43,7 +43,7 @@ public:
 
 public:
   const vcl_vector<vcl_vector< vsol_point_2d_sptr > > &points_;
-  mw_discrete_corresp_n *corr_;
+  bmcsd_discrete_corresp_n *corr_;
   const vcl_vector< vcl_vector<vpgl_fundamental_matrix<double> > > &fm_;
   const vcl_vector<mw_subpixel_point_set *> &sp_;
   double err_pos_;
@@ -51,11 +51,11 @@ public:
   unsigned nviews_;
   vcl_vector<unsigned> npts_;
   vcl_vector<bool> is_specified_;
-  vcl_vector< vcl_vector<dbecl_epiband *> > epband_;
-  mw_ntuplet tup_;
+  vcl_vector< vcl_vector<becld_epiband *> > epband_;
+  bmcsd_ntuplet tup_;
   vcl_vector<vsol_point_2d_sptr> specified_pts_;
   vcl_vector<vsol_box_2d_sptr> bbox_;  //:< bounding boxes for all points
-  vcl_vector<dbecl_grid_cover_window*> w_;
+  vcl_vector<becld_grid_cover_window*> w_;
 };
 
 #endif // mw_match_position_band_h

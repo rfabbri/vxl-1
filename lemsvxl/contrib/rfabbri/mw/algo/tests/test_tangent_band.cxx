@@ -1,14 +1,14 @@
 #include <testlib/testlib_test.h>
-#include <mw/mw_util.h>
+#include <bmcsd/bmcsd_util.h>
 #include <mw/algo/mw_stereo_app.h>
-#include <dbdif/algo/dbdif_transfer.h>
+#include <bdifd/algo/bdifd_transfer.h>
 
 
 static bool test_band_reprojection();
 
 static void test_has_tangent_band_intersection();
 
-//: Currently tests both IO and other functions of mw_discrete_corresp_3
+//: Currently tests both IO and other functions of bmcsd_discrete_corresp_3
 MAIN( test_tangent_band )
 {
   START ("Stereo correspondence algorithms that use epipolar bands");
@@ -180,7 +180,7 @@ test_contains_all_gt_synth(mw_stereo_app &app)
 {
   bool contains_all_gt = true;
   for (unsigned i=0; i < app.vsols_[0].size(); ++i) {
-    mw_ntuplet tup(app.nviews_, i);
+    bmcsd_ntuplet tup(app.nviews_, i);
     if (!app.corr_ep_n_.l_.fullp(tup)) {
       contains_all_gt = false;
       vcl_cout << "Epipolar geometry missed corresp: " << tup << vcl_endl;
@@ -206,24 +206,24 @@ test_band_transfer(mw_stereo_app &app)
     const double t_err = vnl_math::pi/180.; // 1 deg
 
 
-    dbdif_2nd_order_point_2d p0 = app.crv2d_gt_[0][i]; //: slicing
-    dbdif_2nd_order_point_2d p1 = app.crv2d_gt_[1][i]; //: slicing
-    dbdif_2nd_order_point_2d p2_gt = app.crv2d_gt_[2][i]; //: slicing
-    dbdif_2nd_order_point_2d p2_reproj;
+    bdifd_2nd_order_point_2d p0 = app.crv2d_gt_[0][i]; //: slicing
+    bdifd_2nd_order_point_2d p1 = app.crv2d_gt_[1][i]; //: slicing
+    bdifd_2nd_order_point_2d p2_gt = app.crv2d_gt_[2][i]; //: slicing
+    bdifd_2nd_order_point_2d p2_reproj;
 
     double theta_min_reproj,theta_max_reproj;
 
-    dbdif_rig rig(app.cam_[0].Pr_, app.cam_[1].Pr_);
+    bdifd_rig rig(app.cam_[0].Pr_, app.cam_[1].Pr_);
 
-    dbdif_transfer::transfer_tangent_band(
+    bdifd_transfer::transfer_tangent_band(
         p0,p1,t_err, &theta_min_reproj,&theta_max_reproj, 
         app.cam_[2], rig );
 
     double perturb = 1 * t_err;
     double s = vcl_sin(perturb);
     double c = vcl_cos(perturb);
-    p2_gt.t = mw_vector_3d (c*p2_gt.t[0] + s*p2_gt.t[1], -s*p2_gt.t[0] + c*p2_gt.t[1], 0);
-    bool has_intersection = dbdif_transfer::has_tangent_band_intersection(p2_gt.t[0],p2_gt.t[1],t_err, theta_min_reproj,theta_max_reproj);
+    p2_gt.t = bmcsd_vector_3d (c*p2_gt.t[0] + s*p2_gt.t[1], -s*p2_gt.t[0] + c*p2_gt.t[1], 0);
+    bool has_intersection = bdifd_transfer::has_tangent_band_intersection(p2_gt.t[0],p2_gt.t[1],t_err, theta_min_reproj,theta_max_reproj);
 
     TEST("transferred and ground truth are compatible",has_intersection,true);
   }
@@ -238,7 +238,7 @@ test_has_tangent_band_intersection()
   // Test cases from may 15 2008 notes
   //
   {
-    mw_vector_2d t(1,1);
+    bmcsd_vector_2d t(1,1);
 
     t.normalize();
     tx = t[0];
@@ -250,30 +250,30 @@ test_has_tangent_band_intersection()
     double theta_max = 2*vnl_math::pi/3+vnl_math::pi/12;
 
     // Case A
-    has_intersection = dbdif_transfer::has_tangent_band_intersection(tx,ty,t_err, theta_min,theta_max);
+    has_intersection = bdifd_transfer::has_tangent_band_intersection(tx,ty,t_err, theta_min,theta_max);
     TEST("Case A",has_intersection,true); 
 
-    has_intersection = dbdif_transfer::has_tangent_band_intersection(tx,ty,t_err, theta_max,theta_min+vnl_math::pi);
+    has_intersection = bdifd_transfer::has_tangent_band_intersection(tx,ty,t_err, theta_max,theta_min+vnl_math::pi);
     TEST("Case A complement second sector",has_intersection,true); 
 
     // Case B
-    has_intersection = dbdif_transfer::has_tangent_band_intersection(tx,ty,t_err, 0,vnl_math::pi/12);
+    has_intersection = bdifd_transfer::has_tangent_band_intersection(tx,ty,t_err, 0,vnl_math::pi/12);
     TEST("Case B",has_intersection,false); 
     
     // Case C
-    has_intersection = dbdif_transfer::has_tangent_band_intersection(-ty,tx,0.5*(vnl_math::pi-vnl_math::pi/6), theta_max,theta_min+vnl_math::pi);
+    has_intersection = bdifd_transfer::has_tangent_band_intersection(-ty,tx,0.5*(vnl_math::pi-vnl_math::pi/6), theta_max,theta_min+vnl_math::pi);
     TEST("Case C",has_intersection,true); 
     
     // Case D
-    has_intersection = dbdif_transfer::has_tangent_band_intersection(-ty,tx,t_err, vnl_math::pi/4,3*vnl_math::pi/4);
+    has_intersection = bdifd_transfer::has_tangent_band_intersection(-ty,tx,t_err, vnl_math::pi/4,3*vnl_math::pi/4);
     TEST("Case D",has_intersection,true); 
     
     // Case D where the green sector was changed to be outside and including x axis
-    has_intersection = dbdif_transfer::has_tangent_band_intersection(-1,0,t_err/100.0, vnl_math::pi/4,3*vnl_math::pi/4);
+    has_intersection = bdifd_transfer::has_tangent_band_intersection(-1,0,t_err/100.0, vnl_math::pi/4,3*vnl_math::pi/4);
     TEST("Case D2",has_intersection,false); 
     
     // Case E
-    has_intersection = dbdif_transfer::has_tangent_band_intersection(0,1,t_err, 3*vnl_math::pi/4,vnl_math::pi+vnl_math::pi/4);
+    has_intersection = bdifd_transfer::has_tangent_band_intersection(0,1,t_err, 3*vnl_math::pi/4,vnl_math::pi+vnl_math::pi/4);
     TEST("Case E",has_intersection,false); 
 
     t[0] = -1;
@@ -283,7 +283,7 @@ test_has_tangent_band_intersection()
     ty = t[1];
 
     // Case F
-    has_intersection = dbdif_transfer::has_tangent_band_intersection(tx,ty,vnl_math::pi/4 + vnl_math::pi/12, vnl_math::pi-vnl_math::pi/6, vnl_math::pi+vnl_math::pi/6);
+    has_intersection = bdifd_transfer::has_tangent_band_intersection(tx,ty,vnl_math::pi/4 + vnl_math::pi/12, vnl_math::pi-vnl_math::pi/6, vnl_math::pi+vnl_math::pi/6);
     TEST("Case F",has_intersection,true); 
   }
 }

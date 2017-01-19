@@ -3,11 +3,11 @@
 
 #include <vcl_iostream.h>
 
-#include <dbdif/dbdif_rig.h>
+#include <bdifd/bdifd_rig.h>
 #include <mw/algo/mw_match_old.h>
-#include <dbdif/dbdif_analytic.h>
+#include <bdifd/bdifd_analytic.h>
 #include <mw/mw_dist.h>
-#include <dbdif/algo/dbdif_data.h>
+#include <bdifd/algo/bdifd_data.h>
 
 #include <vgl/vgl_homg_point_3d.h>
 #include <vgl/vgl_point_3d.h>
@@ -22,8 +22,8 @@
 #include <vsol/vsol_polyline_2d_sptr.h>
 
 #include <vpgl/vpgl_fundamental_matrix.h>
-#include <dvpgl/pro/dvpgl_camera_storage.h>
-#include <dvpgl/pro/dvpgl_camera_storage_sptr.h>
+#include <vpgld/pro/vpgld_camera_storage.h>
+#include <vpgld/pro/vpgld_camera_storage_sptr.h>
 
 
 static void
@@ -31,7 +31,7 @@ match_contours(
   const vcl_vector<vcl_vector<vsol_point_2d_sptr> >  &con,
   const vcl_vector<vcl_vector<vsol_point_2d_sptr> >  &con_dt,
   const vcl_vector<unsigned> &match,
-  dbdif_rig &rig,
+  bdifd_rig &rig,
   vcl_vector<vcl_vector<vsol_point_2d_sptr> >  &con_match,
   vcl_vector<vcl_vector<bool> > &valid);
 
@@ -40,23 +40,23 @@ define_perturbation(
     double theta, double phi, 
     bool read_params_from_file, 
     bool write_info, 
-    const dbdif_rig &rig, 
-    mw_vector_3d &my_c_t);
+    const bdifd_rig &rig, 
+    bmcsd_vector_3d &my_c_t);
 
 static void 
 define_perturbation(
     double theta, double phi, 
     bool read_params_from_file, 
     bool write_info, 
-    const dbdif_rig &rig, 
-    mw_vector_3d &my_c_t, double mag);
+    const bdifd_rig &rig, 
+    bmcsd_vector_3d &my_c_t, double mag);
 
 
 static void
 mw_sphere_apparent_contour_do_a_camera_pair(
       bool read_params_from_file, bool write_info,
-      dbdif_rig &rig, bool perturb, const mw_vector_3d &my_c_t, const vcl_string &suffix,
-      vcl_vector<vcl_vector<mw_vector_3d> > &crv_3d
+      bdifd_rig &rig, bool perturb, const bmcsd_vector_3d &my_c_t, const vcl_string &suffix,
+      vcl_vector<vcl_vector<bmcsd_vector_3d> > &crv_3d
       );
 
 //: reads 3D levelset image, trace 0-levelset at each slice, do matching
@@ -157,14 +157,14 @@ match_and_reconstruct()
   // Perform intra-contour matching and reconstruction
 
   vnl_double_3x3 Kmatrix;
-  dbdif_turntable::internal_calib_ctspheres(Kmatrix);
+  bdifd_turntable::internal_calib_ctspheres(Kmatrix);
   vpgl_calibration_matrix<double> K(Kmatrix);
   vpgl_perspective_camera<double> *P, *P_dt;
 
-  P    = dbdif_turntable::camera_ctspheres(2, K);
-  P_dt = dbdif_turntable::camera_ctspheres(3, K);
+  P    = bdifd_turntable::camera_ctspheres(2, K);
+  P_dt = bdifd_turntable::camera_ctspheres(3, K);
 
-  dbdif_rig rig(*P,*P_dt);
+  bdifd_rig rig(*P,*P_dt);
 
   delete P; 
   delete P_dt;
@@ -202,7 +202,7 @@ match_and_reconstruct()
   vcl_string ext(".dat");
 
   for (unsigned i=0; i<con.size(); ++i) {
-    vcl_vector<mw_vector_3d> crv_3d;
+    vcl_vector<bmcsd_vector_3d> crv_3d;
     vcl_vector<bool> valid;
 
     rig.reconstruct_3d_occluding_contour(
@@ -258,23 +258,23 @@ mw_sphere_apparent_contour_app_orientation(
   // Define cameras
   
   vnl_double_3x3 Kmatrix;
-  dbdif_turntable::internal_calib_ctspheres(Kmatrix);
+  bdifd_turntable::internal_calib_ctspheres(Kmatrix);
   vpgl_calibration_matrix<double> K(Kmatrix);
 
   vpgl_perspective_camera<double> *P, *P_dt;
 
-  P    = dbdif_turntable::camera_ctspheres(0, K);
-  P_dt = dbdif_turntable::camera_ctspheres(1, K);
+  P    = bdifd_turntable::camera_ctspheres(0, K);
+  P_dt = bdifd_turntable::camera_ctspheres(1, K);
 
-  dbdif_rig rig1(*P,*P_dt);
+  bdifd_rig rig1(*P,*P_dt);
 
   delete P; delete P_dt;
 
 
-  P    = dbdif_turntable::camera_ctspheres(1, K);
-  P_dt = dbdif_turntable::camera_ctspheres(2, K);
+  P    = bdifd_turntable::camera_ctspheres(1, K);
+  P_dt = bdifd_turntable::camera_ctspheres(2, K);
 
-  dbdif_rig rig2(*P,*P_dt);
+  bdifd_rig rig2(*P,*P_dt);
 
   delete P; delete P_dt;
 
@@ -283,7 +283,7 @@ mw_sphere_apparent_contour_app_orientation(
 
 
   double hmin=vcl_numeric_limits<double>::infinity(), theta_min=0, phi_min=0;
-  mw_vector_3d my_c_t; //:< perturbed vector
+  bmcsd_vector_3d my_c_t; //:< perturbed vector
 
   unsigned long n=0;
   for (theta=0; theta<360; theta+=10)
@@ -296,11 +296,11 @@ mw_sphere_apparent_contour_app_orientation(
 
       // MATCH + RECONSTRUCTION
 
-      vcl_vector<vcl_vector<mw_vector_3d> > crv_3d_01;
+      vcl_vector<vcl_vector<bmcsd_vector_3d> > crv_3d_01;
       mw_sphere_apparent_contour_do_a_camera_pair
         (read_params_from_file,  write_info, rig1, perturb, my_c_t, suffix, crv_3d_01);
 
-      vcl_vector<vcl_vector<mw_vector_3d> > crv_3d_12;
+      vcl_vector<vcl_vector<bmcsd_vector_3d> > crv_3d_12;
       mw_sphere_apparent_contour_do_a_camera_pair
         (read_params_from_file, write_info, rig2, perturb, my_c_t, suffix, crv_3d_12);
 
@@ -348,23 +348,23 @@ mw_sphere_apparent_contour_app_magnitude(
   // Define cameras
   
   vnl_double_3x3 Kmatrix;
-  dbdif_turntable::internal_calib_ctspheres(Kmatrix);
+  bdifd_turntable::internal_calib_ctspheres(Kmatrix);
   vpgl_calibration_matrix<double> K(Kmatrix);
 
   vpgl_perspective_camera<double> *P, *P_dt;
 
-  P    = dbdif_turntable::camera_ctspheres(0, K);
-  P_dt = dbdif_turntable::camera_ctspheres(1, K);
+  P    = bdifd_turntable::camera_ctspheres(0, K);
+  P_dt = bdifd_turntable::camera_ctspheres(1, K);
 
-  dbdif_rig rig1(*P,*P_dt);
+  bdifd_rig rig1(*P,*P_dt);
 
   delete P; delete P_dt;
 
 
-  P    = dbdif_turntable::camera_ctspheres(1, K);
-  P_dt = dbdif_turntable::camera_ctspheres(2, K);
+  P    = bdifd_turntable::camera_ctspheres(1, K);
+  P_dt = bdifd_turntable::camera_ctspheres(2, K);
 
-  dbdif_rig rig2(*P,*P_dt);
+  bdifd_rig rig2(*P,*P_dt);
 
   delete P; delete P_dt;
 
@@ -373,7 +373,7 @@ mw_sphere_apparent_contour_app_magnitude(
 
 
   double hmin=vcl_numeric_limits<double>::infinity(), mag_min=0, theta_min=0, phi_min=0;
-  mw_vector_3d my_c_t; //:< perturbed vector
+  bmcsd_vector_3d my_c_t; //:< perturbed vector
 
 //  theta = 180;
 //  phi = 89.75;
@@ -392,11 +392,11 @@ mw_sphere_apparent_contour_app_magnitude(
 
       // MATCH + RECONSTRUCTION
 
-      vcl_vector<vcl_vector<mw_vector_3d> > crv_3d_01;
+      vcl_vector<vcl_vector<bmcsd_vector_3d> > crv_3d_01;
       mw_sphere_apparent_contour_do_a_camera_pair
         (read_params_from_file,  write_info, rig1, perturb, my_c_t, suffix, crv_3d_01);
 
-      vcl_vector<vcl_vector<mw_vector_3d> > crv_3d_12;
+      vcl_vector<vcl_vector<bmcsd_vector_3d> > crv_3d_12;
       mw_sphere_apparent_contour_do_a_camera_pair
         (read_params_from_file, write_info, rig2, perturb, my_c_t, suffix, crv_3d_12);
 
@@ -452,40 +452,40 @@ mw_sphere_apparent_contour_app1(
   // Define cameras
   
   vnl_double_3x3 Kmatrix;
-  dbdif_turntable::internal_calib_ctspheres(Kmatrix);
+  bdifd_turntable::internal_calib_ctspheres(Kmatrix);
   vpgl_calibration_matrix<double> K(Kmatrix);
 
   vpgl_perspective_camera<double> *P, *P_dt;
 
-  P    = dbdif_turntable::camera_ctspheres(0, K);
-  P_dt = dbdif_turntable::camera_ctspheres(1, K);
+  P    = bdifd_turntable::camera_ctspheres(0, K);
+  P_dt = bdifd_turntable::camera_ctspheres(1, K);
 
-  dbdif_rig rig1(*P,*P_dt);
-
-  delete P; delete P_dt;
-
-
-  P    = dbdif_turntable::camera_ctspheres(1, K);
-  P_dt = dbdif_turntable::camera_ctspheres(2, K);
-
-  dbdif_rig rig2(*P,*P_dt);
+  bdifd_rig rig1(*P,*P_dt);
 
   delete P; delete P_dt;
 
 
-  mw_vector_3d my_c_t; //:< perturbed vector
+  P    = bdifd_turntable::camera_ctspheres(1, K);
+  P_dt = bdifd_turntable::camera_ctspheres(2, K);
+
+  bdifd_rig rig2(*P,*P_dt);
+
+  delete P; delete P_dt;
+
+
+  bmcsd_vector_3d my_c_t; //:< perturbed vector
 
   define_perturbation(theta, phi, read_params_from_file, write_info, rig1, my_c_t);
 
   // MATCH + RECONSTRUCTION
 
-  vcl_vector<vcl_vector<mw_vector_3d> > crv_3d_01;
+  vcl_vector<vcl_vector<bmcsd_vector_3d> > crv_3d_01;
 
   vcl_string suffix("-cam01"); //:< cameras 0 and 1
   mw_sphere_apparent_contour_do_a_camera_pair
     (read_params_from_file,  write_info, rig1, perturb, my_c_t, suffix,crv_3d_01);
 
-  vcl_vector<vcl_vector<mw_vector_3d> > crv_3d_12;
+  vcl_vector<vcl_vector<bmcsd_vector_3d> > crv_3d_12;
   suffix = "-cam12"; //:< cameras 1 and 2 
   mw_sphere_apparent_contour_do_a_camera_pair
     (read_params_from_file, write_info, rig2, perturb, my_c_t, suffix, crv_3d_12);
@@ -496,23 +496,23 @@ mw_sphere_apparent_contour_app1(
 void
 mw_sphere_apparent_contour_do_a_camera_pair(
       bool /*read_params_from_file*/, bool write_info,
-      dbdif_rig &rig, bool perturb, const mw_vector_3d &my_c_t, const vcl_string &suffix,
-      vcl_vector<vcl_vector<mw_vector_3d> > &crv_3d
+      bdifd_rig &rig, bool perturb, const bmcsd_vector_3d &my_c_t, const vcl_string &suffix,
+      vcl_vector<vcl_vector<bmcsd_vector_3d> > &crv_3d
       )
 {
   vcl_string ext(".dat");
 
   // find sphere_occluding_contour for each view
-  mw_vector_3d s0;
+  bmcsd_vector_3d s0;
   s0(0) = 0;
   s0(1) = 0;
   s0(2) = 60;
   const double radius=5;
   double Gamma_radius, Gamma_radius2;
 
-  vcl_vector<mw_vector_3d> Gamma;
-  mw_vector_3d Gamma_center;
-  dbdif_analytic::sphere_occluding_contour(
+  vcl_vector<bmcsd_vector_3d> Gamma;
+  bmcsd_vector_3d Gamma_center;
+  bdifd_analytic::sphere_occluding_contour(
       radius, /* radius */
       s0, /* sphere center */
       rig.cam[0].c, /* camera center */
@@ -523,15 +523,15 @@ mw_sphere_apparent_contour_do_a_camera_pair(
   xi.resize(Gamma.size());
   for (unsigned i=0; i<Gamma.size(); ++i) {
     // - get image coordinates
-    mw_vector_2d p_aux;
+    bmcsd_vector_2d p_aux;
     p_aux = rig.cam[0].project_to_image(Gamma[i]);
     xi[i] = new vsol_point_2d(p_aux[0], p_aux[1]);
   }
 
 
-  vcl_vector<mw_vector_3d> Gamma2;
-  mw_vector_3d Gamma_center2;
-  dbdif_analytic::sphere_occluding_contour(
+  vcl_vector<bmcsd_vector_3d> Gamma2;
+  bmcsd_vector_3d Gamma_center2;
+  bdifd_analytic::sphere_occluding_contour(
       radius, /* radius */
       s0, /* sphere center */
       rig.cam[1].c, /* camera center */
@@ -541,7 +541,7 @@ mw_sphere_apparent_contour_do_a_camera_pair(
   xi2.resize(Gamma.size());
   for (unsigned i=0; i<Gamma2.size(); ++i) {
     // - get image coordinates
-    mw_vector_2d p_aux;
+    bmcsd_vector_2d p_aux;
     p_aux = rig.cam[1].project_to_image(Gamma2[i]);
     xi2[i] = new vsol_point_2d(p_aux[0], p_aux[1]);
   }
@@ -563,7 +563,7 @@ mw_sphere_apparent_contour_do_a_camera_pair(
           vcl_cerr << "myreadv: error, unable to open file" << vcl_endl; exit(1);
         }
         fGamma_p.write((char *)(Gamma_center.data_block()),3*sizeof(double));
-        mw_vector_3d nn = (rig.cam[0].c - s0).normalize();
+        bmcsd_vector_3d nn = (rig.cam[0].c - s0).normalize();
         fGamma_p.write((char *)(nn.data_block()),3*sizeof(double));
         fGamma_p.write((char *)(&Gamma_radius),sizeof(double));
         fGamma_p.close();
@@ -643,7 +643,7 @@ mw_sphere_apparent_contour_do_a_camera_pair(
     }
   }
 
-  vcl_vector<mw_vector_3d> crv_valid;
+  vcl_vector<bmcsd_vector_3d> crv_valid;
 
   for (unsigned k=0; k<crv_3d[0].size(); ++k) {
     if (valid[0][k]) {
@@ -691,7 +691,7 @@ match_contours(
   const vcl_vector<vcl_vector<vsol_point_2d_sptr> >  &con,
   const vcl_vector<vcl_vector<vsol_point_2d_sptr> >  &con_dt,
   const vcl_vector<unsigned> &match,
-  dbdif_rig &rig, //:< input
+  bdifd_rig &rig, //:< input
   vcl_vector<vcl_vector<vsol_point_2d_sptr> >  &con_match,
   vcl_vector<vcl_vector<bool> > &valid
     )
@@ -752,8 +752,8 @@ define_perturbation(
     double theta, double phi, 
     bool read_params_from_file, 
     bool write_info, 
-    const dbdif_rig &rig, 
-    mw_vector_3d &my_c_t, double magnitude)
+    const bdifd_rig &rig, 
+    bmcsd_vector_3d &my_c_t, double magnitude)
 {
     if (read_params_from_file) {
       vcl_ifstream fconf("ct-spheres/config/perturb.txt",vcl_ios::in);
@@ -800,8 +800,8 @@ define_perturbation(
     double theta, double phi, 
     bool read_params_from_file, 
     bool write_info, 
-    const dbdif_rig &rig, 
-    mw_vector_3d &my_c_t)
+    const bdifd_rig &rig, 
+    bmcsd_vector_3d &my_c_t)
 {
 
     double magnitude;

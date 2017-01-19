@@ -22,10 +22,10 @@
 #include <vnl/vnl_cross.h>
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vpgl/vpgl_fundamental_matrix.h>
-#include <dvpgl/pro/dvpgl_camera_storage.h>
-#include <dvpgl/pro/dvpgl_camera_storage_sptr.h>
-#include <dbsol/algo/dbsol_geno.h>
-#include <dbgl/algo/dbgl_eulerspiral.h>
+#include <vpgld/pro/vpgld_camera_storage.h>
+#include <vpgld/pro/vpgld_camera_storage_sptr.h>
+#include <bsold/algo/bsold_geno.h>
+#include <bgld/algo/bgld_eulerspiral.h>
 
 #include <vil/vil_load.h>
 #include <vil/vil_image_resource_sptr.h>
@@ -36,11 +36,11 @@
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
 
-#include <dbgl/algo/dbgl_curve_smoothing.h>
+#include <bgld/algo/bgld_curve_smoothing.h>
 #include <vgui/vgui_dialog.h>
 #include <vgui/vgui_selector_tableau.h>
 
-#include <dbsol/dbsol_file_io.h>
+#include <bsold/bsold_file_io.h>
 #include <dbdet/edge/dbdet_edgemap.h>
 #include <dbdet/edge/dbdet_edgemap_sptr.h>
 #include <dbdet/algo/dbdet_load_edg.h>
@@ -51,14 +51,14 @@
 #include <bpro1/bpro1_process.h>
 #include <bpro1/bpro1_parameters.h>
 #include <bvis1/bvis1_view_tableau.h>
-#include <dbdif/dbdif_rig.h>
-#include <dbdif/dbdif_analytic.h>
-#include <mw/mw_util.h>
-#include <mw/dbmcs_view_set.h>
+#include <bdifd/bdifd_rig.h>
+#include <bdifd/bdifd_analytic.h>
+#include <bmcsd/bmcsd_util.h>
+#include <bmcsd/bmcsd_view_set.h>
 #include <mw/algo/mw_data.h>
 #include <mw/app/differential-estimates/mw_gradient_descent.h>
 #include <vpgl/vpgl_perspective_camera.h>
-#include <dvpgl/pro/dvpgl_camera_storage.h>
+#include <vpgld/pro/vpgld_camera_storage.h>
 #include "mw_app.h"
 
 //: loads list of edge maps into all frames. Doesn't add frames.
@@ -71,7 +71,7 @@ load_curve_frags_into_frames(const vcl_vector<vcl_string> &cfrags_fnames);
 
 static void load_cams_into_frames(
     const vcl_vector<vcl_string> &cams_fnames, 
-    mw_util::camera_file_type cam_type);
+    bmcsd_util::camera_file_type cam_type);
 
 static void
 load_imgs_into_frames(const vcl_vector<vcl_string> &imgs_fnames);
@@ -88,7 +88,7 @@ mw_misc()
   bool retval = myreadv(fname,pts);
   assert(retval);
 
-  dbgl_curve_shorten_3d(pts, 1, 1);
+  bgld_curve_shorten_3d(pts, 1, 1);
 
   vcl_string out_name("/home/rfabbri/work/ming-signal-smoothed.dat");
   retval =mywritev(out_name,pts);
@@ -116,30 +116,30 @@ void
 mw_load_mcs_instance()
 {
   vcl_string data_dir="./";
-  mw_util::camera_file_type cam_type = mw_util::MW_INTRINSIC_EXTRINSIC;
+  bmcsd_util::camera_file_type cam_type = bmcsd_util::MW_INTRINSIC_EXTRINSIC;
   unsigned instance_id = 0;
 
-  mw_curve_stereo_data_path dpath;
+  bmcsd_curve_stereo_data_path dpath;
   bool retval = 
     mw_data::read_frame_data_list_txt(data_dir, &dpath, cam_type);
   if (!retval) return;
   vcl_cout << "Dpath:\n" << dpath << vcl_endl;
-  dbmcs_stereo_instance_views all_instances_;
+  bmcsd_stereo_instance_views all_instances_;
 
-  retval = dbmcs_view_set::read_txt(
+  retval = bmcsd_view_set::read_txt(
       data_dir + vcl_string("/mcs_stereo_instances.txt"), 
       &all_instances_);
   assert(retval == true);
   vcl_cout << "Instances:\n" << all_instances_ << vcl_endl;
 
-  dbmcs_stereo_instance_views one_instance_;
+  bmcsd_stereo_instance_views one_instance_;
   one_instance_.add_instance(all_instances_.instance(instance_id));
   vcl_cout << "Loading instance[" <<  instance_id << "]: " 
     << one_instance_ << vcl_endl;
 
   vcl_vector<vcl_string> edgemaps_fnames, cfrags_fnames, cams_fnames, imgs_fnames;
 
-  dbmcs_stereo_views_sptr inst = one_instance_.instance(0);
+  bmcsd_stereo_views_sptr inst = one_instance_.instance(0);
 
   edgemaps_fnames.push_back(dpath[inst->stereo0()].edg_full_path());
   edgemaps_fnames.push_back(dpath[inst->stereo1()].edg_full_path());
@@ -245,27 +245,27 @@ mw_load_current_working_repository_curve_tracing_tool()
 
   MANAGER->load_repository_from_file(data_dir + rep_fname);
 
-  mw_util::camera_file_type cam_type = mw_util::MW_INTRINSIC_EXTRINSIC;
+  bmcsd_util::camera_file_type cam_type = bmcsd_util::MW_INTRINSIC_EXTRINSIC;
   unsigned instance_id = 0;
 
-  mw_curve_stereo_data_path dpath;
+  bmcsd_curve_stereo_data_path dpath;
   bool retval = 
     mw_data::read_frame_data_list_txt(data_dir, &dpath, cam_type);
   if (!retval) return;
   vcl_cout << "Dpath:\n" << dpath << vcl_endl;
-  dbmcs_stereo_instance_views all_instances_;
+  bmcsd_stereo_instance_views all_instances_;
 
-  retval = dbmcs_view_set::read_txt(
+  retval = bmcsd_view_set::read_txt(
       data_dir + vcl_string("/mcs_stereo_instances.txt"), 
       &all_instances_);
   assert(retval == true);
   vcl_cout << "Instances:\n" << all_instances_ << vcl_endl;
 
-  dbmcs_stereo_instance_views one_instance_;
+  bmcsd_stereo_instance_views one_instance_;
   one_instance_.add_instance(all_instances_.instance(instance_id));
   vcl_cout << "Loading instance[" <<  instance_id << "]: " 
     << one_instance_ << vcl_endl;
-  dbmcs_stereo_views_sptr inst = one_instance_.instance(0);
+  bmcsd_stereo_views_sptr inst = one_instance_.instance(0);
 
   // Fill edgemaps with instances
   edgemaps_fnames.push_back(dpath[inst->stereo0()].edg_full_path());
@@ -400,27 +400,27 @@ mw_load_current_working_repository_edgel_tracing_tool()
   MANAGER->load_repository_from_file(data_dir + rep_fname);
 
   // Instance-controlled loading not yet used ----------------------
-  mw_util::camera_file_type cam_type = mw_util::MW_INTRINSIC_EXTRINSIC;
+  bmcsd_util::camera_file_type cam_type = bmcsd_util::MW_INTRINSIC_EXTRINSIC;
   unsigned instance_id = 0;
 
-  mw_curve_stereo_data_path dpath;
+  bmcsd_curve_stereo_data_path dpath;
   bool retval = 
     mw_data::read_frame_data_list_txt(data_dir, &dpath, cam_type);
   if (!retval) return;
   vcl_cout << "Dpath:\n" << dpath << vcl_endl;
-  dbmcs_stereo_instance_views all_instances_;
+  bmcsd_stereo_instance_views all_instances_;
 
-  retval = dbmcs_view_set::read_txt(
+  retval = bmcsd_view_set::read_txt(
       data_dir + vcl_string("/mcs_stereo_instances.txt"), 
       &all_instances_);
   assert(retval == true);
   vcl_cout << "Instances:\n" << all_instances_ << vcl_endl;
 
-  dbmcs_stereo_instance_views one_instance_;
+  bmcsd_stereo_instance_views one_instance_;
   one_instance_.add_instance(all_instances_.instance(instance_id));
   vcl_cout << "Loading instance[" <<  instance_id << "]: " 
     << one_instance_ << vcl_endl;
-  dbmcs_stereo_views_sptr inst = one_instance_.instance(0);
+  bmcsd_stereo_views_sptr inst = one_instance_.instance(0);
   
   // TODO dialog option to not load repos.
   vgui_dialog io_dialog("initializer options");
@@ -590,7 +590,7 @@ load_imgs_into_frames(const vcl_vector<vcl_string> &imgs_fnames)
 void
 load_cams_into_frames(
     const vcl_vector<vcl_string> &cams_fnames, 
-    mw_util::camera_file_type cam_type)
+    bmcsd_util::camera_file_type cam_type)
 {
   for (unsigned v=0; v < cams_fnames.size(); ++v) {
 
@@ -598,10 +598,10 @@ load_cams_into_frames(
     vpgl_perspective_camera<double> *pcam = new vpgl_perspective_camera<double>;
     vpgl_perspective_camera<double> &cam = *pcam;
 
-    mw_util::read_cam_anytype(cams_fnames[v], cam_type, &cam);
+    bmcsd_util::read_cam_anytype(cams_fnames[v], cam_type, &cam);
 
-    dvpgl_camera_storage_sptr 
-       cam_storage = dvpgl_camera_storage_new();
+    vpgld_camera_storage_sptr 
+       cam_storage = vpgld_camera_storage_new();
     
     cam_storage->set_camera(pcam);
     cam_storage->set_name("my_vpgl_cam");
@@ -643,7 +643,7 @@ load_curve_frags_into_frames(const vcl_vector<vcl_string> &cfrags_fnames)
       MANAGER->repository()->store_data(output_vsol_2);
       MANAGER->add_to_display(output_vsol);
     } else {
-      bool retval = dbsol_load_cem(contours, cfrags_fnames[v]);
+      bool retval = bsold_load_cem(contours, cfrags_fnames[v]);
       if (!retval) {
         vcl_cerr << "Could not open frag file " << cfrags_fnames[v] << vcl_endl;
         return;
@@ -723,7 +723,7 @@ test_point_reconstruct()
  
    vgl_point_3d<double> c1_pt = Pr1.get_camera_center();
  
-   mw_vector_3d 
+   bmcsd_vector_3d 
       c1(c1_pt.x(),c1_pt.y(),c1_pt.z()),
       //: world coordinates
       e11, e12, e13, gama1, F1,
@@ -782,7 +782,7 @@ test_point_reconstruct()
  
    vgl_point_3d<double> c2_pt = Pr2.get_camera_center();
  
-   mw_vector_3d 
+   bmcsd_vector_3d 
       c2(c2_pt.x(),c2_pt.y(),c2_pt.z()),
       //: world coordinates
       e21, e22, e23, gama2, F2,
@@ -841,7 +841,7 @@ test_point_reconstruct()
       << "Mynorm2:" << (A*lambda +c1 - c2).two_norm() << vcl_endl;
  
  
-   mw_vector_3d Cpt_v = c1 + lambda(0)*gama1;
+   bmcsd_vector_3d Cpt_v = c1 + lambda(0)*gama1;
    vgl_homg_point_3d<double> Cpt(Cpt_v(0), Cpt_v(1), Cpt_v(2));
    vcl_cout << "Reconstructed point: " << Cpt << vcl_endl;
  
@@ -856,10 +856,10 @@ test_point_reconstruct()
    //=========== Tangents
  
  
-   mw_vector_3d t1,
+   bmcsd_vector_3d t1,
       T(0,1,0); //:< test 
-   mw_vector_3d t1_cam;
-   mw_vector_2d t1_img;
+   bmcsd_vector_3d t1_cam;
+   bmcsd_vector_2d t1_img;
  
    t1 = T - dot_product(T, F1)*gama1;
    vcl_cout << "t1: " << t1 << vcl_endl;
@@ -896,8 +896,8 @@ test_point_reconstruct()
    vcl_cout << "================= Tangent reconstruction: =======================" << vcl_endl;
  
    // Camera 1:
-   mw_vector_3d t1_cam_bkwd;
-   mw_vector_3d t1_world_bkwd;
+   bmcsd_vector_3d t1_cam_bkwd;
+   bmcsd_vector_3d t1_world_bkwd;
  
    t1_cam_bkwd[0] = t1_img[0]/x_scale;   //:< take off streching;
    t1_cam_bkwd[1] = t1_img[1]/y_scale;
@@ -907,9 +907,9 @@ test_point_reconstruct()
    t1_world_bkwd = Rct*t1_cam_bkwd;
  
    // Camera 2:
-   mw_vector_3d t2_cam_bkwd;
-   mw_vector_3d t2_world_bkwd;
-   mw_vector_3d T_rec;
+   bmcsd_vector_3d t2_cam_bkwd;
+   bmcsd_vector_3d t2_world_bkwd;
+   bmcsd_vector_3d T_rec;
  
    t2_cam_bkwd[0] = (1982 - p2.x())/x_scale;   //:< determined by the eye
    t2_cam_bkwd[1] = (295 - p2.y())/y_scale;
@@ -1002,7 +1002,7 @@ example_project_and_reconstruct()
 
   ft.close(); fC_orig.close();
 
-  dbdif_rig rig;
+  bdifd_rig rig;
   rig.read("curr2/255-crop.jpg","curr2/261-crop.jpg");
 
 
@@ -1022,7 +1022,7 @@ example_project_and_reconstruct()
   }
   fgama1.close();
   fgama2.close();
-  vcl_vector<mw_vector_3d> C_rec;
+  vcl_vector<bmcsd_vector_3d> C_rec;
   rig.reconstruct_3d_curve(&C_rec,gama1_img,gama2_img);
 
   fC_rec.open("/tmp/C_rec.dat");
@@ -1081,7 +1081,7 @@ test_point_reconstruct_rig()
    vcl_string fname1("curr/p1010049.jpg");
    vcl_string fname2("curr/p1010053.jpg");
 
-   dbdif_rig rig;
+   bdifd_rig rig;
    rig.read(fname1,fname2);
    
    // origin of board
@@ -1093,14 +1093,14 @@ test_point_reconstruct_rig()
    p1.set(1482,217);
    p2.set(1895,307);
 
-   mw_vector_3d gama1, gama2;
+   bmcsd_vector_3d gama1, gama2;
 
    rig.cam[0].get_gama(p1.x(),p1.y(),&gama1);
    rig.cam[1].get_gama(p2.x(),p2.y(),&gama2);
 
    
    // Least squares reconstr
-   mw_vector_3d Cpt_v;
+   bmcsd_vector_3d Cpt_v;
    rig.reconstruct_point_lsqr(gama1,gama2,&Cpt_v);
 
    vcl_cout << "Reconstructed point: " << Cpt_v << vcl_endl;
@@ -1109,10 +1109,10 @@ test_point_reconstruct_rig()
    // Forward tangent projection
 
 
-   mw_vector_3d t1,
+   bmcsd_vector_3d t1,
       T(0,1,0); //:< test 
 
-   mw_vector_2d t1_img;
+   bmcsd_vector_2d t1_img;
 
    rig.cam[0].project_t(T,gama1,&t1);
    
@@ -1133,7 +1133,7 @@ test_point_reconstruct_rig()
       t2vgl(1982 - p2.x(), 295 - p2.y()),
       t1vgl(t1[0],t1[1]);
 
-   mw_vector_3d T_rec;
+   bmcsd_vector_3d T_rec;
 
    rig.reconstruct_tangent(gama1,gama2,t1vgl,t2vgl, &T_rec);
    T_rec.normalize();
@@ -1192,15 +1192,15 @@ test_k_formula_circle_old()
 
   ft.close(); fC_orig.close();
 
-  dbdif_rig rig;
+  bdifd_rig rig;
 //  rig.read("curr2/255.jpg","curr2/261.jpg");
   rig.read("curr2/255.jpg","curr2/235.jpg");
 
 
   // Project all points ----------
   vcl_vector <vsol_point_2d_sptr> gama1_img, gama2_img;
-  vcl_vector <mw_vector_3d> gama1,gama2;
-  dbdif_3rd_order_point_2d frame1,frame2;
+  vcl_vector <bmcsd_vector_3d> gama1,gama2;
+  bdifd_3rd_order_point_2d frame1,frame2;
 
   // FILES for debugging
   fgama1.open("/tmp/gama1.dat",vcl_ios::out | vcl_ios::binary);
@@ -1231,7 +1231,7 @@ test_k_formula_circle_old()
      gama1_img.push_back(new vsol_point_2d(p1));
      gama2_img.push_back(new vsol_point_2d(p2));
 
-     mw_vector_3d Pt_inhomg;
+     bmcsd_vector_3d Pt_inhomg;
      Pt_inhomg[0] = Ps[i].x()/Ps[i].w();
      Pt_inhomg[1] = Ps[i].y()/Ps[i].w();
      Pt_inhomg[2] = Ps[i].z()/Ps[i].w();
@@ -1252,7 +1252,7 @@ test_k_formula_circle_old()
      fgama2.write((char *)((gama2[i] + rig.cam[1].c).data_block()),3*sizeof(double));
 
      // Project curvatures of 3D points ----------
-     dbdif_3rd_order_point_3d Frame;
+     bdifd_3rd_order_point_3d Frame;
      
      Frame.N = -Pt_inhomg;
      Frame.Gama = Pt_inhomg;
@@ -1288,7 +1288,7 @@ test_k_formula_circle_old()
 
      // ------- RECONSTRUCTION ------------------------------------------------ 
 
-     dbdif_3rd_order_point_3d Frame_rec;
+     bdifd_3rd_order_point_3d Frame_rec;
      
      rig.reconstruct_3rd_order(frame1,frame2,&Frame_rec);
 
@@ -1357,15 +1357,15 @@ test_k_formula()
 
   ft.close(); fC_orig.close();
 
-  dbdif_rig rig;
+  bdifd_rig rig;
 //  rig.read("curr2/255.jpg","curr2/261.jpg");
   rig.read("curr2/255.jpg","curr2/235.jpg");
 
 
   // Project all points ----------
   vcl_vector <vsol_point_2d_sptr> gama1_img, gama2_img;
-  vcl_vector <mw_vector_3d> gama1,gama2;
-  dbdif_3rd_order_point_2d frame1,frame2;
+  vcl_vector <bmcsd_vector_3d> gama1,gama2;
+  bdifd_3rd_order_point_2d frame1,frame2;
 
   // FILES for debugging
   fgama1.open("/tmp/gama1.dat",vcl_ios::out | vcl_ios::binary);
@@ -1396,7 +1396,7 @@ test_k_formula()
      gama1_img.push_back(new vsol_point_2d(p1));
      gama2_img.push_back(new vsol_point_2d(p2));
 
-     mw_vector_3d Pt_inhomg;
+     bmcsd_vector_3d Pt_inhomg;
      Pt_inhomg[0] = Ps[i].x()/Ps[i].w();
      Pt_inhomg[1] = Ps[i].y()/Ps[i].w();
      Pt_inhomg[2] = Ps[i].z()/Ps[i].w();
@@ -1413,7 +1413,7 @@ test_k_formula()
      fgama2.write((char *)((gama2[i] + rig.cam[1].c).data_block()),3*sizeof(double));
 
      // Project curvatures of 3D points ----------
-     dbdif_3rd_order_point_3d Frame;
+     bdifd_3rd_order_point_3d Frame;
      
      Frame.Gama = Pt_inhomg;
      Frame.T[0] = -Pt_inhomg[1];
@@ -1451,7 +1451,7 @@ test_k_formula()
 
      // ------- RECONSTRUCTION ------------------------------------------------ 
 
-     dbdif_3rd_order_point_3d Frame_rec;
+     bdifd_3rd_order_point_3d Frame_rec;
      
      rig.reconstruct_3rd_order(frame1,frame2,&Frame_rec);
 
@@ -1489,10 +1489,10 @@ void
 test_formulas_circle()
 {
   
-  vcl_vector<dbdif_3rd_order_point_3d> C;
+  vcl_vector<bdifd_3rd_order_point_3d> C;
   vcl_vector<double> theta;
 
-  dbdif_analytic::circle_curve (2000, C, theta, 0, 0.01, 360);
+  bdifd_analytic::circle_curve (2000, C, theta, 0, 0.01, 360);
 
   vcl_vector <vsol_point_2d_sptr> gama1_img;
   test_formulas(C,theta,gama1_img);
@@ -1502,11 +1502,11 @@ void
 test_formulas_helix()
 {
   
-  vcl_vector<dbdif_3rd_order_point_3d> C;
+  vcl_vector<bdifd_3rd_order_point_3d> C;
   vcl_vector<double> theta;
 
-  mw_vector_3d translation(0,0,0);
-  dbdif_analytic::helix_curve(20, 1.0/4.0, translation, C, theta, 0, 0.06, 3*360);
+  bmcsd_vector_3d translation(0,0,0);
+  bdifd_analytic::helix_curve(20, 1.0/4.0, translation, C, theta, 0, 0.06, 3*360);
 
   vcl_vector <vsol_point_2d_sptr> gama1_img;
   test_formulas(C,theta,gama1_img);
@@ -1516,12 +1516,12 @@ void
 test_formulas_space_curve1()
 {
   
-  vcl_vector<dbdif_3rd_order_point_3d> C;
+  vcl_vector<bdifd_3rd_order_point_3d> C;
   vcl_vector<double> theta;
 
-  mw_vector_3d translation(100,100,100);
+  bmcsd_vector_3d translation(100,100,100);
 
-  dbdif_analytic::space_curve1(300, translation, C, theta, 0.01, 0.02, 360);
+  bdifd_analytic::space_curve1(300, translation, C, theta, 0.01, 0.02, 360);
 
   vcl_vector <vsol_point_2d_sptr> gama1_img;
   test_formulas(C,theta,gama1_img);
@@ -1532,13 +1532,13 @@ test_formulas_space_curve1()
 /* TODO: see if can remove this
 
 //: this fn could be useful in a matlab interface
-// \todo Maybe output 3 dbdif_3rd_order_points: 2 views  plus 1 reconstruction
+// \todo Maybe output 3 bdifd_3rd_order_points: 2 views  plus 1 reconstruction
 // \param[in] C vector of 3D geometry at each point
 // \param[in] parameter vector for each entry of C
 // \param[out] gama1_img image of C in 1st camera
 void 
 test_formulas(
-  vcl_vector<dbdif_3rd_order_point_3d> &C,
+  vcl_vector<bdifd_3rd_order_point_3d> &C,
   vcl_vector<double> &theta,
   vcl_vector <vsol_point_2d_sptr> &gama1_img
   )
@@ -1547,7 +1547,7 @@ test_formulas(
     fC_orig, fgama1, fgama2, fgama1_img, fgama2_img, fC_rec, ft, ftt, fn, fk, fkdot,
     frec, frec_T, frec_N, frec_B, frec_K, frec_Kdot, frec_Tau, faux, ftheta;
 
-  dbdif_rig rig;
+  bdifd_rig rig;
   rig.read("curr2/255.jpg","curr2/235.jpg");
 //  rig.read("curr2/255.jpg","curr2/261.jpg");
 
@@ -1555,8 +1555,8 @@ test_formulas(
   // Project all points ----------
   //
   vcl_vector <vsol_point_2d_sptr> gama2_img;
-  vcl_vector <mw_vector_3d> gama1,gama2;
-  dbdif_3rd_order_point_2d frame1,frame2;
+  vcl_vector <bmcsd_vector_3d> gama1,gama2;
+  bdifd_3rd_order_point_2d frame1,frame2;
 
   // FILES for debugging
   fgama1.open("/tmp/gama1.dat",vcl_ios::out | vcl_ios::binary);
@@ -1592,7 +1592,7 @@ test_formulas(
 
 
   for (unsigned i=0; i<C.size(); ++i) {
-     mw_vector_3d Pt;
+     bmcsd_vector_3d Pt;
      Pt[0] = C[i].Gama[0];
      Pt[1] = C[i].Gama[1];
      Pt[2] = C[i].Gama[2];
@@ -1631,7 +1631,7 @@ test_formulas(
 
      // ------- RECONSTRUCTION ------------------------------------------------ 
 
-     dbdif_3rd_order_point_3d Frame_rec;
+     bdifd_3rd_order_point_3d Frame_rec;
      
      rig.reconstruct_3rd_order(frame1,frame2,&Frame_rec);
 
@@ -1670,11 +1670,11 @@ void
 test_geometry_numerics()
 {
   
-  vcl_vector<dbdif_3rd_order_point_3d> C;
+  vcl_vector<bdifd_3rd_order_point_3d> C;
   vcl_vector<double> theta;
 
-  mw_vector_3d translation(100,100,100);
-  dbdif_analytic::space_curve1(300, translation, C, theta, 0.01, 0.02, 360);
+  bmcsd_vector_3d translation(100,100,100);
+  bdifd_analytic::space_curve1(300, translation, C, theta, 0.01, 0.02, 360);
 
 //  circle_curve (2000, C, theta, 0, 0.05, 360-0.05);
 
@@ -1707,9 +1707,9 @@ test_geometry_numerics()
 
   // Interpolate with GENO
 
-  dbsol_geno_curve_2d gc;
-  dbsol_geno::interpolate3_approx(&gc,gama1_round,false);
-//  dbsol_geno::interpolate(&gc,gama1_round,false);
+  bsold_geno_curve_2d gc;
+  bsold_geno::interpolate3_approx(&gc,gama1_round,false);
+//  bsold_geno::interpolate(&gc,gama1_round,false);
 
   // Sample points, tangents, curvatures, and output to files to be plotted in
   // Matlab
@@ -1765,10 +1765,10 @@ test_geometry_numerics2()
   
   // Interpolate with GENO
 
-  dbsol_geno_curve_2d gc, gc_circle;
-  dbsol_geno::interpolate3_approx(&gc,pts,false);
-//  dbsol_geno::interpolate(&gc,pts,false);
-  dbsol_geno::interpolate(&gc_circle,pts,false);
+  bsold_geno_curve_2d gc, gc_circle;
+  bsold_geno::interpolate3_approx(&gc,pts,false);
+//  bsold_geno::interpolate(&gc,pts,false);
+  bsold_geno::interpolate(&gc_circle,pts,false);
 
   // Sample points, tangents, curvatures, and output to files to be plotted in
   // Matlab
@@ -1822,10 +1822,10 @@ test_geometry_numerics2()
     double dt=0, dk=0, dkdot=0;
 
     if (i != 0 && i != gc.size()) {
-      const dbgl_eulerspiral * c_i=0;
-      const dbgl_eulerspiral * c_i_min_1=0;
-      c_i = dynamic_cast<const dbgl_eulerspiral*>(gc.interval(i));
-      c_i_min_1 = dynamic_cast<const dbgl_eulerspiral*>(gc.interval(i-1));
+      const bgld_eulerspiral * c_i=0;
+      const bgld_eulerspiral * c_i_min_1=0;
+      c_i = dynamic_cast<const bgld_eulerspiral*>(gc.interval(i));
+      c_i_min_1 = dynamic_cast<const bgld_eulerspiral*>(gc.interval(i-1));
       assert(c_i && c_i_min_1);
 
       dt    = gc_circle.interval(i)->tangent_angle_at(0) - gc_circle.interval(i-1)->tangent_angle_at(1);
@@ -1905,16 +1905,16 @@ test_geometry_numerics2_2(unsigned n_iter, unsigned n_iter_position)
   
   // Interpolate with GENO
 
-  dbsol_geno_curve_2d *pgc, *pgc_refined, *gc_circle;
+  bsold_geno_curve_2d *pgc, *pgc_refined, *gc_circle;
 
-//  dbsol_geno::interpolate3_from_tangents(&gc,pts,t_angles,false);
-//  dbsol_geno::interpolate(&gc,pts,false);
+//  bsold_geno::interpolate3_from_tangents(&gc,pts,t_angles,false);
+//  bsold_geno::interpolate(&gc,pts,false);
 
-  pgc = new dbsol_geno_curve_2d();
-  dbsol_geno::interpolate3_approx(pgc,pts,false);
+  pgc = new bsold_geno_curve_2d();
+  bsold_geno::interpolate3_approx(pgc,pts,false);
 
-  gc_circle = new dbsol_geno_curve_2d();
-  dbsol_geno::interpolate(gc_circle,pts,false);
+  gc_circle = new bsold_geno_curve_2d();
+  bsold_geno::interpolate(gc_circle,pts,false);
 
   write_geno_info(*pgc,*gc_circle,"sm");
   write_geno_info_super_sample(*pgc,"sm");
@@ -1950,7 +1950,7 @@ test_geometry_numerics2_2(unsigned n_iter, unsigned n_iter_position)
     delta_norm = 5e-3, 
     psi_pos = 0.01;
 
-    /* FIXME Gives bug in dbgl_arc:
+    /* FIXME Gives bug in bgld_arc:
     delta_norm = 5e-5, 
     psi_pos = 1e-4;
     */
@@ -1961,12 +1961,12 @@ test_geometry_numerics2_2(unsigned n_iter, unsigned n_iter_position)
       delete pgc;
 
     pgc = pgc_refined;
-    pgc_refined = new dbsol_geno_curve_2d();
+    pgc_refined = new bsold_geno_curve_2d();
 
     gradient_descent_positional(pts,*pgc,delta_norm,psi_pos,grad);
     delete pgc;
 
-    dbsol_geno::interpolate3_approx(pgc_refined,pts,false);
+    bsold_geno::interpolate3_approx(pgc_refined,pts,false);
     
     pgc = pgc_refined;
     // refine tangents again
@@ -1974,8 +1974,8 @@ test_geometry_numerics2_2(unsigned n_iter, unsigned n_iter_position)
   }
 
   delete gc_circle;
-  gc_circle = new dbsol_geno_curve_2d();
-  dbsol_geno::interpolate(gc_circle,pts,false);
+  gc_circle = new bsold_geno_curve_2d();
+  bsold_geno::interpolate(gc_circle,pts,false);
 
   write_geno_info(*pgc_refined,*gc_circle,"posref");
   write_geno_info_super_sample(*pgc_refined,"posref");
@@ -1997,13 +1997,13 @@ arc_positional_descent_test(unsigned n_iter, unsigned n_iter_position)
   // Interpolate with GENO
 
 
-  dbsol_geno_curve_2d *pgc, *pgc_refined, *gc_circle;
+  bsold_geno_curve_2d *pgc, *pgc_refined, *gc_circle;
 
-  pgc = new dbsol_geno_curve_2d();
-  dbsol_geno::interpolate3_approx(pgc,pts,false);
+  pgc = new bsold_geno_curve_2d();
+  bsold_geno::interpolate3_approx(pgc,pts,false);
 
-  gc_circle = new dbsol_geno_curve_2d();
-  dbsol_geno::interpolate(gc_circle,pts,false);
+  gc_circle = new bsold_geno_curve_2d();
+  bsold_geno::interpolate(gc_circle,pts,false);
 
   write_geno_info(*pgc,*gc_circle,"sm");
   write_geno_info_super_sample(*pgc,"sm");
@@ -2031,24 +2031,24 @@ arc_positional_descent_test(unsigned n_iter, unsigned n_iter_position)
     delete pgc;
 
     pgc = pgc_refined;
-    pgc_refined = new dbsol_geno_curve_2d();
+    pgc_refined = new bsold_geno_curve_2d();
 
     gradient_descent_positional(pts,*pgc,delta_norm,psi_pos,grad);
 
-    dbsol_geno::interpolate(pgc_refined,pts,false);
+    bsold_geno::interpolate(pgc_refined,pts,false);
   }
 
   
   delete pgc;
   delete pgc_refined;
-  pgc_refined = new dbsol_geno_curve_2d();
+  pgc_refined = new bsold_geno_curve_2d();
 
-  dbsol_geno::interpolate3_approx(pgc_refined,pts,false);
+  bsold_geno::interpolate3_approx(pgc_refined,pts,false);
   pgc = pgc_refined;
   refine_tangents(&pgc, &pgc_refined,delta_angle,psi, n_iter);
 
-  gc_circle = new dbsol_geno_curve_2d();
-  dbsol_geno::interpolate(gc_circle,pts,false);
+  gc_circle = new bsold_geno_curve_2d();
+  bsold_geno::interpolate(gc_circle,pts,false);
 
   write_geno_info(*pgc_refined,*gc_circle,"posref");
   write_geno_info_super_sample(*pgc_refined,"posref");
@@ -2076,8 +2076,8 @@ arc_positional_descent_test(unsigned n_iter, unsigned n_iter_position)
 // plotted in Matlab
 void
 write_geno_info(
-    const dbsol_geno_curve_2d &gc,  //:< 3rd order (Eulerspiral) geno curve
-    const dbsol_geno_curve_2d &gc_circle,  //:< underlying circle interpolation
+    const bsold_geno_curve_2d &gc,  //:< 3rd order (Eulerspiral) geno curve
+    const bsold_geno_curve_2d &gc_circle,  //:< underlying circle interpolation
     const char *ssuffix)
 {
 
@@ -2154,10 +2154,10 @@ write_geno_info(
     double dt=0, dk=0, dkdot=0;
 
     if (i != 0 && i != gc.size()) {
-      const dbgl_eulerspiral * c_i=0;
-      const dbgl_eulerspiral * c_i_min_1=0;
-      c_i = dynamic_cast<const dbgl_eulerspiral*>(gc.interval(i));
-      c_i_min_1 = dynamic_cast<const dbgl_eulerspiral*>(gc.interval(i-1));
+      const bgld_eulerspiral * c_i=0;
+      const bgld_eulerspiral * c_i_min_1=0;
+      c_i = dynamic_cast<const bgld_eulerspiral*>(gc.interval(i));
+      c_i_min_1 = dynamic_cast<const bgld_eulerspiral*>(gc.interval(i-1));
       assert(c_i && c_i_min_1);
 
       dt    = gc_circle.interval(i)->tangent_angle_at(0) - gc_circle.interval(i-1)->tangent_angle_at(1);
@@ -2216,7 +2216,7 @@ write_geno_info(
 // plotted in Matlab
 void
 write_geno_arc_info(
-    const dbsol_geno_curve_2d &gc,
+    const bsold_geno_curve_2d &gc,
     const char *ssuffix)
 {
   vcl_string suf(ssuffix), fname, ext(".dat");
@@ -2288,10 +2288,10 @@ write_geno_arc_info(
     double dt=0, dk=0, dkdot=0;
 
     if (i != 0 && i != gc.size()) {
-      const dbgl_arc *c_i=0;
-      const dbgl_arc *c_i_min_1=0;
-      c_i = dynamic_cast<const dbgl_arc*>(gc.interval(i));
-      c_i_min_1 = dynamic_cast<const dbgl_arc*>(gc.interval(i-1));
+      const bgld_arc *c_i=0;
+      const bgld_arc *c_i_min_1=0;
+      c_i = dynamic_cast<const bgld_arc*>(gc.interval(i));
+      c_i_min_1 = dynamic_cast<const bgld_arc*>(gc.interval(i-1));
       assert(c_i && c_i_min_1);
 
       dt    = gc.interval(i)->tangent_angle_at(0) - gc.interval(i-1)->tangent_angle_at(1);
@@ -2343,7 +2343,7 @@ write_geno_arc_info(
 //: fine sampling of geno information, to verify the interpolation within
 // intervals
 void
-write_geno_info_super_sample(const dbsol_geno_curve_2d &gc, char *suffix)
+write_geno_info_super_sample(const bsold_geno_curve_2d &gc, char *suffix)
 {
   vcl_ofstream fgama1_g_super_sample;
 
@@ -2380,7 +2380,7 @@ reproject_curve_sculpture()
    vcl_string fname2("curr2/255-crop.jpg");
    vcl_string fname3("curr2/257-crop.jpg");
 
-   dbdif_rig rig;
+   bdifd_rig rig;
    rig.read(fname1,fname2);
 
    bool isopen;

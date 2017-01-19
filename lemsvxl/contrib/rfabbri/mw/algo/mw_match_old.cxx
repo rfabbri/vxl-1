@@ -1,8 +1,8 @@
-#include <mw/mw_util.h>
+#include <bmcsd/bmcsd_util.h>
 #include "mw_match_old.h"
 #include <mw/mw_curves.h>
-#include <mw/mw_discrete_corresp.h>
-#include <mw/mw_intersection_sets.h>
+#include <bmcsd/bmcsd_discrete_corresp.h>
+#include <becld/becld_intersection_sets.h>
 
 #include <vcl_string.h>
 #include <vcl_iostream.h>
@@ -43,7 +43,7 @@ trinocular_match()
 
    //: TODO: correspondence should start from the view with largest number of
    //points, so that corresp list be well distributed (?)
-   mw_discrete_corresp corresp12(cdata1->npts(),cdata2->npts());
+   bmcsd_discrete_corresp corresp12(cdata1->npts(),cdata2->npts());
    
 
    //TODO: make function that only takes calibrations and cameras
@@ -68,7 +68,7 @@ trinocular_match()
    //
    // Binocular
    //
-   mw_attributed_object pt_attrib;
+   bmcsd_attributed_object pt_attrib;
    pt_attrib.cost_ = 0;
    const double epipolar_distance_threshold = 1;
 
@@ -105,8 +105,8 @@ trinocular_match()
 
    // for each point in 1st image
    for (unsigned long i1=0; i1<cdata1->npts(); ++i1) {
-      vcl_list< mw_attributed_object >:: iterator  ptr;
-      vcl_list<mw_attributed_object> *lst = &(corresp12.corresp_[i1]);
+      vcl_list< bmcsd_attributed_object >:: iterator  ptr;
+      vcl_list<bmcsd_attributed_object> *lst = &(corresp12.corresp_[i1]);
       vgl_homg_point_2d<double> homg_pt1(cdata1->pt(i1).get_p());
       double distance; unsigned long  cp3;
 
@@ -220,7 +220,7 @@ nearest_match_along_line(
   bool stat;
   vcl_vector<bool> is_close_enough; //:< is_close_enough[i] if crv[i] is close enough to given line
 
-  stat=mw_intersection_sets::mw_line_polyline_intersection_1(&l,crv,is_close_enough,maxdist);
+  stat=becld_intersection_sets::mw_line_polyline_intersection_1(&l,crv,is_close_enough,maxdist);
   if (!stat) {
     vcl_cout <<" No intersection!!\n";
     return false;

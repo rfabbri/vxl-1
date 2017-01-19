@@ -6,7 +6,7 @@
 #include <brct/brct_algos.h>
 
 #include <vcl_algorithm.h>
-#include <dbgl/algo/dbgl_intersect.h>
+#include <bgld/algo/bgld_intersect.h>
 #include <vpgl/algo/vpgl_ray_intersect.h>
 
 
@@ -106,7 +106,7 @@ reconstruct_multiview()
 
   for (unsigned di0=0; di0 + ini_idx <= end_idx; ++di0) {
     
-    mw_vector_3d pt_3D, pt_3D_linear;
+    bmcsd_vector_3d pt_3D, pt_3D_linear;
 
     { // reconstruct from all views
       vcl_cout << "reconstruct from all views\n";
@@ -156,14 +156,14 @@ show_reprojections(unsigned jnz)
   for (unsigned i=0; i < nviews_; ++i)
     tab_[i]->set_current_grouping( "Drawing" );
 
-  dbdif_rig rig(cam_[0].Pr_, cam_[1].Pr_);
+  bdifd_rig rig(cam_[0].Pr_, cam_[1].Pr_);
 
   vcl_vector<vsol_point_2d_sptr> reproj; 
   vcl_vector<unsigned> crv1_idx, crv2_idx;
 
 
   for (unsigned v=2; v < nviews_; ++v) {
-    vcl_vector<mw_vector_3d> crv3d; 
+    vcl_vector<bmcsd_vector_3d> crv3d; 
     reconstruct_and_reproject(jnz, v /*view*/, reproj, crv3d,crv1_idx, crv2_idx, rig);
     vsol_point_2d_sptr pt = crv_candidates_ptrs_[jnz]->vertex(crv2_idx[0]);
 
@@ -234,10 +234,10 @@ reconstruct_and_reproject(
     unsigned view, 
     vcl_vector<vsol_point_2d_sptr> &reproj, 
 
-    vcl_vector<mw_vector_3d> &crv3d, 
+    vcl_vector<bmcsd_vector_3d> &crv3d, 
     vcl_vector<unsigned> &crv1_idx,
     vcl_vector<unsigned> &crv2_idx,
-    dbdif_rig &rig) const
+    bdifd_rig &rig) const
 {
   define_match_for_reconstruction(jnz, crv1_idx, crv2_idx, rig);
   reconstruct_one_candidate(jnz, crv3d, crv1_idx, crv2_idx, rig);
@@ -248,8 +248,8 @@ void mw_curve_appearance_tracing_tool::
 project(
     unsigned view, 
     vcl_vector<vsol_point_2d_sptr> &proj, 
-    const vcl_vector<mw_vector_3d> &crv3d, 
-    dbdif_rig &/*rig*/) const
+    const vcl_vector<bmcsd_vector_3d> &crv3d, 
+    bdifd_rig &/*rig*/) const
 {
   assert (view < nviews_);
 
@@ -257,7 +257,7 @@ project(
   proj.resize(crv3d.size());
   for (unsigned i=0; i<crv3d.size(); ++i) {
     // - get image coordinates
-    mw_vector_2d p_aux;
+    bmcsd_vector_2d p_aux;
     p_aux = cam_[view].project_to_image(crv3d[i]);
     proj[i] = new vsol_point_2d(p_aux[0], p_aux[1]);
   }
@@ -278,7 +278,7 @@ define_match_for_reconstruction(
     unsigned jnz,
     vcl_vector<unsigned> &crv1_idx,
     vcl_vector<unsigned> &crv2_idx,
-    dbdif_rig &/*rig*/
+    bdifd_rig &/*rig*/
     ) const
 {
   unsigned ini_idx, 
@@ -299,7 +299,7 @@ define_match_for_reconstruction(
   j = crv_candidates_idx_[jnz];
 
   // traverse L_[j] 
-  vcl_list<mw_intersection_sets::intersection_nhood_>::const_iterator ptr;
+  vcl_list<becld_intersection_sets::intersection_nhood_>::const_iterator ptr;
   for (ptr=isets_.L_[j].intercepts.begin(); ptr != isets_.L_[j].intercepts.end(); ++ptr) {
 
     unsigned k = ptr->ep_number;
@@ -327,7 +327,7 @@ define_match_for_reconstruction(
 
 //    vsol_point_2d_sptr pt_img2 = crv_candidates_ptrs_[jnz]->vertex(ptr->index[lmin]);
 
-//    mw_vector_3d pt_3D;
+//    bmcsd_vector_3d pt_3D;
 
     // ---- Reconstruct ---
 //    rig.reconstruct_point_lsqr(pt_img1,pt_img2,&pt_3D);
@@ -354,10 +354,10 @@ define_match_for_reconstruction(
 void mw_curve_appearance_tracing_tool::
 reconstruct_one_candidate(
     unsigned jnz, 
-    vcl_vector<mw_vector_3d> &crv3d, 
+    vcl_vector<bmcsd_vector_3d> &crv3d, 
     const vcl_vector<unsigned> &crv1_idx,
     const vcl_vector<unsigned> &crv2_idx,
-    dbdif_rig &rig) const
+    bdifd_rig &rig) const
 {
 
   crv3d.resize(crv1_idx.size());
@@ -366,7 +366,7 @@ reconstruct_one_candidate(
 
     vsol_point_2d_sptr pt_img2 = crv_candidates_ptrs_[jnz]->vertex(crv2_idx[i]);
 
-    mw_vector_3d pt_3D;
+    bmcsd_vector_3d pt_3D;
 
     // ---- Reconstruct ---
     rig.reconstruct_point_lsqr(pt_img1,pt_img2,&(crv3d[i]));
@@ -429,7 +429,7 @@ get_corresponding_point_v0_to_vn(unsigned v,unsigned di0, vsol_point_2d_sptr &pt
                                     selected_crv_[v]->vertex(lmin)->get_p());
     vgl_point_2d<double> ipt;
 
-    intersects=dbgl_intersect::line_lineseg_intersect(vgl_line_2d<double> (ep_[v-1][di0]),seg,ipt);
+    intersects=bgld_intersect::line_lineseg_intersect(vgl_line_2d<double> (ep_[v-1][di0]),seg,ipt);
     if (intersects) {
       pt_img1 = new vsol_point_2d(ipt);
     }
@@ -440,7 +440,7 @@ get_corresponding_point_v0_to_vn(unsigned v,unsigned di0, vsol_point_2d_sptr &pt
                                     selected_crv_[v]->vertex(lmin+1)->get_p());
     vgl_point_2d<double> ipt;
 
-    intersects=dbgl_intersect::line_lineseg_intersect(vgl_line_2d<double> (ep_[v-1][di0]),seg,ipt);
+    intersects=bgld_intersect::line_lineseg_intersect(vgl_line_2d<double> (ep_[v-1][di0]),seg,ipt);
     if (intersects) {
       pt_img1 = new vsol_point_2d(ipt);
     }
@@ -468,7 +468,7 @@ linearly_reconstruct_pts(
     pts.push_back(vnl_double_2(pt_img[v+1]->x(),pt_img[v+1]->y()));
     projs.push_back(cam_[views[v]].Pr_.get_matrix());
   }
-  *pt_3D = brct_algos::bundle_reconstruct_3d_point(pts, projs);
+  *pt_3D = reconstruct_3d_points_nviews_linear(pts, projs);
 }
 
 // \param[in] views: views[i] specify from which view does pt_img[i] come from
@@ -511,8 +511,8 @@ get_reconstructions(
     const vcl_vector<unsigned> &views, 
     unsigned ini_idx, 
     unsigned di0, 
-    mw_vector_3d *pt_3D, 
-    mw_vector_3d *pt_3D_linear) const 
+    bmcsd_vector_3d *pt_3D, 
+    bmcsd_vector_3d *pt_3D_linear) const 
 {
 
   // Corresponding points
@@ -527,10 +527,10 @@ get_reconstructions(
 
   vcl_cout << "Nu-Newly coded\n";
   linearly_reconstruct_pts(pt_img, views, &pt_3D_linear_vgl);
-  *pt_3D_linear = mw_util::vgl_to_vnl(pt_3D_linear_vgl);
+  *pt_3D_linear = bmcsd_util::vgl_to_vnl(pt_3D_linear_vgl);
 
   nonlinearly_optimize_reconstruction(
       pt_img, views, pt_3D_linear_vgl, &pt_3D_vgl);
 
-  *pt_3D = mw_util::vgl_to_vnl(pt_3D_vgl);
+  *pt_3D = bmcsd_util::vgl_to_vnl(pt_3D_vgl);
 }

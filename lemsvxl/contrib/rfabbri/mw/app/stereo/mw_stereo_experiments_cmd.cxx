@@ -1,11 +1,11 @@
 #include <testlib/testlib_test.h>
-#include <mw/mw_util.h>
+#include <bmcsd/bmcsd_util.h>
 #include <vgl/vgl_box_2d.h>
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_box_2d.h>
 #include <vsol/vsol_box_2d_sptr.h>
-#include <dbecl/dbecl_epiband.h>
-#include <dbecl/dbecl_epiband_builder.h>
+#include <becld/becld_epiband.h>
+#include <becld/becld_epiband_builder.h>
 #include <mw/algo/mw_stereo_app.h>
 
 //: Command to run some experiments based on epipolar bands and
@@ -44,7 +44,7 @@ public:
     vcl_vector<bool> &is_specified,
     vcl_vector<vsol_point_2d_sptr> &specified_pts,
     vcl_vector<vcl_vector<vsol_point_2d_sptr> > &vsols,
-    vcl_vector< vcl_vector<dbecl_epiband *> > &epband_,
+    vcl_vector< vcl_vector<becld_epiband *> > &epband_,
     const vcl_vector <vsol_box_2d_sptr> &bbox_,
     const vcl_vector< vcl_vector<vpgl_fundamental_matrix<double> > > &fm,
     double err_pos,
@@ -319,10 +319,10 @@ ntuplet_test_avg(
     }
 
     unsigned idx;
-    max_ntup->push_back(mw_util::max(ntup_nv, idx));
-    min_ntup->push_back(mw_util::min(ntup_nv, idx));
-    med_ntup->push_back(mw_util::median(ntup_nv));
-    avg_ntup->push_back(mw_util::mean(ntup_nv));
+    max_ntup->push_back(bmcsd_util::max(ntup_nv, idx));
+    min_ntup->push_back(bmcsd_util::min(ntup_nv, idx));
+    med_ntup->push_back(bmcsd_util::median(ntup_nv));
+    avg_ntup->push_back(bmcsd_util::mean(ntup_nv));
   }
 
   return true;
@@ -475,7 +475,7 @@ gain_in_epipolar()
       vcl_cout << "-----------------------------------\n";
     }
 
-    vcl_vector< vcl_vector<dbecl_epiband *> > epband;
+    vcl_vector< vcl_vector<becld_epiband *> > epband;
     vcl_vector<vcl_vector <vpgl_fundamental_matrix<double> > > fms;
     vcl_vector< vcl_vector<vsol_point_2d_sptr> > vsols;
     vcl_vector <vsol_box_2d_sptr> bbox;
@@ -529,10 +529,10 @@ gain_in_epipolar()
 
     unsigned idx;
     assert(gain.size());
-    max_gain.push_back(mw_util::max(gain,idx));
-    min_gain.push_back(mw_util::min(gain,idx));
-    avg_gain.push_back(mw_util::mean(gain));
-    med_gain.push_back(mw_util::median(gain));
+    max_gain.push_back(bmcsd_util::max(gain,idx));
+    min_gain.push_back(bmcsd_util::min(gain,idx));
+    avg_gain.push_back(bmcsd_util::mean(gain));
+    med_gain.push_back(bmcsd_util::median(gain));
   }
 
   // write to file
@@ -574,7 +574,7 @@ gain_in_epipolar_for_exactly_nviews(
   vcl_vector<bool> &is_specified,
   vcl_vector<vsol_point_2d_sptr> &specified_pts,
   vcl_vector<vcl_vector<vsol_point_2d_sptr> > &vsols,
-  vcl_vector< vcl_vector<dbecl_epiband *> > &epband,
+  vcl_vector< vcl_vector<becld_epiband *> > &epband,
   const vcl_vector <vsol_box_2d_sptr> &bbox,
   const vcl_vector< vcl_vector<vpgl_fundamental_matrix<double> > > &fm,
   double err_pos,
@@ -595,7 +595,7 @@ gain_in_epipolar_for_exactly_nviews(
 #endif
 
       specified_pts[iv] = vsols[iv][k_pts];
-      dbecl_epiband_builder::build_epibands_iteratively(
+      becld_epiband_builder::build_epibands_iteratively(
             true, iv,
             is_specified,
             specified_pts,
@@ -609,7 +609,7 @@ gain_in_epipolar_for_exactly_nviews(
           continue;
 
 
-        dbecl_epiband epband_iv_m(vgl_box_2d<double>(bbox[m]->get_min_x(),bbox[m]->get_max_x(), bbox[m]->get_min_y(), bbox[m]->get_max_y()));
+        becld_epiband epband_iv_m(vgl_box_2d<double>(bbox[m]->get_min_x(),bbox[m]->get_max_x(), bbox[m]->get_min_y(), bbox[m]->get_max_y()));
 
         epband_iv_m.compute(vsols[iv][k_pts]->get_p(), fm[iv][m], err_pos);
 
@@ -628,9 +628,9 @@ gain_in_epipolar_for_exactly_nviews(
 
         //: this could be an automated test for the system (using small
         //dataset):
-        assert (area_new <= area_normal || mw_util::near_zero(area_new-area_normal,1e-8));
+        assert (area_new <= area_normal || bmcsd_util::near_zero(area_new-area_normal,1e-8));
         double thisgain=-1;
-        if (!mw_util::near_zero(area_normal,1e-10)) {
+        if (!bmcsd_util::near_zero(area_normal,1e-10)) {
           thisgain = (area_normal - area_new) / area_normal;
           gain.push_back(thisgain);
         }

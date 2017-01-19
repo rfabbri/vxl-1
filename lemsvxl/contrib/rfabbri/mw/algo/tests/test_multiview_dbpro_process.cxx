@@ -1,24 +1,24 @@
 //:
 //\file
-//\brief File for me to experiment with dbpro.
+//\brief File for me to experiment with bprod.
 //\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //
 #include <testlib/testlib_test.h>
-#include <dbpro/dbpro_process.h>
+#include <bprod/bprod_process.h>
 #include <vcl_iostream.h>
-#include <dbpro/dbpro_observer.h>
-#include <dbpro/tests/dbpro_sample_processes.h>
+#include <bprod/bprod_observer.h>
+#include <bprod/tests/bprod_sample_processes.h>
 #include <vcl_vector.h>
 #include <vil/vil_save.h>
 #include <vil/vil_convert.h>
 
 #include <mw/algo/mw_data.h>
-#include <mw/pro/dbpro_load_camera_source.h>
-#include <mw/pro/dbpro_load_edg_source.h>
-#include <mw/pro/dbpro_load_vsol_polyline_source.h>
-#include <mw/pro/dbpro_fragment_tangents.h>
+#include <mw/pro/bprod_load_camera_source.h>
+#include <mw/pro/bprod_load_edg_source.h>
+#include <mw/pro/bprod_load_vsol_polyline_source.h>
+#include <mw/pro/bprod_fragment_tangents.h>
 
-class views_aggregator : public dbpro_sink
+class views_aggregator : public bprod_sink
 {
  public:
 
@@ -37,7 +37,7 @@ class views_aggregator : public dbpro_sink
   // Input 0 : camera
   // Input 1 : edgemap
   // Input 2,3 : distance transform and label.
-  dbpro_signal execute()
+  bprod_signal execute()
   {
     for (unsigned i=0; i < nviews_; ++i) {
       //: Camera
@@ -67,16 +67,16 @@ class views_aggregator : public dbpro_sink
       tgts_.push_back(input<vcl_vector< vcl_vector <double> > >(TGTS_ID));
     }
 
-    return DBPRO_VALID;
+    return BPROD_VALID;
   }
 
   void setup_inputs(
       unsigned view,
-      dbpro_process_sptr cam_src, 
-      dbpro_process_sptr edg_src, 
-      dbpro_process_sptr edg_dt, 
-      dbpro_process_sptr frag_src,
-      dbpro_process_sptr tgts
+      bprod_process_sptr cam_src, 
+      bprod_process_sptr edg_src, 
+      bprod_process_sptr edg_dt, 
+      bprod_process_sptr frag_src,
+      bprod_process_sptr tgts
       )
   {
     edg_dt->connect_input(0, edg_src, 0);
@@ -101,33 +101,33 @@ class views_aggregator : public dbpro_sink
 #define PARALLEL_RUN 1
 
 #ifdef PARALLEL_RUN
-MAIN( test_multiview_dbpro_process )
+MAIN( test_multiview_bprod_process )
 {
-  START ("multiview dbpro processes");
+  START ("multiview bprod processes");
 
   //: A rough estimate of how many cores to use at a time
   static const unsigned max_num_active_frames = 6;
 
-  mw_curve_stereo_data_path dpath;
+  bmcsd_curve_stereo_data_path dpath;
   mw_data::get_capitol_building_subset(&dpath);
 
   unsigned nviews =  vcl_min(dpath.nviews(), max_num_active_frames);
 
   assert(nviews != 0);
 
-  vcl_vector<dbpro_process_sptr> process_pool;
+  vcl_vector<bprod_process_sptr> process_pool;
   process_pool.reserve(nviews*5);
   
   views_aggregator *out_ptr = new views_aggregator(nviews);
-  dbpro_process_sptr out(out_ptr);
+  bprod_process_sptr out(out_ptr);
 
   //: Setup the processing nodes
   for (unsigned v=0; v < nviews; ++v) {
     // Attach sources to files -----
 
     // 1 Cam loader
-    dbpro_process_sptr 
-      cam_src = new dbpro_load_camera_source<double>(
+    bprod_process_sptr 
+      cam_src = new bprod_load_camera_source<double>(
           dpath[v].cam_full_path(), dpath[v].cam_file_type());
 
     process_pool.push_back(cam_src);
@@ -135,25 +135,25 @@ MAIN( test_multiview_dbpro_process )
     // 1 Edge map loader
     static const bool my_bSubPixel = true;
     static const double my_scale=1.0;
-    dbpro_process_sptr 
-      edg_src = new dbpro_load_edg_source(dpath[v].edg_full_path(), my_bSubPixel, my_scale);
+    bprod_process_sptr 
+      edg_src = new bprod_load_edg_source(dpath[v].edg_full_path(), my_bSubPixel, my_scale);
 
     process_pool.push_back(edg_src);
 
     // 1 dt and label loader
-    dbpro_process_sptr 
-      edg_dt = new dbpro_edg_dt;
+    bprod_process_sptr 
+      edg_dt = new bprod_edg_dt;
 
     process_pool.push_back(edg_dt);
 
     // 1 curve fragment loader
-    dbpro_process_sptr
-      frag_src = new dbpro_load_vsol_polyline_source(dpath[v].frag_full_path());
+    bprod_process_sptr
+      frag_src = new bprod_load_vsol_polyline_source(dpath[v].frag_full_path());
 
     process_pool.push_back(frag_src);
 
-    dbpro_process_sptr
-      tgts = new dbpro_fragment_tangents;
+    bprod_process_sptr
+      tgts = new bprod_fragment_tangents;
 
     process_pool.push_back(tgts);
 
@@ -206,34 +206,34 @@ MAIN( test_multiview_dbpro_process )
 #else // PARALLEL_RUN not defined
 
 // Just to test serial loading:
-MAIN( test_multiview_dbpro_process )
+MAIN( test_multiview_bprod_process )
 {
-  mw_curve_stereo_data_path dpath;
+  bmcsd_curve_stereo_data_path dpath;
   mw_data::get_capitol_building_data_subset(&dpath);
 
   static const bool my_bSubPixel = true;
   static const double my_scale=1.0;
 
   for (unsigned v=0; v < dpath.nviews(); ++v) {
-    dbpro_process_sptr 
-      edg_src = new dbpro_load_edg_source(dpath[v].edg_full_path(), my_bSubPixel, my_scale);
+    bprod_process_sptr 
+      edg_src = new bprod_load_edg_source(dpath[v].edg_full_path(), my_bSubPixel, my_scale);
 
     // 1 Cam loader
-    dbpro_process_sptr 
-      cam_src = new dbpro_load_camera_source<double>(
+    bprod_process_sptr 
+      cam_src = new bprod_load_camera_source<double>(
           dpath[v].cam_full_path(), dpath[v].cam_file_type());
 
     cam_src->run(1);
 
     // 1 dt and label loader
-    dbpro_process_sptr 
-      edg_dt = new dbpro_edg_dt;
+    bprod_process_sptr 
+      edg_dt = new bprod_edg_dt;
     edg_dt->connect_input(0, edg_src, 0);
     edg_dt->run(1);
 
     // 1 curve fragment loader
-    dbpro_process_sptr
-      frag_src = new dbpro_load_vsol_polyline_source(dpath[v].frag_full_path());
+    bprod_process_sptr
+      frag_src = new bprod_load_vsol_polyline_source(dpath[v].frag_full_path());
     frag_src->run(1);
   }
   SUMMARY();

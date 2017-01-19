@@ -304,7 +304,7 @@ test_contains_all_gt_synth(mw_stereo_app &app)
 {
   bool contains_all_gt = true;
   for (unsigned i=0; i < app.vsols_[0].size(); ++i) {
-    mw_ntuplet tup(app.nviews_, i);
+    bmcsd_ntuplet tup(app.nviews_, i);
     if (!app.corr_ep_n_.l_.fullp(tup)) {
       contains_all_gt = false;
       vcl_cout << "Epipolar geometry missed corresp: " << tup << vcl_endl;

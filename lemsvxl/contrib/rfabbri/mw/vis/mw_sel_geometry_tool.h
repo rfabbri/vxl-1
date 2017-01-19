@@ -10,10 +10,10 @@
 
 #include <dbdet/vis/dbdet_sel_explorer_tool.h>
 
-#include <dbdif/pro/dbdif_3rd_order_geometry_storage_sptr.h>
+#include <bdifd/pro/bdifd_3rd_order_geometry_storage_sptr.h>
 
 //:  Extend sel_explorer tool to deal with ground-truth data given by a
-// dbdif_3rd_order_geometry_storage in 1-1 correspondence with the edgels.
+// bdifd_3rd_order_geometry_storage in 1-1 correspondence with the edgels.
 class mw_sel_geometry_tool : public dbdet_sel_explorer_tool {
 public:
   //: Constructor
@@ -36,7 +36,7 @@ public:
   print_ground_truth_info_at_edgel();
 
 protected:
-  dbdif_3rd_order_geometry_storage_sptr gt_;
+  bdifd_3rd_order_geometry_storage_sptr gt_;
 };
 
 

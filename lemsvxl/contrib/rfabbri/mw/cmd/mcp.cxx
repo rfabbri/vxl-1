@@ -1,8 +1,8 @@
 #include <vcl_iterator.h>
 #include <vul/vul_arg.h>
 #include <vul/vul_file.h>
-#include <dbul/dbul_arg.h>
-#include <mw/mw_util.h>
+#include <buld/buld_arg.h>
+#include <bmcsd/bmcsd_util.h>
 #include <mw/algo/dvcpl_distmap_bundle_adjust.h>
 #include <mw/pro/dvcpl_bundle_adjust_driver.h>
 
@@ -12,7 +12,7 @@
 void 
 keep_only_curves_with_sufficient_inlier_views(
     const vcl_set<unsigned> &viewset,
-    dbmcs_curve_3d_sketch *csk);
+    bmcsd_curve_3d_sketch *csk);
 
 int
 main(int argc, char **argv)
@@ -57,20 +57,20 @@ main(int argc, char **argv)
   vcl_cout << vcl_endl;
   
 
-  mw_util::camera_file_type cam_type;
+  bmcsd_util::camera_file_type cam_type;
 
   if (a_cam_type() == "intrinsic_extrinsic") {
-    cam_type = mw_util::MW_INTRINSIC_EXTRINSIC;
+    cam_type = bmcsd_util::MW_INTRINSIC_EXTRINSIC;
   } else {
     if (a_cam_type() == "projcamera")
-      cam_type = mw_util::MW_3X4;
+      cam_type = bmcsd_util::MW_3X4;
     else  {
       vcl_cerr << "Error: invalid camera type " << a_cam_type() << vcl_endl;
       return 1;
     }
   }
 
-  mw_curve_stereo_data_path dpath;
+  bmcsd_curve_stereo_data_path dpath;
   bool retval = 
     mw_data::read_frame_data_list_txt(a_prefix(), &dpath, cam_type);
   if (!retval) return 1;
@@ -78,7 +78,7 @@ main(int argc, char **argv)
 
   // Run Bundle Adjustment
 
-  dbmcs_curve_3d_sketch *csk = new dbmcs_curve_3d_sketch;
+  bmcsd_curve_3d_sketch *csk = new bmcsd_curve_3d_sketch;
   vcl_string csk_fname = a_prefix() + "/" + a_csk();
   retval  = csk->read_dir_format(csk_fname);
   MW_ASSERT(vcl_string("Error reading 3D curve sketch: ") + csk_fname, retval, true);
@@ -123,15 +123,15 @@ main(int argc, char **argv)
   if (vul_file::make_directory(a_out_dir()))
     vcl_cout << "Making output directory " << a_out_dir() << vcl_endl;
 
-  retval = mw_util::write_cams(a_out_dir(), cam_fnames_noext, 
-      mw_util::MW_INTRINSIC_EXTRINSIC, b.optimized_cameras());
+  retval = bmcsd_util::write_cams(a_out_dir(), cam_fnames_noext, 
+      bmcsd_util::MW_INTRINSIC_EXTRINSIC, b.optimized_cameras());
 
   MW_ASSERT("Error in writing optimized cameras", retval, true);
 
 // future todo: write out the optmized points. No tangential info -- so use mywritev
 // istead of the sequence below.
 //
-//  dbmcs_curve_3d_sketch csk_new;
+//  bmcsd_curve_3d_sketch csk_new;
 //  b.get_optimized_csk(&csk_new);
 //  csk_new.write_dir_format(a_out_dir() + "/optimized_curve_sketch");
 //  MW_ASSERT("Error in writing optimized curve sketch", retval, true);
@@ -142,10 +142,10 @@ main(int argc, char **argv)
 void 
 keep_only_curves_with_sufficient_inlier_views(
     const vcl_set<unsigned> &viewset,
-    dbmcs_curve_3d_sketch *csk)
+    bmcsd_curve_3d_sketch *csk)
 {
-  vcl_vector< dbdif_1st_order_curve_3d > crv3d_new;
-  vcl_vector< dbmcs_curve_3d_attributes > attr_new;
+  vcl_vector< bdifd_1st_order_curve_3d > crv3d_new;
+  vcl_vector< bmcsd_curve_3d_attributes > attr_new;
   crv3d_new.reserve(csk->num_curves());
   attr_new.reserve(csk->num_curves());
 

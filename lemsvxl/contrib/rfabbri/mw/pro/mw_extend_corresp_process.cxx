@@ -13,8 +13,8 @@
 #include <vsol/vsol_polyline_2d_sptr.h>
 #include <vsol/vsol_region_2d.h>
 #include <vsol/vsol_polygon_2d.h>
-#include <mw/algo/mw_discrete_corresp_algo.h>
-#include <mw/pro/mw_discrete_corresp_storage.h>
+#include <mw/algo/bmcsd_discrete_corresp_algo.h>
+#include <mw/pro/bmcsd_discrete_corresp_storage.h>
 
 
 
@@ -104,7 +104,7 @@ mw_extend_corresp_process::execute()
   retval = get_vsols(1, 1, &b0_);
   if (!retval) return false;
 
-  mw_discrete_corresp_storage_sptr c_sto;
+  bmcsd_discrete_corresp_storage_sptr c_sto;
   c_sto.vertical_cast(input_data_[1][2]);  
   if (!c_sto) {
     vcl_cout << "Error: corresp storage null\n";
@@ -114,26 +114,26 @@ mw_extend_corresp_process::execute()
   vcl_cout << "Corresp NAME: " << c_sto->name() << vcl_endl;
   vcl_cout << "Corresp: " << " : \n" << *acorr_ << vcl_endl;
 
-  if (acorr_->checksum() != mw_discrete_corresp_algo::compute_checksum(a0_, a1_)) {
+  if (acorr_->checksum() != bmcsd_discrete_corresp_algo::compute_checksum(a0_, a1_)) {
     vcl_cerr << "ERROR: input correspondence incompatible with input vsols\n";
     return false;
   }
 
   // extend corresp ------------
-  mw_discrete_corresp *bcorr_ptr = new mw_discrete_corresp;
-  mw_discrete_corresp &bcorr =*bcorr_ptr;
+  bmcsd_discrete_corresp *bcorr_ptr = new bmcsd_discrete_corresp;
+  bmcsd_discrete_corresp &bcorr =*bcorr_ptr;
 
   bool do_subcurves=false;
   parameters()->get_value( "-bsubcurves" , do_subcurves);
   if (do_subcurves) {
-    mw_discrete_corresp_algo::extend_to_subcurves(a0_, a1_, b0_, b1_, *acorr_, &bcorr);
+    bmcsd_discrete_corresp_algo::extend_to_subcurves(a0_, a1_, b0_, b1_, *acorr_, &bcorr);
   } else {
-    mw_discrete_corresp_algo::extend(a0_, a1_, b0_, b1_, *acorr_, &bcorr);
+    bmcsd_discrete_corresp_algo::extend(a0_, a1_, b0_, b1_, *acorr_, &bcorr);
   }
 
   // now output to frame -1 if possible
-  mw_discrete_corresp_storage_sptr 
-     b_storage = mw_discrete_corresp_storage_new();
+  bmcsd_discrete_corresp_storage_sptr 
+     b_storage = bmcsd_discrete_corresp_storage_new();
   
   b_storage->set_corresp(bcorr_ptr);
 

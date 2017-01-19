@@ -2,14 +2,14 @@
 //:
 // \file
 
-#include "dbmcs_nearest_edgels_process.h"
-#include <dbdif/dbdif_analytic.h>
-#include <dbdif/algo/dbdif_data.h>
+#include "bmcsd_nearest_edgels_process.h"
+#include <bdifd/bdifd_analytic.h>
+#include <bdifd/algo/bdifd_data.h>
 
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
 
-#include <dbdif/pro/dbdif_3rd_order_geometry_storage.h>
+#include <bdifd/pro/bdifd_3rd_order_geometry_storage.h>
 
 #include <vcl_vector.h>
 #include <vcl_string.h>
@@ -94,7 +94,7 @@ struct mynearest {
 };
 
 //: Constructor
-dbmcs_nearest_edgels_process::dbmcs_nearest_edgels_process()
+bmcsd_nearest_edgels_process::bmcsd_nearest_edgels_process()
 {
 //  if( 
 //      !parameters()->add( "   perturb tangents (deg)" , "-dtan"     , 10.0)
@@ -105,22 +105,22 @@ dbmcs_nearest_edgels_process::dbmcs_nearest_edgels_process()
 
 
 //: Destructor
-dbmcs_nearest_edgels_process::~dbmcs_nearest_edgels_process()
+bmcsd_nearest_edgels_process::~bmcsd_nearest_edgels_process()
 {
 }
 
 
 //: Clone the process
 bpro1_process*
-dbmcs_nearest_edgels_process::clone() const
+bmcsd_nearest_edgels_process::clone() const
 {
-  return new dbmcs_nearest_edgels_process(*this);
+  return new bmcsd_nearest_edgels_process(*this);
 }
 
 
 //: Return the name of this process
 vcl_string
-dbmcs_nearest_edgels_process::name()
+bmcsd_nearest_edgels_process::name()
 {
   return "Nearest Edgels to Polyline";
 }
@@ -128,7 +128,7 @@ dbmcs_nearest_edgels_process::name()
 
 //: Return the number of input frame for this process
 int
-dbmcs_nearest_edgels_process::input_frames()
+bmcsd_nearest_edgels_process::input_frames()
 {
   return 1;
 }
@@ -136,14 +136,14 @@ dbmcs_nearest_edgels_process::input_frames()
 
 //: Return the number of output frames for this process
 int
-dbmcs_nearest_edgels_process::output_frames()
+bmcsd_nearest_edgels_process::output_frames()
 {
   return 1;
 }
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbmcs_nearest_edgels_process::get_input_type()
+vcl_vector< vcl_string > bmcsd_nearest_edgels_process::get_input_type()
 {
   vcl_vector< vcl_string > to_return;
   to_return.push_back( "vsol2D" ); // curves
@@ -155,7 +155,7 @@ vcl_vector< vcl_string > dbmcs_nearest_edgels_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbmcs_nearest_edgels_process::get_output_type()
+vcl_vector< vcl_string > bmcsd_nearest_edgels_process::get_output_type()
 {
   vcl_vector<vcl_string > to_return;
   to_return.push_back( "vsol2D" ); // edgels
@@ -165,7 +165,7 @@ vcl_vector< vcl_string > dbmcs_nearest_edgels_process::get_output_type()
 
 //: Execute the process
 bool
-dbmcs_nearest_edgels_process::execute()
+bmcsd_nearest_edgels_process::execute()
 {
   clear_output();
 
@@ -265,7 +265,7 @@ dbmcs_nearest_edgels_process::execute()
 }
 
 bool
-dbmcs_nearest_edgels_process::finish()
+bmcsd_nearest_edgels_process::finish()
 {
   return true;
 }

@@ -8,8 +8,8 @@
 //\date 05/09/2006 10:11:31 PM EDT
 //
 
-#include <mw/mw_util.h>
-#include <dbdif/dbdif_frenet.h>
+#include <bmcsd/bmcsd_util.h>
+#include <bdifd/bdifd_frenet.h>
 #include <vsol/vsol_line_2d_sptr.h>
 
 //: Class to test the precision of differential-geometric estimations from Tamrakkar's symbolic edge linker.
@@ -27,7 +27,7 @@ public:
    );
 
   static void compute_circle_stats(
-  const vcl_vector<dbdif_3rd_order_point_2d> &crv,
+  const vcl_vector<bdifd_3rd_order_point_2d> &crv,
   const vcl_vector<vcl_vector<double> > &k, 
   const vcl_vector<vcl_vector<double> > &kdot,
   const vcl_vector<vcl_vector<double> > &k_stdv, 

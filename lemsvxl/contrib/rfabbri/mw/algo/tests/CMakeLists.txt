@@ -13,9 +13,9 @@ add_executable (mw_algo_test_all
    test_qualitative_epipolar.cxx
    test_cam.cxx
    test_sift_curve.cxx
-   test_dbpro_process.cxx
-   test_multiview_dbpro_process.cxx
-   test_dbmcs_stereo_driver.cxx
+   test_bprod_process.cxx
+   test_multiview_bprod_process.cxx
+   test_bmcsd_stereo_driver.cxx
    test_dvcpl_distmap_bundle_adjust.cxx
 )
 
@@ -34,9 +34,9 @@ add_test( mw_algo_test_tangent_band mw_algo_test_all test_tangent_band)
 add_test( mw_algo_test_util mw_algo_test_all test_util )
 add_test( mw_algo_test_cam mw_algo_test_all test_cam )
 add_test( mw_algo_test_sift_curve mw_algo_test_all test_sift_curve )
-add_test( mw_algo_test_dbpro_process mw_algo_test_all test_dbpro_process )
-add_test( mw_algo_test_multiview_dbpro_process mw_algo_test_all test_multiview_dbpro_process )
-add_test( mw_algo_test_dbmcs_stereo_driver mw_algo_test_all test_dbmcs_stereo_driver)
+add_test( mw_algo_test_bprod_process mw_algo_test_all test_bprod_process )
+add_test( mw_algo_test_multiview_bprod_process mw_algo_test_all test_multiview_bprod_process )
+add_test( mw_algo_test_bmcsd_stereo_driver mw_algo_test_all test_bmcsd_stereo_driver)
 add_test( mw_algo_test_dvcpl_distmap_bundle_ajust mw_algo_test_all test_dvcpl_distmap_bundle_adjust )
 
 add_executable( mw_algo_test_include test_include.cxx )

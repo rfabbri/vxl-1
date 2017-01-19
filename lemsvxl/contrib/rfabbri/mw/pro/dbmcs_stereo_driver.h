@@ -1,6 +1,6 @@
-// This is dbmcs_stereo_driver.h
-#ifndef dbmcs_stereo_driver_h
-#define dbmcs_stereo_driver_h
+// This is bmcsd_stereo_driver.h
+#ifndef bmcsd_stereo_driver_h
+#define bmcsd_stereo_driver_h
 //:
 //\file
 //\brief Class to run mw_*_curve_stereo in a multiview sequence
@@ -8,25 +8,25 @@
 //\date 08/12/2009 02:19:28 PM PDT
 //
 
-#include <mw/dbmcs_view_set.h>
-#include <mw/dbmcs_curve_3d_attributes.h>
-#include <mw/dbmcs_curve_3d_sketch.h>
-#include <mw/algo/mw_odt_curve_stereo.h>
+#include <bmcsd/bmcsd_view_set.h>
+#include <bmcsd/bmcsd_curve_3d_attributes.h>
+#include <bmcsd/bmcsd_curve_3d_sketch.h>
+#include <bmcsd/algo/bmcsd_odt_curve_stereo.h>
 #include <mw/algo/mw_data.h>
-#include <mw/pro/dbmcs_stereo_filter.h>
+#include <mw/pro/bmcsd_stereo_filter.h>
 
 //: Performs multiview stereo on a video sequence, by running many instances of
 // two-view stereo in subsets of the frames.
-class dbmcs_stereo_driver {
+class bmcsd_stereo_driver {
 public: 
 
   //: Specifies the input data by its path \p dpath, and the frames to be used
   // in each instance of 2-view stereo in \p frames_to_match.
   //
   // The number of confirmation views is specified in \p frames_to_match.
-  dbmcs_stereo_driver(
-      const mw_curve_stereo_data_path &dpath, 
-      const dbmcs_stereo_instance_views &frames_to_match)
+  bmcsd_stereo_driver(
+      const bmcsd_curve_stereo_data_path &dpath, 
+      const bmcsd_stereo_instance_views &frames_to_match)
     :
       dpath_(dpath),
       f_(frames_to_match),
@@ -49,7 +49,7 @@ public:
     assert(!f_.empty());
   }
 
-  virtual ~dbmcs_stereo_driver() {};
+  virtual ~bmcsd_stereo_driver() {};
 
   //: Might be bogus - this assumes all instances have the same number of
   // confirmation views. Not true.
@@ -86,11 +86,11 @@ public:
   void set_min_epiangle(double theta) 
     { tau_min_epiangle_ = theta; }
 
-  //: see mw_curve_stereo.h
+  //: see bmcsd_curve_stereo.h
   void set_min_first_to_second_best_ratio(double ratio) 
   { tau_min_first_to_second_best_ratio_ = ratio; }
 
-  //: see mw_curve_stereo.h
+  //: see bmcsd_curve_stereo.h
   void set_lonely_threshold(unsigned threshold) { tau_lonely_ = threshold; }
 
   void set_use_curvelets(unsigned use_curvelets) { use_curvelets_ = use_curvelets; }
@@ -98,7 +98,7 @@ public:
   void set_min_num_inlier_edgels_per_curvelet(unsigned m)
   { tau_min_num_inlier_edgels_per_curvelet_ = m; }
 
-  //: see mw_curve_stereo.h
+  //: see bmcsd_curve_stereo.h
   void set_min_epipolar_overlap(unsigned m) 
     { tau_min_epipolar_overlap_ = m; }
 
@@ -110,13 +110,13 @@ public:
   virtual bool run(unsigned long timestamp=1) = 0;
 
   //: The resulting 3D reconstruction after run();
-  void get_curve_sketch(dbmcs_curve_3d_sketch *csk) const
+  void get_curve_sketch(bmcsd_curve_3d_sketch *csk) const
     { csk->set(*crv3d_, *attr_); }
 
   //: The correspondence structures between the first two views, for each
   // instance (not necessarily in order of instances when run in parallel, but
-  // you can recover the instance from the dbmcs_curve_3d_attributes).
-  const mw_discrete_corresp &corresp(unsigned i) const
+  // you can recover the instance from the bmcsd_curve_3d_attributes).
+  const bmcsd_discrete_corresp &corresp(unsigned i) const
     { return (*corresp_)[i]; }
 
   unsigned num_corresp() const
@@ -133,17 +133,17 @@ public:
 
 protected:
   //: Inputs
-  mw_curve_stereo_data_path dpath_;
-  dbmcs_stereo_instance_views f_; 
+  bmcsd_curve_stereo_data_path dpath_;
+  bmcsd_stereo_instance_views f_; 
   unsigned nviews_;
 
   //: Outputs
-  dbmcs_curve_3d_sketch csk_;
-  vcl_vector< dbdif_1st_order_curve_3d > *crv3d_;
-  vcl_vector< dbmcs_curve_3d_attributes > *attr_;
+  bmcsd_curve_3d_sketch csk_;
+  vcl_vector< bdifd_1st_order_curve_3d > *crv3d_;
+  vcl_vector< bmcsd_curve_3d_attributes > *attr_;
 
-  dbpro_process_sptr output_job_;
-  vcl_vector<mw_discrete_corresp> *corresp_;
+  bprod_process_sptr output_job_;
+  vcl_vector<bmcsd_discrete_corresp> *corresp_;
 
   //: Parameters
   // TODO: include other parameters such as:
@@ -166,13 +166,13 @@ protected:
   bool initialized_;
 };
 
-class dbmcs_concurrent_stereo_driver : public dbmcs_stereo_driver {
+class bmcsd_concurrent_stereo_driver : public bmcsd_stereo_driver {
 public:
-  dbmcs_concurrent_stereo_driver(
-      const mw_curve_stereo_data_path &dpath, 
-      const dbmcs_stereo_instance_views &frames_to_match)
+  bmcsd_concurrent_stereo_driver(
+      const bmcsd_curve_stereo_data_path &dpath, 
+      const bmcsd_stereo_instance_views &frames_to_match)
     :
-      dbmcs_stereo_driver(dpath, frames_to_match),
+      bmcsd_stereo_driver(dpath, frames_to_match),
       max_concurrent_matchers_(2)
   {
   }
@@ -196,15 +196,15 @@ private:
   unsigned max_concurrent_matchers_;
 
   //: pool of processors.
-  vcl_vector<dbpro_process_sptr> cam_src_;
-  vcl_vector<dbpro_process_sptr> edg_src_;
-  vcl_vector<dbpro_process_sptr> edg_dt_;
-  vcl_vector<dbpro_process_sptr> frag_src_;
-  vcl_vector<dbpro_process_sptr> cvlet_src_;
-  vcl_vector<dbpro_process_sptr> frag_tangents_;
-  vcl_vector<dbpro_process_sptr> curve_stereo_;
-  vcl_vector<dbpro_process_sptr> curve_stereo_jobs_;
-  dbpro_process_sptr output_job_;
+  vcl_vector<bprod_process_sptr> cam_src_;
+  vcl_vector<bprod_process_sptr> edg_src_;
+  vcl_vector<bprod_process_sptr> edg_dt_;
+  vcl_vector<bprod_process_sptr> frag_src_;
+  vcl_vector<bprod_process_sptr> cvlet_src_;
+  vcl_vector<bprod_process_sptr> frag_tangents_;
+  vcl_vector<bprod_process_sptr> curve_stereo_;
+  vcl_vector<bprod_process_sptr> curve_stereo_jobs_;
+  bprod_process_sptr output_job_;
 };
 
-#endif // dbmcs_stereo_driver_h
+#endif // bmcsd_stereo_driver_h

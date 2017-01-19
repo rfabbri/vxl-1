@@ -16,10 +16,10 @@
 #include <bgui/bgui_vsol2D_tableau.h>
 #include <bgui/bgui_vsol2D_tableau_sptr.h>
 
-#include <dbdif/dbdif_camera.h>
+#include <bdifd/bdifd_camera.h>
 
 //: Many of the basic operations this tool does, as far as displaying epipolar
-//lines is concerned, could be moved to a dvpgl_epipolar_tool
+//lines is concerned, could be moved to a vpgld_epipolar_tool
 //
 
 class mw_correspond_point_tool_basic : public bvis1_tool {
@@ -47,7 +47,7 @@ public:
 
 protected:
 
-  vcl_vector<dbdif_camera> cam_; //: cameras for each view
+  vcl_vector<bdifd_camera> cam_; //: cameras for each view
   vcl_vector<int> frame_v_;   //: frame number for each view
   vcl_map<int,unsigned> iv_frame_; //: view number for each frame
   unsigned nviews_;

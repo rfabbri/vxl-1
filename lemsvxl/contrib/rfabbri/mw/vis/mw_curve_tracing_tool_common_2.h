@@ -16,7 +16,7 @@
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <bvis1/bvis1_manager.h>
 #include <bpro1/bpro1_storage_sptr.h>
-#include <dvpgl/pro/dvpgl_camera_storage.h>
+#include <vpgld/pro/vpgld_camera_storage.h>
 
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
@@ -30,9 +30,9 @@
 #include <vgl/vgl_distance.h>
 #include <vnl/vnl_math.h>
 
-#include <dbdif/dbdif_rig.h>
-#include <mw/mw_util.h>
-#include <mw/mw_intersection_sets.h>
+#include <bdifd/bdifd_rig.h>
+#include <bmcsd/bmcsd_util.h>
+#include <becld/becld_intersection_sets.h>
 #include <mw/mw_dist.h>
 
 #define MANAGER bvis1_manager::instance()

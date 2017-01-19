@@ -19,9 +19,9 @@
 
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vpgl/vpgl_fundamental_matrix.h>
-#include <mw/mw_intersection_sets.h>
-#include <dbdif/dbdif_camera.h>
-#include <dbdif/dbdif_rig.h>
+#include <becld/becld_intersection_sets.h>
+#include <bdifd/bdifd_camera.h>
+#include <bdifd/bdifd_rig.h>
 #include <mw/mw_curves.h>
 
 
@@ -53,7 +53,7 @@ public:
 protected:
 
   vgui_event_condition gesture0;
-  vcl_vector<dbdif_camera> cam_; //: cameras for each view
+  vcl_vector<bdifd_camera> cam_; //: cameras for each view
   vcl_vector<vil_image_view<vxl_uint_32> > dt_; //: distance transform images for each view
   vcl_vector<vil_image_view<unsigned> > label_; //: closest label transform images for each view
 
@@ -146,7 +146,7 @@ protected:
   bool display_all_nth_view_epips_;
 
   bool compute_isets_; 
-  mw_intersection_sets  isets_;
+  becld_intersection_sets  isets_;
 
   bool click_selects_whole_curve_;
 
@@ -183,7 +183,7 @@ private:
       *pt_3D) const;
 
   void get_reconstructions( const vcl_vector<unsigned> &views, unsigned ini_idx, unsigned di0,
-      mw_vector_3d *pt_3D, mw_vector_3d *pt_3D_linear) const;
+      bmcsd_vector_3d *pt_3D, bmcsd_vector_3d *pt_3D_linear) const;
 
   bool get_index_of_candidate_curve( const vsol_polyline_2d_sptr & selected_crv, unsigned *jnz);
 
@@ -195,19 +195,19 @@ private:
 
   void show_reprojections(unsigned jnz);
 
-  void project( unsigned view, vcl_vector<vsol_point_2d_sptr> &proj, const vcl_vector<mw_vector_3d>
-      &crv3d, dbdif_rig &/*rig*/) const;
+  void project( unsigned view, vcl_vector<vsol_point_2d_sptr> &proj, const vcl_vector<bmcsd_vector_3d>
+      &crv3d, bdifd_rig &/*rig*/) const;
 
   void reconstruct_and_reproject( unsigned jnz, unsigned view, vcl_vector<vsol_point_2d_sptr>
       &reproj, 
-      vcl_vector<mw_vector_3d> &crv3d, vcl_vector<unsigned> &crv1_idx, vcl_vector<unsigned>
-      &crv2_idx, dbdif_rig &rig) const;
+      vcl_vector<bmcsd_vector_3d> &crv3d, vcl_vector<unsigned> &crv1_idx, vcl_vector<unsigned>
+      &crv2_idx, bdifd_rig &rig) const;
 
-  void reconstruct_one_candidate( unsigned jnz, vcl_vector<mw_vector_3d> &crv3d, const
-      vcl_vector<unsigned> &crv1_idx, const vcl_vector<unsigned> &crv2_idx, dbdif_rig &rig) const;
+  void reconstruct_one_candidate( unsigned jnz, vcl_vector<bmcsd_vector_3d> &crv3d, const
+      vcl_vector<unsigned> &crv1_idx, const vcl_vector<unsigned> &crv2_idx, bdifd_rig &rig) const;
 
   void define_match_for_reconstruction( unsigned jnz, vcl_vector<unsigned> &crv1_idx,
-      vcl_vector<unsigned> &crv2_idx, dbdif_rig &rig) const;
+      vcl_vector<unsigned> &crv2_idx, bdifd_rig &rig) const;
 
   void get_matching_subcurve(
       unsigned candidate_index,
@@ -222,15 +222,15 @@ private:
   void reconstruct_subcurve(
       unsigned ini_idx_sub, 
       unsigned end_idx_sub, 
-      vcl_vector<mw_vector_3d> *curve_3d) const;
+      vcl_vector<bmcsd_vector_3d> *curve_3d) const;
 
   void
   get_reconstructions_optimal_kanatani(
       const vcl_vector<unsigned> &views, 
       unsigned ini_idx, 
       unsigned di0, 
-      mw_vector_3d *pt_3D, 
-      mw_vector_3d *pt_3D_linear) const ;
+      bmcsd_vector_3d *pt_3D, 
+      bmcsd_vector_3d *pt_3D_linear) const ;
 
   void reconstruct_pts_2view_kanatani(
       const vcl_vector<vsol_point_2d_sptr> &pt_img,

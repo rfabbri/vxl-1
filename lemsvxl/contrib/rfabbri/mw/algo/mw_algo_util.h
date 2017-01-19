@@ -1,6 +1,6 @@
-// This is mw_algo_util.h
-#ifndef mw_algo_util_h
-#define mw_algo_util_h
+// This is bmcsd_algo_util.h
+#ifndef bmcsd_algo_util_h
+#define bmcsd_algo_util_h
 //:
 //\file
 //\brief Misc. Utilities for photogrammetry library
@@ -14,15 +14,15 @@
 #include <vsol/vsol_box_2d.h>
 #include <dbdet/dbdet_frenet_keypoint.h>
 #include <dbdet/sel/dbdet_edgel.h>
-#include <dbdif/dbdif_camera.h>
-#include <dbdif/dbdif_rig.h>
+#include <bdifd/bdifd_camera.h>
+#include <bdifd/bdifd_rig.h>
 
-#include <mw/mw_util.h>
+#include <bmcsd/bmcsd_util.h>
 #include <mw/mw_subpixel_point_set.h>
 
 
 //: Some utility functions for mw_algo
-class mw_algo_util {
+class bmcsd_algo_util {
 public:
   //:  Move world coordinates to first camera, updating each camera matrix accordingly
   // \todo test this separately.
@@ -41,8 +41,8 @@ public:
   // \return true in case at least one reprojection into current view has non-degenerate geometry
   static bool
   dg_reprojection_error(
-      vcl_vector<dbdif_3rd_order_point_2d> &pts, //:< pts[iv] points in view iv
-      const vcl_vector<dbdif_camera> &cam,
+      vcl_vector<bdifd_3rd_order_point_2d> &pts, //:< pts[iv] points in view iv
+      const vcl_vector<bdifd_camera> &cam,
       unsigned v,
       double &dpos,
       double &dtheta,
@@ -66,8 +66,8 @@ public:
   // \return false if all points lead to degenerate reprojection / singular geometry
   static bool
   dg_reprojection_error(
-      vcl_vector<dbdif_3rd_order_point_2d> &pts, //:< pts[iv] points in view iv
-      const vcl_vector<dbdif_camera> &cam,
+      vcl_vector<bdifd_3rd_order_point_2d> &pts, //:< pts[iv] points in view iv
+      const vcl_vector<bdifd_camera> &cam,
       // no parameter v - do it for all v.
       double &dpos,
       double &dtheta,
@@ -80,15 +80,15 @@ public:
       unsigned &n
       );
   
-  //: convert from dbdet to dbdif (point with differential geometry attributes)
-  inline static dbdif_3rd_order_point_2d
+  //: convert from dbdet to bdifd (point with differential geometry attributes)
+  inline static bdifd_3rd_order_point_2d
     mw_get_3rd_order_point_2d(const dbdet_frenet_keypoint &kp);
 
-  //: convert from dbdif to dbdet (point with differential geometry attributes)
+  //: convert from bdifd to dbdet (point with differential geometry attributes)
   inline static dbdet_frenet_keypoint
-    mw_get_frenet_keypoint(const dbdif_3rd_order_point_2d &fp);
+    mw_get_frenet_keypoint(const bdifd_3rd_order_point_2d &fp);
 
-  //: Determines proper bbox to be passed to dbecl_epiband, given that the bbox of the vsols (edgel
+  //: Determines proper bbox to be passed to becld_epiband, given that the bbox of the vsols (edgel
   // set) is pb, and that we have a subpixel point set sp
   static inline vsol_box_2d_sptr
     determine_right_bbox(const vsol_box_2d_sptr &/*poly_box*/, const mw_subpixel_point_set *sp) 
@@ -112,25 +112,25 @@ public:
       return box;
     }
 
-  //: Given 1st order dbdif point-tangents in image coordinates, 
+  //: Given 1st order bdifd point-tangents in image coordinates, 
   // returns the dbdet_edgel with the correct position and orientation.
-  static void dbdif_to_dbdet(
-      const dbdif_1st_order_curve_2d &crv_from, 
+  static void bdifd_to_dbdet(
+      const bdifd_1st_order_curve_2d &crv_from, 
       vcl_vector<dbdet_edgel> *crv_to
       )
   {
     crv_to->reserve(crv_from.size());
     for (unsigned i=0; i < crv_from.size(); ++i) {
       dbdet_edgel edg;
-      dbdif_to_dbdet(crv_from[i], &edg);
+      bdifd_to_dbdet(crv_from[i], &edg);
       crv_to->push_back(edg);
     }
   }
 
-  static void dbdif_to_dbdet(const dbdif_1st_order_point_2d &from, dbdet_edgel *to) 
+  static void bdifd_to_dbdet(const bdifd_1st_order_point_2d &from, dbdet_edgel *to) 
   {
     to->pt.set(from.gama[0], from.gama[1]);
-    to->tangent = mw_util::angle0To2Pi(vcl_atan2(from.t[1], from.t[0]));
+    to->tangent = bmcsd_util::angle0To2Pi(vcl_atan2(from.t[1], from.t[0]));
   }
 
   static void dbdet_to_vsol(
@@ -145,10 +145,10 @@ public:
   static void extract_edgel_chain(const vsol_polyline_2d &pts, dbdet_edgel_chain *ec);
 };
 
-inline dbdif_3rd_order_point_2d mw_algo_util::
+inline bdifd_3rd_order_point_2d bmcsd_algo_util::
 mw_get_3rd_order_point_2d(const dbdet_frenet_keypoint &kp)
 {
-  dbdif_3rd_order_point_2d p;
+  bdifd_3rd_order_point_2d p;
 
   p.gama[0] = kp.x();
   p.gama[1] = kp.y();
@@ -166,8 +166,8 @@ mw_get_3rd_order_point_2d(const dbdet_frenet_keypoint &kp)
   return p;
 }
 
-inline dbdet_frenet_keypoint mw_algo_util::
-mw_get_frenet_keypoint(const dbdif_3rd_order_point_2d &fp)
+inline dbdet_frenet_keypoint bmcsd_algo_util::
+mw_get_frenet_keypoint(const bdifd_3rd_order_point_2d &fp)
 {
   dbdet_frenet_keypoint kp;
 
@@ -184,4 +184,4 @@ mw_get_frenet_keypoint(const dbdif_3rd_order_point_2d &fp)
   return kp;
 }
 
-#endif // mw_algo_util_h
+#endif // bmcsd_algo_util_h

@@ -21,14 +21,14 @@
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/storage/vidpro1_vtol_storage.h>
-#include <dvpgl/pro/dvpgl_camera_storage.h>
+#include <vpgld/pro/vpgld_camera_storage.h>
 #include <dbdet/pro/dbdet_sel_storage.h>
 #include <dbdet/pro/dbdet_edgemap_storage.h>
 #include <dbdet/pro/dbdet_keypoint_storage.h>   
 #include <dbkpr/pro/dbkpr_corr3d_storage.h>  
-#include <mw/pro/mw_discrete_corresp_storage.h>
-#include <mw/pro/mw_discrete_corresp_storage_3.h>
-#include <dbdif/pro/dbdif_3rd_order_geometry_storage.h>
+#include <mw/pro/bmcsd_discrete_corresp_storage.h>
+#include <mw/pro/bmcsd_discrete_corresp_storage_3.h>
+#include <bdifd/pro/bdifd_3rd_order_geometry_storage.h>
 
 
 // Displayer header files
@@ -60,7 +60,7 @@
 #include <vidpro1/process/vidpro1_save_vsol_process.h>
 #include <dbdet/pro/dbdet_load_cvlet_map_process.h>
 #include <dbdet/pro/dbdet_save_cvlet_map_process.h>
-#include <dbsol/pro/dbsol_smooth_contours_process.h>
+#include <bsold/pro/bsold_smooth_contours_process.h>
 
 
 
@@ -88,27 +88,27 @@
 #include <dbdet/pro/dbdet_load_cem_process.h>
 #include <dbdet/pro/dbdet_save_cem_process.h>
 #include <dbdet/pro/dbdet_convert_edgemap_to_image_process.h>
-#include <dbil/pro/dbil_distance_transform_process.h>
+#include <bild/pro/bild_distance_transform_process.h>
 #include <dbkpr/pro/dbkpr_bbf_match_process.h>
 #include <dbkpr/pro/dbkpr_span_match_process.h>
 #include <dbkpr/pro/dbkpr_reconstruct_process.h>
 #include <mw/pro/dbkpr_frenet_reconstruct_process.h>
 #include <dbkpr/pro/dbkpr_interp_depth_process.h>
-//#include <dvpgl/algo/pro/dvpgl_vsol_lens_warp_process.h>
-//#include <dvpgl/algo/pro/dvpgl_image_lens_warp_process.h>
-#include <mw/pro/dvpgl_load_camera_process.h>
+//#include <vpgld/algo/pro/vpgld_vsol_lens_warp_process.h>
+//#include <vpgld/algo/pro/vpgld_image_lens_warp_process.h>
+#include <mw/pro/vpgld_load_camera_process.h>
 #include <mw/pro/mw_load_discrete_corresp_process.h>
 #include <mw/pro/mw_save_discrete_corresp_process.h>
-#include <dbdif/pro/dbdif_edgel_data_process.h>
+#include <bdifd/pro/bdifd_edgel_data_process.h>
 #include <mw/pro/dbdet_combine_curves_process.h>
 #include <mw/pro/dbkpr_projective_reconstruct_process.h>
 #include <mw/pro/mw_synthetic_corresp_process.h>
 #include <mw/pro/mw_project_cube_process.h>
 #include <mw/pro/mw_project_polyline_process.h>
-#include <mw/pro/dbmcs_project_curve_sketch_process.h>
+#include <mw/pro/bmcsd_project_curve_sketch_process.h>
 #include <mw/pro/dbdet_compute_linked_curves_process.h>
 #include <mw/pro/mw_extend_corresp_process.h>
-#include <mw/pro/dbmcs_nearest_edgels_process.h>
+#include <mw/pro/bmcsd_nearest_edgels_process.h>
 
 #ifdef HAS_BGUI3D
 #include <bgui3d/bgui3d.h>
@@ -144,14 +144,14 @@ int main(int argc, char** argv)
   REG_STORAGE( vidpro1_image_storage );
   REG_STORAGE( vidpro1_vsol2D_storage );
   REG_STORAGE( vidpro1_vtol_storage );
-  REG_STORAGE( dvpgl_camera_storage );
+  REG_STORAGE( vpgld_camera_storage );
   REG_STORAGE( dbdet_sel_storage );
   REG_STORAGE( dbdet_edgemap_storage );
   REG_STORAGE( dbdet_keypoint_storage );
   REG_STORAGE( dbkpr_corr3d_storage );
-  REG_STORAGE( mw_discrete_corresp_storage );
-  REG_STORAGE( mw_discrete_corresp_storage_3 );
-  REG_STORAGE( dbdif_3rd_order_geometry_storage );
+  REG_STORAGE( bmcsd_discrete_corresp_storage );
+  REG_STORAGE( bmcsd_discrete_corresp_storage_3 );
+  REG_STORAGE( bdifd_3rd_order_geometry_storage );
 
   // Register all the processes
   REG_PROCESS( vidpro1_load_image_process );
@@ -168,10 +168,10 @@ int main(int argc, char** argv)
   REG_PROCESS( vidpro1_load_cem_process );
   REG_PROCESS( vidpro1_save_cem_process );
   REG_PROCESS( vidpro1_edgeprune_process );
-  REG_PROCESS( dbil_distance_transform_process);
+  REG_PROCESS( bild_distance_transform_process);
 
   
-  REG_PROCESS( dbsol_smooth_contours_process );
+  REG_PROCESS( bsold_smooth_contours_process );
   REG_PROCESS( dbdet_lowe_keypoint_process );
   REG_PROCESS( dbdet_generic_edge_detector_process );
   REG_PROCESS( dbdet_sel_process );
@@ -203,22 +203,22 @@ int main(int argc, char** argv)
   REG_PROCESS( dbkpr_frenet_reconstruct_process );
   REG_PROCESS( dbkpr_projective_reconstruct_process );
   REG_PROCESS( dbkpr_interp_depth_process );
-//  REG_PROCESS( dvpgl_vsol_lens_warp_process );
-//  REG_PROCESS( dvpgl_image_lens_warp_process );
-  REG_PROCESS( dvpgl_load_camera_process );
+//  REG_PROCESS( vpgld_vsol_lens_warp_process );
+//  REG_PROCESS( vpgld_image_lens_warp_process );
+  REG_PROCESS( vpgld_load_camera_process );
   REG_PROCESS( show_contours_process );
 
   REG_PROCESS( mw_load_discrete_corresp_process );
   REG_PROCESS( mw_save_discrete_corresp_process );
   REG_PROCESS( vidpro1_load_vsol_process );
   REG_PROCESS( vidpro1_save_vsol_process );
-  REG_PROCESS( dbdif_edgel_data_process );
+  REG_PROCESS( bdifd_edgel_data_process );
   REG_PROCESS( dbdet_combine_curves_process );
   REG_PROCESS( mw_synthetic_corresp_process );
   REG_PROCESS( mw_project_cube_process );
   REG_PROCESS( mw_project_polyline_process );
-  REG_PROCESS( dbmcs_project_curve_sketch_process );
-  REG_PROCESS( dbmcs_nearest_edgels_process );
+  REG_PROCESS( bmcsd_project_curve_sketch_process );
+  REG_PROCESS( bmcsd_nearest_edgels_process );
   REG_PROCESS( mw_extend_corresp_process );
 
   mw_stereo_menu menubar;

@@ -1,6 +1,6 @@
-// This is dbpro_load_vsol_polyline_source.h
-#ifndef dbpro_load_vsol_polyline_source_h
-#define dbpro_load_vsol_polyline_source_h
+// This is bprod_load_vsol_polyline_source.h
+#ifndef bprod_load_vsol_polyline_source_h
+#define bprod_load_vsol_polyline_source_h
 //:
 //\file
 //\brief Source process associated with binary vsol file
@@ -9,16 +9,16 @@
 //
 
 #include <vul/vul_file.h>
-#include <dbsol/dbsol_file_io.h>
+#include <bsold/bsold_file_io.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 
 
-//: dbpro souce process to load vsol storage from a binary file.
+//: bprod souce process to load vsol storage from a binary file.
 //
-class dbpro_load_vsol_polyline_source : public dbpro_source {
+class bprod_load_vsol_polyline_source : public bprod_source {
 public:
 
-  dbpro_load_vsol_polyline_source( vcl_string fname ) 
+  bprod_load_vsol_polyline_source( vcl_string fname ) 
     : fname_(fname),
       min_samples_(0),
       min_length_(0.0),
@@ -33,7 +33,7 @@ public:
   //: Used to prune the curves by enforcing a minimum number of samples.
   void set_min_length(double m) { min_length_ = m; use_length_ = true; }
 
-  dbpro_signal execute() {
+  bprod_signal execute() {
     vcl_string ext = vul_file::extension(fname_);
     vcl_vector< vsol_spatial_object_2d_sptr > base;
 
@@ -41,7 +41,7 @@ public:
       vsl_b_ifstream bp_in(fname_.c_str());
       if (!bp_in) {
         vcl_cout << " Error opening file  " << fname_ << vcl_endl;
-        return DBPRO_INVALID;
+        return BPROD_INVALID;
       }
 
       vcl_cout << "Opened vsl file " << fname_ <<  " for reading" << vcl_endl;
@@ -51,9 +51,9 @@ public:
       bp_in.close();
       base = output_vsol->all_data();
     } else {
-      bool retval = dbsol_load_cem(base, fname_);
+      bool retval = bsold_load_cem(base, fname_);
       if (!retval) {
-        return DBPRO_INVALID;
+        return BPROD_INVALID;
       }
       vcl_cout << "Opened cemv file " << fname_ <<  " for reading" << vcl_endl;
     }
@@ -69,7 +69,7 @@ public:
 
       if (!p) {
         vcl_cerr << "Non-polyline found, but only POLYLINES supported!" << vcl_endl;
-        return DBPRO_INVALID;
+        return BPROD_INVALID;
       }
 
       bool include_curve = (use_length_)? (p->length() > min_length_) : (p->size() > min_samples_);
@@ -83,7 +83,7 @@ public:
     vcl_cout << "Curves: #curves =  " << curves.size() << vcl_endl;
 
     output(0, curves);
-    return DBPRO_VALID;
+    return BPROD_VALID;
   }
 
 private:
@@ -93,5 +93,5 @@ private:
   bool use_length_;
 };
 
-#endif // dbpro_load_vsol_polyline_source_h
+#endif // bprod_load_vsol_polyline_source_h
 

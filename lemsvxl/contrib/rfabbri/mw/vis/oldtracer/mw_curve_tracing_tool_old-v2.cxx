@@ -7,7 +7,7 @@
 #include <bvis1/bvis1_view_tableau.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/vidpro1_repository.h>
-#include <dvpgl/pro/dvpgl_camera_storage.h>
+#include <vpgld/pro/vpgld_camera_storage.h>
 
 #include <vcl_set.h>
 #include <vnl/vnl_math.h>
@@ -18,9 +18,9 @@
 #include <vgl/vgl_line_2d.h>
 #include <vgl/vgl_distance.h>
 
-#include <dbdif/dbdif_rig.h>
-#include <mw/mw_intersection_sets.h>
-#include <mw/mw_util.h>
+#include <bdifd/bdifd_rig.h>
+#include <becld/becld_intersection_sets.h>
+#include <bmcsd/bmcsd_util.h>
 
 
 
@@ -97,7 +97,7 @@ mw_curve_tracing_tool_3::activate ()
     bpro1_storage_sptr 
       p = MANAGER->repository()->get_data_at("vpgl camera",frame_v1);
 
-    dvpgl_camera_storage_sptr cam_storage;
+    vpgld_camera_storage_sptr cam_storage;
 
     cam_storage.vertical_cast(p);
 
@@ -752,7 +752,7 @@ reconstruct_possible_matches()
   //      - output with proper name
 
 
-  dbdif_rig rig(*cam1_, *cam2_);
+  bdifd_rig rig(*cam1_, *cam2_);
 
 
   unsigned ini_idx, end_idx,i,j;
@@ -787,7 +787,7 @@ reconstruct_possible_matches()
     vcl_cout << "Writing: " << fname << vcl_endl;
 
     // traverse L_[j] 
-    vcl_list<mw_intersection_sets::intersection_nhood_>::const_iterator ptr;
+    vcl_list<becld_intersection_sets::intersection_nhood_>::const_iterator ptr;
     for (ptr=isets_.L_[j].intercepts.begin(); ptr != isets_.L_[j].intercepts.end(); ++ptr) {
 
       unsigned k = ptr->ep_number;
@@ -814,7 +814,7 @@ reconstruct_possible_matches()
 
       vsol_point_2d_sptr pt_img2 = crv_candidates_ptrs_[j]->vertex(ptr->index[lmin]);
 
-      mw_vector_3d pt_3D;
+      bmcsd_vector_3d pt_3D;
 
       rig.reconstruct_point_lsqr(pt_img1,pt_img2,&pt_3D);
 

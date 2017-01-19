@@ -25,7 +25,7 @@
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_homg_point_3d.h>
-#include <mw/mw_util.h>
+#include <bmcsd/bmcsd_util.h>
 
 
 
@@ -112,9 +112,9 @@ class dvcpl_distmap_optimize_camera_lsqr : public vnl_least_squares_function
     }
 
     unsigned id;
-    mw_util::max(ev, id);
+    bmcsd_util::max(ev, id);
     *max_err = ev[id];
-    *med_err  =  mw_util::median(ev);
+    *med_err  =  bmcsd_util::median(ev);
    
     return  e /= (fx.size()*0.5);
   }

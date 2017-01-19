@@ -1,10 +1,10 @@
 #include "mw_curve_tracing_tool_common_3.h"
 #include "mw_curve_tracing_tool_utils_3.h"
 
-#include <dbecl/dbecl_episeg_sptr.h>
-#include <dbecl/dbecl_episeg.h>
-#include <dbecl/dbecl_epipole.h>
-#include <dbecl/dbecl_episeg_from_curve_converter.h>
+#include <becld/becld_episeg_sptr.h>
+#include <becld/becld_episeg.h>
+#include <becld/becld_epipole.h>
+#include <becld/becld_episeg_from_curve_converter.h>
 
 vcl_string
 mw_curve_tracing_tool_3::name() const
@@ -77,12 +77,12 @@ break_curves_into_episegs(
   // ----------------------------------------------------------------------
   // Break curve
 
-  dbecl_epipole_sptr epipole = new dbecl_epipole(e.x()/e.w(), e.y()/e.w());
-  dbecl_episeg_from_curve_converter factory(epipole);
+  becld_epipole_sptr epipole = new becld_epipole(e.x()/e.w(), e.y()/e.w());
+  becld_episeg_from_curve_converter factory(epipole);
 
   // A) For each vsol, do:
   
-  vcl_vector<dbecl_episeg_sptr> all_episegs;
+  vcl_vector<becld_episeg_sptr> all_episegs;
   for (unsigned i=0; i < vsols.size(); ++i) {
     
     // A1 - convert to digital curve
@@ -91,9 +91,9 @@ break_curves_into_episegs(
       dc->add_vertex(vsols[i]->vertex(k));
 
     // A2 - apply episeg
-    vcl_vector<dbecl_episeg_sptr> eps = factory.convert_curve(dc);
+    vcl_vector<becld_episeg_sptr> eps = factory.convert_curve(dc);
 
-    for(vcl_vector<dbecl_episeg_sptr>::iterator itr = eps.begin(); 
+    for(vcl_vector<becld_episeg_sptr>::iterator itr = eps.begin(); 
         itr != eps.end();  ++itr)
       all_episegs.push_back(*itr);
   }

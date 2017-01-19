@@ -10,8 +10,8 @@
 
 #include <mw/vis/mw_correspond_point_tool_basic.h>
 
-class dbecl_epiband;
-class dbecl_grid_cover_window;
+class becld_epiband;
+class becld_grid_cover_window;
 class vgui_dialog;
 
 class mw_correspond_point_tool_band : public mw_correspond_point_tool_basic {
@@ -35,9 +35,9 @@ public:
 protected:
   vcl_vector<vsol_box_2d_sptr> bbox_;  //:< bounding boxes for all vsols
   
-  vcl_vector<dbecl_grid_cover_window*> w_;
+  vcl_vector<becld_grid_cover_window*> w_;
 
-  vcl_vector< vcl_vector<dbecl_epiband *> > epband_;
+  vcl_vector< vcl_vector<becld_epiband *> > epband_;
   vcl_vector< vcl_vector<bgui_vsol_soview2D_polygon *> > epband_soview_;
 
   vcl_vector< vcl_list<vgui_soview2D_point *> > covering_soviews_; 

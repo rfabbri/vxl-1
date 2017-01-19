@@ -9,11 +9,11 @@
 //
 
 #include <mw/vis/mw_correspond_point_tool_basic.h>
-#include <mw/mw_discrete_corresp.h>
+#include <bmcsd/bmcsd_discrete_corresp.h>
 
 #include <vcl_map.h>
 
-class dbgl_eulerspiral;
+class bgld_eulerspiral;
 
 //: Tool for exploring and editing binocular correspondences between edgels
 //
@@ -77,7 +77,7 @@ public:
 
 protected:
 
-  mw_discrete_corresp *corr_;
+  bmcsd_discrete_corresp *corr_;
   vsol_line_2d_sptr selected_edgel_corresp_;
   vgui_style_sptr corresp_edges_style_;
   vgui_style_sptr wrongly_matched_edgels_style_;
@@ -100,7 +100,7 @@ protected:
   vgui_style_sptr p1_query_style_; 
   //: if selected point in left view is a candidate, heres an iterator for it in the
   // correspondences list:
-  vcl_list<mw_attributed_object>::iterator p1_query_itr_; 
+  vcl_list<bmcsd_attributed_object>::iterator p1_query_itr_; 
   bool p1_query_is_candidate_;
   vcl_string p1_query_layer_; 
 
@@ -109,17 +109,17 @@ protected:
   // For manipulating ground-truth /  synthetic data
   bool synthetic_;
   bool synthetic_olympus_;
-  vcl_vector<vcl_vector<dbdif_3rd_order_point_2d> > crv2d_gt_;
-  vcl_vector<vcl_vector<dbdif_3rd_order_point_3d> > crv3d_gt_;
-  mw_discrete_corresp gt_; //:< ground-truth corresp.
-  vcl_vector<dbgl_eulerspiral *>es_; //:< srm stands for synthetic reconstruction movie
+  vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > crv2d_gt_;
+  vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > crv3d_gt_;
+  bmcsd_discrete_corresp gt_; //:< ground-truth corresp.
+  vcl_vector<bgld_eulerspiral *>es_; //:< srm stands for synthetic reconstruction movie
   vgui_style_sptr es_style_;
   vcl_string es_layer_; 
   vcl_string srm_allcrvs_layer_; 
   double srm_angle_;
-  dbdif_camera srm_cam_;
+  bdifd_camera srm_cam_;
   vnl_double_3x3 srm_K_;
-  dbdif_3rd_order_point_3d srm_Prec_;
+  bdifd_3rd_order_point_3d srm_Prec_;
   bool  srm_display_full_; 
   bool  srm_display_es_; 
   vcl_vector<bgui_vsol_soview2D_polyline *> srm_allcrvs_so_;
@@ -128,9 +128,9 @@ protected:
   vcl_vector<bgui_vsol_soview2D_polyline *> es_so_;
   vcl_vector<double> angle_cam_; //:< degrees; only used in digital cameras's synthetic data for now
 
-  vcl_vector<dbdif_camera> cam_gt_; //: unperturbed cameras for each view
+  vcl_vector<bdifd_camera> cam_gt_; //: unperturbed cameras for each view
 
-  dbgl_eulerspiral *es_gt_; //:< eulerspiral of reproj. in 3rd view using true cams
+  bgld_eulerspiral *es_gt_; //:< eulerspiral of reproj. in 3rd view using true cams
   vgui_style_sptr es_style_gt_;
   vcl_string es_layer_gt_;
   bgui_vsol_soview2D_polyline * es_so_gt_;
@@ -172,8 +172,8 @@ protected:
 //  void run_stereo_matcher_given_epipolar_candidates();
 //  void run_stereo_matcher_and_epipolar_candidates();
 
-  dbgl_eulerspiral * 
-  get_new_eulerspiral(const dbdif_3rd_order_point_2d &p1) const;
+  bgld_eulerspiral * 
+  get_new_eulerspiral(const bdifd_3rd_order_point_2d &p1) const;
 
   void srm_draw_eulerspiral();
   void write_energies();

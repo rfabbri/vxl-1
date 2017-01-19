@@ -2,14 +2,14 @@
 #include <vcl_sstream.h>
 #include <vul/vul_file.h>
 #include <vnl/vnl_random.h>
-#include <dbdif/dbdif_camera.h>
-#include <dbdif/algo/dbdif_data.h>
-#include <dbsol/dbsol_file_io.h>
+#include <bdifd/bdifd_camera.h>
+#include <bdifd/algo/bdifd_data.h>
+#include <bsold/bsold_file_io.h>
 #include <dbdet/edge/dbdet_edgemap.h>
 #include <dbdet/algo/dbdet_load_edg.h>
-#include <mw/mw_util.h>
-#include <mw/algo/mw_algo_util.h>
-#include <mw/dbmcs_curve_3d_sketch.h>
+#include <bmcsd/bmcsd_util.h>
+#include <bmcsd/algo/bmcsd_algo_util.h>
+#include <bmcsd/bmcsd_curve_3d_sketch.h>
 
 // Generate a synthetic sequence of curves
 int
@@ -25,11 +25,11 @@ main(int argc, char **argv)
   vcl_string prefix("frame_");
 
   vnl_double_3x3 Kmatrix;
-  dbdif_turntable::internal_calib_olympus(Kmatrix, x_max_scaled, crop_origin_x_, crop_origin_y_);
+  bdifd_turntable::internal_calib_olympus(Kmatrix, x_max_scaled, crop_origin_x_, crop_origin_y_);
 
   vpgl_calibration_matrix<double> K(Kmatrix);
   vcl_vector<vpgl_perspective_camera<double> > cam_vpgl;
-  vcl_vector<dbdif_camera> cam_gt;
+  vcl_vector<bdifd_camera> cam_gt;
   cam_vpgl.resize(nviews);
   cam_gt.resize(nviews);
 
@@ -38,11 +38,11 @@ main(int argc, char **argv)
 
   for (unsigned i=0; i < nviews; ++i) {
     vpgl_perspective_camera<double> *P;
-    P = dbdif_turntable::camera_olympus(6*i, K);
+    P = bdifd_turntable::camera_olympus(6*i, K);
     cam_gt[i].set_p(*P);
     delete P;
 
-    P = dbdif_turntable::camera_olympus(6*i+myrand.drand64(-4,4), K);
+    P = bdifd_turntable::camera_olympus(6*i+myrand.drand64(-4,4), K);
 
     cam_vpgl[i] = *P;
     delete P;
@@ -53,22 +53,22 @@ main(int argc, char **argv)
   vul_file::make_directory(dir);
 
   bool retval =  
-    mw_util::write_cams(dir, prefix, mw_util::MW_INTRINSIC_EXTRINSIC, cam_vpgl);
+    bmcsd_util::write_cams(dir, prefix, bmcsd_util::MW_INTRINSIC_EXTRINSIC, cam_vpgl);
   if (!retval)
     abort();
   
 
   // crv2d[i][j]  curve i view j
-  vcl_vector<vcl_vector<vcl_vector<dbdif_3rd_order_point_2d> > > crv2d;
-  vcl_vector<vcl_vector<dbdif_3rd_order_point_3d> > crv3d;
-//  dbdif_data::space_curves_digicam_turntable_sandbox( crv3d );
-  dbdif_data::space_curves_olympus_turntable( crv3d );
+  vcl_vector<vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > > crv2d;
+  vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > crv3d;
+//  bdifd_data::space_curves_digicam_turntable_sandbox( crv3d );
+  bdifd_data::space_curves_olympus_turntable( crv3d );
 
 
   // XXX hack: select specific subset
 
   {
-  vcl_vector<vcl_vector<dbdif_3rd_order_point_3d> > crv3d_ss;
+  vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > crv3d_ss;
   crv3d_ss.reserve(crv3d.size());
   for (unsigned  i=0; i < crv3d.size(); ++i) {
 //    if (i == 8 || i == 10 || i == 15)
@@ -81,9 +81,9 @@ main(int argc, char **argv)
   crv2d.resize(crv3d.size());
 
   for (unsigned  i=0; i < crv3d.size(); ++i)
-    dbdif_data::project_into_cams(crv3d[i], cam_gt, crv2d[i]);
+    bdifd_data::project_into_cams(crv3d[i], cam_gt, crv2d[i]);
 
-  vcl_vector<vcl_vector<dbdif_1st_order_point_3d> > crv3d_1st(crv3d.size());
+  vcl_vector<vcl_vector<bdifd_1st_order_point_3d> > crv3d_1st(crv3d.size());
   for (unsigned  i=0; i < crv3d.size(); ++i) {
     crv3d_1st[i].resize(crv3d[i].size());
     for (unsigned k=0; k < crv3d[i].size(); ++k) {
@@ -108,7 +108,7 @@ main(int argc, char **argv)
     vcl_ostringstream v_str;
     v_str << vcl_setw(4) << vcl_setfill('0') << k;
     vcl_string filename = dir + vcl_string("/") + prefix + v_str.str() + vcl_string(".cemv.gz");
-    dbsol_save_cem(polys, filename);
+    bsold_save_cem(polys, filename);
   }
 
   // We now need to generate the edgemaps.
@@ -118,7 +118,7 @@ main(int argc, char **argv)
     for (unsigned i=0; i<number_of_curves; ++i) {
       for (unsigned  j=0; j < crv2d[i][k].size(); ++j) {
         edgels.push_back(new dbdet_edgel);
-        mw_algo_util::dbdif_to_dbdet(crv2d[i][k][j], edgels.back());
+        bmcsd_algo_util::bdifd_to_dbdet(crv2d[i][k][j], edgels.back());
       }
     }
     dbdet_edgemap_sptr em = new dbdet_edgemap(520, 380, edgels);
@@ -134,14 +134,14 @@ main(int argc, char **argv)
 
   // The 3D Curve Sketch
 
-  vcl_vector< dbmcs_curve_3d_attributes > attr(number_of_curves);
+  vcl_vector< bmcsd_curve_3d_attributes > attr(number_of_curves);
   for (unsigned i=0; i < number_of_curves; ++i) {
-    attr[i].set_views(new dbmcs_stereo_views);
+    attr[i].set_views(new bmcsd_stereo_views);
     attr[i].v_->set_stereo0(0);
     attr[i].v_->set_stereo1(nviews-1);
   }
 
-  dbmcs_curve_3d_sketch csk(crv3d_1st, attr);
+  bmcsd_curve_3d_sketch csk(crv3d_1st, attr);
   csk.write_dir_format(dir+vcl_string("/csk"));
 
   return 0;

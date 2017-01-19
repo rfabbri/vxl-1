@@ -1,17 +1,17 @@
-#include "dbmcs_stereo_filter.h"
+#include "bmcsd_stereo_filter.h"
 
-#include <mw/dbmcs_view_set.h>
+#include <bmcsd/bmcsd_view_set.h>
 #include <bbld/bbld_subsequence.h>
 
-void dbmcs_stereo_filter::
+void bmcsd_stereo_filter::
 setup_inputs(
-      const dbmcs_stereo_views_sptr &views,
-      vcl_vector<dbpro_process_sptr> &cam_src, 
-      vcl_vector<dbpro_process_sptr> &edg_src, 
-      vcl_vector<dbpro_process_sptr> &edg_dt, 
-      vcl_vector<dbpro_process_sptr> &frag_src,
-      vcl_vector<dbpro_process_sptr> &cvlet_src,
-      vcl_vector<dbpro_process_sptr> &frag_tangents
+      const bmcsd_stereo_views_sptr &views,
+      vcl_vector<bprod_process_sptr> &cam_src, 
+      vcl_vector<bprod_process_sptr> &edg_src, 
+      vcl_vector<bprod_process_sptr> &edg_dt, 
+      vcl_vector<bprod_process_sptr> &frag_src,
+      vcl_vector<bprod_process_sptr> &cvlet_src,
+      vcl_vector<bprod_process_sptr> &frag_tangents
       )
 {
   v_ = views;
@@ -58,10 +58,10 @@ setup_inputs(
   s_.set_nviews(2 + v_->num_confirmation_views());
 }
 
-void dbmcs_stereo_filter::
+void bmcsd_stereo_filter::
 get_cameras()
 {
-  vcl_vector<dbdif_camera> cams(s_.nviews());
+  vcl_vector<bdifd_camera> cams(s_.nviews());
 
   assert(input_type_id(CAM_ID0) == typeid(vpgl_perspective_camera<double>));
   cams[0].set_p(input<vpgl_perspective_camera<double> >(CAM_ID0));
@@ -81,7 +81,7 @@ get_cameras()
   s_.set_cams(cams);
 }
 
-void dbmcs_stereo_filter::
+void bmcsd_stereo_filter::
 get_edgemaps()
 {
   vcl_vector<dbdet_edgemap_sptr> em(s_.nviews());
@@ -96,7 +96,7 @@ get_edgemaps()
   s_.set_all_edgemaps(em);
 }
 
-void dbmcs_stereo_filter::
+void bmcsd_stereo_filter::
 get_curvelets()
 {
   vcl_vector<dbdet_sel_storage_sptr> sels(s_.nviews());
@@ -111,7 +111,7 @@ get_curvelets()
   s_.set_all_sels(sels);
 }
 
-void dbmcs_stereo_filter::
+void bmcsd_stereo_filter::
 get_curves_and_tangents()
 {
   vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > curves (s_.nviews()); 
@@ -145,7 +145,7 @@ get_curves_and_tangents()
   s_.break_into_episegs_and_replace_curve(&sseq);
 }
 
-void dbmcs_stereo_filter::
+void bmcsd_stereo_filter::
 get_dt_label()
 {
   typedef vil_image_view<vxl_uint_32> dt_t;
@@ -166,9 +166,9 @@ get_dt_label()
   s_.set_all_dt_label(dts, labels);
 }
 
-dbpro_signal dbmcs_stereo_aggregator::
+bprod_signal bmcsd_stereo_aggregator::
 run(unsigned long timestamp,
-    dbpro_debug_observer* const debug)
+    bprod_debug_observer* const debug)
 {
   // notify the debugger if available
   if (debug) debug->notify_enter(this, timestamp);
@@ -176,7 +176,7 @@ run(unsigned long timestamp,
   if(!this->enabled()){
     // notify the debugger if available
     if (debug) debug->notify_exit(this, timestamp);
-    return DBPRO_VALID;
+    return BPROD_VALID;
   }
   
   update_mutex_.lock();
@@ -184,7 +184,7 @@ run(unsigned long timestamp,
   if(timestamp > this->timestamp_){
     this->timestamp_ = timestamp;
     this->last_signal_ = this->request_inputs_serial(timestamp,debug);
-    if(this->last_signal_ == DBPRO_VALID){
+    if(this->last_signal_ == BPROD_VALID){
       if (debug){
         debug->notify_pre_exec(this);
         this->last_signal_ = this->execute();

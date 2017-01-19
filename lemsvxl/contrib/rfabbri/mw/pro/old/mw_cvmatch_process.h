@@ -16,7 +16,7 @@
 
 #include <dbcvr/pro/dbcvr_curvematch_storage.h>
 #include <dbcvr/pro/dbcvr_curvematch_storage_sptr.h>
-#include <dvpgl/pro/dvpgl_camera_storage.h>
+#include <vpgld/pro/vpgld_camera_storage.h>
 
 #include <vsol/vsol_spatial_object_2d.h>
 #include <vsol/vsol_spatial_object_2d_sptr.h>

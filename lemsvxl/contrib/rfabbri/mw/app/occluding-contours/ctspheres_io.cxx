@@ -5,12 +5,12 @@
 #include <vidpro1/vidpro1_repository.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
-#include <dvpgl/pro/dvpgl_camera_storage.h>
-#include <dvpgl/pro/dvpgl_camera_storage_sptr.h>
+#include <vpgld/pro/vpgld_camera_storage.h>
+#include <vpgld/pro/vpgld_camera_storage_sptr.h>
 #include <dbdet/tracer/dbdet_contour_tracer.h>
 
-#include <mw/mw_util.h>
-#include <dbdif/algo/dbdif_data.h>
+#include <bmcsd/bmcsd_util.h>
+#include <bdifd/algo/bdifd_data.h>
 #include <bvis1/bvis1_manager.h>
 
 
@@ -22,7 +22,7 @@ load_ct_spheres_dataset()
 
   vnl_double_3x3 m;
 
-  dbdif_turntable::internal_calib_ctspheres(m);
+  bdifd_turntable::internal_calib_ctspheres(m);
 
   vpgl_calibration_matrix<double> K(m);
 
@@ -73,9 +73,9 @@ load_ct_spheres_dataset()
     }
 
     vpgl_perspective_camera<double> *P;
-    P = dbdif_turntable::camera_ctspheres(frm_i,K);
+    P = bdifd_turntable::camera_ctspheres(frm_i,K);
 
-    dvpgl_camera_storage_sptr Pstorage = new dvpgl_camera_storage();
+    vpgld_camera_storage_sptr Pstorage = new vpgld_camera_storage();
     Pstorage->set_camera(P);
     Pstorage->set_name("camera");
 

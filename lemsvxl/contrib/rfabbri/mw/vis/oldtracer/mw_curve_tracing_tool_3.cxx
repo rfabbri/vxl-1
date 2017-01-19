@@ -2,7 +2,7 @@
 
 #include "mw_curve_tracing_tool_3.h"
 #include "mw_curve_tracing_tool_utils_3.h"
-#include <dvpgl/io/dvpgl_io_cameras.h>
+#include <vpgld/io/vpgld_io_cameras.h>
 #include <vgl/vgl_intersection.h>
 
 
@@ -88,7 +88,7 @@ activate ()
       bpro1_storage_sptr 
         p = MANAGER->repository()->get_data_at("vpgl camera",frame_v_[i]);
 
-      dvpgl_camera_storage_sptr cam_storage;
+      vpgld_camera_storage_sptr cam_storage;
 
       cam_storage.vertical_cast(p);
       if(!p) {
@@ -98,7 +98,7 @@ activate ()
 
       const vpgl_perspective_camera<double> *pcam;
 
-      pcam = dvpgl_cast_to_perspective_camera(cam_storage->get_camera());
+      pcam = vpgld_cast_to_perspective_camera(cam_storage->get_camera());
       if(!pcam) {
         vcl_cerr << "Error: tool requires a perspective camera" << vcl_endl;
         return;

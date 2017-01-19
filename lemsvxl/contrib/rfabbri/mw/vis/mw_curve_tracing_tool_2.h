@@ -19,11 +19,11 @@
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vpgl/vpgl_fundamental_matrix.h>
 #include <dbdet/pro/dbdet_sel_storage_sptr.h>
-#include <mw/mw_intersection_sets.h>
-#include <dbdif/dbdif_camera.h>
-#include <dbdif/dbdif_rig.h>
+#include <becld/becld_intersection_sets.h>
+#include <bdifd/bdifd_camera.h>
+#include <bdifd/bdifd_rig.h>
 #include <mw/mw_curves.h>
-#include <mw/algo/mw_curve_stereo.h>
+#include <bmcsd/algo/bmcsd_curve_stereo.h>
 
 
 //: This tool allows the user to trace linked curve fragments to be matched and
@@ -33,7 +33,7 @@
 //  -# Define n frames.
 //  -# Put an image into each frame; detect edges and link the edges into
 //     Vsol polylines or symbolic edge linker.
-//  -# Put a vpgl_perspective_camera into a dvpgl_camera_storage in each frame.
+//  -# Put a vpgl_perspective_camera into a vpgld_camera_storage in each frame.
 //  -# Define n_v views, one for each frame.
 //  -# Set the linked curves as active in each frame.
 //  -# call the tool and click on a curve fragment in the first view.
@@ -51,10 +51,10 @@
 //
 // DESIGN
 //  The mw_curve_tracing_tool_2* hierarchy provide a brown-eyes GUI hierarchy to
-//  the basic classes of mw_curve_stereo*. These two hierarchies of GUI and
+//  the basic classes of bmcsd_curve_stereo*. These two hierarchies of GUI and
 //  implementation are in 1-1 correspondence by keeping a private pointer in the
-//  tools to a base mw_curve_stereo.h class. The pointer is automatically bound to the
-//  appropriate mw_curve_stereo subclass depending on which mw_curve_tracing_tool_2
+//  tools to a base bmcsd_curve_stereo.h class. The pointer is automatically bound to the
+//  appropriate bmcsd_curve_stereo subclass depending on which mw_curve_tracing_tool_2
 //  is instantiated. The GUI classes are not to be used polymorphically, so
 //  don't call a leaf class from a base class pointer. They are in a hierarchy
 //  with the sole purpose of implementation reuse.
@@ -100,13 +100,13 @@ public:
   unsigned view_from_frame_index(unsigned fi) const;
 
 protected:
-  //: Implementation. A pointer to the base of the mw_curve_stereo hierarchy of
+  //: Implementation. A pointer to the base of the bmcsd_curve_stereo hierarchy of
   // curve-based multiview stereo classes.
-  mw_curve_stereo *s_;
+  bmcsd_curve_stereo *s_;
 
   //: Constructor from a specific implementation.
-  mw_curve_tracing_tool_2(mw_curve_stereo *impl);
-  void init(mw_curve_stereo *impl);
+  mw_curve_tracing_tool_2(bmcsd_curve_stereo *impl);
+  void init(bmcsd_curve_stereo *impl);
 
   //: \see frame_v()
   vcl_vector<int> frame_v_;

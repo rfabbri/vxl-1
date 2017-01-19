@@ -11,7 +11,7 @@
 #include <bpro1/bpro1_storage_sptr.h>
 #define MANAGER bvis1_manager::instance()
 
-#include <dvpgl/pro/dvpgl_camera_storage.h>
+#include <vpgld/pro/vpgld_camera_storage.h>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_projection_inspector.h>
@@ -22,11 +22,11 @@
 #include <bvis1/bvis1_manager.h>
 #include <bvis1/bvis1_view_tableau.h>
 
-#include <mw/mw_util.h>
-#include <mw/mw_epi_interceptor.h>
-#include <dbecl/dbecl_epiband.h>
-#include <dbecl/dbecl_epiband_iterator.h>
-#include <dbecl/dbecl_epiband_builder.h>
+#include <bmcsd/bmcsd_util.h>
+#include <becld/becld_epiline_interceptor.h>
+#include <becld/becld_epiband.h>
+#include <becld/becld_epiband_iterator.h>
+#include <becld/becld_epiband_builder.h>
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_box_2d.h>
@@ -34,7 +34,7 @@
 
 static void 
 get_vertices(
-    dbecl_epiband &eb,
+    becld_epiband &eb,
     vcl_vector<vsol_point_2d_sptr> &v1);
 
 
@@ -104,7 +104,7 @@ activate ()
   for (unsigned iv=0; iv < nviews_; ++iv) {
     vsol_polyline_2d poly(vsols_[iv]);
     bbox_[iv] = poly.get_bounding_box();
-    w_[iv] = new dbecl_grid_cover_window(vgl_box_2d<double>(bbox_[iv]->get_min_x(),bbox_[iv]->get_max_x(), bbox_[iv]->get_min_y(),bbox_[iv]->get_max_y()),0);
+    w_[iv] = new becld_grid_cover_window(vgl_box_2d<double>(bbox_[iv]->get_min_x(),bbox_[iv]->get_max_x(), bbox_[iv]->get_min_y(),bbox_[iv]->get_max_y()),0);
   }
 
 
@@ -228,7 +228,7 @@ handle_mouse_event_whatever_view(
     }
   }
 
-  dbecl_epiband_builder::build_epibands_iteratively(
+  becld_epiband_builder::build_epibands_iteratively(
       true, v, is_specified, selected_points, epband_, bbox_, fm_, err_pos_);
 
   update_display_for_epipolar_bands(true);
@@ -281,7 +281,7 @@ update_display_for_epipolar_bands( bool redraw)
 
     if (display_epiband_covering_) {
       assert (epband_[v][v] != 0);
-      for (dbecl_epiband_iterator it(*(epband_[v][v]),*(w_[v])); it.nxt(); ) {
+      for (becld_epiband_iterator it(*(epband_[v][v]),*(w_[v])); it.nxt(); ) {
         covering_soviews_[v].push_back(tab_[v]->add_point(it.x(),it.y()));
         covering_soviews_[v].back()->set_style(covering_pt_style_);
       }
@@ -326,7 +326,7 @@ add_params(vgui_dialog *d, double *err_pos)
 //---------------------------------------------------------------------------------------------------------------
 void 
 get_vertices(
-    dbecl_epiband &eb,
+    becld_epiband &eb,
     vcl_vector<vsol_point_2d_sptr> &v)
 {
   if (eb.polygon().num_sheets()) { 

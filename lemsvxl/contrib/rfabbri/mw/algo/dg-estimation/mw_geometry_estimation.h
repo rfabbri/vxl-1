@@ -8,7 +8,7 @@
 //\date Wed May 09 21:00:07 EDT 2006
 //
 
-#include <mw/mw_util.h>
+#include <bmcsd/bmcsd_util.h>
 
 #include <vsol/vsol_line_2d_sptr.h>
 #include <dbdet/sel/dbdet_sel_sptr.h>

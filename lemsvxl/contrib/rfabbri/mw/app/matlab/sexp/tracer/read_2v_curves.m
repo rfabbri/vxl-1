@@ -2,7 +2,7 @@
 %
 % The input files will be named like $prefix-3dcurve-$crv_id-{points|tangents}$ext
 %
-% See mw_util.h for mywritev(prefix, ext, curves3d)
+% See bmcsd_util.h for mywritev(prefix, ext, curves3d)
 
 % mypath='/home/rfabbri/cprg/vxlprg/lemsvxlsrc/contrib/rfabbri/mw/app/dat/reconstr_curves_workdir'
 mypath='/home/rfabbri/tmp/dat/'

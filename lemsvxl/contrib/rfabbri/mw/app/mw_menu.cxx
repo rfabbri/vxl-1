@@ -20,7 +20,7 @@
 #include <bvis1/tool/bvis1_soview2D_tools.h>
 #include <bvis1/tool/bvis1_correspond_tools.h>
 
-#include <dbecl/vis/dbecl_episeg_tools.h>
+#include <becld/vis/becld_episeg_tools.h>
 #include <dbetl/vis/dbetl_episeg_tools.h>
 #include <dbctrk/vis/dbctrk_get_info_tool.h>
 #include <dbctrk/vis/dbctrk_write_info_tool.h>
@@ -37,9 +37,9 @@
 #include <dbdet/vis/dbdet_livewire_tool.h>
 #include <dbdet/vis/dbdet_query_linking_tool.h>
 #include <dbdet/vis/dbdet_sel_explorer_tool.h>
-#include <dvpgl/vis/dvpgl_epipolar_tool.h>
+#include <vpgld/vis/vpgld_epipolar_tool.h>
 
-#include <dvpgl/vis/dvpgl_epipolar_region_tool.h>
+#include <vpgld/vis/vpgld_epipolar_region_tool.h>
 #include <mw/vis/mw_curve_tracing_tool_2.h>
 #include <mw/vis/mw_curve_tracing_tool.h>
 #include <mw/vis/mw_sel_tracing_tool.h>
@@ -207,11 +207,11 @@ mw_menu::setup_menu()
 
 
   vgui_menu epi_tools_menu;
-    MENU_ADD_TOOL( dbecl_episeg_inspector_tool,  epi_tools_menu );
+    MENU_ADD_TOOL( becld_episeg_inspector_tool,  epi_tools_menu );
     MENU_ADD_TOOL( dbetl_epiprofile_tool,        epi_tools_menu );
     // tool to display epipolar lines:
-    MENU_ADD_TOOL( dvpgl_epipolar_tool,          epi_tools_menu);
-    MENU_ADD_TOOL( dvpgl_epipolar_region_tool,   epi_tools_menu); // TODO put in vxl
+    MENU_ADD_TOOL( vpgld_epipolar_tool,          epi_tools_menu);
+    MENU_ADD_TOOL( vpgld_epipolar_region_tool,   epi_tools_menu); // TODO put in vxl
 
   vgui_menu lvwr_tools_menu;
     MENU_ADD_TOOL( dbdet_livewire_tool,              lvwr_tools_menu );

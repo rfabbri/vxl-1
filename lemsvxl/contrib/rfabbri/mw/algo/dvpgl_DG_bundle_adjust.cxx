@@ -1,9 +1,9 @@
-// This is brcv/mvg/dvpgl/algo/dvpgl_DG_bundle_adjust.cxx
+// This is bmvgd/vpgld/algo/vpgld_DG_bundle_adjust.cxx
 
 //:
 // \file
 
-#include "dvpgl_DG_bundle_adjust.h"
+#include "vpgld_DG_bundle_adjust.h"
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_quaternion.h>
 #include <vnl/algo/vnl_cholesky.h>
@@ -13,13 +13,13 @@
 #include <vcl_fstream.h>
 #include <vcl_algorithm.h>
 
-#include <dbdif/dbdif_camera.h>
-#include <mw/algo/mw_algo_util.h>
+#include <bdifd/bdifd_camera.h>
+#include <bmcsd/algo/bmcsd_algo_util.h>
 
 //: Constructor
-dvpgl_DG_bundle_adj_lsqr::
-  dvpgl_DG_bundle_adj_lsqr(const vcl_vector<vpgl_calibration_matrix<double> >& K,
-                        const vcl_vector<dbdif_3rd_order_point_2d>& image_points,
+vpgld_DG_bundle_adj_lsqr::
+  vpgld_DG_bundle_adj_lsqr(const vcl_vector<vpgl_calibration_matrix<double> >& K,
+                        const vcl_vector<bdifd_3rd_order_point_2d>& image_points,
                         const vcl_vector<vcl_vector<bool> >& mask,
                         bool use_confidence_weights)
  : vnl_sparse_lst_sqr_function(K.size(),6,mask[0].size(),3,0,mask,3,use_gradient),
@@ -37,8 +37,8 @@ dvpgl_DG_bundle_adj_lsqr::
 //: Constructor
 //  Each image point is assigned an inverse covariance (error projector) matrix
 // \note image points are not homogeneous because they require finite points to measure projection error
-dvpgl_DG_bundle_adj_lsqr::
-dvpgl_DG_bundle_adj_lsqr(const vcl_vector<vpgl_calibration_matrix<double> >& K,
+vpgld_DG_bundle_adj_lsqr::
+vpgld_DG_bundle_adj_lsqr(const vcl_vector<vpgl_calibration_matrix<double> >& K,
                       const vcl_vector<vgl_point_2d<double> >& image_points,
                       const vcl_vector<vnl_matrix<double> >& inv_covars,
                       const vcl_vector<vcl_vector<bool> >& mask,
@@ -87,13 +87,13 @@ dvpgl_DG_bundle_adj_lsqr(const vcl_vector<vpgl_calibration_matrix<double> >& K,
 //  The parameters in b for each 3D point are {px, py, pz} 
 //  the non-homogeneous position.
 void
-dvpgl_DG_bundle_adj_lsqr::f(vnl_vector<double> const& a, vnl_vector<double> const& b,
+vpgld_DG_bundle_adj_lsqr::f(vnl_vector<double> const& a, vnl_vector<double> const& b,
                          vnl_vector<double>& e)
 {
   typedef vnl_crs_index::sparse_vector::iterator sv_itr;
 
   vcl_vector<vpgl_perspective_camera<double> > Pi_vec(number_of_a());
-  vcl_vector<dbdif_camera> cam(number_of_a());
+  vcl_vector<bdifd_camera> cam(number_of_a());
   for(unsigned int i=0; i<number_of_a(); ++i) {
     Pi_vec[i] = param_to_cam(i,a);
     cam[i].set_p(Pi_vec[i]);
@@ -134,7 +134,7 @@ dvpgl_DG_bundle_adj_lsqr::f(vnl_vector<double> const& a, vnl_vector<double> cons
       //: Current implementation does not allow for incomplete corresps
 //      assert(i0 == (unsigned)residual_indices_.sparse_col(i)[0].first);
 
-      vcl_vector<dbdif_3rd_order_point_2d> pts(number_of_a());
+      vcl_vector<bdifd_3rd_order_point_2d> pts(number_of_a());
       for (unsigned iv=0; iv < number_of_a(); ++iv) {
         pts[iv] = image_points_[i0 + iv*residual_indices_.num_cols()];
       }
@@ -152,7 +152,7 @@ dvpgl_DG_bundle_adj_lsqr::f(vnl_vector<double> const& a, vnl_vector<double> cons
       dpos=dtheta=dk=dkdot=0;
       n =0;
 
-      bool one_true = mw_algo_util::dg_reprojection_error(pts,cam,i,
+      bool one_true = bmcsd_algo_util::dg_reprojection_error(pts,cam,i,
           dpos,dtheta,
           dnormal_plus,
           dnormal_minus,
@@ -203,13 +203,13 @@ dvpgl_DG_bundle_adj_lsqr::f(vnl_vector<double> const& a, vnl_vector<double> cons
   unsigned dummy;
   vcl_cout << "     MY Total RMS: " << total_rms << vcl_endl
            << "         dpos RMS: " << dpos_rms << vcl_endl
-           << "       dtheta RMS: " << dtheta_rms << " (max: " << vcl_sqrt(mw_util::max(dthetas,dummy))
-           << ", min: " << vcl_sqrt(mw_util::min(dthetas,dummy))
-           << ", avg: " << vcl_sqrt(mw_util::mean(dthetas)) << ")" << vcl_endl
+           << "       dtheta RMS: " << dtheta_rms << " (max: " << vcl_sqrt(bmcsd_util::max(dthetas,dummy))
+           << ", min: " << vcl_sqrt(bmcsd_util::min(dthetas,dummy))
+           << ", avg: " << vcl_sqrt(bmcsd_util::mean(dthetas)) << ")" << vcl_endl
 
-           << " dnormal_plus RMS: " << dnormal_plus_rms << " (max: " << vcl_sqrt(mw_util::max(dnormal_plus_v,dummy))
-           << ", min: " << vcl_sqrt(mw_util::min(dnormal_plus_v,dummy))
-           << ", avg: " << vcl_sqrt(mw_util::mean(dnormal_plus_v)) << ")"
+           << " dnormal_plus RMS: " << dnormal_plus_rms << " (max: " << vcl_sqrt(bmcsd_util::max(dnormal_plus_v,dummy))
+           << ", min: " << vcl_sqrt(bmcsd_util::min(dnormal_plus_v,dummy))
+           << ", avg: " << vcl_sqrt(bmcsd_util::mean(dnormal_plus_v)) << ")"
            << vcl_endl;
 
   if(use_weights_ && iteration_count_++ > 50 ){
@@ -240,14 +240,14 @@ dvpgl_DG_bundle_adj_lsqr::f(vnl_vector<double> const& a, vnl_vector<double> cons
 
 //: Compute the sparse Jacobian in block form.
 void
-dvpgl_DG_bundle_adj_lsqr::jac_blocks(vnl_vector<double> const& a, vnl_vector<double> const& b,
+vpgld_DG_bundle_adj_lsqr::jac_blocks(vnl_vector<double> const& a, vnl_vector<double> const& b,
                                   vcl_vector<vnl_matrix<double> >& A,
                                   vcl_vector<vnl_matrix<double> >& B)
 {
   const double stepsize = 0.001;
 
   vcl_vector<vpgl_perspective_camera<double> > Pi_vec(number_of_a());
-  vcl_vector<dbdif_camera> cam(number_of_a());
+  vcl_vector<bdifd_camera> cam(number_of_a());
   for(unsigned int i=0; i<number_of_a(); ++i) {
     Pi_vec[i] = param_to_cam(i,a);
     cam[i].set_p(Pi_vec[i]);
@@ -316,7 +316,7 @@ dvpgl_DG_bundle_adj_lsqr::jac_blocks(vnl_vector<double> const& a, vnl_vector<dou
         //: Current implementation does not allow for incomplete corresps
 //        assert(i0 == (unsigned)residual_indices_.sparse_row(i)[0].first);
 
-        vcl_vector<dbdif_3rd_order_point_2d> pts(number_of_a());
+        vcl_vector<bdifd_3rd_order_point_2d> pts(number_of_a());
         for (unsigned iv=0; iv < number_of_a(); ++iv) {
           pts[iv] = image_points_[i0 + iv*residual_indices_.num_cols()];
         }
@@ -336,7 +336,7 @@ dvpgl_DG_bundle_adj_lsqr::jac_blocks(vnl_vector<double> const& a, vnl_vector<dou
           dpos=dtheta=dk=dkdot=0;
           n =0;
 
-          bool one_true = mw_algo_util::dg_reprojection_error(pts,cam,i,
+          bool one_true = bmcsd_algo_util::dg_reprojection_error(pts,cam,i,
               dpos,dtheta,
               dnormal_plus,
               dnormal_minus,
@@ -365,7 +365,7 @@ dvpgl_DG_bundle_adj_lsqr::jac_blocks(vnl_vector<double> const& a, vnl_vector<dou
           dpos=dtheta=dk=dkdot=0;
           n =0;
 
-          bool one_true = mw_algo_util::dg_reprojection_error(pts,cam,i,
+          bool one_true = bmcsd_algo_util::dg_reprojection_error(pts,cam,i,
               dpos,dtheta,
               dnormal_plus,
               dnormal_minus,
@@ -401,7 +401,7 @@ dvpgl_DG_bundle_adj_lsqr::jac_blocks(vnl_vector<double> const& a, vnl_vector<dou
 
 //: compute the Jacobian Bij
 void
-dvpgl_DG_bundle_adj_lsqr::jac_Bij(vnl_double_3x4 const& Pi, vnl_vector<double> const& bj,
+vpgld_DG_bundle_adj_lsqr::jac_Bij(vnl_double_3x4 const& Pi, vnl_vector<double> const& bj,
                                vnl_matrix<double>& Bij)
 {
   double denom = Pi(2,0)*bj[0] + Pi(2,1)*bj[1] + Pi(2,2)*bj[2] + Pi(2,3);
@@ -438,7 +438,7 @@ dvpgl_DG_bundle_adj_lsqr::jac_Bij(vnl_double_3x4 const& Pi, vnl_vector<double> c
 
 //: Create the parameter vector \p a from a vector of cameras
 vnl_vector<double> 
-dvpgl_DG_bundle_adj_lsqr::create_param_vector(const vcl_vector<vpgl_perspective_camera<double> >& cameras)
+vpgld_DG_bundle_adj_lsqr::create_param_vector(const vcl_vector<vpgl_perspective_camera<double> >& cameras)
 {
   vnl_vector<double> a(6*cameras.size(),0.0);
   for(unsigned int i=0; i<cameras.size(); ++i){
@@ -464,7 +464,7 @@ dvpgl_DG_bundle_adj_lsqr::create_param_vector(const vcl_vector<vpgl_perspective_
 
 //: Create the parameter vector \p b from a vector of 3D points
 vnl_vector<double> 
-dvpgl_DG_bundle_adj_lsqr::create_param_vector(const vcl_vector<vgl_point_3d<double> >& world_points)
+vpgld_DG_bundle_adj_lsqr::create_param_vector(const vcl_vector<vgl_point_3d<double> >& world_points)
 { 
   vnl_vector<double> b(3*world_points.size(),0.0);
   for(unsigned int j=0; j<world_points.size(); ++j){

@@ -4,11 +4,11 @@
 //\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //
 #include <testlib/testlib_test.h>
-#include <mw/pro/dbmcs_stereo_driver.h>
+#include <mw/pro/bmcsd_stereo_driver.h>
 
-MAIN( test_dbmcs_stereo_driver )
+MAIN( test_bmcsd_stereo_driver )
 {
-   mw_curve_stereo_data_path dpath;
+   bmcsd_curve_stereo_data_path dpath;
    vcl_string fname_path("/usr/local/moredata/subset/");
 
   // Hardcoded:
@@ -18,7 +18,7 @@ MAIN( test_dbmcs_stereo_driver )
   bool retval = mw_data::read_frame_data_list_txt(
       fname_path,
       &dpath,
-      mw_util::MW_INTRINSIC_EXTRINSIC
+      bmcsd_util::MW_INTRINSIC_EXTRINSIC
       );
   TEST("data list from file", retval, true);
   if (!retval)
@@ -26,13 +26,13 @@ MAIN( test_dbmcs_stereo_driver )
 
   // unsigned nviews = dpath.nviews();
 
-  dbmcs_stereo_instance_views frames_to_match;
+  bmcsd_stereo_instance_views frames_to_match;
 
   // Hardcoded:
-  // dbmcs_view_set::get_capitol_subset_view_instances(&frames_to_match);
+  // bmcsd_view_set::get_capitol_subset_view_instances(&frames_to_match);
 
   // Files:
-  retval =  dbmcs_view_set::read_txt(
+  retval =  bmcsd_view_set::read_txt(
       fname_path + vcl_string("/mcs_stereo_instances.txt"), 
       &frames_to_match);
 
@@ -41,7 +41,7 @@ MAIN( test_dbmcs_stereo_driver )
     exit(1);
 
   // Alternative ways to generate views
-//  dbmcs_view_set view_gen;
+//  bmcsd_view_set view_gen;
 //  view_gen.set_stereo_baseline(xx);
 //  view_gen.set_num_confirmation_views(xx);
 //  view_gen.set_confirmation_view_baseline(xx);
@@ -49,7 +49,7 @@ MAIN( test_dbmcs_stereo_driver )
 //  view_gen.set_stereo_overlap(&delta_frame_between_stereos);
 //  view_gen.populate(&instance);
 
-  dbmcs_concurrent_stereo_driver s(dpath, frames_to_match);
+  bmcsd_concurrent_stereo_driver s(dpath, frames_to_match);
 
   //: How many stereo matchers can run simultaneously
   s.set_max_concurrent_matchers(4);

@@ -6,7 +6,7 @@
 #include <brct/brct_algos.h>
 
 #include <vcl_algorithm.h>
-#include <dbgl/algo/dbgl_intersect.h>
+#include <bgld/algo/bgld_intersect.h>
 #include <vpgl/algo/vpgl_ray_intersect.h>
 
 
@@ -40,8 +40,8 @@ reconstruct_trinocular()
     return;
   }
 
-  dbdif_rig rig01(cam_[0].Pr_, cam_[1].Pr_);
-  dbdif_rig rig02(cam_[0].Pr_, cam_[2].Pr_);
+  bdifd_rig rig01(cam_[0].Pr_, cam_[1].Pr_);
+  bdifd_rig rig02(cam_[0].Pr_, cam_[2].Pr_);
 
   unsigned ini_idx, 
            end_idx;
@@ -143,7 +143,7 @@ reconstruct_trinocular()
 
         vgl_point_2d<double> ipt;
 
-        intersects=dbgl_intersect::line_lineseg_intersect(vgl_line_2d<double> (ep_[0][di0]),seg,ipt);
+        intersects=bgld_intersect::line_lineseg_intersect(vgl_line_2d<double> (ep_[0][di0]),seg,ipt);
         if (intersects) {
           pt_img1 = new vsol_point_2d(ipt);
           double cost = vgl_distance(ep_[0][di0],vgl_homg_point_2d<double>(ipt));
@@ -156,7 +156,7 @@ reconstruct_trinocular()
 
         vgl_point_2d<double> ipt;
 
-        intersects=dbgl_intersect::line_lineseg_intersect(vgl_line_2d<double> (ep_[0][di0]),seg,ipt);
+        intersects=bgld_intersect::line_lineseg_intersect(vgl_line_2d<double> (ep_[0][di0]),seg,ipt);
         if (intersects) {
           pt_img1 = new vsol_point_2d(ipt);
           double cost = vgl_distance(ep_[0][di0],vgl_homg_point_2d<double>(ipt));
@@ -199,7 +199,7 @@ reconstruct_trinocular()
 
         vgl_point_2d<double> ipt;
 
-        intersects=dbgl_intersect::line_lineseg_intersect(vgl_line_2d<double> (ep_[1][di0]),seg,ipt);
+        intersects=bgld_intersect::line_lineseg_intersect(vgl_line_2d<double> (ep_[1][di0]),seg,ipt);
         if (intersects) {
           pt_img2 = new vsol_point_2d(ipt);
           double cost = vgl_distance(ep_[1][di0],vgl_homg_point_2d<double>(ipt));
@@ -212,7 +212,7 @@ reconstruct_trinocular()
 
         vgl_point_2d<double> ipt;
 
-        intersects=dbgl_intersect::line_lineseg_intersect(vgl_line_2d<double> (ep_[1][di0]),seg,ipt);
+        intersects=bgld_intersect::line_lineseg_intersect(vgl_line_2d<double> (ep_[1][di0]),seg,ipt);
         if (intersects) {
           pt_img2 = new vsol_point_2d(ipt);
           double cost = vgl_distance(ep_[1][di0],vgl_homg_point_2d<double>(ipt));
@@ -222,7 +222,7 @@ reconstruct_trinocular()
     } // -------- !!! Intersect with points in view[1]
 
 
-    mw_vector_3d pt_3D, pt_3D_linear,  pt_3D_01, pt_3D_02;
+    bmcsd_vector_3d pt_3D, pt_3D_linear,  pt_3D_01, pt_3D_02;
 
     vgl_point_3d<double> pt_3D_vgl, pt_3D_linear_vgl;
     rig01.reconstruct_point_lsqr(pt_img0,pt_img1,&pt_3D_01);
@@ -240,8 +240,8 @@ reconstruct_trinocular()
       projs.push_back(cam_[2].Pr_.get_matrix());
 
 
-      pt_3D_linear_vgl = brct_algos::bundle_reconstruct_3d_point(pts, projs);
-      pt_3D_linear = mw_util::vgl_to_vnl(pt_3D_linear_vgl);
+      pt_3D_linear_vgl = reconstruct_3d_points_nviews_linear(pts, projs);
+      pt_3D_linear = bmcsd_util::vgl_to_vnl(pt_3D_linear_vgl);
     }
 
     // nonlinear optimization of reprojection errors
@@ -260,7 +260,7 @@ reconstruct_trinocular()
       projs.push_back(&(cam_[2].Pr_));
 
       isect.intersect(projs, pts, pt_3D_linear_vgl, pt_3D_vgl);
-      pt_3D = mw_util::vgl_to_vnl(pt_3D_vgl);
+      pt_3D = bmcsd_util::vgl_to_vnl(pt_3D_vgl);
     }
 
     fcrv_3d_v01.write((char *)(pt_3D_01.data_block()),3*sizeof(double));
@@ -286,7 +286,7 @@ reconstruct_possible_matches()
   //      - output with proper name
 
 
-  dbdif_rig rig(cam_[0].Pr_, cam_[1].Pr_);
+  bdifd_rig rig(cam_[0].Pr_, cam_[1].Pr_);
 // TODO: modularize this code; use functions:
 //
 //
@@ -360,7 +360,7 @@ reconstruct_possible_matches()
 
 
     // traverse L_[j] 
-    vcl_list<mw_intersection_sets::intersection_nhood_>::const_iterator ptr;
+    vcl_list<becld_intersection_sets::intersection_nhood_>::const_iterator ptr;
     for (ptr=isets_.L_[j].intercepts.begin(); ptr != isets_.L_[j].intercepts.end(); ++ptr) {
 
       unsigned k = ptr->ep_number;
@@ -395,7 +395,7 @@ reconstruct_possible_matches()
 
         vgl_point_2d<double> ipt;
 
-        intersects=dbgl_intersect::line_lineseg_intersect(vgl_line_2d<double> (ep_[0][k]),seg,ipt);
+        intersects=bgld_intersect::line_lineseg_intersect(vgl_line_2d<double> (ep_[0][k]),seg,ipt);
         if (intersects) {
           pt_img2 = new vsol_point_2d(ipt);
           double cost = vgl_distance(ep_[0][k],vgl_homg_point_2d<double>(ipt));
@@ -409,7 +409,7 @@ reconstruct_possible_matches()
 
         vgl_point_2d<double> ipt;
 
-        intersects=dbgl_intersect::line_lineseg_intersect(vgl_line_2d<double> (ep_[0][k]),seg,ipt);
+        intersects=bgld_intersect::line_lineseg_intersect(vgl_line_2d<double> (ep_[0][k]),seg,ipt);
         if (intersects) {
           pt_img2 = new vsol_point_2d(ipt);
           double cost = vgl_distance(ep_[0][k],vgl_homg_point_2d<double>(ipt));
@@ -418,7 +418,7 @@ reconstruct_possible_matches()
       }
 
       if (intersects) {
-        mw_vector_3d pt_3D;
+        bmcsd_vector_3d pt_3D;
 
         rig.reconstruct_point_lsqr(pt_img1,pt_img2,&pt_3D);
 
@@ -438,7 +438,7 @@ show_reprojections(unsigned jnz)
   for (unsigned i=0; i < nviews_; ++i)
     tab_[i]->set_current_grouping( "Drawing" );
 
-  dbdif_rig rig(cam_[0].Pr_, cam_[1].Pr_);
+  bdifd_rig rig(cam_[0].Pr_, cam_[1].Pr_);
 
   if (display_perturbed_reprojections_) {
     unsigned const n_perturb_reproject = 50;
@@ -466,7 +466,7 @@ show_reprojections(unsigned jnz)
 
   vcl_vector<unsigned> crv1_idx, crv2_idx;
 
-  vcl_vector<mw_vector_3d> crv3d; 
+  vcl_vector<bmcsd_vector_3d> crv3d; 
   reconstruct_and_reproject(jnz, 2 /*view*/, reproj, crv3d,crv1_idx, crv2_idx, rig);
 
 //  reproject_mvl_tritensor( jnz, reproj, crv1_idx, crv2_idx, rig);
@@ -529,7 +529,7 @@ trinocular_candidates()
 {
   tab_[1]->set_current_grouping("Drawing");
 
-  dbdif_rig rig(cam_[0].Pr_, cam_[1].Pr_);
+  bdifd_rig rig(cam_[0].Pr_, cam_[1].Pr_);
 
   mw_curves curves_v3 ( mw_curves::new_curvepts(vsols_[2]) );
 
@@ -538,7 +538,7 @@ trinocular_candidates()
   vcl_cout << "Curves (numbers) passing trinocular constraints:\n";
   for (unsigned j=0; j < crv_candidates_ptrs_.size(); ++j) {
     vcl_vector<vsol_point_2d_sptr> reproj; 
-    vcl_vector<mw_vector_3d> crv3d; 
+    vcl_vector<bmcsd_vector_3d> crv3d; 
     double d;
     if (trinocular_consistency(j, reproj, crv3d, curves_v3, rig, &d)) {
       vcl_cout << " (" << j+1 << ")" ;
@@ -574,9 +574,9 @@ bool mw_curve_tracing_tool_3::
 trinocular_consistency(
     unsigned jnz, 
     vcl_vector<vsol_point_2d_sptr> &reproj, 
-    vcl_vector<mw_vector_3d> &crv3d, 
+    vcl_vector<bmcsd_vector_3d> &crv3d, 
     mw_curves &curves_v3,
-    dbdif_rig &rig,
+    bdifd_rig &rig,
     double *cost)
 {
 //  unsigned ini_idx, 
@@ -628,7 +628,7 @@ reproject_mvl_tritensor(
     vcl_vector<vsol_point_2d_sptr> &reproj,
     vcl_vector<unsigned> &crv1_idx,
     vcl_vector<unsigned> &crv2_idx,
-    dbdif_rig &rig
+    bdifd_rig &rig
     ) const
 {
   define_match_for_reconstruction(jnz, crv1_idx, crv2_idx, rig);
@@ -688,10 +688,10 @@ reconstruct_and_reproject(
     unsigned view, 
     vcl_vector<vsol_point_2d_sptr> &reproj, 
 
-    vcl_vector<mw_vector_3d> &crv3d, 
+    vcl_vector<bmcsd_vector_3d> &crv3d, 
     vcl_vector<unsigned> &crv1_idx,
     vcl_vector<unsigned> &crv2_idx,
-    dbdif_rig &rig) const
+    bdifd_rig &rig) const
 {
   define_match_for_reconstruction(jnz, crv1_idx, crv2_idx, rig);
   reconstruct_one_candidate(jnz, crv3d, crv1_idx, crv2_idx, rig);
@@ -702,8 +702,8 @@ void mw_curve_tracing_tool_3::
 project(
     unsigned view, 
     vcl_vector<vsol_point_2d_sptr> &proj, 
-    const vcl_vector<mw_vector_3d> &crv3d, 
-    dbdif_rig &/*rig*/) const
+    const vcl_vector<bmcsd_vector_3d> &crv3d, 
+    bdifd_rig &/*rig*/) const
 {
   assert (view < nviews_);
 
@@ -711,7 +711,7 @@ project(
   proj.resize(crv3d.size());
   for (unsigned i=0; i<crv3d.size(); ++i) {
     // - get image coordinates
-    mw_vector_2d p_aux;
+    bmcsd_vector_2d p_aux;
     p_aux = cam_[view].project_to_image(crv3d[i]);
     proj[i] = new vsol_point_2d(p_aux[0], p_aux[1]);
   }
@@ -732,7 +732,7 @@ define_match_for_reconstruction(
     unsigned jnz,
     vcl_vector<unsigned> &crv1_idx,
     vcl_vector<unsigned> &crv2_idx,
-    dbdif_rig &/*rig*/
+    bdifd_rig &/*rig*/
     ) const
 {
   unsigned ini_idx, 
@@ -753,7 +753,7 @@ define_match_for_reconstruction(
   j = crv_candidates_idx_[jnz];
 
   // traverse L_[j] 
-  vcl_list<mw_intersection_sets::intersection_nhood_>::const_iterator ptr;
+  vcl_list<becld_intersection_sets::intersection_nhood_>::const_iterator ptr;
   for (ptr=isets_.L_[j].intercepts.begin(); ptr != isets_.L_[j].intercepts.end(); ++ptr) {
 
     unsigned k = ptr->ep_number;
@@ -781,7 +781,7 @@ define_match_for_reconstruction(
 
 //    vsol_point_2d_sptr pt_img2 = crv_candidates_ptrs_[jnz]->vertex(ptr->index[lmin]);
 
-//    mw_vector_3d pt_3D;
+//    bmcsd_vector_3d pt_3D;
 
     // ---- Reconstruct ---
 //    rig.reconstruct_point_lsqr(pt_img1,pt_img2,&pt_3D);
@@ -808,10 +808,10 @@ define_match_for_reconstruction(
 void mw_curve_tracing_tool_3::
 reconstruct_one_candidate(
     unsigned jnz, 
-    vcl_vector<mw_vector_3d> &crv3d, 
+    vcl_vector<bmcsd_vector_3d> &crv3d, 
     const vcl_vector<unsigned> &crv1_idx,
     const vcl_vector<unsigned> &crv2_idx,
-    dbdif_rig &rig) const
+    bdifd_rig &rig) const
 {
 
   crv3d.resize(crv1_idx.size());
@@ -820,7 +820,7 @@ reconstruct_one_candidate(
 
     vsol_point_2d_sptr pt_img2 = crv_candidates_ptrs_[jnz]->vertex(crv2_idx[i]);
 
-    mw_vector_3d pt_3D;
+    bmcsd_vector_3d pt_3D;
 
     // ---- Reconstruct ---
     rig.reconstruct_point_lsqr(pt_img1,pt_img2,&(crv3d[i]));
@@ -850,10 +850,10 @@ perturb(vsol_point_2d_sptr &pt, double max_radius) const
 
   // 1 - generate uniformly random vector inside unit disc
 
-  mw_vector_2d err(myrand.drand64(-1,1), myrand.drand64(-1,1));
+  bmcsd_vector_2d err(myrand.drand64(-1,1), myrand.drand64(-1,1));
 
   while (err.two_norm() > 1)
-    err = mw_vector_2d(myrand.drand64(-1,1), myrand.drand64(-1,1));
+    err = bmcsd_vector_2d(myrand.drand64(-1,1), myrand.drand64(-1,1));
 
   err = err * max_radius;
 
@@ -874,7 +874,7 @@ perturb_and_reproject(
     vcl_vector<vsol_point_2d_sptr> &reproj, 
     vcl_vector<vsol_point_2d_sptr> &crv1_ppts, //: crv_'s perturbed points used for reprojection
     vcl_vector<vsol_point_2d_sptr> &crv2_ppts, //: crv_candidates_ptrs_'s perturbed points used for reprojection
-    dbdif_rig &rig)
+    bdifd_rig &rig)
 {
   // 1 - get a hold of the points in curve 2 and its correspondents in curve 1,
   // and curve 1 itself.
@@ -905,7 +905,7 @@ perturb_and_reproject(
 
   // 3 - Reconstruct based on the perturbed data
 
-  vcl_vector<mw_vector_3d> crv3d;
+  vcl_vector<bmcsd_vector_3d> crv3d;
 
   crv3d.resize(crv1_idx.size());
   crv1_ppts.resize(crv1_idx.size());
@@ -915,7 +915,7 @@ perturb_and_reproject(
     vsol_point_2d_sptr pt_img1 = crv1_p[crv1_idx[i]]; 
     vsol_point_2d_sptr pt_img2 = crv2_p[crv2_idx[i]];
 
-    mw_vector_3d pt_3D;
+    bmcsd_vector_3d pt_3D;
 
     // ---- Reconstruct ---
     rig.reconstruct_point_lsqr(pt_img1,pt_img2,&(crv3d[i]));

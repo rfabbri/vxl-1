@@ -1,5 +1,5 @@
 #include "mw_curves.h"
-#include "mw_util.h"
+#include "bmcsd_util.h"
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_point_2d.h>
 
@@ -94,8 +94,8 @@ compute_geno()
 {
    for (unsigned i=0; i<curvepts_.size(); ++i) {
       // GENO INTERP.
-      gcurve_[i] = new dbsol_gshock_curve_2d;
-      dbsol_geno::interpolate(gcurve_[i].ptr(), curvepts_[i], false); // open curve for now
+      gcurve_[i] = new bsold_gshock_curve_2d;
+      bsold_geno::interpolate(gcurve_[i].ptr(), curvepts_[i], false); // open curve for now
       // no shock placing for now; but we may place them whenever we want
    }
 

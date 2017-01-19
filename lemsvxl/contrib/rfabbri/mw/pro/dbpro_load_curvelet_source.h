@@ -1,6 +1,6 @@
-// This is dbpro_load_curvelet_source.h
-#ifndef dbpro_load_curvelet_source_h
-#define dbpro_load_curvelet_source_h
+// This is bprod_load_curvelet_source.h
+#ifndef bprod_load_curvelet_source_h
+#define bprod_load_curvelet_source_h
 //:
 //\file
 //\brief 
@@ -8,7 +8,7 @@
 //\date 07/24/10 15:53:48 EDT
 //
 
-#include <dbpro/dbpro_process.h>
+#include <bprod/bprod_process.h>
 #include <dbdet/pro/dbdet_sel_storage.h>
 #include <dbdet/pro/dbdet_sel_storage_sptr.h>
 #include <dbdet/edge/dbdet_edgemap.h>
@@ -18,13 +18,13 @@
 
 
 //: Reads .cvlet files into curvelet maps
-class dbpro_load_curvelet_source : public dbpro_source {
+class bprod_load_curvelet_source : public bprod_source {
 public:
-  dbpro_load_curvelet_source(vcl_string fname)
+  bprod_load_curvelet_source(vcl_string fname)
     : fname_(fname)
       {}
 
-  dbpro_signal execute() {
+  bprod_signal execute() {
 #ifndef NDEBUG
     vcl_cout << "Started curvelet loading.\n";
 #endif
@@ -34,7 +34,7 @@ public:
 
     bool retval = dbdet_load_cvlet_map(fname_, edge_map, output_sel->CM());
     if (!retval)
-      return DBPRO_INVALID;
+      return BPROD_INVALID;
 
     output_sel->set_EM(edge_map);
 
@@ -42,11 +42,11 @@ public:
 #ifndef NDEBUG
     vcl_cout << "Finished curvelet loading.\n";
 #endif
-    return DBPRO_VALID;
+    return BPROD_VALID;
   }
 
 private:
   vcl_string fname_;
 };
 
-#endif // dbpro_load_curvelet_source_h
+#endif // bprod_load_curvelet_source_h

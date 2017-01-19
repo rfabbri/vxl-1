@@ -1,7 +1,7 @@
 #include "mw_match_position_band.h"
-#include <mw/algo/mw_algo_util.h>
-#include <mw/mw_util.h>
-#include <dbecl/dbecl_epiband_builder.h>
+#include <bmcsd/algo/bmcsd_algo_util.h>
+#include <bmcsd/bmcsd_util.h>
+#include <becld/becld_epiband_builder.h>
 #include <mw/mw_subpixel_point_set.h>
 #include <vsol/vsol_box_2d.h>
 #include <vsol/vsol_polyline_2d.h>
@@ -15,7 +15,7 @@
 mw_match_position_band::
 mw_match_position_band (
   const vcl_vector<vcl_vector< vsol_point_2d_sptr > > &points,
-  mw_discrete_corresp_n *corr,
+  bmcsd_discrete_corresp_n *corr,
   // --- the following params may be provided by the user if efficiency is
   // needed. However, they make this function implementation-dependent.
   //: fm[i][k] = fundamental matrix from view i to view k
@@ -60,9 +60,9 @@ mw_match_position_band (
     vsol_polyline_2d poly(points_[i]);
     vsol_box_2d_sptr pb = poly.get_bounding_box();
 
-    bbox_[i] = mw_algo_util::determine_right_bbox(pb,sp_[i]);
+    bbox_[i] = bmcsd_algo_util::determine_right_bbox(pb,sp_[i]);
 
-    w_[i] = new dbecl_grid_cover_window(vgl_box_2d<double>(0,sp_[i]->ncols()-1,0,sp_[i]->nrows()-1),0);
+    w_[i] = new becld_grid_cover_window(vgl_box_2d<double>(0,sp_[i]->ncols()-1,0,sp_[i]->nrows()-1),0);
     vcl_cout << "BOUNDING BOX:\n";
     vcl_cout << *(bbox_[i]);
     vcl_cout << "SP DIMENSIONS:\n";
@@ -82,7 +82,7 @@ mw_match_position_band (
       for (unsigned iv=1; iv < nviews_; ++iv)
         is_specified_[iv] = false;
       // Compute epbands for p^1
-      dbecl_epiband_builder::build_epibands_iteratively(true, 0,
+      becld_epiband_builder::build_epibands_iteratively(true, 0,
           is_specified_, specified_pts_, epband_, bbox_, fm_, err_pos_);
       consider(1);
     }
@@ -94,7 +94,7 @@ mw_match_position_band (
       for (unsigned iv=1; iv < nviews_; ++iv)
         is_specified_[iv] = false;
       // Compute epbands for p^1
-      dbecl_epiband_builder::build_epibands_iteratively(true, 0,
+      becld_epiband_builder::build_epibands_iteratively(true, 0,
           is_specified_, specified_pts_, epband_, bbox_, fm_, err_pos_);
       consider(1); // XXX
     }
@@ -118,10 +118,10 @@ void mw_match_position_band::
 consider(unsigned vn)
 {
 
-  dbecl_epiband epband_prv(*(epband_[vn][vn]));
+  becld_epiband epband_prv(*(epband_[vn][vn]));
 
   // traverse points of epband_[vn][vn]
-  dbecl_epiband_iterator it(epband_prv, *(w_[vn]),1.5); // Do not decrease this!!
+  becld_epiband_iterator it(epband_prv, *(w_[vn]),1.5); // Do not decrease this!!
 
   for (it.reset(); it.nxt(); ) {
     unsigned const i_row = sp_[vn]->row(it.y());
@@ -140,7 +140,7 @@ consider(unsigned vn)
         specified_pts_[vn] = points_[vn][p2_idx];
 
         // refine epipolar regions
-        dbecl_epiband_builder::build_epibands_iteratively(/*reinitialize*/ true, vn, is_specified_, specified_pts_, epband_, bbox_, fm_, err_pos_);
+        becld_epiband_builder::build_epibands_iteratively(/*reinitialize*/ true, vn, is_specified_, specified_pts_, epband_, bbox_, fm_, err_pos_);
 
 
         // test reverse now
@@ -161,7 +161,7 @@ consider(unsigned vn)
         if (satisfies_reverse) {
           tup_[vn] = p2_idx;
           if (vn+1 == nviews_) {
-            corr_->l_.put(tup_,mw_match_attribute());
+            corr_->l_.put(tup_,bmcsd_match_attribute());
           } else {
             consider(vn+1);
           }
@@ -182,10 +182,10 @@ consider_synthetic(unsigned vn)
 {
 
   // TODO FIXME the pointers in epband_ are not being freed! Memleak!
-  dbecl_epiband epband_prv(*(epband_[vn][vn]));
+  becld_epiband epband_prv(*(epband_[vn][vn]));
 
   // traverse points of epband_[vn][vn]
-  dbecl_epiband_iterator it(epband_prv, *(w_[vn]), 1.5);
+  becld_epiband_iterator it(epband_prv, *(w_[vn]), 1.5);
 
   for (it.reset(); it.nxt(); ) {
     unsigned const i_row = sp_[vn]->row(it.y());
@@ -209,7 +209,7 @@ consider_synthetic(unsigned vn)
         specified_pts_[vn] = points_[vn][p2_idx];
 
         // refine epipolar regions
-        dbecl_epiband_builder::build_epibands_iteratively(/*reinitialize*/ true, vn, is_specified_, specified_pts_, epband_, bbox_, fm_, err_pos_);
+        becld_epiband_builder::build_epibands_iteratively(/*reinitialize*/ true, vn, is_specified_, specified_pts_, epband_, bbox_, fm_, err_pos_);
 
 
         // test reverse now
@@ -230,7 +230,7 @@ consider_synthetic(unsigned vn)
         if (satisfies_reverse) {
           tup_[vn] = p2_idx;
           if (vn+1 == nviews_) {
-            corr_->l_.put(tup_,mw_match_attribute());
+            corr_->l_.put(tup_,bmcsd_match_attribute());
 
 #ifdef DEBUG_SYNTHETIC_EXACT
           if (p2_idx != tup_[0]) {
@@ -246,7 +246,7 @@ consider_synthetic(unsigned vn)
             tru_d = vgl_distance(ep_l, homg_pt);
             vcl_cout << "  tru_d: " << tru_d << vcl_endl;
 
-            dbecl_epiband ep_tmp (
+            becld_epiband ep_tmp (
                 vgl_box_2d<double>(bbox_[1]->get_min_x(),bbox_[1]->get_max_x(), bbox_[1]->get_min_y(), bbox_[1]->get_max_y()));
             ep_tmp.compute(specified_pts_[0]->get_p(), fm_[0][1], err_pos_);
 
@@ -309,7 +309,7 @@ consider_synthetic(unsigned vn)
             tru_d = vgl_distance(ep_l, homg_pt);
             vcl_cout << "  tru_d: " << tru_d << vcl_endl;
 
-            dbecl_epiband ep_tmp (
+            becld_epiband ep_tmp (
                 vgl_box_2d<double>(bbox_[1]->get_min_x(),bbox_[1]->get_max_x(), bbox_[1]->get_min_y(), bbox_[1]->get_max_y()));
             ep_tmp.compute(specified_pts_[0]->get_p(), fm_[0][1], err_pos_);
 

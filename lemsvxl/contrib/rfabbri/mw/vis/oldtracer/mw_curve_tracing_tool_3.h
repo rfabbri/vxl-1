@@ -17,9 +17,9 @@
 
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vpgl/vpgl_fundamental_matrix.h>
-#include <mw/mw_intersection_sets.h>
-#include <dbdif/dbdif_camera.h>
-#include <dbdif/dbdif_rig.h>
+#include <becld/becld_intersection_sets.h>
+#include <bdifd/bdifd_camera.h>
+#include <bdifd/bdifd_rig.h>
 #include <mw/mw_curves.h>
 
 
@@ -39,7 +39,7 @@
 //  1- Define three frames.
 //  2- Put an image into each frame; detect edges and transform the edges into
 //     Vsol polylines by using pruning process.
-//  3- Put a vpgl_perspective_camera into a dvpgl_camera_storage in each frame.
+//  3- Put a vpgl_perspective_camera into a vpgld_camera_storage in each frame.
 //  4- Define three views, one for each frame.
 //  5- Set the three edge vsols as active in each frame.
 //  6- call the tool and click on the first view's vsol 
@@ -91,7 +91,7 @@ public:
 protected:
 
   vgui_event_condition gesture0;
-  vcl_vector<dbdif_camera> cam_; //: cameras for each view
+  vcl_vector<bdifd_camera> cam_; //: cameras for each view
   vcl_vector<int> frame_v_;   //: frame number for each view
   const unsigned nviews_;
 
@@ -172,7 +172,7 @@ protected:
   bool display_all_3rd_view_epips_;
 
   bool compute_isets_; 
-  mw_intersection_sets  isets_;
+  becld_intersection_sets  isets_;
 
   bool click_selects_whole_curve_;
 
@@ -207,39 +207,39 @@ private:
       vcl_vector<vsol_point_2d_sptr> &reproj , 
       vcl_vector<vsol_point_2d_sptr> &crv1_ppts, 
       vcl_vector<vsol_point_2d_sptr> &crv2_ppts,
-      dbdif_rig &rig);
+      bdifd_rig &rig);
 
   void trinocular_candidates();
 
   void project(
       unsigned view, 
       vcl_vector<vsol_point_2d_sptr> &proj, 
-      const vcl_vector<mw_vector_3d> &crv3d, 
-      dbdif_rig &/*rig*/) const;
+      const vcl_vector<bmcsd_vector_3d> &crv3d, 
+      bdifd_rig &/*rig*/) const;
 
   void reconstruct_and_reproject(
       unsigned jnz, 
       unsigned view, 
       vcl_vector<vsol_point_2d_sptr> &reproj, 
 
-      vcl_vector<mw_vector_3d> &crv3d, 
+      vcl_vector<bmcsd_vector_3d> &crv3d, 
       vcl_vector<unsigned> &crv1_idx,
       vcl_vector<unsigned> &crv2_idx,
-      dbdif_rig &rig) const;
+      bdifd_rig &rig) const;
 
   void reconstruct_one_candidate(
       unsigned jnz, 
-      vcl_vector<mw_vector_3d> &crv3d, 
+      vcl_vector<bmcsd_vector_3d> &crv3d, 
       const vcl_vector<unsigned> &crv1_idx,
       const vcl_vector<unsigned> &crv2_idx,
-      dbdif_rig &rig) const;
+      bdifd_rig &rig) const;
 
   bool trinocular_consistency(
       unsigned jnz, 
       vcl_vector<vsol_point_2d_sptr> &reproj, 
-      vcl_vector<mw_vector_3d> &crv3d, 
+      vcl_vector<bmcsd_vector_3d> &crv3d, 
       mw_curves &curves_v3,
-      dbdif_rig &rig,
+      bdifd_rig &rig,
       double *cost);
 
   void 
@@ -247,7 +247,7 @@ private:
       unsigned jnz,
       vcl_vector<unsigned> &crv1_idx,
       vcl_vector<unsigned> &crv2_idx,
-      dbdif_rig &rig
+      bdifd_rig &rig
       ) const;
 
   vgl_homg_line_2d<double> l_epipolar_line(
@@ -259,7 +259,7 @@ private:
       vcl_vector<vsol_point_2d_sptr> &reproj,
       vcl_vector<unsigned> &crv1_idx,
       vcl_vector<unsigned> &crv2_idx,
-      dbdif_rig &rig
+      bdifd_rig &rig
       ) const;
 
   void 

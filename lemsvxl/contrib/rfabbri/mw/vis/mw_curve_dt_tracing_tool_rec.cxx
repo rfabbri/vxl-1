@@ -28,14 +28,14 @@ show_reprojections(unsigned jnz)
   for (unsigned i=0; i < nviews_; ++i)
     tab_[i]->set_current_grouping( "Drawing" );
 
-  dbdif_rig rig(cam_[0].Pr_, cam_[1].Pr_);
+  bdifd_rig rig(cam_[0].Pr_, cam_[1].Pr_);
 
   vcl_vector<vsol_point_2d_sptr> reproj; 
   vcl_vector<unsigned> crv1_idx, crv2_idx;
 
 
   for (unsigned v=2; v < nviews_; ++v) {
-    vcl_vector<mw_vector_3d> crv3d; 
+    vcl_vector<bmcsd_vector_3d> crv3d; 
     reconstruct_and_reproject(jnz, v, reproj, crv3d,crv1_idx, crv2_idx, rig);
     vsol_point_2d_sptr pt = crv_candidates_ptrs_[jnz]->vertex(crv2_idx[0]);
 

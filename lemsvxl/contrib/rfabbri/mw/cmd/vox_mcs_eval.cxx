@@ -12,7 +12,7 @@
 #include <vul/vul_timer.h>
 #include <dborl/algo/dborl_utilities.h>
 #include <dbxml/dbxml_algos.h>
-#include <mw/pro/dbmcs_stereo_driver.h>
+#include <mw/pro/bmcsd_stereo_driver.h>
 
 
 #define MW_ASSERT(msg, a, b) if ((a) != (b)) { vcl_cerr << (msg) \
@@ -104,7 +104,7 @@ main(int argc, char *argv[])
       return 1;
   }
 
-  dbmcs_concurrent_stereo_driver s(e.dpath_, e.one_instance_);
+  bmcsd_concurrent_stereo_driver s(e.dpath_, e.one_instance_);
   s.set_max_concurrent_matchers(1);
   s.set_use_curvelets(e.use_curvelets_);
 
@@ -153,7 +153,7 @@ main(int argc, char *argv[])
     MW_ASSERT("Stereo driver run return value", retval, true);
 
     // Now compare to ground truth 
-    mw_discrete_corresp corr (s.corresp(s.num_corresp()-1));
+    bmcsd_discrete_corresp corr (s.corresp(s.num_corresp()-1));
 
     if (corr.checksum() != e.gt_.checksum())
       vcl_cout << "Computed and g-truth checksum for corresp don't match\n"
@@ -348,10 +348,10 @@ void vox_mcs_eval::
 read_cams()
 {
   if (params_->cam_type_() == "intrinsic_extrinsic") {
-    cam_type_ = mw_util::MW_INTRINSIC_EXTRINSIC;
+    cam_type_ = bmcsd_util::MW_INTRINSIC_EXTRINSIC;
   } else {
     if (params_->cam_type_() == "projcamera")
-      cam_type_ = mw_util::MW_3X4;
+      cam_type_ = bmcsd_util::MW_3X4;
     else  {
       vcl_cerr << "Error: invalid camera type " << params_->cam_type_() << vcl_endl;
       exit(1);
@@ -388,7 +388,7 @@ read_gt()
 void vox_mcs_eval::
 read_one_mcs_instance()
 {
-  bool retval = dbmcs_view_set::read_txt(
+  bool retval = bmcsd_view_set::read_txt(
       params_->input_folder_() + vcl_string("/mcs_stereo_instances.txt"), 
       &all_instances_);
   MW_ASSERT("frames to match from file", retval, true);
@@ -405,20 +405,20 @@ read_one_mcs_instance()
 void vox_mcs_eval::
 read_param_lists()
 {
-  mw_util::parse_num_list(params_->distance_threshold_list_(), &distance_threshold_list_);
-  mw_util::parse_num_list(params_->dtheta_threshold_list_(), &dtheta_threshold_list_);
-  mw_util::parse_num_list(params_->min_samples_per_curve_frag_list_(), &min_samples_per_curve_frag_list_);
+  bmcsd_util::parse_num_list(params_->distance_threshold_list_(), &distance_threshold_list_);
+  bmcsd_util::parse_num_list(params_->dtheta_threshold_list_(), &dtheta_threshold_list_);
+  bmcsd_util::parse_num_list(params_->min_samples_per_curve_frag_list_(), &min_samples_per_curve_frag_list_);
   prune_by_length_ = params_->prune_by_length_();
-  mw_util::parse_num_list(params_->min_inliers_per_view_list_(), &min_inliers_per_view_list_);
-  mw_util::parse_num_list(params_->min_total_inliers_list_(), &min_total_inliers_list_);
+  bmcsd_util::parse_num_list(params_->min_inliers_per_view_list_(), &min_inliers_per_view_list_);
+  bmcsd_util::parse_num_list(params_->min_total_inliers_list_(), &min_total_inliers_list_);
   vcl_sort(min_total_inliers_list_.begin(), min_total_inliers_list_.end());
-  mw_util::parse_num_list(params_->min_first_to_second_best_ratio_list_(), &min_first_to_second_best_ratio_list_);
-  mw_util::parse_num_list(params_->lonely_threshold_list_(), &lonely_threshold_list_);
-  mw_util::parse_num_list(params_->min_epipolar_overlap_list_(), &min_epipolar_overlap_list_);
-  mw_util::parse_num_list(params_->min_epiangle_list_(), &min_epiangle_list_);
+  bmcsd_util::parse_num_list(params_->min_first_to_second_best_ratio_list_(), &min_first_to_second_best_ratio_list_);
+  bmcsd_util::parse_num_list(params_->lonely_threshold_list_(), &lonely_threshold_list_);
+  bmcsd_util::parse_num_list(params_->min_epipolar_overlap_list_(), &min_epipolar_overlap_list_);
+  bmcsd_util::parse_num_list(params_->min_epiangle_list_(), &min_epiangle_list_);
 
   use_curvelets_ = params_->use_curvelets_();
-  mw_util::parse_num_list(params_->min_num_inlier_edgels_per_curvelet_list_(), &min_num_inlier_edgels_per_curvelet_list_);
+  bmcsd_util::parse_num_list(params_->min_num_inlier_edgels_per_curvelet_list_(), &min_num_inlier_edgels_per_curvelet_list_);
 }
 
 bool 

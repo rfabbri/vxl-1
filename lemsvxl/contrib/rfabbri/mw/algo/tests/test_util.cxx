@@ -1,7 +1,7 @@
 #include <testlib/testlib_test.h>
 
-#include <mw/algo/mw_algo_util.h>
-#include <dbdif/algo/dbdif_data.h>
+#include <bmcsd/algo/bmcsd_algo_util.h>
+#include <bdifd/algo/bdifd_data.h>
 #include <vgl/vgl_distance.h>
 
 
@@ -29,7 +29,7 @@ void  test_reprojection_errors()
   unsigned ncols = 500;
   unsigned  crop_origin_x = 450;
   unsigned  crop_origin_y = 1750;
-  dbdif_turntable::internal_calib_olympus(Kmatrix, ncols, crop_origin_x, crop_origin_y);
+  bdifd_turntable::internal_calib_olympus(Kmatrix, ncols, crop_origin_x, crop_origin_y);
 
   vpgl_calibration_matrix<double> K(Kmatrix);
 
@@ -43,26 +43,26 @@ void  test_reprojection_errors()
   angles.push_back(50);
   angles.push_back(70);
 
-  vcl_vector<dbdif_camera> cam;
+  vcl_vector<bdifd_camera> cam;
   vcl_vector<vpgl_perspective_camera<double> *> pcam;
 
   cam.resize(nviews);
 
   pcam.resize(nviews);
   for (unsigned i=0; i < nviews; ++i) {
-    P = dbdif_turntable::camera_olympus(angles[i], K);
+    P = bdifd_turntable::camera_olympus(angles[i], K);
     cam[i].set_p(*P);
     pcam[i] = P;
   }
 
-  vcl_vector<vcl_vector<dbdif_3rd_order_point_3d> > crv3d;
-//  dbdif_data::space_curves_digicam_turntable_medium_sized( crv3d );
-  dbdif_data::space_curves_olympus_turntable( crv3d );
+  vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > crv3d;
+//  bdifd_data::space_curves_digicam_turntable_medium_sized( crv3d );
+  bdifd_data::space_curves_olympus_turntable( crv3d );
 
-  vcl_vector<vcl_vector<dbdif_3rd_order_point_2d> > crv2d;
-  dbdif_data::project_into_cams(crv3d, cam, crv2d);
+  vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > crv2d;
+  bdifd_data::project_into_cams(crv3d, cam, crv2d);
   vcl_cout << "Number of samples INCLUDING epitangencies: " << crv2d[0].size() << vcl_endl;
-//  dbdif_data::project_into_cams_without_epitangency(crv3d, cam, crv2d, vnl_math::pi/6.0);
+//  bdifd_data::project_into_cams_without_epitangency(crv3d, cam, crv2d, vnl_math::pi/6.0);
 //  vcl_cout << "Number of samples after removal of epipolar tangency: " << crv2d[0].size() << vcl_endl;
 
   vcl_vector<unsigned> pt_id; //: can be used if you want to select only a subset of the points
@@ -74,12 +74,12 @@ void  test_reprojection_errors()
   vcl_vector<vgl_point_3d<double> > vgl_pts;
 
   for (unsigned i=0; i < pt_id.size(); ++i) {
-    vgl_pts.push_back(dbdif_data::get_point_crv3d(crv3d,pt_id[i]));
+    vgl_pts.push_back(bdifd_data::get_point_crv3d(crv3d,pt_id[i]));
   }
 
   // -------------------------------------------------------------------------------
 
-  vcl_vector<dbdif_camera> ecam(nviews);
+  vcl_vector<bdifd_camera> ecam(nviews);
   for (unsigned iv=0; iv < nviews; ++iv)
     ecam[iv].set_p(*(pcam[iv]));
 
@@ -88,7 +88,7 @@ void  test_reprojection_errors()
 //  double dk_total=0;
 //  double dkdot_total=0;
   unsigned n_total=0;
-  vcl_vector<dbdif_3rd_order_point_2d> pts;
+  vcl_vector<bdifd_3rd_order_point_2d> pts;
   pts.resize(nviews);
   double dnormal_plus_total=0;
   double dtangential_plus_total=0;
@@ -108,7 +108,7 @@ void  test_reprojection_errors()
     double dtangential_minus;
     unsigned n;
 
-    mw_algo_util::dg_reprojection_error( 
+    bmcsd_algo_util::dg_reprojection_error( 
         pts, ecam, dpos, 
         dtheta, 
         dnormal_plus,
@@ -144,7 +144,7 @@ void  test_reprojection_errors()
   // -------------------------------------------------------------------------------
 
 
-  mw_algo_util::move_world_to_1st_cam(pcam,vgl_pts);
+  bmcsd_algo_util::move_world_to_1st_cam(pcam,vgl_pts);
 
 
 

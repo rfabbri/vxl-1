@@ -39,5 +39,5 @@ set(mw_vis_sources
 
 add_library(mw_vis ${mw_vis_sources})
 
-target_link_libraries(mw_vis dbdet_vis bvis1 mw_algo dbcsi vpgl brct )
+target_link_libraries(mw_vis dbdet_vis bvis1 mw_algo bcsid vpgl brct )
 

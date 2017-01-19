@@ -646,7 +646,7 @@ get_cameras()
     bpro1_storage_sptr 
       p = MANAGER->repository()->get_data_at("vpgl camera",frame_v_[i]);
 
-    dvpgl_camera_storage_sptr cam_storage;
+    vpgld_camera_storage_sptr cam_storage;
 
     cam_storage.vertical_cast(p);
     if(!p) {

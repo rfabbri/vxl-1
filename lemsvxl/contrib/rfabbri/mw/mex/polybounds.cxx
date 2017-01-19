@@ -1,8 +1,8 @@
 #include <vcl_iostream.h>
 #include <vcl_streambuf.h>
 #include <math.h>
-#include <dbecl/dbecl_epipole.h>
-#include <dbecl/dbecl_epiband.h>
+#include <becld/becld_epipole.h>
+#include <becld/becld_epiband.h>
 
 
 
@@ -23,13 +23,13 @@ void mymex(
       )
 {
 
-  dbecl_epipole ep(vgl_point_2d<double>(pole_x,pole_y));
+  becld_epipole ep(vgl_point_2d<double>(pole_x,pole_y));
   vgl_polygon<double> poly(x,y,n);
   
   double theta_plus;
   double theta_minus;
   double theta_mean;
-  dbecl_epiband::get_bounds(poly, ep, theta_plus, theta_minus, theta_mean);
+  becld_epiband::get_bounds(poly, ep, theta_plus, theta_minus, theta_mean);
 
   double *tmp;
   *p_theta_plus= mxCreateDoubleMatrix(1,1,mxREAL);

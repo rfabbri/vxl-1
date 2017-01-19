@@ -1,6 +1,6 @@
-// This is brcv/seg/dbdet/pro/dbmcs_project_curve_sketch_process.h
-#ifndef dbmcs_project_curve_sketch_process_h_
-#define dbmcs_project_curve_sketch_process_h_
+// This is brcv/seg/dbdet/pro/bmcsd_project_curve_sketch_process.h
+#ifndef bmcsd_project_curve_sketch_process_h_
+#define bmcsd_project_curve_sketch_process_h_
 
 //:
 // \file
@@ -18,12 +18,12 @@
 //
 // See the documentation in the .cxx 
 //
-class dbmcs_project_curve_sketch_process : public bpro1_process 
+class bmcsd_project_curve_sketch_process : public bpro1_process 
 {
 public:
 
-  dbmcs_project_curve_sketch_process();
-  virtual ~dbmcs_project_curve_sketch_process();
+  bmcsd_project_curve_sketch_process();
+  virtual ~bmcsd_project_curve_sketch_process();
 
   //: Clone the process
   virtual bpro1_process* clone() const;

@@ -19,9 +19,9 @@
 #include <dbkpr/pro/dbkpr_corr3d_storage.h>
 
 #include <bpro1/bpro1_parameters.h>
-#include <dbdif/dbdif_frenet.h>
-#include <mw/algo/mw_algo_util.h>
-#include <mw/algo/dvpgl_DG_bundle_adjust.h>
+#include <bdifd/bdifd_frenet.h>
+#include <bmcsd/algo/bmcsd_algo_util.h>
+#include <mw/algo/vpgld_DG_bundle_adjust.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
 #include <dbdet/pro/dbdet_edgemap_storage.h>
@@ -29,7 +29,7 @@
 
 #include <vsol/vsol_line_2d_sptr.h>
 #include <vsol/vsol_line_2d.h>
-#include <dvpgl/io/dvpgl_io_cameras.h>
+#include <vpgld/io/vpgld_io_cameras.h>
 
 
 //: Constructor
@@ -139,7 +139,7 @@ dbkpr_frenet_reconstruct_process::finish()
 
     const vpgl_perspective_camera<double> *pcam;
 
-    pcam = dvpgl_cast_to_perspective_camera(frame_corr3d->get_camera());
+    pcam = vpgld_cast_to_perspective_camera(frame_corr3d->get_camera());
     if(!pcam) {
       vcl_cerr << "Error: requires a perspective  camera" << vcl_endl;
       return false;
@@ -182,7 +182,7 @@ dbkpr_frenet_reconstruct_process::finish()
   }
 
   // Get image_points, world_points in the proper format
-  vcl_vector<dbdif_3rd_order_point_2d> image_points;
+  vcl_vector<bdifd_3rd_order_point_2d> image_points;
   vcl_vector<vgl_point_3d<double> > world_points;
   vcl_vector<vcl_vector<bool> > mask(cameras.size(),
                                      vcl_vector<bool>(some_corr3d.size(),false));
@@ -196,7 +196,7 @@ dbkpr_frenet_reconstruct_process::finish()
         dbdet_frenet_keypoint *kp = dynamic_cast<dbdet_frenet_keypoint *>(some_corr3d[j]->in_view(i).ptr());
         if(kp){
           mask[i][j] = true;
-          image_points.push_back(mw_algo_util::mw_get_3rd_order_point_2d(*kp));
+          image_points.push_back(bmcsd_algo_util::mw_get_3rd_order_point_2d(*kp));
         } else
           abort();
       }
@@ -225,7 +225,7 @@ dbkpr_frenet_reconstruct_process::finish()
 
   {
 
-    vcl_vector<dbdif_camera> ecam(nviews);
+    vcl_vector<bdifd_camera> ecam(nviews);
     for (unsigned iv=0; iv < nviews; ++iv)
       ecam[iv].set_p(cameras[iv]);
 
@@ -236,7 +236,7 @@ dbkpr_frenet_reconstruct_process::finish()
   //  double dkdot_total=0;
     unsigned n_total=0;
     double dnormal_plus_total=0;
-    vcl_vector<dbdif_3rd_order_point_2d> pts;
+    vcl_vector<bdifd_3rd_order_point_2d> pts;
     pts.resize(nviews);
 
     for (unsigned ip=0; ip < some_corr3d.size(); ++ip) {
@@ -244,7 +244,7 @@ dbkpr_frenet_reconstruct_process::finish()
       for (unsigned iv=0; iv < nviews; ++iv) {
         dbdet_frenet_keypoint *kp = dynamic_cast<dbdet_frenet_keypoint *>(some_corr3d[ip]->in_view(iv).ptr());
         if(kp){
-          pts[iv] = mw_algo_util::mw_get_3rd_order_point_2d(*kp);
+          pts[iv] = bmcsd_algo_util::mw_get_3rd_order_point_2d(*kp);
         } else
           abort();
       }
@@ -255,7 +255,7 @@ dbkpr_frenet_reconstruct_process::finish()
       bool valid;
       for (unsigned l=0; l < ecam.size(); ++l) {
 
-        valid = mw_algo_util::dg_reprojection_error(
+        valid = bmcsd_algo_util::dg_reprojection_error(
             pts,ecam,l,dpos,
             dtheta,dnormal_plus,dnormal_minus, 
             dtangential_plus, dtangential_minus, dk,dkdot,n);
@@ -278,10 +278,10 @@ dbkpr_frenet_reconstruct_process::finish()
     vcl_cout << "           # valid reprojections: " << n_total << vcl_endl;
 
     unsigned dummy;
-    vcl_cout<< "       dtheta max: " << mw_util::max(dthetas,dummy);
+    vcl_cout<< "       dtheta max: " << bmcsd_util::max(dthetas,dummy);
     vcl_cout<< " (idx = " << dummy << "of " << dthetas.size() << ")" << vcl_endl;
-    vcl_cout<< "       dtheta min: " << mw_util::min(dthetas,dummy) << vcl_endl;
-    vcl_cout<< "       dtheta avg: " << mw_util::mean(dthetas) << vcl_endl;
+    vcl_cout<< "       dtheta min: " << bmcsd_util::min(dthetas,dummy) << vcl_endl;
+    vcl_cout<< "       dtheta avg: " << bmcsd_util::mean(dthetas) << vcl_endl;
   }
   vcl_cout << "\n\n";
 
@@ -290,7 +290,7 @@ dbkpr_frenet_reconstruct_process::finish()
   // ------- CORE
   
   vnl_vector<double> a(init_a), b(init_b), c(0);
-  dvpgl_DG_bundle_adj_lsqr ba_func(Ks,image_points,mask,usewgt);
+  vpgld_DG_bundle_adj_lsqr ba_func(Ks,image_points,mask,usewgt);
   vnl_sparse_lm lm(ba_func);
   lm.set_max_function_evals(maxitr);
   lm.set_g_tolerance(gtol);
@@ -446,7 +446,7 @@ dbkpr_frenet_reconstruct_process::finish()
 
       assert(fp);
 
-      dbdif_3rd_order_point_2d frenet_pt = mw_algo_util::mw_get_3rd_order_point_2d(*fp);
+      bdifd_3rd_order_point_2d frenet_pt = bmcsd_algo_util::mw_get_3rd_order_point_2d(*fp);
 
       vgl_point_2d<double> pt(cameras[i](vgl_homg_point_3d<double>(world_points[p])));
 

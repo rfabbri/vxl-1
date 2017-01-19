@@ -1,12 +1,12 @@
 #include "mw_stereo_app.h"
 
 #include <vcl_sstream.h>
-#include <mw/mw_util.h>
+#include <bmcsd/bmcsd_util.h>
 #include <mw/algo/mw_point_matcher.h>
 #include <mw/algo/mw_match_position_band.h>
 #include <mw/algo/mw_match_tangent_band.h>
 #include <mw/mw_subpixel_point_set.h>
-#include <dbdif/algo/dbdif_data.h>
+#include <bdifd/algo/bdifd_data.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
@@ -16,7 +16,7 @@
 #include <dbdet/algo/dbdet_load_edg.h>
 #include <bvis1/bvis1_macros.h>
 #include <vnl/vnl_random.h>
-#include <dvpgl/io/dvpgl_io_cameras.h>
+#include <vpgld/io/vpgld_io_cameras.h>
 
 
 static vnl_random myrand;
@@ -192,13 +192,13 @@ init(mw_stereo_app_args &arg)
     if (arg.synth_data_1->value_) {
       nrows_ = 314;
       ncols_ = 600;
-      dbdif_turntable::internal_calib_ctspheres(Kmatrix, ncols_);
+      bdifd_turntable::internal_calib_ctspheres(Kmatrix, ncols_);
     } else { // valid for synth data 2 and 3 alike
       nrows_ = 400;
       ncols_ = 500;
       unsigned  crop_origin_x_ = 450;
       unsigned  crop_origin_y_ = 1750;
-      dbdif_turntable::internal_calib_olympus(Kmatrix, ncols_, crop_origin_x_, crop_origin_y_);
+      bdifd_turntable::internal_calib_olympus(Kmatrix, ncols_, crop_origin_x_, crop_origin_y_);
     }
 
     vpgl_calibration_matrix<double> K(Kmatrix);
@@ -209,12 +209,12 @@ init(mw_stereo_app_args &arg)
 
     if (arg.synth_data_1->value_) {
       for (unsigned i=0; i < nviews_; ++i) {
-        P = dbdif_turntable::camera_ctspheres((unsigned)(angles_[i]), K);
+        P = bdifd_turntable::camera_ctspheres((unsigned)(angles_[i]), K);
         cam_[i].set_p(*P); delete P;
       }
     } else {// valid for synth data 2 and 3 alike
       for (unsigned i=0; i < nviews_; ++i) {
-        P = dbdif_turntable::camera_olympus(angles_[i], K);
+        P = bdifd_turntable::camera_olympus(angles_[i], K);
         cam_[i].set_p(*P); delete P;
       }
     }
@@ -257,11 +257,11 @@ init(mw_stereo_app_args &arg)
         abort();
       } else {// valid for synth data 2 and 3 alike
         // Using simple perturb criteria for now
-        P = dbdif_turntable::camera_olympus(angle1_perturb, K);
+        P = bdifd_turntable::camera_olympus(angle1_perturb, K);
         cam_[0].set_p(*P); delete P;
-        P = dbdif_turntable::camera_olympus(angle2_perturb, K);
+        P = bdifd_turntable::camera_olympus(angle2_perturb, K);
         cam_[1].set_p(*P); delete P;
-        P = dbdif_turntable::camera_olympus(angle3_perturb, K);
+        P = bdifd_turntable::camera_olympus(angle3_perturb, K);
         cam_[2].set_p(*P); delete P;
       }
 
@@ -302,7 +302,7 @@ init(mw_stereo_app_args &arg)
             abort();
           }
 
-          b_write_dvpgl(bp_out, &(cam_[i].Pr_));
+          b_write_vpgld(bp_out, &(cam_[i].Pr_));
           bp_out.close();
         }
       }
@@ -311,15 +311,15 @@ init(mw_stereo_app_args &arg)
     vcl_cout << "Generating curves...\n"; vcl_cout.flush();
 
     if (arg.synth_data_1->value_) {
-      dbdif_data::space_curves_ctspheres( crv3d_gt_ );
+      bdifd_data::space_curves_ctspheres( crv3d_gt_ );
     } else {
       if (arg.synth_data_2->value_)
-        dbdif_data::space_curves_olympus_turntable( crv3d_gt_ );
+        bdifd_data::space_curves_olympus_turntable( crv3d_gt_ );
       else {
         if (arg.synth_data_3->value_)
-          dbdif_data::space_curves_digicam_turntable_sandbox( crv3d_gt_ );
+          bdifd_data::space_curves_digicam_turntable_sandbox( crv3d_gt_ );
         else if (arg.synth_data_med->value_)
-          dbdif_data::space_curves_digicam_turntable_medium_sized( crv3d_gt_ );
+          bdifd_data::space_curves_digicam_turntable_medium_sized( crv3d_gt_ );
       }
     }
 
@@ -329,11 +329,11 @@ init(mw_stereo_app_args &arg)
 
     // eliminate epipolar tangency 
     if (arg.remove_epitangency->value_) {
-      dbdif_data::project_into_cams_without_epitangency(crv3d_gt_, cam_gt_, crv2d_gt_, vnl_math::pi/6.0);
+      bdifd_data::project_into_cams_without_epitangency(crv3d_gt_, cam_gt_, crv2d_gt_, vnl_math::pi/6.0);
       vcl_cout << "Number of samples after removal of epipolar tangency: " 
         << crv2d_gt_[0].size() << vcl_endl;
     } else {
-      dbdif_data::project_into_cams(crv3d_gt_, cam_gt_, crv2d_gt_);
+      bdifd_data::project_into_cams(crv3d_gt_, cam_gt_, crv2d_gt_);
       vcl_cout << "Number of samples INCLUDING epitangencies: " 
         << crv2d_gt_[0].size() << vcl_endl;
     }
@@ -351,8 +351,8 @@ init(mw_stereo_app_args &arg)
 
     // Reconstruct from the known correspondence, as a check.
 
-    //    vcl_vector<mw_vector_3d> C_rec;
-    //    dbdif_rig rig(cam_gt_[0].Pr_,cam_[1].Pr_);
+    //    vcl_vector<bmcsd_vector_3d> C_rec;
+    //    bdifd_rig rig(cam_gt_[0].Pr_,cam_[1].Pr_);
     //    rig.reconstruct_3d_curve(&C_rec,vsols_[0],vsols_[1]);
 
     //    mywritev(vcl_string("dat/synth_data3d_rec.dat"), C_rec);
@@ -361,7 +361,7 @@ init(mw_stereo_app_args &arg)
       if (!symmetric_n_) {
         gt_.set_size(crv2d_gt_[0].size(), crv2d_gt_[1].size());
         for (unsigned i=0; i < crv2d_gt_[0].size(); ++i) {
-          gt_.corresp_[i].push_back(mw_attributed_object(i));
+          gt_.corresp_[i].push_back(bmcsd_attributed_object(i));
         }
       } else { // N-tuple groundtruth
         vcl_vector<unsigned> npts(nviews_);
@@ -373,11 +373,11 @@ init(mw_stereo_app_args &arg)
         gt_n_.set_size(npts);
 
         for (unsigned i=0; i < crv2d_gt_[0].size(); ++i) {
-          mw_ntuplet tup(nviews_);
+          bmcsd_ntuplet tup(nviews_);
           for (unsigned iv=1; iv < nviews_; ++iv) {
             tup[iv] = i;
           }
-          gt_n_.l_.put(tup,mw_match_attribute());
+          gt_n_.l_.put(tup,bmcsd_match_attribute());
         }
       }
     } else {
@@ -386,7 +386,7 @@ init(mw_stereo_app_args &arg)
       assert (crv2d_gt_[0].size() == crv2d_gt_[1].size() && crv2d_gt_[1].size() == crv2d_gt_[2].size());
 
       for (unsigned i=0; i < crv2d_gt_[0].size(); ++i) {
-        gt_3_.l_.put(i,i,i,mw_match_attribute());
+        gt_3_.l_.put(i,i,i,bmcsd_match_attribute());
       }
     }
 
@@ -624,7 +624,7 @@ run_stereo()
               mw_match_tangent_band(vsols_, crv2d_gt_, &corr_ep_n_, fms, 
                   cam_, sp, err_pos_, err_t, false);// false = do not debug synthetic
             } else {
-              vcl_vector<vcl_vector<dbdif_3rd_order_point_2d> > dg_points;
+              vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > dg_points;
               build_point_tangents_from_edgels(dg_points);
               mw_match_tangent_band(vsols_, dg_points, &corr_ep_n_, fms, 
                   cam_, sp, err_pos_, err_t, false);// false = do not debug synthetic
@@ -688,7 +688,7 @@ run_stereo()
         vcl_cout << corr_ep_n_;
 
         vcl_cout << "======== Converting to 3 ========\n";
-        corr_ep_3_ = mw_discrete_corresp_3(corr_ep_n_);
+        corr_ep_3_ = bmcsd_discrete_corresp_3(corr_ep_n_);
         vcl_cout << corr_ep_3_;
         have_precomputed_epi_corresp_ = true;
 
@@ -738,7 +738,7 @@ run_stereo()
           mw_point_matcher::C_THRESHOLD_TANGENT_AND_CURVATURE
          );
       } else {
-        vcl_vector<vcl_vector<dbdif_3rd_order_point_2d> > crv2d;
+        vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > crv2d;
         build_point_tangents_from_edgels(crv2d);
 
         m.trinocular_DG_costs_3(
@@ -768,7 +768,7 @@ run_stereo()
           } else { 
             //: non-synthetic data, using edgel tangents
             
-            vcl_vector<vcl_vector<dbdif_3rd_order_point_2d> > crv2d;
+            vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > crv2d;
             build_point_tangents_from_edgels(crv2d);
 
             m.trinocular_DG_costs(crv2d, p_img3, &corr_out_, 0, 1, 2, 
@@ -819,7 +819,7 @@ run_stereo()
 }
 
 void mw_stereo_app::
-build_point_tangents_from_edgels(vcl_vector<vcl_vector<dbdif_3rd_order_point_2d> > &crv2d) const
+build_point_tangents_from_edgels(vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > &crv2d) const
 {
   crv2d.resize(nviews_);
   for (unsigned iv=0; iv < nviews_; ++iv) {
@@ -1042,7 +1042,7 @@ write_gt_edgels(mw_stereo_app_args &arg)
   for (unsigned  iv=0; iv < nviews_; ++iv) {
 
     vcl_vector<vsol_line_2d_sptr> lines;
-    dbdif_data::get_lines(lines, crv2d_gt_[iv], false);
+    bdifd_data::get_lines(lines, crv2d_gt_[iv], false);
 
     vcl_vector< vsol_spatial_object_2d_sptr > edgels;
 

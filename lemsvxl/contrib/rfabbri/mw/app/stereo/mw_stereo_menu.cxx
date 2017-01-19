@@ -19,12 +19,12 @@
 #include <dbdet/vis/dbdet_query_linking_tool.h>
 #include <dbdet/vis/dbdet_sel_explorer_tool.h>
 
-#include <dvpgl/vis/dvpgl_epipolar_tool.h>
+#include <vpgld/vis/vpgld_epipolar_tool.h>
 #include <dbkpr/vis/dbkpr_keypoint_tools.h>
 #include <dbdet/vis/dbdet_crop_edgemap_tool.h>
 
 
-#include <dvpgl/vis/dvpgl_epipolar_region_tool.h>
+#include <vpgld/vis/vpgld_epipolar_region_tool.h>
 #include <mw/vis/mw_curve_tracing_tool_2.h>
 #include <mw/vis/mw_curve_dt_tracing_tool_2.h>
 #include <mw/vis/mw_curve_edit_tracing_tool_2.h>
@@ -208,7 +208,7 @@ mw_stereo_menu::setup_menu()
     MENU_ADD_TOOL( bvis1_style_tool,     soview2D_tools_menu );
 
 //  vgui_menu image_tools_menu;
-//    MENU_ADD_TOOL( dbil_image_intensity_inspector, image_tools_menu );
+//    MENU_ADD_TOOL( bild_image_intensity_inspector, image_tools_menu );
 
   vgui_menu keypoint_tools_menu;
     MENU_ADD_TOOL( dbkpr_keypoint_inspector_tool, keypoint_tools_menu );
@@ -221,8 +221,8 @@ mw_stereo_menu::setup_menu()
 
   vgui_menu epi_tools_menu;
     // tool to display epipolar lines:
-    MENU_ADD_TOOL( dvpgl_epipolar_tool,          epi_tools_menu);
-    MENU_ADD_TOOL( dvpgl_epipolar_region_tool,   epi_tools_menu);
+    MENU_ADD_TOOL( vpgld_epipolar_tool,          epi_tools_menu);
+    MENU_ADD_TOOL( vpgld_epipolar_region_tool,   epi_tools_menu);
 
   tools.add("vsol2D",      vsol2D_tools_menu );
   tools.add("2D Geometry", soview2D_tools_menu);

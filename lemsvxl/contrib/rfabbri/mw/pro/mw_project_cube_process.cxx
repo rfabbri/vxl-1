@@ -5,15 +5,15 @@
 
 #include <vcl_vector.h>
 #include <vcl_string.h>
-#include <dbdif/algo/dbdif_data.h>
+#include <bdifd/algo/bdifd_data.h>
 #include <vpgl/vpgl_perspective_camera.h>
 
 
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
 
-#include <dvpgl/pro/dvpgl_camera_storage.h>
-#include <dvpgl/io/dvpgl_io_cameras.h>
+#include <vpgld/pro/vpgld_camera_storage.h>
+#include <vpgld/io/vpgld_io_cameras.h>
 
 
 
@@ -105,7 +105,7 @@ mw_project_cube_process::execute()
 
   // get camera matrix
 
-  dvpgl_camera_storage_sptr cam_storage;
+  vpgld_camera_storage_sptr cam_storage;
 
   cam_storage.vertical_cast(input_data_[0][0]);
 

@@ -1,10 +1,10 @@
-#include "dbmcs_stereo_driver.h"
-#include <mw/pro/dbpro_fragment_tangents.h>
-#include <mw/pro/dbpro_load_curvelet_source.h>
-#include <mw/pro/dbmcs_stereo_filter.h>
+#include "bmcsd_stereo_driver.h"
+#include <mw/pro/bprod_fragment_tangents.h>
+#include <mw/pro/bprod_load_curvelet_source.h>
+#include <mw/pro/bmcsd_stereo_filter.h>
 #include <vcl_algorithm.h>
 
-bool dbmcs_concurrent_stereo_driver::
+bool bmcsd_concurrent_stereo_driver::
 init()
 {
   //: For each view, setup the following processes:
@@ -59,38 +59,38 @@ init()
     // Attach sources to files -----
 
     // 1 Cam loader
-    dbpro_process_sptr 
-      p = new dbpro_load_camera_source<double>(
+    bprod_process_sptr 
+      p = new bprod_load_camera_source<double>(
           dpath_[v].cam_full_path(), dpath_[v].cam_file_type());
     cam_src_.push_back(p);
  
     // 1 Edge map loader
     static const bool my_bSubPixel = true;
     static const double my_scale=1.0;
-    p = new dbpro_load_edg_source(dpath_[v].edg_full_path(), my_bSubPixel, my_scale);
+    p = new bprod_load_edg_source(dpath_[v].edg_full_path(), my_bSubPixel, my_scale);
     edg_src_.push_back(p);
 
     // 1 curve fragment loader
-    dbpro_load_vsol_polyline_source 
-      *p_curve_src = new dbpro_load_vsol_polyline_source(dpath_[v].frag_full_path());
+    bprod_load_vsol_polyline_source 
+      *p_curve_src = new bprod_load_vsol_polyline_source(dpath_[v].frag_full_path());
 
     frag_src_.push_back(p_curve_src);
 
     // 1 curvelet map loader
     if (use_curvelets_)  {
-      dbpro_load_curvelet_source
-        *p_curvelet_src = new dbpro_load_curvelet_source(dpath_[v].cvlet_full_path());
+      bprod_load_curvelet_source
+        *p_curvelet_src = new bprod_load_curvelet_source(dpath_[v].cvlet_full_path());
       cvlet_src_.push_back(p_curvelet_src);
     }
 
     // 1 dt and label loader
-    p = new dbpro_edg_dt;
+    p = new bprod_edg_dt;
     edg_dt_.push_back(p);
     p->connect_input(0, edg_src_[v], 0);
 
 
     // 1 curve fragment tangent interpolator
-    p = new dbpro_fragment_tangents();
+    p = new bprod_fragment_tangents();
     frag_tangents_.push_back(p);
     p->connect_input(0, frag_src_[v], 0);
   }
@@ -99,7 +99,7 @@ init()
 
   //: Setup nodes that act on multiple frames
   for (unsigned i=0; i < f_.num_instances(); ++i) {
-    dbmcs_stereo_filter *p = new dbmcs_stereo_filter();
+    bmcsd_stereo_filter *p = new bmcsd_stereo_filter();
     curve_stereo_.push_back(p);
 
     p->setup_inputs(
@@ -123,10 +123,10 @@ init()
        = vcl_min(static_cast<unsigned long>(max_concurrent_matchers_), 
            static_cast<unsigned long>(curve_stereo_.size()-i));
 
-      curve_stereo_jobs_.push_back(new dbmcs_stereo_jobs(num_matchers));
+      curve_stereo_jobs_.push_back(new bmcsd_stereo_jobs(num_matchers));
     }
 
-    dbpro_process_sptr p = curve_stereo_jobs_.back();
+    bprod_process_sptr p = curve_stereo_jobs_.back();
     unsigned idx = 3*(i % max_concurrent_matchers_);
     p->connect_input(idx,   curve_stereo_[i], 0);
     p->connect_input(idx+1, curve_stereo_[i], 1);
@@ -134,7 +134,7 @@ init()
   }
 
   //: Now connect all curve_stereo_jobs_ into a single output job.
-  output_job_ = new dbmcs_stereo_aggregator(curve_stereo_jobs_.size());
+  output_job_ = new bmcsd_stereo_aggregator(curve_stereo_jobs_.size());
   for (unsigned i=0; i < curve_stereo_jobs_.size(); ++i) {
     output_job_->connect_input(3*i,   curve_stereo_jobs_[i], 0 /* crv_3d */);
     output_job_->connect_input(3*i+1, curve_stereo_jobs_[i], 1 /* attr */);
@@ -145,17 +145,17 @@ init()
   return true;
 }
 
-bool dbmcs_concurrent_stereo_driver::
+bool bmcsd_concurrent_stereo_driver::
 run(unsigned long timestamp)
 {
   vcl_cout << "Running stereo driver.\n";
   assert(initialized_);
-  dbpro_signal retval = output_job_->run(timestamp);
+  bprod_signal retval = output_job_->run(timestamp);
 
-  if (retval == DBPRO_INVALID)
+  if (retval == BPROD_INVALID)
     return false;
 
-  dbmcs_stereo_aggregator *o = dynamic_cast<dbmcs_stereo_aggregator *> (output_job_.ptr());
+  bmcsd_stereo_aggregator *o = dynamic_cast<bmcsd_stereo_aggregator *> (output_job_.ptr());
   crv3d_ = &o->crv3d_;
   attr_  = &o->attr_;
   corresp_  = &o->corresp_;
@@ -163,12 +163,12 @@ run(unsigned long timestamp)
   return true;
 }
 
-void dbmcs_concurrent_stereo_driver::
+void bmcsd_concurrent_stereo_driver::
 update_stereo_params()
 {
   for (unsigned i=0; i < frag_src_.size(); ++i) {
-    dbpro_load_vsol_polyline_source *p = 
-      dynamic_cast<dbpro_load_vsol_polyline_source *>(frag_src_[i].ptr());
+    bprod_load_vsol_polyline_source *p = 
+      dynamic_cast<bprod_load_vsol_polyline_source *>(frag_src_[i].ptr());
     if (prune_by_length_)
       p->set_min_length(tau_min_length_per_curve_frag_);
     else
@@ -176,7 +176,7 @@ update_stereo_params()
   }
 
   for (unsigned i=0; i < curve_stereo_.size(); ++i) {
-    dbmcs_stereo_filter *p = dynamic_cast<dbmcs_stereo_filter *>(curve_stereo_[i].ptr());
+    bmcsd_stereo_filter *p = dynamic_cast<bmcsd_stereo_filter *>(curve_stereo_[i].ptr());
     assert(p);
 
     p->s_.set_tau_distance_squared(tau_distance_*tau_distance_);

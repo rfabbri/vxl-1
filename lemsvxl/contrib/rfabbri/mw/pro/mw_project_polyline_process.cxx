@@ -5,22 +5,22 @@
 
 #include <vcl_vector.h>
 #include <vcl_string.h>
-#include <dbdif/algo/dbdif_data.h>
+#include <bdifd/algo/bdifd_data.h>
 #include <vpgl/vpgl_perspective_camera.h>
 
 
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
 
-#include <dvpgl/pro/dvpgl_camera_storage.h>
-#include <dvpgl/io/dvpgl_io_cameras.h>
+#include <vpgld/pro/vpgld_camera_storage.h>
+#include <vpgld/io/vpgld_io_cameras.h>
 
 #include <vsol/vsol_point_3d.h>
 #include <vsol/vsol_point_3d_sptr.h>
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_point_2d_sptr.h>
 #include <vsol/vsol_polyline_2d.h>
-#include <mw/mw_util.h>
+#include <bmcsd/bmcsd_util.h>
 
 //: Constructor
 mw_project_polyline_process::mw_project_polyline_process()
@@ -92,12 +92,12 @@ mw_project_polyline_process::execute()
 
   // get camera matrix
 
-  dvpgl_camera_storage_sptr cam_storage;
+  vpgld_camera_storage_sptr cam_storage;
 
   cam_storage.vertical_cast(input_data_[0][0]);
 
   const vpgl_perspective_camera<double> *pcam = 
-    dvpgl_cast_to_perspective_camera(cam_storage->get_camera());
+    vpgld_cast_to_perspective_camera(cam_storage->get_camera());
   if(!pcam) {
     vcl_cerr << "Error: process requires a perspective camera" << vcl_endl;
     return false;

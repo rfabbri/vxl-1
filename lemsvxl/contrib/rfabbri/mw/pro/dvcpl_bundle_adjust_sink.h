@@ -6,13 +6,13 @@
 //\brief Dbpro process for curve bundle adjustment
 //\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //
-#include <dbpro/dbpro_process.h>
+#include <bprod/bprod_process.h>
 #include <mw/algo/dvcpl_distmap_bundle_adjust.h>
 #include <mw/algo/dvcpl_distmap_optimize_camera.h>
-#include <mw/pro/dbpro_load_camera_source.h>
-#include <mw/pro/dbpro_load_edg_source.h>
+#include <mw/pro/bprod_load_camera_source.h>
+#include <mw/pro/bprod_load_edg_source.h>
 
-class dvcpl_bundle_adjust_sink : public dbpro_sink {
+class dvcpl_bundle_adjust_sink : public bprod_sink {
 public:
   typedef vcl_vector<vgl_point_3d<double> > single_3d_curve;
 
@@ -27,7 +27,7 @@ public:
     curve_ransac_(curve_ransac)
   {}
 
-  dbpro_signal execute() 
+  bprod_signal execute() 
   {
     get_cameras();
     get_edgemaps();
@@ -46,7 +46,7 @@ public:
 
       if (!retval) {
         vcl_cerr << "Problem calling optimize from bundle adj sink\n";
-        return DBPRO_INVALID;
+        return BPROD_INVALID;
       }
     } else {
       // Optimize each view at a time.
@@ -87,13 +87,13 @@ public:
       }
     }
 
-    return DBPRO_VALID;
+    return BPROD_VALID;
   }
 
   void setup_inputs(
-        vcl_vector<dbpro_process_sptr> &cam_src, 
-        vcl_vector<dbpro_process_sptr> &edg_src, 
-        vcl_vector<dbpro_process_sptr> &edg_dt);
+        vcl_vector<bprod_process_sptr> &cam_src, 
+        vcl_vector<bprod_process_sptr> &edg_src, 
+        vcl_vector<bprod_process_sptr> &edg_dt);
 
   //: Driver sets mask_ and pts3d_ these before calling execute()
   vcl_vector<vcl_vector<bool> > mask_;

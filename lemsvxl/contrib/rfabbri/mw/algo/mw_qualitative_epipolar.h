@@ -9,8 +9,8 @@
 //
 #include <vcl_vector.h>
 
-#include <dbecl/dbecl_epiband.h>
-#include <mw/mw_discrete_corresp_n.h>
+#include <becld/becld_epiband.h>
+#include <bmcsd/bmcsd_discrete_corresp_n.h>
 #include <vsol/vsol_box_2d_sptr.h>
 #include <vsol/vsol_point_2d_sptr.h>
 #include <vcl_list.h>

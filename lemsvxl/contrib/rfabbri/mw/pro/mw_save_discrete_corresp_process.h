@@ -13,7 +13,7 @@
 #include <vcl_vector.h>
 
 
-//: This process loads mw_discrete_corresp binary file into a storage class
+//: This process loads bmcsd_discrete_corresp binary file into a storage class
 class mw_save_discrete_corresp_process : public bpro1_process
 {
 public:

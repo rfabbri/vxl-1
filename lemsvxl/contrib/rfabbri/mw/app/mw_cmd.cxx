@@ -1,20 +1,20 @@
-#include <mw/mw_util.h>
+#include <bmcsd/bmcsd_util.h>
 #include <vul/vul_arg.h>
-#include <dbdif/dbdif_rig.h>
-#include <dbdif/dbdif_analytic.h>
-#include <dbdif/algo/dbdif_data.h>
+#include <bdifd/bdifd_rig.h>
+#include <bdifd/bdifd_analytic.h>
+#include <bdifd/algo/bdifd_data.h>
 
 static void 
 calib_perturb_minimizing_reprojection_errors(
-    const vcl_vector<dbdif_camera> &cam_gt_,  //:< ideal cams
+    const vcl_vector<bdifd_camera> &cam_gt_,  //:< ideal cams
     const vpgl_calibration_matrix<double> &K,
-    const vcl_vector<vcl_vector<dbdif_3rd_order_point_3d> > &crv3d);
+    const vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > &crv3d);
 
 //: This program accomodates any experimentation I wanna do.
 int
 main(int /*argc*/, char ** /*argv*/)
 {
-  vcl_vector<dbdif_camera> cam_gt_;
+  vcl_vector<bdifd_camera> cam_gt_;
   unsigned nviews_=3;
   cam_gt_.resize(nviews_);
 
@@ -23,21 +23,21 @@ main(int /*argc*/, char ** /*argv*/)
   double x_max_scaled = 500;
 
   vnl_double_3x3 Kmatrix;
-  dbdif_turntable::internal_calib_olympus(Kmatrix, x_max_scaled, crop_origin_x_, crop_origin_y_);
+  bdifd_turntable::internal_calib_olympus(Kmatrix, x_max_scaled, crop_origin_x_, crop_origin_y_);
 
   vpgl_calibration_matrix<double> K(Kmatrix);
 
   vpgl_perspective_camera<double> *P;
 
-  P = dbdif_turntable::camera_olympus(0, K);
+  P = bdifd_turntable::camera_olympus(0, K);
   cam_gt_[0].set_p(*P);
-  P = dbdif_turntable::camera_olympus(5, K);
+  P = bdifd_turntable::camera_olympus(5, K);
   cam_gt_[1].set_p(*P);
-  P = dbdif_turntable::camera_olympus(60, K);
+  P = bdifd_turntable::camera_olympus(60, K);
   cam_gt_[2].set_p(*P);
 
-  vcl_vector<vcl_vector<dbdif_3rd_order_point_3d> > crv3d;
-  dbdif_data::space_curves_olympus_turntable( crv3d );
+  vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > crv3d;
+  bdifd_data::space_curves_olympus_turntable( crv3d );
 
   calib_perturb_minimizing_reprojection_errors(cam_gt_, K, crv3d);
 
@@ -48,14 +48,14 @@ main(int /*argc*/, char ** /*argv*/)
 // measurements of tangent, curvature, and curvature derivative.
 void 
 calib_perturb_minimizing_reprojection_errors(
-    const vcl_vector<dbdif_camera> &cam_gt_,  //:< ideal cams
+    const vcl_vector<bdifd_camera> &cam_gt_,  //:< ideal cams
     const vpgl_calibration_matrix<double> &K,
-    const vcl_vector<vcl_vector<dbdif_3rd_order_point_3d> > &crv3d)
+    const vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > &crv3d)
 {
-  vcl_vector<vcl_vector<dbdif_3rd_order_point_2d> > crv2d_gt_;
-  dbdif_data::project_into_cams(crv3d, cam_gt_, crv2d_gt_);
+  vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > crv2d_gt_;
+  bdifd_data::project_into_cams(crv3d, cam_gt_, crv2d_gt_);
 
-  vcl_vector<dbdif_camera> cam_;
+  vcl_vector<bdifd_camera> cam_;
   cam_.resize(3);
 
   double err_pos, err_t, err_k, err_kdot;
@@ -76,18 +76,18 @@ calib_perturb_minimizing_reprojection_errors(
 
     vpgl_perspective_camera<double> *P;
     // Using simple perturb criteria for now
-    P = dbdif_turntable::camera_olympus(angle1_perturb, K);
+    P = bdifd_turntable::camera_olympus(angle1_perturb, K);
     cam_[0].set_p(*P); delete P;
-    P = dbdif_turntable::camera_olympus(angle2_perturb, K);
+    P = bdifd_turntable::camera_olympus(angle2_perturb, K);
     cam_[1].set_p(*P); delete P;
-    P = dbdif_turntable::camera_olympus(angle3_perturb, K);
+    P = bdifd_turntable::camera_olympus(angle3_perturb, K);
     cam_[2].set_p(*P); delete P;
 
     //: second, distance to reprojection using perturbed cameras 
     //    vcl_cout << "\nErrors of reprojection using PERTURBED cams\n";
-    dbdif_rig rig(cam_[0].Pr_, cam_[1].Pr_);
+    bdifd_rig rig(cam_[0].Pr_, cam_[1].Pr_);
     
-    dbdif_data::max_err_reproj_perturb(crv2d_gt_, cam_, rig, err_pos,err_t,err_k,
+    bdifd_data::max_err_reproj_perturb(crv2d_gt_, cam_, rig, err_pos,err_t,err_k,
         err_kdot, i_pos, i_t, i_k, i_kdot, nvalid);
 
     if (err_pos < min_err_pos) {

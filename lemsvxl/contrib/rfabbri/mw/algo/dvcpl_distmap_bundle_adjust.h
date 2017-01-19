@@ -23,7 +23,7 @@
 #include <dbdet/edge/dbdet_edgemap_sptr.h>
 
 
-//: Computes the residuals for bundle adjustment similarly to dvpgl_distmap_bundle_adj.
+//: Computes the residuals for bundle adjustment similarly to vpgld_distmap_bundle_adj.
 //
 // To achive this subpixel precision, we take in the original subpixel
 // feature map and a closest label map indexing into it so that the closest

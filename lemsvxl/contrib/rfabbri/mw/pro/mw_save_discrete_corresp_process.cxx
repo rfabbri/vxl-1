@@ -7,8 +7,8 @@
 #include <vcl_string.h>
 #include <vcl_fstream.h>
 
-#include <mw/pro/mw_discrete_corresp_storage.h>
-#include <mw/pro/mw_discrete_corresp_storage_3.h>
+#include <mw/pro/bmcsd_discrete_corresp_storage.h>
+#include <mw/pro/bmcsd_discrete_corresp_storage_3.h>
 
 
 mw_save_discrete_corresp_process::mw_save_discrete_corresp_process() : bpro1_process()
@@ -68,11 +68,11 @@ bool mw_save_discrete_corresp_process::execute()
   bool binocular_ftype=false;
   parameters()->get_value( "-binocular_ftype", binocular_ftype);
   if (binocular_ftype) {
-    mw_discrete_corresp_storage_sptr input_corr;
+    bmcsd_discrete_corresp_storage_sptr input_corr;
     input_corr.vertical_cast(input_data_[0][0]);
     input_corr->corresp()->b_write(bp_out);
   } else {
-    mw_discrete_corresp_storage_3_sptr input_corr;
+    bmcsd_discrete_corresp_storage_3_sptr input_corr;
     input_corr.vertical_cast(input_data_[0][0]);
     input_corr->corresp()->b_write(bp_out);
   }

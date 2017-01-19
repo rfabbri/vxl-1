@@ -1,6 +1,6 @@
-// This is brcv/seg/dbdet/pro/dbmcs_nearest_edgels_process.h
-#ifndef dbmcs_nearest_edgels_process_h_
-#define dbmcs_nearest_edgels_process_h_
+// This is brcv/seg/dbdet/pro/bmcsd_nearest_edgels_process.h
+#ifndef bmcsd_nearest_edgels_process_h_
+#define bmcsd_nearest_edgels_process_h_
 
 //:
 // \file
@@ -15,12 +15,12 @@
 #include <bpro1/bpro1_process.h>
 #include <bpro1/bpro1_parameters.h>
 
-class dbmcs_nearest_edgels_process : public bpro1_process 
+class bmcsd_nearest_edgels_process : public bpro1_process 
 {
 public:
 
-  dbmcs_nearest_edgels_process();
-  virtual ~dbmcs_nearest_edgels_process();
+  bmcsd_nearest_edgels_process();
+  virtual ~bmcsd_nearest_edgels_process();
 
   //: Clone the process
   virtual bpro1_process* clone() const;

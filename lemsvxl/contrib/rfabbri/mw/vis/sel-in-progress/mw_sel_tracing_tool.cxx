@@ -14,7 +14,7 @@
 
 #include <dbdet/sel/dbdet_sel.h>
 
-#include <mw/mw_util.h>
+#include <bmcsd/bmcsd_util.h>
 
 mw_sel_tracing_tool::
 mw_sel_tracing_tool()

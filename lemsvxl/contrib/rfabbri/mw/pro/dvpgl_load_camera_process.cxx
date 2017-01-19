@@ -2,18 +2,18 @@
 #include <vcl_iostream.h>
 #include <vcl_fstream.h>
 
-#include "dvpgl_load_camera_process.h"
+#include "vpgld_load_camera_process.h"
 
 #include <vcl_cstring.h>
 #include <vcl_string.h>
 #include <vcl_fstream.h>
 #include <vpgl/vpgl_perspective_camera.h>
-#include <dvpgl/pro/dvpgl_camera_storage.h>
+#include <vpgld/pro/vpgld_camera_storage.h>
 
-#include <mw/mw_util.h>
+#include <bmcsd/bmcsd_util.h>
 #include <mw/app/mw_load_data.h>
-#include <dvpgl/io/dvpgl_io_cameras.h>
-#include <dbdif/algo/dbdif_data.h>
+#include <vpgld/io/vpgld_io_cameras.h>
+#include <bdifd/algo/bdifd_data.h>
 
 // camfiletype parameter:
 #define INTRINSIC_EXTRINSIC 1 
@@ -21,13 +21,13 @@
 
 static int file_num = -1;
 
-dvpgl_load_camera_process::dvpgl_load_camera_process() : bpro1_process()
+vpgld_load_camera_process::vpgld_load_camera_process() : bpro1_process()
 {
   if(  
       !parameters()->add( "Input file name" , "-nameprefix" , bpro1_filepath("","*.*")) ||
       !parameters()->add( "File type ASCII Camera matrix?" , "-camera_matrix_ftype" , false)  ||
       !parameters()->add( "File type ASCII Intrinsic/Extrinsic?" , "-intrinsic_extrinsic_ftype" , false)  ||
-      !parameters()->add( "File type binary VSL (old dvpgl)?" , "-vsl_ftype" , false)  ||
+      !parameters()->add( "File type binary VSL (old vpgld)?" , "-vsl_ftype" , false)  ||
       !parameters()->add( "Multiple Intrinsic/Extrinsic Sequence?" , "-multi_intrextr" , true)  ||
       !parameters()->add( "     # of first file (integer from 0 to 499)" , "-multi_intrextr_first_file"     , 0 ) ||
       !parameters()->add( "     Reset numbering?" , "-multi_intrextr_reset" , false)  ||
@@ -45,18 +45,18 @@ dvpgl_load_camera_process::dvpgl_load_camera_process() : bpro1_process()
 
 //: Clone the process
 bpro1_process*
-dvpgl_load_camera_process::clone() const
+vpgld_load_camera_process::clone() const
 {
-  return new dvpgl_load_camera_process(*this);
+  return new vpgld_load_camera_process(*this);
 }
 
-vcl_vector< vcl_string > dvpgl_load_camera_process::get_input_type() 
+vcl_vector< vcl_string > vpgld_load_camera_process::get_input_type() 
 {
   vcl_vector< vcl_string > to_return;
   return to_return;
 }
 
-vcl_vector< vcl_string > dvpgl_load_camera_process::get_output_type() 
+vcl_vector< vcl_string > vpgld_load_camera_process::get_output_type() 
 {
   vcl_vector< vcl_string > to_return;
   to_return.push_back( "vpgl camera" );
@@ -64,7 +64,7 @@ vcl_vector< vcl_string > dvpgl_load_camera_process::get_output_type()
 }
 
 //: Loads a _full_ perspective camera (not a pure vpgl_proj_camera)
-bool dvpgl_load_camera_process::execute()
+bool vpgld_load_camera_process::execute()
 {
   bool multi_intrextr=false;
   parameters()->get_value( "-multi_intrextr", multi_intrextr);
@@ -86,19 +86,19 @@ bool dvpgl_load_camera_process::execute()
     int ncols_ = 600;
 
     vnl_double_3x3 Kmatrix;
-    dbdif_turntable::internal_calib_ctspheres(Kmatrix, ncols_);
+    bdifd_turntable::internal_calib_ctspheres(Kmatrix, ncols_);
     vpgl_calibration_matrix<double> K(Kmatrix);
-    P = dbdif_turntable::camera_ctspheres(2*angle, K);
+    P = bdifd_turntable::camera_ctspheres(2*angle, K);
   } else if (turn_olympus) {
     double angle=0;
     parameters()->get_value( "-angle_olympus" , angle);
 
     vcl_cout <<"Angle: " << angle << vcl_endl; //: Viewport size; TODO get these from parameters 
     unsigned  crop_origin_x_ = 450; unsigned  crop_origin_y_ = 1750; vnl_double_3x3 Kmatrix;
-    dbdif_turntable::internal_calib_olympus(Kmatrix, 500, crop_origin_x_, crop_origin_y_);
-//    dbdif_turntable::internal_calib_olympus(Kmatrix);
+    bdifd_turntable::internal_calib_olympus(Kmatrix, 500, crop_origin_x_, crop_origin_y_);
+//    bdifd_turntable::internal_calib_olympus(Kmatrix);
     vpgl_calibration_matrix<double> K(Kmatrix);
-    P = dbdif_turntable::camera_olympus(angle, K);
+    P = bdifd_turntable::camera_olympus(angle, K);
   } else if (multi_intrextr) {
 
 
@@ -186,7 +186,7 @@ bool dvpgl_load_camera_process::execute()
         vcl_cerr << "ERROR: couldn't open file: " << input.path << vcl_endl;
         return false;
       }
-      b_read_dvpgl(bp_in, &cam);
+      b_read_vpgld(bp_in, &cam);
       bp_in.close();
     } else {
       vcl_cerr << "Error: no camera type selected!\n";
@@ -198,8 +198,8 @@ bool dvpgl_load_camera_process::execute()
 
   clear_output();
 
-  dvpgl_camera_storage_sptr 
-     cam_storage = dvpgl_camera_storage_new();
+  vpgld_camera_storage_sptr 
+     cam_storage = vpgld_camera_storage_new();
   
   cam_storage->set_camera(P);
 

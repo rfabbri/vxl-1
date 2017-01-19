@@ -14,7 +14,7 @@
 #include <vidpro1/vidpro1_repository.h>
 #define MANAGER bvis1_manager::instance()
 
-#include <dbdif/pro/dbdif_3rd_order_geometry_storage.h>
+#include <bdifd/pro/bdifd_3rd_order_geometry_storage.h>
 
 mw_sel_geometry_tool::
 mw_sel_geometry_tool()

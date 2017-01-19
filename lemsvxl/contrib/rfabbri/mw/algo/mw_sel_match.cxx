@@ -8,10 +8,10 @@ void mw_point_matcher::
 sel_geometry_costs(
     const vcl_vector<vcl_vector< vsol_point_2d_sptr > > &points_,
     const vcl_vector<dbdet_sel_sptr> &sel_,
-    mw_discrete_corresp *corr,
+    bmcsd_discrete_corresp *corr,
     unsigned iv1, unsigned iv2 )
 {
-  dbdif_rig rig(cam_[iv1].Pr_, cam_[iv2].Pr_);
+  bdifd_rig rig(cam_[iv1].Pr_, cam_[iv2].Pr_);
 
   unsigned  long n_fail = 0;
   unsigned  long n_corr = 0;
@@ -91,7 +91,7 @@ sel_geometry_match_cost(
   const dbdet_edgel *e2, 
   const dbdet_sel_sptr &/*sel_img1*/,
   const dbdet_sel_sptr &/*sel_img2*/,
-  dbdif_rig &rig,
+  bdifd_rig &rig,
   double *cost, sel_reason *reason) const
 {
 
@@ -142,7 +142,7 @@ sel_geometry_match_cost(
             double theta    = crv_model1->theta;
             vgl_point_2d<double> p1_refined = crv_model1->pt;
 
-            dbdif_3rd_order_point_2d p1_frenet;
+            bdifd_3rd_order_point_2d p1_frenet;
 
             rig.cam[0].img_to_world(p1_refined,theta,kurv,kurv_dot, &p1_frenet);
 
@@ -162,10 +162,10 @@ sel_geometry_match_cost(
                     double kurv_dot_2 = crv_model2->gamma;
                     double theta_2 = crv_model2->theta;
                     vgl_point_2d<double> p2_refined = crv_model2->pt;
-                    dbdif_3rd_order_point_2d p2_frenet;
+                    bdifd_3rd_order_point_2d p2_frenet;
                     rig.cam[1].img_to_world(p2_refined,theta_2,kurv_2,kurv_dot_2, &p2_frenet);
 
-                    dbdif_3rd_order_point_3d P_frenet;
+                    bdifd_3rd_order_point_3d P_frenet;
                     rig.reconstruct_3rd_order(p1_frenet, p2_frenet, &P_frenet);
 //                    double Gamma_3dot_tmp = P_frenet.Gamma_3dot_abs();
                     double Gamma_3dot_tmp = P_frenet.K*P_frenet.K; // XXX ignoring torsion as a test

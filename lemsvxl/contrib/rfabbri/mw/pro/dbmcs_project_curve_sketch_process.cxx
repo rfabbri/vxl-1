@@ -1,11 +1,11 @@
 //:
 // \file
 
-#include "dbmcs_project_curve_sketch_process.h"
+#include "bmcsd_project_curve_sketch_process.h"
 
 #include <vcl_vector.h>
 #include <vcl_string.h>
-#include <dbdif/algo/dbdif_data.h>
+#include <bdifd/algo/bdifd_data.h>
 #include <vpgl/vpgl_perspective_camera.h>
 
 
@@ -13,21 +13,21 @@
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
 #include <bvis1/bvis1_manager.h>
 
-#include <dvpgl/pro/dvpgl_camera_storage.h>
+#include <vpgld/pro/vpgld_camera_storage.h>
 
 #include <vsol/vsol_point_3d.h>
 #include <vsol/vsol_point_3d_sptr.h>
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_point_2d_sptr.h>
 #include <vsol/vsol_polyline_2d.h>
-#include <mw/mw_util.h> 
-#include <mw/dbmcs_curve_3d_sketch.h>
-#include <dvpgl/io/dvpgl_io_cameras.h>
+#include <bmcsd/bmcsd_util.h> 
+#include <bmcsd/bmcsd_curve_3d_sketch.h>
+#include <vpgld/io/vpgld_io_cameras.h>
 
 
 
 //: Constructor
-dbmcs_project_curve_sketch_process::dbmcs_project_curve_sketch_process()
+bmcsd_project_curve_sketch_process::bmcsd_project_curve_sketch_process()
 {
   if( 
       !parameters()->add("Path", "-curvesketch", bpro1_filepath("./","*.*")) ||
@@ -41,22 +41,22 @@ dbmcs_project_curve_sketch_process::dbmcs_project_curve_sketch_process()
 
 
 //: Destructor
-dbmcs_project_curve_sketch_process::~dbmcs_project_curve_sketch_process()
+bmcsd_project_curve_sketch_process::~bmcsd_project_curve_sketch_process()
 {
 }
 
 
 //: Clone the process
 bpro1_process*
-dbmcs_project_curve_sketch_process::clone() const
+bmcsd_project_curve_sketch_process::clone() const
 {
-  return new dbmcs_project_curve_sketch_process(*this);
+  return new bmcsd_project_curve_sketch_process(*this);
 }
 
 
 //: Return the name of this process
 vcl_string
-dbmcs_project_curve_sketch_process::name()
+bmcsd_project_curve_sketch_process::name()
 {
   return "Project Curve Sketch";
 }
@@ -64,7 +64,7 @@ dbmcs_project_curve_sketch_process::name()
 
 //: Return the number of input frame for this process
 int
-dbmcs_project_curve_sketch_process::input_frames()
+bmcsd_project_curve_sketch_process::input_frames()
 {
   return 1;
 }
@@ -72,14 +72,14 @@ dbmcs_project_curve_sketch_process::input_frames()
 
 //: Return the number of output frames for this process
 int
-dbmcs_project_curve_sketch_process::output_frames()
+bmcsd_project_curve_sketch_process::output_frames()
 {
   return 1;
 }
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbmcs_project_curve_sketch_process::get_input_type()
+vcl_vector< vcl_string > bmcsd_project_curve_sketch_process::get_input_type()
 {
   vcl_vector< vcl_string > to_return;
   to_return.push_back( "vpgl camera" );
@@ -88,7 +88,7 @@ vcl_vector< vcl_string > dbmcs_project_curve_sketch_process::get_input_type()
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbmcs_project_curve_sketch_process::get_output_type()
+vcl_vector< vcl_string > bmcsd_project_curve_sketch_process::get_output_type()
 {
   vcl_vector<vcl_string > to_return;
   to_return.push_back( "vsol2D" );
@@ -99,18 +99,18 @@ vcl_vector< vcl_string > dbmcs_project_curve_sketch_process::get_output_type()
 
 //: Execute the process
 bool
-dbmcs_project_curve_sketch_process::execute()
+bmcsd_project_curve_sketch_process::execute()
 {
   clear_output();
 
   // get camera matrix
 
-  dvpgl_camera_storage_sptr cam_storage;
+  vpgld_camera_storage_sptr cam_storage;
 
   cam_storage.vertical_cast(input_data_[0][0]);
 
   const vpgl_perspective_camera<double> *pcam = 
-    dvpgl_cast_to_perspective_camera(cam_storage->get_camera());
+    vpgld_cast_to_perspective_camera(cam_storage->get_camera());
   if(!pcam) {
     vcl_cerr << "Error: process requires a perspective camera" << vcl_endl;
     return false;
@@ -122,7 +122,7 @@ dbmcs_project_curve_sketch_process::execute()
   const vpgl_perspective_camera<double> &cam = *pcam;
 
 
-  dbmcs_curve_3d_sketch *csk = new dbmcs_curve_3d_sketch;
+  bmcsd_curve_3d_sketch *csk = new bmcsd_curve_3d_sketch;
 
   bpro1_filepath input;
   parameters()->get_value("-curvesketch", input);
@@ -198,7 +198,7 @@ dbmcs_project_curve_sketch_process::execute()
 }
 
 bool
-dbmcs_project_curve_sketch_process::finish()
+bmcsd_project_curve_sketch_process::finish()
 {
   return true;
 }

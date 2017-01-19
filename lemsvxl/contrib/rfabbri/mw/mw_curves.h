@@ -14,8 +14,8 @@
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
 
-#include <dbsol/dbsol_gshock_curve_2d_sptr.h>
-#include <dbsol/algo/dbsol_geno_shock.h>
+#include <bsold/bsold_gshock_curve_2d_sptr.h>
+#include <bsold/algo/bsold_geno_shock.h>
 
 
 //: The main purpose is to deal with efficient pixel-curves and curve-curves querying
@@ -60,8 +60,8 @@ public:
    
    // ith geno curve
    //: gcurve()
-   const vcl_vector<dbsol_gshock_curve_2d_sptr> & gcurve() const {return gcurve_;}
-   const dbsol_gshock_curve_2d_sptr gcurve(unsigned i) const {return gcurve_[i];}
+   const vcl_vector<bsold_gshock_curve_2d_sptr> & gcurve() const {return gcurve_;}
+   const bsold_gshock_curve_2d_sptr gcurve(unsigned i) const {return gcurve_[i];}
 
    void compute_geno();
 
@@ -92,7 +92,7 @@ public:
 
    //: geno curves
    // index into this vector is the curve id
-   vcl_vector<dbsol_gshock_curve_2d_sptr> gcurve_;
+   vcl_vector<bsold_gshock_curve_2d_sptr> gcurve_;
 
    //: vector of cached pixels for each curve 
    vcl_vector< vcl_vector<vsol_point_2d_sptr> > &curvepts_;

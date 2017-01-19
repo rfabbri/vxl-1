@@ -1,24 +1,24 @@
 #include "mw_gradient_descent.h"
 
-#include <dbgl/algo/dbgl_eulerspiral.h>
+#include <bgld/algo/bgld_eulerspiral.h>
 #include <vnl/vnl_math.h>
-#include <dbsol/algo/dbsol_geno.h>
-#include <mw/mw_util.h>
+#include <bsold/algo/bsold_geno.h>
+#include <bmcsd/bmcsd_util.h>
 
 static void compute_tangent_gradient(
-    const dbsol_geno_curve_2d &c,
+    const bsold_geno_curve_2d &c,
     double delta_angle,
     vcl_vector<double> &grad);
 
 static void 
 compute_positional_gradient_arc(
-    const dbsol_geno_curve_2d &c,
+    const bsold_geno_curve_2d &c,
     double delta_normal,
     vcl_vector<double> &grad);
 
 void 
 compute_positional_gradient_arc_dt(
-    const dbsol_geno_curve_2d &c,
+    const bsold_geno_curve_2d &c,
     double delta_normal,
     vcl_vector<double> &grad);
 
@@ -31,7 +31,7 @@ compute_positional_gradient_arc_dt(
 // \param[out] grad  gradient vector
 void 
 compute_tangent_gradient(
-    const dbsol_geno_curve_2d &c,
+    const bsold_geno_curve_2d &c,
     double delta_angle,
     vcl_vector<double> &grad) 
 {
@@ -66,7 +66,7 @@ compute_tangent_gradient(
     double dk_i_minus_prev , dk_i_minus_curr , dk_i_minus_next,
            dk_i_plus_prev , dk_i_plus_curr , dk_i_plus_next, angle;
 
-    dbgl_eulerspiral *spiral_i_min_1, *spiral_i;
+    bgld_eulerspiral *spiral_i_min_1, *spiral_i;
 
     // ---------- extract i-th partial derivative ---------
 
@@ -80,13 +80,13 @@ compute_tangent_gradient(
 
     // 2 - reconstruct intervals 
 
-    spiral_i = new dbgl_eulerspiral(
+    spiral_i = new bgld_eulerspiral(
         c.point_at_sample(i)->get_p(),
         angle,
         c.point_at_sample(i+1)->get_p(),
         c[i].tangent_angle_at(1));
 
-    spiral_i_min_1 = new dbgl_eulerspiral(
+    spiral_i_min_1 = new bgld_eulerspiral(
         c.point_at_sample(i-1)->get_p(),
         c[i-1].tangent_angle_at(0),
         c.point_at_sample(i)->get_p(),
@@ -117,13 +117,13 @@ compute_tangent_gradient(
 
     // 2 - reconstruct intervals 
 
-    spiral_i = new dbgl_eulerspiral(
+    spiral_i = new bgld_eulerspiral(
         c.point_at_sample(i)->get_p(),
         angle,
         c.point_at_sample(i+1)->get_p(),
         c[i].tangent_angle_at(1));
 
-    spiral_i_min_1 = new dbgl_eulerspiral(
+    spiral_i_min_1 = new bgld_eulerspiral(
         c.point_at_sample(i-1)->get_p(),
         c[i-1].tangent_angle_at(0),
         c.point_at_sample(i)->get_p(),
@@ -161,7 +161,7 @@ compute_tangent_gradient(
     double E_i_minus1, E_i_plus1;
     double dk_i_minus_next, dk_i_plus_next, angle;
 
-    dbgl_eulerspiral* spiral_i;
+    bgld_eulerspiral* spiral_i;
 
     // ---------- extract i-th partial derivative ---------
 
@@ -175,7 +175,7 @@ compute_tangent_gradient(
 
     // 2 - reconstruct intervals 
 
-    spiral_i = new dbgl_eulerspiral(
+    spiral_i = new bgld_eulerspiral(
         c.point_at_sample(0)->get_p(),
         angle,
         c.point_at_sample(1)->get_p(),
@@ -200,7 +200,7 @@ compute_tangent_gradient(
 
     // 2 - reconstruct intervals 
 
-    spiral_i = new dbgl_eulerspiral(
+    spiral_i = new bgld_eulerspiral(
         c.point_at_sample(0)->get_p(),
         angle,
         c.point_at_sample(1)->get_p(),
@@ -231,7 +231,7 @@ compute_tangent_gradient(
     double  dk_i_minus_curr , dk_i_minus_next,
             dk_i_plus_curr , dk_i_plus_next, angle;
 
-    dbgl_eulerspiral* spiral_i_min_1, *spiral_i;
+    bgld_eulerspiral* spiral_i_min_1, *spiral_i;
 
     // ---------- extract i-th partial derivative ---------
 
@@ -245,13 +245,13 @@ compute_tangent_gradient(
 
     // 2 - reconstruct intervals 
 
-    spiral_i = new dbgl_eulerspiral(
+    spiral_i = new bgld_eulerspiral(
         c.point_at_sample(i)->get_p(),
         angle,
         c.point_at_sample(i+1)->get_p(),
         c[i].tangent_angle_at(1));
 
-    spiral_i_min_1 = new dbgl_eulerspiral(
+    spiral_i_min_1 = new bgld_eulerspiral(
         c.point_at_sample(i-1)->get_p(),
         c[i-1].tangent_angle_at(0),
         c.point_at_sample(i)->get_p(),
@@ -280,13 +280,13 @@ compute_tangent_gradient(
 
     // 2 - reconstruct intervals 
 
-    spiral_i = new dbgl_eulerspiral(
+    spiral_i = new bgld_eulerspiral(
         c.point_at_sample(i)->get_p(),
         angle,
         c.point_at_sample(i+1)->get_p(),
         c[i].tangent_angle_at(1));
 
-    spiral_i_min_1 = new dbgl_eulerspiral(
+    spiral_i_min_1 = new bgld_eulerspiral(
         c.point_at_sample(i-1)->get_p(),
         c[i-1].tangent_angle_at(0),
         c.point_at_sample(i)->get_p(),
@@ -319,7 +319,7 @@ compute_tangent_gradient(
     double E_i_minus1, E_i_plus1;
     double dk_i_minus_prev,dk_i_plus_prev, angle;
 
-    dbgl_eulerspiral* spiral_i_min_1;
+    bgld_eulerspiral* spiral_i_min_1;
 
     // ---------- extract i-th partial derivative ---------
 
@@ -333,7 +333,7 @@ compute_tangent_gradient(
 
     // 2 - reconstruct intervals 
 
-    spiral_i_min_1 = new dbgl_eulerspiral(
+    spiral_i_min_1 = new bgld_eulerspiral(
         c.point_at_sample(i-1)->get_p(),
         c[i-1].tangent_angle_at(0),
         c.point_at_sample(i)->get_p(),
@@ -358,7 +358,7 @@ compute_tangent_gradient(
 
     // 2 - reconstruct intervals 
 
-    spiral_i_min_1 = new dbgl_eulerspiral(
+    spiral_i_min_1 = new bgld_eulerspiral(
         c.point_at_sample(i-1)->get_p(),
         c[i-1].tangent_angle_at(0),
         c.point_at_sample(i)->get_p(),
@@ -388,7 +388,7 @@ compute_tangent_gradient(
     double dk_i_minus_prev , dk_i_minus_curr ,
            dk_i_plus_prev , dk_i_plus_curr , angle;
 
-    dbgl_eulerspiral *spiral_i_min_1, *spiral_i;
+    bgld_eulerspiral *spiral_i_min_1, *spiral_i;
 
     // ---------- extract i-th partial derivative ---------
 
@@ -402,13 +402,13 @@ compute_tangent_gradient(
 
     // 2 - reconstruct intervals 
 
-    spiral_i = new dbgl_eulerspiral(
+    spiral_i = new bgld_eulerspiral(
         c.point_at_sample(i)->get_p(),
         angle,
         c.point_at_sample(i+1)->get_p(),
         c[i].tangent_angle_at(1));
 
-    spiral_i_min_1 = new dbgl_eulerspiral(
+    spiral_i_min_1 = new bgld_eulerspiral(
         c.point_at_sample(i-1)->get_p(),
         c[i-1].tangent_angle_at(0),
         c.point_at_sample(i)->get_p(),
@@ -437,13 +437,13 @@ compute_tangent_gradient(
 
     // 2 - reconstruct intervals 
 
-    spiral_i = new dbgl_eulerspiral(
+    spiral_i = new bgld_eulerspiral(
         c.point_at_sample(i)->get_p(),
         angle,
         c.point_at_sample(i+1)->get_p(),
         c[i].tangent_angle_at(1));
 
-    spiral_i_min_1 = new dbgl_eulerspiral(
+    spiral_i_min_1 = new bgld_eulerspiral(
         c.point_at_sample(i-1)->get_p(),
         c[i-1].tangent_angle_at(0),
         c.point_at_sample(i)->get_p(),
@@ -484,8 +484,8 @@ compute_tangent_gradient(
 //
 void 
 gradient_descent(
-    dbsol_geno_curve_2d *cnew,
-    const dbsol_geno_curve_2d &c,
+    bsold_geno_curve_2d *cnew,
+    const bsold_geno_curve_2d &c,
     double delta_angle,
     double psi
     )
@@ -527,7 +527,7 @@ gradient_descent(
 
   // re-interpolate using new tangents
 
-  dbsol_geno::interpolate3_from_tangents(cnew, pts, tangent, false);
+  bsold_geno::interpolate3_from_tangents(cnew, pts, tangent, false);
 }
 
 //: Compute gradient of a smoothness energy on the eulerspiral-geno
@@ -539,7 +539,7 @@ gradient_descent(
 // \param[out] grad  gradient vector
 void 
 compute_positional_gradient(
-    const dbsol_geno_curve_2d &c,
+    const bsold_geno_curve_2d &c,
     double delta_normal,
     vcl_vector<double> &grad) 
 {
@@ -575,7 +575,7 @@ compute_positional_gradient(
            normal_x, normal_y;
     vsol_point_2d_sptr point;
 
-    dbgl_eulerspiral *spiral_i_min_1, *spiral_i;
+    bgld_eulerspiral *spiral_i_min_1, *spiral_i;
 
     // ---------- extract i-th partial derivative ---------
 
@@ -589,13 +589,13 @@ compute_positional_gradient(
 
     // 2 - reconstruct intervals 
 
-    spiral_i = new dbgl_eulerspiral(
+    spiral_i = new bgld_eulerspiral(
         point->get_p(),
         c[i].tangent_angle_at(0),
         c.point_at_sample(i+1)->get_p(),
         c[i].tangent_angle_at(1));
 
-    spiral_i_min_1 = new dbgl_eulerspiral(
+    spiral_i_min_1 = new bgld_eulerspiral(
         c.point_at_sample(i-1)->get_p(),
         c[i-1].tangent_angle_at(0),
         point->get_p(),
@@ -634,7 +634,7 @@ compute_positional_gradient(
            normal_x, normal_y;
     vsol_point_2d_sptr point;
 
-    dbgl_eulerspiral* spiral_i;
+    bgld_eulerspiral* spiral_i;
 
     // ---------- extract i-th partial derivative ---------
 
@@ -648,7 +648,7 @@ compute_positional_gradient(
 
     // 2 - reconstruct intervals 
 
-    spiral_i = new dbgl_eulerspiral(
+    spiral_i = new bgld_eulerspiral(
         point->get_p(),
         c[0].tangent_angle_at(0),
         c.point_at_sample(1)->get_p(),
@@ -676,7 +676,7 @@ compute_positional_gradient(
            normal_x, normal_y;
     vsol_point_2d_sptr point;
 
-    dbgl_eulerspiral *spiral_i_min_1, *spiral_i;
+    bgld_eulerspiral *spiral_i_min_1, *spiral_i;
 
     // ---------- extract i-th partial derivative ---------
 
@@ -690,13 +690,13 @@ compute_positional_gradient(
 
     // 2 - reconstruct intervals 
 
-    spiral_i = new dbgl_eulerspiral(
+    spiral_i = new bgld_eulerspiral(
         point->get_p(),
         c[i].tangent_angle_at(0),
         c.point_at_sample(i+1)->get_p(),
         c[i].tangent_angle_at(1));
 
-    spiral_i_min_1 = new dbgl_eulerspiral(
+    spiral_i_min_1 = new bgld_eulerspiral(
         c.point_at_sample(i-1)->get_p(),
         c[i-1].tangent_angle_at(0),
         point->get_p(),
@@ -730,7 +730,7 @@ compute_positional_gradient(
            normal_x, normal_y;
     vsol_point_2d_sptr point;
 
-    dbgl_eulerspiral *spiral_i_min_1;
+    bgld_eulerspiral *spiral_i_min_1;
 
     // ---------- extract i-th partial derivative ---------
 
@@ -744,7 +744,7 @@ compute_positional_gradient(
 
     // 2 - reconstruct intervals 
 
-    spiral_i_min_1 = new dbgl_eulerspiral(
+    spiral_i_min_1 = new bgld_eulerspiral(
         c.point_at_sample(i-1)->get_p(),
         c[i-1].tangent_angle_at(0),
         point->get_p(),
@@ -775,7 +775,7 @@ compute_positional_gradient(
     vgl_vector_2d<double> tgt;
     vsol_point_2d_sptr point;
 
-    dbgl_eulerspiral *spiral_i_min_1, *spiral_i;
+    bgld_eulerspiral *spiral_i_min_1, *spiral_i;
 
     // ---------- extract i-th partial derivative ---------
 
@@ -789,13 +789,13 @@ compute_positional_gradient(
 
     // 2 - reconstruct intervals 
 
-    spiral_i = new dbgl_eulerspiral(
+    spiral_i = new bgld_eulerspiral(
         point->get_p(),
         c[i].tangent_angle_at(0),
         c.point_at_sample(i+1)->get_p(),
         c[i].tangent_angle_at(1));
 
-    spiral_i_min_1 = new dbgl_eulerspiral(
+    spiral_i_min_1 = new bgld_eulerspiral(
         c.point_at_sample(i-1)->get_p(),
         c[i-1].tangent_angle_at(0),
         point->get_p(),
@@ -836,7 +836,7 @@ compute_positional_gradient(
 void 
 gradient_descent_positional(
     vcl_vector<vsol_point_2d_sptr> &pts,
-    const dbsol_geno_curve_2d &c,
+    const bsold_geno_curve_2d &c,
     double delta_norm,
     double psi,
     vcl_vector<double> &grad
@@ -912,9 +912,9 @@ gradient_descent_positional(
 // It will delete the input; and the refined version will be pointed by "refined"
 // 
 void
-refine_tangents(dbsol_geno_curve_2d **input, dbsol_geno_curve_2d **refined,double delta_angle,double psi,unsigned n_iter)
+refine_tangents(bsold_geno_curve_2d **input, bsold_geno_curve_2d **refined,double delta_angle,double psi,unsigned n_iter)
 {
-  dbsol_geno_curve_2d *pgc_refined, *pgc;
+  bsold_geno_curve_2d *pgc_refined, *pgc;
 
   pgc_refined = *input;
   pgc = 0;
@@ -924,7 +924,7 @@ refine_tangents(dbsol_geno_curve_2d **input, dbsol_geno_curve_2d **refined,doubl
       delete pgc;
 
     pgc = pgc_refined;
-    pgc_refined = new dbsol_geno_curve_2d();
+    pgc_refined = new bsold_geno_curve_2d();
 
     gradient_descent(pgc_refined,*pgc,delta_angle,psi);
   }
@@ -936,14 +936,14 @@ refine_tangents(dbsol_geno_curve_2d **input, dbsol_geno_curve_2d **refined,doubl
 //
 //: Compute gradient of a smoothness energy on the arc-GENO
 // interpolation, relative to variation on point position along normal. This is used for
-// gradient-descent smoothing of a curve given by dbsol_geno::interpolate
+// gradient-descent smoothing of a curve given by bsold_geno::interpolate
 //
 // \param[in] delta_normal step to compute discrete partial derivatives
 // \param[in] c geno curve
 // \param[out] grad  gradient vector
 void 
 compute_positional_gradient_arc(
-    const dbsol_geno_curve_2d &c,
+    const bsold_geno_curve_2d &c,
     double delta_normal,
     vcl_vector<double> &grad) 
 {
@@ -971,7 +971,7 @@ compute_positional_gradient_arc(
     dk[i] = c[i].curvature_at(0) - c[i-1].curvature_at(1);
     dksq[i] = dk[i]*(dk[i]);
 
-    dt[i] = mw_util::angle_difference(c[i].tangent_angle_at(0), c[i-1].tangent_angle_at(1));
+    dt[i] = bmcsd_util::angle_difference(c[i].tangent_angle_at(0), c[i-1].tangent_angle_at(1));
     dtsq[i] = dt[i]*(dt[i]);
 
     E += dksq[i] + dtsq[i];
@@ -982,7 +982,7 @@ compute_positional_gradient_arc(
     double normal_x, normal_y;
     vsol_point_2d_sptr point;
 
-    dbgl_arc *arc[4];
+    bgld_arc *arc[4];
 
     // ---------- extract i-th partial derivative ---------
 
@@ -996,13 +996,13 @@ compute_positional_gradient_arc(
 
     // 2 - reconstruct 4 intervals 
 
-    arc[1] = dbsol_geno::interpolate_interval(
+    arc[1] = bsold_geno::interpolate_interval(
         c.point_at_sample(i-2)->get_p(),
         c.point_at_sample(i-1)->get_p(),
         point->get_p(),
         c.point_at_sample(i+1)->get_p(),&fwd);
 
-    arc[2] = dbsol_geno::interpolate_interval(
+    arc[2] = bsold_geno::interpolate_interval(
         c.point_at_sample(i-1)->get_p(),
         point->get_p(),
         c.point_at_sample(i+1)->get_p(),
@@ -1010,38 +1010,38 @@ compute_positional_gradient_arc(
 
     // 1st interval
     if (i == 2) {
-      arc[0] = new dbgl_arc(
+      arc[0] = new bgld_arc(
         c.point_at_sample(i-2)->get_p(),
         c.point_at_sample(i-1)->get_p(),
         point->get_p());
       dk[0] = dt[0] = 0;
     } else {
-      arc[0] = dbsol_geno::interpolate_interval(
+      arc[0] = bsold_geno::interpolate_interval(
         c.point_at_sample(i-3)->get_p(),
         c.point_at_sample(i-2)->get_p(),
         c.point_at_sample(i-1)->get_p(),
         point->get_p(), &fwd);
       dk[i-2] = c[i-3].curvature_at(1) - arc[0]->curvature_at(0);
-      dt[i-2] = mw_util::angle_difference(
+      dt[i-2] = bmcsd_util::angle_difference(
                 c[i-3].tangent_angle_at(1), arc[0]->tangent_angle_at(0));
     }
 
     // last interval
     if (i == dk.size()-3) {
-      arc[3] = new dbgl_arc(
+      arc[3] = new bgld_arc(
         point->get_p(),
         c.point_at_sample(i+1)->get_p(),
         c.point_at_sample(i+2)->get_p());
       dk[i+1] = dt[i+1] = 0;
     } else {
-      arc[3] = dbsol_geno::interpolate_interval(
+      arc[3] = bsold_geno::interpolate_interval(
         point->get_p(),
         c.point_at_sample(i+1)->get_p(),
         c.point_at_sample(i+2)->get_p(),
         c.point_at_sample(i+3)->get_p(),
         &fwd);
       dk[i+2] = arc[3]->curvature_at(1) - c[i+2].curvature_at(0);
-      dt[i+2] = mw_util::angle_difference(
+      dt[i+2] = bmcsd_util::angle_difference(
                 arc[3]->tangent_angle_at(1), c[i+2].tangent_angle_at(0));
     }
 
@@ -1053,11 +1053,11 @@ compute_positional_gradient_arc(
     dk[i] = arc[1]->curvature_at(1) - arc[2]->curvature_at(0);
     dk[i+1] = arc[2]->curvature_at(1) - arc[3]->curvature_at(0);
 
-    dt[i-1] = mw_util::angle_difference(
+    dt[i-1] = bmcsd_util::angle_difference(
         arc[0]->tangent_angle_at(1), arc[1]->tangent_angle_at(0));
-    dt[i] = mw_util::angle_difference(
+    dt[i] = bmcsd_util::angle_difference(
         arc[1]->tangent_angle_at(1), arc[2]->tangent_angle_at(0));
-    dt[i+1] = mw_util::angle_difference(
+    dt[i+1] = bmcsd_util::angle_difference(
         arc[2]->tangent_angle_at(1), arc[3]->tangent_angle_at(0));
 
 
@@ -1082,7 +1082,7 @@ compute_positional_gradient_arc(
     double normal_x, normal_y;
     vsol_point_2d_sptr point;
 
-    dbgl_arc *arc;
+    bgld_arc *arc;
 
     // ---------- extract i-th partial derivative ---------
 
@@ -1096,13 +1096,13 @@ compute_positional_gradient_arc(
 
     // 2 - reconstruct 1 interval
 
-    arc = new dbgl_arc(
+    arc = new bgld_arc(
       point->get_p(),
       c.point_at_sample(1)->get_p(),
       c.point_at_sample(2)->get_p());
 
     dk[1] = c[1].curvature_at(0) - arc->curvature_at(1);
-    dt[1] = mw_util::angle_difference(
+    dt[1] = bmcsd_util::angle_difference(
         c[1].tangent_angle_at(0), arc->tangent_angle_at(1));
 
     E_i_plus1 = E;
@@ -1119,7 +1119,7 @@ compute_positional_gradient_arc(
     double normal_x, normal_y;
     vsol_point_2d_sptr point;
 
-    dbgl_arc *arc[4];
+    bgld_arc *arc[4];
 
     // ---------- extract i-th partial derivative ---------
 
@@ -1133,13 +1133,13 @@ compute_positional_gradient_arc(
 
     // 2 - reconstruct 3 intervals 
 
-    arc[1] = new dbgl_arc(
+    arc[1] = new bgld_arc(
         c.point_at_sample(i-1)->get_p(),
         point->get_p(),
         c.point_at_sample(i+1)->get_p()
       );
 
-    arc[2] = dbsol_geno::interpolate_interval(
+    arc[2] = bsold_geno::interpolate_interval(
         c.point_at_sample(i-1)->get_p(),
         point->get_p(),
         c.point_at_sample(i+1)->get_p(),
@@ -1147,20 +1147,20 @@ compute_positional_gradient_arc(
 
     // last interval
     if (i == dk.size()-3) {
-      arc[3] = new dbgl_arc(
+      arc[3] = new bgld_arc(
         point->get_p(),
         c.point_at_sample(i+1)->get_p(),
         c.point_at_sample(i+2)->get_p());
       dk[i+1] = dt[i+1] = 0;
     } else {
-      arc[3] = dbsol_geno::interpolate_interval(
+      arc[3] = bsold_geno::interpolate_interval(
         point->get_p(),
         c.point_at_sample(i+1)->get_p(),
         c.point_at_sample(i+2)->get_p(),
         c.point_at_sample(i+3)->get_p(),
         &fwd);
       dk[i+2] = arc[3]->curvature_at(1) - c[i+2].curvature_at(0);
-      dt[i+2] = mw_util::angle_difference(
+      dt[i+2] = bmcsd_util::angle_difference(
                 arc[3]->tangent_angle_at(1), c[i+2].tangent_angle_at(0));
     }
 
@@ -1173,9 +1173,9 @@ compute_positional_gradient_arc(
     dk[i+1] = arc[2]->curvature_at(1) - arc[3]->curvature_at(0);
 
     dt[i-1] = 0;
-    dt[i] = mw_util::angle_difference(
+    dt[i] = bmcsd_util::angle_difference(
         arc[1]->tangent_angle_at(1), arc[2]->tangent_angle_at(0));
-    dt[i+1] = mw_util::angle_difference(
+    dt[i+1] = bmcsd_util::angle_difference(
         arc[2]->tangent_angle_at(1), arc[3]->tangent_angle_at(0));
 
     E_i_plus1 = E;
@@ -1196,7 +1196,7 @@ compute_positional_gradient_arc(
     double normal_x, normal_y;
     vsol_point_2d_sptr point;
 
-    dbgl_arc *arc;
+    bgld_arc *arc;
 
     // ---------- extract i-th partial derivative ---------
 
@@ -1210,7 +1210,7 @@ compute_positional_gradient_arc(
 
     // 2 - reconstruct interval
 
-    arc = new dbgl_arc(
+    arc = new bgld_arc(
       c.point_at_sample(i-1)->get_p(),
       point->get_p(),
       c.point_at_sample(i-2)->get_p()
@@ -1222,7 +1222,7 @@ compute_positional_gradient_arc(
     // note we are reusing dk vector here 
     dk[i-1] = arc->curvature_at(0) - c[i-2].curvature_at(1);
 
-    dt[i-1] = mw_util::angle_difference(
+    dt[i-1] = bmcsd_util::angle_difference(
         arc->tangent_angle_at(0), c[i-2].tangent_angle_at(1));
 
     E_i_plus1 = E;
@@ -1241,7 +1241,7 @@ compute_positional_gradient_arc(
     double normal_x, normal_y;
     vsol_point_2d_sptr point;
 
-    dbgl_arc *arc[4];
+    bgld_arc *arc[4];
 
     // ---------- extract i-th partial derivative ---------
 
@@ -1255,32 +1255,32 @@ compute_positional_gradient_arc(
 
     // 2 - reconstruct 4 intervals 
 
-    arc[1] = dbsol_geno::interpolate_interval(
+    arc[1] = bsold_geno::interpolate_interval(
         c.point_at_sample(i-2)->get_p(),
         c.point_at_sample(i-1)->get_p(),
         point->get_p(),
         c.point_at_sample(i+1)->get_p(),&fwd);
 
-    arc[2] = new dbgl_arc(
+    arc[2] = new bgld_arc(
         point->get_p(),
         c.point_at_sample(i+1)->get_p(),
         c.point_at_sample(i-1)->get_p());
 
     // 1st interval
     if (i == 2) {
-      arc[0] = new dbgl_arc(
+      arc[0] = new bgld_arc(
         c.point_at_sample(i-2)->get_p(),
         c.point_at_sample(i-1)->get_p(),
         point->get_p());
       dk[0] = dt[0] = 0;
     } else {
-      arc[0] = dbsol_geno::interpolate_interval(
+      arc[0] = bsold_geno::interpolate_interval(
         c.point_at_sample(i-3)->get_p(),
         c.point_at_sample(i-2)->get_p(),
         c.point_at_sample(i-1)->get_p(),
         point->get_p(), &fwd);
       dk[i-2] = c[i-3].curvature_at(1) - arc[0]->curvature_at(0);
-      dt[i-2] = mw_util::angle_difference(
+      dt[i-2] = bmcsd_util::angle_difference(
                 c[i-3].tangent_angle_at(1), arc[0]->tangent_angle_at(0));
     }
 
@@ -1291,9 +1291,9 @@ compute_positional_gradient_arc(
     dk[i-1] = arc[0]->curvature_at(1) - arc[1]->curvature_at(0);
     dk[i] = arc[1]->curvature_at(1) - arc[2]->curvature_at(0);
 
-    dt[i-1] = mw_util::angle_difference(
+    dt[i-1] = bmcsd_util::angle_difference(
         arc[0]->tangent_angle_at(1), arc[1]->tangent_angle_at(0));
-    dt[i] = mw_util::angle_difference(
+    dt[i] = bmcsd_util::angle_difference(
         arc[1]->tangent_angle_at(1), arc[2]->tangent_angle_at(0));
 
     E_i_plus1 = E;
@@ -1314,7 +1314,7 @@ compute_positional_gradient_arc(
 // i == 2 to N-3
 //
 double energy_dt_middlepts(
-    const dbsol_geno_curve_2d &c,
+    const bsold_geno_curve_2d &c,
     unsigned i,
     const vsol_point_2d_sptr & point, // new point at sample i
     vcl_vector<double> &dt, // not read; only written and used as scrap
@@ -1324,19 +1324,19 @@ double energy_dt_middlepts(
     double E_ini 
     )
 {
-    dbgl_arc *arc[4];
+    bgld_arc *arc[4];
     bool fwd; // is arc fwd or not
     double nsamples = c.size()+1;
 
     // 2 - reconstruct 4 intervals 
 
-    arc[1] = dbsol_geno::interpolate_interval(
+    arc[1] = bsold_geno::interpolate_interval(
         c.point_at_sample(i-2)->get_p(),
         c.point_at_sample(i-1)->get_p(),
         point->get_p(),
         c.point_at_sample(i+1)->get_p(),&fwd);
 
-    arc[2] = dbsol_geno::interpolate_interval(
+    arc[2] = bsold_geno::interpolate_interval(
         c.point_at_sample(i-1)->get_p(),
         point->get_p(),
         c.point_at_sample(i+1)->get_p(),
@@ -1344,38 +1344,38 @@ double energy_dt_middlepts(
 
     // 1st interval
     if (i == 2) {
-      arc[0] = new dbgl_arc(
+      arc[0] = new bgld_arc(
         c.point_at_sample(i-2)->get_p(),
         c.point_at_sample(i-1)->get_p(),
         point->get_p());
       dk[0] = dt[0] = 0;
     } else {
-      arc[0] = dbsol_geno::interpolate_interval(
+      arc[0] = bsold_geno::interpolate_interval(
         c.point_at_sample(i-3)->get_p(),
         c.point_at_sample(i-2)->get_p(),
         c.point_at_sample(i-1)->get_p(),
         point->get_p(), &fwd);
       dk[i-2] = c[i-3].curvature_at(1) - arc[0]->curvature_at(0);
-      dt[i-2] = mw_util::angle_difference(
+      dt[i-2] = bmcsd_util::angle_difference(
                 c[i-3].tangent_angle_at(1), arc[0]->tangent_angle_at(0));
     }
 
     // last interval
     if (i == nsamples-3) {
-      arc[3] = new dbgl_arc(
+      arc[3] = new bgld_arc(
         point->get_p(),
         c.point_at_sample(i+1)->get_p(),
         c.point_at_sample(i+2)->get_p());
       dk[i+1] = dt[i+1] = 0;
     } else {
-      arc[3] = dbsol_geno::interpolate_interval(
+      arc[3] = bsold_geno::interpolate_interval(
         point->get_p(),
         c.point_at_sample(i+1)->get_p(),
         c.point_at_sample(i+2)->get_p(),
         c.point_at_sample(i+3)->get_p(),
         &fwd);
       dk[i+2] = arc[3]->curvature_at(1) - c[i+2].curvature_at(0);
-      dt[i+2] = mw_util::angle_difference(
+      dt[i+2] = bmcsd_util::angle_difference(
                 arc[3]->tangent_angle_at(1), c[i+2].tangent_angle_at(0));
     }
 
@@ -1387,11 +1387,11 @@ double energy_dt_middlepts(
     dk[i] = arc[1]->curvature_at(1) - arc[2]->curvature_at(0);
     dk[i+1] = arc[2]->curvature_at(1) - arc[3]->curvature_at(0);
 
-    dt[i-1] = mw_util::angle_difference(
+    dt[i-1] = bmcsd_util::angle_difference(
         arc[0]->tangent_angle_at(1), arc[1]->tangent_angle_at(0));
-    dt[i] = mw_util::angle_difference(
+    dt[i] = bmcsd_util::angle_difference(
         arc[1]->tangent_angle_at(1), arc[2]->tangent_angle_at(0));
-    dt[i+1] = mw_util::angle_difference(
+    dt[i+1] = bmcsd_util::angle_difference(
         arc[2]->tangent_angle_at(1), arc[3]->tangent_angle_at(0));
 
     double E_new = E_ini;
@@ -1410,25 +1410,25 @@ double energy_dt_middlepts(
 // For use by compute_positional_gradient_arc_dt
 //
 double energy_dt_sample0(
-    const dbsol_geno_curve_2d &c,
+    const bsold_geno_curve_2d &c,
     const vsol_point_2d_sptr & point, // new point at sample 0
     const vcl_vector<double> &dtsq, 
     const vcl_vector<double> &,//dksq,
     double E_ini 
     )
 {
-    dbgl_arc *arc;
+    bgld_arc *arc;
     double dk,dt;
 
     // 2 - reconstruct 1 interval
 
-    arc = new dbgl_arc(
+    arc = new bgld_arc(
       point->get_p(),
       c.point_at_sample(1)->get_p(),
       c.point_at_sample(2)->get_p());
 
     dk = c[1].curvature_at(0) - arc->curvature_at(1);
-    dt = mw_util::angle_difference(
+    dt = bmcsd_util::angle_difference(
         c[1].tangent_angle_at(0), arc->tangent_angle_at(1));
 
     delete arc;
@@ -1441,7 +1441,7 @@ double energy_dt_sample0(
 // For use by compute_positional_gradient_arc_dt
 //
 double energy_dt_sample1(
-    const dbsol_geno_curve_2d &c,
+    const bsold_geno_curve_2d &c,
     const vsol_point_2d_sptr & point, // new point at sample 0
     vcl_vector<double> &dt, // not read; only written and used as scrap
     const vcl_vector<double> &dtsq, 
@@ -1450,20 +1450,20 @@ double energy_dt_sample1(
     double E_ini 
     )
 {
-    dbgl_arc *arc[4];
+    bgld_arc *arc[4];
     bool fwd; // is arc fwd or not
     double nsamples = c.size()+1;
     unsigned i = 1;
 
     // reconstruct 3 intervals 
 
-    arc[1] = new dbgl_arc(
+    arc[1] = new bgld_arc(
         c.point_at_sample(i-1)->get_p(),
         point->get_p(),
         c.point_at_sample(i+1)->get_p()
       );
 
-    arc[2] = dbsol_geno::interpolate_interval(
+    arc[2] = bsold_geno::interpolate_interval(
         c.point_at_sample(i-1)->get_p(),
         point->get_p(),
         c.point_at_sample(i+1)->get_p(),
@@ -1471,20 +1471,20 @@ double energy_dt_sample1(
 
     // last interval
     if (i == nsamples-3) {
-      arc[3] = new dbgl_arc(
+      arc[3] = new bgld_arc(
         point->get_p(),
         c.point_at_sample(i+1)->get_p(),
         c.point_at_sample(i+2)->get_p());
       dk[i+1] = dt[i+1] = 0;
     } else {
-      arc[3] = dbsol_geno::interpolate_interval(
+      arc[3] = bsold_geno::interpolate_interval(
         point->get_p(),
         c.point_at_sample(i+1)->get_p(),
         c.point_at_sample(i+2)->get_p(),
         c.point_at_sample(i+3)->get_p(),
         &fwd);
       dk[i+2] = arc[3]->curvature_at(1) - c[i+2].curvature_at(0);
-      dt[i+2] = mw_util::angle_difference(
+      dt[i+2] = bmcsd_util::angle_difference(
                 arc[3]->tangent_angle_at(1), c[i+2].tangent_angle_at(0));
     }
 
@@ -1497,9 +1497,9 @@ double energy_dt_sample1(
     dk[i+1] = arc[2]->curvature_at(1) - arc[3]->curvature_at(0);
 
     dt[i-1] = 0;
-    dt[i] = mw_util::angle_difference(
+    dt[i] = bmcsd_util::angle_difference(
         arc[1]->tangent_angle_at(1), arc[2]->tangent_angle_at(0));
-    dt[i+1] = mw_util::angle_difference(
+    dt[i+1] = bmcsd_util::angle_difference(
         arc[2]->tangent_angle_at(1), arc[3]->tangent_angle_at(0));
 
     double E_new= E_ini;
@@ -1519,20 +1519,20 @@ double energy_dt_sample1(
 // For use by compute_positional_gradient_arc_dt
 //
 double energy_dt_sample_last(
-    const dbsol_geno_curve_2d &c,
+    const bsold_geno_curve_2d &c,
     const vsol_point_2d_sptr & point, // new point at sample 0
     const vcl_vector<double> &dtsq, 
     const vcl_vector<double> &,//dksq,
     double E_ini 
     )
 {
-    dbgl_arc *arc;
+    bgld_arc *arc;
     unsigned i = c.size(); // nsamples-1
     double dk,dt;
 
     // 2 - reconstruct interval
 
-    arc = new dbgl_arc(
+    arc = new bgld_arc(
       c.point_at_sample(i-1)->get_p(),
       point->get_p(),
       c.point_at_sample(i-2)->get_p()
@@ -1544,7 +1544,7 @@ double energy_dt_sample_last(
     // note we are reusing dk vector here 
     dk = arc->curvature_at(0) - c[i-2].curvature_at(1);
 
-    dt = mw_util::angle_difference(
+    dt = bmcsd_util::angle_difference(
         arc->tangent_angle_at(0), c[i-2].tangent_angle_at(1));
 
     delete arc;
@@ -1557,7 +1557,7 @@ double energy_dt_sample_last(
 // For use by compute_positional_gradient_arc_dt
 //
 double energy_dt_sample_before_last(
-    const dbsol_geno_curve_2d &c,
+    const bsold_geno_curve_2d &c,
     const vsol_point_2d_sptr & point, // new point at sample 0
     vcl_vector<double> &dt, // not read; only written and used as scrap
     const vcl_vector<double> &dtsq, 
@@ -1566,39 +1566,39 @@ double energy_dt_sample_before_last(
     double E_ini 
     )
 {
-    dbgl_arc *arc[4];
+    bgld_arc *arc[4];
     bool fwd; // is arc fwd or not
     unsigned nsamples = c.size()+1;
     unsigned i = nsamples-2;
 
     // 2 - reconstruct 4 intervals 
 
-    arc[1] = dbsol_geno::interpolate_interval(
+    arc[1] = bsold_geno::interpolate_interval(
         c.point_at_sample(i-2)->get_p(),
         c.point_at_sample(i-1)->get_p(),
         point->get_p(),
         c.point_at_sample(i+1)->get_p(),&fwd);
 
-    arc[2] = new dbgl_arc(
+    arc[2] = new bgld_arc(
         point->get_p(),
         c.point_at_sample(i+1)->get_p(),
         c.point_at_sample(i-1)->get_p());
 
     // 1st interval
     if (i == 2) {
-      arc[0] = new dbgl_arc(
+      arc[0] = new bgld_arc(
         c.point_at_sample(i-2)->get_p(),
         c.point_at_sample(i-1)->get_p(),
         point->get_p());
       dk[0] = dt[0] = 0;
     } else {
-      arc[0] = dbsol_geno::interpolate_interval(
+      arc[0] = bsold_geno::interpolate_interval(
         c.point_at_sample(i-3)->get_p(),
         c.point_at_sample(i-2)->get_p(),
         c.point_at_sample(i-1)->get_p(),
         point->get_p(), &fwd);
       dk[i-2] = c[i-3].curvature_at(1) - arc[0]->curvature_at(0);
-      dt[i-2] = mw_util::angle_difference(
+      dt[i-2] = bmcsd_util::angle_difference(
                 c[i-3].tangent_angle_at(1), arc[0]->tangent_angle_at(0));
     }
 
@@ -1609,9 +1609,9 @@ double energy_dt_sample_before_last(
     dk[i-1] = arc[0]->curvature_at(1) - arc[1]->curvature_at(0);
     dk[i] = arc[1]->curvature_at(1) - arc[2]->curvature_at(0);
 
-    dt[i-1] = mw_util::angle_difference(
+    dt[i-1] = bmcsd_util::angle_difference(
         arc[0]->tangent_angle_at(1), arc[1]->tangent_angle_at(0));
-    dt[i] = mw_util::angle_difference(
+    dt[i] = bmcsd_util::angle_difference(
         arc[1]->tangent_angle_at(1), arc[2]->tangent_angle_at(0));
 
     double E_new = E_ini;
@@ -1627,20 +1627,20 @@ double energy_dt_sample_before_last(
 //
 //: Compute gradient of a smoothness energy on the arc-GENO
 // interpolation, relative to variation on point position along normal. This is used for
-// gradient-descent smoothing of a curve given by dbsol_geno::interpolate
+// gradient-descent smoothing of a curve given by bsold_geno::interpolate
 //
 // \param[in] delta_normal step to compute discrete partial derivatives
 // \param[in] c geno curve
 // \param[out] grad  gradient vector
 void 
 compute_positional_gradient_arc_dt(
-    const dbsol_geno_curve_2d &c,
+    const bsold_geno_curve_2d &c,
     double delta_normal,
     vcl_vector<double> &grad) 
 {
 
   double energy_dt_middlepts(
-      const dbsol_geno_curve_2d &c,
+      const bsold_geno_curve_2d &c,
       unsigned i,
       const vsol_point_2d_sptr & newpoint,
       vcl_vector<double> &dt, // not read; only written and used as scrap
@@ -1650,14 +1650,14 @@ compute_positional_gradient_arc_dt(
       double E_ini 
       );
   double energy_dt_sample0(
-      const dbsol_geno_curve_2d &c,
+      const bsold_geno_curve_2d &c,
       const vsol_point_2d_sptr & point, // new point at sample 0
       const vcl_vector<double> &dtsq, 
       const vcl_vector<double> &,//dksq,
       double E_ini 
       );
   double energy_dt_sample1(
-      const dbsol_geno_curve_2d &c,
+      const bsold_geno_curve_2d &c,
       const vsol_point_2d_sptr & point, // new point at sample 0
       vcl_vector<double> &dt, // not read; only written and used as scrap
       const vcl_vector<double> &dtsq, 
@@ -1666,14 +1666,14 @@ compute_positional_gradient_arc_dt(
       double E_ini 
       );
   double energy_dt_sample_last(
-      const dbsol_geno_curve_2d &c,
+      const bsold_geno_curve_2d &c,
       const vsol_point_2d_sptr & point, // new point at sample 0
       const vcl_vector<double> &dtsq, 
       const vcl_vector<double> &,//dksq,
       double E_ini 
       );
   double energy_dt_sample_before_last(
-      const dbsol_geno_curve_2d &c,
+      const bsold_geno_curve_2d &c,
       const vsol_point_2d_sptr & point, // new point at sample 0
       vcl_vector<double> &dt, // not read; only written and used as scrap
       const vcl_vector<double> &dtsq, 
@@ -1703,7 +1703,7 @@ compute_positional_gradient_arc_dt(
     dk[i] = c[i].curvature_at(0) - c[i-1].curvature_at(1);
     dksq[i] = dk[i]*(dk[i]);
 
-    dt[i] = mw_util::angle_difference(c[i].tangent_angle_at(0), c[i-1].tangent_angle_at(1));
+    dt[i] = bmcsd_util::angle_difference(c[i].tangent_angle_at(0), c[i-1].tangent_angle_at(1));
     dtsq[i] = dt[i]*(dt[i]);
 
     E += dtsq[i];

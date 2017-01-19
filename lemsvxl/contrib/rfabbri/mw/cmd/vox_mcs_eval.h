@@ -10,19 +10,19 @@
 
 #include <mw/cmd/vox_mcs_eval_params_sptr.h>
 #include <mw/cmd/vox_mcs_eval_params.h>
-#include <mw/mw_util.h>
-#include <mw/mw_discrete_corresp.h>
-#include <mw/dbmcs_view_set.h>
+#include <bmcsd/bmcsd_util.h>
+#include <bmcsd/bmcsd_discrete_corresp.h>
+#include <bmcsd/bmcsd_view_set.h>
 #include <mw/algo/mw_data.h>
 
 class vox_mcs_eval {
 public:
   vox_mcs_eval_params_sptr params_;
-  mw_util::camera_file_type cam_type_;
-  mw_discrete_corresp gt_;
-  mw_curve_stereo_data_path dpath_;
-  dbmcs_stereo_instance_views all_instances_;
-  dbmcs_stereo_instance_views one_instance_;
+  bmcsd_util::camera_file_type cam_type_;
+  bmcsd_discrete_corresp gt_;
+  bmcsd_curve_stereo_data_path dpath_;
+  bmcsd_stereo_instance_views all_instances_;
+  bmcsd_stereo_instance_views one_instance_;
   
   vcl_vector<double> distance_threshold_list_;
   vcl_vector<double> dtheta_threshold_list_;

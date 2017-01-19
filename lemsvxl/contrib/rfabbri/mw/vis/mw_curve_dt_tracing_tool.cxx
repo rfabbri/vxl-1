@@ -5,7 +5,7 @@
 #include <vcl_algorithm.h>
 #include <vgl/vgl_intersection.h>
 #include <vil/vil_convert.h>
-#include <dbspi/dbspi_curve_distance.h>
+#include <bspid/bspid_curve_distance.h>
 
 
 mw_curve_dt_tracing_tool::
@@ -647,7 +647,7 @@ get_cameras()
     bpro1_storage_sptr 
       p = MANAGER->repository()->get_data_at("vpgl camera",frame_v_[i]);
 
-    dvpgl_camera_storage_sptr cam_storage;
+    vpgld_camera_storage_sptr cam_storage;
 
     cam_storage.vertical_cast(p);
     if(!p) {
@@ -988,7 +988,7 @@ match_using_dt()
     return false;
   }
 
-  assert(mw_util::in_img_bounds(*(selected_crv_[0]), dt_[0]));
+  assert(bmcsd_util::in_img_bounds(*(selected_crv_[0]), dt_[0]));
 
 
   vcl_vector<unsigned long> votes(crv_candidates_ptrs_.size(), 0);
@@ -1012,9 +1012,9 @@ match_using_dt()
 
     vsol_polyline_2d_sptr original_selected_crv = selected_crv_[1]; 
     selected_crv_[1] = crv_candidates_ptrs_[ic];
-    assert(mw_util::in_img_bounds(*(selected_crv_[1]), dt_[1]));
+    assert(bmcsd_util::in_img_bounds(*(selected_crv_[1]), dt_[1]));
 
-    vcl_vector<mw_vector_3d> curve_3d;
+    vcl_vector<bmcsd_vector_3d> curve_3d;
     // reconstruct this subcurve
     reconstruct_subcurve(ini_idx_sub, end_idx_sub, &curve_3d);
 
@@ -1028,13 +1028,13 @@ match_using_dt()
 
       vcl_vector<vsol_point_2d_sptr> reprojected_curve; 
 
-      dbdif_rig dummy;
+      bdifd_rig dummy;
       project_curve(v, reprojected_curve, curve_3d);
 
-      mw_util::clip_to_img_bounds(&reprojected_curve, dt_[v]);
+      bmcsd_util::clip_to_img_bounds(&reprojected_curve, dt_[v]);
 
       // compute reprojected_curve into view v
-      unsigned d_vote = dbspi_curve_distance::num_inliers_dt(
+      unsigned d_vote = bspid_curve_distance::num_inliers_dt(
           reprojected_curve, tau_distance_squared_, dt_[v], label_[v]);
 
       votes[ic] += d_vote;
@@ -1047,7 +1047,7 @@ match_using_dt()
   }
 
   unsigned i_best;
-  mw_util::max(votes, i_best);
+  bmcsd_util::max(votes, i_best);
 
   vcl_cout << "Best curve has index " << i_best << 
     " among candidates, with #votes = " << votes[i_best] << vcl_endl;
@@ -1096,10 +1096,10 @@ get_matching_subcurve(
   vcl_vector<bool> no_intersections(selected_subcurve_size, true);
 
   {
-    vcl_list<mw_intersection_sets::intersection_nhood_>::const_iterator  itr;
+    vcl_list<becld_intersection_sets::intersection_nhood_>::const_iterator  itr;
 
     assert(crv_candidates_idx_[candidate_index] < isets_.L_.size());
-    const vcl_list<mw_intersection_sets::intersection_nhood_> &ilist 
+    const vcl_list<becld_intersection_sets::intersection_nhood_> &ilist 
       = isets_.L_[ crv_candidates_idx_[candidate_index] ].intercepts;  
 
     for (itr = ilist.begin(); itr != ilist.end(); ++itr) {

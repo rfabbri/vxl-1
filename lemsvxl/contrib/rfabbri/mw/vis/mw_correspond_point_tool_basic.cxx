@@ -11,8 +11,8 @@
 #include <bpro1/bpro1_storage_sptr.h>
 #define MANAGER bvis1_manager::instance()
 
-#include <dvpgl/pro/dvpgl_camera_storage.h>
-#include <dvpgl/io/dvpgl_io_cameras.h>
+#include <vpgld/pro/vpgld_camera_storage.h>
+#include <vpgld/io/vpgld_io_cameras.h>
 
 #include <vgui/vgui.h>
 #include <vgui/vgui_projection_inspector.h>
@@ -23,9 +23,9 @@
 #include <bvis1/bvis1_manager.h>
 #include <bvis1/bvis1_view_tableau.h>
 
-#include <mw/mw_util.h>
-#include <mw/mw_epi_interceptor.h>
-#include <dbdif/dbdif_rig.h>
+#include <bmcsd/bmcsd_util.h>
+#include <becld/becld_epiline_interceptor.h>
+#include <bdifd/bdifd_rig.h>
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vpgl/vpgl_fundamental_matrix.h>
 
@@ -145,7 +145,7 @@ activate ()
       bpro1_storage_sptr 
         p = MANAGER->repository()->get_data_at("vpgl camera",frame_v_[i]);
 
-      dvpgl_camera_storage_sptr cam_storage;
+      vpgld_camera_storage_sptr cam_storage;
 
       cam_storage.vertical_cast(p);
       if(!p) {
@@ -155,7 +155,7 @@ activate ()
 
       const vpgl_perspective_camera<double> *pcam;
 
-      pcam = dvpgl_cast_to_perspective_camera(cam_storage->get_camera());
+      pcam = vpgld_cast_to_perspective_camera(cam_storage->get_camera());
       if(!pcam) {
         vcl_cerr << "Error: tool requires a perspective camera" << vcl_endl;
         return;
@@ -628,8 +628,8 @@ compute_intersections()
 {
     intercepts_id_.clear();
 
-    mw_epi_interceptor_base *intr;
-    mw_epi_interceptor_brute intr_brute;
+    becld_epiline_interceptor_base *intr;
+    becld_epiline_interceptor_brute intr_brute;
     intr = &intr_brute;
 
 

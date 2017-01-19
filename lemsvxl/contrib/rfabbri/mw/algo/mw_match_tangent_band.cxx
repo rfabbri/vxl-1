@@ -4,10 +4,10 @@
 #include <vsol/vsol_polyline_2d.h>
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_homg_point_2d.h>
-#include <dbecl/dbecl_epiband_builder.h>
-#include <dbdif/dbdif_rig.h>
-#include <mw/algo/mw_algo_util.h>
-#include <mw/mw_util.h>
+#include <becld/becld_epiband_builder.h>
+#include <bdifd/bdifd_rig.h>
+#include <bmcsd/algo/bmcsd_algo_util.h>
+#include <bmcsd/bmcsd_util.h>
 #include <mw/mw_subpixel_point_set.h>
 #include <mw/algo/mw_point_matcher.h>
 
@@ -15,10 +15,10 @@
 mw_match_tangent_band::
 mw_match_tangent_band (
   const vcl_vector<vcl_vector< vsol_point_2d_sptr > > &points,
-  const vcl_vector<vcl_vector< dbdif_3rd_order_point_2d > > &dg_points,
-  mw_discrete_corresp_n *corr,
+  const vcl_vector<vcl_vector< bdifd_3rd_order_point_2d > > &dg_points,
+  bmcsd_discrete_corresp_n *corr,
   const vcl_vector< vcl_vector<vpgl_fundamental_matrix<double> > > &fm,
-  const vcl_vector<dbdif_camera> &cam,
+  const vcl_vector<bdifd_camera> &cam,
   const vcl_vector<mw_subpixel_point_set *> &sp,
   double err_pos,
   double err_t,
@@ -62,9 +62,9 @@ mw_match_tangent_band (
     vsol_polyline_2d poly(points_[i]);
     vsol_box_2d_sptr pb = poly.get_bounding_box();
 
-    bbox_[i] = mw_algo_util::determine_right_bbox(pb,sp_[i]);
+    bbox_[i] = bmcsd_algo_util::determine_right_bbox(pb,sp_[i]);
 
-    w_[i] = new dbecl_grid_cover_window(vgl_box_2d<double>(0,sp_[i]->ncols()-1,0,sp_[i]->nrows()-1),0);
+    w_[i] = new becld_grid_cover_window(vgl_box_2d<double>(0,sp_[i]->ncols()-1,0,sp_[i]->nrows()-1),0);
     vcl_cout << "BOUNDING BOX:\n";
     vcl_cout << *(bbox_[i]);
     vcl_cout << "SP DIMENSIONS:\n";
@@ -84,7 +84,7 @@ mw_match_tangent_band (
         for (unsigned iv=1; iv < nviews_; ++iv)
           is_specified_[iv] = false;
         // Compute epbands for p^1
-        dbecl_epiband_builder::build_epibands_iteratively(true, 0,
+        becld_epiband_builder::build_epibands_iteratively(true, 0,
             is_specified_, specified_pts_, epband_, bbox_, fm_, err_pos_);
         consider(1);
       }
@@ -96,7 +96,7 @@ mw_match_tangent_band (
       for (unsigned iv=1; iv < nviews_; ++iv)
         is_specified_[iv] = false;
       // Compute epbands for p^1
-      dbecl_epiband_builder::build_epibands_iteratively(true, 0,
+      becld_epiband_builder::build_epibands_iteratively(true, 0,
           is_specified_, specified_pts_, epband_, bbox_, fm_, err_pos_);
       consider(1);
     }
@@ -113,10 +113,10 @@ mw_match_tangent_band::
 void mw_match_tangent_band::
 consider(unsigned vn)
 {
-  dbecl_epiband epband_prv(*(epband_[vn][vn]));
+  becld_epiband epband_prv(*(epband_[vn][vn]));
 
   // traverse points of epband_[vn][vn]
-  dbecl_epiband_iterator it(epband_prv, *(w_[vn]),1.5);
+  becld_epiband_iterator it(epband_prv, *(w_[vn]),1.5);
 
   for (it.reset(); it.nxt(); ) {
     unsigned const i_row = sp_[vn]->row(it.y());
@@ -135,7 +135,7 @@ consider(unsigned vn)
         specified_pts_[vn] = points_[vn][p2_idx];
 
         // refine epipolar regions
-        dbecl_epiband_builder::build_epibands_iteratively(
+        becld_epiband_builder::build_epibands_iteratively(
             /*reinitialize*/ true, vn, is_specified_, specified_pts_, 
             epband_, bbox_, fm_, err_pos_);
 
@@ -161,13 +161,13 @@ consider(unsigned vn)
 
             if (satisfies_tangent_constraint) {
               if (vn+1 == nviews_)
-                corr_->l_.put(tup_,mw_match_attribute());
+                corr_->l_.put(tup_,bmcsd_match_attribute());
               else
                 consider(vn+1);
             }
           } else {
               if (vn+1 == nviews_)
-                corr_->l_.put(tup_,mw_match_attribute());
+                corr_->l_.put(tup_,bmcsd_match_attribute());
               else
                 consider(vn+1);
           }
@@ -190,7 +190,7 @@ tangent_constraint(unsigned vn) const
     for (unsigned iv0=0; iv0 < vn; ++iv0) {
       for (unsigned iv1=iv0+1; iv1 < vn; ++iv1) {
 
-          dbdif_rig rig01(cam_[iv0].Pr_,cam_[iv1].Pr_);
+          bdifd_rig rig01(cam_[iv0].Pr_,cam_[iv1].Pr_);
           
           mw_point_matcher::reason reason;
           bool pass = mw_point_matcher::trinocular_tangent_match_cost_band_1way
@@ -218,12 +218,12 @@ tangent_constraint_3views() const
   // 3 reprojections to test (we want to be symmetric and stringent when forming
   // triplets, which is the basis for adding new views):
 
-  dbdif_2nd_order_point_2d p0 = dg_points_[0][tup_[0]] ;
-  dbdif_2nd_order_point_2d p1 = dg_points_[1][tup_[1]] ;
-  dbdif_2nd_order_point_2d p2 = dg_points_[2][tup_[2]] ;
+  bdifd_2nd_order_point_2d p0 = dg_points_[0][tup_[0]] ;
+  bdifd_2nd_order_point_2d p1 = dg_points_[1][tup_[1]] ;
+  bdifd_2nd_order_point_2d p2 = dg_points_[2][tup_[2]] ;
   mw_point_matcher::reason reason;
 
-  dbdif_rig rig01(cam_[0].Pr_,cam_[1].Pr_);
+  bdifd_rig rig01(cam_[0].Pr_,cam_[1].Pr_);
   // 1
   bool pass = mw_point_matcher::trinocular_tangent_match_cost_band_1way
     ( p0, p1, p2, err_t_, cam_[2], rig01, &reason);
@@ -232,7 +232,7 @@ tangent_constraint_3views() const
     return false;
   }
 
-  dbdif_rig rig02(cam_[0].Pr_,cam_[2].Pr_);
+  bdifd_rig rig02(cam_[0].Pr_,cam_[2].Pr_);
   // 2
   pass = mw_point_matcher::trinocular_tangent_match_cost_band_1way
     ( p0, p2, p1, err_t_, cam_[1], rig02, &reason);
@@ -241,7 +241,7 @@ tangent_constraint_3views() const
     return false;
   }
 
-  dbdif_rig rig12(cam_[1].Pr_,cam_[2].Pr_);
+  bdifd_rig rig12(cam_[1].Pr_,cam_[2].Pr_);
   // 3
   pass = mw_point_matcher::trinocular_tangent_match_cost_band_1way
     ( p1, p2, p0, err_t_, cam_[0], rig12, &reason);

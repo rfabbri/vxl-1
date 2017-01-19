@@ -2,10 +2,10 @@
 
 #include <vcl_limits.h>
 #include <vcl_vector.h>
-#include <mw/mw_util.h>
-#include <dbdif/dbdif_camera.h>
-#include <dbdif/dbdif_rig.h>
-#include <dbdif/algo/dbdif_data.h>
+#include <bmcsd/bmcsd_util.h>
+#include <bdifd/bdifd_camera.h>
+#include <bdifd/bdifd_rig.h>
+#include <bdifd/algo/bdifd_data.h>
 #include <vnl/vnl_double_3x3.h>
 #include <vcl_algorithm.h>
 
@@ -13,9 +13,9 @@ static const double tolerance=vcl_numeric_limits<double>::epsilon()*100;
 
 static void 
 test_reprojection_errors(
-    const vcl_vector<dbdif_camera> &cam_gt_,  //:< ideal cams
+    const vcl_vector<bdifd_camera> &cam_gt_,  //:< ideal cams
     const vpgl_calibration_matrix<double> &K,
-    const vcl_vector<vcl_vector<dbdif_3rd_order_point_3d> > &crv3d);
+    const vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > &crv3d);
 
 static void 
 compute_and_print_info(
@@ -26,8 +26,8 @@ compute_and_print_info(
     vcl_vector<double> &mean_err_v,
     vcl_vector<double> &median_err_v,
     double err_tolerance,
-    const dbdif_rig &rig,
-    const vcl_vector<vcl_vector<dbdif_3rd_order_point_2d> > &crv2d_gt_
+    const bdifd_rig &rig,
+    const vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > &crv2d_gt_
     );
 
 //: tests multiview projection + reconstruction of differential geometry
@@ -36,7 +36,7 @@ MAIN( test_reprojection_errors )
   START ("Multiview reprojection errors");
 
     //: ideal cams
-  vcl_vector<dbdif_camera> cam_gt_;
+  vcl_vector<bdifd_camera> cam_gt_;
   unsigned nviews_=3;
   cam_gt_.resize(nviews_);
 
@@ -48,29 +48,29 @@ MAIN( test_reprojection_errors )
   double x_max_scaled = 500;
 
   vnl_double_3x3 Kmatrix;
-  dbdif_turntable::internal_calib_olympus(Kmatrix, x_max_scaled, crop_origin_x_, crop_origin_y_);
+  bdifd_turntable::internal_calib_olympus(Kmatrix, x_max_scaled, crop_origin_x_, crop_origin_y_);
 
   vpgl_calibration_matrix<double> K(Kmatrix);
 
   vpgl_perspective_camera<double> *P;
 
-  P = dbdif_turntable::camera_olympus(0, K);
+  P = bdifd_turntable::camera_olympus(0, K);
   cam_gt_[0].set_p(*P);
-  P = dbdif_turntable::camera_olympus(5, K);
+  P = bdifd_turntable::camera_olympus(5, K);
   cam_gt_[1].set_p(*P);
-  P = dbdif_turntable::camera_olympus(60, K);
+  P = bdifd_turntable::camera_olympus(60, K);
   cam_gt_[2].set_p(*P);
 
-//  P = dbdif_turntable::camera_olympus(0, K);
+//  P = bdifd_turntable::camera_olympus(0, K);
 //  cam_gt_[0].set_p(*P);
-//  P = dbdif_turntable::camera_olympus(60, K);
+//  P = bdifd_turntable::camera_olympus(60, K);
 //  cam_gt_[1].set_p(*P);
-//  P = dbdif_turntable::camera_olympus(5, K);
+//  P = bdifd_turntable::camera_olympus(5, K);
 //  cam_gt_[2].set_p(*P);
 
   //unused unsigned  npts=0;
-  vcl_vector<vcl_vector<dbdif_3rd_order_point_3d> > crv3d;
-  dbdif_data::space_curves_olympus_turntable( crv3d );
+  vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > crv3d;
+  bdifd_data::space_curves_olympus_turntable( crv3d );
 
 
   test_reprojection_errors(cam_gt_, K, crv3d);
@@ -82,13 +82,13 @@ MAIN( test_reprojection_errors )
 
 void 
 test_reprojection_errors(
-    const vcl_vector<dbdif_camera> &cam_gt_,  //:< ideal cams
+    const vcl_vector<bdifd_camera> &cam_gt_,  //:< ideal cams
     const vpgl_calibration_matrix<double> &K,
-    const vcl_vector<vcl_vector<dbdif_3rd_order_point_3d> > &crv3d)
+    const vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > &crv3d)
 {
 
-  vcl_vector<vcl_vector<dbdif_3rd_order_point_2d> > crv2d_gt_;
-  dbdif_data::project_into_cams(crv3d, cam_gt_, crv2d_gt_);
+  vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > crv2d_gt_;
+  bdifd_data::project_into_cams(crv3d, cam_gt_, crv2d_gt_);
 
 
   { //: first, distance to reprojection using ideal cameras should be low for all non-degenerate points:
@@ -98,9 +98,9 @@ test_reprojection_errors(
     unsigned  nvalid;
 
     vcl_cout << "\nErrors of reprojection using IDEAL cams\n";
-    dbdif_rig rig(cam_gt_[0].Pr_, cam_gt_[1].Pr_);
+    bdifd_rig rig(cam_gt_[0].Pr_, cam_gt_[1].Pr_);
     
-    dbdif_data::max_err_reproj_perturb(crv2d_gt_, cam_gt_, rig, err_pos,err_t,err_k,err_kdot, i_pos, i_t, i_k, i_kdot, nvalid);
+    bdifd_data::max_err_reproj_perturb(crv2d_gt_, cam_gt_, rig, err_pos,err_t,err_k,err_kdot, i_pos, i_t, i_k, i_kdot, nvalid);
 
     vcl_cout 
       << "MAX: err_pos = " << err_pos  << "(" << i_pos 
@@ -118,7 +118,7 @@ test_reprojection_errors(
 
   // PERTURBED CAMS
   
-  vcl_vector<dbdif_camera> cam_;
+  vcl_vector<bdifd_camera> cam_;
   cam_.resize(3);
 
   vcl_vector<double> perturb_angle_v, 
@@ -142,15 +142,15 @@ test_reprojection_errors(
 
     vpgl_perspective_camera<double> *P;
     // Using simple perturb criteria for now
-    P = dbdif_turntable::camera_olympus(angle1_perturb, K);
+    P = bdifd_turntable::camera_olympus(angle1_perturb, K);
     cam_[0].set_p(*P); delete P;
-    P = dbdif_turntable::camera_olympus(angle2_perturb, K);
+    P = bdifd_turntable::camera_olympus(angle2_perturb, K);
     cam_[1].set_p(*P); delete P;
-    P = dbdif_turntable::camera_olympus(angle3_perturb, K);
+    P = bdifd_turntable::camera_olympus(angle3_perturb, K);
     cam_[2].set_p(*P); delete P;
 
     // Second, distance to reprojection using perturbed cameras 
-    dbdif_rig rig(cam_[0].Pr_, cam_[1].Pr_);
+    bdifd_rig rig(cam_[0].Pr_, cam_[1].Pr_);
     
     vcl_vector<double> err_pos_sq_v;
     vcl_vector<double> err_t_v;
@@ -160,7 +160,7 @@ test_reprojection_errors(
 
     vcl_cout << "\nPerturbation angle:" << dtheta << " deg\n";
 
-    dbdif_data::err_reproj_perturb(crv2d_gt_, cam_, rig, err_pos_sq_v, err_t_v, err_k_v, err_kdot_v, valid_idx);
+    bdifd_data::err_reproj_perturb(crv2d_gt_, cam_, rig, err_pos_sq_v, err_t_v, err_k_v, err_kdot_v, valid_idx);
 
     for (unsigned i=0; i < err_pos_sq_v.size(); ++i)
       err_pos_sq_v[i] = vcl_sqrt(err_pos_sq_v[i]);
@@ -241,26 +241,26 @@ compute_and_print_info(
     vcl_vector<double> &mean_err_v,
     vcl_vector<double> &median_err_v,
     double err_tolerance,
-    const dbdif_rig &rig,
-    const vcl_vector<vcl_vector<dbdif_3rd_order_point_2d> > &crv2d_gt_
+    const bdifd_rig &rig,
+    const vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > &crv2d_gt_
     )
 {
 
   unsigned max_idx, min_idx;
   double err;
 
-  err = mw_util::max(err_v,max_idx); 
+  err = bmcsd_util::max(err_v,max_idx); 
   max_idx = valid_idx[max_idx];
   max_err_v.push_back(err);
 
-  err = mw_util::min(err_v,min_idx); 
+  err = bmcsd_util::min(err_v,min_idx); 
   min_idx = valid_idx[min_idx];
   min_err_v.push_back(err);
 
-  err = mw_util::mean(err_v); 
+  err = bmcsd_util::mean(err_v); 
   mean_err_v.push_back(err);
 
-  err = mw_util::median(err_v); 
+  err = bmcsd_util::median(err_v); 
   median_err_v.push_back(err);
 
   double n_err=0;
@@ -273,9 +273,9 @@ compute_and_print_info(
     if (vcl_fabs(err_v[i]) > err_tolerance ) {
       ++n_err;
 
-      const dbdif_3rd_order_point_2d &p1 = crv2d_gt_[0][valid_idx[i]];
+      const bdifd_3rd_order_point_2d &p1 = crv2d_gt_[0][valid_idx[i]];
 
-      double epipolar_angle = dbdif_rig::angle_with_epipolar_line(p1.t,p1.gama,rig.f12);
+      double epipolar_angle = bdifd_rig::angle_with_epipolar_line(p1.t,p1.gama,rig.f12);
 
       if (epipolar_angle > max_epi_angle) {
         max_epi_angle = epipolar_angle;

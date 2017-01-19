@@ -9,13 +9,13 @@
 #include <vsol/vsol_region_2d.h>
 #include <vsol/vsol_polygon_2d.h>
 
-#include <dbsol/algo/dbsol_curve_algs.h>
-#include <dbsol/dbsol_interp_curve_2d.h>
-#include <dbsol/algo/dbsol_geno.h>
+#include <bsold/algo/bsold_curve_algs.h>
+#include <bsold/bsold_interp_curve_2d.h>
+#include <bsold/algo/bsold_geno.h>
 
 #include <mw/algo/mw_cvmatch.h>
 #include <mw/algo/mw_cvmatch_sptr.h>
-#include <dbdif/dbdif_rig.h>
+#include <bdifd/bdifd_rig.h>
 
 #include <dbcvr/dbcvr_clsd_interp_cvmatch.h>
 #include <dbcvr/dbcvr_clsd_interp_cvmatch_sptr.h>
@@ -75,13 +75,13 @@ bool mw_cvmatch_process::execute()
   vidpro1_vsol2D_storage_sptr input_vsol1;
   input_vsol1.vertical_cast(input_data_[0][0]);
 
-  dvpgl_camera_storage_sptr input_cam1;
+  vpgld_camera_storage_sptr input_cam1;
   input_cam1.vertical_cast(input_data_[0][1]);
 
   vidpro1_vsol2D_storage_sptr input_vsol2;
   input_vsol2.vertical_cast(input_data_[1][0]);
 
-  dvpgl_camera_storage_sptr input_cam2;
+  vpgld_camera_storage_sptr input_cam2;
   input_cam2.vertical_cast(input_data_[1][1]);
 
 
@@ -154,8 +154,8 @@ bool mw_cvmatch_process::execute()
   else
     vcl_cout << "Original curve2 is a polyline, i.e. an open curve\n";
 
-  //dbsol_interp_curve_2d_sptr curve1 = new dbsol_interp_curve_2d();
-  //dbsol_interp_curve_2d_sptr curve2 = new dbsol_interp_curve_2d();
+  //bsold_interp_curve_2d_sptr curve1 = new bsold_interp_curve_2d();
+  //bsold_interp_curve_2d_sptr curve2 = new bsold_interp_curve_2d();
 
   cdebug << "Camera1: \n" << input_cam1->get_camera();
   cdebug << "Camera2: \n" << input_cam2->get_camera();
@@ -163,18 +163,18 @@ bool mw_cvmatch_process::execute()
     vcl_cerr << "Error: input cams are not perspective\n";
   }
 
-  dbdif_rig rig(
+  bdifd_rig rig(
       *(input_cam1->get_camera()->cast_to_perspective_camera()), 
       *(input_cam2->get_camera()->cast_to_perspective_camera()));
 
-  dbsol_interp_curve_2d_sptr curve1;
-  dbsol_interp_curve_2d_sptr curve2;
+  bsold_interp_curve_2d_sptr curve1;
+  bsold_interp_curve_2d_sptr curve2;
 
   // GENO
-  curve1 = new dbsol_geno_curve_2d();
-  curve2 = new dbsol_geno_curve_2d();
-  dbsol_geno::interpolate((dbsol_geno_curve_2d *)curve1.ptr(),inp1, true);
-  dbsol_geno::interpolate((dbsol_geno_curve_2d *)curve2.ptr(),inp2, true);
+  curve1 = new bsold_geno_curve_2d();
+  curve2 = new bsold_geno_curve_2d();
+  bsold_geno::interpolate((bsold_geno_curve_2d *)curve1.ptr(),inp1, true);
+  bsold_geno::interpolate((bsold_geno_curve_2d *)curve2.ptr(),inp2, true);
 
   for (unsigned i=0; i< inp1.size(); ++i)
     cdebug << *inp1[i];
@@ -279,7 +279,7 @@ bool mw_cvmatch_process::execute()
       
     }
 
-    vcl_vector<mw_vector_3d> C3d;
+    vcl_vector<bmcsd_vector_3d> C3d;
     rig.reconstruct_3d_curve(&C3d, out_curve1, out_curve2);
     // output to file
     vcl_ofstream prec;

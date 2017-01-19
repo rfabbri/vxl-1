@@ -22,7 +22,7 @@ template <class T>
 class vpgl_calibration_matrix;
 
 
-struct dbdif_3rd_order_point_2d;
+struct bdifd_3rd_order_point_2d;
 
 //: Process for generating synthetic correspondence data and calibration for testing struction and
 // motion recovery algorithms
@@ -54,7 +54,7 @@ protected:
   vcl_vector<vpgl_perspective_camera<double> *> pcam_ini_;
   vcl_vector<vgl_point_3d<double> > vgl_pts_ini_;
   vcl_vector<unsigned> pt_id_;
-  vcl_vector<vcl_vector<dbdif_3rd_order_point_2d> > crv2d_;
+  vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > crv2d_;
   unsigned nviews_;
 
   void define_dataset(vpgl_calibration_matrix<double> **K, unsigned &ncols, unsigned &nrows);

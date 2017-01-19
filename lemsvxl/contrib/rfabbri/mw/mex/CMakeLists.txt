@@ -7,7 +7,7 @@ include_directories( ${VXL_GEL_INCLUDE_DIR} )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 include_directories(${VXL_OXL_INCLUDE_DIR} )
 include_directories(${VXL_MUL_INCLUDE_DIR} )
-include_directories( ${lems_SOURCE_DIR}/brcv/mvg)
+include_directories( ${lems_SOURCE_DIR}/bmvgd)
 include_directories( ${lems_SOURCE_DIR}/brcv/trk )
 include_directories( ${lems_SOURCE_DIR}/brcv/shp )
 include_directories( ${lems_SOURCE_DIR}/brcv/seg )
@@ -41,9 +41,9 @@ target_link_libraries(episearch mw_algo vpgl_algo rrel mvl vgl vsol ${MATLAB_LIB
 
 target_link_libraries(synthetic_data mw_algo vpgl_algo vgl vsol ${MATLAB_LIBRARIES})
 target_link_libraries(fmatrix vpgl_algo rrel mvl vgl vsol ${MATLAB_LIBRARIES})
-target_link_libraries(polybounds mw dbecl ${MATLAB_LIBRARIES})
+target_link_libraries(polybounds mw becld ${MATLAB_LIBRARIES})
 # /home/rfabbri/src/GeometricTools/WildMagic4/SDK/Library/Release
 target_link_libraries(p2conic_dist vgl_algo ${MATLAB_LIBRARIES} )
 #target_link_libraries(p2quadric_dist vgl_algo ${MATLAB_LIBRARIES} Wm4Foundation )
-target_link_libraries(fit_conics dbgl_algo ${MATLAB_LIBRARIES} )
+target_link_libraries(fit_conics bgld_algo ${MATLAB_LIBRARIES} )
 

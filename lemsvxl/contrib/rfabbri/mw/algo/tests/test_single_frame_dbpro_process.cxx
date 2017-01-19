@@ -1,23 +1,23 @@
 //:
 //\file
-//\brief File for me to experiment with dbpro.
+//\brief File for me to experiment with bprod.
 //\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //
 #include <testlib/testlib_test.h>
-#include <dbpro/dbpro_process.h>
+#include <bprod/bprod_process.h>
 #include <vcl_iostream.h>
-#include <dbpro/dbpro_observer.h>
-#include <dbpro/tests/dbpro_sample_processes.h>
+#include <bprod/bprod_observer.h>
+#include <bprod/tests/bprod_sample_processes.h>
 #include <vcl_vector.h>
 #include <vil/vil_save.h>
 #include <vil/vil_convert.h>
 
-#include <mw/pro/dbpro_load_camera_source.h>
-#include <mw/pro/dbpro_load_edg_source.h>
-#include <mw/pro/dbpro_load_vsol_polyline_source.h>
+#include <mw/pro/bprod_load_camera_source.h>
+#include <mw/pro/bprod_load_edg_source.h>
+#include <mw/pro/bprod_load_vsol_polyline_source.h>
 
 template <class T>
-class view_aggregator : public dbpro_sink
+class view_aggregator : public bprod_sink
 {
  public:
   view_aggregator() {} 
@@ -26,7 +26,7 @@ class view_aggregator : public dbpro_sink
   // Input 0 : camera
   // Input 1 : edgemap
   // Input 2,3 : distance transform and label.
-  dbpro_signal execute()
+  bprod_signal execute()
   {
     //: Camera
     assert(input_type_id(0) == typeid(vpgl_perspective_camera<T>));
@@ -48,7 +48,7 @@ class view_aggregator : public dbpro_sink
     assert(input_type_id(4) == typeid(vcl_vector< vsol_polyline_2d_sptr >));
     curves_ = input<vcl_vector< vsol_polyline_2d_sptr > >(4);
 
-    return DBPRO_VALID;
+    return BPROD_VALID;
   }
 
   const vpgl_perspective_camera<T> *cam_;
@@ -58,9 +58,9 @@ class view_aggregator : public dbpro_sink
   vcl_vector< vsol_polyline_2d_sptr > curves_;
 };
 
-MAIN( test_multiview_dbpro_process )
+MAIN( test_multiview_bprod_process )
 {
-  START ("multiview dbpro processes");
+  START ("multiview bprod processes");
 
   vcl_string datapath("/usr/local/moredata/subset");
   vcl_string img_fname = datapath + vcl_string("/frame_00066.png");
@@ -68,29 +68,29 @@ MAIN( test_multiview_dbpro_process )
   vcl_string frag_fname = datapath + vcl_string("/frame_00066.vsl");
 
   // 1 Cam loader
-  dbpro_process_sptr 
-    cam_src = new dbpro_load_camera_source<double>(
-        img_fname, dbpro_load_camera_source<double>::MW_INTRINSIC_EXTRINSIC);
+  bprod_process_sptr 
+    cam_src = new bprod_load_camera_source<double>(
+        img_fname, bprod_load_camera_source<double>::MW_INTRINSIC_EXTRINSIC);
 
   // 1 Edge map loader
   bool bSubPixel = true;
   double scale=1.0;
-  dbpro_process_sptr 
-    edg_src = new dbpro_load_edg_source(edg_fname, bSubPixel, scale);
+  bprod_process_sptr 
+    edg_src = new bprod_load_edg_source(edg_fname, bSubPixel, scale);
 
   // 1 dt and label loader
-  dbpro_process_sptr 
-    edg_dt = new dbpro_edg_dt();
+  bprod_process_sptr 
+    edg_dt = new bprod_edg_dt();
 
   edg_dt->connect_input(0, edg_src, 0);
 
   // 1 curve fragment loader
-  dbpro_process_sptr
-    frag_src = new dbpro_load_vsol_polyline_source(frag_fname);
+  bprod_process_sptr
+    frag_src = new bprod_load_vsol_polyline_source(frag_fname);
 
   // Node that commands all others and collects their outputs
   view_aggregator<double> *out_ptr = new view_aggregator<double>;
-  dbpro_process_sptr out(out_ptr);
+  bprod_process_sptr out(out_ptr);
   out->connect_input(0, cam_src, 0);
   out->connect_input(1, edg_src, 0);
   out->connect_input(2, edg_dt, 0);

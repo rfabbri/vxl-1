@@ -9,12 +9,12 @@
 //
 
 #include <vcl_string.h>
-#include <mw/mw_util.h>
+#include <bmcsd/bmcsd_util.h>
 
 //: Paths/URLs for the data of 1 frame
 //
 // The cam_fname can be <fileprefix>*anything.
-class mw_curve_stereo_frame_data_path {
+class bmcsd_curve_stereo_frame_data_path {
 public:
 
   vcl_string cam_full_path() const { return path_ + cam_fname_; }
@@ -22,7 +22,7 @@ public:
   vcl_string frag_full_path() const { return path_ + frag_fname_; }
   vcl_string img_full_path() const { return path_ + img_fname_; }
   vcl_string cvlet_full_path() const { return path_ + cvlet_fname_; }
-  mw_util::camera_file_type cam_file_type() const  {return cam_ftype_; }
+  bmcsd_util::camera_file_type cam_file_type() const  {return cam_ftype_; }
 
   vcl_string path_;
   vcl_string img_fname_;
@@ -30,21 +30,21 @@ public:
   vcl_string edg_fname_;
   vcl_string frag_fname_;
   vcl_string cvlet_fname_;
-  mw_util::camera_file_type cam_ftype_;
+  bmcsd_util::camera_file_type cam_ftype_;
 };
 
 //: Paths/URL for full datasets to be used in multiview stereo
-class mw_curve_stereo_data_path {
+class bmcsd_curve_stereo_data_path {
 public:
-  mw_curve_stereo_data_path() {}
+  bmcsd_curve_stereo_data_path() {}
   unsigned nviews() const { return views_.size(); }
 
   //: Return the i-th element
-  mw_curve_stereo_frame_data_path & operator[] ( unsigned int v ) 
+  bmcsd_curve_stereo_frame_data_path & operator[] ( unsigned int v ) 
   { assert (v < nviews()); return views_[v]; }
 
   //: Return the i-th element
-  const mw_curve_stereo_frame_data_path & operator[] ( unsigned int v ) const 
+  const bmcsd_curve_stereo_frame_data_path & operator[] ( unsigned int v ) const 
   { assert (v < nviews()); return views_[v]; }
 
   //: Automatically guesses what types of files are in the path, and loads their
@@ -57,7 +57,7 @@ public:
   // - Camera calibration is in one of two formats
   //    - calib.intrinsic and <fnameprefix>.extrinsic pair, with optional
   //    <fnameprefix>.origin to denote a crop, and calib.scale to denote image
-  //    scaling. More details in read_cam in mw_util.h
+  //    scaling. More details in read_cam in bmcsd_util.h
   //
   //    - calibration given by projection matrix files, one for each frame, in
   //    the format <fnameprefix>.projmatrix
@@ -100,7 +100,7 @@ public:
       const vcl_vector<vcl_string> &cam_fnames,
       const vcl_vector<vcl_string> &edg_fnames,
       const vcl_vector<vcl_string> &frag_fnames,
-      mw_util::camera_file_type cam_ftype
+      bmcsd_util::camera_file_type cam_ftype
       );
 
   bool set_curvelets(const vcl_vector<vcl_string> &cvlet_fnames);
@@ -110,28 +110,28 @@ public:
 
   // Data -------------
 private:
-  vcl_vector<mw_curve_stereo_frame_data_path> views_;
+  vcl_vector<bmcsd_curve_stereo_frame_data_path> views_;
 };
 
 //: Write to stream
-// \relates mw_curve_stereo_data_path 
-vcl_ostream&  operator<<(vcl_ostream& s, const mw_curve_stereo_data_path& p);
+// \relates bmcsd_curve_stereo_data_path 
+vcl_ostream&  operator<<(vcl_ostream& s, const bmcsd_curve_stereo_data_path& p);
 
 //: Write to stream
-// \relates mw_curve_stereo_frame_data_path
-vcl_ostream&  operator<<(vcl_ostream& s, const mw_curve_stereo_frame_data_path& p);
+// \relates bmcsd_curve_stereo_frame_data_path
+vcl_ostream&  operator<<(vcl_ostream& s, const bmcsd_curve_stereo_frame_data_path& p);
 
 struct mw_data {
   // Commmon datasets I use, hardcoded.
   static void
-  get_capitol_building_subset(mw_curve_stereo_data_path *dataset);
+  get_capitol_building_subset(bmcsd_curve_stereo_data_path *dataset);
 
   //: Reads from text file.  For the format, see
   // tests/mcs_stereo_instances_example.txt
   static bool read_frame_data_list_txt(
       const vcl_string &path,
-      mw_curve_stereo_data_path *dataset,
-      mw_util::camera_file_type cam_type);
+      bmcsd_curve_stereo_data_path *dataset,
+      bmcsd_util::camera_file_type cam_type);
 };
 
 #endif // mw_data_h

@@ -2,23 +2,23 @@
 #include "mw_curve_tracing_tool_common_2.h"
 
 #include <dbdet/pro/dbdet_sel_storage.h>
-#include <dvpgl/io/dvpgl_io_cameras.h>
-#include <mw/algo/mw_algo_util.h>
+#include <vpgld/io/vpgld_io_cameras.h>
+#include <bmcsd/algo/bmcsd_algo_util.h>
 
 mw_curve_tracing_tool_2::
 mw_curve_tracing_tool_2()
 {
-  init(new mw_curve_stereo);
+  init(new bmcsd_curve_stereo);
 }
 
 mw_curve_tracing_tool_2::
-mw_curve_tracing_tool_2(mw_curve_stereo *impl)
+mw_curve_tracing_tool_2(bmcsd_curve_stereo *impl)
 {
   init(impl);
 }
 
 void mw_curve_tracing_tool_2::
-init(mw_curve_stereo *impl)
+init(bmcsd_curve_stereo *impl)
 {
   s_ = impl;
   p0_ = 0; 
@@ -530,13 +530,13 @@ draw_candidate_curves()
 void mw_curve_tracing_tool_2::
 get_cameras()
 {
-  vcl_vector<dbdif_camera> cams(nviews());
+  vcl_vector<bdifd_camera> cams(nviews());
 
   for (unsigned i=0; i<nviews(); ++i) {
     bpro1_storage_sptr 
       p = MANAGER->repository()->get_data_at("vpgl camera",frame_v_[i]);
 
-    dvpgl_camera_storage_sptr cam_storage;
+    vpgld_camera_storage_sptr cam_storage;
 
     cam_storage.vertical_cast(p);
     if(!p) {
@@ -546,7 +546,7 @@ get_cameras()
 
     const vpgl_perspective_camera<double> *pcam;
 
-    pcam = dvpgl_cast_to_perspective_camera(cam_storage->get_camera());
+    pcam = vpgld_cast_to_perspective_camera(cam_storage->get_camera());
     if(!pcam) {
       vcl_cerr << "Error: tool requires a perspective camera" << vcl_endl;
       return;
@@ -660,7 +660,7 @@ get_sels(
       f_it != frags.end(); ++f_it) {
 
     vcl_vector<vsol_point_2d_sptr> pts;
-    mw_algo_util::dbdet_to_vsol((*f_it)->edgels, &pts);
+    bmcsd_algo_util::dbdet_to_vsol((*f_it)->edgels, &pts);
     curves.push_back(new vsol_polyline_2d(pts));
   }
 
@@ -780,7 +780,7 @@ handle_mouse_click(
         // mark clicked point
         vsol_point_2d_sptr pt = new vsol_point_2d(ix,iy);
         unsigned mindist;
-        unsigned near_id = mw_util::find_nearest_pt(pt, s_->selected_crv(0), mindist);
+        unsigned near_id = bmcsd_util::find_nearest_pt(pt, s_->selected_crv(0), mindist);
 
         s_->initialize_subcurve(near_id);
         initialize_curve_selection();
@@ -789,7 +789,7 @@ handle_mouse_click(
 
         vsol_point_2d_sptr pt = new vsol_point_2d(ix,iy);
         unsigned mindist;
-        unsigned near_id = mw_util::find_nearest_pt(pt, s_->selected_crv(0), mindist);
+        unsigned near_id = bmcsd_util::find_nearest_pt(pt, s_->selected_crv(0), mindist);
         s_->update_endpoint(near_id);
         pt = s_->selected_crv(0)->vertex(near_id);
         update_pn(pt);
@@ -971,7 +971,7 @@ view_from_frame_index(unsigned fi) const
 void mw_curve_tracing_tool_2::
 equalize_matching_subcurve()
 {
-  // this block could be made into a memer of mw_curve_stereo if it turns out to be useful.
+  // this block could be made into a memer of bmcsd_curve_stereo if it turns out to be useful.
   unsigned ini_id_sub, end_id_sub;
   { 
   if (!s_->selected_crv(0) || !s_->selected_crv(1))

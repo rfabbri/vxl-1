@@ -12,7 +12,7 @@
 #include <vnl/vnl_double_4.h>
 #include <vgl/vgl_distance.h>
 
-#include <mw/mw_util.h>
+#include <bmcsd/bmcsd_util.h>
 
 /* OVERALL STEPS
  *
@@ -205,7 +205,7 @@ dbkpr_projective_reconstruct_process::finish()
   in_view_set[v1] = true;
   in_view_set[v2] = true;
 
-  vcl_vector<dvpgl_proj_camera<double> > cam_set;
+  vcl_vector<vpgld_proj_camera<double> > cam_set;
   cam_set.push_back(Pr1);
   cam_set.push_back(Pr2);
 
@@ -354,7 +354,7 @@ get_initial_reconstruction(
     for (unsigned k=0; k < 3; ++k) {
       if (fm_sane.get_matrix()(i,k)) {
         double thisratio = fm_sane.get_matrix()(i,k)/fm.get_matrix()(i,k);
-        assert(mw_util::near_zero(thisratio-ratio));
+        assert(bmcsd_util::near_zero(thisratio-ratio));
       }
     }
 #endif
@@ -469,7 +469,7 @@ add_new_view_to_reconstruction(unsigned v3,
   vpgl_proj_camera<double> Pr3;
 
   // Calls my RANSAC code
-  dvpgl_camera_compute_ransac Pr3(image_pts,world_pts, Pr3);
+  vpgld_camera_compute_ransac Pr3(image_pts,world_pts, Pr3);
 
 
   // TODO: find more correspondences by searching point-wise
@@ -477,7 +477,7 @@ add_new_view_to_reconstruction(unsigned v3,
   // Refine reconstruction simultaneously using new camera sequence and least-squares with inliers
   
   for (unsigned i=0; i < pts3d.size(); ++i) {
-    pts3d[i] = brct_algos::bundle_reconstruct_3d_point(pts, cams);
+    pts3d[i] = reconstruct_3d_points_nviews_linear(pts, cams);
     //  vgl_point_3d<double> bundle_reconstruct_3d_point(vcl_vector<vnl_double_2> &pts,
     //                                                   vcl_vector<vnl_double_3x4> &cams);
   }
@@ -504,7 +504,7 @@ projective_bundle_adjust(vcl_vector<vpgl_proj_camera<double> > &cameras, t_corr_
   vnl_vector<double> a(init_a), b(init_b);
 
   // do the bundle adjustment
-  dvpgl_proj_bundle_adj_lsqr ba_func(image_points,mask,usewgt);
+  vpgld_proj_bundle_adj_lsqr ba_func(image_points,mask,usewgt);
   bnl_sparse_lm lm(ba_func);
   lm.set_max_function_evals(maxitr);
   lm.set_g_tolerance(gtol);

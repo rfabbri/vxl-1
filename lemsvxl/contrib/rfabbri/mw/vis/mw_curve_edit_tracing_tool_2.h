@@ -8,8 +8,8 @@
 //\date Fri Oct 09 2009
 //
 
-#include <mw/mw_discrete_corresp.h>
-#include <mw/pro/mw_discrete_corresp_storage.h>
+#include <bmcsd/bmcsd_discrete_corresp.h>
+#include <mw/pro/bmcsd_discrete_corresp_storage.h>
 #include <mw/vis/mw_curve_tracing_tool_2.h>
 
 //: Same as \c mw_curve_tracing_tool, 
@@ -46,14 +46,14 @@ protected:
 
 private:
   // Data -----
-  mw_discrete_corresp *corr_;
-  mw_discrete_corresp_storage_sptr c_sto_;
+  bmcsd_discrete_corresp *corr_;
+  bmcsd_discrete_corresp_storage_sptr c_sto_;
 
   vsol_polyline_2d_sptr selected_obj_in_corresp_;
 
   bool lock_corresp_query_;
   unsigned o0_query_idx_;
-  mw_discrete_corresp::one_corresp_list_iter o1_query_itr_; 
+  bmcsd_discrete_corresp::one_corresp_list_iter o1_query_itr_; 
   unsigned o1_query_idx_;
   bool o1_query_is_corresp_;
 

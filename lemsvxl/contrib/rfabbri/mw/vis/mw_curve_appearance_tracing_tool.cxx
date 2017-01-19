@@ -5,8 +5,8 @@
 #include <vcl_algorithm.h>
 #include <vgl/vgl_intersection.h>
 #include <vil/vil_convert.h>
-#include <dvpgl/io/dvpgl_io_cameras.h>
-#include <mw/algo/mw_algo_util.h>
+#include <vpgld/io/vpgld_io_cameras.h>
+#include <bmcsd/algo/bmcsd_algo_util.h>
 
 
 mw_curve_appearance_tracing_tool::
@@ -650,7 +650,7 @@ get_cameras()
     bpro1_storage_sptr 
       p = MANAGER->repository()->get_data_at("vpgl camera",frame_v_[i]);
 
-    dvpgl_camera_storage_sptr cam_storage;
+    vpgld_camera_storage_sptr cam_storage;
 
     cam_storage.vertical_cast(p);
     if(!p) {
@@ -660,7 +660,7 @@ get_cameras()
 
     const vpgl_perspective_camera<double> *pcam;
 
-    pcam = dvpgl_cast_to_perspective_camera(cam_storage->get_camera());
+    pcam = vpgld_cast_to_perspective_camera(cam_storage->get_camera());
     if(!pcam) {
       vcl_cerr << "Error: tool requires a perspective camera" << vcl_endl;
       return;
@@ -977,7 +977,7 @@ match_using_hog()
   vcl_cout << "Computing descriptors for the curve in image[0]. Also computing the image gradient." << vcl_endl;
   {
   dbdet_edgel_chain curvelet_ec;
-  mw_algo_util::extract_edgel_chain(*subcurve_, &curvelet_ec);
+  bmcsd_algo_util::extract_edgel_chain(*subcurve_, &curvelet_ec);
   computor.compute(curvelet_ec, &sc0);
 
   for (unsigned i=0; i < curvelet_ec.edgels.size(); ++i)
@@ -996,7 +996,7 @@ match_using_hog()
 
   vcl_cout << "\tExtracting edgel chain/tangents in image[1]" << vcl_endl;
   for (unsigned ii=0; ii < crv_candidates_ptrs_.size(); ++ii)
-    mw_algo_util::extract_edgel_chain(*(crv_candidates_ptrs_[ii]), &(ec_v[ii]));
+    bmcsd_algo_util::extract_edgel_chain(*(crv_candidates_ptrs_[ii]), &(ec_v[ii]));
   vcl_cout << "\tDone extracting edgel chain/tangents in image[1]" << vcl_endl;
 
   vcl_vector<mw_sift_curve> sc_img1(crv_candidates_ptrs_.size());
@@ -1049,7 +1049,7 @@ match_using_hog()
   }
 
   unsigned i_best;
-  mw_util::max(votes, i_best);
+  bmcsd_util::max(votes, i_best);
 
   vcl_cout << "Best curve has index " << i_best << " among candidates, with #votes = " << votes[i_best] << vcl_endl;
 

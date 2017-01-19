@@ -24,21 +24,21 @@
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/storage/vidpro1_vtol_storage.h>
-#include <dvpgl/pro/dvpgl_camera_storage.h>
-#include <dbsol/pro/dbsol_curve_sampling_process.h>
+#include <vpgld/pro/vpgld_camera_storage.h>
+#include <bsold/pro/bsold_curve_sampling_process.h>
 #include <dbdet/pro/dbdet_lvwr_process.h>
 #include <dbctrk/pro/dbctrk_storage.h>
-#include <dbecl/pro/dbecl_episeg_storage.h>
+#include <becld/pro/becld_episeg_storage.h>
 #include <dbetl/pro/dbetl_track_storage.h>
 #include <dbcvr/pro/dbcvr_curvematch_storage.h>
 #include <dbdet/pro/dbdet_sel_storage.h>
-#include <mw/pro/mw_discrete_corresp_storage.h>
+#include <mw/pro/bmcsd_discrete_corresp_storage.h>
 
 // Displayer header files
 #include <bvis1/displayer/bvis1_image_displayer.h>
 #include <bvis1/displayer/bvis1_vsol2D_displayer.h>
 #include <bvis1/displayer/bvis1_vtol_displayer.h>
-#include <dbecl/vis/dbecl_episeg_displayer.h>
+#include <becld/vis/becld_episeg_displayer.h>
 #include <dbcvr/vis/dbcvr_curvematch_displayer.h>
 #include <dbdet/vis/dbdet_sel_displayer.h>
 
@@ -66,13 +66,13 @@
 #include <dbcvr/pro/dbcvr_curvematch_process.h>
 #include <dbcvr/pro/dbcvr_interp_cvmatch_process.h>
 #include <dbctrk/pro/dbctrk_process.h>
-#include <dbecl/pro/dbecl_builder_process.h>
+#include <becld/pro/becld_builder_process.h>
 #include <dbetl/pro/dbetl_tracker_process.h>
-#include <dbnl/algo/pro/dbnl_function_sampling_process.h>
+#include <bnld/algo/pro/bnld_function_sampling_process.h>
 #include <dbdet/pro/dbdet_contour_tracer_process.h>
 #include <dbdet/pro/dbdet_nms_process.h>
 #include <dbdet/pro/dbdet_sel_process.h>
-#include <mw/pro/dvpgl_load_camera_process.h>
+#include <mw/pro/vpgld_load_camera_process.h>
 #include <mw/pro/mw_cvmatch_process.h>
 #include <mw/pro/mw_load_discrete_corresp_process.h>
 #include <mw/pro/dbdet_edgel_data_process.h>
@@ -89,7 +89,7 @@ int main(int argc, char** argv)
   REG_DISPLAYER( bvis1_vsol2D_displayer );
   REG_DISPLAYER( bvis1_vtol_displayer );
 
-  REG_DISPLAYER( dbecl_episeg_displayer );
+  REG_DISPLAYER( becld_episeg_displayer );
   REG_DISPLAYER( dbcvr_curvematch_displayer );
   REG_DISPLAYER( dbdet_sel_displayer );
 
@@ -101,12 +101,12 @@ int main(int argc, char** argv)
   REG_STORAGE( vidpro1_vtol_storage );
   // --- dvidpro storage types ---
   REG_STORAGE( dbctrk_storage );
-  REG_STORAGE( dbecl_episeg_storage );
+  REG_STORAGE( becld_episeg_storage );
   REG_STORAGE( dbetl_track_storage );
-  REG_STORAGE( dvpgl_camera_storage );
+  REG_STORAGE( vpgld_camera_storage );
   REG_STORAGE( dbcvr_curvematch_storage );
   REG_STORAGE( dbdet_sel_storage );
-  REG_STORAGE( mw_discrete_corresp_storage );
+  REG_STORAGE( bmcsd_discrete_corresp_storage );
 
   // Register all the processes
   REG_PROCESS( vidpro1_load_image_process );
@@ -129,7 +129,7 @@ int main(int argc, char** argv)
   REG_PROCESS( vidpro1_smoothcem_process );
   REG_PROCESS( vidpro1_kl_process );
 
-  REG_PROCESS( dvpgl_load_camera_process );
+  REG_PROCESS( vpgld_load_camera_process );
   REG_PROCESS( show_contours_process );
 
 
@@ -137,10 +137,10 @@ int main(int argc, char** argv)
   REG_PROCESS( dbcvr_curvematch_process );
   REG_PROCESS( dbcvr_interp_cvmatch_process );
   REG_PROCESS( dbctrk_process );
-  REG_PROCESS( dbecl_builder_process );
+  REG_PROCESS( becld_builder_process );
   
-  REG_PROCESS( dbsol_curve_sampling_process );
-  REG_PROCESS( dbnl_function_sampling_process );
+  REG_PROCESS( bsold_curve_sampling_process );
+  REG_PROCESS( bnld_function_sampling_process );
   REG_PROCESS( dbdet_lvwr_process );
 
   REG_PROCESS( dbdet_contour_tracer_process );

@@ -7,7 +7,7 @@
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/vidpro1_repository.h>
 #include <bpro1/bpro1_storage_sptr.h>
-#include <dvpgl/pro/dvpgl_camera_storage.h>
+#include <vpgld/pro/vpgld_camera_storage.h>
 
 #include <vcl_set.h>
 #include <vnl/vnl_math.h>
@@ -24,17 +24,17 @@
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_intersection.h>
 
-#include <dbecl/dbecl_episeg_sptr.h>
-#include <dbecl/dbecl_episeg.h>
-#include <dbecl/dbecl_epipole.h>
-#include <dbecl/dbecl_episeg_from_curve_converter.h>
+#include <becld/becld_episeg_sptr.h>
+#include <becld/becld_episeg.h>
+#include <becld/becld_epipole.h>
+#include <becld/becld_episeg_from_curve_converter.h>
 
 
-#include <dbdif/dbdif_rig.h>
-#include <mw/mw_intersection_sets.h>
-#include <mw/mw_util.h>
+#include <bdifd/bdifd_rig.h>
+#include <becld/becld_intersection_sets.h>
+#include <bmcsd/bmcsd_util.h>
 
-#include <dbgl/algo/dbgl_intersect.h>
+#include <bgld/algo/bgld_intersect.h>
 
 
 
@@ -112,7 +112,7 @@ mw_curve_tracing_tool_2::activate ()
     bpro1_storage_sptr 
       p = MANAGER->repository()->get_data_at("vpgl camera",frame_v1_);
 
-    dvpgl_camera_storage_sptr cam_storage;
+    vpgld_camera_storage_sptr cam_storage;
 
     cam_storage.vertical_cast(p);
 
@@ -798,7 +798,7 @@ draw_candidate_curves()
     vgl_homg_line_2d<double>  epi = fm_->l_epipolar_line(homg_pt);
     ep_.push_back(epi);
 
-    vgl_homg_line_2d<double>  epi_left = dbdif_rig::l_epipolar_line( *fm_, epi);
+    vgl_homg_line_2d<double>  epi_left = bdifd_rig::l_epipolar_line( *fm_, epi);
 
     ep_left_.push_back(epi_left);
 
@@ -864,7 +864,7 @@ reconstruct_possible_matches()
 
   vcl_cout << "Ric!\n\n";// XXX
 
-  dbdif_rig rig(*cam1_, *cam2_);
+  bdifd_rig rig(*cam1_, *cam2_);
 
 
   unsigned ini_idx, 
@@ -932,7 +932,7 @@ reconstruct_possible_matches()
 
 
     // traverse L_[j] 
-    vcl_list<mw_intersection_sets::intersection_nhood_>::const_iterator ptr;
+    vcl_list<becld_intersection_sets::intersection_nhood_>::const_iterator ptr;
     for (ptr=isets_.L_[j].intercepts.begin(); ptr != isets_.L_[j].intercepts.end(); ++ptr) {
 
       unsigned k = ptr->ep_number;
@@ -967,7 +967,7 @@ reconstruct_possible_matches()
 
         vgl_point_2d<double> ipt;
 
-        bool intersects=dbgl_intersect::line_lineseg_intersect(vgl_line_2d<double> (ep_[k]),seg,ipt);
+        bool intersects=bgld_intersect::line_lineseg_intersect(vgl_line_2d<double> (ep_[k]),seg,ipt);
         if (intersects) {
           vcl_cout <<"Intersects!\n";
           pt_img2 = new vsol_point_2d(ipt);
@@ -976,7 +976,7 @@ reconstruct_possible_matches()
         }
       }
 
-      mw_vector_3d pt_3D;
+      bmcsd_vector_3d pt_3D;
 
       rig.reconstruct_point_lsqr(pt_img1,pt_img2,&pt_3D);
 
@@ -1061,12 +1061,12 @@ break_curves_into_episegs(
   // ----------------------------------------------------------------------
   // Break curve
 
-  dbecl_epipole_sptr epipole = new dbecl_epipole(e.x()/e.w(), e.y()/e.w());
-  dbecl_episeg_from_curve_converter factory(epipole);
+  becld_epipole_sptr epipole = new becld_epipole(e.x()/e.w(), e.y()/e.w());
+  becld_episeg_from_curve_converter factory(epipole);
 
   // A) For each vsol, do:
   
-  vcl_vector<dbecl_episeg_sptr> all_episegs;
+  vcl_vector<becld_episeg_sptr> all_episegs;
   for (unsigned i=0; i < vsols.size(); ++i) {
     
     // A1 - convert to digital curve
@@ -1075,9 +1075,9 @@ break_curves_into_episegs(
       dc->add_vertex(vsols[i]->vertex(k));
 
     // A2 - apply episeg
-    vcl_vector<dbecl_episeg_sptr> eps = factory.convert_curve(dc);
+    vcl_vector<becld_episeg_sptr> eps = factory.convert_curve(dc);
 
-    for(vcl_vector<dbecl_episeg_sptr>::iterator itr = eps.begin(); 
+    for(vcl_vector<becld_episeg_sptr>::iterator itr = eps.begin(); 
         itr != eps.end();  ++itr)
       all_episegs.push_back(*itr);
   }

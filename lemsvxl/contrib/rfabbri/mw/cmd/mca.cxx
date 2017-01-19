@@ -1,8 +1,8 @@
 #include <vul/vul_arg.h>
 #include <vul/vul_file.h>
-#include <dbul/dbul_arg.h>
-#include <mw/mw_util.h>
-#include <mw/dbmcs_curve_3d_sketch.h>
+#include <buld/buld_arg.h>
+#include <bmcsd/bmcsd_util.h>
+#include <bmcsd/bmcsd_curve_3d_sketch.h>
 
 
 #define MW_ASSERT(msg, a, b) if ((a) != (b)) { vcl_cerr << (msg) << vcl_endl; abort(); }
@@ -23,7 +23,7 @@ main(int argc, char **argv)
   vul_arg_parse(argc,argv);
   vcl_cout << "\n";
 
-  dbmcs_curve_3d_sketch *csk = new dbmcs_curve_3d_sketch;
+  bmcsd_curve_3d_sketch *csk = new bmcsd_curve_3d_sketch;
   vcl_string csk_fname = prefix + "/" + a_csk();
   bool retval  = csk->read_dir_format(csk_fname);
   MW_ASSERT(vcl_string("Error reading 3D curve sketch: ") + csk_fname, retval, true);

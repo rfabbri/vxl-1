@@ -1,7 +1,7 @@
 #include <vul/vul_arg.h>
-#include <dbul/dbul_arg.h>
-#include <mw/mw_util.h>
-#include <mw/pro/dbmcs_stereo_driver.h>
+#include <buld/buld_arg.h>
+#include <bmcsd/bmcsd_util.h>
+#include <mw/pro/bmcsd_stereo_driver.h>
 
 
 #define MW_ASSERT(msg, a, b) if ((a) != (b)) { vcl_cerr << (msg) << vcl_endl; exit(1); }
@@ -56,28 +56,28 @@ main(int argc, char **argv)
   vul_arg_parse(argc,argv);
   vcl_cout << "\n";
 
-  mw_util::camera_file_type cam_type;
+  bmcsd_util::camera_file_type cam_type;
 
   if (a_cam_type() == "intrinsic_extrinsic") {
-    cam_type = mw_util::MW_INTRINSIC_EXTRINSIC;
+    cam_type = bmcsd_util::MW_INTRINSIC_EXTRINSIC;
   } else {
     if (a_cam_type() == "projcamera")
-      cam_type = mw_util::MW_3X4;
+      cam_type = bmcsd_util::MW_3X4;
     else  {
       vcl_cerr << "Error: invalid camera type " << a_cam_type() << vcl_endl;
       return 1;
     }
   }
 
-  mw_curve_stereo_data_path dpath;
+  bmcsd_curve_stereo_data_path dpath;
   bool retval = 
     mw_data::read_frame_data_list_txt(a_prefix(), &dpath, cam_type);
   if (!retval) return 1;
   vcl_cout << "Dpath:\n" << dpath << vcl_endl;
 
-  dbmcs_stereo_instance_views frames_to_match;
+  bmcsd_stereo_instance_views frames_to_match;
 
-  retval = dbmcs_view_set::read_txt(
+  retval = bmcsd_view_set::read_txt(
       a_prefix() + vcl_string("/mcs_stereo_instances.txt"), 
       &frames_to_match);
   MW_ASSERT("frames to match from file", retval, true);
@@ -89,7 +89,7 @@ main(int argc, char **argv)
 
   // Run 2-view stereo with confirmation views
 
-  dbmcs_concurrent_stereo_driver s(dpath, frames_to_match);
+  bmcsd_concurrent_stereo_driver s(dpath, frames_to_match);
 
   s.set_dtheta_threshold(a_dtheta_threshold());
   s.set_distance_threshold(a_distance_threshold());
@@ -119,7 +119,7 @@ main(int argc, char **argv)
   MW_ASSERT("Stereo driver run return value", retval, true);
 
   //: Write 3D curves and attributes to file.
-  dbmcs_curve_3d_sketch csk;
+  bmcsd_curve_3d_sketch csk;
   s.get_curve_sketch(&csk);
 
   retval = csk.write_dir_format(a_prefix() + vcl_string("/") + a_out_dir());

@@ -11,7 +11,7 @@
 #include <vcl_vector.h>
 #include <vil/vil_image_view.h>
 #include <vnl/vnl_vector_fixed.h>
-#include <mw/mw_util.h>
+#include <bmcsd/bmcsd_util.h>
 
 void match_and_reconstruct();
 

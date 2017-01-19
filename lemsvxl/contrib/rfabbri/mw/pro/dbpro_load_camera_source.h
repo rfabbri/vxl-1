@@ -1,6 +1,6 @@
-// This is dbpro_load_camera_source.h
-#ifndef dbpro_load_camera_source_h
-#define dbpro_load_camera_source_h
+// This is bprod_load_camera_source.h
+#ifndef bprod_load_camera_source_h
+#define bprod_load_camera_source_h
 //:
 //\file
 //\brief Source process to load cam from file.
@@ -9,14 +9,14 @@
 //
 
 #include <vpgl/vpgl_perspective_camera.h>
-#include <dbpro/dbpro_process.h>
-#include <mw/mw_util.h>
+#include <bprod/bprod_process.h>
+#include <bmcsd/bmcsd_util.h>
 
 //: Reads a camera file.
 //
 // \todo support other types of cameras.
 template <class T>
-class dbpro_load_camera_source : public dbpro_source {
+class bprod_load_camera_source : public bprod_source {
 public:
 
   //: Constructs from a given file name prefix and camera type. This fname_prefix must be
@@ -33,24 +33,24 @@ public:
   // /lib/data/frame_0001.camera
   //
   // is used.
-  dbpro_load_camera_source(vcl_string fname_prefix, mw_util::camera_file_type type) 
+  bprod_load_camera_source(vcl_string fname_prefix, bmcsd_util::camera_file_type type) 
     : name_prefix_(fname_prefix), ftype_(type) {}
 
   //: Execute the process
-  dbpro_signal execute() {
+  bprod_signal execute() {
     vpgl_perspective_camera<T> cam;
 
-    bool retval = mw_util::read_cam_anytype(name_prefix_, ftype_, &cam);
+    bool retval = bmcsd_util::read_cam_anytype(name_prefix_, ftype_, &cam);
     if (!retval)
-      return DBPRO_INVALID;
+      return BPROD_INVALID;
 
     output(0, cam);
-    return DBPRO_VALID;
+    return BPROD_VALID;
   }
 
   vcl_string name_prefix_;
-  mw_util::camera_file_type ftype_;
+  bmcsd_util::camera_file_type ftype_;
 };
 
 
-#endif // dbpro_load_camera_source_h
+#endif // bprod_load_camera_source_h

@@ -10,8 +10,8 @@ include_directories(${VXL_OXL_INCLUDE_DIR} )
 include_directories(${VXL_MUL_INCLUDE_DIR} )
 include_directories(${VXD_BRLD_INCLUDE_DIR})
 include_directories( ${lems_SOURCE_DIR}/brcv/seg )
-include_directories( ${lems_SOURCE_DIR}/brcv/mvg)
-include_directories( ${lems_SOURCE_DIR}/brcv/mvg/bmvl)
+include_directories( ${lems_SOURCE_DIR}/bmvgd)
+include_directories( ${lems_SOURCE_DIR}/bmvgd/bmvl)
 include_directories( ${lems_SOURCE_DIR}/brcv/rec )
 include_directories( ${lems_SOURCE_DIR}/basic )
 
@@ -23,8 +23,6 @@ include_directories( ${lems_SOURCE_DIR}/contrib/rfabbri )
 set( mw_sources
    mw_curves.cxx      mw_curves.h
    mw_subpixel_point_set.cxx mw_subpixel_point_set.h
-   mw_epi_interceptor.cxx mw_epi_interceptor.h
-   mw_intersection_sets.cxx mw_intersection_sets.h
    mw_dist.cxx       mw_dist.h
 )
 
@@ -33,7 +31,7 @@ aux_source_directory(Templates bvis1_sources)
 
 add_library(mw ${mw_sources})
 
-target_link_libraries(mw vpgl dbsol_algo dbnl vil dbul vbl_io)
+target_link_libraries(mw vpgl bsold_algo bnld vil buld vbl_io)
 
 if( BUILD_TESTING )
   #  add_subdirectory(tests)

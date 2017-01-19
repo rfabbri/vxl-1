@@ -1,8 +1,8 @@
 #include "mw_curve_dt_tracing_tool_common.h"
 #include "mw_curve_dt_tracing_tool_utils.h"
 
-#include <dbsol/algo/dbsol_geno.h>
-#include <dbgl/algo/dbgl_curve_smoothing.h>
+#include <bsold/algo/bsold_geno.h>
+#include <bgld/algo/bgld_curve_smoothing.h>
 #include <dbdet/sel/dbdet_edgel.h>
 
 vcl_string

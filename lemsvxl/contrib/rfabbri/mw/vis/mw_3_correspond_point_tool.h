@@ -12,13 +12,13 @@
 
 #include <vcl_map.h>
 
-#include <mw/mw_discrete_corresp_3.h>
-#include <mw/pro/mw_discrete_corresp_storage_3_sptr.h>
+#include <bmcsd/bmcsd_discrete_corresp_3.h>
+#include <mw/pro/bmcsd_discrete_corresp_storage_3_sptr.h>
 #include <mw/algo/mw_point_matcher.h>
 
-class dbgl_eulerspiral;
+class bgld_eulerspiral;
 class mw_subpixel_point_set;
-class dbdif_rig;
+class bdifd_rig;
 
 //: Tool for exploring and editing trinocular correspondences between edgels
 //
@@ -83,8 +83,8 @@ public:
 protected:
 
   // Data -----
-  mw_discrete_corresp_3 *corr_3_;
-  mw_discrete_corresp_storage_3_sptr p_sto_3_;
+  bmcsd_discrete_corresp_3 *corr_3_;
+  bmcsd_discrete_corresp_storage_3_sptr p_sto_3_;
   vcl_vector<vil_image_resource_sptr> images_;
 
   bool lock_corresp_query_;
@@ -111,17 +111,17 @@ protected:
   // For manipulating ground-truth /  synthetic data ----------------------
   bool synthetic_;
   bool synthetic_olympus_;
-  vcl_vector<vcl_vector<dbdif_3rd_order_point_2d> > crv2d_gt_;
-  vcl_vector<vcl_vector<dbdif_3rd_order_point_3d> > crv3d_gt_;
-  mw_discrete_corresp_3 gt_3_; //:< ground-truth corresp.
-  vcl_vector<dbgl_eulerspiral *>es_; //:< srm stands for synthetic reconstruction movie
+  vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > crv2d_gt_;
+  vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > crv3d_gt_;
+  bmcsd_discrete_corresp_3 gt_3_; //:< ground-truth corresp.
+  vcl_vector<bgld_eulerspiral *>es_; //:< srm stands for synthetic reconstruction movie
   vgui_style_sptr es_style_;
   vcl_string es_layer_; 
   vcl_string srm_allcrvs_layer_; 
   double srm_angle_;
-  dbdif_camera srm_cam_;
+  bdifd_camera srm_cam_;
   vnl_double_3x3 srm_K_;
-  dbdif_3rd_order_point_3d srm_Prec_;
+  bdifd_3rd_order_point_3d srm_Prec_;
   bool  srm_display_full_; 
   bool  srm_display_es_; 
   vcl_vector<bgui_vsol_soview2D_polyline *> srm_allcrvs_so_;
@@ -130,9 +130,9 @@ protected:
   vcl_vector<bgui_vsol_soview2D_polyline *> es_so_;
   vcl_vector<double> angle_cam_; //:< degrees; only used in digital cameras's synthetic data for now
 
-  vcl_vector<dbdif_camera> cam_gt_; //: unperturbed cameras for each view
+  vcl_vector<bdifd_camera> cam_gt_; //: unperturbed cameras for each view
 
-  dbgl_eulerspiral *es_gt_; //:< eulerspiral of reproj. in 3rd view using true cams
+  bgld_eulerspiral *es_gt_; //:< eulerspiral of reproj. in 3rd view using true cams
   vgui_style_sptr es_style_gt_;
   vcl_string es_layer_gt_;
   bgui_vsol_soview2D_polyline * es_so_gt_;
@@ -188,7 +188,7 @@ protected:
 
   static void 
   build_point_tangents_from_edgels(
-      vcl_vector<vcl_vector<dbdif_3rd_order_point_2d> > &pts2d_dg,
+      vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > &pts2d_dg,
       const vcl_vector<vcl_vector<vsol_line_2d_sptr> > &v
       );
 
@@ -196,13 +196,13 @@ protected:
   void reproject_from_triplet();
   void reproject_from_triplet_allcorr();
 
-  dbgl_eulerspiral * 
-  get_new_eulerspiral(const dbdif_3rd_order_point_2d &p1) const;
+  bgld_eulerspiral * 
+  get_new_eulerspiral(const bdifd_3rd_order_point_2d &p1) const;
 
   void srm_draw_eulerspiral();
   void write_energies();
   static void 
-  get_candidates_from_p0(const mw_discrete_corresp_3 &c, unsigned idx, vcl_list<unsigned> &p1_l, vcl_list<unsigned> &p2_l);
+  get_candidates_from_p0(const bmcsd_discrete_corresp_3 &c, unsigned idx, vcl_list<unsigned> &p1_l, vcl_list<unsigned> &p2_l);
   void get_corresp();
   void get_images();
 };

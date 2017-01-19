@@ -9,23 +9,23 @@
 #include <dbdet/pro/dbdet_edgemap_storage_sptr.h>
 #include <dbdet/pro/dbdet_sel_storage.h>
 
-#include <mw/mw_discrete_corresp.h>
-#include <mw/algo/mw_algo_util.h>
-#include <mw/algo/mw_dt_curve_stereo.h>
-#include <mw/algo/mw_odt_curve_stereo.h>
+#include <bmcsd/bmcsd_discrete_corresp.h>
+#include <bmcsd/algo/bmcsd_algo_util.h>
+#include <bmcsd/algo/bmcsd_dt_curve_stereo.h>
+#include <bmcsd/algo/bmcsd_odt_curve_stereo.h>
 
 
 mw_curve_dt_tracing_tool_2::
 mw_curve_dt_tracing_tool_2()
   :
-    mw_curve_tracing_tool_2(new mw_odt_curve_stereo),
+    mw_curve_tracing_tool_2(new bmcsd_odt_curve_stereo),
     tau_distance_(10.0),
     tau_dtheta_(10.0), //< degrees
     tau_min_inliers_per_view_(20.0),
     tau_min_total_inliers_(5.0),
     tau_min_epiangle_(30.0) //< degrees
 {
-  s_dt_ = static_cast<mw_odt_curve_stereo *> (s_);
+  s_dt_ = static_cast<bmcsd_odt_curve_stereo *> (s_);
   init();
 }
 
@@ -169,7 +169,7 @@ get_tangents()
       tangents[v].resize(s_->num_curves(v));
       for (unsigned c=0; c < s_->num_curves(v); ++c) {
         dbdet_edgel_chain ec;
-        mw_algo_util::extract_edgel_chain(*(s_->curves(v,c)), &ec);
+        bmcsd_algo_util::extract_edgel_chain(*(s_->curves(v,c)), &ec);
 
         tangents[v][c].resize(ec.edgels.size());
         for (unsigned i=0; i < ec.edgels.size(); ++i) {
@@ -273,9 +273,9 @@ handle( const vgui_event & e,
       case 'p': {
         vcl_cout << "Matching views using _oriented_ reprojection distance to edgels\n";
         vgui::out << "Matching views using _oriented_ reprojection distance to edgels\n";
-        vcl_vector<dbdif_1st_order_curve_3d> crv3d;
-        mw_discrete_corresp corresp;
-        if (!dbmcs_match_and_reconstruct_all_curves(*s_dt_, &crv3d, &corresp)) {
+        vcl_vector<bdifd_1st_order_curve_3d> crv3d;
+        bmcsd_discrete_corresp corresp;
+        if (!bmcsd_match_and_reconstruct_all_curves(*s_dt_, &crv3d, &corresp)) {
           vcl_cerr << "Error: while matching all views.\n";
           return false;
         }

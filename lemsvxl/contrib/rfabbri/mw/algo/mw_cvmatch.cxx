@@ -1,7 +1,7 @@
 #include "mw_cvmatch.h"
-#include <mw/mw_util.h>
+#include <bmcsd/bmcsd_util.h>
 
-#include <dbsol/dbsol_interp_curve_2d.h>
+#include <bsold/bsold_interp_curve_2d.h>
 
 
 // Cost of matching the interval [x(ip),x(i)]  to [y(jp),y(j)].
@@ -29,9 +29,9 @@ double mw_cvmatch::computeIntervalCost(int i, int ip, int j, int jp){
   vsol_point_2d_sptr p2 = _curve2->point_at(s2);
   vsol_point_2d_sptr p2_p = _curve2->point_at(s2_p);
 
-  mw_vector_3d gama1, gama2;
-  mw_vector_3d gama1_p, gama2_p;
-  mw_vector_3d Gama1, Gama1_p;
+  bmcsd_vector_3d gama1, gama2;
+  bmcsd_vector_3d gama1_p, gama2_p;
+  bmcsd_vector_3d Gama1, Gama1_p;
 
   rig_->cam[0].get_gama(p1->x(),p1->y(),&gama1);
   rig_->cam[1].get_gama(p2->x(),p2->y(),&gama2);
@@ -51,10 +51,10 @@ double mw_cvmatch::computeIntervalCost(int i, int ip, int j, int jp){
 
   double dGama = (Gama1 - Gama1_p).magnitude();
 
-//  mw_vector_3d T_rec;
+//  bmcsd_vector_3d T_rec;
 //  rig_->reconstruct_tangent(gama1,gama2,_curve1->tangent_at(s1),_curve2->tangent_at(s2), &T_rec);
 //
-//  mw_vector_3d T_rec_p;
+//  bmcsd_vector_3d T_rec_p;
 //  rig_->reconstruct_tangent(gama1_p,gama2_p,_curve1->tangent_at(s1_p),_curve2->tangent_at(s2_p), &T_rec_p);
 //  
 //  double dT = angle(T_rec,T_rec_p);

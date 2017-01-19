@@ -3,7 +3,7 @@
 // \file
 
 #include "show_contours_process.h"
-#include <mw/mw_util.h>
+#include <bmcsd/bmcsd_util.h>
 #include <vcl_iostream.h>
 
 #include <bpro1/bpro1_parameters.h>

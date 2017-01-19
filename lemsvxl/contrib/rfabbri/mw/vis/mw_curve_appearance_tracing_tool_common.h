@@ -19,7 +19,7 @@
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
 
-#include <dvpgl/pro/dvpgl_camera_storage.h>
+#include <vpgld/pro/vpgld_camera_storage.h>
 
 #include <vcl_set.h>
 #include <vnl/vnl_math.h>
@@ -35,8 +35,8 @@
 #include <vgl/vgl_line_2d.h>
 #include <vgl/vgl_distance.h>
 
-#include <dbdif/dbdif_rig.h>
-#include <mw/mw_intersection_sets.h>
+#include <bdifd/bdifd_rig.h>
+#include <becld/becld_intersection_sets.h>
 #include <mw/mw_dist.h>
 #include <mw/mw_sift_curve.h>
 #include <mw/algo/mw_sift_curve_algo.h>

@@ -23,7 +23,7 @@ class mw_sel_point_matcher : mw_point_matcher {
   void sel_geometry_costs (
     const vcl_vector<vcl_vector< vsol_point_2d_sptr > > &points_,
     const vcl_vector<dbdet_sel_sptr> &sel_,
-    mw_discrete_corresp *corr,
+    bmcsd_discrete_corresp *corr,
     unsigned iv1, unsigned iv2);
   
 //  bool sel_geometry_match_cost( 
@@ -31,7 +31,7 @@ class mw_sel_point_matcher : mw_point_matcher {
 //    const dbdet_edgel *pt_img2, 
 //    const dbdet_sel_sptr &sel_img1,
 //    const dbdet_sel_sptr &sel_img2,
-//    dbdif_rig &rig,
+//    bdifd_rig &rig,
 //    double *cost, 
 //    sel_reason *reason) const;
 };

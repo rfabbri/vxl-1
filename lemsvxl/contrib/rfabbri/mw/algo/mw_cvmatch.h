@@ -20,19 +20,19 @@
 
 
 #include <vcl_ctime.h>
-#include <dbsol/dbsol_interp_curve_2d_sptr.h>
+#include <bsold/bsold_interp_curve_2d_sptr.h>
 
 #include <dbcvr/dbcvr_cvmatch.h>
 #include <dbcvr/dbcvr_clsd_cvmatch_even.h>
 
-#include <dbdif/dbdif_rig.h>
+#include <bdifd/bdifd_rig.h>
 
 class mw_cvmatch : public dbcvr_clsd_cvmatch_even
 {
 
 protected:
 
-  dbdif_rig *rig_;
+  bdifd_rig *rig_;
 
   virtual double computeIntervalCost(int i, int ip, int j, int jp);
 
@@ -40,8 +40,8 @@ protected:
 
 public:
   mw_cvmatch();
-  mw_cvmatch( const dbsol_interp_curve_2d_sptr c1, 
-              const dbsol_interp_curve_2d_sptr c2, 
+  mw_cvmatch( const bsold_interp_curve_2d_sptr c1, 
+              const bsold_interp_curve_2d_sptr c2, 
               int n1,
               int n2,
               double R, 
@@ -50,13 +50,13 @@ public:
     : dbcvr_clsd_cvmatch_even (c1,c2,n1,n2,R,template_size),
       epipolar_error_threshold_(epipolar_error_threshold)
     {}
-//  mw_cvmatch(const dbsol_interp_curve_2d_sptr c1, 
-//                          const dbsol_interp_curve_2d_sptr c2, 
+//  mw_cvmatch(const bsold_interp_curve_2d_sptr c1, 
+//                          const bsold_interp_curve_2d_sptr c2, 
 //                          int n1,
 //                          int n2,
 //                          double R, 
 //                          int template_size);
-  void set_rig (dbdif_rig *rig) {rig_ = rig;}
+  void set_rig (bdifd_rig *rig) {rig_ = rig;}
 
 };
 

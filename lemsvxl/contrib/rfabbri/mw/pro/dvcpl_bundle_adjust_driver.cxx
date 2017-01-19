@@ -1,5 +1,5 @@
 #include "dvcpl_bundle_adjust_driver.h"
-#include <mw/pro/dbpro_fragment_tangents.h>
+#include <mw/pro/bprod_fragment_tangents.h>
 #include <mw/pro/dvcpl_bundle_adjust_sink.h>
 #include <vcl_set.h>
 #include <vcl_algorithm.h>
@@ -176,19 +176,19 @@ init()
     // Attach sources to files -----
 
     // 1 Cam loader
-    dbpro_process_sptr 
-      p = new dbpro_load_camera_source<double>(
+    bprod_process_sptr 
+      p = new bprod_load_camera_source<double>(
           dpath_[v].cam_full_path(), dpath_[v].cam_file_type());
     cam_src_.push_back(p);
 
     // 1 Edge map loader
     static const bool my_bSubPixel = true;
     static const double my_scale=1.0;
-    p = new dbpro_load_edg_source(dpath_[v].edg_full_path(), my_bSubPixel, my_scale);
+    p = new bprod_load_edg_source(dpath_[v].edg_full_path(), my_bSubPixel, my_scale);
     edg_src_.push_back(p);
 
     // 1 dt and label loader
-    p = new dbpro_edg_dt;
+    p = new bprod_edg_dt;
     edg_dt_.push_back(p);
     p->connect_input(0, edg_src_[i], 0);
   }
@@ -214,9 +214,9 @@ run(unsigned long timestamp)
 {
   vcl_cout << "Running stereo driver.\n";
   assert(initialized_);
-  dbpro_signal retval = curve_bundler_->run(timestamp);
+  bprod_signal retval = curve_bundler_->run(timestamp);
 
-  if (retval == DBPRO_INVALID)
+  if (retval == BPROD_INVALID)
     return false;
 
   dvcpl_bundle_adjust_sink *cb = 

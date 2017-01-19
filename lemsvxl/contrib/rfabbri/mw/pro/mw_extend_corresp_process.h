@@ -3,7 +3,7 @@
 
 //:
 // \file
-// \brief run mw_discrete_corresp_algo::extend in two frames.
+// \brief run bmcsd_discrete_corresp_algo::extend in two frames.
 // \author Ricardo Fabbri
 // \date Sun Oct 25 18:45:54 PDT 2009
 //
@@ -15,7 +15,7 @@
 #include <vcl_vector.h>
 #include <vcl_string.h>
 #include <vsol/vsol_polyline_2d_sptr.h>
-#include <mw/mw_discrete_corresp.h>
+#include <bmcsd/bmcsd_discrete_corresp.h>
 
 //: Given:
 // - two frames, 0 and 1, each having two vsol storages, a0, b0, and a1, b1
@@ -50,7 +50,7 @@ private:
   vcl_vector< vsol_polyline_2d_sptr > a1_;
   vcl_vector< vsol_polyline_2d_sptr > b0_;
   vcl_vector< vsol_polyline_2d_sptr > b1_;
-  mw_discrete_corresp *acorr_;
+  bmcsd_discrete_corresp *acorr_;
   bool get_vsols(unsigned v, unsigned input_id, vcl_vector< vsol_polyline_2d_sptr > *pcurves);
 };
 

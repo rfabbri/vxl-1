@@ -1,5 +1,5 @@
 #include "mw_subpixel_point_set.h"
-#include "mw_util.h"
+#include "bmcsd_util.h"
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_point_2d.h>
 

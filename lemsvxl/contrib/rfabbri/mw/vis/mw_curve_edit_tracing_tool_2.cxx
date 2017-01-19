@@ -4,8 +4,8 @@
 #include <vnl/vnl_random.h>
 #include <vil/algo/vil_colour_space.h>
 #include <vgui/vgui_dialog.h>
-#include <mw/algo/mw_discrete_corresp_algo.h>
-#include <mw/pro/mw_discrete_corresp_storage.h>
+#include <mw/algo/bmcsd_discrete_corresp_algo.h>
+#include <mw/pro/bmcsd_discrete_corresp_storage.h>
 
 
 static vnl_random g_myrand;
@@ -109,7 +109,7 @@ get_corresp()
   bpro1_storage_sptr 
     p = MANAGER->repository()->get_data_by_name_at(input_names[0], frame_v_[0]);
 
-  mw_discrete_corresp_storage_sptr c_sto;
+  bmcsd_discrete_corresp_storage_sptr c_sto;
 
   c_sto.vertical_cast(p);
   if(!p) {
@@ -126,8 +126,8 @@ get_corresp()
   corr_ = c_sto->corresp();
   if(!corr_) {
     vcl_cout << "Empty storage - allocating data" << vcl_endl;
-    corr_ = new mw_discrete_corresp(s_->num_curves(0), s_->num_curves(1));
-    corr_->set_checksum(mw_discrete_corresp_algo::compute_checksum(*s_));
+    corr_ = new bmcsd_discrete_corresp(s_->num_curves(0), s_->num_curves(1));
+    corr_->set_checksum(bmcsd_discrete_corresp_algo::compute_checksum(*s_));
     c_sto->set_corresp(corr_); // storage deletes it
   } else {
     vcl_cout << "Non-empty storage" << vcl_endl;
@@ -148,7 +148,7 @@ get_corresp()
 
       corr_->set_size(s_->num_curves(s_->v0()), s_->num_curves(s_->v1()));
     }
-    unsigned long cksum = mw_discrete_corresp_algo::compute_checksum(*s_);
+    unsigned long cksum = bmcsd_discrete_corresp_algo::compute_checksum(*s_);
     if (corr_->checksum() != cksum) {
       vcl_cerr << "********************************************************\n";
       vcl_cerr << "WARNING: input correspondence checksum doesn't match. This means that either: \n"
@@ -172,7 +172,7 @@ void mw_curve_edit_tracing_tool_2::
 color_objs_having_correpondents()
 {
   // coloring of points in image 0 having any correspondents
-  mw_discrete_corresp &corr = *corr_;
+  bmcsd_discrete_corresp &corr = *corr_;
 
   // XXX modified for CVPR result
   /*
@@ -216,7 +216,7 @@ color_objs_having_correpondents()
       o0_corresp_soview_[i]->set_style(newstyle);
 
       // Now color curve in second view:
-      vcl_list<mw_attributed_object>::const_iterator itr;
+      vcl_list<bmcsd_attributed_object>::const_iterator itr;
       itr = corr[i].begin(); unsigned ii=0;
       for (; itr != corr[i].end(); 
            ++itr, ++ii) {
@@ -272,7 +272,7 @@ handle( const vgui_event & e,
 bool mw_curve_edit_tracing_tool_2::
 handle_key(vgui_key key)
 {
-  mw_discrete_corresp &corr = *corr_;
+  bmcsd_discrete_corresp &corr = *corr_;
 
   switch (key) {
     case 277: // Del
@@ -306,9 +306,9 @@ handle_key(vgui_key key)
     case 275: // Home (think "Ins", but macs don't have ins, so I used home)
       if (!o1_query_is_corresp_) {
 
-        mw_discrete_corresp::one_corresp_list_iter itr;
+        bmcsd_discrete_corresp::one_corresp_list_iter itr;
         bool stat = 
-          corr_->add_unique( mw_attributed_object(o1_query_idx_), o0_query_idx_, &itr);
+          corr_->add_unique( bmcsd_attributed_object(o1_query_idx_), o0_query_idx_, &itr);
 
         if (stat) {
           vcl_cout << "Inserting " << o0_query_idx_ << ",  " << *itr << vcl_endl;
@@ -416,7 +416,7 @@ handle_corresp_query_at_view_0
 
   selected_obj_in_corresp_ = selected_soview->sptr();
 
-  mw_discrete_corresp &corr = *corr_;
+  bmcsd_discrete_corresp &corr = *corr_;
   // identify the index of the selected obj in our data
   unsigned idx;
   
@@ -464,7 +464,7 @@ handle_corresp_query_at_view_0
   correspondents_soview_.clear();
   correspondents_idx_.clear();
 
-  vcl_list<mw_attributed_object>::const_iterator itr;
+  vcl_list<bmcsd_attributed_object>::const_iterator itr;
   itr = corr[idx].begin(); unsigned ii=0;
   for (; itr != corr[idx].end(); 
        ++itr, ++ii) {
@@ -503,7 +503,7 @@ handle_mouse_event_at_view_1(
     const bvis1_view_tableau_sptr& /*view*/ )
 {
   vcl_cout << "Clicked----------------------\n" << vcl_endl;
-  mw_discrete_corresp &corr = *corr_;
+  bmcsd_discrete_corresp &corr = *corr_;
 
   o1_query_idx_ = s_->selected_crv_id(1);
   vcl_cout << "View[1]: mouse click on point[" << o1_query_idx_ << "] out of " 
@@ -511,7 +511,7 @@ handle_mouse_event_at_view_1(
 
   // find clicked point among current correspondences + print info
 
-  vcl_list<mw_attributed_object>::iterator itr = corr[o0_query_idx_].begin();  
+  vcl_list<bmcsd_attributed_object>::iterator itr = corr[o0_query_idx_].begin();  
   unsigned  ii=0;
   for (; itr != corr[o0_query_idx_].end(); ++itr, ++ii) {
     if (itr->obj_ == o1_query_idx_)

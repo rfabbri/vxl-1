@@ -1,9 +1,9 @@
 #include <vcl_iostream.h>
 #include <vcl_streambuf.h>
 #include <math.h>
-#include <dbdif/dbdif_analytic.h>
-#include <dbdif/algo/dbdif_data.h>
-#include <mw/mw_util.h>
+#include <bdifd/bdifd_analytic.h>
+#include <bdifd/algo/bdifd_data.h>
+#include <bmcsd/bmcsd_util.h>
 #include <mw/algo/mw_stereo_app.h>
 
 #include "mex.h"
@@ -149,30 +149,30 @@ void mymex(
         && app.vsols_[0].size() == app.vsols_[1].size()) )
     mexErrMsgTxt("Inconsistent error being returned from internal app\n");
 
-  vcl_vector<vcl_vector<dbdif_3rd_order_point_2d> > data_pts_occl(app.nviews_);
+  vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > data_pts_occl(app.nviews_);
   if (do_occl) {
     // Generate and project the occluding contours in 2 views.
 
     double radius = 10;
-    dbdif_vector_3d s0;
+    bdifd_vector_3d s0;
     s0[0] = 0; s0[1] = 0; s0[2] = 0;
 
     for (unsigned v=0; v < app.nviews_; ++v) {
-      const dbdif_vector_3d &c = app.cam_gt_[v].c;
+      const bdifd_vector_3d &c = app.cam_gt_[v].c;
       
-      vcl_vector<dbdif_3rd_order_point_3d> crv3d;
-      dbdif_vector_3d Gamma_center;
+      vcl_vector<bdifd_3rd_order_point_3d> crv3d;
+      bdifd_vector_3d Gamma_center;
       double Gamma_radius;
 
-      dbdif_analytic::sphere_occluding_contour(radius, s0, c, crv3d, Gamma_center, Gamma_radius);
+      bdifd_analytic::sphere_occluding_contour(radius, s0, c, crv3d, Gamma_center, Gamma_radius);
 
       // we need to regenerate the curve for each view; we can't just
       // project crv3d to all cams at once.
-      vcl_vector<dbdif_camera> cam;
+      vcl_vector<bdifd_camera> cam;
       cam.push_back(app.cam_gt_[v]);
 
-      vcl_vector<vcl_vector<dbdif_3rd_order_point_2d> > xi; //:< image coordinates
-      dbdif_data::project_into_cams( crv3d, cam, xi); 
+      vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > xi; //:< image coordinates
+      bdifd_data::project_into_cams( crv3d, cam, xi); 
 
       data_pts_occl[v] = xi[0];
     }

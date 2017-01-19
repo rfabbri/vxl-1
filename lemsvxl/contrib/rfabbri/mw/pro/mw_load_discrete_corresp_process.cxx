@@ -6,8 +6,8 @@
 #include <vcl_cstring.h>
 #include <vcl_string.h>
 #include <vcl_fstream.h>
-#include <mw/pro/mw_discrete_corresp_storage.h>
-#include <mw/pro/mw_discrete_corresp_storage_3.h>
+#include <mw/pro/bmcsd_discrete_corresp_storage.h>
+#include <mw/pro/bmcsd_discrete_corresp_storage_3.h>
 
 
 mw_load_discrete_corresp_process::mw_load_discrete_corresp_process() : bpro1_process()
@@ -68,13 +68,13 @@ bool mw_load_discrete_corresp_process::execute()
   parameters()->get_value( "-binocular_ftype", binocular_ftype);
 
   if (binocular_ftype) {
-    mw_discrete_corresp *cp_in = new mw_discrete_corresp();
+    bmcsd_discrete_corresp *cp_in = new bmcsd_discrete_corresp();
     vsl_b_read(bfs_in, *cp_in);
     bfs_in.close();
     clear_output();
 
-    mw_discrete_corresp_storage_sptr 
-       c_storage = mw_discrete_corresp_storage_new();
+    bmcsd_discrete_corresp_storage_sptr 
+       c_storage = bmcsd_discrete_corresp_storage_new();
     
     c_storage->set_corresp(cp_in);
 
@@ -82,13 +82,13 @@ bool mw_load_discrete_corresp_process::execute()
     
     vcl_cout << "Corresp (process): \n" << *(c_storage->corresp());
   } else {
-    mw_discrete_corresp_3 *cp_in_3 = new mw_discrete_corresp_3();
+    bmcsd_discrete_corresp_3 *cp_in_3 = new bmcsd_discrete_corresp_3();
     vsl_b_read(bfs_in, *cp_in_3);
     bfs_in.close();
     clear_output();
 
-    mw_discrete_corresp_storage_3_sptr 
-       c_storage = mw_discrete_corresp_storage_3_new();
+    bmcsd_discrete_corresp_storage_3_sptr 
+       c_storage = bmcsd_discrete_corresp_storage_3_new();
     
     c_storage->set_corresp(cp_in_3);
 

@@ -9,12 +9,12 @@
 //
 
 #include <vul/vul_arg.h>
-#include <dbul/dbul_arg.h>
-#include <dbdif/dbdif_rig.h>
+#include <buld/buld_arg.h>
+#include <bdifd/bdifd_rig.h>
 #include <vil/vil_image_resource.h>
-#include <mw/mw_discrete_corresp.h>
-#include <mw/mw_discrete_corresp_3.h>
-#include <mw/mw_discrete_corresp_n.h>
+#include <bmcsd/bmcsd_discrete_corresp.h>
+#include <bmcsd/bmcsd_discrete_corresp_3.h>
+#include <bmcsd/bmcsd_discrete_corresp_n.h>
 #include <vsol/vsol_line_2d_sptr.h>
 
 struct mw_stereo_app_args {
@@ -139,7 +139,7 @@ public:
   void run_stereo();
 
   void build_point_tangents_from_edgels(
-      vcl_vector<vcl_vector<dbdif_3rd_order_point_2d> > &crv2d) const;
+      vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > &crv2d) const;
 
   bool read_edgels(mw_stereo_app_args &arg);
   bool write_gt_edgels(mw_stereo_app_args &arg);
@@ -155,20 +155,20 @@ public:
   vcl_vector<double> angles_;
   vcl_vector<vcl_string> edgel_fnames_;
   vcl_string edgel_type_;
-  vcl_vector<dbdif_camera> cam_;
-  vcl_vector<dbdif_camera> cam_gt_; //:< ground-truth
+  vcl_vector<bdifd_camera> cam_;
+  vcl_vector<bdifd_camera> cam_gt_; //:< ground-truth
   vcl_vector<vcl_vector< vsol_point_2d_sptr > > vsols_;
-  vcl_vector<vcl_vector<dbdif_3rd_order_point_2d> > crv2d_gt_;
-  vcl_vector<vcl_vector<dbdif_3rd_order_point_3d> > crv3d_gt_;
-  mw_discrete_corresp gt_; //:< ground-truth corresp.
-  mw_discrete_corresp_3 gt_3_; //:< ground-truth corresp.
-  mw_discrete_corresp_n gt_n_; //:< ground-truth corresp.
-  mw_discrete_corresp corr_out_; //:< corresp to store stereo results
-  mw_discrete_corresp corr_ep_; //:< corresp to store stereo results
-  mw_discrete_corresp_3 corr_ep_3_; //:< corresp to store stereo results
-  mw_discrete_corresp_3 corr_out_3_; //:< corresp to store stereo results
-  mw_discrete_corresp_n corr_ep_n_; //:< corresp to store stereo results
-  mw_discrete_corresp_n corr_out_n_; //:< corresp to store stereo results
+  vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > crv2d_gt_;
+  vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > crv3d_gt_;
+  bmcsd_discrete_corresp gt_; //:< ground-truth corresp.
+  bmcsd_discrete_corresp_3 gt_3_; //:< ground-truth corresp.
+  bmcsd_discrete_corresp_n gt_n_; //:< ground-truth corresp.
+  bmcsd_discrete_corresp corr_out_; //:< corresp to store stereo results
+  bmcsd_discrete_corresp corr_ep_; //:< corresp to store stereo results
+  bmcsd_discrete_corresp_3 corr_ep_3_; //:< corresp to store stereo results
+  bmcsd_discrete_corresp_3 corr_out_3_; //:< corresp to store stereo results
+  bmcsd_discrete_corresp_n corr_ep_n_; //:< corresp to store stereo results
+  bmcsd_discrete_corresp_n corr_out_n_; //:< corresp to store stereo results
 
 
   vcl_vector<vcl_vector< vsol_line_2d_sptr > > vsols_orig_cache_;

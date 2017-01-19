@@ -1,11 +1,11 @@
 #include <testlib/testlib_test.h>
-#include <mw/mw_util.h>
+#include <bmcsd/bmcsd_util.h>
 #include <mw/algo/dvcpl_distmap_bundle_adjust.h>
 #include <mw/algo/dvcpl_distmap_optimize_camera.h>
 #include <dbdet/algo/dbdet_load_edg.h>
 #include <dbdet/algo/dbdet_convert_edgemap.h>
-#include <dbpro/dbpro_process.h>
-#include <dbil/algo/dbil_exact_distance_transform.h>
+#include <bprod/bprod_process.h>
+#include <bild/algo/bild_exact_distance_transform.h>
 
 
 class dvcpl_bundle_adjust_tester {
@@ -51,8 +51,8 @@ public:
   void load_cams(const vcl_vector<vcl_string> &cams_fnames)
   {
     for (unsigned v=0; v < cams_fnames.size(); ++v) {
-      bool retval = mw_util::read_cam_anytype(cams_fnames[v], 
-          mw_util::MW_INTRINSIC_EXTRINSIC, &cam_[v]);
+      bool retval = bmcsd_util::read_cam_anytype(cams_fnames[v], 
+          bmcsd_util::MW_INTRINSIC_EXTRINSIC, &cam_[v]);
       if (!retval)
         abort();
     }
@@ -62,7 +62,7 @@ public:
   void write_cams(vcl_string dir, vcl_string prefix)
   {
     bool retval =  
-      mw_util::write_cams(dir, prefix, mw_util::MW_INTRINSIC_EXTRINSIC, cam_);
+      bmcsd_util::write_cams(dir, prefix, bmcsd_util::MW_INTRINSIC_EXTRINSIC, cam_);
     if (!retval)
       abort();
   }
@@ -91,7 +91,7 @@ public:
 
       vil_image_view<unsigned> imlabel(dt.ni(), dt.nj(), 1);
 
-      retval = dbil_exact_distance_transform_maurer_label(dt, imlabel);
+      retval = bild_exact_distance_transform_maurer_label(dt, imlabel);
       if (!retval) abort();
 
       dt_[v] = dt;
@@ -227,7 +227,7 @@ do_one_cam_optimization()
   vcl_vector<vpgl_perspective_camera<double> > cams;
   cams.push_back(opt);
   bool retval =  
-    mw_util::write_cams("dat", "result-1cam", mw_util::MW_INTRINSIC_EXTRINSIC, cams);
+    bmcsd_util::write_cams("dat", "result-1cam", bmcsd_util::MW_INTRINSIC_EXTRINSIC, cams);
   if (!retval)
     abort();
 }

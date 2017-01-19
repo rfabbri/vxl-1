@@ -9,7 +9,7 @@
 //
 
 #include <mw/pro/dvcpl_bundle_adjust_sink.h>
-#include <mw/dbmcs_curve_3d_sketch.h>
+#include <bmcsd/bmcsd_curve_3d_sketch.h>
 #include <mw/algo/dvcpl_distmap_bundle_adjust.h>
 #include <mw/algo/mw_data.h>
 
@@ -21,8 +21,8 @@ public:
   // \param[in] optimize_one_view: optimizes every view independently, without
   // optimizing the 3D structure.
   dvcpl_bundle_adjust_driver(
-      const mw_curve_stereo_data_path &dpath, 
-      dbmcs_curve_3d_sketch *csk,
+      const bmcsd_curve_stereo_data_path &dpath, 
+      bmcsd_curve_3d_sketch *csk,
       const vcl_set<unsigned> &viewset,
       bool optimize_one_view,
       bool curve_ransac
@@ -54,8 +54,8 @@ public:
 
 protected:
   //: Inputs
-  mw_curve_stereo_data_path dpath_;
-  const dbmcs_curve_3d_sketch *csk_;
+  bmcsd_curve_stereo_data_path dpath_;
+  const bmcsd_curve_3d_sketch *csk_;
 
   //: Outputs
   vcl_vector< vpgl_perspective_camera<double> > *optimized_cam_;
@@ -79,10 +79,10 @@ protected:
   //: true if init has been called
   bool initialized_;
   //: pool of processors.
-  vcl_vector<dbpro_process_sptr> cam_src_;
-  vcl_vector<dbpro_process_sptr> edg_src_;
-  vcl_vector<dbpro_process_sptr> edg_dt_;
-  dbpro_process_sptr curve_bundler_;
+  vcl_vector<bprod_process_sptr> cam_src_;
+  vcl_vector<bprod_process_sptr> edg_src_;
+  vcl_vector<bprod_process_sptr> edg_dt_;
+  bprod_process_sptr curve_bundler_;
 
   bool get_views_to_optimize(const vcl_set<unsigned> &viewset, 
       vcl_vector<unsigned> *views_ptr);

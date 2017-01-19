@@ -4,7 +4,7 @@
 // \file
 
 #include "dbdet_test_sel_circle_process.h"
-#include <dbdif/dbdif_analytic.h>
+#include <bdifd/bdifd_analytic.h>
 
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>

@@ -9,26 +9,26 @@
 //
 
 
-#include <dbsol/algo/dbsol_geno.h>
+#include <bsold/algo/bsold_geno.h>
 
 
 void gradient_descent(
-    dbsol_geno_curve_2d *cnew,
-    const dbsol_geno_curve_2d &c,
+    bsold_geno_curve_2d *cnew,
+    const bsold_geno_curve_2d &c,
     double delta_angle,
     double psi);
 
 void 
 gradient_descent_positional(
     vcl_vector<vsol_point_2d_sptr> &pts,
-    const dbsol_geno_curve_2d &c,
+    const bsold_geno_curve_2d &c,
     double delta_norm,
     double psi,
     vcl_vector<double> &grad
     );
 
 void
-refine_tangents(dbsol_geno_curve_2d **input, dbsol_geno_curve_2d **refined,double delta_angle,double psi,unsigned n_iter);
+refine_tangents(bsold_geno_curve_2d **input, bsold_geno_curve_2d **refined,double delta_angle,double psi,unsigned n_iter);
 
 
 #endif // mw_gradient_descent_h

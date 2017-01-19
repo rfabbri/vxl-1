@@ -2,7 +2,7 @@
 #include <vcl_iostream.h>
 #include <vcl_iterator.h>
 #include <mw/algo/mw_qualitative_epipolar.h>
-#include <mw/mw_util.h>
+#include <bmcsd/bmcsd_util.h>
 
 static bool basic_test();
 static bool test_sectors();

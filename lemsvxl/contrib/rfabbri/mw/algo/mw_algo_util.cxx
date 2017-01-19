@@ -1,14 +1,14 @@
-#include "mw_algo_util.h"
+#include "bmcsd_algo_util.h"
 
 #include <vnl/vnl_double_2.h>
 #include <brct/brct_algos.h>
-#include <dbgl/algo/dbgl_distance.h>
-#include <dbgl/algo/dbgl_curve_smoothing.h>
-#include <dbsol/algo/dbsol_geno.h>
-#include <dbdif/algo/dbdif_transfer.h>
-#include <mw/mw_util.h>
+#include <bgld/algo/bgld_distance.h>
+#include <bgld/algo/bgld_curve_smoothing.h>
+#include <bsold/algo/bsold_geno.h>
+#include <bdifd/algo/bdifd_transfer.h>
+#include <bmcsd/bmcsd_util.h>
 
-void mw_algo_util::
+void bmcsd_algo_util::
 move_world_to_1st_cam(vcl_vector<vpgl_perspective_camera<double> *> &cam)
 {
   // just pass empty vcl_vector
@@ -17,7 +17,7 @@ move_world_to_1st_cam(vcl_vector<vpgl_perspective_camera<double> *> &cam)
   move_world_to_1st_cam(cam,pts);
 }
 
-void mw_algo_util::
+void bmcsd_algo_util::
 move_world_to_1st_cam(vcl_vector<vpgl_perspective_camera<double> *> &cam,vcl_vector<vgl_point_3d<double> > &pts)
 {
   vgl_h_matrix_3d<double> R_0;
@@ -53,9 +53,9 @@ move_world_to_1st_cam(vcl_vector<vpgl_perspective_camera<double> *> &cam,vcl_vec
 
     ctmp = vpgl_perspective_camera<double>::postmultiply(*(cam[0]),tr_0_inv_hmg);
 
-    assert(mw_util::near_zero((ctmp.get_calibration().get_matrix()-cam[0]->get_calibration().get_matrix()).array_two_norm()));
-    assert(mw_util::near_zero(mw_util::vgl_to_vnl(ctmp.get_camera_center()).two_norm()));
-    assert(mw_util::near_zero((ctmp.get_rotation().as_h_matrix_3d().get_upper_3x3().get_matrix()-R_id.get_upper_3x3().get_matrix()).array_two_norm()));
+    assert(bmcsd_util::near_zero((ctmp.get_calibration().get_matrix()-cam[0]->get_calibration().get_matrix()).array_two_norm()));
+    assert(bmcsd_util::near_zero(bmcsd_util::vgl_to_vnl(ctmp.get_camera_center()).two_norm()));
+    assert(bmcsd_util::near_zero((ctmp.get_rotation().as_h_matrix_3d().get_upper_3x3().get_matrix()-R_id.get_upper_3x3().get_matrix()).array_two_norm()));
   }
 
   cam[0]->set_camera_center(vgl_point_3d<double>(0,0,0));
@@ -94,10 +94,10 @@ move_world_to_1st_cam(vcl_vector<vpgl_perspective_camera<double> *> &cam,vcl_vec
 
 //----------------------------------------------------------------------
 
-bool mw_algo_util::
+bool bmcsd_algo_util::
 dg_reprojection_error(
-    vcl_vector<dbdif_3rd_order_point_2d> &pts, //:< pts[iv] points in view iv
-    const vcl_vector<dbdif_camera> &cam,
+    vcl_vector<bdifd_3rd_order_point_2d> &pts, //:< pts[iv] points in view iv
+    const vcl_vector<bdifd_camera> &cam,
     unsigned v,
     double &dpos,
     double &dtheta,
@@ -123,18 +123,18 @@ dg_reprojection_error(
 //      p2 -> pts[u2]
 //      Obtain p_v_reproj. Then compare to pts[v]
 
-      dbdif_3rd_order_point_2d p_v_reproj; 
-      dbdif_3rd_order_point_3d Prec;
+      bdifd_3rd_order_point_2d p_v_reproj; 
+      bdifd_3rd_order_point_3d Prec;
 
-      dbdif_rig rig(cam[u1].Pr_,cam[u2].Pr_);
+      bdifd_rig rig(cam[u1].Pr_,cam[u2].Pr_);
 
       bool retval = 
-      dbdif_transfer::transfer_by_reconstruct_and_reproject ( 
+      bdifd_transfer::transfer_by_reconstruct_and_reproject ( 
           pts[u1], pts[u2], p_v_reproj, Prec, cam[v], rig);
 
       if (retval) {
         one_true = true;
-        double angle = mw_util::angle_unit(p_v_reproj.t, pts[v].t);
+        double angle = bmcsd_util::angle_unit(p_v_reproj.t, pts[v].t);
 
         double dtheta_inc = vcl_min(angle, vnl_math::pi - angle);
         dtheta += dtheta_inc*dtheta_inc;
@@ -148,14 +148,14 @@ dg_reprojection_error(
         ++n;
 
         double d_e, d_n_1, d_t_1;
-        dbgl_distance::projected_distance(
+        bgld_distance::projected_distance(
             p_v_reproj.gama[0],  p_v_reproj.gama[1],
             pts[v].gama[0],  pts[v].gama[1], vcl_atan2(pts[v].t[1],pts[v].t[0]),
             &d_e, &d_n_1, &d_t_1 
             );
 
         double d_n_2, d_t_2;
-        dbgl_distance::projected_distance(
+        bgld_distance::projected_distance(
             pts[v].gama[0],  pts[v].gama[1], 
             p_v_reproj.gama[0],  p_v_reproj.gama[1], vcl_atan2(p_v_reproj.t[1],p_v_reproj.t[0]),
             &d_e, &d_n_2, &d_t_2 
@@ -182,10 +182,10 @@ dg_reprojection_error(
   return one_true;
 }
 
-bool mw_algo_util::
+bool bmcsd_algo_util::
 dg_reprojection_error(
-    vcl_vector<dbdif_3rd_order_point_2d> &pts, //:< pts[iv] points in view iv
-    const vcl_vector<dbdif_camera> &cam,
+    vcl_vector<bdifd_3rd_order_point_2d> &pts, //:< pts[iv] points in view iv
+    const vcl_vector<bdifd_camera> &cam,
     // no parameter v - do it for all v.
     double &dpos,
     double &dtheta,
@@ -213,7 +213,7 @@ dg_reprojection_error(
 }
 
 
-void mw_algo_util::
+void bmcsd_algo_util::
 extract_edgel_chain(const vsol_polyline_2d &pts, dbdet_edgel_chain *ec)
 {
   // Move vsol polyline into vgl_vector of points
@@ -222,17 +222,17 @@ extract_edgel_chain(const vsol_polyline_2d &pts, dbdet_edgel_chain *ec)
   for (unsigned i=0; i < pts.size(); ++i)
     pts_vgl.push_back(pts.vertex(i)->get_p());
 
-  dbgl_csm(pts_vgl, 1, 1);
+  bgld_csm(pts_vgl, 1, 1);
 
-  dbsol_geno_curve_2d gc;
+  bsold_geno_curve_2d gc;
 
   vcl_vector<vsol_point_2d_sptr > pts_vsol;
   pts_vsol.reserve(pts.size());
   for (unsigned i=0; i < pts.size(); ++i)
     pts_vsol.push_back(pts.vertex(i));
 
-  // dbgl_geno
-  dbsol_geno::interpolate3_approx(&gc, pts_vsol, false);
+  // bgld_geno
+  bsold_geno::interpolate3_approx(&gc, pts_vsol, false);
 
   ec->edgels.resize(pts.size());
   // get_tangents

@@ -109,7 +109,7 @@ TODO:
 
   - Synthetic data so that we have an automated regression test
   - Ground-truth matches in real data. Vox.
-  - Study Matt's architecture for processes (basic/dbpro). Study how can we stream the data without
+  - Study Matt's architecture for processes (basic/bprod). Study how can we stream the data without
     having to use breye2.
 
 REDUCED VERSION OF THE SYSTEM 

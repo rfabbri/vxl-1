@@ -1,6 +1,6 @@
-// This is dbpro_load_cemv_source.h
-#ifndef dbpro_load_cemv_source_h
-#define dbpro_load_cemv_source_h
+// This is bprod_load_cemv_source.h
+#ifndef bprod_load_cemv_source_h
+#define bprod_load_cemv_source_h
 //:
 //\file
 //\brief Source process associated with binary vsol file
@@ -8,17 +8,17 @@
 //\date 08/28/2009 04:12:36 PM PDT
 //
 
-#include <dbsol/dbsol_file_io.h>
+#include <bsold/bsold_file_io.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 
 
 
-//: dbpro souce process to load vsol storage from a binary file.
+//: bprod souce process to load vsol storage from a binary file.
 //
-class dbpro_load_cemv_source : public dbpro_source {
+class bprod_load_cemv_source : public bprod_source {
 public:
 
-  dbpro_load_cemv_source( vcl_string fname ) 
+  bprod_load_cemv_source( vcl_string fname ) 
     : fname_(fname),
       min_samples_(0)
   {
@@ -28,9 +28,9 @@ public:
   //: Used to prune the curves by enforcing a minimum number of samples.
   void set_min_samples(unsigned m) { min_samples_ = m; }
 
-  dbpro_signal execute() {
+  bprod_signal execute() {
     vcl_vector< vsol_spatial_object_2d_sptr > base;
-    dbsol_load_cem(contours, fname_);
+    bsold_load_cem(contours, fname_);
 
     // create the output storage class
     vcl_vector< vsol_polyline_2d_sptr > curves;
@@ -44,7 +44,7 @@ public:
 
       if (!p) {
         vcl_cerr << "Non-polyline found, but only POLYLINES supported!" << vcl_endl;
-        return DBPRO_INVALID;
+        return BPROD_INVALID;
       }
 
       if (p->size() >= min_samples_ ) 
@@ -57,7 +57,7 @@ public:
     vcl_cout << "Curves: #curves =  " << curves.size() << vcl_endl;
 
     output(0, curves);
-    return DBPRO_VALID;
+    return BPROD_VALID;
   }
 
 private:
@@ -65,4 +65,4 @@ private:
   unsigned min_samples_;
 };
 
-#endif // dbpro_load_cemv_source_h
+#endif // bprod_load_cemv_source_h

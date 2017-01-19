@@ -1,9 +1,9 @@
-#ifndef mw_discrete_corresp_storage_3_sptr_h
-#define mw_discrete_corresp_storage_3_sptr_h
+#ifndef bmcsd_discrete_corresp_storage_3_sptr_h
+#define bmcsd_discrete_corresp_storage_3_sptr_h
 
 #include <bpro1/bpro1_storage_sptr.h>
 
-class mw_discrete_corresp_storage_3;
-typedef bpro1_storage_sptr_t<mw_discrete_corresp_storage_3> mw_discrete_corresp_storage_3_sptr;
+class bmcsd_discrete_corresp_storage_3;
+typedef bpro1_storage_sptr_t<bmcsd_discrete_corresp_storage_3> bmcsd_discrete_corresp_storage_3_sptr;
 
-#endif // mw_discrete_corresp_storage_3_sptr_h
+#endif // bmcsd_discrete_corresp_storage_3_sptr_h

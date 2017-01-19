@@ -1,14 +1,14 @@
 #include "mw_point_matcher.h"
 
-#include <mw/mw_util.h>
-#include <dbdif/dbdif_rig.h>
+#include <bmcsd/bmcsd_util.h>
+#include <bdifd/bdifd_rig.h>
 #include <mw/mw_subpixel_point_set.h>
-#include <mw/mw_epi_interceptor.h>
-#include <dbecl/dbecl_epiband.h>
-#include <dbecl/dbecl_epiband_iterator.h>
+#include <becld/becld_epiline_interceptor.h>
+#include <becld/becld_epiband.h>
+#include <becld/becld_epiband_iterator.h>
 
 mw_point_matcher::
-mw_point_matcher(vcl_vector<dbdif_camera> &in_cam)
+mw_point_matcher(vcl_vector<bdifd_camera> &in_cam)
   :
   epipolar_dist_err_(1.4),
   err_pos_(2) //:< 2 pixels (we are also implicitly including calibration errors here)
@@ -19,7 +19,7 @@ mw_point_matcher(vcl_vector<dbdif_camera> &in_cam)
 void mw_point_matcher::
 epipolar_constraint_3(
   const vcl_vector<vcl_vector< vsol_point_2d_sptr > > &points_,
-  mw_discrete_corresp_3 *corr,
+  bmcsd_discrete_corresp_3 *corr,
   unsigned iv0, unsigned iv1, unsigned iv2,
   // --- the following params may be provided by the user if efficiency is
   // needed. However, they make this function implementation-dependent.
@@ -37,7 +37,7 @@ epipolar_constraint_3(
     vgl_homg_point_2d<double> homg_pt(points_[iv0][i]->get_p());
     vgl_homg_line_2d<double> ep_l = fm.l_epipolar_line(homg_pt);
 
-    mw_epi_interceptor_brute intr_brute; //:< for now
+    becld_epiline_interceptor_brute intr_brute; //:< for now
     vcl_vector<bool> indices; 
 
     intr_brute.compute(&ep_l,points_[iv1], indices, epipolar_dist_err_);
@@ -57,13 +57,13 @@ epipolar_constraint_3(
 
       vgl_point_2d<double> p3_reproj;
 
-      dbdif_rig rig(cam_[iv0].Pr_, cam_[iv1].Pr_);
+      bdifd_rig rig(cam_[iv0].Pr_, cam_[iv1].Pr_);
       
       vgl_point_2d<double> p3;
       // compute trinocular reproj for present point + candidate
 
       bool valid;
-      valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img2, p3, cam_[iv2], rig);
+      valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img2, p3, cam_[iv2], rig);
 
       unsigned p_j = sp_pts3.col(p3.x());
       unsigned p_i = sp_pts3.row(p3.y());
@@ -92,7 +92,7 @@ epipolar_constraint_3(
             for (unsigned l=0; l < sp_pts3.cells()[icell][jcell].size(); ++l) {
               nhood_empty=false;
 
-              corr->l_.put(i,k,sp_pts3.cells()[icell][jcell][l],mw_match_attribute());
+              corr->l_.put(i,k,sp_pts3.cells()[icell][jcell][l],bmcsd_match_attribute());
             }
         }
       }
@@ -106,7 +106,7 @@ epipolar_constraint_3(
 void mw_point_matcher::
 epipolar_constraint_3_using_band(
   const vcl_vector<vcl_vector< vsol_point_2d_sptr > > &points,
-  mw_discrete_corresp_3 *corr,
+  bmcsd_discrete_corresp_3 *corr,
   unsigned i1, unsigned i2, unsigned i3,
   // --- the following params may be provided by the user if efficiency is
   // needed. However, they make this function implementation-dependent.
@@ -128,7 +128,7 @@ epipolar_constraint_3_using_band(
   fm32.set_matrix(fm23.get_matrix().transpose());
 
 
-  mw_discrete_corresp corr2(points[i1].size(), points[i2].size());
+  bmcsd_discrete_corresp corr2(points[i1].size(), points[i2].size());
   // 1- build pairs between i1 and i2
   epipolar_constraint_using_band(points, &corr2, i1, i2, fm12, sp[i2], sp[i1].nrows(), sp[i1].ncols());
 
@@ -138,11 +138,11 @@ epipolar_constraint_3_using_band(
   //      - make sure p^2 in E^2(p^3) and p1 in E^1(p^3)
 
 
-  dbecl_grid_cover_window w3(vgl_box_2d<double>(0,sp[i3].ncols()-1,0,sp[i3].nrows()-1),0);
+  becld_grid_cover_window w3(vgl_box_2d<double>(0,sp[i3].ncols()-1,0,sp[i3].nrows()-1),0);
 
   for (unsigned i=0; i < corr2.n_objects_view_0(); ++i) {
     // run through list of candidates
-    for ( vcl_list<mw_attributed_object>::iterator 
+    for ( vcl_list<bmcsd_attributed_object>::iterator 
           itr  = corr2.corresp_[i].begin();
           itr != corr2.corresp_[i].end();   ++itr) {
 
@@ -155,7 +155,7 @@ epipolar_constraint_3_using_band(
       
       vgl_box_2d<double> mybox(0,0,sp[i3].ncols()-1,sp[i3].nrows()-1);
 
-      dbecl_epiband epi_13(mybox),
+      becld_epiband epi_13(mybox),
                        epi_23(mybox),
                        epi_3 (mybox);
 
@@ -164,7 +164,7 @@ epipolar_constraint_3_using_band(
 
       epi_3.intersect(epi_13,epi_23);
 
-      dbecl_epiband_iterator it(epi_3,w3,1.5);
+      becld_epiband_iterator it(epi_3,w3,1.5);
 
       for (it.reset(); it.nxt(); ) {
         unsigned const i_row = sp[i3].row(it.y());
@@ -178,19 +178,19 @@ epipolar_constraint_3_using_band(
           // test reverse now
           unsigned const p3_idx = sp[i3].cells()[i_row][i_col][k];
 
-          dbecl_epiband epi31(vgl_box_2d<double>(0,sp[i1].ncols()-1, 0, sp[i1].nrows()-1));
+          becld_epiband epi31(vgl_box_2d<double>(0,sp[i1].ncols()-1, 0, sp[i1].nrows()-1));
           epi31.compute(points[i3][p3_idx]->get_p(), fm31, err_pos_);
           
           const vgl_point_2d<double> p1 = points[i1][i]->get_p();
           if (epi31.contains(p1)) {
             // test if p2 is in epipolar region of p3 in img 2
 
-            dbecl_epiband epi32(vgl_box_2d<double>(0,sp[i2].ncols()-1, 0, sp[i2].nrows()-1));
+            becld_epiband epi32(vgl_box_2d<double>(0,sp[i2].ncols()-1, 0, sp[i2].nrows()-1));
             epi32.compute(points[i3][p3_idx]->get_p(), fm32, err_pos_);
             
             const vgl_point_2d<double> p2 = points[i2][itr->obj_]->get_p();
             if (epi32.contains(p2)) {
-              corr->l_.put(i,itr->obj_,p3_idx,mw_match_attribute());
+              corr->l_.put(i,itr->obj_,p3_idx,bmcsd_match_attribute());
             } else
               vcl_cout << "Case where p3 is in E^3(p2) but p2 is not in E^2(p3)\n";
           } else 
@@ -204,7 +204,7 @@ epipolar_constraint_3_using_band(
 void mw_point_matcher::
 epipolar_constraint(
   const vcl_vector<vcl_vector< vsol_point_2d_sptr > > &points_,
-  mw_discrete_corresp *corr,
+  bmcsd_discrete_corresp *corr,
   unsigned iv1, unsigned iv2,
   const vpgl_fundamental_matrix<double> &fm
   )
@@ -218,14 +218,14 @@ epipolar_constraint(
     vgl_homg_line_2d<double> ep_l = fm.l_epipolar_line(homg_pt);
 
     {
-      mw_epi_interceptor_brute intr_brute; //:< for now
+      becld_epiline_interceptor_brute intr_brute; //:< for now
       vcl_vector<bool> indices; 
 
       intr_brute.compute(&ep_l,points_[iv2], indices, epipolar_dist_err_);
 
       for (unsigned k=0; k < indices.size(); ++k) {
         if (indices[k])
-          corr->corresp_[i].push_back(mw_attributed_object(k));
+          corr->corresp_[i].push_back(bmcsd_attributed_object(k));
       }
     }
   }
@@ -234,7 +234,7 @@ epipolar_constraint(
 void mw_point_matcher::
 epipolar_constraint_using_band(
     const vcl_vector<vcl_vector< vsol_point_2d_sptr > > &points,
-    mw_discrete_corresp *corr,
+    bmcsd_discrete_corresp *corr,
     unsigned i1, unsigned i2,
     const vpgl_fundamental_matrix<double> &fm,
     const mw_subpixel_point_set &sp_pts2,
@@ -250,14 +250,14 @@ epipolar_constraint_using_band(
   vpgl_fundamental_matrix<double> fm_transpose;
   fm_transpose.set_matrix(fm.get_matrix().transpose());
 
-  dbecl_grid_cover_window w2(vgl_box_2d<double>(0,sp_pts2.ncols()-1,0,sp_pts2.nrows()-1),0);
+  becld_grid_cover_window w2(vgl_box_2d<double>(0,sp_pts2.ncols()-1,0,sp_pts2.nrows()-1),0);
 
   for (unsigned i = 0; i < points[i1].size(); ++i) {
-    dbecl_epiband epi(vgl_box_2d<double>(0,sp_pts2.ncols()-1, 0, sp_pts2.nrows()-1));
+    becld_epiband epi(vgl_box_2d<double>(0,sp_pts2.ncols()-1, 0, sp_pts2.nrows()-1));
     epi.compute(points[i1][i]->get_p(), fm, err_pos_);
 
 
-    dbecl_epiband_iterator it(epi,w2,1.5);
+    becld_epiband_iterator it(epi,w2,1.5);
 
     for (it.reset(); it.nxt(); ) {
       unsigned const i_row = sp_pts2.row(it.y());
@@ -275,11 +275,11 @@ epipolar_constraint_using_band(
         // fine test if actual subpixel position is within err_pos_ from epipolar band
         if (epi.distance(points[i2][p2_idx]->get_p()) < err_pos_) {
 
-          dbecl_epiband epi21(vgl_box_2d<double>(0,ncols_pts1-1, 0,nrows_pts1-1));
+          becld_epiband epi21(vgl_box_2d<double>(0,ncols_pts1-1, 0,nrows_pts1-1));
           epi21.compute(points[i2][p2_idx]->get_p(), fm_transpose, err_pos_);
           
           if (epi21.distance(points[i1][i]->get_p()) < err_pos_ )
-            corr->corresp_[i].push_back(mw_attributed_object(p2_idx));
+            corr->corresp_[i].push_back(bmcsd_attributed_object(p2_idx));
           else  {
             vcl_cout << "Case where p2 is in E^2(p1) but p1 is not in E^1(p2)\n";
             *n_asymmetric += 1;
@@ -294,7 +294,7 @@ void mw_point_matcher::
 trinocular_costs(
   const vcl_vector<vcl_vector< vsol_point_2d_sptr > > &points_,
   const mw_subpixel_point_set &pts_img3,
-  mw_discrete_corresp *corr,
+  bmcsd_discrete_corresp *corr,
   unsigned iv1, unsigned iv2, unsigned iv3)
 {
   assert(points_.size() >= 2);
@@ -307,11 +307,11 @@ trinocular_costs(
 
   for (unsigned i=0; i < points_[iv1].size(); ++i) {
     // run through list of candidates
-    for ( vcl_list<mw_attributed_object>::iterator itr= corr->corresp_[i].begin();
+    for ( vcl_list<bmcsd_attributed_object>::iterator itr= corr->corresp_[i].begin();
           itr != corr->corresp_[i].end(); ++itr) {
       vsol_point_2d_sptr p1 = points_[iv1][i];
       vsol_point_2d_sptr p2 = points_[iv2][itr->obj_];
-      dbdif_rig rig(cam_[iv1].Pr_, cam_[iv2].Pr_);
+      bdifd_rig rig(cam_[iv1].Pr_, cam_[iv2].Pr_);
 
       vgl_point_2d<double> p3_reproj;
       double cost;
@@ -331,12 +331,12 @@ trinocular_match_cost (
   const mw_subpixel_point_set &pts_img3,
   vgl_point_2d<double> &p3, 
   unsigned view3, 
-  dbdif_rig &rig,
+  bdifd_rig &rig,
   double *cost
   ) const
 {
 
-  dbdif_transfer::transfer_by_reconstruct_and_reproject(pt_img1, pt_img2, p3, cam_[view3], rig);
+  bdifd_transfer::transfer_by_reconstruct_and_reproject(pt_img1, pt_img2, p3, cam_[view3], rig);
   
   double d;
   unsigned np;
@@ -359,9 +359,9 @@ trinocular_match_cost (
 
 void mw_point_matcher::
 trinocular_DG_costs(
-  const vcl_vector<vcl_vector< dbdif_3rd_order_point_2d > > &points_,
+  const vcl_vector<vcl_vector< bdifd_3rd_order_point_2d > > &points_,
   const mw_subpixel_point_set &sp_pts3,
-  mw_discrete_corresp *corr,
+  bmcsd_discrete_corresp *corr,
   unsigned iv1, unsigned iv2, unsigned iv3,
   trinocular_DG_constraint constr//:< true in case use curvature diffs; false in case we use only tgts diffs
   )
@@ -378,18 +378,18 @@ trinocular_DG_costs(
     abort(); 
   }
 
-  dbdif_rig rig(cam_[0].Pr_, cam_[1].Pr_);
+  bdifd_rig rig(cam_[0].Pr_, cam_[1].Pr_);
 
   for (unsigned i=0; i < points_[iv1].size(); ++i) {
     // run through list of candidates
-    for ( vcl_list<mw_attributed_object>::iterator 
+    for ( vcl_list<bmcsd_attributed_object>::iterator 
           itr  = corr->corresp_[i].begin();
           itr != corr->corresp_[i].end();   ++itr) {
-      const dbdif_3rd_order_point_2d &p1 = points_[iv1][i];
-      const dbdif_3rd_order_point_2d &p2 = points_[iv2][itr->obj_];
+      const bdifd_3rd_order_point_2d &p1 = points_[iv1][i];
+      const bdifd_3rd_order_point_2d &p2 = points_[iv2][itr->obj_];
 
 
-      dbdif_3rd_order_point_2d p3_reproj;
+      bdifd_3rd_order_point_2d p3_reproj;
 
       double cost; unsigned np;
       reason reason;
@@ -432,8 +432,8 @@ trinocular_DG_costs(
 
 void mw_point_matcher::
 trinocular_DG_costs_3(
-  const vcl_vector<vcl_vector< dbdif_3rd_order_point_2d > > &points_,
-  mw_discrete_corresp_3 *corr,
+  const vcl_vector<vcl_vector< bdifd_3rd_order_point_2d > > &points_,
+  bmcsd_discrete_corresp_3 *corr,
   unsigned iv0, unsigned iv1, unsigned iv2,
   trinocular_DG_constraint constr
   )
@@ -445,19 +445,19 @@ trinocular_DG_costs_3(
 
   unsigned  n_matched=0, n_corr=0;
 
-  dbdif_rig rig12(cam_[iv0].Pr_, cam_[iv1].Pr_);
-  dbdif_rig rig13(cam_[iv0].Pr_, cam_[iv2].Pr_);
-  dbdif_rig rig23(cam_[iv1].Pr_, cam_[iv2].Pr_);
+  bdifd_rig rig12(cam_[iv0].Pr_, cam_[iv1].Pr_);
+  bdifd_rig rig13(cam_[iv0].Pr_, cam_[iv2].Pr_);
+  bdifd_rig rig23(cam_[iv1].Pr_, cam_[iv2].Pr_);
 
   unsigned  total_n_corresp= corr->l_.count_nonempty();
 
   unsigned print_step = (unsigned)vcl_floor(total_n_corresp/6.0);
 
-  vbl_sparse_array_3d<mw_match_attribute>::const_iterator p;
+  vbl_sparse_array_3d<bmcsd_match_attribute>::const_iterator p;
   for (p = corr->l_.begin(); p != corr->l_.end(); ++p) {
-    const dbdif_3rd_order_point_2d &p1 = points_[iv0][p->first.first];
-    const dbdif_3rd_order_point_2d &p2 = points_[iv1][p->first.second];
-    const dbdif_3rd_order_point_2d &p3 = points_[iv2][p->first.third];
+    const bdifd_3rd_order_point_2d &p1 = points_[iv0][p->first.first];
+    const bdifd_3rd_order_point_2d &p2 = points_[iv1][p->first.second];
+    const bdifd_3rd_order_point_2d &p3 = points_[iv2][p->first.third];
 
     double cost; 
     reason reason;
@@ -516,8 +516,8 @@ trinocular_DG_costs_3(
 //
 void mw_point_matcher::
 n_view_DG_costs(
-  const vcl_vector<vcl_vector< dbdif_3rd_order_point_2d > > &points_,
-  mw_discrete_corresp_n *corr,
+  const vcl_vector<vcl_vector< bdifd_3rd_order_point_2d > > &points_,
+  bmcsd_discrete_corresp_n *corr,
   trinocular_DG_constraint constr
   )
 {
@@ -527,13 +527,13 @@ n_view_DG_costs(
 
   unsigned  n_matched=0, n_corr=0;
 
-  vcl_vector<vcl_vector<dbdif_rig *> > rigs;
+  vcl_vector<vcl_vector<bdifd_rig *> > rigs;
 
   for (unsigned v=0; v < cam_.size(); ++v) {
     for (unsigned i=0; i < cam_.size(); ++i) {
       if (i == v)
         continue;
-      rigs[i][v] = new dbdif_rig(cam_[i].Pr_, cam_[v].Pr_);
+      rigs[i][v] = new bdifd_rig(cam_[i].Pr_, cam_[v].Pr_);
     }
   }
 
@@ -541,10 +541,10 @@ n_view_DG_costs(
 
   unsigned print_step = (unsigned)vcl_floor(total_n_corresp/6.0);
 
-  vbl_sparse_array_base<mw_match_attribute,mw_ntuplet>::const_iterator p;
+  vbl_sparse_array_base<bmcsd_match_attribute,bmcsd_ntuplet>::const_iterator p;
 
   for (p = corr->l_.begin(); p != corr->l_.end(); ++p) {
-    const mw_ntuplet &tup = p->first;
+    const bmcsd_ntuplet &tup = p->first;
 
     double cost; 
     reason reason;
@@ -595,19 +595,19 @@ n_view_DG_costs(
 
 bool mw_point_matcher::
 trinocular_tangent_match_cost_closest_edgel( 
-  const dbdif_3rd_order_point_2d &pt_img1, 
-  const dbdif_3rd_order_point_2d &pt_img2, 
+  const bdifd_3rd_order_point_2d &pt_img1, 
+  const bdifd_3rd_order_point_2d &pt_img2, 
   const mw_subpixel_point_set &sp_pts3,
-  const vcl_vector<dbdif_3rd_order_point_2d> &pts3,
-  dbdif_3rd_order_point_2d &p3, 
+  const vcl_vector<bdifd_3rd_order_point_2d> &pts3,
+  bdifd_3rd_order_point_2d &p3, 
   unsigned view3, 
-  dbdif_rig &rig,
+  bdifd_rig &rig,
   double *cost,
   unsigned *np,
   reason *reason
   ) const
 {
-  //: use dbdif_2nd_order_point
+  //: use bdifd_2nd_order_point
 
   if (!pt_img1.valid || !pt_img2.valid) {
     *cost   = vcl_numeric_limits<double>::infinity();
@@ -616,7 +616,7 @@ trinocular_tangent_match_cost_closest_edgel(
   } else {
 
     const double epipolar_angle_thresh = vnl_math::pi/6;
-    double epipolar_angle = dbdif_rig::angle_with_epipolar_line(pt_img1.t,pt_img1.gama,rig.f12);
+    double epipolar_angle = bdifd_rig::angle_with_epipolar_line(pt_img1.t,pt_img1.gama,rig.f12);
 
     if (epipolar_angle < epipolar_angle_thresh) {
       *cost   = vcl_numeric_limits<double>::infinity();
@@ -625,9 +625,9 @@ trinocular_tangent_match_cost_closest_edgel(
     }
 
 
-    dbdif_3rd_order_point_3d Prec;
+    bdifd_3rd_order_point_3d Prec;
     bool valid;
-    valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img2, p3, Prec, cam_[view3], rig);
+    valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img2, p3, Prec, cam_[view3], rig);
 
     if (!valid) {
       *cost   = vcl_numeric_limits<double>::infinity();
@@ -654,9 +654,9 @@ trinocular_tangent_match_cost_closest_edgel(
     if (sp_pts3.nearest_point_by_bucketing(p3.gama[0], p3.gama[1], np ,&d)) {
       // - get a hold of np
       // - compare angle of p3.t with np.t
-      const dbdif_3rd_order_point_2d &pt = pts3[ *np ];
+      const bdifd_3rd_order_point_2d &pt = pts3[ *np ];
       if (pt.valid) {
-        dmin = vcl_acos(mw_util::clump_to_acos(pt.t[0]*p3.t[0] + pt.t[1]*p3.t[1]));
+        dmin = vcl_acos(bmcsd_util::clump_to_acos(pt.t[0]*p3.t[0] + pt.t[1]*p3.t[1]));
         nhood_empty = false;
         has_valid = true;
       }
@@ -681,20 +681,20 @@ trinocular_tangent_match_cost_closest_edgel(
 
 bool mw_point_matcher::
 trinocular_DG_match_cost( 
-  const dbdif_3rd_order_point_2d &pt_img1, 
-  const dbdif_3rd_order_point_2d &pt_img2, 
+  const bdifd_3rd_order_point_2d &pt_img1, 
+  const bdifd_3rd_order_point_2d &pt_img2, 
   const mw_subpixel_point_set &sp_pts3,
-  const vcl_vector<dbdif_3rd_order_point_2d> &pts3,
-  dbdif_3rd_order_point_2d &p3, 
+  const vcl_vector<bdifd_3rd_order_point_2d> &pts3,
+  bdifd_3rd_order_point_2d &p3, 
   unsigned view3, 
-  dbdif_rig &rig,
+  bdifd_rig &rig,
   double *cost,
   unsigned *np,
   bool use_curvature,//:< true in case use curvature diffs; false in case we use only tgts diffs
   reason *reason
   ) const
 {
-  //: use dbdif_2nd_order_point
+  //: use bdifd_2nd_order_point
 
   if (!pt_img1.valid || !pt_img2.valid) {
     *cost   = vcl_numeric_limits<double>::infinity();
@@ -703,7 +703,7 @@ trinocular_DG_match_cost(
   } else {
 
     const double epipolar_angle_thresh = vnl_math::pi/6;
-    double epipolar_angle = dbdif_rig::angle_with_epipolar_line(pt_img1.t,pt_img1.gama,rig.f12);
+    double epipolar_angle = bdifd_rig::angle_with_epipolar_line(pt_img1.t,pt_img1.gama,rig.f12);
 
     if (epipolar_angle < epipolar_angle_thresh) {
       *cost   = vcl_numeric_limits<double>::infinity();
@@ -712,9 +712,9 @@ trinocular_DG_match_cost(
     }
 
 
-    dbdif_3rd_order_point_3d Prec;
+    bdifd_3rd_order_point_3d Prec;
     bool valid;
-    valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img2, p3, Prec, cam_[view3], rig);
+    valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img2, p3, Prec, cam_[view3], rig);
 
     if (!valid) {
       *cost   = vcl_numeric_limits<double>::infinity();
@@ -763,12 +763,12 @@ trinocular_DG_match_cost(
         for (unsigned jcell = j_range_min; jcell <= j_range_max; ++jcell) {
             for (unsigned i=0; i < sp_pts3.cells()[icell][jcell].size(); ++i) {
               nhood_empty=false;
-              const dbdif_3rd_order_point_2d &pt = pts3[ sp_pts3.cells()[icell][jcell][i] ];
+              const bdifd_3rd_order_point_2d &pt = pts3[ sp_pts3.cells()[icell][jcell][i] ];
               if (pt.valid) {
                 has_valid = true;
                 //pt : data point in view 3
                 //p3 : reprojected point
-                double dt = vcl_acos(mw_util::clump_to_acos(pt.t[0]*p3.t[0] + pt.t[1]*p3.t[1]));
+                double dt = vcl_acos(bmcsd_util::clump_to_acos(pt.t[0]*p3.t[0] + pt.t[1]*p3.t[1]));
                 if (dt < t_thresh) {
                   double d = vcl_fabs(pt.k - p3.k);
                   if (d < dmin) {
@@ -788,12 +788,12 @@ trinocular_DG_match_cost(
         for (unsigned jcell = j_range_min; jcell <= j_range_max; ++jcell) {
             for (unsigned i=0; i < sp_pts3.cells()[icell][jcell].size(); ++i) {
               nhood_empty=false;
-              const dbdif_3rd_order_point_2d &pt = pts3[ sp_pts3.cells()[icell][jcell][i] ];
+              const bdifd_3rd_order_point_2d &pt = pts3[ sp_pts3.cells()[icell][jcell][i] ];
               if (pt.valid) {
                 has_valid = true;
                 //pt : data point in view 3
                 //p3 : reprojected point
-                double d = vcl_acos(mw_util::clump_to_acos(pt.t[0]*p3.t[0] + pt.t[1]*p3.t[1]));
+                double d = vcl_acos(bmcsd_util::clump_to_acos(pt.t[0]*p3.t[0] + pt.t[1]*p3.t[1]));
                 if (d < dmin) {
                   kmin = i;
                   dmin = d;
@@ -826,15 +826,15 @@ trinocular_DG_match_cost(
 
 bool mw_point_matcher::
 trinocular_DG_match_cost_band( 
-  const dbdif_2nd_order_point_2d &p0, 
-  const dbdif_2nd_order_point_2d &p1, 
-  const dbdif_2nd_order_point_2d &p2, 
+  const bdifd_2nd_order_point_2d &p0, 
+  const bdifd_2nd_order_point_2d &p1, 
+  const bdifd_2nd_order_point_2d &p2, 
   unsigned iv0, 
   unsigned iv1, 
   unsigned iv2, 
-  dbdif_rig &rig01,
-  dbdif_rig &rig02,
-  dbdif_rig &rig12,
+  bdifd_rig &rig01,
+  bdifd_rig &rig02,
+  bdifd_rig &rig12,
   double *cost,
   reason *reason
   ) const
@@ -886,15 +886,15 @@ trinocular_DG_match_cost_band(
 
 bool mw_point_matcher::
 trinocular_DG_match_cost_3( 
-  const dbdif_3rd_order_point_2d &pt_img1, 
-  const dbdif_3rd_order_point_2d &pt_img2, 
-  const dbdif_3rd_order_point_2d &pt_img3, 
+  const bdifd_3rd_order_point_2d &pt_img1, 
+  const bdifd_3rd_order_point_2d &pt_img2, 
+  const bdifd_3rd_order_point_2d &pt_img3, 
   unsigned iv0, 
   unsigned iv1, 
   unsigned iv2, 
-  dbdif_rig &rig12,
-  dbdif_rig &rig13,
-  dbdif_rig &rig23,
+  bdifd_rig &rig12,
+  bdifd_rig &rig13,
+  bdifd_rig &rig23,
   double *cost,
   bool use_curvature,//:< true in case use curvature diffs; false in case we use only tgts diffs
   reason *reason
@@ -905,7 +905,7 @@ trinocular_DG_match_cost_3(
   const double k_thresh = 0.5;
 
 
-  //: use dbdif_2nd_order_point
+  //: use bdifd_2nd_order_point
 
   if (!pt_img1.valid || !pt_img2.valid || !pt_img3.valid ) {
     *cost   = vcl_numeric_limits<double>::infinity();
@@ -925,18 +925,18 @@ trinocular_DG_match_cost_3(
   vpgl_fundamental_matrix<double> f_tmp;
 
 
-  double epiangle_p1_E21 = dbdif_rig::angle_with_epipolar_line(pt_img1.t,pt_img1.gama,rig12.f12);
-  double epiangle_p1_E31 = dbdif_rig::angle_with_epipolar_line(pt_img1.t,pt_img1.gama,rig13.f12);
+  double epiangle_p1_E21 = bdifd_rig::angle_with_epipolar_line(pt_img1.t,pt_img1.gama,rig12.f12);
+  double epiangle_p1_E31 = bdifd_rig::angle_with_epipolar_line(pt_img1.t,pt_img1.gama,rig13.f12);
 
   f_tmp.set_matrix(rig12.f12.get_matrix().transpose());
-  double epiangle_p2_E12 = dbdif_rig::angle_with_epipolar_line(pt_img2.t,pt_img2.gama,f_tmp);
-  double epiangle_p2_E32 = dbdif_rig::angle_with_epipolar_line(pt_img2.t,pt_img2.gama,rig23.f12);
+  double epiangle_p2_E12 = bdifd_rig::angle_with_epipolar_line(pt_img2.t,pt_img2.gama,f_tmp);
+  double epiangle_p2_E32 = bdifd_rig::angle_with_epipolar_line(pt_img2.t,pt_img2.gama,rig23.f12);
 
   f_tmp.set_matrix(rig13.f12.get_matrix().transpose());
-  double epiangle_p3_E13 = dbdif_rig::angle_with_epipolar_line(pt_img3.t,pt_img3.gama,f_tmp);
+  double epiangle_p3_E13 = bdifd_rig::angle_with_epipolar_line(pt_img3.t,pt_img3.gama,f_tmp);
 
   f_tmp.set_matrix(rig23.f12.get_matrix().transpose());
-  double epiangle_p3_E23 = dbdif_rig::angle_with_epipolar_line(pt_img3.t,pt_img3.gama,f_tmp);
+  double epiangle_p3_E23 = bdifd_rig::angle_with_epipolar_line(pt_img3.t,pt_img3.gama,f_tmp);
 
 
 
@@ -959,10 +959,10 @@ trinocular_DG_match_cost_3(
 
   // -- 3
   
-  dbdif_3rd_order_point_3d Prec;
-  dbdif_3rd_order_point_2d p_rep3; 
+  bdifd_3rd_order_point_3d Prec;
+  bdifd_3rd_order_point_2d p_rep3; 
   bool valid;
-  valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img2, p_rep3, Prec, cam_[iv2], rig12);
+  valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img2, p_rep3, Prec, cam_[iv2], rig12);
   if (!valid) {
     *cost   = vcl_numeric_limits<double>::infinity();
     *reason = S_FAIL_DIFFERENTIAL_DEGENERACY_3D;
@@ -972,8 +972,8 @@ trinocular_DG_match_cost_3(
 
   // -- 2
 
-  dbdif_3rd_order_point_2d p_rep2; 
-  valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img3, p_rep2, Prec, cam_[iv1], rig13);
+  bdifd_3rd_order_point_2d p_rep2; 
+  valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img3, p_rep2, Prec, cam_[iv1], rig13);
   if (!valid) {
     *cost   = vcl_numeric_limits<double>::infinity();
     *reason = S_FAIL_DIFFERENTIAL_DEGENERACY_3D;
@@ -983,8 +983,8 @@ trinocular_DG_match_cost_3(
   
   // -- 1
 
-  dbdif_3rd_order_point_2d p_rep1; 
-  valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img2, pt_img3, p_rep1, Prec, cam_[iv0], rig23);
+  bdifd_3rd_order_point_2d p_rep1; 
+  valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img2, pt_img3, p_rep1, Prec, cam_[iv0], rig23);
   if (!valid) {
     *cost   = vcl_numeric_limits<double>::infinity();
     *reason = S_FAIL_DIFFERENTIAL_DEGENERACY_3D;
@@ -992,11 +992,11 @@ trinocular_DG_match_cost_3(
   }
 
   // compare p_rep and pt_img3
-  double dt3 = vcl_acos(mw_util::clump_to_acos(p_rep3.t[0]*pt_img3.t[0] + p_rep3.t[1]*pt_img3.t[1]));
+  double dt3 = vcl_acos(bmcsd_util::clump_to_acos(p_rep3.t[0]*pt_img3.t[0] + p_rep3.t[1]*pt_img3.t[1]));
   // compare p_rep and pt_img2
-  double dt2 = vcl_acos(mw_util::clump_to_acos(p_rep2.t[0]*pt_img2.t[0] + p_rep2.t[1]*pt_img2.t[1]));
+  double dt2 = vcl_acos(bmcsd_util::clump_to_acos(p_rep2.t[0]*pt_img2.t[0] + p_rep2.t[1]*pt_img2.t[1]));
   // compare p_rep and pt_img1
-  double dt1 = vcl_acos(mw_util::clump_to_acos(p_rep1.t[0]*pt_img1.t[0] + p_rep1.t[1]*pt_img1.t[1]));
+  double dt1 = vcl_acos(bmcsd_util::clump_to_acos(p_rep1.t[0]*pt_img1.t[0] + p_rep1.t[1]*pt_img1.t[1]));
 
   if ( dt1 > t_thresh ||
        dt2 > t_thresh ||
@@ -1059,9 +1059,9 @@ trinocular_DG_match_cost_3(
 // DG stands for differential geometry
 bool mw_point_matcher::
 n_view_DG_match_cost( 
-  const mw_ntuplet &tup,
-  const vcl_vector<vcl_vector< dbdif_3rd_order_point_2d > > &points_,
-  const vcl_vector<dbdif_rig *> &rigs,
+  const bmcsd_ntuplet &tup,
+  const vcl_vector<vcl_vector< bdifd_3rd_order_point_2d > > &points_,
+  const vcl_vector<bdifd_rig *> &rigs,
   double *cost,
   bool use_curvature,//:< true in case use curvature diffs; false in case we use only tgts diffs
   reason *reason
@@ -1073,7 +1073,7 @@ n_view_DG_match_cost(
   const double k_thresh = 0.5;
   const double epipolar_angle_thresh = vnl_math::pi/8; //:< for epipolar tangency
 
-  //: use dbdif_2nd_order_point
+  //: use bdifd_2nd_order_point
 
   for (unsigned iv=0; iv < tup.size(); ++iv) {
     if (!points_[iv][tup[iv]].valid) {
@@ -1092,18 +1092,18 @@ n_view_DG_match_cost(
 
   vpgl_fundamental_matrix<double> f_tmp;
 
-  double epiangle_p1_E21 = dbdif_rig::angle_with_epipolar_line(pt_img1.t,pt_img1.gama,rig12.f12);
-  double epiangle_p1_E31 = dbdif_rig::angle_with_epipolar_line(pt_img1.t,pt_img1.gama,rig13.f12);
+  double epiangle_p1_E21 = bdifd_rig::angle_with_epipolar_line(pt_img1.t,pt_img1.gama,rig12.f12);
+  double epiangle_p1_E31 = bdifd_rig::angle_with_epipolar_line(pt_img1.t,pt_img1.gama,rig13.f12);
 
   f_tmp.set_matrix(rig12.f12.get_matrix().transpose());
-  double epiangle_p2_E12 = dbdif_rig::angle_with_epipolar_line(pt_img2.t,pt_img2.gama,f_tmp);
-  double epiangle_p2_E32 = dbdif_rig::angle_with_epipolar_line(pt_img2.t,pt_img2.gama,rig23.f12);
+  double epiangle_p2_E12 = bdifd_rig::angle_with_epipolar_line(pt_img2.t,pt_img2.gama,f_tmp);
+  double epiangle_p2_E32 = bdifd_rig::angle_with_epipolar_line(pt_img2.t,pt_img2.gama,rig23.f12);
 
   f_tmp.set_matrix(rig13.f12.get_matrix().transpose());
-  double epiangle_p3_E13 = dbdif_rig::angle_with_epipolar_line(pt_img3.t,pt_img3.gama,f_tmp);
+  double epiangle_p3_E13 = bdifd_rig::angle_with_epipolar_line(pt_img3.t,pt_img3.gama,f_tmp);
 
   f_tmp.set_matrix(rig23.f12.get_matrix().transpose());
-  double epiangle_p3_E23 = dbdif_rig::angle_with_epipolar_line(pt_img3.t,pt_img3.gama,f_tmp);
+  double epiangle_p3_E23 = bdifd_rig::angle_with_epipolar_line(pt_img3.t,pt_img3.gama,f_tmp);
 
 
 
@@ -1125,10 +1125,10 @@ n_view_DG_match_cost(
 
   // -- 3
   
-  dbdif_3rd_order_point_3d Prec;
-  dbdif_3rd_order_point_2d p_rep3; 
+  bdifd_3rd_order_point_3d Prec;
+  bdifd_3rd_order_point_2d p_rep3; 
   bool valid;
-  valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img2, p_rep3, Prec, iv2, rig12);
+  valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img2, p_rep3, Prec, iv2, rig12);
   if (!valid) {
     *cost   = vcl_numeric_limits<double>::infinity();
     *reason = S_FAIL_DIFFERENTIAL_DEGENERACY_3D;
@@ -1138,8 +1138,8 @@ n_view_DG_match_cost(
 
   // -- 2
 
-  dbdif_3rd_order_point_2d p_rep2; 
-  valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img3, p_rep2, Prec, iv1, rig13);
+  bdifd_3rd_order_point_2d p_rep2; 
+  valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img1, pt_img3, p_rep2, Prec, iv1, rig13);
   if (!valid) {
     *cost   = vcl_numeric_limits<double>::infinity();
     *reason = S_FAIL_DIFFERENTIAL_DEGENERACY_3D;
@@ -1149,8 +1149,8 @@ n_view_DG_match_cost(
   
   // -- 1
 
-  dbdif_3rd_order_point_2d p_rep1; 
-  valid = dbdif_transfer::transfer_by_reconstruct_and_reproject ( pt_img2, pt_img3, p_rep1, Prec, iv0, rig23);
+  bdifd_3rd_order_point_2d p_rep1; 
+  valid = bdifd_transfer::transfer_by_reconstruct_and_reproject ( pt_img2, pt_img3, p_rep1, Prec, iv0, rig23);
   if (!valid) {
     *cost   = vcl_numeric_limits<double>::infinity();
     *reason = S_FAIL_DIFFERENTIAL_DEGENERACY_3D;
@@ -1158,11 +1158,11 @@ n_view_DG_match_cost(
   }
 
   // compare p_rep and pt_img3
-  double dt3 = vcl_acos(mw_util::clump_to_acos(p_rep3.t[0]*pt_img3.t[0] + p_rep3.t[1]*pt_img3.t[1]));
+  double dt3 = vcl_acos(bmcsd_util::clump_to_acos(p_rep3.t[0]*pt_img3.t[0] + p_rep3.t[1]*pt_img3.t[1]));
   // compare p_rep and pt_img2
-  double dt2 = vcl_acos(mw_util::clump_to_acos(p_rep2.t[0]*pt_img2.t[0] + p_rep2.t[1]*pt_img2.t[1]));
+  double dt2 = vcl_acos(bmcsd_util::clump_to_acos(p_rep2.t[0]*pt_img2.t[0] + p_rep2.t[1]*pt_img2.t[1]));
   // compare p_rep and pt_img1
-  double dt1 = vcl_acos(mw_util::clump_to_acos(p_rep1.t[0]*pt_img1.t[0] + p_rep1.t[1]*pt_img1.t[1]));
+  double dt1 = vcl_acos(bmcsd_util::clump_to_acos(p_rep1.t[0]*pt_img1.t[0] + p_rep1.t[1]*pt_img1.t[1]));
 
 
 
@@ -1227,19 +1227,19 @@ n_view_DG_match_cost(
 
 void mw_point_matcher::
 synthetic_geometry_costs(
-    vcl_vector<vcl_vector<dbdif_3rd_order_point_2d> > crv2d_gt,
-    mw_discrete_corresp *corr,
+    vcl_vector<vcl_vector<bdifd_3rd_order_point_2d> > crv2d_gt,
+    bmcsd_discrete_corresp *corr,
     unsigned iv1, unsigned iv2 )
 {
-  dbdif_rig rig(cam_[iv1].Pr_, cam_[iv2].Pr_);
+  bdifd_rig rig(cam_[iv1].Pr_, cam_[iv2].Pr_);
   unsigned  n_matched=0, n_corr=0;
 
   for (unsigned  i=0; i < crv2d_gt[iv1].size(); ++i) {
-    for ( vcl_list<mw_attributed_object>::iterator itr= corr->corresp_[i].begin();
+    for ( vcl_list<bmcsd_attributed_object>::iterator itr= corr->corresp_[i].begin();
           itr != corr->corresp_[i].end(); ++itr) {
 
-      dbdif_3rd_order_point_2d p1 = crv2d_gt[iv1][i];
-      dbdif_3rd_order_point_2d p2 = crv2d_gt[iv2][itr->obj_]; 
+      bdifd_3rd_order_point_2d p1 = crv2d_gt[iv1][i];
+      bdifd_3rd_order_point_2d p2 = crv2d_gt[iv2][itr->obj_]; 
       double cost;
       reason reason;
 
@@ -1263,9 +1263,9 @@ synthetic_geometry_costs(
 //: binocular differential-geometric cost
 bool mw_point_matcher::
 synthetic_geometry_match_cost( 
-  const dbdif_3rd_order_point_2d &p1, 
-  const dbdif_3rd_order_point_2d &p2, 
-  dbdif_rig &rig,
+  const bdifd_3rd_order_point_2d &p1, 
+  const bdifd_3rd_order_point_2d &p2, 
+  bdifd_rig &rig,
   double *cost, reason *reason) const
 {
   if (!p1.valid || !p2.valid) {
@@ -1273,8 +1273,8 @@ synthetic_geometry_match_cost(
     *reason = S_FAIL_DIFFERENTIAL_DEGENERACY_2D;
     return false;
   } else {
-    dbdif_3rd_order_point_3d P;
-    dbdif_3rd_order_point_2d p1_w, p2_w;
+    bdifd_3rd_order_point_3d P;
+    bdifd_3rd_order_point_2d p1_w, p2_w;
 
     rig.cam[0].img_to_world(&p1,&p1_w);
     rig.cam[1].img_to_world(&p2,&p2_w);
@@ -1287,7 +1287,7 @@ synthetic_geometry_match_cost(
       return false;
     }
 
-    if (mw_util::near_zero(P.K,1e-13))
+    if (bmcsd_util::near_zero(P.K,1e-13))
       *cost = 0;
     else {
       double Gamma_3dot = P.Gamma_3dot_abs();
@@ -1300,7 +1300,7 @@ synthetic_geometry_match_cost(
 //      *cost = vcl_sqrt(Gamma_3dot)*slant*slant*slant*slant*slant*slant;
       *cost = vcl_sqrt(Gamma_3dot)*Speed;
 //      *cost = vcl_fabs(P.K)*Speed;
-//      *cost = vcl_acos( mw_util::clump_to_acos(p1.t[0]*p2.t[0] + p1.t[1]*p2.t[1]) );
+//      *cost = vcl_acos( bmcsd_util::clump_to_acos(p1.t[0]*p2.t[0] + p1.t[1]*p2.t[1]) );
 //      *cost = d_sqr(p1.gama[0], p1.gama[1], p2.gama[0], p2.gama[1]);
 //        *cost = vcl_fabs(p1.k - p2.k);
     }

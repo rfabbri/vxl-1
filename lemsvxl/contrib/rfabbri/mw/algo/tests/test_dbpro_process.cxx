@@ -1,28 +1,28 @@
 //:
 //\file
-//\brief File for me to experiment with dbpro.
+//\brief File for me to experiment with bprod.
 //\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //
 #include <testlib/testlib_test.h>
-#include <dbpro/dbpro_process.h>
+#include <bprod/bprod_process.h>
 #include <vcl_iostream.h>
-#include <dbpro/dbpro_observer.h>
-#include <dbpro/tests/dbpro_sample_processes.h>
+#include <bprod/bprod_observer.h>
+#include <bprod/tests/bprod_sample_processes.h>
 #include <vcl_vector.h>
 
 //: The simplest possible source; just returns what it holds. Each call to
 // execute just returns the same thing.
 template <class T>
-class dbpro_single_input : public dbpro_source
+class bprod_single_input : public bprod_source
 {
  public:
-  dbpro_single_input(T d) : data(d) {}
+  bprod_single_input(T d) : data(d) {}
 
   //: Execute the process
-  dbpro_signal execute()
+  bprod_signal execute()
   {
     output(0, data);
-    return DBPRO_VALID;
+    return BPROD_VALID;
   }
 
   T data;
@@ -30,34 +30,34 @@ class dbpro_single_input : public dbpro_source
 
 
 template <class T>
-class dbpro_concat : public dbpro_sink
+class bprod_concat : public bprod_sink
 {
  public:
-  dbpro_concat(unsigned n) : n_(n), data() { data.reserve(n);}
+  bprod_concat(unsigned n) : n_(n), data() { data.reserve(n);}
 
   //: Execute the process
-  dbpro_signal execute()
+  bprod_signal execute()
   {
     for (unsigned i=0; i < n_; ++i) {
       assert(input_type_id(i) == typeid(T));
       data.push_back(input<T>(i));
     }
-    return DBPRO_VALID;
+    return BPROD_VALID;
   }
 
   unsigned n_; 
   vcl_vector<T> data;
 };
 
-static dbpro_mutex print_mutex;
+static bprod_mutex print_mutex;
 
 template <class T>
-class dbpro_sum_expensive : public dbpro_filter
+class bprod_sum_expensive : public bprod_filter
 {
  public:
-  dbpro_sum_expensive(unsigned n_iter) : n_it_(n_iter) {}
+  bprod_sum_expensive(unsigned n_iter) : n_it_(n_iter) {}
   //: Execute the process
-  dbpro_signal execute()
+  bprod_signal execute()
   {
     assert(input_type_id(0) == typeid(T));
     assert(input_type_id(1) == typeid(T));
@@ -78,15 +78,15 @@ class dbpro_sum_expensive : public dbpro_filter
     print_mutex.unlock();
 
     output(0, T(val1+val2));
-    return DBPRO_VALID;
+    return BPROD_VALID;
   }
 
   unsigned n_it_;
 };
 
-MAIN( test_dbpro_process )
+MAIN( test_bprod_process )
 {
-  START ("ric's dbpro process experiments");
+  START ("ric's bprod process experiments");
 
   vcl_vector<int> data;
   data.push_back(4);
@@ -97,23 +97,23 @@ MAIN( test_dbpro_process )
 
 
   assert(!data.empty());
-  vcl_vector<dbpro_process_sptr> sources;
+  vcl_vector<bprod_process_sptr> sources;
   sources.reserve(data.size());
 
-  vcl_vector<dbpro_process_sptr> sums;
+  vcl_vector<bprod_process_sptr> sums;
   sums.reserve(data.size()-1);
 
   
-  dbpro_concat<int> *out_ptr = new dbpro_concat<int>(data.size()-1);
-  dbpro_process_sptr out(out_ptr);
+  bprod_concat<int> *out_ptr = new bprod_concat<int>(data.size()-1);
+  bprod_process_sptr out(out_ptr);
 
   for (unsigned i=0; i < data.size(); ++i) {
     // Create source processes that just return an int.
-    sources.push_back(new dbpro_single_input<int>(data[i]));
+    sources.push_back(new bprod_single_input<int>(data[i]));
 
     if (i > 0) {
       // Connect each source to a process that sums the value with the previous
-      sums.push_back(new dbpro_sum_expensive<int>((data.size()-i+1)*1000));
+      sums.push_back(new bprod_sum_expensive<int>((data.size()-i+1)*1000));
       sums.back()->connect_input(0,sources[i-1],0);
       sums.back()->connect_input(1,sources[i],0);
       out->connect_input(i-1, sums.back(), 0);

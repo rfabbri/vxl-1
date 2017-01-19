@@ -2,9 +2,9 @@
 
 void dvcpl_bundle_adjust_sink::
 setup_inputs(
-      vcl_vector<dbpro_process_sptr> &cam_src, 
-      vcl_vector<dbpro_process_sptr> &edg_src, 
-      vcl_vector<dbpro_process_sptr> &edg_dt
+      vcl_vector<bprod_process_sptr> &cam_src, 
+      vcl_vector<bprod_process_sptr> &edg_src, 
+      vcl_vector<bprod_process_sptr> &edg_dt
       )
 {
   nviews_ = cam_src.size();

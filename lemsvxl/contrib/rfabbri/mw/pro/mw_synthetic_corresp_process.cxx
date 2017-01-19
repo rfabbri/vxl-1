@@ -4,8 +4,8 @@
 #include <dbdet/dbdet_keypoint.h>
 #include <dbkpr/pro/dbkpr_corr3d_storage.h>
 #include <vgl/vgl_distance.h>
-#include <dbdif/algo/dbdif_data.h>
-#include <mw/algo/mw_algo_util.h>
+#include <bdifd/algo/bdifd_data.h>
+#include <bmcsd/algo/bmcsd_algo_util.h>
 #include <bpgl/algo/bpgl_construct_cameras.h>
 
 #include <bpro1/bpro1_parameters.h>
@@ -166,7 +166,7 @@ finish()
 
       assert(fp);
 
-      dbdif_3rd_order_point_2d frenet_pt = mw_algo_util::mw_get_3rd_order_point_2d(*fp);
+      bdifd_3rd_order_point_2d frenet_pt = bmcsd_algo_util::mw_get_3rd_order_point_2d(*fp);
 
       double x; double y; double dir;
 
@@ -226,7 +226,7 @@ define_dataset(vpgl_calibration_matrix<double> **K, unsigned &ncols, unsigned &n
   ncols = 500;
   unsigned  crop_origin_x = 450;
   unsigned  crop_origin_y = 1750;
-  dbdif_turntable::internal_calib_olympus(Kmatrix, ncols, crop_origin_x, crop_origin_y);
+  bdifd_turntable::internal_calib_olympus(Kmatrix, ncols, crop_origin_x, crop_origin_y);
 
   *K = new vpgl_calibration_matrix<double> (Kmatrix);
 
@@ -240,31 +240,31 @@ define_dataset(vpgl_calibration_matrix<double> **K, unsigned &ncols, unsigned &n
   angles.push_back(50);
   angles.push_back(70);
 
-  vcl_vector<dbdif_camera> cam;
+  vcl_vector<bdifd_camera> cam;
 
   cam.resize(nviews_);
 
   pcam_.resize(nviews_);
   for (unsigned i=0; i < nviews_; ++i) {
-    P = dbdif_turntable::camera_olympus(angles[i], **K);
+    P = bdifd_turntable::camera_olympus(angles[i], **K);
     cam[i].set_p(*P);
     pcam_[i] = P;
   }
 
-  vcl_vector<vcl_vector<dbdif_3rd_order_point_3d> > crv3d;
-  dbdif_data::space_curves_digicam_turntable_medium_sized( crv3d );
+  vcl_vector<vcl_vector<bdifd_3rd_order_point_3d> > crv3d;
+  bdifd_data::space_curves_digicam_turntable_medium_sized( crv3d );
 
-  dbdif_data::project_into_cams(crv3d, cam, crv2d_);
+  bdifd_data::project_into_cams(crv3d, cam, crv2d_);
   vcl_cout << "Number of samples INCLUDING epitangencies: " << crv2d_[0].size() << vcl_endl;
 
   for (unsigned n=0; n < crv2d_[0].size(); n+=1)
     pt_id_.push_back(n);
 
   for (unsigned i=0; i < pt_id_.size(); ++i) {
-    vgl_pts_.push_back(dbdif_data::get_point_crv3d(crv3d,pt_id_[i]));
+    vgl_pts_.push_back(bdifd_data::get_point_crv3d(crv3d,pt_id_[i]));
   }
 
-  mw_algo_util::move_world_to_1st_cam(pcam_,vgl_pts_);
+  bmcsd_algo_util::move_world_to_1st_cam(pcam_,vgl_pts_);
   for (unsigned i=0; i < pcam_.size(); ++i) {
     vcl_cout << "Camera view index " << i << ":" << vcl_endl;
     vcl_cout << *(pcam_[i]) << vcl_endl;
@@ -308,7 +308,7 @@ generate_corr_pts(vcl_vector<dbdet_keypoint_corr3d_sptr> &corr_pts)
       dbdet_keypoint_sptr p;
 //      p = new dbdet_keypoint(crv2d_[iv][pt_id_[i]].gama[0],crv2d_[iv][pt_id_[i]].gama[1]);
 
-      p = new dbdet_frenet_keypoint(mw_algo_util::mw_get_frenet_keypoint(crv2d_[iv][pt_id_[i]]));
+      p = new dbdet_frenet_keypoint(bmcsd_algo_util::mw_get_frenet_keypoint(crv2d_[iv][pt_id_[i]]));
       corr->add_correspondence(p,iv);
     }
 
@@ -362,8 +362,8 @@ initialize_poses(
   // Renormalize the translations to have only 1 global ambiguous scale
   // TODO: guarantee that world_points_ini[1][0] is not near any baseline.
   for (unsigned iv=2; iv < nviews_; ++iv) {
-    assert(!mw_util::near_zero(mw_util::vgl_to_vnl(world_points_ini[iv][0]).two_norm()));
-    double scale = mw_util::vgl_to_vnl(world_points_ini[1][0]).two_norm() / mw_util::vgl_to_vnl(world_points_ini[iv][0]).two_norm();
+    assert(!bmcsd_util::near_zero(bmcsd_util::vgl_to_vnl(world_points_ini[iv][0]).two_norm()));
+    double scale = bmcsd_util::vgl_to_vnl(world_points_ini[1][0]).two_norm() / bmcsd_util::vgl_to_vnl(world_points_ini[iv][0]).two_norm();
 
     vgl_point_3d<double> c = pcam_ini[iv]->get_camera_center();
     c.set(c.x()*scale, c.y()*scale, c.z()*scale);

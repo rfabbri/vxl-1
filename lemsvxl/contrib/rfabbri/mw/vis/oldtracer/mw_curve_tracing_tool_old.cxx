@@ -4,7 +4,7 @@
 #include <bvis1/bvis1_manager.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/vidpro1_repository.h>
-#include <dvpgl/pro/dvpgl_camera_storage.h>
+#include <vpgld/pro/vpgld_camera_storage.h>
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_point_2d.h>
 #include <vcl_set.h>
@@ -41,7 +41,7 @@ mw_curve_tracing_tool_3::activate ()
     bpro1_storage_sptr 
       p = MANAGER->repository()->get_data("vpgl camera");
 
-    dvpgl_camera_storage_sptr cam_storage;
+    vpgld_camera_storage_sptr cam_storage;
 
     cam_storage.vertical_cast(p);
 

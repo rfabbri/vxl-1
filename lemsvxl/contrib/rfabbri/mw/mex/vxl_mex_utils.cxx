@@ -1,7 +1,7 @@
 #include "vxl_mex_utils.h"
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_conic_segment_2d.h>
-#include <dbgl/algo/dbgl_circ_arc.h>
+#include <bgld/algo/bgld_circ_arc.h>
 
 // Assumes pts_vxl_ptr already has the right length.
 void 
@@ -64,7 +64,7 @@ vgl_to_matlab(const vcl_vector<vgl_conic_segment_2d<double> > &pts_vxl)
 // The order of the coefficients is: $X^2$, $XY$, $Y^2$, $XW$, $YW$, $W^2$,
 // where $W$ is the homogeneous coordinate (sometimes denoted by $Z$).
 mxArray *
-vgl_to_matlab(const vcl_vector<dbgl_circ_arc> &pts_vxl)
+vgl_to_matlab(const vcl_vector<bgld_circ_arc> &pts_vxl)
 {
   unsigned n = pts_vxl.size();
 

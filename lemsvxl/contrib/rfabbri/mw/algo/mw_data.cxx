@@ -1,9 +1,9 @@
 #include "mw_data.h"
-#include <dbul/dbul_parse_simple_file.h>
+#include <buld/buld_parse_simple_file.h>
 #include <vul/vul_file.h>
 
 void mw_data::
-get_capitol_building_subset(mw_curve_stereo_data_path *d)
+get_capitol_building_subset(bmcsd_curve_stereo_data_path *d)
 {
   vcl_string path("/usr/local/moredata/subset/");
   vcl_vector<vcl_string> edgemaps_fnames;
@@ -40,32 +40,32 @@ get_capitol_building_subset(mw_curve_stereo_data_path *d)
   cam_fnames.push_back("frame_00030.png");
   cam_fnames.push_back("frame_00100.png");
 
-  mw_util::camera_file_type cam_type = mw_util::MW_INTRINSIC_EXTRINSIC;
+  bmcsd_util::camera_file_type cam_type = bmcsd_util::MW_INTRINSIC_EXTRINSIC;
   d->set(path, img_fnames, cam_fnames, edgemaps_fnames, frag_fnames, cam_type);
 }
 
-bool mw_curve_stereo_data_path::
+bool bmcsd_curve_stereo_data_path::
 set(const vcl_string &path, 
     const vcl_vector<vcl_string> &img_fnames, 
     const vcl_vector<vcl_string> &cam_fnames,
     const vcl_vector<vcl_string> &edg_fnames,
     const vcl_vector<vcl_string> &frag_fnames,
-    mw_util::camera_file_type cam_ftype
+    bmcsd_util::camera_file_type cam_ftype
     )
 {
   unsigned nviews = img_fnames.size();
   if (cam_fnames.size() != nviews)  {
-    vcl_cerr << "Error in mw_curve_stereo_data_path::set():"
+    vcl_cerr << "Error in bmcsd_curve_stereo_data_path::set():"
              << "Num of camera files different than num of images.\n";
     return false;
   }
   if (edg_fnames.size() != nviews) {
-    vcl_cerr << "Error in mw_curve_stereo_data_path::set():"
+    vcl_cerr << "Error in bmcsd_curve_stereo_data_path::set():"
              << "Num of edge files different than num of images.\n";
     return false;
   }
   if (frag_fnames.size() != nviews) {
-    vcl_cerr << "Error in mw_curve_stereo_data_path::set():"
+    vcl_cerr << "Error in bmcsd_curve_stereo_data_path::set():"
              << "Num of curve fragments different than num of images.\n";
     return false;
   }
@@ -82,12 +82,12 @@ set(const vcl_string &path,
   return true;
 }
 
-bool mw_curve_stereo_data_path::
+bool bmcsd_curve_stereo_data_path::
 set_curvelets(const vcl_vector<vcl_string> &cvlet_fnames)
 {
   unsigned nviews = views_.size();
   if (cvlet_fnames.size() != nviews)  {
-    vcl_cerr << "Error in mw_curve_stereo_data_path::set():"
+    vcl_cerr << "Error in bmcsd_curve_stereo_data_path::set():"
              << "Num of camera files different than num of images.\n";
     return false;
   }
@@ -102,26 +102,26 @@ set_curvelets(const vcl_vector<vcl_string> &cvlet_fnames)
 bool mw_data::
 read_frame_data_list_txt(
     const vcl_string &path,
-    mw_curve_stereo_data_path *dataset,
-    mw_util::camera_file_type cam_type
+    bmcsd_curve_stereo_data_path *dataset,
+    bmcsd_util::camera_file_type cam_type
     )
 {
   vcl_string fname = path + vcl_string("/mcs_img_list.txt");
   vcl_cout << "Reading " << fname << vcl_endl;
   vcl_vector<vcl_string > img_fnames;
-  bool retval = dbul_parse_string_list(fname, img_fnames);
+  bool retval = buld_parse_string_list(fname, img_fnames);
   if (!retval) return false;
 
   fname = path + vcl_string("/mcs_edg_list.txt");
   vcl_cout << "Reading " << fname << vcl_endl;
   vcl_vector<vcl_string > edg_fnames;
-  retval = dbul_parse_string_list(fname, edg_fnames);
+  retval = buld_parse_string_list(fname, edg_fnames);
   if (!retval) return false;
 
   fname = path + vcl_string("/mcs_frag_list.txt");
   vcl_cout << "Reading " << fname << vcl_endl;
   vcl_vector<vcl_string > frag_fnames;
-  retval = dbul_parse_string_list(fname, frag_fnames);
+  retval = buld_parse_string_list(fname, frag_fnames);
   if (!retval) return false;
   
   retval = 
@@ -135,7 +135,7 @@ read_frame_data_list_txt(
   vcl_vector<vcl_string > cvlet_fnames;
   if (vul_file::exists(fname)) {
     vcl_cout << "Reading " << fname << vcl_endl;
-    retval = dbul_parse_string_list(fname, cvlet_fnames);
+    retval = buld_parse_string_list(fname, cvlet_fnames);
     if (!retval) return false;
 
     retval = 
@@ -152,7 +152,7 @@ read_frame_data_list_txt(
 }
 
 // #define MW_VERBOSE_DEBUG 0
-vcl_ostream&  operator<<(vcl_ostream& s, const mw_curve_stereo_data_path& p)
+vcl_ostream&  operator<<(vcl_ostream& s, const bmcsd_curve_stereo_data_path& p)
 {
   s << "nviews: " << p.nviews() << vcl_endl;
   assert(p.nviews());
@@ -169,7 +169,7 @@ vcl_ostream&  operator<<(vcl_ostream& s, const mw_curve_stereo_data_path& p)
   return s;
 }
 
-vcl_ostream&  operator<<(vcl_ostream& s, const mw_curve_stereo_frame_data_path& p)
+vcl_ostream&  operator<<(vcl_ostream& s, const bmcsd_curve_stereo_frame_data_path& p)
 {
   s << "path: " << p.path_ << vcl_endl;
   s << "cam_ftype: " << p.cam_ftype_ << vcl_endl;

@@ -2,10 +2,10 @@
 include_directories( ${lems_SOURCE_DIR}/contrib/rfabbri )
 
 set(mw_pro_sources
-dvpgl_load_camera_process.cxx dvpgl_load_camera_process.h
+vpgld_load_camera_process.cxx vpgld_load_camera_process.h
 #old/mw_cvmatch_process.cxx old/mw_cvmatch_process.h
-mw_discrete_corresp_storage.cxx mw_discrete_corresp_storage.h mw_discrete_corresp_storage_sptr.h
-mw_discrete_corresp_storage_3.cxx mw_discrete_corresp_storage_3.h mw_discrete_corresp_storage_3_sptr.h
+bmcsd_discrete_corresp_storage.cxx bmcsd_discrete_corresp_storage.h bmcsd_discrete_corresp_storage_sptr.h
+bmcsd_discrete_corresp_storage_3.cxx bmcsd_discrete_corresp_storage_3.h bmcsd_discrete_corresp_storage_3_sptr.h
 mw_load_discrete_corresp_process.cxx mw_load_discrete_corresp_process.h
 mw_save_discrete_corresp_process.cxx mw_save_discrete_corresp_process.h
 #dbdet_test_sel_circle_process.cxx dbdet_test_sel_circle_process.h
@@ -17,17 +17,17 @@ dbkpr_frenet_reconstruct_process.cxx    dbkpr_frenet_reconstruct_process.h
 mw_synthetic_corresp_process.cxx mw_synthetic_corresp_process.h
 mw_project_cube_process.cxx mw_project_cube_process.h
 mw_project_polyline_process.cxx mw_project_polyline_process.h
-dbmcs_project_curve_sketch_process.cxx dbmcs_project_curve_sketch_process.h
+bmcsd_project_curve_sketch_process.cxx bmcsd_project_curve_sketch_process.h
 mw_extend_corresp_process.cxx mw_extend_corresp_process.h
-dbmcs_stereo_filter.h dbmcs_stereo_filter.cxx
-dbmcs_stereo_driver.h dbmcs_stereo_driver.cxx
+bmcsd_stereo_filter.h bmcsd_stereo_filter.cxx
+bmcsd_stereo_driver.h bmcsd_stereo_driver.cxx
 dvcpl_bundle_adjust_driver.h dvcpl_bundle_adjust_driver.cxx
 dvcpl_bundle_adjust_sink.h dvcpl_bundle_adjust_sink.cxx
-dbmcs_nearest_edgels_process.h dbmcs_nearest_edgels_process.cxx
+bmcsd_nearest_edgels_process.h bmcsd_nearest_edgels_process.cxx
 )
 
 
 add_library(mw_pro ${mw_pro_sources})
 
-target_link_libraries(mw_pro mw_algo bpgl_algo vpgl_algo dbkpr_pro dvpgl_pro dbdet_pro bvis1 bpro1 dbpro vsl)
+target_link_libraries(mw_pro mw_algo bpgl_algo vpgl_algo dbkpr_pro vpgld_pro dbdet_pro bvis1 bpro1 bprod vsl)
 

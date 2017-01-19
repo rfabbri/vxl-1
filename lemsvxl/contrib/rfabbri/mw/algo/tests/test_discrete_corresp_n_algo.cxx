@@ -1,7 +1,7 @@
 #include <testlib/testlib_test.h>
-#include <mw/mw_discrete_corresp_3.h>
-#include <mw/mw_discrete_corresp_n.h>
-#include <mw/algo/mw_discrete_corresp_algo.h>
+#include <bmcsd/bmcsd_discrete_corresp_3.h>
+#include <bmcsd/bmcsd_discrete_corresp_n.h>
+#include <mw/algo/bmcsd_discrete_corresp_algo.h>
 #include <vcl_limits.h>
 #include <vcl_set.h>
 #include <vnl/vnl_math.h>
@@ -16,10 +16,10 @@ static void test_discrete_corresp();
 
 
 
-//: Currently tests both IO and other functions of mw_discrete_corresp_3
+//: Currently tests both IO and other functions of bmcsd_discrete_corresp_3
 MAIN( test_discrete_corresp_n_algo )
 {
-  START ("mw_discrete_corresp_n algo");
+  START ("bmcsd_discrete_corresp_n algo");
 
 //  test_discrete_corresp_n();
   test_discrete_corresp();
@@ -35,20 +35,20 @@ test_discrete_corresp_n()
   npts.push_back(7);
   npts.push_back(8);
   npts.push_back(8);
-  mw_discrete_corresp_n gt(npts);
+  bmcsd_discrete_corresp_n gt(npts);
   
-  mw_ntuplet tup(3);
+  bmcsd_ntuplet tup(3);
 
-  tup[0] = 1; tup[1] = 2; tup[2] = 3; gt.l_.put(tup,mw_match_attribute());
-  tup[0] = 2; tup[1] = 2; tup[2] = 2; gt.l_.put(tup,mw_match_attribute());
-  tup[0] = 2; tup[1] = 3; tup[2] = 3; gt.l_.put(tup,mw_match_attribute());
+  tup[0] = 1; tup[1] = 2; tup[2] = 3; gt.l_.put(tup,bmcsd_match_attribute());
+  tup[0] = 2; tup[1] = 2; tup[2] = 2; gt.l_.put(tup,bmcsd_match_attribute());
+  tup[0] = 2; tup[1] = 3; tup[2] = 3; gt.l_.put(tup,bmcsd_match_attribute());
 
   vcl_cout << gt << vcl_endl;
 
 //  double inf = vcl_numeric_limits<double>::infinity();
-  mw_discrete_corresp_n cp(npts);
-  tup[0] = 1; tup[1] = 2; tup[2]= 3; cp.l_.put(tup,mw_match_attribute(false,0));
-  tup[0] = 2; tup[1] = 2; tup[2]= 2; cp.l_.put(tup,mw_match_attribute(false,23.2));
+  bmcsd_discrete_corresp_n cp(npts);
+  tup[0] = 1; tup[1] = 2; tup[2]= 3; cp.l_.put(tup,bmcsd_match_attribute(false,0));
+  tup[0] = 2; tup[1] = 2; tup[2]= 2; cp.l_.put(tup,bmcsd_match_attribute(false,23.2));
 
   // Equality operator
 
@@ -62,17 +62,17 @@ test_discrete_corresp_n()
   vcl_cout << cp;
 
   // ------ Writing -------
-  vsl_b_ofstream bfs_out("mw_discrete_corresp_n.tmp");
-  TEST("Created mw_discrete_corresp_n.tmp for writing", (!bfs_out), false);
+  vsl_b_ofstream bfs_out("bmcsd_discrete_corresp_n.tmp");
+  TEST("Created bmcsd_discrete_corresp_n.tmp for writing", (!bfs_out), false);
   vsl_b_write(bfs_out, cp);
   bfs_out.close();
 
   // ------ Reading -------
 
-  mw_discrete_corresp_n cp_in;
+  bmcsd_discrete_corresp_n cp_in;
 
-  vsl_b_ifstream bfs_in("mw_discrete_corresp_n.tmp");
-  TEST("Opened mw_discrete_corresp_n.tmp for reading", (!bfs_in), false);
+  vsl_b_ifstream bfs_in("bmcsd_discrete_corresp_n.tmp");
+  TEST("Opened bmcsd_discrete_corresp_n.tmp for reading", (!bfs_in), false);
   vsl_b_read(bfs_in, cp_in);
   TEST("Finished reading file successfully", (!bfs_in), false);
   bfs_in.close();
@@ -84,7 +84,7 @@ test_discrete_corresp_n()
 
   //----- ALGO ----------------------------------------------------------
 
-  mw_discrete_corresp_algo::print_difference(cp,gt);
+  bmcsd_discrete_corresp_algo::print_difference(cp,gt);
 }
 
 void
@@ -154,13 +154,13 @@ test_discrete_corresp()
 
   // Correspond a0 and a1
 
-  mw_discrete_corresp acorr(a0.size(), a1.size());
-  acorr[0].push_back(mw_attributed_object(2));
-  acorr[1].push_back(mw_attributed_object(0));
-  acorr[1].push_back(mw_attributed_object(1));
+  bmcsd_discrete_corresp acorr(a0.size(), a1.size());
+  acorr[0].push_back(bmcsd_attributed_object(2));
+  acorr[1].push_back(bmcsd_attributed_object(0));
+  acorr[1].push_back(bmcsd_attributed_object(1));
   // acorr[2] empty
-  acorr[3].push_back(mw_attributed_object(0));
-  acorr[3].push_back(mw_attributed_object(2));
+  acorr[3].push_back(bmcsd_attributed_object(0));
+  acorr[3].push_back(bmcsd_attributed_object(2));
 
   // Define b0 subset of a0, b1 subset of a1
 
@@ -206,23 +206,23 @@ test_discrete_corresp()
 
   // Test subset corresps
   {
-  mw_discrete_corresp eq;
-  mw_discrete_corresp_algo::match_equal(b0, a0, &eq);
-  mw_discrete_corresp eq_gt(b0.size(), a0.size());
-  eq_gt[0].push_back(mw_attributed_object(1));
-  eq_gt[1].push_back(mw_attributed_object(3));
+  bmcsd_discrete_corresp eq;
+  bmcsd_discrete_corresp_algo::match_equal(b0, a0, &eq);
+  bmcsd_discrete_corresp eq_gt(b0.size(), a0.size());
+  eq_gt[0].push_back(bmcsd_attributed_object(1));
+  eq_gt[1].push_back(bmcsd_attributed_object(3));
   TEST("Computed subset corresp equals truth", eq, eq_gt);
   }
 
   // Make sure induced corresp is as expected.
 
-  mw_discrete_corresp bcorr_gt(b0.size(), b1.size());
-  bcorr_gt[0].push_back(mw_attributed_object(0));
-  bcorr_gt[1].push_back(mw_attributed_object(1));
+  bmcsd_discrete_corresp bcorr_gt(b0.size(), b1.size());
+  bcorr_gt[0].push_back(bmcsd_attributed_object(0));
+  bcorr_gt[1].push_back(bmcsd_attributed_object(1));
   vcl_cout << "Bcorr_gt:\n" << bcorr_gt;
 
-  mw_discrete_corresp bcorr;
-  mw_discrete_corresp_algo::extend(a0, a1, b0, b1, acorr, &bcorr);
+  bmcsd_discrete_corresp bcorr;
+  bmcsd_discrete_corresp_algo::extend(a0, a1, b0, b1, acorr, &bcorr);
   vcl_cout << "Bcorr:\n" << bcorr;
 
   TEST("Computed induced corresp equals truth", bcorr, bcorr_gt);
@@ -235,79 +235,79 @@ test_discrete_corresp_stats()
 
   {
   vcl_cout << "\nTesting statistics ----------------------------------------\n";
-  mw_discrete_corresp gt(10,10);
+  bmcsd_discrete_corresp gt(10,10);
 
-  gt.corresp_[0].push_back(mw_attributed_object(7,0,0));
-  gt.corresp_[1].push_back(mw_attributed_object(2));
-  gt.corresp_[1].push_back(mw_attributed_object(3));
-  gt.corresp_[2].push_back(mw_attributed_object(3));
-  gt.corresp_[3].push_back(mw_attributed_object(6));
-  gt.corresp_[4].push_back(mw_attributed_object(4));
-  gt.corresp_[4].push_back(mw_attributed_object(5));
+  gt.corresp_[0].push_back(bmcsd_attributed_object(7,0,0));
+  gt.corresp_[1].push_back(bmcsd_attributed_object(2));
+  gt.corresp_[1].push_back(bmcsd_attributed_object(3));
+  gt.corresp_[2].push_back(bmcsd_attributed_object(3));
+  gt.corresp_[3].push_back(bmcsd_attributed_object(6));
+  gt.corresp_[4].push_back(bmcsd_attributed_object(4));
+  gt.corresp_[4].push_back(bmcsd_attributed_object(5));
   // 5 : empty
-  gt.corresp_[6].push_back(mw_attributed_object(3));
+  gt.corresp_[6].push_back(bmcsd_attributed_object(3));
   // 7 : empty
-  gt.corresp_[8].push_back(mw_attributed_object(8));
-  gt.corresp_[8].push_back(mw_attributed_object(7));
-  gt.corresp_[8].push_back(mw_attributed_object(6));
+  gt.corresp_[8].push_back(bmcsd_attributed_object(8));
+  gt.corresp_[8].push_back(bmcsd_attributed_object(7));
+  gt.corresp_[8].push_back(bmcsd_attributed_object(6));
 
-  gt.corresp_[9].push_back(mw_attributed_object(6));
+  gt.corresp_[9].push_back(bmcsd_attributed_object(6));
 
   TEST("#empty (including dummy)", gt.count_empty(), 3);
 
 
   double inf = vcl_numeric_limits<double>::infinity();
-  mw_discrete_corresp cp(10,10);
-  cp.corresp_[0].push_back(mw_attributed_object(4,0,inf));
-  cp.corresp_[0].push_back(mw_attributed_object(5,0,inf));
-  cp.corresp_[0].push_back(mw_attributed_object(7,0,1e-2));  // T
+  bmcsd_discrete_corresp cp(10,10);
+  cp.corresp_[0].push_back(bmcsd_attributed_object(4,0,inf));
+  cp.corresp_[0].push_back(bmcsd_attributed_object(5,0,inf));
+  cp.corresp_[0].push_back(bmcsd_attributed_object(7,0,1e-2));  // T
 
   //: Infinite cost doesn't count.
-  cp.corresp_[1].push_back(mw_attributed_object(5,0,0));  // F
-  cp.corresp_[1].push_back(mw_attributed_object(7,0,inf));
-  cp.corresp_[1].push_back(mw_attributed_object(4,0,inf));
-  cp.corresp_[1].push_back(mw_attributed_object(6,0,inf));
-  cp.corresp_[1].push_back(mw_attributed_object(1,0,inf));
-  cp.corresp_[1].push_back(mw_attributed_object(2,0,inf));
+  cp.corresp_[1].push_back(bmcsd_attributed_object(5,0,0));  // F
+  cp.corresp_[1].push_back(bmcsd_attributed_object(7,0,inf));
+  cp.corresp_[1].push_back(bmcsd_attributed_object(4,0,inf));
+  cp.corresp_[1].push_back(bmcsd_attributed_object(6,0,inf));
+  cp.corresp_[1].push_back(bmcsd_attributed_object(1,0,inf));
+  cp.corresp_[1].push_back(bmcsd_attributed_object(2,0,inf));
 
-  cp.corresp_[2].push_back(mw_attributed_object(3));  // T
-  cp.corresp_[2].push_back(mw_attributed_object(4));  // F
-  cp.corresp_[2].push_back(mw_attributed_object(5));  // F
-  cp.corresp_[2].push_back(mw_attributed_object(6));  // F
+  cp.corresp_[2].push_back(bmcsd_attributed_object(3));  // T
+  cp.corresp_[2].push_back(bmcsd_attributed_object(4));  // F
+  cp.corresp_[2].push_back(bmcsd_attributed_object(5));  // F
+  cp.corresp_[2].push_back(bmcsd_attributed_object(6));  // F
 
 
-  cp.corresp_[3].push_back(mw_attributed_object(1,0,0.1));  // F
-  cp.corresp_[3].push_back(mw_attributed_object(2,0,0.2));  // F
-  cp.corresp_[3].push_back(mw_attributed_object(3,0,0.3));  // F
-  cp.corresp_[3].push_back(mw_attributed_object(4,0,0.4));  // F
-  cp.corresp_[3].push_back(mw_attributed_object(6,0,0.6));  // T
+  cp.corresp_[3].push_back(bmcsd_attributed_object(1,0,0.1));  // F
+  cp.corresp_[3].push_back(bmcsd_attributed_object(2,0,0.2));  // F
+  cp.corresp_[3].push_back(bmcsd_attributed_object(3,0,0.3));  // F
+  cp.corresp_[3].push_back(bmcsd_attributed_object(4,0,0.4));  // F
+  cp.corresp_[3].push_back(bmcsd_attributed_object(6,0,0.6));  // T
 
-  cp.corresp_[4].push_back(mw_attributed_object(5,0,0));  // T
+  cp.corresp_[4].push_back(bmcsd_attributed_object(5,0,0));  // T
 
-  cp.corresp_[6].push_back(mw_attributed_object(4,0,inf));
-  cp.corresp_[6].push_back(mw_attributed_object(2,0,inf));
-  cp.corresp_[6].push_back(mw_attributed_object(7,0,inf));
-  cp.corresp_[6].push_back(mw_attributed_object(3,0,0));  // T
-  cp.corresp_[6].push_back(mw_attributed_object(0,0,inf));
-  cp.corresp_[6].push_back(mw_attributed_object(1,0,inf));
+  cp.corresp_[6].push_back(bmcsd_attributed_object(4,0,inf));
+  cp.corresp_[6].push_back(bmcsd_attributed_object(2,0,inf));
+  cp.corresp_[6].push_back(bmcsd_attributed_object(7,0,inf));
+  cp.corresp_[6].push_back(bmcsd_attributed_object(3,0,0));  // T
+  cp.corresp_[6].push_back(bmcsd_attributed_object(0,0,inf));
+  cp.corresp_[6].push_back(bmcsd_attributed_object(1,0,inf));
 
   //: empty g-t doesn't count.
-  cp.corresp_[7].push_back(mw_attributed_object(1,0,inf));
-  cp.corresp_[7].push_back(mw_attributed_object(2,0,inf));
-  cp.corresp_[7].push_back(mw_attributed_object(3,0,inf));
+  cp.corresp_[7].push_back(bmcsd_attributed_object(1,0,inf));
+  cp.corresp_[7].push_back(bmcsd_attributed_object(2,0,inf));
+  cp.corresp_[7].push_back(bmcsd_attributed_object(3,0,inf));
 
-  cp.corresp_[8].push_back(mw_attributed_object(8,0,inf));
-  cp.corresp_[8].push_back(mw_attributed_object(7,0,2.3));  // T
-  cp.corresp_[8].push_back(mw_attributed_object(6,0,0.1));  // T
-  cp.corresp_[8].push_back(mw_attributed_object(5,0,0));  // F
+  cp.corresp_[8].push_back(bmcsd_attributed_object(8,0,inf));
+  cp.corresp_[8].push_back(bmcsd_attributed_object(7,0,2.3));  // T
+  cp.corresp_[8].push_back(bmcsd_attributed_object(6,0,0.1));  // T
+  cp.corresp_[8].push_back(bmcsd_attributed_object(5,0,0));  // F
 
 
-  cp.corresp_[9].push_back(mw_attributed_object(1,0,0.1));  // F
-  cp.corresp_[9].push_back(mw_attributed_object(2,0,0.2));  // F
-  cp.corresp_[9].push_back(mw_attributed_object(3,0,0.3));  // F
-  cp.corresp_[9].push_back(mw_attributed_object(4,0,0.4));  // F
-  cp.corresp_[9].push_back(mw_attributed_object(5,0,0.5));  // F
-  cp.corresp_[9].push_back(mw_attributed_object(6,0,0.6));  // T
+  cp.corresp_[9].push_back(bmcsd_attributed_object(1,0,0.1));  // F
+  cp.corresp_[9].push_back(bmcsd_attributed_object(2,0,0.2));  // F
+  cp.corresp_[9].push_back(bmcsd_attributed_object(3,0,0.3));  // F
+  cp.corresp_[9].push_back(bmcsd_attributed_object(4,0,0.4));  // F
+  cp.corresp_[9].push_back(bmcsd_attributed_object(5,0,0.5));  // F
+  cp.corresp_[9].push_back(bmcsd_attributed_object(6,0,0.6));  // T
   
 
   // sort & print
@@ -325,7 +325,7 @@ test_discrete_corresp_stats()
   */
 
   unsigned p1_idx = 0;
-  vcl_list<mw_attributed_object>::const_iterator  itr;
+  vcl_list<bmcsd_attributed_object>::const_iterator  itr;
   itr = cp.find_right_corresp_mincost(p1_idx,&gt);
 
   TEST("find_right_corresp_mincost idx 0",itr->obj_,7);
@@ -384,7 +384,7 @@ test_discrete_corresp_stats()
 
   {
   dborl_exp_stat s;
-  mw_discrete_corresp_algo::exp_stats(&gt, s, &gt);
+  bmcsd_discrete_corresp_algo::exp_stats(&gt, s, &gt);
   s.print_stats();
   TEST("consistent FP/FN/TP/TN", s.all_done(), true);
   TEST_NEAR("self-test", s.precision(), 1.0, 1e-9);
@@ -397,7 +397,7 @@ test_discrete_corresp_stats()
 
   {
   dborl_exp_stat s;
-  mw_discrete_corresp_algo::exp_stats(&cp, s, &gt);
+  bmcsd_discrete_corresp_algo::exp_stats(&cp, s, &gt);
   s.print_stats();
   TEST("consistent FP/FN/TP/TN", s.all_done(), true);
   TEST_EQUAL("TP", s.TP_, 8);
@@ -408,7 +408,7 @@ test_discrete_corresp_stats()
 
   {
   dborl_exp_stat s;
-  mw_discrete_corresp_algo::exp_stats_hitmiss(&gt, s, &gt);
+  bmcsd_discrete_corresp_algo::exp_stats_hitmiss(&gt, s, &gt);
   s.print_stats();
   TEST("consistent FP/FN/TP/TN", s.all_done(), true);
   TEST_NEAR("self-test", s.precision(), 1.0, 1e-9);
@@ -419,7 +419,7 @@ test_discrete_corresp_stats()
 
   {
   dborl_exp_stat s;
-  mw_discrete_corresp_algo::exp_stats_hitmiss(&cp, s, &gt);
+  bmcsd_discrete_corresp_algo::exp_stats_hitmiss(&cp, s, &gt);
   vcl_cout << vcl_endl;
   s.print_stats();
   TEST("consistent FP/FN/TP/TN", s.all_done(), true);
@@ -441,10 +441,10 @@ test_discrete_corresp_stats()
   }
 
   { 
-  mw_discrete_corresp cp_copy = cp;
+  bmcsd_discrete_corresp cp_copy = cp;
   cp_copy.threshold_by_cost_lteq(0);
   cp_copy.threshold_by_cost(1e6);
-  mw_discrete_corresp cp_copy2 = cp_copy;
+  bmcsd_discrete_corresp cp_copy2 = cp_copy;
 
   cp_copy.keep_only_extreme_cost(true);
   cp_copy2.keep_only_unambiguous_max(0);
@@ -460,29 +460,29 @@ void
 test_discrete_corresp_3()
 {
   vcl_cout << "\nTesting statistics ----------------------------------------\n";
-  mw_discrete_corresp_3 gt(7,8,8);
+  bmcsd_discrete_corresp_3 gt(7,8,8);
 
-  gt.l_.put(1,2,3,mw_match_attribute());
-  gt.l_.put(2,2,2,mw_match_attribute());
-  gt.l_.put(2,3,3,mw_match_attribute());
-  gt.l_.put(5,3,7,mw_match_attribute());
-  gt.l_.put(4,4,4,mw_match_attribute());
-  gt.l_.put(3,4,4,mw_match_attribute());
+  gt.l_.put(1,2,3,bmcsd_match_attribute());
+  gt.l_.put(2,2,2,bmcsd_match_attribute());
+  gt.l_.put(2,3,3,bmcsd_match_attribute());
+  gt.l_.put(5,3,7,bmcsd_match_attribute());
+  gt.l_.put(4,4,4,bmcsd_match_attribute());
+  gt.l_.put(3,4,4,bmcsd_match_attribute());
 
 
   double inf = vcl_numeric_limits<double>::infinity();
-  mw_discrete_corresp_3 cp(7,8,8);
-  cp.l_.put(1,2,3,mw_match_attribute(false,0));
-  cp.l_.put(2,2,2,mw_match_attribute(false,23.2));
-  cp.l_.put(4,5,6,mw_match_attribute(false,4.45));
-  cp.l_.put(4,4,4,mw_match_attribute(false,29.8));
-  cp.l_.put(4,7,1,mw_match_attribute(false,10.33));
+  bmcsd_discrete_corresp_3 cp(7,8,8);
+  cp.l_.put(1,2,3,bmcsd_match_attribute(false,0));
+  cp.l_.put(2,2,2,bmcsd_match_attribute(false,23.2));
+  cp.l_.put(4,5,6,bmcsd_match_attribute(false,4.45));
+  cp.l_.put(4,4,4,bmcsd_match_attribute(false,29.8));
+  cp.l_.put(4,7,1,bmcsd_match_attribute(false,10.33));
 
   //: Infinite cost doesn't count.
-  cp.l_.put(5,3,7,mw_match_attribute(false,inf));
+  cp.l_.put(5,3,7,bmcsd_match_attribute(false,inf));
 
   //: empty g-t doesn't count.
-  cp.l_.put(6,7,4,mw_match_attribute(false,10.33));
+  cp.l_.put(6,7,4,bmcsd_match_attribute(false,10.33));
 
   // compare
   cp.compare_and_print(&gt);
@@ -556,17 +556,17 @@ test_discrete_corresp_3()
   vcl_cout << cp;
 
   // ------ Writing -------
-  vsl_b_ofstream bfs_out("mw_discrete_corresp_3.tmp");
-  TEST("Created mw_discrete_corresp_3.tmp for writing", (!bfs_out), false);
+  vsl_b_ofstream bfs_out("bmcsd_discrete_corresp_3.tmp");
+  TEST("Created bmcsd_discrete_corresp_3.tmp for writing", (!bfs_out), false);
   vsl_b_write(bfs_out, cp);
   bfs_out.close();
 
   // ------ Reading -------
 
-  mw_discrete_corresp_3 cp_in;
+  bmcsd_discrete_corresp_3 cp_in;
 
-  vsl_b_ifstream bfs_in("mw_discrete_corresp_3.tmp");
-  TEST("Opened mw_discrete_corresp_3.tmp for reading", (!bfs_in), false);
+  vsl_b_ifstream bfs_in("bmcsd_discrete_corresp_3.tmp");
+  TEST("Opened bmcsd_discrete_corresp_3.tmp for reading", (!bfs_in), false);
   vsl_b_read(bfs_in, cp_in);
   TEST("Finished reading file successfully", (!bfs_in), false);
   bfs_in.close();

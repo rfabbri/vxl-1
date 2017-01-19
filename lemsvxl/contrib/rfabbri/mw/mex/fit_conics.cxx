@@ -3,8 +3,8 @@
 #include <vcl_sstream.h>
 #include <math.h>
 #include <vgl/algo/vgl_fit_conics_2d.h>
-#include <dbgl/algo/dbgl_conic_arc.h>
-#include <dbgl/algo/dbgl_fit_circ_arc_spline.h>
+#include <bgld/algo/bgld_conic_arc.h>
+#include <bgld/algo/bgld_fit_circ_arc_spline.h>
 
 #include "vxl_mex_utils.h"
 
@@ -54,7 +54,7 @@ mymex(
     endpoints.reserve(2*segs.size());
     // transform to a parametric curve and finely sample it.
     for (unsigned is=0; is < segs.size(); ++is) {
-      dbgl_conic_arc s;
+      bgld_conic_arc s;
       s.set_from(segs[is]);
       for (double t=0; t <= 1; t += subsample_step_size) {
         subsamples.push_back(s.point_at(t));
@@ -72,10 +72,10 @@ mymex(
   } else {
     // Circular arc fitting
 
-    vcl_vector<dbgl_circ_arc> segs;
+    vcl_vector<bgld_circ_arc> segs;
 
     vcl_cout << "tolerance = " << tol << vcl_endl;
-    bool retval = dbgl_fit_circ_arc_spline_to_polyline(segs, pts_vxl, tol);
+    bool retval = bgld_fit_circ_arc_spline_to_polyline(segs, pts_vxl, tol);
     if (!retval) {
       vcl_cout << "Error in fit()\n";
       vcl_cerr << "Error in fit()\n";

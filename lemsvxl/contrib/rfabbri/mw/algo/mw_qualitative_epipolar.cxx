@@ -1,7 +1,7 @@
 #include "mw_qualitative_epipolar.h"
 
 #include <vcl_iomanip.h>
-#include <mw/mw_util.h>
+#include <bmcsd/bmcsd_util.h>
 #include <vsol/vsol_box_2d.h>
 #include <vgl/vgl_distance.h>
 #include <vcl_algorithm.h>
@@ -95,8 +95,8 @@ try_combination(
         continue;
 
           /*
-      if (mw_util::near_zero(vgl_area<double>(isec0),1e-7)) {
-        if (mw_util::near_zero(vgl_area<double>(isec1),1e-7)) {
+      if (bmcsd_util::near_zero(vgl_area<double>(isec0),1e-7)) {
+        if (bmcsd_util::near_zero(vgl_area<double>(isec1),1e-7)) {
 //          vcl_cout << "One combination has failed\n";
 //          vcl_cout << "  Points: 0..." << i0;
 //          vcl_cout << "  Sectors: " ;
@@ -114,13 +114,13 @@ try_combination(
         }
         continue;
       } else {
-        if (mw_util::near_zero(vgl_area<double>(isec1),1e-7)) {
+        if (bmcsd_util::near_zero(vgl_area<double>(isec1),1e-7)) {
           vcl_cout << "\n\nIsec 1 nearly empty  but in image[0] it is non-empty!\n";
           vcl_cout << "\tarea(isec0): " << vgl_area<double>(isec0) << vcl_endl 
                    << "\t" << isec0 << vcl_endl;
           vcl_cout << "\tarea(isec1): " << vgl_area<double>(isec1) << vcl_endl 
                    << "\t" << isec1 << vcl_endl << vcl_endl;
-          assert(!mw_util::near_zero(vgl_area<double>(isec1),1e-7));
+          assert(!bmcsd_util::near_zero(vgl_area<double>(isec1),1e-7));
         }
       }
       */
@@ -265,10 +265,10 @@ form_sector_polygon(
     const vgl_box_2d<double> &bbox
     )
 {
-  mw_vector_2d c(0.5*(bbox.max_x() + bbox.min_x()), 0.5*(bbox.max_y() + bbox.min_y()));
+  bmcsd_vector_2d c(0.5*(bbox.max_x() + bbox.min_x()), 0.5*(bbox.max_y() + bbox.min_y()));
 
-  mw_vector_2d r1(0.5*(bbox.max_x() - bbox.min_x()), 0.5*(bbox.max_y() - bbox.min_y()));
-  mw_vector_2d p_c(p[ip]->x(),p[ip]->y());
+  bmcsd_vector_2d r1(0.5*(bbox.max_x() - bbox.min_x()), 0.5*(bbox.max_y() - bbox.min_y()));
+  bmcsd_vector_2d p_c(p[ip]->x(),p[ip]->y());
 
   //: the 100.0 bellow is whatever quantity > 0
   double rho = (c - p_c).two_norm() +  20*r1.two_norm() + 100.0;
@@ -279,13 +279,13 @@ form_sector_polygon(
   double theta_end;
   get_sector_bounds(angle, is, theta_start,theta_end);
 
-  mw_vector_2d t_start (vcl_cos(theta_start),vcl_sin(theta_start));
-  mw_vector_2d t_end (vcl_cos(theta_end),vcl_sin(theta_end));
+  bmcsd_vector_2d t_start (vcl_cos(theta_start),vcl_sin(theta_start));
+  bmcsd_vector_2d t_end (vcl_cos(theta_end),vcl_sin(theta_end));
 
-  mw_vector_2d A = p_c + rho*t_start;
-  mw_vector_2d C = p_c - rho*t_start;
-  mw_vector_2d B = p_c + rho*t_end;
-  mw_vector_2d D = p_c - rho*t_end;
+  bmcsd_vector_2d A = p_c + rho*t_start;
+  bmcsd_vector_2d C = p_c - rho*t_start;
+  bmcsd_vector_2d B = p_c + rho*t_end;
+  bmcsd_vector_2d D = p_c - rho*t_end;
 
   // we now form the polygon
 
@@ -372,18 +372,18 @@ partition(const vcl_vector<vsol_point_2d_sptr> &p,
 {
   // for each point, test if its to the left or to the right
   
-  mw_vector_2d v_c(vcl_cos(angle),vcl_sin(angle));
+  bmcsd_vector_2d v_c(vcl_cos(angle),vcl_sin(angle));
 
   if (!outward) {
     v_c = -v_c;
   }
 
   // rotate 90 deg
-  mw_vector_2d v_c_normal(-v_c[1],v_c[0]);
+  bmcsd_vector_2d v_c_normal(-v_c[1],v_c[0]);
 
   for (unsigned i=0; i < p.size(); ++i) {
     if (i != p_i) {
-      mw_vector_2d v_i(p[i]->x() - p[p_i]->x(), p[i]->y() - p[p_i]->y());
+      bmcsd_vector_2d v_i(p[i]->x() - p[p_i]->x(), p[i]->y() - p[p_i]->y());
       if (dot_product(v_i,v_c_normal) > 0) {
         left.insert(i);
       } else {

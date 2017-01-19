@@ -23,7 +23,7 @@ test_circle(
 
     // - create circle edgels (function)
     vcl_vector<vsol_line_2d_sptr> lines;
-    vcl_vector<dbdif_3rd_order_point_2d> crv;
+    vcl_vector<bdifd_3rd_order_point_2d> crv;
     get_circle_edgels(radius, lines, crv, do_perturb, pert_pos, pert_tan);
     
     // k[i][j] == curvature at edgel i, valid quad number j
@@ -68,7 +68,7 @@ test_circle(
 
 void mw_test_sel_geometry::
 compute_circle_stats(
-  const vcl_vector<dbdif_3rd_order_point_2d> &crv,
+  const vcl_vector<bdifd_3rd_order_point_2d> &crv,
   const vcl_vector<vcl_vector<double> > &k, 
   const vcl_vector<vcl_vector<double> > &kdot,
   const vcl_vector<vcl_vector<double> > &/*k_stdv*/, 

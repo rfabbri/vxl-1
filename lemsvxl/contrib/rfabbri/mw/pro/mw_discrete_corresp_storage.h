@@ -1,6 +1,6 @@
-// This is mw_discrete_corresp_storage.h
-#ifndef mw_discrete_corresp_storage_h
-#define mw_discrete_corresp_storage_h
+// This is bmcsd_discrete_corresp_storage.h
+#ifndef bmcsd_discrete_corresp_storage_h
+#define bmcsd_discrete_corresp_storage_h
 //:
 //\file
 //\brief Stores point correspondences
@@ -9,15 +9,15 @@
 //
 
 #include <bpro1/bpro1_storage.h>
-#include <mw/pro/mw_discrete_corresp_storage_sptr.h>
-#include <mw/mw_discrete_corresp.h>
+#include <mw/pro/bmcsd_discrete_corresp_storage_sptr.h>
+#include <bmcsd/bmcsd_discrete_corresp.h>
 
 
-class mw_discrete_corresp_storage: public bpro1_storage 
+class bmcsd_discrete_corresp_storage: public bpro1_storage 
 {
 public:
-  mw_discrete_corresp_storage();
-  virtual ~mw_discrete_corresp_storage();
+  bmcsd_discrete_corresp_storage();
+  virtual ~bmcsd_discrete_corresp_storage();
 
   // For backward compatibility reasons, the name still has 'pt' in it.
   virtual vcl_string type() const { return "mw pt corresp"; }
@@ -30,13 +30,13 @@ public:
   // For backward compatibility reasons, the name still has 'point' in it.
   virtual vcl_string is_a() const { return "mw_point_corresp_storage"; }
 
-  mw_discrete_corresp *corresp() {
+  bmcsd_discrete_corresp *corresp() {
     return c_;
   }
  
   //: Sets the corresp object pointer. Storage must be allocated by the user and will be
   // deleted by _this_ class. In the future, this might be replaced by a smart pointer.
-  void set_corresp(mw_discrete_corresp *new_c) {
+  void set_corresp(bmcsd_discrete_corresp *new_c) {
     c_ = new_c;
   }
 
@@ -53,17 +53,17 @@ protected:
 
 private:
 
-  mw_discrete_corresp *c_;
+  bmcsd_discrete_corresp *c_;
 };
 
-//: Create a smart-pointer to a mw_discrete_corresp_storage
-struct mw_discrete_corresp_storage_new : public mw_discrete_corresp_storage_sptr
+//: Create a smart-pointer to a bmcsd_discrete_corresp_storage
+struct bmcsd_discrete_corresp_storage_new : public bmcsd_discrete_corresp_storage_sptr
 {
-  typedef mw_discrete_corresp_storage_sptr base;
+  typedef bmcsd_discrete_corresp_storage_sptr base;
 
   //: Constructor - creates a default vidpro1_curve_storage_sptr.
-  mw_discrete_corresp_storage_new() : base(new mw_discrete_corresp_storage()) { }
+  bmcsd_discrete_corresp_storage_new() : base(new bmcsd_discrete_corresp_storage()) { }
 };
 
-#endif // mw_discrete_corresp_storage_h
+#endif // bmcsd_discrete_corresp_storage_h
 

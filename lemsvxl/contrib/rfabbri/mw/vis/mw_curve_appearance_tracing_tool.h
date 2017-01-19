@@ -19,9 +19,9 @@
 
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vpgl/vpgl_fundamental_matrix.h>
-#include <mw/mw_intersection_sets.h>
-#include <dbdif/dbdif_camera.h>
-#include <dbdif/dbdif_rig.h>
+#include <becld/becld_intersection_sets.h>
+#include <bdifd/bdifd_camera.h>
+#include <bdifd/bdifd_rig.h>
 #include <mw/mw_curves.h>
 
 
@@ -43,7 +43,7 @@
 //  1- Define n frames.
 //  2- Put an image into each frame; detect edges and transform the edges into
 //     Vsol polylines by using pruning process.
-//  3- Put a vpgl_perspective_camera into a dvpgl_camera_storage in each frame.
+//  3- Put a vpgl_perspective_camera into a vpgld_camera_storage in each frame.
 //  4- Define n views, one for each frame.
 //  5- Set the edge vsols as active in each frame.
 //  6- call the tool and click on the first view's vsol 
@@ -105,7 +105,7 @@ public:
 protected:
 
   vgui_event_condition gesture0;
-  vcl_vector<dbdif_camera> cam_; //: cameras for each view
+  vcl_vector<bdifd_camera> cam_; //: cameras for each view
   vcl_vector<vil_image_view<float> > img_; //: images for each view
   vcl_vector<vcl_vector<vpgl_fundamental_matrix<double> > > fm_; //: fundamental matrices between each view
   vcl_vector<int> frame_v_;   //: frame number for each view
@@ -195,7 +195,7 @@ protected:
   bool display_all_nth_view_epips_;
 
   bool compute_isets_; 
-  mw_intersection_sets  isets_;
+  becld_intersection_sets  isets_;
 
   bool click_selects_whole_curve_;
 
@@ -237,8 +237,8 @@ private:
       const vcl_vector<unsigned> &views, 
       unsigned ini_idx, 
       unsigned di0, 
-      mw_vector_3d *pt_3D, 
-      mw_vector_3d *pt_3D_linear) const;
+      bmcsd_vector_3d *pt_3D, 
+      bmcsd_vector_3d *pt_3D_linear) const;
 
   bool get_index_of_candidate_curve(
       const vsol_polyline_2d_sptr & selected_crv, 
@@ -254,32 +254,32 @@ private:
   void project(
       unsigned view, 
       vcl_vector<vsol_point_2d_sptr> &proj, 
-      const vcl_vector<mw_vector_3d> &crv3d, 
-      dbdif_rig &/*rig*/) const;
+      const vcl_vector<bmcsd_vector_3d> &crv3d, 
+      bdifd_rig &/*rig*/) const;
 
   void reconstruct_and_reproject(
       unsigned jnz, 
       unsigned view, 
       vcl_vector<vsol_point_2d_sptr> &reproj, 
 
-      vcl_vector<mw_vector_3d> &crv3d, 
+      vcl_vector<bmcsd_vector_3d> &crv3d, 
       vcl_vector<unsigned> &crv1_idx,
       vcl_vector<unsigned> &crv2_idx,
-      dbdif_rig &rig) const;
+      bdifd_rig &rig) const;
 
   void reconstruct_one_candidate(
       unsigned jnz, 
-      vcl_vector<mw_vector_3d> &crv3d, 
+      vcl_vector<bmcsd_vector_3d> &crv3d, 
       const vcl_vector<unsigned> &crv1_idx,
       const vcl_vector<unsigned> &crv2_idx,
-      dbdif_rig &rig) const;
+      bdifd_rig &rig) const;
 
   void 
   define_match_for_reconstruction(
       unsigned jnz,
       vcl_vector<unsigned> &crv1_idx,
       vcl_vector<unsigned> &crv2_idx,
-      dbdif_rig &rig
+      bdifd_rig &rig
       ) const;
 };
 

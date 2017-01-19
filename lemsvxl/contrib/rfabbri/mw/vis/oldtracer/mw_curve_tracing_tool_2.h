@@ -18,7 +18,7 @@
 
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vpgl/vpgl_fundamental_matrix.h>
-#include <mw/mw_intersection_sets.h>
+#include <becld/becld_intersection_sets.h>
 
 
 
@@ -36,7 +36,7 @@
 //  1- Define two frames.
 //  2- Put an image into each frame; detect edges and transform the edges into
 //     Vsol polylines by using pruning process.
-//  3- Put a vpgl_perspective_camera into a dvpgl_camera_storage in each frame.
+//  3- Put a vpgl_perspective_camera into a vpgld_camera_storage in each frame.
 //  4- Define two views, one for each frame.
 //  5- Set the two edge vsols as active in each frame.
 //  6- call the tool and click on the first view's vsol 
@@ -142,7 +142,7 @@ protected:
   bool display_all_left_epips_;
 
   bool compute_isets_; 
-  mw_intersection_sets  isets_;
+  becld_intersection_sets  isets_;
 
   int frame_v1_, frame_v2_; //: frame number for each view
 
