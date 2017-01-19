@@ -14,6 +14,7 @@
 #include <vcl_algorithm.h>
 
 #include <bdifd/bdifd_camera.h>
+#include <mw/algo/mw_algo_util.h>
 #include <bmcsd/algo/bmcsd_algo_util.h>
 
 //: Constructor
@@ -152,7 +153,7 @@ dvpgl_DG_bundle_adj_lsqr::f(vnl_vector<double> const& a, vnl_vector<double> cons
       dpos=dtheta=dk=dkdot=0;
       n =0;
 
-      bool one_true = bmcsd_algo_util::dg_reprojection_error(pts,cam,i,
+      bool one_true = mw_algo_util::dg_reprojection_error(pts,cam,i,
           dpos,dtheta,
           dnormal_plus,
           dnormal_minus,
@@ -336,7 +337,7 @@ dvpgl_DG_bundle_adj_lsqr::jac_blocks(vnl_vector<double> const& a, vnl_vector<dou
           dpos=dtheta=dk=dkdot=0;
           n =0;
 
-          bool one_true = bmcsd_algo_util::dg_reprojection_error(pts,cam,i,
+          bool one_true = mw_algo_util::dg_reprojection_error(pts,cam,i,
               dpos,dtheta,
               dnormal_plus,
               dnormal_minus,
@@ -365,7 +366,7 @@ dvpgl_DG_bundle_adj_lsqr::jac_blocks(vnl_vector<double> const& a, vnl_vector<dou
           dpos=dtheta=dk=dkdot=0;
           n =0;
 
-          bool one_true = bmcsd_algo_util::dg_reprojection_error(pts,cam,i,
+          bool one_true = mw_algo_util::dg_reprojection_error(pts,cam,i,
               dpos,dtheta,
               dnormal_plus,
               dnormal_minus,

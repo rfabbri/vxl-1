@@ -115,7 +115,7 @@ trinocular_match()
          vgl_homg_point_2d<double> homg_pt2(cdata2->pt(ptr->obj_).get_p());
 
          vgl_homg_point_2d<double> p3
-            = mw_epipolar_point_transfer(homg_pt1,homg_pt2,f_13,f_23);
+            = bmcsd_epipolar_point_transfer(homg_pt1,homg_pt2,f_13,f_23);
 
          cdata3->nearest_point_to(p3.x()/p3.w(), p3.y()/p3.w(), &cp3,&distance);
 

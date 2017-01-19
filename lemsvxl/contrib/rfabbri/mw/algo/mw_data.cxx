@@ -40,7 +40,7 @@ get_capitol_building_subset(bmcsd_curve_stereo_data_path *d)
   cam_fnames.push_back("frame_00030.png");
   cam_fnames.push_back("frame_00100.png");
 
-  bmcsd_util::camera_file_type cam_type = bmcsd_util::MW_INTRINSIC_EXTRINSIC;
+  bmcsd_util::camera_file_type cam_type = bmcsd_util::BMCS_INTRINSIC_EXTRINSIC;
   d->set(path, img_fnames, cam_fnames, edgemaps_fnames, frag_fnames, cam_type);
 }
 

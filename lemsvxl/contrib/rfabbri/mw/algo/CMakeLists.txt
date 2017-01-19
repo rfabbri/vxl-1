@@ -29,7 +29,7 @@ aux_source_directory(Templates mw_sources)
 
 add_library(mw_algo ${mw_algo_sources})
 
-target_link_libraries(mw_algo mw vidpro1 bgui vil bild_algo dbdet_pro bgld_algo brct vpgld_algo becld bcsid vpgld_io bdifd_algo bspid buld)
+target_link_libraries(mw_algo mw vidpro1 bgui vil bild_algo dbdet_pro bgld_algo vpgld_algo bmcsd becld bcsid vpgld_io bdifd bdifd_algo bspid buld)
 
 if( BUILD_TESTING )
   add_subdirectory(tests)

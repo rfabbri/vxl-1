@@ -13,7 +13,7 @@
 #include <vil/vil_image_view.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <dbdet/sel/dbdet_edgel.h>
-#include <mw/mw_sift_curve.h>
+#include <bmcsd/bmcsd_sift_curve.h>
 #include <mw/algo/siftpp/sift.hpp>
 
 // Functions to build and manipulate SIFT descriptors attached to curve fragments
@@ -92,13 +92,13 @@ typedef VL::float_t t_descriptor_float;
     }
   }
 
-  void compute( const dbdet_edgel_chain &crv, mw_sift_curve *s_crv);
+  void compute( const dbdet_edgel_chain &crv, bmcsd_sift_curve *s_crv);
 
-  void compute_many(const vcl_vector<dbdet_edgel_chain> &ec_v, vcl_vector<mw_sift_curve> *ptr_sc_v);
+  void compute_many(const vcl_vector<dbdet_edgel_chain> &ec_v, vcl_vector<bmcsd_sift_curve> *ptr_sc_v);
 
   static t_descriptor_float unambigous_nneighbor(
-      const mw_sift_curve &sc, 
-      const vnl_vector_fixed <t_descriptor_float, MW_SIFT_CURVE_NUM_DIMS> &descr) 
+      const bmcsd_sift_curve &sc, 
+      const vnl_vector_fixed <t_descriptor_float, BMCSD_SIFT_CURVE_NUM_DIMS> &descr) 
   {
     t_descriptor_float dbest = vcl_numeric_limits<t_descriptor_float>::infinity();
     t_descriptor_float dsecond_best = vcl_numeric_limits<t_descriptor_float>::infinity();

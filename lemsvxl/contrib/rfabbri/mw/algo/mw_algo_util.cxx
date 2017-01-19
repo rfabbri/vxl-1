@@ -1,14 +1,13 @@
-#include "bmcsd_algo_util.h"
+#include "mw_algo_util.h"
 
 #include <vnl/vnl_double_2.h>
-#include <brct/brct_algos.h>
 #include <bgld/algo/bgld_distance.h>
 #include <bgld/algo/bgld_curve_smoothing.h>
 #include <bsold/algo/bsold_geno.h>
 #include <bdifd/algo/bdifd_transfer.h>
 #include <bmcsd/bmcsd_util.h>
 
-void bmcsd_algo_util::
+void mw_algo_util::
 move_world_to_1st_cam(vcl_vector<vpgl_perspective_camera<double> *> &cam)
 {
   // just pass empty vcl_vector
@@ -17,7 +16,7 @@ move_world_to_1st_cam(vcl_vector<vpgl_perspective_camera<double> *> &cam)
   move_world_to_1st_cam(cam,pts);
 }
 
-void bmcsd_algo_util::
+void mw_algo_util::
 move_world_to_1st_cam(vcl_vector<vpgl_perspective_camera<double> *> &cam,vcl_vector<vgl_point_3d<double> > &pts)
 {
   vgl_h_matrix_3d<double> R_0;
@@ -94,7 +93,7 @@ move_world_to_1st_cam(vcl_vector<vpgl_perspective_camera<double> *> &cam,vcl_vec
 
 //----------------------------------------------------------------------
 
-bool bmcsd_algo_util::
+bool mw_algo_util::
 dg_reprojection_error(
     vcl_vector<bdifd_3rd_order_point_2d> &pts, //:< pts[iv] points in view iv
     const vcl_vector<bdifd_camera> &cam,
@@ -182,7 +181,7 @@ dg_reprojection_error(
   return one_true;
 }
 
-bool bmcsd_algo_util::
+bool mw_algo_util::
 dg_reprojection_error(
     vcl_vector<bdifd_3rd_order_point_2d> &pts, //:< pts[iv] points in view iv
     const vcl_vector<bdifd_camera> &cam,
@@ -213,7 +212,7 @@ dg_reprojection_error(
 }
 
 
-void bmcsd_algo_util::
+void mw_algo_util::
 extract_edgel_chain(const vsol_polyline_2d &pts, dbdet_edgel_chain *ec)
 {
   // Move vsol polyline into vgl_vector of points

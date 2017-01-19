@@ -1,6 +1,5 @@
 #include<mw/algo/mw_cvmatch.h>
 #include<mw/algo/mw_cvmatch_sptr.h>
-#include<mw/algo/bmcsd_discrete_corresp_algo.h>
 // #include<mw/algo/dg-estimation/mw_geometry_estimation.h>
 #include<mw/algo/mw_point_matcher.h>
 #include<mw/algo/mw_match_old.h>

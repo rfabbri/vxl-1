@@ -6,7 +6,7 @@
 #include <testlib/testlib_test.h>
 #include <mw/pro/bmcsd_stereo_driver.h>
 
-MAIN( test_bmcsd_stereo_driver )
+MAIN( test_dbmcs_stereo_driver )
 {
    bmcsd_curve_stereo_data_path dpath;
    vcl_string fname_path("/usr/local/moredata/subset/");

@@ -9,6 +9,7 @@
 #include <bmcsd/algo/bmcsd_algo_util.h>
 #include <bmcsd/bmcsd_util.h>
 #include <mw/mw_subpixel_point_set.h>
+#include <mw/algo/mw_algo_util.h>
 #include <mw/algo/mw_point_matcher.h>
 
 
@@ -62,7 +63,7 @@ mw_match_tangent_band (
     vsol_polyline_2d poly(points_[i]);
     vsol_box_2d_sptr pb = poly.get_bounding_box();
 
-    bbox_[i] = bmcsd_algo_util::determine_right_bbox(pb,sp_[i]);
+    bbox_[i] = mw_algo_util::determine_right_bbox(pb,sp_[i]);
 
     w_[i] = new becld_grid_cover_window(vgl_box_2d<double>(0,sp_[i]->ncols()-1,0,sp_[i]->nrows()-1),0);
     vcl_cout << "BOUNDING BOX:\n";

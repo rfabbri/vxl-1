@@ -15,7 +15,7 @@ add_executable (mw_algo_test_all
    test_sift_curve.cxx
    test_bprod_process.cxx
    test_multiview_bprod_process.cxx
-   test_bmcsd_stereo_driver.cxx
+   test_dbmcs_stereo_driver.cxx
    test_dvcpl_distmap_bundle_adjust.cxx
 )
 

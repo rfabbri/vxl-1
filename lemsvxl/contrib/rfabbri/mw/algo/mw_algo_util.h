@@ -1,6 +1,6 @@
 // This is bmcsd_algo_util.h
-#ifndef bmcsd_algo_util_h
-#define bmcsd_algo_util_h
+#ifndef mw_algo_util_h
+#define mw_algo_util_h
 //:
 //\file
 //\brief Misc. Utilities for photogrammetry library
@@ -18,11 +18,12 @@
 #include <bdifd/bdifd_rig.h>
 
 #include <bmcsd/bmcsd_util.h>
+#include <bmcsd/algo/bmcsd_algo_util.h>
 #include <mw/mw_subpixel_point_set.h>
 
 
 //: Some utility functions for mw_algo
-class bmcsd_algo_util {
+class mw_algo_util {
 public:
   //:  Move world coordinates to first camera, updating each camera matrix accordingly
   // \todo test this separately.
@@ -145,7 +146,7 @@ public:
   static void extract_edgel_chain(const vsol_polyline_2d &pts, dbdet_edgel_chain *ec);
 };
 
-inline bdifd_3rd_order_point_2d bmcsd_algo_util::
+inline bdifd_3rd_order_point_2d mw_algo_util::
 mw_get_3rd_order_point_2d(const dbdet_frenet_keypoint &kp)
 {
   bdifd_3rd_order_point_2d p;
@@ -166,7 +167,7 @@ mw_get_3rd_order_point_2d(const dbdet_frenet_keypoint &kp)
   return p;
 }
 
-inline dbdet_frenet_keypoint bmcsd_algo_util::
+inline dbdet_frenet_keypoint mw_algo_util::
 mw_get_frenet_keypoint(const bdifd_3rd_order_point_2d &fp)
 {
   dbdet_frenet_keypoint kp;
@@ -184,4 +185,4 @@ mw_get_frenet_keypoint(const bdifd_3rd_order_point_2d &fp)
   return kp;
 }
 
-#endif // bmcsd_algo_util_h
+#endif // mw_algo_util_h

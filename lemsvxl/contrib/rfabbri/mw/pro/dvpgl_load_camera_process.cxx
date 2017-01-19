@@ -2,7 +2,7 @@
 #include <vcl_iostream.h>
 #include <vcl_fstream.h>
 
-#include "vpgld_load_camera_process.h"
+#include "dvpgl_load_camera_process.h"
 
 #include <vcl_cstring.h>
 #include <vcl_string.h>
@@ -21,7 +21,7 @@
 
 static int file_num = -1;
 
-vpgld_load_camera_process::vpgld_load_camera_process() : bpro1_process()
+dvpgl_load_camera_process::dvpgl_load_camera_process() : bpro1_process()
 {
   if(  
       !parameters()->add( "Input file name" , "-nameprefix" , bpro1_filepath("","*.*")) ||
@@ -45,18 +45,18 @@ vpgld_load_camera_process::vpgld_load_camera_process() : bpro1_process()
 
 //: Clone the process
 bpro1_process*
-vpgld_load_camera_process::clone() const
+dvpgl_load_camera_process::clone() const
 {
-  return new vpgld_load_camera_process(*this);
+  return new dvpgl_load_camera_process(*this);
 }
 
-vcl_vector< vcl_string > vpgld_load_camera_process::get_input_type() 
+vcl_vector< vcl_string > dvpgl_load_camera_process::get_input_type() 
 {
   vcl_vector< vcl_string > to_return;
   return to_return;
 }
 
-vcl_vector< vcl_string > vpgld_load_camera_process::get_output_type() 
+vcl_vector< vcl_string > dvpgl_load_camera_process::get_output_type() 
 {
   vcl_vector< vcl_string > to_return;
   to_return.push_back( "vpgl camera" );
@@ -64,7 +64,7 @@ vcl_vector< vcl_string > vpgld_load_camera_process::get_output_type()
 }
 
 //: Loads a _full_ perspective camera (not a pure vpgl_proj_camera)
-bool vpgld_load_camera_process::execute()
+bool dvpgl_load_camera_process::execute()
 {
   bool multi_intrextr=false;
   parameters()->get_value( "-multi_intrextr", multi_intrextr);

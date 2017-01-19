@@ -9,7 +9,7 @@ DECLARE( test_tangent_band );
 DECLARE( test_sift_curve );
 DECLARE( test_bprod_process );
 DECLARE( test_multiview_bprod_process );
-DECLARE( test_bmcsd_stereo_driver);
+DECLARE( test_dbmcs_stereo_driver);
 DECLARE( test_dvcpl_distmap_bundle_adjust );
 //DECLARE( test_curve_stereo_batch );
 //DECLARE( test_reprojection_errors );
@@ -26,7 +26,7 @@ register_tests()
   REGISTER( test_sift_curve );
   REGISTER( test_bprod_process );
   REGISTER( test_multiview_bprod_process );
-  REGISTER( test_bmcsd_stereo_driver);
+  REGISTER( test_dbmcs_stereo_driver);
   REGISTER( test_dvcpl_distmap_bundle_adjust );
 //  REGISTER( test_curve_stereo_batch );
 //   REGISTER( test_reprojection_errors );
