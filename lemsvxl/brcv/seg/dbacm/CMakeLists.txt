@@ -29,7 +29,7 @@ aux_source_directory(Templates dbacm_sources)
 add_library(dbacm  ${dbacm_sources})
 
 # add the required libraries into this list
-target_link_libraries( dbacm vil vbl dbnl_algo bil_algo )
+target_link_libraries( dbacm vil vbl bnld_algo bil_algo )
 
 add_subdirectory(pro)
 

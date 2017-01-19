@@ -6,8 +6,8 @@
 
 #include <vnl/vnl_math.h>
 
-#include <dbil3d/algo/dbil3d_finite_differences.h>
-#include <dbil3d/algo/dbil3d_finite_second_differences.h>
+#include <bild3d/algo/bild3d_finite_differences.h>
+#include <bild3d/algo/bild3d_finite_second_differences.h>
 
 
 #include <vil3d/vil3d_image_view.h>
@@ -32,7 +32,7 @@ reinitialize_levelset_surf()
 
         // signed distance transform
         vil_image_view<float > sedt_mask;
-        dbil_edt_signed(mask_unsigned, sedt_mask);
+        bild_edt_signed(mask_unsigned, sedt_mask);
 
         // smooth distance transform image using gaussian filter
         double gauss_sigma = 0.5;
@@ -265,8 +265,8 @@ evolve_one_timestep(float timestep)
                         vil3d_image_view<float> dzp;
                         vil3d_image_view<float> dzm;
 
-                        //vcl_cerr << "dbil3d_finite_differences..." ;
-                        dbil3d_finite_differences(phi_,
+                        //vcl_cerr << "bild3d_finite_differences..." ;
+                        bild3d_finite_differences(phi_,
                                         dxp,dxm,this->dxc_,
                                         dyp,dym,this->dyc_,
                                         dzp,dzm,this->dzc_);
@@ -286,7 +286,7 @@ evolve_one_timestep(float timestep)
                                 vil3d_image_view<float> dxz;
                                 vil3d_image_view<float> dyz;
 
-                                dbil3d_finite_second_differences(phi_,dxp,dxm,
+                                bild3d_finite_second_differences(phi_,dxp,dxm,
                                                                       dyp,dym,
                                                                       dzp,dzm,
                                                                       dxx,dyy,dzz,dxy,dxz,dyz);

@@ -5,9 +5,9 @@
 #include "dbacm3d_geodesic_active_contour.h"
 
 #include <vil3d/vil3d_convert.h>
-#include <dbil3d/algo/dbil3d_gauss_filter.h>
+#include <bild3d/algo/bild3d_gauss_filter.h>
 
-#include <dbil/algo/dbil_edt.h>
+#include <bild/algo/bild_edt.h>
 #include <dbacm/dbacm3d_standard_levelset_func.h>
 #include <dbacm/dbacm3d_image_filters.h>
 
@@ -90,7 +90,7 @@ init_levelset_surf_with_binary_mask(const vil3d_image_view<bool >& mask_binary)
 
   // signed distance transform
   vil3d_image_view<float > phi;
-  dbil_edt_signed(mask_unsigned, phi);
+  bild_edt_signed(mask_unsigned, phi);
 
   // smooth distance transform image using gaussian filter
   double gauss_sigma = 0.5;

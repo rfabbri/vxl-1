@@ -19,7 +19,7 @@
 #include <vil3d/vil3d_image_view.h>
 #include <vil3d/vil3d_math.h>
 #include <vil3d/vil3d_transform.h>
-#include <dbil3d/algo/dbil3d_gauss_filter.h>
+#include <bild3d/algo/bild3d_gauss_filter.h>
 #include <vil3d/algo/vil3d_grad_1x3.h>
 
 
@@ -93,7 +93,7 @@ inline void dbacm3d_malladi_image_force(const vil3d_image_view<inT >& src_im,
   vil3d_image_view<outT> smoothed(ni,nj,nk,np);
 
   //blur by the appropriate gaussian
-  dbil3d_gauss_filter(src_im,sigma,smoothed);
+  bild3d_gauss_filter(src_im,sigma,smoothed);
 
   //compute image gradient values
   vil3d_grad_1x3(smoothed,grad_i,grad_j,grad_k);
