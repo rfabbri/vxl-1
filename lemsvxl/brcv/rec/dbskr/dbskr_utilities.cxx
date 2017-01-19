@@ -16,7 +16,7 @@
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_polyline_2d.h>
 #include <vgl/algo/vgl_fit_lines_2d.h>
-#include <dbsol/dbsol_file_io.h>
+#include <bsold/bsold_file_io.h>
 
 #include <vil/vil_image_resource.h>
 #include <bil/algo/bil_color_conversions.h>
@@ -29,10 +29,10 @@
 #include <dbdet/sel/dbdet_curve_model.h>
 #include <dbdet/algo/dbdet_sel.h>
 
-#include <dbsol/algo/dbsol_img_curve_algs.h>
-#include <dbsol/algo/dbsol_curve_algs.h>
-#include <dbsol/dbsol_interp_curve_2d.h>
-#include <dbsol/dbsol_file_io.h>
+#include <bsold/algo/bsold_img_curve_algs.h>
+#include <bsold/algo/bsold_curve_algs.h>
+#include <bsold/bsold_interp_curve_2d.h>
+#include <bsold/bsold_file_io.h>
 
 #include <bbas/bsol/bsol_algs.h>
 
@@ -41,7 +41,7 @@
 
 #include <dbdet/tracer/dbdet_contour_tracer.h>
 
-#include <dbgl/algo/dbgl_curve_smoothing.h>
+#include <bgld/algo/bgld_curve_smoothing.h>
 
 vsol_polyline_2d_sptr smooth_poly(vsol_polyline_2d_sptr new_curve, unsigned smoothing_nsteps)
 {
@@ -49,7 +49,7 @@ vsol_polyline_2d_sptr smooth_poly(vsol_polyline_2d_sptr new_curve, unsigned smoo
   for (unsigned i = 0; i < new_curve->size(); i++)
     pv.push_back(new_curve->vertex(i)->get_p());
 
-  dbgl_csm( pv, 1.0, smoothing_nsteps);
+  bgld_csm( pv, 1.0, smoothing_nsteps);
 
   vcl_vector<vsol_point_2d_sptr> vv;
   for (unsigned i = 0; i < pv.size(); i++)
@@ -64,7 +64,7 @@ vsol_polygon_2d_sptr smooth_polygon(vsol_polygon_2d_sptr new_curve, unsigned smo
   for (unsigned i = 0; i < new_curve->size(); i++)
     pv.push_back(new_curve->vertex(i)->get_p());
 
-  dbgl_csm( pv, 1.0, smoothing_nsteps);
+  bgld_csm( pv, 1.0, smoothing_nsteps);
 
   vcl_vector<vsol_point_2d_sptr> vv;
   for (unsigned i = 0; i < pv.size(); i++)
@@ -227,7 +227,7 @@ dbsk2d_shock_graph_sptr extract_shock(vil_image_resource_sptr img_sptr,
       pts.push_back(chain->edgels[j]->pt);
 
     //smooth this contour
-    dbgl_csm(pts, 1.0f, smoothing_nsteps);   // psi = 1.0f
+    bgld_csm(pts, 1.0f, smoothing_nsteps);   // psi = 1.0f
 
     vcl_vector<vsol_point_2d_sptr> vsol_pts;
     vsol_pts.reserve(pts.size());
@@ -247,8 +247,8 @@ dbsk2d_shock_graph_sptr extract_shock(vil_image_resource_sptr img_sptr,
 
       image_curves_length_pruned.push_back(new_curve->cast_to_spatial_object());
 
-      dbsol_interp_curve_2d_sptr c = new dbsol_interp_curve_2d();
-      dbsol_curve_algs::interpolate_linear(c.ptr(), new_curve); // open curve
+      bsold_interp_curve_2d_sptr c = new bsold_interp_curve_2d();
+      bsold_curve_algs::interpolate_linear(c.ptr(), new_curve); // open curve
       double dist;
       if (color_image)
         dist = get_color_distance_of_curve_regions(c, float(pruning_region_width), L, A, B, 14.0f);  // color_gamma = 14
@@ -272,8 +272,8 @@ dbsk2d_shock_graph_sptr extract_shock(vil_image_resource_sptr img_sptr,
         pts.push_back(new vsol_point_2d(chain->edgels[j]->pt));
       vsol_polyline_2d_sptr new_curve = new vsol_polyline_2d(pts);
       if (new_curve->length() > length_thresh) {
-        dbsol_interp_curve_2d_sptr c = new dbsol_interp_curve_2d();
-        dbsol_curve_algs::interpolate_linear(c.ptr(), new_curve); // open curve
+        bsold_interp_curve_2d_sptr c = new bsold_interp_curve_2d();
+        bsold_curve_algs::interpolate_linear(c.ptr(), new_curve); // open curve
         double dist;
         if (color_image)
           dist = get_color_distance_of_curve_regions(c, float(pruning_region_width), L, A, B, 14.0f);  // color_gamma = 14
@@ -306,10 +306,10 @@ dbsk2d_shock_graph_sptr extract_shock(vil_image_resource_sptr img_sptr,
     // save the boundary curves
     dbsk2d_file_io::save_bnd_v3_0(out_shock_name+"_boundary.bnd", image_curves);
     
-    dbsol_save_cem(image_curves, out_shock_name+"_boundary.cem");
-    dbsol_save_cem(image_curves_all, out_shock_name+"_all_boundary.cem");
-    dbsol_save_cem(image_curves_avg_mag_pruned, out_shock_name+"_after_avg_mag_pruned_boundary.cem");
-    dbsol_save_cem(image_curves_length_pruned, out_shock_name+"_after_length_pruned_boundary.cem");
+    bsold_save_cem(image_curves, out_shock_name+"_boundary.cem");
+    bsold_save_cem(image_curves_all, out_shock_name+"_all_boundary.cem");
+    bsold_save_cem(image_curves_avg_mag_pruned, out_shock_name+"_after_avg_mag_pruned_boundary.cem");
+    bsold_save_cem(image_curves_length_pruned, out_shock_name+"_after_length_pruned_boundary.cem");
   }
   
   edge_map = 0;
@@ -361,7 +361,7 @@ dbsk2d_shock_graph_sptr extract_shock(vil_image_resource_sptr img_sptr,
     dbsk2d_xshock_graph_fileio writer;
     writer.save_xshock_graph(sampled_sg, out_shock_name+".esf");
     dbsk2d_file_io::save_bnd_v3_0(out_shock_name+"_boundary_gaps.bnd", euler_sps);
-    dbsol_save_cem(euler_sps, out_shock_name+"_boundary_gaps.cem");
+    bsold_save_cem(euler_sps, out_shock_name+"_boundary_gaps.cem");
   }
   
   vcl_cout << "total: " << (t.real()/1000.0f)/60.0 << " mins. Done!\n";
@@ -434,7 +434,7 @@ dbsk2d_shock_graph_sptr extract_shock_from_mask(vil_image_resource_sptr image_sp
     if (write_output) {
       // save the boundary curves
       vcl_string out_name_str = out_shock_name+"_boundary.con";
-      dbsol_save_con_file(out_name_str.c_str(), poly);
+      bsold_save_con_file(out_name_str.c_str(), poly);
     }
 
     // compute shocks ---------------------------------------------------------------------------------------------------

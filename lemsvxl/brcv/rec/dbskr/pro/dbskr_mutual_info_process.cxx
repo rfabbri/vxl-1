@@ -44,7 +44,7 @@
 #include <vgl/vgl_polygon_scan_iterator.h>
 #include <vgl/algo/vgl_fit_lines_2d.h>
 
-#include <dbru/dbru_rcor.h>
+#include <dbru/algo/dbru_rcor.h>
 
 #include <dbskr/pro/dbskr_shock_match_process.h>
 #include <dbsk2d/algo/dbsk2d_xshock_graph_fileio.h>

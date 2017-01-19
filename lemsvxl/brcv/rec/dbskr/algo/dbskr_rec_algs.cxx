@@ -14,8 +14,8 @@
 #include <dbskr/dbskr_tree_edit_combined.h>
 #include <dbskr/dbskr_tree_edit_coarse.h>
 
-#include <dbgrl/algo/dbgrl_algs.h>
-#include <dbsol/algo/dbsol_curve_algs.h>
+#include <bgrld/algo/bgrld_algs.h>
+#include <bsold/algo/bsold_curve_algs.h>
 
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_polyline_2d.h>

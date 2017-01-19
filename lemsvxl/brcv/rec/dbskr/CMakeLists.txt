@@ -6,7 +6,7 @@ include_directories(${VXL_GEL_INCLUDE_DIR})
 include_directories(${VXL_GEL_INCLUDE_DIR}/mrc)
 include_directories(${VXL_BRL_INCLUDE_DIR})
 include_directories(${VXL_BRL_INCLUDE_DIR}/bbas)
-include_directories(${lems_SOURCE_DIR}/brcv/mvg/bmvl )
+include_directories(${lems_SOURCE_DIR}/bmvgd/bmvl )
 include_directories(${VXL_BRL_INCLUDE_DIR}/bseg)
 include_directories( ${lems_SOURCE_DIR}/brcv/shp )
 include_directories( ${lems_SOURCE_DIR}/brcv/trk )
@@ -61,8 +61,8 @@ aux_source_directory(Templates dbskr_sources)
 
 add_library(dbskr  ${dbskr_sources})
 
-target_link_libraries(dbskr dbsk2d_algo vnl dbsol_algo dbcvr dbru dbdet_algo rgrl)
-#target_link_libraries(dbskr dbsk2d_algo vnl dbsol_algo dbcvr dbru dbdet_algo brct rgrl)
+target_link_libraries(dbskr dbsk2d_algo vnl bsold_algo dbcvr dbru dbdet_algo rgrl)
+#target_link_libraries(dbskr dbsk2d_algo vnl bsold_algo dbcvr dbru dbdet_algo brct rgrl)
 
 # algorithms library
 add_subdirectory(algo)

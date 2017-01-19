@@ -13,7 +13,7 @@
 #include <vsol/vsol_line_2d_sptr.h>
 #include <dbskr/pro/dbskr_shock_patch_storage.h>
 #include <vil/vil_load.h>
-#include <dbgrl/algo/dbgrl_algs.h>
+#include <bgrld/algo/bgrld_algs.h>
 
 #include <dbskr/dbskr_scurve.h>
 #include <dbskr/dbskr_compute_scurve.h>

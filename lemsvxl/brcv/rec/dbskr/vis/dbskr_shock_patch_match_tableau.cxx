@@ -45,7 +45,7 @@
 
 #include <bsol/bsol_algs.h>
 
-//#include <dbil/algo/dbil_color_conversions.h>
+//#include <bild/algo/bild_color_conversions.h>
 //#include <vidpro1/storage/vidpro1_image_storage.h>
 //#include <vil/vil_image_resource.h>
 

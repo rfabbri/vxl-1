@@ -8,7 +8,7 @@
 #include <vgl/vgl_lineseg_test.h>
 #include <vgl/vgl_closest_point.h>
 #include <vgl/vgl_intersection.h>
-#include <dbgl/algo/dbgl_eulerspiral.h>
+#include <bgld/algo/bgld_eulerspiral.h>
 
 #include <vcl_cstdio.h>
 #include <vcl_algorithm.h>
@@ -1613,7 +1613,7 @@ void dbskr_scurve::set_euler_spiral_completion_length()
     }
 
     // 2) Compute Euler Spiral
-    dbgl_eulerspiral es(
+    bgld_eulerspiral es(
         plus_last_point,
         plus_line.slope_radians(),
         minus_last_point,

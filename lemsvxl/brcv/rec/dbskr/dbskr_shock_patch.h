@@ -38,8 +38,8 @@
 
 // Construct a virtual undirected graph for the subgraph extracted, this will be used to trace the boundary 
 // all the degree two nodes will be merged and degree three nodes will constitute the nodes of this virtual graph
-#include <dbgrl/dbgrl_edge.h>
-#include <dbgrl/dbgrl_vertex.h>
+#include <bgrld/bgrld_edge.h>
+#include <bgrld/bgrld_vertex.h>
 #include <dbsk2d/dbsk2d_shock_node_sptr.h>
 #include <dbsk2d/dbsk2d_shock_edge_sptr.h>
 
@@ -48,7 +48,7 @@
 #include <vgl/algo/vgl_h_matrix_2d.h>
 
 //: helper classes in costruction of a patch
-class dbskr_v_edge : public dbgrl_edge<dbskr_v_node> 
+class dbskr_v_edge : public bgrld_edge<dbskr_v_node> 
 {
 public:
   vcl_vector<dbsk2d_shock_edge_sptr> edges_;
@@ -56,9 +56,9 @@ public:
   int end_node_id_;
   float length_;
 
-  dbskr_v_edge() : dbgrl_edge<dbskr_v_node>(), start_node_id_(-1), end_node_id_(-1), length_(-1) {}
-  dbskr_v_edge(dbskr_v_node_sptr vs, dbskr_v_node_sptr vt) : dbgrl_edge<dbskr_v_node>(vs, vt),  start_node_id_(-1), end_node_id_(-1), length_(-1) {}
-  dbskr_v_edge(dbskr_v_node_sptr vs, dbskr_v_node_sptr vt, vcl_vector<dbsk2d_shock_edge_sptr>& edges, int sid, int eid) : dbgrl_edge<dbskr_v_node>(vs, vt), edges_(edges), start_node_id_(sid), end_node_id_(eid), length_(-1) {}
+  dbskr_v_edge() : bgrld_edge<dbskr_v_node>(), start_node_id_(-1), end_node_id_(-1), length_(-1) {}
+  dbskr_v_edge(dbskr_v_node_sptr vs, dbskr_v_node_sptr vt) : bgrld_edge<dbskr_v_node>(vs, vt),  start_node_id_(-1), end_node_id_(-1), length_(-1) {}
+  dbskr_v_edge(dbskr_v_node_sptr vs, dbskr_v_node_sptr vt, vcl_vector<dbsk2d_shock_edge_sptr>& edges, int sid, int eid) : bgrld_edge<dbskr_v_node>(vs, vt), edges_(edges), start_node_id_(sid), end_node_id_(eid), length_(-1) {}
   dbskr_v_edge(const dbskr_v_edge& other);
 
   float length();
@@ -66,24 +66,24 @@ public:
   virtual ~dbskr_v_edge() { edges_.clear(); }
 };
 
-class dbskr_v_node : public dbgrl_vertex<dbskr_v_edge> 
+class dbskr_v_node : public bgrld_vertex<dbskr_v_edge> 
 {
 public:
   dbsk2d_shock_node_sptr original_shock_node_;
   int id_;
 
-  dbskr_v_node(): dbgrl_vertex<dbskr_v_edge>(), id_(0), original_shock_node_(0) {}
-  dbskr_v_node(int id): dbgrl_vertex<dbskr_v_edge>(), id_(id), original_shock_node_(0) {}
+  dbskr_v_node(): bgrld_vertex<dbskr_v_edge>(), id_(0), original_shock_node_(0) {}
+  dbskr_v_node(int id): bgrld_vertex<dbskr_v_edge>(), id_(id), original_shock_node_(0) {}
   dbskr_v_node(dbsk2d_shock_node_sptr n);
   dbskr_v_node(const dbskr_v_node& other);
   virtual ~dbskr_v_node() {}
 };
 
-//: a test graph class subclasssed from dbgrl_graph
-class dbskr_v_graph : public dbgrl_graph<dbskr_v_node, dbskr_v_edge>
+//: a test graph class subclasssed from bgrld_graph
+class dbskr_v_graph : public bgrld_graph<dbskr_v_node, dbskr_v_edge>
 {
 public:
-  dbskr_v_graph() : dbgrl_graph<dbskr_v_node, dbskr_v_edge>() {}
+  dbskr_v_graph() : bgrld_graph<dbskr_v_node, dbskr_v_edge>() {}
   ~dbskr_v_graph(){}
 
   float node_overlap(dbskr_v_graph& other);

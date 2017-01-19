@@ -28,7 +28,7 @@
 #include <dbskr/dbskr_tree_edit_pmi.h>
 #include <dbinfo/dbinfo_observation.h>
 #include <dbinfo/dbinfo_observation_matcher.h>
-#include <dbru/dbru_rcor.h>
+#include <dbru/algo/dbru_rcor.h>
 #include <dbru/algo/dbru_rcor_generator.h>
 #include <dbru/pro/dbru_rcor_storage.h>
 #include <dbru/pro/dbru_rcor_storage_sptr.h>

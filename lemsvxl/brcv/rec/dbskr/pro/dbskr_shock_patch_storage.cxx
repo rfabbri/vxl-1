@@ -12,7 +12,7 @@
 #include <vsol/vsol_polygon_2d.h>
 #include <dbsk2d/algo/dbsk2d_xshock_graph_fileio.h>
 #include <dbskr/algo/dbskr_rec_algs.h>
-#include <dbsol/algo/dbsol_curve_algs.h>
+#include <bsold/algo/bsold_curve_algs.h>
 
 //: Constructor
 dbskr_shock_patch_storage::dbskr_shock_patch_storage() 

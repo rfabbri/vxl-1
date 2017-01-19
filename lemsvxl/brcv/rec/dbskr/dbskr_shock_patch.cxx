@@ -29,9 +29,9 @@
 #include <vil/algo/vil_binary_dilate.h>
 #include <vil/vil_save.h>
 
-#include <dbsol/algo/dbsol_img_curve_algs.h>
-#include <dbsol/algo/dbsol_curve_algs.h>
-#include <dbsol/dbsol_interp_curve_2d.h>
+#include <bsold/algo/bsold_img_curve_algs.h>
+#include <bsold/algo/bsold_curve_algs.h>
+#include <bsold/bsold_interp_curve_2d.h>
 
 #include <dbinfo/dbinfo_observation.h>
 #include <dbinfo/dbinfo_observation_generator.h>
@@ -437,8 +437,8 @@ void dbskr_shock_patch::find_color_contrast(vil_image_view<float>& L, vil_image_
 
   color_contrast_ = 0;
   for (unsigned k = 0; k  < real_boundaries_.size(); k++) {
-    dbsol_interp_curve_2d_sptr c = new dbsol_interp_curve_2d();
-    dbsol_curve_algs::interpolate_linear(c.ptr(), real_boundaries_[k]); // open curve
+    bsold_interp_curve_2d_sptr c = new bsold_interp_curve_2d();
+    bsold_curve_algs::interpolate_linear(c.ptr(), real_boundaries_[k]); // open curve
     color_contrast_ += (float)get_color_distance_of_curve_regions(c, region_width, L, A, B, 14.0f);  // color_gamma = 14
   }
 
@@ -454,8 +454,8 @@ void dbskr_shock_patch::find_grey_contrast(vil_image_view<vxl_byte>& I, float re
   grey_contrast_ = 0;
  
   for (unsigned k = 0; k  < real_boundaries_.size(); k++) {
-    dbsol_interp_curve_2d_sptr c = new dbsol_interp_curve_2d();
-    dbsol_curve_algs::interpolate_linear(c.ptr(), real_boundaries_[k]); // open curve
+    bsold_interp_curve_2d_sptr c = new bsold_interp_curve_2d();
+    bsold_curve_algs::interpolate_linear(c.ptr(), real_boundaries_[k]); // open curve
 
     grey_contrast_ += (float)get_intensity_distance_of_curve_regions(c, region_width, I, 14.0f);  // color_gamma = 14
   }
@@ -731,18 +731,18 @@ vsol_box_2d_sptr dbskr_v_graph::bounding_box()
   return box;
 }
 
-dbskr_v_node::dbskr_v_node(dbsk2d_shock_node_sptr n) : dbgrl_vertex<dbskr_v_edge>() {
+dbskr_v_node::dbskr_v_node(dbsk2d_shock_node_sptr n) : bgrld_vertex<dbskr_v_edge>() {
   original_shock_node_ = n;
   id_ = n->id();
 }
 
-dbskr_v_node::dbskr_v_node(const dbskr_v_node& n) : dbgrl_vertex<dbskr_v_edge>() 
+dbskr_v_node::dbskr_v_node(const dbskr_v_node& n) : bgrld_vertex<dbskr_v_edge>() 
 {
   original_shock_node_ = n.original_shock_node_;
   id_ = n.id_;
 }
 
-dbskr_v_edge::dbskr_v_edge(const dbskr_v_edge& other) : dbgrl_edge<dbskr_v_node>(other.source_, other.target_) {
+dbskr_v_edge::dbskr_v_edge(const dbskr_v_edge& other) : bgrld_edge<dbskr_v_node>(other.source_, other.target_) {
   edges_ = other.edges_;
   start_node_id_ = other.start_node_id_;
   end_node_id_ = other.end_node_id_;

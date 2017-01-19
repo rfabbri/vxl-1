@@ -5,7 +5,7 @@
 // \brief Shock curve class which includes 2 reconstructed boundaries from
 //        a given path on the shock graph
 //        Currently it simply includes discrete point samples on the boundaries
-//        in the future these two boundary curves can be dbsol_interp_curve2d
+//        in the future these two boundary curves can be bsold_interp_curve2d
 //        with parametric intervals
 //
 // \author

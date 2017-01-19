@@ -9,7 +9,7 @@
 #include <dbinfo/dbinfo_observation.h>
 #include <dbinfo/dbinfo_observation_matcher.h>
 
-#include <dbru/dbru_rcor.h>
+#include <dbru/algo/dbru_rcor.h>
 #include <dbru/algo/dbru_rcor_generator.h>
 
 //#include <vcl_algorithm.h> 

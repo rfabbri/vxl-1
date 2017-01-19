@@ -19,7 +19,7 @@
 
 #include <dbskr/dbskr_tree_edit.h>
 #include <dbinfo/dbinfo_observation_sptr.h>
-#include <dbru/dbru_rcor_sptr.h>
+#include <dbru/algo/dbru_rcor_sptr.h>
 #include <dbskr/dbskr_sm_cor_sptr.h>
 
 class dbskr_tree_edit_pmi : public dbskr_tree_edit

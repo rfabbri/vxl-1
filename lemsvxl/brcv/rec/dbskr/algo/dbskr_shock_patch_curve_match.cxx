@@ -20,9 +20,9 @@
 #include <vil/vil_image_resource.h>
 
 
-#include <dbsol/algo/dbsol_img_curve_algs.h>
-#include <dbsol/algo/dbsol_curve_algs.h>
-#include <dbsol/dbsol_interp_curve_2d.h>
+#include <bsold/algo/bsold_img_curve_algs.h>
+#include <bsold/algo/bsold_curve_algs.h>
+#include <bsold/bsold_interp_curve_2d.h>
 
 #include <dbru/algo/dbru_object_matcher.h>
 */

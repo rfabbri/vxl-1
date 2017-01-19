@@ -24,7 +24,7 @@ aux_source_directory(Templates dbskr_algo_sources)
 
 add_library( dbskr_algo  ${dbskr_algo_sources} )
 
-target_link_libraries( dbskr_algo dbskr dbgrl dbdet_algo bil_algo vul) 
+target_link_libraries( dbskr_algo dbskr bgrld dbdet_algo bil_algo vul) 
 
 if(BUILD_TESTING)
   add_subdirectory(tests)
