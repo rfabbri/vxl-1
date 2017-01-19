@@ -75,7 +75,7 @@
 #include <dbsk2d/algo/dbsk2d_shock_transforms.h>
 #include <dbskr/algo/io/dbskr_extract_bnd_params.h>
 #include <dbskr/algo/io/dbskr_extract_shock_params.h>
-#include <dbskr/algo/dbskr_shock_patch_selector.h>
+#include <dbskr/pro/dbskr_shock_patch_selector.h>
 
 bool write_def_params(vcl_string bnd_param_file, vcl_string shock_param_file)
 {
