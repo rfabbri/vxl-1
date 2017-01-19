@@ -1,7 +1,9 @@
-# brcv/mvg/dbvrl/CMakeLists.txt
+# bmvgd/dbvrl/CMakeLists.txt
 # Brown video registration library
 
 include_directories( ${VXL_MUL_INCLUDE_DIR} )
+include_directories(${VXD_BRLD_INCLUDE_DIR})
+
 
 set(dbvrl_sources
    dbvrl_world_roi.cxx         dbvrl_world_roi.h          dbvrl_world_roi_sptr.h  
