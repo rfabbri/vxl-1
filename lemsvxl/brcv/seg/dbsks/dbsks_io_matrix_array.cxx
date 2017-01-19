@@ -4,6 +4,7 @@
 // \file
 
 #include "dbsks_io_matrix_array.h"
+#include <vcl_iostream.h>
 #include <vnl/io/vnl_io_matrix.h>
 #include <vsl/vsl_binary_io.h>
 

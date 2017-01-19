@@ -151,6 +151,11 @@ load_params_and_models()
 
 ////------------------------------------------------------------------------------
 ////: Load edge map pyramid
+bool dbsks_detect_xgraph_local_min::
+load_edgemap_pyramid()
+{
+  abort();
+}
 //bool dbsks_detect_xgraph_local_min::
 //load_edgemap_pyramid()
 //{

@@ -4,6 +4,7 @@
 // \file
 
 #include "dbsks_io_shapelet_grid.h"
+#include <vcl_iostream.h>
 #include <vsl/vsl_binary_io.h>
 #include <vnl/io/vnl_io_vector.h>
 #include <vnl/vnl_math.h>

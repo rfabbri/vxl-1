@@ -10,6 +10,7 @@ include_directories( ${lems_SOURCE_DIR}/basic)
 include_directories( ${lems_SOURCE_DIR}/brcv/shp )
 include_directories( ${lems_SOURCE_DIR}/brcv/rec )
 include_directories( ${lems_SOURCE_DIR}/brcv/seg )
+include_directories(${VXD_BRLD_INCLUDE_DIR})
 
 
 set( dbsks_sources
@@ -94,7 +95,7 @@ aux_source_directory(Templates dbsks_sources)
 
 add_library(dbsks ${dbsks_sources})
 
-target_link_libraries(dbsks dbsksp_algo dbdet_algo vidpro1 vnl_io)
+target_link_libraries(dbsks dbsksp_algo dborl dbdet_algo vidpro1 vnl_io)
 
 
 

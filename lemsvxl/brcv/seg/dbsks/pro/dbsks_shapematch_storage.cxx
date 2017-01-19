@@ -4,6 +4,7 @@
 // \file
 
 #include "dbsks_shapematch_storage.h"
+#include <vcl_iostream.h>
 
 //: Constructor
 dbsks_shapematch_storage::

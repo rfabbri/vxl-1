@@ -13,6 +13,7 @@
 #include <dbsksp/dbsksp_shock_graph.h>
 #include <dbsks/dbsks_utils.h>
 #include <bsold/bsold_file_io.h>
+#include <bsold/io/bsold_file_io_extras.h>
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_polygon_2d.h>
 #include <dbsksp/dbsksp_xshock_node.h>
