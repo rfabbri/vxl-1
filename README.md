@@ -346,6 +346,7 @@ git fetch vxl
                                    # non-master branch, else use vxl-master normally
 
 git checkout master
+# TO BE CAREFUL: git co master-vxl-merge
 # merges vxl/master into vxl-master
 git merge -s recursive vxl-master -Xsubtree=vxl vxl/master    # optional branch vxl/anybranch
 # git merge -s recursive utils-master -Xsubtree=scripts/utils utils/master   # for utils
