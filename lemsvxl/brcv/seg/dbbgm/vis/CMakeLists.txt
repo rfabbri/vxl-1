@@ -19,6 +19,6 @@ set(dbbgm_vis_sources
 
 add_library(dbbgm_vis  ${dbbgm_vis_sources})
 
-target_link_libraries(dbbgm_vis dbbgm_pro bvis1)
+target_link_libraries(dbbgm_vis dbbgm_pro bvis1 bgui vgui)
 
 endif (VXL_VGUI_FOUND)

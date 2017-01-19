@@ -45,7 +45,7 @@ aux_source_directory(Templates dbbgm_pro_sources)
 
 add_library(dbbgm_pro ${dbbgm_pro_sources})
 
-target_link_libraries(dbbgm_pro dbbgm_algo bbgm dbsta_algo bsta_algo)
+target_link_libraries(dbbgm_pro dbbgm_algo bbgm dbsta_algo bsta_algo bpro1 vidpro1 bvis1)
 
 
 

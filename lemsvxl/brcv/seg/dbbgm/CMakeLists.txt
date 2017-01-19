@@ -1,6 +1,7 @@
 # This is brcv/seg/dbbgm/CMakeLists.txt
 # Brown background modeling Library
 
+include_directories(${VXD_BRLD_INCLUDE_DIR})
 
 set(dbbgm_sources
   dbbgm_distribution_image.hxx    dbbgm_distribution_image.h    
@@ -20,7 +21,7 @@ aux_source_directory(Templates dbbgm_sources)
 add_library(dbbgm  ${dbbgm_sources})
 
 # add the required libraries into this list
-target_link_libraries(dbbgm dbsta vsl vbl vbl_io)  
+target_link_libraries(dbbgm dbsta vil vsl vbl vbl_io)  
 
 
 if( BUILD_TESTING )

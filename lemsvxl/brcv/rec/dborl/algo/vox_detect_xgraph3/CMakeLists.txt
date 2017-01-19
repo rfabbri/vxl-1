@@ -11,7 +11,7 @@ set( vox_detect_xgraph3_lib_sources
 )
 
 add_library (vox_detect_xgraph3_lib ${vox_detect_xgraph3_lib_sources} )
-target_link_libraries (vox_detect_xgraph3_lib dborl_algo dbsks dbsks_pro dbsksp_xio vidpro1)
+target_link_libraries (vox_detect_xgraph3_lib dborl_algo dbsks dbsks_pro dbsksp_xio vidpro1 dbdet_pro)
 
 
 # Main executable for vox
