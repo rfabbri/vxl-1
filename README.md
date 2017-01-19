@@ -345,15 +345,16 @@ git fetch vxl
 # git branch vxl-master vxl/master # create optional branch if you're fetching 
                                    # non-master branch, else use vxl-master normally
 git checkout master
-git co -b vxl-master-merge
+git checkout -b vxl-master-merge
 # merges vxl/master into vxl-master-merge
 # TO BE CAREFUL TODO: use master-vxl-merge below. vxl-master below seems to have no effect
 git merge -s recursive vxl-master-merge -Xsubtree=vxl vxl/master    # optional branch vxl/anybranch
-# git merge -s recursive utils-master -Xsubtree=scripts/utils utils/master   # for utils
+# git merge -s recursive utils-master-merge -Xsubtree=scripts/utils utils/master   # for utils
 
 # Check that vxl-master-merge has the commits as you want them
 # If necessary, checkout vxl-master-merge and see if the files are in the right subfolder
 # If the changes are substantial, compile first before merging below!
+git checkout master
 git merge vxl-master-merge  # optional branch
 # Update VPE upstream
 
