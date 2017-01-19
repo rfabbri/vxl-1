@@ -19,9 +19,6 @@ dbru_label_sptr.h
 dbru_object.h                          dbru_object.cxx
 dbru_object_sptr.h
 
-dbru_rcor.h                            dbru_rcor.cxx
-dbru_rcor_sptr.h
-
 dbru_osl.h                             dbru_osl.cxx
 dbru_osl_sptr.h
 

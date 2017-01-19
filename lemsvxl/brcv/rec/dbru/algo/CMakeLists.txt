@@ -11,6 +11,9 @@ include_directories( ${lems_SOURCE_DIR}/brcv/shp )
 include_directories( ${VXL_MUL_INCLUDE_DIR} )
 
 set(dbru_algo_sources  
+dbru_rcor.h                            dbru_rcor.cxx
+dbru_rcor_sptr.h
+
 dbru_rcor_generator.h                  dbru_rcor_generator.cxx
 dbru_object_matcher.h                  dbru_object_matcher.cxx
 )

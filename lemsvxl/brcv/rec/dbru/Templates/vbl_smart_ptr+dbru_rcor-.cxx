@@ -1,4 +1,4 @@
-#include <dbru/dbru_rcor.h>
+#include <dbru/algo/dbru_rcor.h>
 #include <vsol/vsol_box_2d.h>
 #include <vtol/vtol_face_2d.h>
 #include <vsol/vsol_region_2d.h>
