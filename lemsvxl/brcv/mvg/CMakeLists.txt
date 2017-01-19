@@ -2,7 +2,6 @@
 # Brown Multi-View Geometry Libraries.
 
 include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
-include_directories(${VXD_BRLD_INCLUDE_DIR})
 
 # Brown VXL multi-view library
 add_subdirectory( bmvl )

@@ -13,7 +13,7 @@ set(dbacm_pro_sources
 
 add_library(dbacm_pro ${dbacm_pro_sources})
 
-target_link_libraries(dbacm_pro dbacm vidpro1)
+target_link_libraries(dbacm_pro dbacm vidpro1 bpro1)
 
 
 if(BUILD_TESTING)

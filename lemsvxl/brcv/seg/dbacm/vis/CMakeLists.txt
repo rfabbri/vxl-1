@@ -11,7 +11,7 @@ set(dbacm_vis_sources
 
 add_library(dbacm_vis  ${dbacm_vis_sources})
 
-target_link_libraries(dbacm_vis dbacm bvis1)
+target_link_libraries(dbacm_vis dbacm bvis1 vgui)
 
 
 if(BUILD_TESTING)
