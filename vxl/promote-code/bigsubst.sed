@@ -99,14 +99,15 @@ s/dbcsi/bcsid/g
 s/DBCSI/BCSID/g
 s/bmvgd\/bcsid/bbasd\/bcsid/g
 #
-#XXX s/dbdet\/edge/sdet/g
-#s/dbdet\/sel/sdet/g
-#s/dbdet/sdetd/g
+#XXX 
+s/dbdet\/edge/sdet/g
+s/dbdet\/sel/sdet/g
+s/dbdet/sdetd/g
 #
 # sdet/dbdet: XXX
-#s/\<curvelet_list/sdet_curvelet_list/g
-#s/cvlet_list/sdet_curvelet_list/g
-#s/dbdet_curve_fragment_graph/sdet_curve_fragment_graph/g
+s/\<curvelet_list/sdet_curvelet_list/g
+s/cvlet_list/sdet_curvelet_list/g
+s/dbdet_curve_fragment_graph/sdet_curve_fragment_graph/g
 #
 s/mw_algo_util/bmcsd_algo_util/g
 s/mw\(_discrete_corresp\)/bmcsd\1/g
