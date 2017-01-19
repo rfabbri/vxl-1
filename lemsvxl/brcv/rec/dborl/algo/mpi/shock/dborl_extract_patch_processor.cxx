@@ -14,8 +14,8 @@
 #include <dbsk2d/dbsk2d_shock_graph.h>
 #include <dbsk2d/algo/dbsk2d_xshock_graph_fileio.h>
 #include <dbskr/pro/dbskr_shock_patch_storage_sptr.h>
-#include <dbskr/algo/dbskr_shock_patch_model_selector.h>
-#include <dbskr/algo/dbskr_shock_patch_selector.h>
+#include <dbskr/pro/dbskr_shock_patch_model_selector.h>
+#include <dbskr/pro/dbskr_shock_patch_selector.h>
 #include <dbskr/pro/dbskr_shock_patch_storage.h>
 #include <dbskr/dbskr_shock_patch.h>
 #include <dbskr/dbskr_tree.h>
