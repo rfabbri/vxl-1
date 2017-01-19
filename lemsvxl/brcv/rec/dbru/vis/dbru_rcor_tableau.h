@@ -19,7 +19,7 @@
 #include <vgui/vgui_gl.h>
 
 #include "dbru_rcor_tableau_sptr.h"
-#include <dbru/dbru_rcor_sptr.h>
+#include <dbru/algo/dbru_rcor_sptr.h>
 
 //: A tableau to display dbsk2d_shock_storage objects
 class dbru_rcor_tableau : public vgui_tableau 

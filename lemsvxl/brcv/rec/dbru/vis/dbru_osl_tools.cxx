@@ -33,7 +33,7 @@
 #include <dbru/dbru_osl.h>
 #include <dbru/dbru_label.h>
 #include <dbru/dbru_object.h>
-#include <dbru/algo/dbru_object_matcher.h>
+#include <dbskr/algo/dbskr_object_matcher.h>
 #include <dbinfo/dbinfo_observation.h>
 
 #include <vidl1/vidl1_movie.h>
@@ -1151,7 +1151,7 @@ bool dbru_osl_match_tool::match_query_opt(const float dx, const float dr,
     vil_image_resource_sptr match_imagef;
     vil_image_resource_sptr match_imager;
     vil_image_resource_sptr dummy;
-    float minfo = dbru_object_matcher::minfo_rigid_alignment_search(obsq, obsdb, dx, dr, ds, ratio);
+    float minfo = dbskr_object_matcher::minfo_rigid_alignment_search(obsq, obsdb, dx, dr, ds, ratio);
     match_scores.push_back(minfo);
   }
   return true;

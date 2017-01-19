@@ -13,8 +13,8 @@
 #include <bvis1/bvis1_view_tableau.h>
 #include <vidpro1/vidpro1_repository.h>
 
-#include <dbru/dbru_rcor_sptr.h>
-#include <dbru/dbru_rcor.h>
+#include <dbru/algo/dbru_rcor_sptr.h>
+#include <dbru/algo/dbru_rcor.h>
 
 #include <dbru/algo/dbru_rcor_generator.h>
 

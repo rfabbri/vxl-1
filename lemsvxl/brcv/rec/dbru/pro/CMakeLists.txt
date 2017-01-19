@@ -31,5 +31,5 @@ dbru_create_empty_osl_process.h   dbru_create_empty_osl_process.cxx
 
 add_library(dbru_pro ${dbru_pro_sources})
 
-target_link_libraries(dbru_pro bvis1 dbdet dbru_algo dbskr dbsk2d_algo)
+target_link_libraries(dbru_pro bvis1 dbdet dbru_algo dbskr_algo dbsk2d_algo)
 

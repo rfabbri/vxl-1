@@ -25,7 +25,7 @@
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 
-#include <dbskr/dbskr_tree_edit_pmi.h>
+#include <dbskr/algo/dbskr_tree_edit_pmi.h>
 #include <dbinfo/dbinfo_observation.h>
 #include <dbinfo/dbinfo_observation_matcher.h>
 #include <dbru/algo/dbru_rcor.h>

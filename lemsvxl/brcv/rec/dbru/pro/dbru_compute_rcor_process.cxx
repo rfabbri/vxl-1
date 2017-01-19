@@ -42,7 +42,7 @@
 #include <dbru/algo/dbru_rcor_sptr.h>
 #include <dbru/algo/dbru_rcor.h>
 
-#include <dbru/algo/dbskr_object_matcher.h>
+#include <dbskr/algo/dbskr_object_matcher.h>
 
 #define MARGIN  (10)
 

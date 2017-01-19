@@ -16,7 +16,7 @@
 #include <vgl/vgl_distance.h>
 
 #include "dbru_rcor_tableau.h"
-#include <dbru/dbru_rcor.h>
+#include <dbru/algo/dbru_rcor.h>
 
 class dbru_rcor_tableau_toggle_command : public vgui_command
 {

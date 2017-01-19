@@ -5,7 +5,7 @@
 
 #include "dbskr_extract_subgraph_and_find_shock_patches_process.h"
 #include <bpro1/bpro1_parameters.h>
-#include <dbskr/algo/dbskr_shock_patch_selector.h>
+#include <dbskr/pro/dbskr_shock_patch_selector.h>
 #include <vul/vul_file.h>
 
 

@@ -1,4 +1,4 @@
-// This is brcv/rec/dbskr/algo/dbskr_shock_patch_selector.h
+// This is brcv/rec/dbskr/pro/dbskr_shock_patch_selector.h
 #ifndef dbskr_shock_patch_selector_h_
 #define dbskr_shock_patch_selector_h_
 

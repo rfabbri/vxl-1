@@ -29,7 +29,7 @@
 #include <dbinfo/dbinfo_observation_sptr.h>
 #include <dbinfo/dbinfo_observation.h>
 #include <dbinfo/dbinfo_object_matcher.h>
-#include <dbru/algo/dbru_object_matcher.h>
+#include <dbskr/algo/dbskr_object_matcher.h>
 
 dbskr_shock_patch_curve_match_process::dbskr_shock_patch_curve_match_process() : bpro1_process()
 {

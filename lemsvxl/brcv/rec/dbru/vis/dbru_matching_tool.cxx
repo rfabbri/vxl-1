@@ -9,9 +9,9 @@
 #include <vidpro1/storage/vidpro1_image_storage.h>
 
 #include <dbru/pro/dbru_rcor_storage.h>
-#include <dbru/algo/dbru_object_matcher.h>
+#include <dbskr/algo/dbskr_object_matcher.h>
 #include <dbskr/pro/dbskr_shock_match_storage.h>
-#include <dbru/dbru_rcor.h>
+#include <dbru/algo/dbru_rcor.h>
 
 #include <dbcvr/dbcvr_cv_cor_sptr.h>
 #include <dbskr/dbskr_sm_cor_sptr.h>
@@ -405,22 +405,22 @@ dbru_matching_tool::handle( const vgui_event & e,
     dbskr_sm_cor_sptr sm_cor; dbcvr_cv_cor_sptr sil_cor;
     double cost;
     if (choice_ == 0)
-      sm_cor = dbru_object_matcher::compute_shock_alignment(tree1, tree2, cost, false);
+      sm_cor = dbskr_object_matcher::compute_shock_alignment(tree1, tree2, cost, false);
     else if (choice_ == 1)
-      sm_cor = dbru_object_matcher::compute_shock_alignment_pmi(obs1, obs2, tree1, tree2, cost, false);
+      sm_cor = dbskr_object_matcher::compute_shock_alignment_pmi(obs1, obs2, tree1, tree2, cost, false);
     else 
-      sil_cor = dbru_object_matcher::compute_curve_alignment(obs1, obs2, cost, R_, rms_, restricted_cvmatch_ratio_, false);
+      sil_cor = dbskr_object_matcher::compute_curve_alignment(obs1, obs2, cost, R_, rms_, restricted_cvmatch_ratio_, false);
 
     switch(choice_) {
       case 0 :   // normal edit distance 
       case 1 : { // pmi edit distance
-        output_rcor = dbru_object_matcher::generate_rcor_shock_matching(obs1, obs2, sm_cor, true);  // verbose    
+        output_rcor = dbskr_object_matcher::generate_rcor_shock_matching(obs1, obs2, sm_cor, true);  // verbose    
         break; }
       case 2 : { // dt
-        output_rcor = dbru_object_matcher::generate_rcor_curve_matching_dt(obs1, obs2, sil_cor, true);  // verbose    
+        output_rcor = dbskr_object_matcher::generate_rcor_curve_matching_dt(obs1, obs2, sil_cor, true);  // verbose    
         break; }
       case 3 : { // line intersections
-        output_rcor = dbru_object_matcher::generate_rcor_curve_matching_line(obs1, obs2, sil_cor, true);  // verbose    
+        output_rcor = dbskr_object_matcher::generate_rcor_curve_matching_line(obs1, obs2, sil_cor, true);  // verbose    
         break; }
     }
     rcor_storage_->set_rcor(output_rcor);

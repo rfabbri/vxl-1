@@ -1,6 +1,6 @@
-// This is brcv/rec/dbskr/algo/dbskr_shock_patch_selector.cxx
+// This is brcv/rec/dbskr/pro/dbskr_shock_patch_selector.cxx
 
-#include <dbskr/algo/dbskr_shock_patch_selector.h>
+#include <dbskr/pro/dbskr_shock_patch_selector.h>
 
 #include <bil/algo/bil_color_conversions.h>
 #include <dbskr/pro/dbskr_shock_patch_storage.h>

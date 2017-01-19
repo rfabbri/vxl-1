@@ -25,7 +25,7 @@
 //#include <dbcvr/dbcvr_clsd_cvmatch.h>
 //#include <dbcvr/dbcvr_clsd_cvmatch_sptr.h>
 
-#include <dbru/algo/dbskr_object_matcher.h>
+#include <dbskr/algo/dbskr_object_matcher.h>
 
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
