@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// This is brcv/rec/dbru/dbru_rcor.h
+// This is brcv/rec/dbru/algo/dbru_rcor.h
 //:
 // \file
 // \brief Class that finds correspondence between the pixels of polygonal input regions,

@@ -7,8 +7,8 @@
 #include <dbru/dbru_object.h>
 #include <dbru/algo/dbru_object_matcher.h>
 
-#include <dbru/dbru_rcor_sptr.h>
-#include <dbru/dbru_rcor.h>
+#include <dbru/algo/dbru_rcor_sptr.h>
+#include <dbru/algo/dbru_rcor.h>
 #include <dbru/algo/dbru_rcor_generator.h>
 
 #include <dbinfo/dbinfo_observation.h>

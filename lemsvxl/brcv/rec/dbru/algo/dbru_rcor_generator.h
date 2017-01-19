@@ -32,7 +32,7 @@
 #include <vgl/algo/vgl_norm_trans_2d.h>
 
 #include <bsold/bsold_interp_curve_2d_sptr.h>
-#include <dbru/dbru_rcor_sptr.h>
+#include <dbru/algo/dbru_rcor_sptr.h>
 
 #include <dbcvr/dbcvr_cv_cor_sptr.h>
 #include <dbskr/dbskr_sm_cor_sptr.h>

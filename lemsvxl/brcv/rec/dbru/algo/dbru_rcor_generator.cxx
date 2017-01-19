@@ -1,6 +1,6 @@
 
 #include <dbru/algo/dbru_rcor_generator.h>
-#include <dbru/dbru_rcor.h>
+#include <dbru/algo/dbru_rcor.h>
 #include <dbcvr/dbcvr_cv_cor.h>
 #include <dbskr/dbskr_sm_cor.h>
 
