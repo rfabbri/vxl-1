@@ -1,7 +1,7 @@
 
-// This is brcv/rec/dbru/dbru_object_matcher.h
-#ifndef dbru_object_matcher_h_
-#define dbru_object_matcher_h_
+// This is brcv/rec/dbru/dbskr_object_matcher.h
+#ifndef dbskr_object_matcher_h_
+#define dbskr_object_matcher_h_
 //---------------------------------------------------------------------
 //:
 // \file
@@ -36,12 +36,12 @@
 #include <dbru/algo/dbru_rcor_sptr.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
 
-class dbru_object_matcher : public vbl_ref_count
+class dbskr_object_matcher : public vbl_ref_count
 {
  public:
 
   //:default destructor
-  ~dbru_object_matcher(){}
+  ~dbskr_object_matcher(){}
 
   //----------------------------------------------------------------------------------------------------
   // Mutual info between objects
@@ -377,8 +377,8 @@ class dbru_object_matcher : public vbl_ref_count
 
  protected:
   //: no default constructor, static methods only
-  dbru_object_matcher();
+  dbskr_object_matcher();
 
 };
 
-#endif // dbru_object_matcher_h_
+#endif // dbskr_object_matcher_h_

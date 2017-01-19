@@ -13,7 +13,7 @@
 // \endverbatim
 
 #include <bpro1/bpro1_storage.h>
-#include <dbru/dbru_rcor_sptr.h>
+#include <dbru/algo/dbru_rcor_sptr.h>
 
 #include <dbru/pro/dbru_rcor_storage_sptr.h>
 

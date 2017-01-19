@@ -39,10 +39,10 @@
 
 #include <dbru/pro/dbru_rcor_storage_sptr.h>
 #include <dbru/pro/dbru_rcor_storage.h>
-#include <dbru/dbru_rcor_sptr.h>
-#include <dbru/dbru_rcor.h>
+#include <dbru/algo/dbru_rcor_sptr.h>
+#include <dbru/algo/dbru_rcor.h>
 
-#include <dbru/algo/dbru_object_matcher.h>
+#include <dbru/algo/dbskr_object_matcher.h>
 
 #define MARGIN  (10)
 
@@ -249,47 +249,47 @@ bool dbru_compute_rcor_process::execute()
     if (use_shgm) {
       dbskr_sm_cor_sptr sm = new dbskr_sm_cor(tree1, tree2);
       sm->read_and_construct_from_shgm(shgm_file);
-      output_rcor = dbru_object_matcher::generate_rcor_shock_matching(obs1, obs2, sm, true);
+      output_rcor = dbskr_object_matcher::generate_rcor_shock_matching(obs1, obs2, sm, true);
     } 
     else {
-      output_rcor = dbru_object_matcher::generate_rcor_shock_matching(obs1, obs2, tree1, tree2, true);  // verbose
+      output_rcor = dbskr_object_matcher::generate_rcor_shock_matching(obs1, obs2, tree1, tree2, true);  // verbose
     }
   } 
   else if (distance_transform) {  
     if (use_sil_cor)
-      output_rcor = dbru_object_matcher::generate_rcor_curve_matching_dt(obs1, obs2, sil_cor, true); 
+      output_rcor = dbskr_object_matcher::generate_rcor_curve_matching_dt(obs1, obs2, sil_cor, true); 
     else
-      output_rcor = dbru_object_matcher::generate_rcor_curve_matching_dt(obs1, obs2, R, rms, restricted_cvmatch_ratio, true); 
+      output_rcor = dbskr_object_matcher::generate_rcor_curve_matching_dt(obs1, obs2, R, rms, restricted_cvmatch_ratio, true); 
   }
   else if (dt2) {  
     if (use_sil_cor)
-      output_rcor = dbru_object_matcher::generate_rcor_curve_matching_dt2(obs1, obs2, sil_cor, increment, true); 
+      output_rcor = dbskr_object_matcher::generate_rcor_curve_matching_dt2(obs1, obs2, sil_cor, increment, true); 
     else
-      output_rcor = dbru_object_matcher::generate_rcor_curve_matching_dt2(obs1, obs2, R, rms, restricted_cvmatch_ratio, increment, true); 
+      output_rcor = dbskr_object_matcher::generate_rcor_curve_matching_dt2(obs1, obs2, R, rms, restricted_cvmatch_ratio, increment, true); 
   }
   else if (line_intersections) {
     if (use_sil_cor)
-      output_rcor = dbru_object_matcher::generate_rcor_curve_matching_line(obs1, obs2,sil_cor, int(increment), save_histograms, true);  // verbose
+      output_rcor = dbskr_object_matcher::generate_rcor_curve_matching_line(obs1, obs2,sil_cor, int(increment), save_histograms, true);  // verbose
     else
-      output_rcor = dbru_object_matcher::generate_rcor_curve_matching_line(obs1, obs2,R, rms, restricted_cvmatch_ratio, int(increment), save_histograms, true);  // verbose
+      output_rcor = dbskr_object_matcher::generate_rcor_curve_matching_line(obs1, obs2,R, rms, restricted_cvmatch_ratio, int(increment), save_histograms, true);  // verbose
   } 
   else if (line_intersections2) {
     if (use_sil_cor)
-      output_rcor = dbru_object_matcher::generate_rcor_curve_matching_line2(obs1, obs2,sil_cor, increment, save_histograms, true);  // verbose
+      output_rcor = dbskr_object_matcher::generate_rcor_curve_matching_line2(obs1, obs2,sil_cor, increment, save_histograms, true);  // verbose
     else
-      output_rcor = dbru_object_matcher::generate_rcor_curve_matching_line2(obs1, obs2,R, rms, restricted_cvmatch_ratio, increment, save_histograms, true);  // verbose
+      output_rcor = dbskr_object_matcher::generate_rcor_curve_matching_line2(obs1, obs2,R, rms, restricted_cvmatch_ratio, increment, save_histograms, true);  // verbose
   }
   else if (line_intersections3) {
     if (use_sil_cor)
-      output_rcor = dbru_object_matcher::generate_rcor_curve_matching_line3(obs1, obs2,sil_cor, int(increment), save_histograms, true);  // verbose
+      output_rcor = dbskr_object_matcher::generate_rcor_curve_matching_line3(obs1, obs2,sil_cor, int(increment), save_histograms, true);  // verbose
     else
-      output_rcor = dbru_object_matcher::generate_rcor_curve_matching_line3(obs1, obs2,R, rms, restricted_cvmatch_ratio, int(increment), save_histograms, true);  // verbose
+      output_rcor = dbskr_object_matcher::generate_rcor_curve_matching_line3(obs1, obs2,R, rms, restricted_cvmatch_ratio, int(increment), save_histograms, true);  // verbose
   }
   else if (line_intersections4) {
     if (use_sil_cor)
-      output_rcor = dbru_object_matcher::generate_rcor_curve_matching_line4(obs1, obs2,sil_cor, int(increment), save_histograms, true);  // verbose
+      output_rcor = dbskr_object_matcher::generate_rcor_curve_matching_line4(obs1, obs2,sil_cor, int(increment), save_histograms, true);  // verbose
     else
-      output_rcor = dbru_object_matcher::generate_rcor_curve_matching_line4(obs1, obs2,R, rms, restricted_cvmatch_ratio, int(increment), save_histograms, true);  // verbose
+      output_rcor = dbskr_object_matcher::generate_rcor_curve_matching_line4(obs1, obs2,R, rms, restricted_cvmatch_ratio, int(increment), save_histograms, true);  // verbose
   }
 
   double info = dbinfo_observation_matcher::minfo(obs1, obs2, output_rcor->get_correspondences(), false);

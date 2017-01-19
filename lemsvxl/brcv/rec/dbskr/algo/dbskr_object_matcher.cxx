@@ -5,7 +5,7 @@
 #include <vcl_cstdlib.h> // for rand()
 
 #include <dbru/dbru_object.h>
-#include <dbru/algo/dbru_object_matcher.h>
+#include <dbskr/algo/dbskr_object_matcher.h>
 
 #include <dbru/algo/dbru_rcor_sptr.h>
 #include <dbru/algo/dbru_rcor.h>
@@ -23,7 +23,7 @@
 
 #include <dbskr/dbskr_tree.h>
 #include <dbskr/dbskr_tree_edit.h>
-#include <dbskr/dbskr_tree_edit_pmi.h>
+#include <dbskr/algo/dbskr_tree_edit_pmi.h>
 
 #include <dbsk2d/dbsk2d_shock_graph_sptr.h>
 #include <dbsk2d/dbsk2d_shock_graph.h>
@@ -42,7 +42,7 @@
 //----------------------------------------------------------------------------------------------------
 
 //: compute the mutual information between two objects using correspondences induced by curve matching
-vil_image_resource_sptr dbru_object_matcher::minfo_thomas_curve_matching(dbru_object_sptr const& obj0,
+vil_image_resource_sptr dbskr_object_matcher::minfo_thomas_curve_matching(dbru_object_sptr const& obj0,
                                                        dbru_object_sptr const& obji,
                                                        unsigned int obj0_poly_id,
                                                        unsigned int obji_poly_id,
@@ -131,7 +131,7 @@ vil_image_resource_sptr dbru_object_matcher::minfo_thomas_curve_matching(dbru_ob
 
 
 //: compute the mutual information between two objects using correspondences induced by shock matching
-vil_image_resource_sptr dbru_object_matcher::minfo_shock_matching(dbru_object_sptr const& obj0,
+vil_image_resource_sptr dbskr_object_matcher::minfo_shock_matching(dbru_object_sptr const& obj0,
                                                 dbru_object_sptr const& obji,
                                                 unsigned int obj0_poly_id,
                                                 unsigned int obji_poly_id,
@@ -256,10 +256,10 @@ vil_image_resource_sptr dbru_object_matcher::minfo_shock_matching(dbru_object_sp
 
   // do the shock matching
   dbskr_sm_cor_sptr sm_cor1, sm_cor2; double cost1, cost2;
-  sm_cor1 = dbru_object_matcher::compute_shock_alignment(tree0,treei,cost1,false);
-  sm_cor2 = dbru_object_matcher::compute_shock_alignment(treei,tree0,cost2,false);      
-  dbru_rcor_sptr rcor1 = dbru_object_matcher::generate_rcor_shock_matching(obs0, obsi, sm_cor1, false);
-  dbru_rcor_sptr rcor2 = dbru_object_matcher::generate_rcor_shock_matching(obsi, obs0, sm_cor2, false);
+  sm_cor1 = dbskr_object_matcher::compute_shock_alignment(tree0,treei,cost1,false);
+  sm_cor2 = dbskr_object_matcher::compute_shock_alignment(treei,tree0,cost2,false);      
+  dbru_rcor_sptr rcor1 = dbskr_object_matcher::generate_rcor_shock_matching(obs0, obsi, sm_cor1, false);
+  dbru_rcor_sptr rcor2 = dbskr_object_matcher::generate_rcor_shock_matching(obsi, obs0, sm_cor2, false);
   float info1 = dbinfo_observation_matcher::minfo(obs0, obsi, rcor1->get_correspondences(), false);
   float info2 = dbinfo_observation_matcher::minfo(obsi, obs0, rcor2->get_correspondences(), false);
   if (cost1 < cost2)
@@ -286,7 +286,7 @@ vil_image_resource_sptr dbru_object_matcher::minfo_shock_matching(dbru_object_sp
 
 //: compute curve alignment from two observations
 dbcvr_cv_cor_sptr 
-dbru_object_matcher::compute_curve_alignment(dbinfo_observation_sptr obs0,
+dbskr_object_matcher::compute_curve_alignment(dbinfo_observation_sptr obs0,
                                              dbinfo_observation_sptr obsi,
                                              double &curve_matching_cost,
                                              double R,
@@ -318,7 +318,7 @@ dbru_object_matcher::compute_curve_alignment(dbinfo_observation_sptr obs0,
 
  //: compute curve alignment from two observations
 dbcvr_cv_cor_sptr 
-dbru_object_matcher::compute_curve_alignment (vsol_polygon_2d_sptr poly0,
+dbskr_object_matcher::compute_curve_alignment (vsol_polygon_2d_sptr poly0,
                                                     vsol_polygon_2d_sptr polyi,
                                                     double &curve_matching_cost,
                                                     double R,
@@ -349,7 +349,7 @@ dbru_object_matcher::compute_curve_alignment (vsol_polygon_2d_sptr poly0,
 
 //: compute the region correspondence from curve matching using distance transform mapping
 dbru_rcor_sptr 
-dbru_object_matcher::generate_rcor_curve_matching_dt(dbinfo_observation_sptr obs0,
+dbskr_object_matcher::generate_rcor_curve_matching_dt(dbinfo_observation_sptr obs0,
                                                      dbinfo_observation_sptr obsi,
                                                      dbcvr_cv_cor_sptr sil_cor,
                                                      bool verbose)
@@ -380,7 +380,7 @@ dbru_object_matcher::generate_rcor_curve_matching_dt(dbinfo_observation_sptr obs
 
 //: compute the region correspondence from curve matching using distance transform mapping
 dbru_rcor_sptr 
-dbru_object_matcher::generate_rcor_curve_matching_dt(dbinfo_observation_sptr obs0,
+dbskr_object_matcher::generate_rcor_curve_matching_dt(dbinfo_observation_sptr obs0,
                                                      dbinfo_observation_sptr obsi,
                                                      double R,
                                                      double rms,   // for line fitting before matching
@@ -399,7 +399,7 @@ dbru_object_matcher::generate_rcor_curve_matching_dt(dbinfo_observation_sptr obs
 
 //: compute the mutual info between two observations using curve matching and DT based correspondence
 vil_image_resource_sptr 
-dbru_object_matcher::minfo_curve_matching_dt(dbinfo_observation_sptr obs0,
+dbskr_object_matcher::minfo_curve_matching_dt(dbinfo_observation_sptr obs0,
                                              dbinfo_observation_sptr obsi,
                                              dbcvr_cv_cor_sptr sil_cor,
                                              double &info_dt,
@@ -416,7 +416,7 @@ dbru_object_matcher::minfo_curve_matching_dt(dbinfo_observation_sptr obs0,
 
 //: compute the mutual info between two observations using curve matching and DT based correspondence
 vil_image_resource_sptr 
-dbru_object_matcher::minfo_curve_matching_dt(dbinfo_observation_sptr obs0,
+dbskr_object_matcher::minfo_curve_matching_dt(dbinfo_observation_sptr obs0,
                                              dbinfo_observation_sptr obsi,
                                              double &curve_matching_cost,
                                              double &info_dt,
@@ -448,7 +448,7 @@ dbru_object_matcher::minfo_curve_matching_dt(dbinfo_observation_sptr obs0,
   
 //: compute the region correspondence from curve matching using distance transform mapping
 dbru_rcor_sptr 
-dbru_object_matcher::generate_rcor_curve_matching_dt2(dbinfo_observation_sptr obs0,
+dbskr_object_matcher::generate_rcor_curve_matching_dt2(dbinfo_observation_sptr obs0,
                                                       dbinfo_observation_sptr obsi,
                                                       dbcvr_cv_cor_sptr sil_cor,
                                                       float ratio,
@@ -479,7 +479,7 @@ dbru_object_matcher::generate_rcor_curve_matching_dt2(dbinfo_observation_sptr ob
 
 //: compute the region correspondence from curve matching using distance transform mapping
 dbru_rcor_sptr 
-dbru_object_matcher::generate_rcor_curve_matching_dt2(dbinfo_observation_sptr obs0,
+dbskr_object_matcher::generate_rcor_curve_matching_dt2(dbinfo_observation_sptr obs0,
                                                       dbinfo_observation_sptr obsi,
                                                       double R,
                                                       double rms,   // for line fitting before matching
@@ -504,7 +504,7 @@ dbru_object_matcher::generate_rcor_curve_matching_dt2(dbinfo_observation_sptr ob
 
 //: compute the region correspondence from curve matching using line-intersectionmapping
 dbru_rcor_sptr 
-dbru_object_matcher::generate_rcor_curve_matching_line(dbinfo_observation_sptr obs0,
+dbskr_object_matcher::generate_rcor_curve_matching_line(dbinfo_observation_sptr obs0,
                                                        dbinfo_observation_sptr obsi,
                                                        dbcvr_cv_cor_sptr sil_cor,
                                                        int increment, 
@@ -526,7 +526,7 @@ dbru_object_matcher::generate_rcor_curve_matching_line(dbinfo_observation_sptr o
 
 //: compute the region correspondence from curve matching using line-intersection mapping
 dbru_rcor_sptr 
-dbru_object_matcher::generate_rcor_curve_matching_line(dbinfo_observation_sptr obs0,
+dbskr_object_matcher::generate_rcor_curve_matching_line(dbinfo_observation_sptr obs0,
                                                        dbinfo_observation_sptr obsi,
                                                        double R,
                                                        double rms,   // for line fitting before matching
@@ -548,7 +548,7 @@ dbru_object_matcher::generate_rcor_curve_matching_line(dbinfo_observation_sptr o
 //: compute the mutual info between two observations using curve matching and 
 //line-intersection based correspondence
 vil_image_resource_sptr 
-dbru_object_matcher::minfo_curve_matching_line(dbinfo_observation_sptr obs0,
+dbskr_object_matcher::minfo_curve_matching_line(dbinfo_observation_sptr obs0,
                                                                     dbinfo_observation_sptr obsi,
                                                                     dbcvr_cv_cor_sptr sil_cor,
                                                                     double &info_line,
@@ -567,7 +567,7 @@ dbru_object_matcher::minfo_curve_matching_line(dbinfo_observation_sptr obs0,
 //: compute the mutual info between two observations using curve matching and 
 //line-intersection based correspondence
 vil_image_resource_sptr 
-dbru_object_matcher::minfo_curve_matching_line(dbinfo_observation_sptr obs0,
+dbskr_object_matcher::minfo_curve_matching_line(dbinfo_observation_sptr obs0,
                                                dbinfo_observation_sptr obsi,
                                                double &curve_matching_cost,
                                                double &info_line,
@@ -601,7 +601,7 @@ dbru_object_matcher::minfo_curve_matching_line(dbinfo_observation_sptr obs0,
   
 //: compute the region correspondence from curve matching using line-intersection mapping
 dbru_rcor_sptr 
-dbru_object_matcher::generate_rcor_curve_matching_line2(dbinfo_observation_sptr obs0,
+dbskr_object_matcher::generate_rcor_curve_matching_line2(dbinfo_observation_sptr obs0,
                                                         dbinfo_observation_sptr obsi,
                                                         dbcvr_cv_cor_sptr sil_cor,
                                                         float ratio,
@@ -622,7 +622,7 @@ dbru_object_matcher::generate_rcor_curve_matching_line2(dbinfo_observation_sptr 
 }
 
 //: compute the region correspondence from curve matching using line-intersection mapping version 2
-dbru_rcor_sptr dbru_object_matcher::generate_rcor_curve_matching_line2(dbinfo_observation_sptr obs0,
+dbru_rcor_sptr dbskr_object_matcher::generate_rcor_curve_matching_line2(dbinfo_observation_sptr obs0,
                                                                        dbinfo_observation_sptr obsi,
                                                                        double R,
                                                                        double rms,   // for line fitting before matching
@@ -646,7 +646,7 @@ dbru_rcor_sptr dbru_object_matcher::generate_rcor_curve_matching_line2(dbinfo_ob
 //----------------------------------------------------------------------------------------------------
 
 //: compute the region correspondence from curve matching using line-intersection mapping version 3
-dbru_rcor_sptr dbru_object_matcher::generate_rcor_curve_matching_line3(dbinfo_observation_sptr obs0,
+dbru_rcor_sptr dbskr_object_matcher::generate_rcor_curve_matching_line3(dbinfo_observation_sptr obs0,
                                                                        dbinfo_observation_sptr obsi,
                                                                        dbcvr_cv_cor_sptr sil_cor,
                                                                        int increment,
@@ -667,7 +667,7 @@ dbru_rcor_sptr dbru_object_matcher::generate_rcor_curve_matching_line3(dbinfo_ob
 }
 
 //: compute the region correspondence from curve matching using line-intersection mapping version 3
-dbru_rcor_sptr dbru_object_matcher::generate_rcor_curve_matching_line3(dbinfo_observation_sptr obs0,
+dbru_rcor_sptr dbskr_object_matcher::generate_rcor_curve_matching_line3(dbinfo_observation_sptr obs0,
                                                                        dbinfo_observation_sptr obsi,
                                                                        double R,
                                                                        double rms,   // for line fitting before matching
@@ -692,7 +692,7 @@ dbru_rcor_sptr dbru_object_matcher::generate_rcor_curve_matching_line3(dbinfo_ob
   
 //: compute the region correspondence from curve matching using line-intersection mapping version 3
 dbru_rcor_sptr 
-dbru_object_matcher::generate_rcor_curve_matching_line4(dbinfo_observation_sptr obs0,
+dbskr_object_matcher::generate_rcor_curve_matching_line4(dbinfo_observation_sptr obs0,
                                                         dbinfo_observation_sptr obsi,
                                                         dbcvr_cv_cor_sptr sil_cor,
                                                         int total_votes,
@@ -711,7 +711,7 @@ dbru_object_matcher::generate_rcor_curve_matching_line4(dbinfo_observation_sptr 
 
 //: compute the region correspondence from curve matching using line-intersection mapping version 3
 dbru_rcor_sptr 
-dbru_object_matcher::generate_rcor_curve_matching_line4(dbinfo_observation_sptr obs0,
+dbskr_object_matcher::generate_rcor_curve_matching_line4(dbinfo_observation_sptr obs0,
                                                         dbinfo_observation_sptr obsi,
                                                         double R,
                                                         double rms,   // for line fitting before matching
@@ -735,7 +735,7 @@ dbru_object_matcher::generate_rcor_curve_matching_line4(dbinfo_observation_sptr 
 // Compute shock alignment 
 //----------------------------------------------------------------------------------------------------
 dbskr_sm_cor_sptr 
-dbru_object_matcher::compute_shock_alignment(dbskr_tree_sptr tree0,
+dbskr_object_matcher::compute_shock_alignment(dbskr_tree_sptr tree0,
                                              dbskr_tree_sptr treei,
                                              double &shock_matching_cost,
                                              bool verbose) 
@@ -767,7 +767,7 @@ dbru_object_matcher::compute_shock_alignment(dbskr_tree_sptr tree0,
 }
 //: use edit distance using independent parts' mutual info to align shock branches
 dbskr_sm_cor_sptr 
-dbru_object_matcher::compute_shock_alignment_pmi(dbinfo_observation_sptr obs0,
+dbskr_object_matcher::compute_shock_alignment_pmi(dbinfo_observation_sptr obs0,
                                                  dbinfo_observation_sptr obsi,
                                                  dbskr_tree_sptr tree0,
                                                  dbskr_tree_sptr treei,
@@ -805,7 +805,7 @@ dbru_object_matcher::compute_shock_alignment_pmi(dbinfo_observation_sptr obs0,
 
 //: compute the region correspondence from shock matching
 dbru_rcor_sptr 
-dbru_object_matcher::generate_rcor_shock_matching(dbinfo_observation_sptr obs0,
+dbskr_object_matcher::generate_rcor_shock_matching(dbinfo_observation_sptr obs0,
                                                   dbinfo_observation_sptr obsi,
                                                   dbskr_sm_cor_sptr sm_cor,
                                                   bool verbose)
@@ -825,7 +825,7 @@ dbru_object_matcher::generate_rcor_shock_matching(dbinfo_observation_sptr obs0,
 
 //: compute the region correspondence from shock matching
 dbru_rcor_sptr 
-dbru_object_matcher::generate_rcor_shock_matching(dbinfo_observation_sptr obs0,
+dbskr_object_matcher::generate_rcor_shock_matching(dbinfo_observation_sptr obs0,
                                                   dbinfo_observation_sptr obsi,
                                                   dbskr_tree_sptr tree0,
                                                   dbskr_tree_sptr treei,
@@ -843,7 +843,7 @@ dbru_object_matcher::generate_rcor_shock_matching(dbinfo_observation_sptr obs0,
 
 //: compute the mutual info between two observations shock-matching based correspondence
 vil_image_resource_sptr 
-dbru_object_matcher::minfo_shock_matching(dbinfo_observation_sptr obs0,
+dbskr_object_matcher::minfo_shock_matching(dbinfo_observation_sptr obs0,
                                           dbinfo_observation_sptr obsi,
                                           dbskr_sm_cor_sptr sm_cor,
                                           double &info_shock,
@@ -861,7 +861,7 @@ dbru_object_matcher::minfo_shock_matching(dbinfo_observation_sptr obs0,
 
 //: compute the mutual info between two observations using shock-matching based correspondence
 vil_image_resource_sptr 
-dbru_object_matcher::minfo_shock_matching(dbinfo_observation_sptr obs0,
+dbskr_object_matcher::minfo_shock_matching(dbinfo_observation_sptr obs0,
                                           dbinfo_observation_sptr obsi,
                                           dbskr_tree_sptr tree0,
                                           dbskr_tree_sptr treei,
@@ -931,7 +931,7 @@ vil_image_resource_sptr make_image(dbinfo_observation_sptr obs, int w, int h, do
 // this function is to visualize the final optimized observations
 // ratio is the ratio of pixels to be randomly searched in query observation
 // prior to optimization to find a better initial placement 
-float dbru_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr obs0, 
+float dbskr_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr obs0, 
                                                       dbinfo_observation_sptr obsi, 
                                                       float dx, float dr, float ds, float ratio, int Nob,
                                                       vil_image_resource_sptr& image_r1,
@@ -1047,7 +1047,7 @@ float dbru_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr ob
 // this function is to visualize the final optimized observations
 // ratio is the ratio of pixels to be randomly searched in query observation
 // prior to optimization to find a better initial placement 
-float dbru_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr obs0, 
+float dbskr_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr obs0, 
                                                       dbinfo_observation_sptr obsi, 
                                                       float dx, float dr, float ds, float ratio, int Nob) 
 {
@@ -1120,7 +1120,7 @@ float dbru_object_matcher::minfo_rigid_alignment_rand(dbinfo_observation_sptr ob
 // prior to optimization to find a better initial placement 
 // THE FOLLOWING METHOD IS SENT TO LOCKHEED in Aug 06 and Dec 06 Deliveries
 // Nob parameter is not used in this method
-float dbru_object_matcher::minfo_rigid_alignment_search(dbinfo_observation_sptr obs0, 
+float dbskr_object_matcher::minfo_rigid_alignment_search(dbinfo_observation_sptr obs0, 
                                                         dbinfo_observation_sptr obsi, 
                                                         float dx, float dr, float ds, float ratio) 
 {
@@ -1188,7 +1188,7 @@ float dbru_object_matcher::minfo_rigid_alignment_search(dbinfo_observation_sptr 
 // observationi such that mutual information is maximised and 
 // return this max mutual info
 // this function is to visualize the final optimized observations
-float dbru_object_matcher::minfo_rigid_alignment(dbinfo_observation_sptr obs0, 
+float dbskr_object_matcher::minfo_rigid_alignment(dbinfo_observation_sptr obs0, 
                                                  dbinfo_observation_sptr obsi, 
                                                  float dx,
                                                  float dr,
@@ -1242,7 +1242,7 @@ float dbru_object_matcher::minfo_rigid_alignment(dbinfo_observation_sptr obs0,
 //: find the rigid transformation that aligns observation0 to 
 // observationi such that mutual information is maximised and 
 // return this max mutual info
-float dbru_object_matcher::minfo_rigid_alignment(dbinfo_observation_sptr obs0, 
+float dbskr_object_matcher::minfo_rigid_alignment(dbinfo_observation_sptr obs0, 
                                                  dbinfo_observation_sptr obsi, 
                                                  float dx, float dr, float ds)
 {
@@ -1284,7 +1284,7 @@ float dbru_object_matcher::minfo_rigid_alignment(dbinfo_observation_sptr obs0,
 //: find the rigid transformation that aligns observation0 to 
 // observationi such that mutual information is maximised and 
 // return this max mutual info
-/*float dbru_object_matcher::minfo_rigid_alignment(dbinfo_observation_sptr obs0, 
+/*float dbskr_object_matcher::minfo_rigid_alignment(dbinfo_observation_sptr obs0, 
                                                  dbinfo_observation_sptr obsi, 
                                                  float dx,
                                                  float dr,
@@ -1343,7 +1343,7 @@ float dbru_object_matcher::minfo_rigid_alignment(dbinfo_observation_sptr obs0,
 //  coming from silhouette correspondence
 // if there are 100 corresponding points in sil_cor then an increment of 4 causes 
 // 25 points to be used by tps
-dbru_rcor_sptr dbru_object_matcher::generate_rcor_tps(dbinfo_observation_sptr obs0,
+dbru_rcor_sptr dbskr_object_matcher::generate_rcor_tps(dbinfo_observation_sptr obs0,
                                                       dbinfo_observation_sptr obsi,
                                                       dbcvr_cv_cor_sptr sil_cor,
                                                       int increment, 

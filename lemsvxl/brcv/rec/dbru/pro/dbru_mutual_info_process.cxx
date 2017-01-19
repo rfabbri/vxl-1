@@ -13,9 +13,9 @@
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
 
-#include <dbru/dbru_rcor.h>
-#include <dbru/dbru_rcor_sptr.h>
-#include <dbru/algo/dbru_object_matcher.h>
+#include <dbru/algo/dbru_rcor.h>
+#include <dbru/algo/dbru_rcor_sptr.h>
+#include <dbru/algo/dbskr_object_matcher.h>
 
 #include <dbinfo/dbinfo_observation.h>
 #include <dbinfo/dbinfo_observation_sptr.h>
@@ -249,16 +249,16 @@ bool dbru_mutual_info_process::execute()
                                                             // dpmatch_combined is false using interval cost computations as given in original edit distance algo of Sebastian et al PAMI 06
     tree2->acquire(sg2, elastic_splice_cost, true, false);  // construct_circular_ends is true since matching closed curves in this application
                                                             // dpmatch_combined is false using interval cost computations as given in original edit distance algo of Sebastian et al PAMI 06
-    output_rcor = dbru_object_matcher::generate_rcor_shock_matching(obs1, obs2, tree1, tree2, false);  // verbose
+    output_rcor = dbskr_object_matcher::generate_rcor_shock_matching(obs1, obs2, tree1, tree2, false);  // verbose
   }   
   else if (distance_transform) {    
-    output_rcor = dbru_object_matcher::generate_rcor_curve_matching_dt(obs1, obs2, R, rms, restricted_cvmatch_ratio, false);  // verbose
+    output_rcor = dbskr_object_matcher::generate_rcor_curve_matching_dt(obs1, obs2, R, rms, restricted_cvmatch_ratio, false);  // verbose
   } 
   else if (line_intersections) {
-    output_rcor = dbru_object_matcher::generate_rcor_curve_matching_line(obs1, obs2,R, rms, restricted_cvmatch_ratio, increment, false);  // verbose
+    output_rcor = dbskr_object_matcher::generate_rcor_curve_matching_line(obs1, obs2,R, rms, restricted_cvmatch_ratio, increment, false);  // verbose
   } else {
     vcl_cout << "CAUTION WHEN INPUT IMAGE IS 16 bit, max value is not used in this algorithm\n";
-    total_info_ = dbru_object_matcher::minfo_rigid_alignment_rand(obs1, obs2, rigid_dx, rigid_dr, rigid_ds, rigid_ratio, Nob, output_sptr2, output_sptr3, output_sptr, true);
+    total_info_ = dbskr_object_matcher::minfo_rigid_alignment_rand(obs1, obs2, rigid_dx, rigid_dr, rigid_ds, rigid_ratio, Nob, output_sptr2, output_sptr3, output_sptr, true);
   }
 
   if (shock_matching || distance_transform || line_intersections) {

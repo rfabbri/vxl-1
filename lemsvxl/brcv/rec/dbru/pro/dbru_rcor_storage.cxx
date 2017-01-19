@@ -4,7 +4,7 @@
 // \file
 
 #include "dbru_rcor_storage.h"
-#include <dbru/dbru_rcor.h>
+#include <dbru/algo/dbru_rcor.h>
 
 //: Constructor
 dbru_rcor_storage::dbru_rcor_storage() 

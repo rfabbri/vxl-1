@@ -13,11 +13,11 @@
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
 
-#include <dbru/dbru_rcor.h>
-#include <dbru/dbru_rcor_sptr.h>
+#include <dbru/algo/dbru_rcor.h>
+#include <dbru/algo/dbru_rcor_sptr.h>
 #include <dbru/pro/dbru_rcor_storage_sptr.h>
 #include <dbru/pro/dbru_rcor_storage.h>
-#include <dbru/algo/dbru_object_matcher.h>
+#include <dbru/algo/dbskr_object_matcher.h>
 #include <dbru/dbru_object.h>
 
 #include <dbinfo/dbinfo_observation.h>
@@ -221,26 +221,26 @@ bool dbru_run_osl_process::execute()
   dbskr_sm_cor_sptr sm_cor; dbcvr_cv_cor_sptr sil_cor;
   double cost;
   if (shock_)
-    sm_cor = dbru_object_matcher::compute_shock_alignment(tree1, tree2, cost, false);
+    sm_cor = dbskr_object_matcher::compute_shock_alignment(tree1, tree2, cost, false);
   else if (shock_pmi_)
-    sm_cor = dbru_object_matcher::compute_shock_alignment_pmi(obs1, obs2, tree1, tree2, cost, false);
+    sm_cor = dbskr_object_matcher::compute_shock_alignment_pmi(obs1, obs2, tree1, tree2, cost, false);
   else if (!rigid_alignment_) 
-    sil_cor = dbru_object_matcher::compute_curve_alignment(obs1, obs2, cost, R_, rms_, restricted_cvmatch_ratio_, false);
+    sil_cor = dbskr_object_matcher::compute_curve_alignment(obs1, obs2, cost, R_, rms_, restricted_cvmatch_ratio_, false);
 
   if (shock_ || shock_pmi_)  
-    output_rcor = dbru_object_matcher::generate_rcor_shock_matching(obs1, obs2, sm_cor, true);  // verbose    
+    output_rcor = dbskr_object_matcher::generate_rcor_shock_matching(obs1, obs2, sm_cor, true);  // verbose    
   else if (dt_)
-    output_rcor = dbru_object_matcher::generate_rcor_curve_matching_dt(obs1, obs2, sil_cor, true);  // verbose    
+    output_rcor = dbskr_object_matcher::generate_rcor_curve_matching_dt(obs1, obs2, sil_cor, true);  // verbose    
   else if (!rigid_alignment_)
-    output_rcor = dbru_object_matcher::generate_rcor_curve_matching_line(obs1, obs2, sil_cor, true);  // verbose    
+    output_rcor = dbskr_object_matcher::generate_rcor_curve_matching_line(obs1, obs2, sil_cor, true);  // verbose    
     
   float info;
   vil_image_resource_sptr output_sptr1, output_sptr2, output_sptr3;
   if (!rigid_alignment_)
     info = dbinfo_observation_matcher::minfo(obs1, obs2, output_rcor->get_correspondences(), false, max_value_);
   else                                             //query //database
-    //info = dbru_object_matcher::minfo_rigid_alignment(obs1, obs2, dx_, dr_, ds_, output_sptr1, output_sptr2, output_sptr3, true);
-    info = dbru_object_matcher::minfo_rigid_alignment_rand(obs1, obs2, dx_, dr_, ds_, ratio_, Nob_, output_sptr1, output_sptr2, output_sptr3, true);
+    //info = dbskr_object_matcher::minfo_rigid_alignment(obs1, obs2, dx_, dr_, ds_, output_sptr1, output_sptr2, output_sptr3, true);
+    info = dbskr_object_matcher::minfo_rigid_alignment_rand(obs1, obs2, dx_, dr_, ds_, ratio_, Nob_, output_sptr1, output_sptr2, output_sptr3, true);
   vcl_cout << "Mutual info: " << info << vcl_endl;
 
   clear_output();

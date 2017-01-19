@@ -8,6 +8,9 @@ include_directories( ${lems_SOURCE_DIR}/breye1 )
 include_directories( ${lems_SOURCE_DIR}/contrib/ozge )
 
 set(dbskr_pro_sources
+# further algorithms beyond algo/ that depend on pro/
+   dbskr_shock_patch_selector.h dbskr_shock_patch_selector.cxx
+   dbskr_shock_patch_model_selector.h dbskr_shock_patch_model_selector.cxx
 
 # storage classes
    dbskr_shock_match_storage.h                dbskr_shock_match_storage.cxx

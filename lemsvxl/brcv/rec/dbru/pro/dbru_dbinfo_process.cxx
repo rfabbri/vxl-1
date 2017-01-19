@@ -18,7 +18,7 @@
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
 
-#include <dbru/dbru_rcor.h>
+#include <dbru/algo/dbru_rcor.h>
 
 #include <dbsk2d/dbsk2d_shock_graph_sptr.h>
 #include <dbsk2d/dbsk2d_shock_graph.h>
@@ -227,15 +227,15 @@ bool dbru_dbinfo_process::execute()
 
   double matching_cost, info;
   if (shock_matching) {
-    output_image = dbru_object_matcher::minfo_shock_matching(obs1, obs2, tree1, tree2,
+    output_image = dbskr_object_matcher::minfo_shock_matching(obs1, obs2, tree1, tree2,
                      matching_cost,info, true);  // verbose
   } 
   else if (distance_transform) {    
-    output_image = dbru_object_matcher::minfo_curve_matching_dt(obs1, obs2,
+    output_image = dbskr_object_matcher::minfo_curve_matching_dt(obs1, obs2,
                      matching_cost, info, R, rms, restricted_cvmatch_ratio, true);  // verbose
   } 
   else if (line_intersections) {
-    output_image = dbru_object_matcher::minfo_curve_matching_line(obs1, obs2,
+    output_image = dbskr_object_matcher::minfo_curve_matching_line(obs1, obs2,
                      matching_cost, info, R, rms, restricted_cvmatch_ratio, increment, true);  // verbose
   }
 

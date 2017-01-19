@@ -11,14 +11,13 @@ include_directories( ${lems_SOURCE_DIR}/breye1 )
 set( dbskr_algo_sources
    dbskr_tree_edit_pmi.h       dbskr_tree_edit_pmi.cxx
    dbskr_rec_algs.h dbskr_rec_algs.cxx
-   dbskr_shock_patch_selector.h dbskr_shock_patch_selector.cxx
-   dbskr_shock_patch_model_selector.h dbskr_shock_patch_model_selector.cxx
    dbskr_shock_patch_match.h dbskr_shock_patch_match.cxx
    dbskr_shock_patch_match_sptr.h
    dbskr_shock_patch_curve_match.h dbskr_shock_patch_curve_match.cxx
    dbskr_shock_patch_curve_match_sptr.h
    dbskr_shock_path_finder.h dbskr_shock_path_finder.cxx
    dbskr_shock_path_finder_sptr.h
+   dbskr_object_matcher.h dbskr_object_matcher.cxx
 )
 
 aux_source_directory(Templates dbskr_algo_sources)

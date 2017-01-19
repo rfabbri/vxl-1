@@ -42,10 +42,10 @@
 
 #include <dbru/pro/dbru_rcor_storage_sptr.h>
 #include <dbru/pro/dbru_rcor_storage.h>
-#include <dbru/dbru_rcor_sptr.h>
-#include <dbru/dbru_rcor.h>
+#include <dbru/algo/dbru_rcor_sptr.h>
+#include <dbru/algo/dbru_rcor.h>
 
-//#include <dbru/algo/dbru_object_matcher.h>
+//#include <dbru/algo/dbskr_object_matcher.h>
 
 //#define MARGIN  (10)
 
