@@ -19,6 +19,7 @@
 #include <vcl_vector.h>
 #include <vcl_string.h>
 #include <vcl_cassert.h>
+#include <vcl_iostream.h>
 #include <vbl/vbl_ref_count.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
 #include <dbru/dbru_label_sptr.h>

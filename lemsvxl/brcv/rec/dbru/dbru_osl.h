@@ -29,6 +29,7 @@
 #include <vcl_vector.h>
 #include <vcl_string.h>
 #include <vcl_map.h>
+#include <vcl_iostream.h>
 #include <vbl/vbl_ref_count.h>
 #include <vbl/vbl_array_1d.h>
 #include <vcl_cassert.h>
