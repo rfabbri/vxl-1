@@ -67,7 +67,7 @@ set( dbsksp_algo_sources
 aux_source_directory(Templates dbsksp_algo_sources)
 
 add_library( dbsksp_algo  ${dbsksp_algo_sources} )
-target_link_libraries( dbsksp_algo dbsksp dbsk2d dbskr)
+target_link_libraries( dbsksp_algo dbsksp_xio dbsksp dbsk2d dbskr vpdfl)
 
 if( BUILD_TESTING )
   add_subdirectory(tests)

@@ -8,7 +8,10 @@ include_directories( ${VXL_GEL_INCLUDE_DIR} )
 include_directories( ${lems_SOURCE_DIR}/breye1 )
 include_directories( ${lems_SOURCE_DIR}/contrib/ntrinh )
 
+
 if (VXL_VGUI_FOUND)
+find_package(OpenGL)
+  
 
 set( dbsksp_vis_sources
 # Tableaus and Displayers
@@ -32,7 +35,7 @@ set( dbsksp_vis_sources
 
 add_library(dbsksp_vis ${dbsksp_vis_sources})
 
-target_link_libraries(dbsksp_vis dbsksp_pro dbsksp_algo bvis1)
+target_link_libraries(dbsksp_vis dbsksp_pro dbsksp_algo bvis1 bgui vgui ${OPENGL_LIBRARIES})
 
 
 if(BUILD_TESTING)
