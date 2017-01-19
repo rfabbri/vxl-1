@@ -7,7 +7,7 @@
     )
     
     add_executable (vox_train_xgraph_geom_model ${vox_train_xgraph_geom_model_sources} )
-    target_link_libraries (vox_train_xgraph_geom_model  dbsks_pro dborl_algo)
+    target_link_libraries (vox_train_xgraph_geom_model  dbsks_pro dborl_algo vpl)
 
 
 

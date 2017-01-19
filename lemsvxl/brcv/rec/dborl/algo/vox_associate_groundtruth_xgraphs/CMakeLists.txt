@@ -8,13 +8,4 @@
     )
     
     add_executable (vox_associate_groundtruth_xgraphs ${vox_associate_groundtruth_xgraphs_sources} )
-    target_link_libraries (vox_associate_groundtruth_xgraphs dborl_algo buld)
-
-
-
-
-
-
-
-
-
+    target_link_libraries (vox_associate_groundtruth_xgraphs dborl_algo buld vpl)
