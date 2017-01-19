@@ -3,8 +3,8 @@
 #include <dbsk2d/dbsk2d_shock_graph.h>
 #include <dbsk2d/algo/dbsk2d_xshock_graph_fileio.h>
 #include <dbsk2d/algo/dbsk2d_extract_subgraph.h>
-#include <dbskr/algo/dbskr_shock_patch_model_selector.h>
-#include <dbskr/algo/dbskr_shock_patch_selector.h>
+#include <dbskr/pro/dbskr_shock_patch_model_selector.h>
+#include <dbskr/pro/dbskr_shock_patch_selector.h>
 #include <dbskr/algo/dbskr_rec_algs.h>
 #include <dbskr/algo/dbskr_shock_path_finder.h>
 #include <dbsk2d/dbsk2d_file_io.h>
