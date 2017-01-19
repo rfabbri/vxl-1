@@ -16,7 +16,7 @@
 
 
 #include <vnl/vnl_vector.h>
-#include <dbgl/algo/dbgl_biarc.h>
+#include <bgld/algo/bgld_biarc.h>
 #include <vbl/vbl_array_3d.h>
 #include <vbl/vbl_ref_count.h>
 

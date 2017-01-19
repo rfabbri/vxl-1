@@ -284,7 +284,7 @@ i_height(double height) const
 // ----------------------------------------------------------------------------
 //: Find grid indices of the arc closest to a given circular arc
 void dbsks_circ_arc_grid::
-arc_to_grid(const dbgl_circ_arc& arc, int& i_x, int& i_y,
+arc_to_grid(const bgld_circ_arc& arc, int& i_x, int& i_y,
             int& i_chord, int& i_height, int& i_theta) const
 {
   // indices of left arc

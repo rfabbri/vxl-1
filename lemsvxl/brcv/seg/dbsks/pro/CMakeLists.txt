@@ -33,7 +33,7 @@ set(dbsks_pro_sources
 
 add_library(dbsks_pro ${dbsks_pro_sources})
 
-target_link_libraries(dbsks_pro dbsks_algo dbdet vidpro1 dbsksp_pro dbsol)
+target_link_libraries(dbsks_pro dbsks_algo dbdet vidpro1 dbsksp_pro bsold)
 
 
 if(BUILD_TESTING)

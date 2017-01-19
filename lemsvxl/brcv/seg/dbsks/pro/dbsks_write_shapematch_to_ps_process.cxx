@@ -12,7 +12,7 @@
 #include <dbsksp/pro/dbsksp_shock_storage.h>
 #include <dbsksp/dbsksp_shock_graph.h>
 #include <dbsks/dbsks_utils.h>
-#include <dbsol/dbsol_file_io.h>
+#include <bsold/bsold_file_io.h>
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_polygon_2d.h>
 #include <dbsksp/dbsksp_xshock_node.h>
@@ -410,7 +410,7 @@ save_ps_file(const vcl_string& out_ps_file,
   colors.push_back(vil_rgb<float >(1.0f, 0.0f, 0.0f));
   
   // write the file
-  return dbsol_save_ps_file(out_ps_file, image_resource, vsol_data, colors);
+  return bsold_save_ps_file(out_ps_file, image_resource, vsol_data, colors);
 }
 
 

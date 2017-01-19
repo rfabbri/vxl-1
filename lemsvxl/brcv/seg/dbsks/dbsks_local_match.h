@@ -56,7 +56,7 @@ public:
   void set_xnode_states(const vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >& shapelet_map);
 
   //: Get object boundary from the cur_xnode_map
-  vcl_vector<dbgl_circ_arc > get_cur_bnd_arc_list();
+  vcl_vector<bgld_circ_arc > get_cur_bnd_arc_list();
 
   //: Set initial states (fragments) of the edges
   void set_init_states_of_edges(
@@ -112,7 +112,7 @@ public:
   //  vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map);
 
   ////: Return the final list boundary arcs
-  //void get_bnd_arc_list(vcl_vector<dbgl_circ_arc >& arc_list);
+  //void get_bnd_arc_list(vcl_vector<bgld_circ_arc >& arc_list);
 
 
   // UTILITY functions ---------------------------------------------------------

@@ -22,12 +22,12 @@
 #include <dbsks/dbsks_ocm_image_cost.h>
 #include <dbsksp/dbsksp_xshock_fragment.h>
 #include <dbsksp/dbsksp_xshock_graph_sptr.h>
-#include <dbgl/algo/dbgl_biarc.h>
+#include <bgld/algo/bgld_biarc.h>
 
 
 //: Compute ocm cost of a biarc
 bool dbsks_compute_ocm_cost(const dbsks_ocm_image_cost& ocm, 
-                            const dbgl_biarc& biarc, 
+                            const bgld_biarc& biarc, 
                             float& cost, 
                             double ds = 1);
 

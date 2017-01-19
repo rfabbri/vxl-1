@@ -9,7 +9,7 @@
 #include <dbdet/algo/dbdet_subpix_convolution.h>
 #include <dbdet/edge/dbdet_gaussian_kernel.h>
 #include <bil/algo/bil_edt.h>
-#include <dbnl/dbnl_angle.h>
+#include <bnld/bnld_angle.h>
 
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_matrix.h>

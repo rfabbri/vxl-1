@@ -91,7 +91,7 @@ set_xnode_states(const vcl_map<dbsksp_shock_edge_sptr, dbsksp_shapelet_sptr >& s
 
 // -----------------------------------------------------------------------------
 //: Get object boundary from the cur_xnode_map
-vcl_vector<dbgl_circ_arc > dbsks_local_match::
+vcl_vector<bgld_circ_arc > dbsks_local_match::
 get_cur_bnd_arc_list()
 {
   return dbsks_bnd_arc_list(this->graph(), this->cur_xnode_map_);
@@ -606,7 +606,7 @@ f_graph_w_bnd_length_shape_cost(const vcl_map<dbsksp_shock_node_sptr, dbsksp_xsh
 //// -----------------------------------------------------------------------------
 ////: Return the final list boundary arcs
 //void dbsks_local_match::
-//get_bnd_arc_list(vcl_vector<dbgl_circ_arc >& arc_list)
+//get_bnd_arc_list(vcl_vector<bgld_circ_arc >& arc_list)
 //{
 //  this->lm_cost()->convert_to_circ_arc_list(this->final_x_, arc_list);
 //  return;

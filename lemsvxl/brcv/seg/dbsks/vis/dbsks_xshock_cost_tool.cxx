@@ -308,7 +308,7 @@ execute()
 
   // left boundary
   {
-    dbgl_biarc bnd_left = xfrag.bnd_left_as_biarc();
+    bgld_biarc bnd_left = xfrag.bnd_left_as_biarc();
     double len_left = bnd_left.len();
     for (int k =0; k < num_segments; ++k)
     {
@@ -320,7 +320,7 @@ execute()
       vgl_point_2d<double > midpt = bnd_left.point_at( (k+0.5)*len_left / num_segments );
       
       // estimate this curve segment with a circular arc
-      dbgl_circ_arc arc;
+      bgld_circ_arc arc;
       arc.set_from(start, midpt, end);
       
       // contruct the arc patch
@@ -364,7 +364,7 @@ execute()
 
   // right boundary
   {
-    dbgl_biarc bnd_right = xfrag.bnd_right_as_biarc();
+    bgld_biarc bnd_right = xfrag.bnd_right_as_biarc();
     double len_right = bnd_right.len();
     for (int k =0; k < num_segments; ++k)
     {
@@ -376,7 +376,7 @@ execute()
       vgl_point_2d<double > midpt = bnd_right.point_at( (k+0.5)*len_right / num_segments );
       
       // estimate this curve segment with a circular arc
-      dbgl_circ_arc arc;
+      bgld_circ_arc arc;
       arc.set_from(start, midpt, end);
       
       // contruct the arc patch

@@ -1103,7 +1103,7 @@ check_nkdiff_constraint_no_biarc_sampler(const dbsksp_xshock_fragment& xfrag) co
   {
     dbsksp_xshock_fragment::bnd_side side = dbsksp_xshock_fragment::bnd_side(i);
 
-    dbgl_biarc biarc = xfrag.bnd_as_biarc(side);
+    bgld_biarc biarc = xfrag.bnd_as_biarc(side);
     double kdiff = biarc.k1() - biarc.k2();
     double chord = (biarc.end() - biarc.start()).length();
     double nkdiff = kdiff * chord;

@@ -6,7 +6,7 @@
 #include "dbsks_train_xshock_ccm_model_process.h"
 
 #include <bpro1/bpro1_parameters.h>
-#include <dbul/dbul_parse_simple_file.h>
+#include <buld/buld_parse_simple_file.h>
 //#include <vidpro1/storage/vidpro1_image_storage.h>
 
 
@@ -129,7 +129,7 @@ execute()
   vcl_string params_file = temp_path.path;
 
   vcl_map<vcl_string, vcl_map<vcl_string, vcl_string > > section_params;
-  dbul_parse_ini_file(params_file, section_params);
+  buld_parse_ini_file(params_file, section_params);
 
   vcl_map<vcl_string, vcl_string > ccm_params = section_params["ccm"];
   vcl_map<vcl_string, vcl_string > data_params = section_params["data"];

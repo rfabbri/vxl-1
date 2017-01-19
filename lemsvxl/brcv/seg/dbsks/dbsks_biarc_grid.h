@@ -16,7 +16,7 @@
 
 
 #include <vnl/vnl_vector.h>
-#include <dbgl/algo/dbgl_biarc.h>
+#include <bgld/algo/bgld_biarc.h>
 
 
 

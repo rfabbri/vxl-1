@@ -27,7 +27,7 @@
 //#include <vcl_map.h>
 //#include <vsol/vsol_box_2d_sptr.h>
 //#include <vsol/vsol_spatial_object_2d_sptr.h>
-//#include <dbgl/algo/dbgl_circ_arc.h>
+//#include <bgld/algo/bgld_circ_arc.h>
 //
 //#include <dbsksp/dbsksp_shapelet_sptr.h>
 //#include <dbsksp/dbsksp_shock_node_sptr.h>

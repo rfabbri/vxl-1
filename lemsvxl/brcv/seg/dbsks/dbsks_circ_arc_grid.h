@@ -16,7 +16,7 @@
 
 
 #include <vnl/vnl_vector.h>
-#include <dbgl/algo/dbgl_circ_arc.h>
+#include <bgld/algo/bgld_circ_arc.h>
 
 
 
@@ -149,7 +149,7 @@ public:
   int i_height(double height) const;
 
   //: Find grid indices of the arc closest to a given circular arc
-  void arc_to_grid(const dbgl_circ_arc& arc, int& i_x, int& i_y,
+  void arc_to_grid(const bgld_circ_arc& arc, int& i_x, int& i_y,
     int& i_chord, int& i_height, int& i_theta) const;
 
 

@@ -18,7 +18,7 @@
 #include <vnl/vnl_matrix.h>
 #include <vcl_utility.h>
 
-#include <dbgl/algo/dbgl_biarc.h>
+#include <bgld/algo/bgld_biarc.h>
 
 // ============================================================================
 // dbsks_local_match_cost
@@ -217,7 +217,7 @@ convert_to_xnode_map(const vnl_vector<double >& x,
 //: Convert a configuration vector to a list of xnodes associated with the vertices
 void dbsks_local_match_cost::
 convert_to_circ_arc_list(const vnl_vector<double >& x,
-                         vcl_vector<dbgl_circ_arc >& arc_list)
+                         vcl_vector<bgld_circ_arc >& arc_list)
 {
   arc_list.clear();
   vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor > xnode_map;
@@ -241,27 +241,27 @@ convert_to_circ_arc_list(const vnl_vector<double >& x,
     // Since the biar interpolation codes are very sensity to bad input,
     // we'll be protective, avoid giving it bad inputs
 
-    dbgl_biarc biarc_left;
+    bgld_biarc biarc_left;
     if ( biarc_left.compute_biarc_params(
       xnode_parent.bnd_pt_left(), 
       vcl_atan2(xnode_parent.bnd_tangent_left().y(), xnode_parent.bnd_tangent_left().x()),
       xnode_child.bnd_pt_left(), 
       vcl_atan2(xnode_child.bnd_tangent_left().y(), xnode_child.bnd_tangent_left().x()) ))
     {
-      dbgl_circ_arc arc_l0(biarc_left.start(), biarc_left.mid_pt(), biarc_left.k1());
-      dbgl_circ_arc arc_l1(biarc_left.mid_pt(), biarc_left.end(), biarc_left.k2());
+      bgld_circ_arc arc_l0(biarc_left.start(), biarc_left.mid_pt(), biarc_left.k1());
+      bgld_circ_arc arc_l1(biarc_left.mid_pt(), biarc_left.end(), biarc_left.k2());
       arc_list.push_back(arc_l0);
       arc_list.push_back(arc_l1);
     }
 
-    dbgl_biarc biarc_right;
+    bgld_biarc biarc_right;
     if (biarc_right.compute_biarc_params(xnode_parent.bnd_pt_right(), 
       vcl_atan2(xnode_parent.bnd_tangent_right().y(), xnode_parent.bnd_tangent_right().x()),
       xnode_child.bnd_pt_right(), 
       vcl_atan2(xnode_child.bnd_tangent_right().y(), xnode_child.bnd_tangent_right().x()) ))
     {
-      dbgl_circ_arc arc_r0(biarc_right.start(), biarc_right.mid_pt(), biarc_right.k1());
-      dbgl_circ_arc arc_r1(biarc_right.mid_pt(), biarc_right.end(), biarc_right.k2());
+      bgld_circ_arc arc_r0(biarc_right.start(), biarc_right.mid_pt(), biarc_right.k1());
+      bgld_circ_arc arc_r1(biarc_right.mid_pt(), biarc_right.end(), biarc_right.k2());
       arc_list.push_back(arc_r0);
       arc_list.push_back(arc_r1);
     }    
@@ -296,7 +296,7 @@ f(const vnl_vector<double>& x)
   double total_len = 0;
   double total_cost = 0;
 
-  vcl_vector<dbgl_circ_arc > arc_list;
+  vcl_vector<bgld_circ_arc > arc_list;
   this->convert_to_circ_arc_list(x, arc_list);
 
   // When some biarc interpolation failed ...
@@ -307,7 +307,7 @@ f(const vnl_vector<double>& x)
 
   for (unsigned i =0; i < arc_list.size(); ++i)
   {
-    dbgl_circ_arc arc = arc_list[i];
+    bgld_circ_arc arc = arc_list[i];
 
     // sample the two boundary curves
     double ds = this->ds_shapelet_;
@@ -491,7 +491,7 @@ f_regularized_using_len(const vnl_vector<double>& x)
   dbsksp_xshock_node_descriptor xnode = dbsks_convert_to_xnode(x);
 
   // use biarc to interpolate between the three xnodes
-  dbgl_biarc biarc[4];
+  bgld_biarc biarc[4];
 
 
   // return a huge cost if interpolation fails
@@ -646,7 +646,7 @@ f_regularized_using_len(const vnl_vector<double>& x)
   dbsksp_xshock_node_descriptor xnode = dbsks_convert_to_xnode(x);
 
   // use biarc to interpolate between the three xnodes
-  dbgl_biarc biarc[3];
+  bgld_biarc biarc[3];
 
   // return a huge cost if interpolation fails
   if ( !biarc[0].compute_biarc_params(this->xnode_parent_.bnd_pt_left(), 
@@ -789,7 +789,7 @@ double dbsks_xfrag_cost::
 f_regularized_using_len(const dbsksp_xshock_node_descriptor& terminal_xnode)
 {
   // length
-  dbgl_biarc biarc;
+  bgld_biarc biarc;
   if (!biarc.compute_biarc_params(terminal_xnode.bnd_pt_left(), 
     terminal_xnode.bnd_tangent_left(), 
     terminal_xnode.bnd_pt_right(), 
@@ -825,7 +825,7 @@ f_image(const dbsksp_xshock_node_descriptor& xnode_parent,
         const dbsksp_xshock_node_descriptor& xnode_child)
 {
   // use biarc to interpolate between the three xnodes
-  dbgl_biarc biarc[2];
+  bgld_biarc biarc[2];
 
   // return a huge cost if interpolation fails
   if ( !biarc[0].compute_biarc_params(xnode_parent.bnd_pt_left(), 
@@ -886,7 +886,7 @@ f_image(const dbsksp_xshock_node_descriptor& xnode_parent,
 double dbsks_xfrag_cost::
 f_image(const dbsksp_xshock_node_descriptor& terminal_xnode)
 {
-  dbgl_biarc biarc;
+  bgld_biarc biarc;
   if (!biarc.compute_biarc_params(terminal_xnode.bnd_pt_left(), 
     terminal_xnode.bnd_tangent_left(), 
     terminal_xnode.bnd_pt_right(), 
@@ -929,7 +929,7 @@ f_bnd_length(const dbsksp_xshock_node_descriptor& xnode_parent,
            const dbsksp_xshock_node_descriptor& xnode_child)
 {
   // use biarc to interpolate between the three xnodes
-  dbgl_biarc biarc[2];
+  bgld_biarc biarc[2];
 
   // return a huge cost if interpolation fails
   if ( !biarc[0].compute_biarc_params(xnode_parent.bnd_pt_left(), 
@@ -976,7 +976,7 @@ f_shock_edit(const dbsksp_xshock_node_descriptor& xnode_parent,
     return 1e20;
 
   // use biarc to interpolate between the three xnodes
-  dbgl_biarc biarc[2];
+  bgld_biarc biarc[2];
 
   // return a huge cost if interpolation fails
   if ( !biarc[0].compute_biarc_params(xnode_parent.bnd_pt_left(), 
@@ -1002,12 +1002,12 @@ f_shock_edit(const dbsksp_xshock_node_descriptor& xnode_parent,
 
   
 
-  dbgl_circ_arc arc_left_ref = s_ref->bnd_arc_left();
-  dbgl_circ_arc arc_right_ref = s_ref->bnd_arc_right();
+  bgld_circ_arc arc_left_ref = s_ref->bnd_arc_left();
+  bgld_circ_arc arc_right_ref = s_ref->bnd_arc_right();
 
 
-  dbgl_biarc biarc_left_target = biarc[0];
-  dbgl_biarc biarc_right_target = biarc[1];
+  bgld_biarc biarc_left_target = biarc[0];
+  bgld_biarc biarc_right_target = biarc[1];
 
 
   // Components of shock-edit deformation

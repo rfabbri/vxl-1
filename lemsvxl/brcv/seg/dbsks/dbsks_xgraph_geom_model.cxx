@@ -15,7 +15,7 @@
 #include <dbsksp/dbsksp_xshock_node_descriptor.h>
 #include <dbsksp/dbsksp_xshock_fragment.h>
 
-#include <dbnl/dbnl_angle.h>
+#include <bnld/bnld_angle.h>
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_vector.h>
 #include <vcl_utility.h>
@@ -209,7 +209,7 @@ compute_edge_geom_attr_from_data(const dbsksp_xshock_graph_sptr& xgraph,
       vgl_vector_2d<double > t2 = xfrag->end().shock_tangent();
 
       // interpolate using a biarc
-      dbgl_biarc median_curve(p0, t0, p2, t2);
+      bgld_biarc median_curve(p0, t0, p2, t2);
       double median_length = median_curve.len();
       list_median_length[i] = median_length;
 
@@ -250,8 +250,8 @@ compute_edge_geom_attr_from_data(const dbsksp_xshock_graph_sptr& xgraph,
       list_end_phi_diff[i] = end_phi - predicted_phi;
 
       // curvature difference within curvature biarcs
-      dbgl_biarc left_bnd = xfrag->bnd_left_as_biarc();
-      dbgl_biarc right_bnd = xfrag->bnd_right_as_biarc();
+      bgld_biarc left_bnd = xfrag->bnd_left_as_biarc();
+      bgld_biarc right_bnd = xfrag->bnd_right_as_biarc();
 
       //> left_curvature_diff
       // curvature difference between arcs of left boundary 

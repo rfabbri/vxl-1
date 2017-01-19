@@ -19,8 +19,8 @@
 #include <dbsks/xio/dbsks_xio_xshock_det.h>
 #include <dbsks/dbsks_utils.h>
 
-#include <dbsol/dbsol_file_io.h>
-#include <dbul/dbul_parse_simple_file.h>
+#include <bsold/bsold_file_io.h>
+#include <buld/buld_parse_simple_file.h>
 #include <bpro1/bpro1_parameters.h>
 
 #include <vsol/vsol_point_2d.h>

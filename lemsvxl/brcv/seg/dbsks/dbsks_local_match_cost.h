@@ -22,8 +22,8 @@
 #include <dbsksp/dbsksp_shapelet_sptr.h>
 #include <dbsksp/dbsksp_xshock_node_descriptor.h>
 #include <vcl_map.h>
-#include <dbgl/algo/dbgl_circ_arc.h>
-#include <dbgl/algo/dbgl_biarc.h>
+#include <bgld/algo/bgld_circ_arc.h>
+#include <bgld/algo/bgld_biarc.h>
 
 
 
@@ -68,7 +68,7 @@ public:
 
   //: Convert a configuration vector to a list of xnodes associated with the vertices
   void convert_to_circ_arc_list(const vnl_vector<double >& x,
-    vcl_vector<dbgl_circ_arc >& arc_list);
+    vcl_vector<bgld_circ_arc >& arc_list);
 
 
   //: Cost value for each configuration of the graph

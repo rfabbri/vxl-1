@@ -24,7 +24,7 @@
 
 #include <dbxml/dbxml_vector_xio.h>
 #include <dbxml/dbxml_xio.h>
-#include <dbul/dbul_parse_simple_file.h>
+#include <buld/buld_parse_simple_file.h>
 
 
 #include <bxml/bxml_read.h>
@@ -64,7 +64,7 @@ collect_data()
   
   // parse input file containing list of xshock graphs
   vcl_vector<vcl_string > xml_filenames;
-  dbul_parse_string_list(xshock_list_file, xml_filenames);
+  buld_parse_string_list(xshock_list_file, xml_filenames);
 
   // Iterate thru the names and load one by one
   vcl_vector<dbsksp_xshock_graph_sptr > list_xgraphs;
@@ -298,7 +298,7 @@ save_list_of_xgraph_sizes()
   
   // parse input file containing list of xshock graphs
   vcl_vector<vcl_string > xml_filenames;
-  dbul_parse_string_list(xshock_list_file, xml_filenames);
+  buld_parse_string_list(xshock_list_file, xml_filenames);
 
   // Iterate thru the names and load one by one
   vcl_vector<dbsksp_xshock_graph_sptr > list_xgraph;

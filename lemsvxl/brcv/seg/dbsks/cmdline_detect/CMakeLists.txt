@@ -22,7 +22,7 @@ set(dbsks_cmdline_detect_sources
 
 add_executable(dbsks_cmdline_detect ${dbsks_cmdline_detect_sources})
 
-target_link_libraries(dbsks_cmdline_detect dbsks_algo dbsksp_xio dbsksp_pro dbsks_pro dbsksp_vis vgui dbgui dbul)
+target_link_libraries(dbsks_cmdline_detect dbsks_algo dbsksp_xio dbsksp_pro dbsks_pro dbsksp_vis vgui dbgui buld)
 
 
 endif (VXL_VGUI_FOUND)

@@ -13,7 +13,7 @@
 #include <dbsksp/algo/dbsksp_trace_boundary.h>
 #include <vcl_map.h>
 #include <vnl/vnl_math.h>
-#include <dbnl/dbnl_angle.h>
+#include <bnld/bnld_angle.h>
 
 
 // ============================================================================

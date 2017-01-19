@@ -126,7 +126,7 @@ f(const dbsks_circ_arc_grid& grid, float ds,
         continue;
       }
 
-      dbgl_circ_arc arc;
+      bgld_circ_arc arc;
       if (! arc.set_from(chord, height, pt0, t0))
       {
         continue;
@@ -544,7 +544,7 @@ compute_boundary_samples_uniform(const dbsksp_shapelet_sptr& sh, double ds,
 {
   for (int i=0; i<2; ++i)
   {
-    dbgl_circ_arc arc = sh->bnd_arc(i);
+    bgld_circ_arc arc = sh->bnd_arc(i);
     // sample at the middle of the interval
     for (double s = ds/2; s<arc.len(); s += ds)
     {

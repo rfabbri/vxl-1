@@ -25,7 +25,7 @@
 #include <vcl_map.h>
 #include <vsol/vsol_box_2d_sptr.h>
 #include <vsol/vsol_spatial_object_2d_sptr.h>
-#include <dbgl/algo/dbgl_circ_arc.h>
+#include <bgld/algo/bgld_circ_arc.h>
 
 #include <dbsksp/dbsksp_shapelet_sptr.h>
 #include <dbsksp/dbsksp_shock_node_sptr.h>
@@ -101,7 +101,7 @@ float dbsks_deform_cost(const dbsksp_shapelet_sptr& s_ref,
   float sigma_deform);
 
 //: Trace out the boundary of a one-branch graph with its extrinsic nodes
-vcl_vector<dbgl_circ_arc > dbsks_bnd_arc_list(const dbsksp_shock_graph_sptr& graph,
+vcl_vector<bgld_circ_arc > dbsks_bnd_arc_list(const dbsksp_shock_graph_sptr& graph,
   const vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map);
 
 //: Trace boundary of a one-branch graph

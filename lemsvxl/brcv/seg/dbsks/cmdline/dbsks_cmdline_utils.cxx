@@ -26,9 +26,9 @@
 #include <dbsksp/dbsksp_xshock_fragment.h>
 #include <dbsksp/dbsksp_xshock_fragment_sptr.h>
 
-#include <dbul/dbul_parse_simple_file.h>
-#include <dbil/algo/dbil_gradient_color.h>
-#include <dbsol/dbsol_file_io.h>
+#include <buld/buld_parse_simple_file.h>
+#include <bild/algo/bild_gradient_color.h>
+#include <bsold/bsold_file_io.h>
 
 #include <vsol/vsol_box_2d.h>
 #include <vsol/vsol_spatial_object_2d.h>
@@ -115,7 +115,7 @@ bool dbsks_create_shapematch_summary_xml(const vcl_string& output_xml,
 {
   // get the image list
   vcl_vector<vcl_string > image_names;
-  dbul_parse_string_list(image_list, image_names);
+  buld_parse_string_list(image_list, image_names);
   for (unsigned i =0; i < image_names.size(); ++i)
   {
     vcl_string image_name = image_names[i];
@@ -140,7 +140,7 @@ bool dbsks_extract_xfrag_geom(const vcl_string& xshock_folder,
 {
   // parse input file
   vcl_vector<vcl_string > xml_filenames;
-  dbul_parse_string_list(xshock_list_file, xml_filenames);
+  buld_parse_string_list(xshock_list_file, xml_filenames);
 
   // Process data
   // Go thru each shock graph and extract geometry of the fragment of interest
@@ -269,7 +269,7 @@ bool dbsks_extract_positive_xfrag_bhog(const vcl_string& xshock_folder,
 
   // parse input file
   vcl_vector<vcl_string > xml_filenames;
-  dbul_parse_string_list(xshock_list_file, xml_filenames);
+  buld_parse_string_list(xshock_list_file, xml_filenames);
 
   // collect the fragments and their repsected scales
   vcl_vector<dbsksp_xshock_fragment > xfrag_list;
@@ -335,7 +335,7 @@ bool dbsks_extract_positive_xfrag_bhog(const vcl_string& xshock_folder,
 
     // Compute gradient of color image by taking strongest component of the three color planes
     vil_image_view<double > Gx, Gy;
-    dbil_gradient_rgb_Linf(image_view, Gx, Gy);
+    bild_gradient_rgb_Linf(image_view, Gx, Gy);
 
     // randomly perturb the fragment within a small range to collect positive histogram
     int num_bhog_per_pos_xgraph = 1000;
@@ -433,7 +433,7 @@ bool dbsks_extract_negative_xfrag_bhog(const vcl_string& xshock_folder,
 
   // parse input file
   vcl_vector<vcl_string > xml_filenames;
-  dbul_parse_string_list(xshock_list_file, xml_filenames);
+  buld_parse_string_list(xshock_list_file, xml_filenames);
 
   // Extract a list of fragment from list of shock files
   vcl_vector<dbsksp_xshock_fragment > xfrag_list;
@@ -472,7 +472,7 @@ bool dbsks_extract_negative_xfrag_bhog(const vcl_string& xshock_folder,
   // To handling different image sizes, the fragments are located at the center of image
   // parse input file
   vcl_vector<vcl_string > image_filenames;
-  dbul_parse_string_list(image_list_file, image_filenames);
+  buld_parse_string_list(image_list_file, image_filenames);
   for (unsigned i_file =0; i_file < image_filenames.size(); ++i_file)
   {
     // load the image
@@ -493,7 +493,7 @@ bool dbsks_extract_negative_xfrag_bhog(const vcl_string& xshock_folder,
 
     // Compute gradient of color image by taking strongest component of the three color planes
     vil_image_view<double > Gx, Gy;
-    dbil_gradient_rgb_Linf(image_src, Gx, Gy);
+    bild_gradient_rgb_Linf(image_src, Gx, Gy);
 
     // image center
     vgl_point_2d<double > image_center(image_src.ni() / 2, image_src.nj() / 2);
@@ -681,7 +681,7 @@ bool dbsks_detect_xfrag_using_bhog_model(const vcl_string& libsvm_xfrag_bhog_mod
 
   // Parse the image names and process each imag separately
   vcl_vector<vcl_string > image_filenames;
-  dbul_parse_string_list(image_list_file, image_filenames);
+  buld_parse_string_list(image_list_file, image_filenames);
   //for (unsigned i_file =0; i_file < image_filenames.size(); ++i_file)
   for (unsigned i_file =0; i_file < 1; ++i_file)
   {
@@ -696,7 +696,7 @@ bool dbsks_detect_xfrag_using_bhog_model(const vcl_string& libsvm_xfrag_bhog_mod
 
     // Compute gradient of color image by taking strongest component of the three color planes
     vil_image_view<double > Gx, Gy;
-    dbil_gradient_rgb_Linf(image_src, Gx, Gy);
+    bild_gradient_rgb_Linf(image_src, Gx, Gy);
     vgl_point_2d<double > image_center(image_src.ni() /2 , image_src.nj() / 2);
 
     // Now for each fragment, we sample the BHOG at various locations, scale,
@@ -882,7 +882,7 @@ bool dbsks_detect_xfrag_using_bhog_model(const vcl_string& libsvm_xfrag_bhog_mod
 //
 //  // >>> parse input file containing list of xshock graphs
 //  vcl_vector<vcl_string > image_filenames;
-//  if (!dbul_parse_string_list(image_list_file, image_filenames))
+//  if (!buld_parse_string_list(image_list_file, image_filenames))
 //  {
 //    vcl_cout << "ERROR: couldn't load image list file:" << image_list_file << vcl_endl;
 //    return false;
@@ -1164,7 +1164,7 @@ bool dbsks_extend_giraffe_legs()
 
   // parse input file
   vcl_vector<vcl_string > xml_filenames;
-  dbul_parse_string_list(xshock_list_file, xml_filenames);
+  buld_parse_string_list(xshock_list_file, xml_filenames);
 
   // Go thru each shock graph and add front and rear legs to it
   vcl_vector<vnl_vector<double > > frag_geom_list;

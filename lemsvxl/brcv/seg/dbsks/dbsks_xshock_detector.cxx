@@ -19,7 +19,7 @@
 #include <dbsksp/xio/dbsksp_xio_xshock_graph.h>
 #include <dbsksp/algo/dbsksp_xgraph_algos.h>
 
-#include <dbil/algo/dbil_gradient_color.h>
+#include <bild/algo/bild_gradient_color.h>
 #include <vnl/vnl_math.h>
 #include <vcl_utility.h>
 #include <vcl_algorithm.h>

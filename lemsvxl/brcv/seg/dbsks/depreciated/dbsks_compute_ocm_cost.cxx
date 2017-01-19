@@ -21,7 +21,7 @@
 // -----------------------------------------------------------------------------
 //: Compute ocm cost of a biarc
 bool dbsks_compute_ocm_cost(const dbsks_ocm_image_cost& ocm, 
-                            const dbgl_biarc& biarc, 
+                            const bgld_biarc& biarc, 
                             float& cost, 
                             double ds)
 {
@@ -57,7 +57,7 @@ bool dbsks_compute_ocm_cost(const dbsks_ocm_image_cost& ocm,
                             double ds)
 {
   // Compute the four circular arcs of the fragment
-  dbgl_biarc bnd_biarc[2];
+  bgld_biarc bnd_biarc[2];
   bnd_biarc[0] = xfrag.bnd_left_as_biarc();
   bnd_biarc[1] = xfrag.bnd_right_as_biarc();
 

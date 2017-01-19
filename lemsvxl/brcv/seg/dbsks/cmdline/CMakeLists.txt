@@ -14,9 +14,9 @@ add_executable(dbsks_cmdline
     dbsks_cmdline_main.cxx
     dbsks_cmdline_utils.h       dbsks_cmdline_utils.cxx 
 )
-target_link_libraries( dbsks_cmdline dbsks_algo dbsks_xio dbsksp_xio dbul dbil_algo vul vil )
-#dbsksp_pro dbsks_pro dbsksp_vis vgui dbgui dbul  )
+target_link_libraries( dbsks_cmdline dbsks_algo dbsks_xio dbsksp_xio buld bild_algo vul vil )
+#dbsksp_pro dbsks_pro dbsksp_vis vgui dbgui buld  )
 
 # An application to compute cost of a fragment as it translates / rotates in an image
 add_executable(dbsks_xfrag_cost_map dbsks_xfrag_cost_map_main.cxx)
-target_link_libraries( dbsks_xfrag_cost_map dbsks_algo dbsks_xio dbsksp_xio dbul dbil_algo vul vil  )
+target_link_libraries( dbsks_xfrag_cost_map dbsks_algo dbsks_xio dbsksp_xio buld bild_algo vul vil  )

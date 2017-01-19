@@ -13,7 +13,7 @@
 #include <dbsksp/algo/dbsksp_trace_boundary.h>
 #include <vcl_map.h>
 #include <vnl/vnl_math.h>
-#include <dbnl/dbnl_angle.h>
+#include <bnld/bnld_angle.h>
 
 
 // ============================================================================
@@ -155,7 +155,7 @@ f_whole_contour(unsigned edge_id, const dbsksp_xshock_fragment& xfrag, const vgl
   }
   else
   {
-    dbgl_biarc frag_bnd(start.bnd_pt_left(), start.bnd_tangent_left(), 
+    bgld_biarc frag_bnd(start.bnd_pt_left(), start.bnd_tangent_left(), 
       end.bnd_pt_left(), end.bnd_tangent_left());
     cost_left = this->wcm_->f_whole_contour(x_vec, y_vec, angle_vec, frag_bnd.len(), boundary);
   }
@@ -170,7 +170,7 @@ f_whole_contour(unsigned edge_id, const dbsksp_xshock_fragment& xfrag, const vgl
   }
   else
   {
-    dbgl_biarc frag_bnd(start.bnd_pt_right(), start.bnd_tangent_right(), 
+    bgld_biarc frag_bnd(start.bnd_pt_right(), start.bnd_tangent_right(), 
       end.bnd_pt_right(), end.bnd_tangent_right());
     cost_right = this->wcm_->f_whole_contour(x_vec, y_vec, angle_vec, frag_bnd.len(), boundary);
   }

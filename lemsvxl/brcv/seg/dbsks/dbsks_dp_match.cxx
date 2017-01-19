@@ -1904,7 +1904,7 @@ compute_image_cost_using_arc_cost(const dbsks_shapelet_grid& grid,
               frag->set_from(origin, rA, rotated(t0, psiA_diff), phiA, m, len, phiB);
 
               // the circular arcs on the left of the fragment, starting with front
-              dbgl_circ_arc left_arcs[3];
+              bgld_circ_arc left_arcs[3];
               left_arcs[1] = frag->bnd_arc_left();
               // front arcs (at the starting shock point)
               left_arcs[0].set_from(left_arcs[1].start(), frag->start(), frag->tangent_start());
@@ -1912,7 +1912,7 @@ compute_image_cost_using_arc_cost(const dbsks_shapelet_grid& grid,
               left_arcs[2].set_from(left_arcs[1].end(), frag->end(), -frag->tangent_end());
 
               // the circular arcs on the right of the fragment, starting with front
-              dbgl_circ_arc right_arcs[3];
+              bgld_circ_arc right_arcs[3];
               right_arcs[1] = frag->bnd_arc_right();
               // front arcs (at the starting shock point)
               right_arcs[0].set_from(right_arcs[1].start(), frag->start(), 
@@ -1931,8 +1931,8 @@ compute_image_cost_using_arc_cost(const dbsks_shapelet_grid& grid,
 
                 
 
-                dbgl_circ_arc left_arc = left_arcs[i_part];
-                dbgl_circ_arc right_arc = right_arcs[i_part];
+                bgld_circ_arc left_arc = left_arcs[i_part];
+                bgld_circ_arc right_arc = right_arcs[i_part];
 
                 // Match the fragment's arcs to the pre-computed arcs
 
@@ -2508,8 +2508,8 @@ construct_graph(vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_st
   ////  dbsks_shapelet_grid& grid_e = this->shapelet_grid_map_.find(e)->second;
 
   ////  // collect all the circular arcs we need to draw
-  ////  vcl_vector<dbgl_circ_arc > bnd_arc_list;
-  ////  vcl_vector<dbgl_conic_arc > shock_conic_list;
+  ////  vcl_vector<bgld_circ_arc > bnd_arc_list;
+  ////  vcl_vector<bgld_conic_arc > shock_conic_list;
 
   ////  // left and right
   ////  dbsksp_shock_node_sptr v_child = e->child_node();
@@ -2580,7 +2580,7 @@ construct_graph(vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_st
   ////  
   ////  for (unsigned i =0; i < bnd_arc_list.size(); ++i)
   ////  {
-  ////    dbgl_circ_arc arc = bnd_arc_list[i];
+  ////    bgld_circ_arc arc = bnd_arc_list[i];
   ////    
   ////    // an arc as a 11-vertex polyline
   ////    vcl_vector<vsol_point_2d_sptr > pt_list;
@@ -2595,7 +2595,7 @@ construct_graph(vcl_map<dbsksp_shock_edge_sptr, vgl_point_2d<int > >& graph_i_st
 
   ////  for (unsigned i =0; i < shock_conic_list.size(); ++i)
   ////  {
-  ////    dbgl_conic_arc conic = shock_conic_list[i];
+  ////    bgld_conic_arc conic = shock_conic_list[i];
   ////    
   ////    // an conic as a 11-vertex polyline
   ////    vcl_vector<vsol_point_2d_sptr > pt_list;
@@ -3263,7 +3263,7 @@ matching_cost(const dbsksp_shapelet_sptr& s_ref,
     const vbl_array_1d<vnl_matrix<float > >& arc_image_cost = this->arc_image_cost_;
 
     // the circular arcs on the left of the fragment, starting with front
-    dbgl_circ_arc left_arcs[3];
+    bgld_circ_arc left_arcs[3];
     left_arcs[1] = frag->bnd_arc_left();
     // front arcs (at the starting shock point)
     left_arcs[0].set_from(left_arcs[1].start(), frag->start(), frag->tangent_start());
@@ -3271,7 +3271,7 @@ matching_cost(const dbsksp_shapelet_sptr& s_ref,
     left_arcs[2].set_from(left_arcs[1].end(), frag->end(), -frag->tangent_end());
 
     // the circular arcs on the right of the fragment, starting with front
-    dbgl_circ_arc right_arcs[3];
+    bgld_circ_arc right_arcs[3];
     right_arcs[1] = frag->bnd_arc_right();
     // front arcs (at the starting shock point)
     right_arcs[0].set_from(right_arcs[1].start(), frag->start(), 
@@ -3290,8 +3290,8 @@ matching_cost(const dbsksp_shapelet_sptr& s_ref,
 
                 
 
-      dbgl_circ_arc left_arc = left_arcs[i_part];
-      dbgl_circ_arc right_arc = right_arcs[i_part];
+      bgld_circ_arc left_arc = left_arcs[i_part];
+      bgld_circ_arc right_arc = right_arcs[i_part];
 
       // Match the fragment's arcs to the pre-computed arcs
 
@@ -3770,8 +3770,8 @@ trace_graph_boundary(
     dbsks_shapelet_grid& grid_e = this->shapelet_grid_map_.find(e)->second;
 
     // collect all the circular arcs we need to draw
-    vcl_vector<dbgl_circ_arc > bnd_arc_list;
-    vcl_vector<dbgl_conic_arc > shock_conic_list;
+    vcl_vector<bgld_circ_arc > bnd_arc_list;
+    vcl_vector<bgld_conic_arc > shock_conic_list;
 
     // left and right
     dbsksp_shock_node_sptr v_child = e->child_node();
@@ -3839,7 +3839,7 @@ trace_graph_boundary(
     // Now include all the circular arcs and conics as polyline
     for (unsigned i =0; i < bnd_arc_list.size(); ++i)
     {
-      dbgl_circ_arc arc = bnd_arc_list[i];
+      bgld_circ_arc arc = bnd_arc_list[i];
       
       // an arc as a 11-vertex polyline
       vcl_vector<vsol_point_2d_sptr > pt_list;
@@ -3854,7 +3854,7 @@ trace_graph_boundary(
 
     for (unsigned i =0; i < shock_conic_list.size(); ++i)
     {
-      dbgl_conic_arc conic = shock_conic_list[i];
+      bgld_conic_arc conic = shock_conic_list[i];
       
       // an conic as a 11-vertex polyline
       vcl_vector<vsol_point_2d_sptr > pt_list;

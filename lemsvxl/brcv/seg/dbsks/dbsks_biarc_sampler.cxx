@@ -5,7 +5,7 @@
 
 #include "dbsks_biarc_sampler.h"
 
-#include <dbnl/dbnl_angle.h>
+#include <bnld/bnld_angle.h>
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_math.h>
 #include <vcl_iostream.h>
@@ -333,7 +333,7 @@ compute_cache_sample_points()
   double ds = this->ds();
 
   // compute each biarc explicitly
-  dbgl_biarc biarc;
+  bgld_biarc biarc;
   vgl_point_2d<double > start(0, 0);
   for (unsigned i_dx =0; i_dx < this->dx_.size(); ++i_dx)
   {
@@ -438,7 +438,7 @@ compute_cache_nkdiff()
   double angle0 = signed_angle(vgl_vector_2d<double >(1, 0), end-start);
   double chord = (end-start).length();
 
-  dbgl_biarc biarc;
+  bgld_biarc biarc;
   for (unsigned i_alpha0 =0; i_alpha0 < this->alpha0_.size(); ++i_alpha0)
   {
     // alpha0 is angle between tangent at starting point and the chord
@@ -685,7 +685,7 @@ compute_samples_not_using_cache(const vgl_point_2d<double >& start, const vgl_ve
   {
     xs[i] = vnl_math::rnd(x_vec[i]);
     ys[i] = vnl_math::rnd(y_vec[i]);
-    double angle = dbnl_angle_0to2pi(angle_vec[i]); 
+    double angle = bnld_angle_0to2pi(angle_vec[i]); 
 
     //>> compute the bin-index of the angle, use % to handle angle ~= 2pi;
     angle_bins[i] = vnl_math::rnd(angle / this->radians_per_bin()) % this->num_bins_0to2pi_;
@@ -731,7 +731,7 @@ compute_uniform_biarc_samples(const vgl_point_2d<double >& start,
   angle_vec.clear();
 
   // alpha2 is angle between tangent at end point and the chord
-  dbgl_biarc biarc;
+  bgld_biarc biarc;
   if (!biarc.compute_biarc_params(start, start_tangent, end, end_tangent))
   {
     return false;

@@ -239,14 +239,14 @@ execute()
 
 
     //// boundary
-    //vcl_vector<dbgl_circ_arc > arc_list;
+    //vcl_vector<bgld_circ_arc > arc_list;
     //lm_engine->get_bnd_arc_list(arc_list);
 
     //
     //vcl_vector<vsol_spatial_object_2d_sptr > bnd_list;
     //for (unsigned i =0; i < arc_list.size(); ++i)
     //{
-    //  dbgl_circ_arc arc = arc_list[i];
+    //  bgld_circ_arc arc = arc_list[i];
 
     //  vcl_vector<vsol_point_2d_sptr > pts;
     //  // sample the arc using 10 segments

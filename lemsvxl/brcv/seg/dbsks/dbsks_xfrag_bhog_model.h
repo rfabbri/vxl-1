@@ -17,7 +17,7 @@
 //#include <vbl/vbl_ref_count.h>
 //#include <vgl/vgl_box_2d.h>
 //#include <dbsksp/dbsksp_xshock_node_descriptor.h>
-//#include <dbgl/algo/dbgl_biarc.h>
+//#include <bgld/algo/bgld_biarc.h>
 
 #include <vcl_string.h>
 #include <vnl/vnl_vector.h>

@@ -4,7 +4,7 @@
 // \file
 
 #include "dbsks_xnode_grid.h"
-#include <dbnl/dbnl_angle.h>
+#include <bnld/bnld_angle.h>
 #include <vnl/vnl_math.h>
 
 
@@ -334,7 +334,7 @@ i_y(double y) const
 int dbsks_xnode_grid::
 i_psi(double psi) const
 {
-  double psi_0to2pi = dbnl_angle_0to2pi(psi-this->psi_[0]);
+  double psi_0to2pi = bnld_angle_0to2pi(psi-this->psi_[0]);
   int i_psi = vnl_math::rnd(psi_0to2pi / this->step_psi_);
 
   // just in case psi_0to2pi is very close to 2pi

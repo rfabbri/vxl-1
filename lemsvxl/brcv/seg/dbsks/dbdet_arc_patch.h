@@ -18,7 +18,7 @@
 #include <vnl/vnl_matrix.h>
 #include <vil/vil_image_view.h>
 #include <vgl/vgl_line_segment_2d.h>
-#include <dbgl/algo/dbgl_circ_arc.h>
+#include <bgld/algo/bgld_circ_arc.h>
 
 
 
@@ -40,7 +40,7 @@ public:
   dbdet_arc_patch() {}
 
   // Constructor 2
-  dbdet_arc_patch(const dbgl_circ_arc& arc, double width): axis_(arc), width_(width){}
+  dbdet_arc_patch(const bgld_circ_arc& arc, double width): axis_(arc), width_(width){}
   
   //: Destructor
   virtual ~dbdet_arc_patch() {}
@@ -48,7 +48,7 @@ public:
   // DATA ACCESS ---------------------------------------------------------------
 
   //: central axis of the patch
-  dbgl_circ_arc axis() const {return this->axis_; }
+  bgld_circ_arc axis() const {return this->axis_; }
 
   //: width of the patch
   double width() const { return this->width_; }
@@ -64,7 +64,7 @@ public:
   vcl_ostream& print_summary(vcl_ostream &os) const {return os;}
 
 protected:
-  dbgl_circ_arc axis_;
+  bgld_circ_arc axis_;
   double width_;
 };
 

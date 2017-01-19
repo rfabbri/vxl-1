@@ -33,7 +33,7 @@
 
 
 #include <dbdet/algo/dbdet_cem_file_io.h>
-#include <dbsol/dbsol_file_io.h>
+#include <bsold/bsold_file_io.h>
 
 #include <vsol/vsol_box_2d.h>
 #include <vsol/vsol_point_2d.h>

@@ -10,13 +10,13 @@
 #include <dbsks/dbsks_biarc_sampler.h>
 #include <dbsksp/dbsksp_xshock_graph.h>
 #include <dbsks/dbsks_xgraph_ccm_model.h>
-#include <dbul/dbul_parse_simple_file.h>
+#include <buld/buld_parse_simple_file.h>
 #include <bpro1/bpro1_parameters.h>
 
 
 #include <dbxml/dbxml_vector_xio.h>
 #include <dbxml/dbxml_xio.h>
-//#include <dbul/dbul_parse_simple_file.h>
+//#include <buld/buld_parse_simple_file.h>
 
 
 #include <bxml/bxml_read.h>
@@ -206,7 +206,7 @@ set_training_data_info(const dbsks_train_ccm_model_params& p)
   this->params = p;
 
   //> Parse the list of positive images
-  if (!dbul_parse_string_list(this->params.list_pos_images, pos_image_fnames))
+  if (!buld_parse_string_list(this->params.list_pos_images, pos_image_fnames))
   {
     vcl_cout << "\nERROR: couldn't load list of positive images:" << this->params.list_pos_images << vcl_endl;
     return false;
@@ -214,7 +214,7 @@ set_training_data_info(const dbsks_train_ccm_model_params& p)
 
 
   //> Parse the list of negative images
-  if (!dbul_parse_string_list(this->params.list_neg_images, neg_image_fnames))
+  if (!buld_parse_string_list(this->params.list_neg_images, neg_image_fnames))
   {
     vcl_cout << "\nERROR: couldn't load list of negative images:" << this->params.list_neg_images << vcl_endl;
     return false;
@@ -507,7 +507,7 @@ build_grouping_of_gt_xgraph_fnames(vcl_map<vcl_string, vcl_vector<vcl_string > >
 {
   //> parse input file containing list of xshock graphs
   vcl_vector<vcl_string > xgraph_filenames;
-  if (!dbul_parse_string_list(this->params.list_gt_xgraph, xgraph_filenames))
+  if (!buld_parse_string_list(this->params.list_gt_xgraph, xgraph_filenames))
   {
     vcl_cout << "ERROR: couldn't load xgraph list file:" << this->params.list_gt_xgraph << vcl_endl;
     return false;

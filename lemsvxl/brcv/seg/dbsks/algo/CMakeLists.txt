@@ -18,7 +18,7 @@ set( dbsks_algo_sources
   
 )
 add_library( dbsks_algo  ${dbsks_algo_sources} )
-target_link_libraries( dbsks_algo dbsks dbsks_xio dbul dborl )
+target_link_libraries( dbsks_algo dbsks dbsks_xio buld dborl )
 
 if( BUILD_TESTING )
 #  add_subdirectory(tests)

@@ -8,7 +8,7 @@
 #include <dbsksp/dbsksp_xshock_fragment.h>
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_point_2d.h>
-#include <dbnl/dbnl_angle.h>
+#include <bnld/bnld_angle.h>
 #include <vnl/vnl_math.h>
 #include <vcl_utility.h>
 #include <vcl_algorithm.h>
@@ -367,7 +367,7 @@ vnl_vector<double > dbsks_compute_angle_minmax(const vnl_vector<double >& angles
   // convert to 0 to 2pi
   for (unsigned i =0; i < x.size(); ++i)
   {
-    x[i] = dbnl_angle_0to2pi(x[i]);
+    x[i] = bnld_angle_0to2pi(x[i]);
   }
 
   // sort the angles
@@ -497,10 +497,10 @@ double dbsks_shape_inconsistency(const dbsksp_xshock_graph_sptr& xgraph1, const 
 		dbsksp_xshock_node_descriptor end = xe->target()->descriptor(xe)->opposite_xnode();
 		dbsksp_xshock_fragment xfrag(start, end);
 
-		dbgl_biarc bnd[] = {xfrag.bnd_left_as_biarc(), xfrag.bnd_right_as_biarc()};
+		bgld_biarc bnd[] = {xfrag.bnd_left_as_biarc(), xfrag.bnd_right_as_biarc()};
 		for (int i=0; i < 2; ++i)
 		{
-		  dbgl_biarc biarc = bnd[i];
+		  bgld_biarc biarc = bnd[i];
 		  double len = biarc.len();
 		  for (double s = 0; s <= len; s = s+1)
 		  {
@@ -539,10 +539,10 @@ double dbsks_shape_inconsistency(const dbsksp_xshock_graph_sptr& xgraph1, const 
 		dbsksp_xshock_node_descriptor end = xe->target()->descriptor(xe)->opposite_xnode();
 		dbsksp_xshock_fragment xfrag(start, end);
 
-		dbgl_biarc bnd[] = {xfrag.bnd_left_as_biarc(), xfrag.bnd_right_as_biarc()};
+		bgld_biarc bnd[] = {xfrag.bnd_left_as_biarc(), xfrag.bnd_right_as_biarc()};
 		for (int i=0; i < 2; ++i)
 		{
-		  dbgl_biarc biarc = bnd[i];
+		  bgld_biarc biarc = bnd[i];
 		  double len = biarc.len();
 		  for (double s = 0; s <= len; s = s+1)
 		  {

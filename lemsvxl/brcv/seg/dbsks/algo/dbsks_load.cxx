@@ -14,7 +14,7 @@
 #include <dbsksp/xio/dbsksp_xio_xshock_graph.h>
 #include <dbsks/xio/dbsks_xio_xgraph_geom_model.h>
 
-#include <dbsol/dbsol_file_io.h>
+#include <bsold/bsold_file_io.h>
 
 #include <vsol/vsol_point_2d.h>
 #include <vsol/vsol_polyline_2d.h>
@@ -167,7 +167,7 @@ bool dbsks_load_polyline_list(const vcl_string& cemv_file,
   //>> Load the cemv file containing linked contour info
   vcl_cout << "\n>>Loading linked-edge contour file: " << cemv_file << "...";
   vcl_vector<vsol_spatial_object_2d_sptr > vsol_list;
-  if (!dbsol_load_cem(vsol_list, cemv_file))
+  if (!bsold_load_cem(vsol_list, cemv_file))
   {
     vcl_cout << "[ Failed ]\n";
     return false;

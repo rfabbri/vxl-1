@@ -12,7 +12,7 @@
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_point_2d.h>
 #include <vnl/vnl_math.h>
-#include <dbgl/algo/dbgl_biarc.h>
+#include <bgld/algo/bgld_biarc.h>
 #include <vgl/vgl_lineseg_test.h>
 
 
@@ -155,11 +155,11 @@ float dbsks_deform_cost_shock_edit(const dbsksp_shapelet_sptr& sp_ref,
   dbsksp_shapelet_sptr s_ref = sp_ref;
   dbsksp_shapelet_sptr s_target = sp_target;
 
-  dbgl_circ_arc arc_left_ref = s_ref->bnd_arc_left();
-  dbgl_circ_arc arc_right_ref = s_ref->bnd_arc_right();
+  bgld_circ_arc arc_left_ref = s_ref->bnd_arc_left();
+  bgld_circ_arc arc_right_ref = s_ref->bnd_arc_right();
 
-  dbgl_circ_arc arc_left_target = s_target->bnd_arc_left();
-  dbgl_circ_arc arc_right_target = s_target->bnd_arc_right();
+  bgld_circ_arc arc_left_target = s_target->bnd_arc_left();
+  bgld_circ_arc arc_right_target = s_target->bnd_arc_right();
 
   // Components of shock-edit deformation
   // 1. boundary length difference
@@ -330,10 +330,10 @@ float dbsks_deform_cost(const dbsksp_shapelet_sptr& s_ref,
 
 // ------------------------------------------------------------------------------
 //: Trace out the boundary of a one-branch graph with its extrinsic nodes
-vcl_vector<dbgl_circ_arc > dbsks_bnd_arc_list(const dbsksp_shock_graph_sptr& graph,
+vcl_vector<bgld_circ_arc > dbsks_bnd_arc_list(const dbsksp_shock_graph_sptr& graph,
   const vcl_map<dbsksp_shock_node_sptr, dbsksp_xshock_node_descriptor >& xnode_map)
 {
-  vcl_vector<dbgl_circ_arc > arc_list;
+  vcl_vector<bgld_circ_arc > arc_list;
   arc_list.clear();
 
   // Collect arcs from boundary of the associated with the fragment
@@ -346,7 +346,7 @@ vcl_vector<dbgl_circ_arc > dbsks_bnd_arc_list(const dbsksp_shock_graph_sptr& gra
       // Determine the geometric shape of the edge
       dbsksp_shock_node_sptr v_parent = e->parent_node();
       dbsksp_xshock_node_descriptor xnode_parent = xnode_map.find(v_parent)->second;
-      dbgl_circ_arc arc0;
+      bgld_circ_arc arc0;
 
       if (v_parent->depth() == 0)
       {
@@ -356,7 +356,7 @@ vcl_vector<dbgl_circ_arc > dbsks_bnd_arc_list(const dbsksp_shock_graph_sptr& gra
       arc0.set_from(xnode_parent.bnd_pt_left(), xnode_parent.bnd_tangent_left(), 
         xnode_parent.pt_ + xnode_parent.radius_ * xnode_parent.shock_tangent());
 
-      dbgl_circ_arc arc1;
+      bgld_circ_arc arc1;
       arc1.set_from(xnode_parent.bnd_pt_right(), xnode_parent.bnd_tangent_right(), 
         xnode_parent.pt_ + xnode_parent.radius_ * xnode_parent.shock_tangent());
 
@@ -376,27 +376,27 @@ vcl_vector<dbgl_circ_arc > dbsks_bnd_arc_list(const dbsksp_shock_graph_sptr& gra
       // Since the biar interpolation codes are very sensity to bad input,
       // we'll be protective, avoid giving it bad inputs
 
-      dbgl_biarc biarc_left;
+      bgld_biarc biarc_left;
       if ( biarc_left.compute_biarc_params(
         xnode_parent.bnd_pt_left(), 
         vcl_atan2(xnode_parent.bnd_tangent_left().y(), xnode_parent.bnd_tangent_left().x()),
         xnode_child.bnd_pt_left(), 
         vcl_atan2(xnode_child.bnd_tangent_left().y(), xnode_child.bnd_tangent_left().x()) ))
       {
-        dbgl_circ_arc arc_l0(biarc_left.start(), biarc_left.mid_pt(), biarc_left.k1());
-        dbgl_circ_arc arc_l1(biarc_left.mid_pt(), biarc_left.end(), biarc_left.k2());
+        bgld_circ_arc arc_l0(biarc_left.start(), biarc_left.mid_pt(), biarc_left.k1());
+        bgld_circ_arc arc_l1(biarc_left.mid_pt(), biarc_left.end(), biarc_left.k2());
         arc_list.push_back(arc_l0);
         arc_list.push_back(arc_l1);
       }
 
-      dbgl_biarc biarc_right;
+      bgld_biarc biarc_right;
       if (biarc_right.compute_biarc_params(xnode_parent.bnd_pt_right(), 
         vcl_atan2(xnode_parent.bnd_tangent_right().y(), xnode_parent.bnd_tangent_right().x()),
         xnode_child.bnd_pt_right(), 
         vcl_atan2(xnode_child.bnd_tangent_right().y(), xnode_child.bnd_tangent_right().x()) ))
       {
-        dbgl_circ_arc arc_r0(biarc_right.start(), biarc_right.mid_pt(), biarc_right.k1());
-        dbgl_circ_arc arc_r1(biarc_right.mid_pt(), biarc_right.end(), biarc_right.k2());
+        bgld_circ_arc arc_r0(biarc_right.start(), biarc_right.mid_pt(), biarc_right.k1());
+        bgld_circ_arc arc_r1(biarc_right.mid_pt(), biarc_right.end(), biarc_right.k2());
         arc_list.push_back(arc_r0);
         arc_list.push_back(arc_r1);
       }
@@ -416,12 +416,12 @@ vcl_vector<vsol_spatial_object_2d_sptr > dbsks_trace_boundary(const dbsksp_shock
   vcl_vector<vsol_spatial_object_2d_sptr > bnd_list;
 
   // retrieve the boundary arcs
-  vcl_vector<dbgl_circ_arc > arc_list = dbsks_bnd_arc_list(graph, xnode_map);
+  vcl_vector<bgld_circ_arc > arc_list = dbsks_bnd_arc_list(graph, xnode_map);
 
   // convert each arc to polygon
   for (unsigned i =0; i < arc_list.size(); ++i)
   {
-    dbgl_circ_arc arc = arc_list[i];
+    bgld_circ_arc arc = arc_list[i];
     vcl_vector<vsol_point_2d_sptr > pts;
     
     // sample the arc using 10 segments
