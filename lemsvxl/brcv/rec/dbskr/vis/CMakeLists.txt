@@ -6,6 +6,7 @@ include_directories( ${lems_SOURCE_DIR}/brcv/shp )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 
 if (VXL_VGUI_FOUND)
+find_package(OpenGL)
 
 set(dbskr_vis_sources
 
@@ -36,7 +37,7 @@ set(dbskr_vis_sources
 
 add_library(dbskr_vis ${dbskr_vis_sources})
 
-target_link_libraries(dbskr_vis dbskr_algo dbskr_pro bvis1 ) 
+target_link_libraries(dbskr_vis dbskr_algo dbskr_pro dbsk2d_vis bvis1 vgui  ${OPENGL_LIBRARIES})
 # dbsk2d_vis)
 
 endif (VXL_VGUI_FOUND)
