@@ -29,13 +29,13 @@
 #include <dbdet/pro/dbdet_save_cvlet_map_process.h>
 #include <dbdet/pro/dbdet_convert_edgemap_to_image_process.h>
 
-//#include <pro/dbrl_edge_point_tangent_bg_model_process.h> 
-#include <pro/dbrl_edge_point_tangent_fg_detect_process.h>
-#include <pro/dbrl_edge_image_to_oriented_edgemap_process.h>
-#include <pro/dbrl_oriented_edgemap_to_edge_image_process.h>
-#include <pro/dbrl_edge_point_tangent_fg_detect_process.h>
+//#include <pro/brld_edge_point_tangent_bg_model_process.h> 
+#include <pro/brld_edge_point_tangent_fg_detect_process.h>
+#include <pro/brld_edge_image_to_oriented_edgemap_process.h>
+#include <pro/brld_oriented_edgemap_to_edge_image_process.h>
+#include <pro/brld_edge_point_tangent_fg_detect_process.h>
 
-#include "dbrl_edge_point_tangent_bg_model_process_2.h"
+#include "brld_edge_point_tangent_bg_model_process_2.h"
 
 
 int main(int argc, char *argv[]) {
@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
 
 	// construct the bg model for the center frame
 	vcl_vector<bpro1_storage_sptr> bg_results;
-	dbrl_edge_point_tangent_bg_model_process_2 bg_pro;
+	brld_edge_point_tangent_bg_model_process_2 bg_pro;
 	bg_pro.clear_input();
 	bg_pro.clear_output();
 
@@ -114,7 +114,7 @@ int main(int argc, char *argv[]) {
 		// convert the edge map to edge image which is used in build BG model as well as FG detection
 		vcl_cout<<"convert edge map to edge image"<<vcl_endl;
 		vcl_vector<bpro1_storage_sptr> edge_map2img_results;
-		dbrl_oriented_edgemap_to_edge_image_process edge_map2img_pro;
+		brld_oriented_edgemap_to_edge_image_process edge_map2img_pro;
 
 		edge_map2img_pro.clear_input();
 		edge_map2img_pro.clear_output();
@@ -155,7 +155,7 @@ int main(int argc, char *argv[]) {
 	vcl_cout<<"refine FG edges"<<vcl_endl;
 	//detect the foreground edges
 	vcl_vector<bpro1_storage_sptr> fg_results;
-    dbrl_edge_point_tangent_fg_detect_process fg_pro;
+    brld_edge_point_tangent_fg_detect_process fg_pro;
 	fg_pro.clear_input();
 	fg_pro.clear_output();
 
@@ -176,7 +176,7 @@ int main(int argc, char *argv[]) {
 	//convert edge image back to edge map
 	vcl_cout<<"convert edge image to edge map"<<vcl_endl;
 	vcl_vector<bpro1_storage_sptr> edge_img2map_results;
-	dbrl_edge_image_to_oriented_edgemap_process edge_img2map_pro;
+	brld_edge_image_to_oriented_edgemap_process edge_img2map_pro;
 
 	edge_img2map_pro.clear_input();
 	edge_img2map_pro.clear_output();
@@ -256,7 +256,7 @@ int main(int argc, char *argv[]) {
 		// convert the edge map to edge image which is used in build BG model as well as FG detection
 		vcl_cout<<"convert edge map to edge image"<<vcl_endl;
 		vcl_vector<bpro1_storage_sptr> edge_map2img_results;
-		dbrl_oriented_edgemap_to_edge_image_process edge_map2img_pro;
+		brld_oriented_edgemap_to_edge_image_process edge_map2img_pro;
 
 		edge_map2img_pro.clear_input();
 		edge_map2img_pro.clear_output();
@@ -287,7 +287,7 @@ int main(int argc, char *argv[]) {
 		vcl_cout<<"construct BG model"<<vcl_endl;
 		// construct the bg model for the center frame
 		vcl_vector<bpro1_storage_sptr> bg_results;
-		dbrl_edge_point_tangent_bg_model_process_2 bg_pro;
+		brld_edge_point_tangent_bg_model_process_2 bg_pro;
 		bg_pro.clear_input();
 		bg_pro.clear_output();
 
@@ -307,7 +307,7 @@ int main(int argc, char *argv[]) {
 		vcl_cout<<"refine FG edges"<<vcl_endl;
 		//detect the foreground edges
 		vcl_vector<bpro1_storage_sptr> fg_results;
-		dbrl_edge_point_tangent_fg_detect_process fg_pro;
+		brld_edge_point_tangent_fg_detect_process fg_pro;
 		fg_pro.clear_input();
 		fg_pro.clear_output();
 
@@ -328,7 +328,7 @@ int main(int argc, char *argv[]) {
 		//convert edge image back to edge map
 		vcl_cout<<"convert edge image to edge map"<<vcl_endl;
 		vcl_vector<bpro1_storage_sptr> edge_img2map_results;
-		dbrl_edge_image_to_oriented_edgemap_process edge_img2map_pro;
+		brld_edge_image_to_oriented_edgemap_process edge_img2map_pro;
 
 		edge_img2map_pro.clear_input();
 		edge_img2map_pro.clear_output();

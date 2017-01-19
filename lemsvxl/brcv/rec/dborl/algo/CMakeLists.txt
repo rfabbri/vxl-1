@@ -117,7 +117,9 @@ add_subdirectory(vox_compute_xgraphs_from_silhou)
 add_subdirectory( vox_detect_xgraph3 )
 
 # foreground edge refine from sequential frames
-add_subdirectory(vox_multi_frame_fg_edge_refine )
+# disabled for its dependency on gregistration and vidl1
+# enable and adapt if you need it
+# add_subdirectory(vox_multi_frame_fg_edge_refine )
 
 # generate shapes based on trained geometric model
 add_subdirectory(vox_generate_shape )

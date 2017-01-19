@@ -22,11 +22,11 @@ include_directories( ${lems_SOURCE_DIR}/contrib )
 
 set( dborl_multi_frame_fg_edge_sources
   dborl_multi_frame_fg_edge_main.cxx 
-  dbrl_edge_point_tangent_bg_model_process_2.h
-  dbrl_edge_point_tangent_bg_model_process_2.cxx
+  brld_edge_point_tangent_bg_model_process_2.h
+  brld_edge_point_tangent_bg_model_process_2.cxx
 )
 
 add_executable (dborl_multi_frame_fg_edge ${dborl_multi_frame_fg_edge_sources} )
-target_link_libraries (dborl_multi_frame_fg_edge dborl_algo dbdet_pro bpro1  vidpro1  bvis1 georegistration_pro bgld_algo brip  georegistration_vis dbvidl_pro  dbvrl_pro bgld_algo  vsl bild_pro dbbgm_vis dbbgm_pro dbdet_pro dbinfo_pro dbinfo_vis dbacm_pro bsold_pro dbsta_algo dbdet_vis dbru_pro)
+target_link_libraries (dborl_multi_frame_fg_edge dborl_algo dbdet_pro bpro1 vidpro1  bvis1 bgld_algo brip  dbvrl_pro bgld_algo  brld vsl bild_pro dbbgm_vis dbbgm_pro dbdet_pro dbinfo_pro dbinfo_vis dbacm_pro bsold_pro dbsta_algo dbdet_vis dbru_pro)
 
 endif(VXL_FOUND)

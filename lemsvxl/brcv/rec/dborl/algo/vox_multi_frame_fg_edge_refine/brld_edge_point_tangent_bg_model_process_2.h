@@ -1,6 +1,6 @@
-// This is pro/dbrl_edge_point_tangent_bg_model_process_2.h
-#ifndef dbrl_edge_point_tangent_bg_model_process_2_h_
-#define dbrl_edge_point_tangent_bg_model_process_2_h_
+// This is pro/brld_edge_point_tangent_bg_model_process_2.h
+#ifndef brld_edge_point_tangent_bg_model_process_2_h_
+#define brld_edge_point_tangent_bg_model_process_2_h_
 
 
 //:
@@ -20,12 +20,12 @@
 #include <dbbgm/dbbgm_distribution_image_sptr.h>
 
 //: Derived video process class for computing frame difference
-class dbrl_edge_point_tangent_bg_model_process_2 : public bpro1_process {
+class brld_edge_point_tangent_bg_model_process_2 : public bpro1_process {
 
 public:
 
-  dbrl_edge_point_tangent_bg_model_process_2();
-  ~dbrl_edge_point_tangent_bg_model_process_2();
+  brld_edge_point_tangent_bg_model_process_2();
+  ~brld_edge_point_tangent_bg_model_process_2();
 
   vcl_string name();
 

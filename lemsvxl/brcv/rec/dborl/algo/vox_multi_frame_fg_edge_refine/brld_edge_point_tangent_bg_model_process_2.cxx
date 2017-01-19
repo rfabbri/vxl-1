@@ -1,8 +1,8 @@
-// This is pro/dbrl_edge_point_tangent_bg_model_process_2.cxx
+// This is pro/brld_edge_point_tangent_bg_model_process_2.cxx
 
 //:
 // \file
-#include "dbrl_edge_point_tangent_bg_model_process_2.h"
+#include "brld_edge_point_tangent_bg_model_process_2.h"
 #include <dbbgm/pro/dbbgm_distribution_image_storage.h>
 #include <bpro1/bpro1_parameters.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
@@ -30,7 +30,7 @@
 #include <bvis1/bvis1_manager.h>
 
 //: Constructor
-dbrl_edge_point_tangent_bg_model_process_2::dbrl_edge_point_tangent_bg_model_process_2(): model_(NULL)
+brld_edge_point_tangent_bg_model_process_2::brld_edge_point_tangent_bg_model_process_2(): model_(NULL)
 {
 
     if( !parameters()->add( "Max Num Components" ,   "-maxcmp" ,  unsigned(3) ) ||
@@ -44,7 +44,7 @@ dbrl_edge_point_tangent_bg_model_process_2::dbrl_edge_point_tangent_bg_model_pro
 }
 
 //: Destructor
-dbrl_edge_point_tangent_bg_model_process_2::~dbrl_edge_point_tangent_bg_model_process_2()
+brld_edge_point_tangent_bg_model_process_2::~brld_edge_point_tangent_bg_model_process_2()
 {
    
 }
@@ -52,7 +52,7 @@ dbrl_edge_point_tangent_bg_model_process_2::~dbrl_edge_point_tangent_bg_model_pr
 
 //: Return the name of this process
 vcl_string
-dbrl_edge_point_tangent_bg_model_process_2::name()
+brld_edge_point_tangent_bg_model_process_2::name()
 {
     return "subpixel edge point tangent BG model builder";
 }
@@ -60,7 +60,7 @@ dbrl_edge_point_tangent_bg_model_process_2::name()
 
 //: Return the number of input frame for this process
 int
-dbrl_edge_point_tangent_bg_model_process_2::input_frames()
+brld_edge_point_tangent_bg_model_process_2::input_frames()
 {
     return 1;
 }
@@ -68,14 +68,14 @@ dbrl_edge_point_tangent_bg_model_process_2::input_frames()
 
 //: Return the number of output frames for this process
 int
-dbrl_edge_point_tangent_bg_model_process_2::output_frames()
+brld_edge_point_tangent_bg_model_process_2::output_frames()
 {
     return 1;
 }
 
 
 //: Provide a vector of required input types
-vcl_vector< vcl_string > dbrl_edge_point_tangent_bg_model_process_2::get_input_type()
+vcl_vector< vcl_string > brld_edge_point_tangent_bg_model_process_2::get_input_type()
 {
     vcl_vector< vcl_string > to_return;
     
@@ -92,7 +92,7 @@ vcl_vector< vcl_string > dbrl_edge_point_tangent_bg_model_process_2::get_input_t
 
 
 //: Provide a vector of output types
-vcl_vector< vcl_string > dbrl_edge_point_tangent_bg_model_process_2::get_output_type()
+vcl_vector< vcl_string > brld_edge_point_tangent_bg_model_process_2::get_output_type()
 {  
     vcl_vector<vcl_string > to_return;
     
@@ -108,7 +108,7 @@ vcl_vector< vcl_string > dbrl_edge_point_tangent_bg_model_process_2::get_output_
 
 //: Execute the process
 bool
-dbrl_edge_point_tangent_bg_model_process_2::execute()
+brld_edge_point_tangent_bg_model_process_2::execute()
 {
     if ( input_data_.size() != 1 )
     {
@@ -244,13 +244,13 @@ dbrl_edge_point_tangent_bg_model_process_2::execute()
 }
 //: Clone the process
 bpro1_process*
-dbrl_edge_point_tangent_bg_model_process_2::clone() const
+brld_edge_point_tangent_bg_model_process_2::clone() const
 {
-    return new dbrl_edge_point_tangent_bg_model_process_2(*this);
+    return new brld_edge_point_tangent_bg_model_process_2(*this);
 }
 
 bool
-dbrl_edge_point_tangent_bg_model_process_2::finish()
+brld_edge_point_tangent_bg_model_process_2::finish()
 {
 
   
