@@ -15,7 +15,7 @@
 #include <vbl/vbl_ref_count.h>
 #include <dbdet/dbdet_keypoint_sptr.h>
 #include <dbdet/dbdet_keypoint_corr3d_sptr.h>
-#include <dbnl/algo/dbnl_bbf_tree.h>
+#include <bnld/algo/bnld_bbf_tree.h>
 #include <vcl_vector.h>
 #include <vcl_map.h>
 #include <vnl/vnl_matrix.h>
@@ -112,7 +112,7 @@ class dbkpr_view_span_tree : public vbl_ref_count
   unsigned int num_samples_;
                          
   //: A BBF KD-tree for the points in each view
-  vcl_vector<dbnl_bbf_tree<double,128> > bbf_trees_;
+  vcl_vector<bnld_bbf_tree<double,128> > bbf_trees_;
 
   //: All the keypoints for each view
   // keypoints_[view_index][point_index]

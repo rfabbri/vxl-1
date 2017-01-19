@@ -216,7 +216,7 @@ dbkpr_view_span_tree::expand_matches(dbkpr_view_span_link& link)
     unmatched_from.erase(itr->first);
     unmatched_to.erase(itr->second);
   }
-  dbnl_bbf_tree<double,2> pos_bbf_tree(inlier_pos);
+  bnld_bbf_tree<double,2> pos_bbf_tree(inlier_pos);
   
   // Consider all unmatched point in the first image   
   for( vcl_set<int>::iterator f_itr = unmatched_from.begin();
@@ -320,7 +320,7 @@ dbkpr_view_span_tree::tentative_matches( unsigned int v1, unsigned int v2 ) cons
 {
   const vcl_vector<dbdet_keypoint_sptr>& keys1 = keypoints_[v1];
   const vcl_vector<dbdet_keypoint_sptr>& keys2 = keypoints_[v2];
-  const dbnl_bbf_tree<double,128>& bbf_tree = bbf_trees_[v2];
+  const bnld_bbf_tree<double,128>& bbf_tree = bbf_trees_[v2];
 
   vcl_map<int,int> matches;
   for (unsigned int i=0; i<keys1.size(); ++i){

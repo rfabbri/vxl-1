@@ -365,10 +365,14 @@ git co master
 
 cd vxl-orig
 git pull
+cd ..
 
 git push origin master
 git push origin vxl-master
+```
 
+```bash
+----------------------------
 # PS you could also just merge directly! (be careful)
 # git fetch vxl
 # git merge -s recursive -Xsubtree=vxl vxl/master

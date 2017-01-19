@@ -33,7 +33,7 @@ void
 dbkpr_corr3d_storage::b_write(vsl_b_ostream &os) const
 {
   vsl_b_write(os, version());
-  dvpgl_camera_storage::b_write(os);
+  vpgld_camera_storage::b_write(os);
   vsl_b_write(os, keypoints_3d_);
   vsl_b_write(os, ni_);
   vsl_b_write(os, nj_);
@@ -75,7 +75,7 @@ dbkpr_corr3d_storage::b_read(vsl_b_istream &is)
   }
   case 2:
   {
-    dvpgl_camera_storage::b_read(is);
+    vpgld_camera_storage::b_read(is);
     vsl_b_read(is, keypoints_3d_);
     vsl_b_read(is, ni_);
     vsl_b_read(is, nj_);

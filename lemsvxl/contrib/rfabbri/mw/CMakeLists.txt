@@ -31,7 +31,7 @@ aux_source_directory(Templates bvis1_sources)
 
 add_library(mw ${mw_sources})
 
-target_link_libraries(mw vpgl bsold_algo bnld vil buld vbl_io)
+target_link_libraries(mw vpgl bsold bsold_algo vsol bnld vil buld vbl_io)
 
 if( BUILD_TESTING )
   #  add_subdirectory(tests)

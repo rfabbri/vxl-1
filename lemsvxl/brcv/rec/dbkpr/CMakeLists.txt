@@ -15,7 +15,7 @@ aux_source_directory(Templates dbkpr_sources)
 add_library(dbkpr ${dbkpr_sources})
 
 # add the required libraries into this list
-target_link_libraries( dbkpr dbdet mvl dbnl_algo )
+target_link_libraries( dbkpr dbdet mvl bnld_algo )
 
 # Processing Library
 add_subdirectory(pro)

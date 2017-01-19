@@ -2,7 +2,7 @@
 # Brown Detection Processing library
 
 include_directories( ${lems_SOURCE_DIR}/breye1 )
-include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
+include_directories( ${lems_SOURCE_DIR}/bmvgd )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 
 set(dbkpr_pro_sources
@@ -17,7 +17,7 @@ aux_source_directory(Templates dbkpr_pro_sources)
 
 add_library(dbkpr_pro ${dbkpr_pro_sources})
 
-target_link_libraries(dbkpr_pro dbkpr dbdet_pro dvpgl_pro )
+target_link_libraries(dbkpr_pro dbkpr dbdet_pro vpgld_pro )
 
 
 if(BUILD_TESTING)

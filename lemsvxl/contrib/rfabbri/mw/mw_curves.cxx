@@ -1,5 +1,5 @@
 #include "mw_curves.h"
-#include "bmcsd_util.h"
+#include <bmcsd/bmcsd_util.h>
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_point_2d.h>
 

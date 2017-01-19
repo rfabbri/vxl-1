@@ -1,6 +1,6 @@
-// This is bmvgd/vpgld/algo/vpgld_DG_bundle_adjust.h
-#ifndef _vpgld_DG_bundle_adjust_h_
-#define _vpgld_DG_bundle_adjust_h_
+// This is bmvgd/dvpgl/algo/dvpgl_DG_bundle_adjust.h
+#ifndef _dvpgl_DG_bundle_adjust_h_
+#define _dvpgl_DG_bundle_adjust_h_
 //:
 // \file
 // \brief Edge-based differential-geometric bundle adjustment sparse least squares functions
@@ -26,12 +26,12 @@
 //  edgels. Differential geometry is not a parameter being estimated in this implementation, but it
 //  just drives the optimization by defining the residual.
 //
-class vpgld_DG_bundle_adj_lsqr : public vnl_sparse_lst_sqr_function
+class dvpgl_DG_bundle_adj_lsqr : public vnl_sparse_lst_sqr_function
 {
  public:
   //: Constructor
   // \note image points are not homogeneous because they require finite points to measure projection error
-  vpgld_DG_bundle_adj_lsqr(const vcl_vector<vpgl_calibration_matrix<double> >& K,
+  dvpgl_DG_bundle_adj_lsqr(const vcl_vector<vpgl_calibration_matrix<double> >& K,
                         const vcl_vector<bdifd_3rd_order_point_2d>& image_points,
                         const vcl_vector<vcl_vector<bool> >& mask,
                         bool use_confidence_weights = true);
@@ -40,7 +40,7 @@ class vpgld_DG_bundle_adj_lsqr : public vnl_sparse_lst_sqr_function
   //: Constructor
   //  Each image point is assigned an inverse covariance (error projector) matrix
   // \note image points are not homogeneous because they require finite points to measure projection error
-  vpgld_DG_bundle_adj_lsqr(const vcl_vector<vpgl_calibration_matrix<double> >& K,
+  dvpgl_DG_bundle_adj_lsqr(const vcl_vector<vpgl_calibration_matrix<double> >& K,
                         const vcl_vector<vgl_point_2d<double> >& image_points,
                         const vcl_vector<vnl_matrix<double> >& inv_covars,
                         const vcl_vector<vcl_vector<bool> >& mask,
@@ -48,7 +48,7 @@ class vpgld_DG_bundle_adj_lsqr : public vnl_sparse_lst_sqr_function
                         */
 
   //: Destructor
-  virtual ~vpgld_DG_bundle_adj_lsqr() {}
+  virtual ~dvpgl_DG_bundle_adj_lsqr() {}
 
   //: Compute all the reprojection errors
   //  Given the parameter vectors a and b, compute the vector of residuals e.
@@ -118,4 +118,4 @@ class vpgld_DG_bundle_adj_lsqr : public vnl_sparse_lst_sqr_function
 };
 
 
-#endif // _vpgld_DG_bundle_adjust_h_
+#endif // _dvpgl_DG_bundle_adjust_h_

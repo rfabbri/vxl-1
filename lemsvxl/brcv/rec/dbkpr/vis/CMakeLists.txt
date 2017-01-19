@@ -2,7 +2,7 @@
 # Brown Keypoint Recognition Visualization Library
 
 include_directories( ${lems_SOURCE_DIR}/breye1 )
-include_directories( ${lems_SOURCE_DIR}/brcv/mvg )
+include_directories( ${lems_SOURCE_DIR}/bmvgd )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 

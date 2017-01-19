@@ -18,14 +18,14 @@
 #include <dbdet/dbdet_keypoint_corr3d_sptr.h>
 #include <dbkpr/pro/dbkpr_corr3d_storage_sptr.h>
 #include <dbkpr/dbkpr_view_span_tree_sptr.h>
-#include <dvpgl/pro/dvpgl_camera_storage.h>
+#include <vpgld/pro/vpgld_camera_storage.h>
 
 //: Storage class for keypoints 3d correspondences, 3D points, cameras, and image sizes.
 //
 // \remarks Perhaps some of this should be a global storage. The only frame-specific things here are the
 // number of rows/cols and the camera.
 //
-class dbkpr_corr3d_storage : public dvpgl_camera_storage {
+class dbkpr_corr3d_storage : public vpgld_camera_storage {
 public:
 
   //: Constructor

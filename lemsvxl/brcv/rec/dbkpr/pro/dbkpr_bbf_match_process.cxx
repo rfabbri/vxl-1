@@ -5,7 +5,7 @@
 
 #include "dbkpr_bbf_match_process.h"
 #include <dbdet/dbdet_lowe_keypoint.h>
-#include <dbnl/algo/dbnl_bbf_tree.h>
+#include <bnld/algo/bnld_bbf_tree.h>
 
 #include <dbdet/pro/dbdet_keypoint_storage.h>
 
@@ -116,7 +116,7 @@ dbkpr_bbf_match_process::execute()
   vcl_vector<vnl_vector_fixed<double,128> > descriptors(keypoints1.size());
   for(unsigned int i=0; i<keypoints1.size(); ++i)
     descriptors[i] = keypoints1[i]->descriptor();
-  dbnl_bbf_tree<double,128> bbf(descriptors);
+  bnld_bbf_tree<double,128> bbf(descriptors);
 
   vcl_vector< dbdet_keypoint_sptr > matches1, matches2;
   for (unsigned int i=0; i<keypoints2.size(); ++i){

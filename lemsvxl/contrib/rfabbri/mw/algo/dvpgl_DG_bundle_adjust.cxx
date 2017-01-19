@@ -1,9 +1,9 @@
-// This is bmvgd/vpgld/algo/vpgld_DG_bundle_adjust.cxx
+// This is bmvgd/dvpgl/algo/dvpgl_DG_bundle_adjust.cxx
 
 //:
 // \file
 
-#include "vpgld_DG_bundle_adjust.h"
+#include "dvpgl_DG_bundle_adjust.h"
 #include <vnl/vnl_math.h>
 #include <vnl/vnl_quaternion.h>
 #include <vnl/algo/vnl_cholesky.h>
@@ -17,8 +17,8 @@
 #include <bmcsd/algo/bmcsd_algo_util.h>
 
 //: Constructor
-vpgld_DG_bundle_adj_lsqr::
-  vpgld_DG_bundle_adj_lsqr(const vcl_vector<vpgl_calibration_matrix<double> >& K,
+dvpgl_DG_bundle_adj_lsqr::
+  dvpgl_DG_bundle_adj_lsqr(const vcl_vector<vpgl_calibration_matrix<double> >& K,
                         const vcl_vector<bdifd_3rd_order_point_2d>& image_points,
                         const vcl_vector<vcl_vector<bool> >& mask,
                         bool use_confidence_weights)
@@ -37,8 +37,8 @@ vpgld_DG_bundle_adj_lsqr::
 //: Constructor
 //  Each image point is assigned an inverse covariance (error projector) matrix
 // \note image points are not homogeneous because they require finite points to measure projection error
-vpgld_DG_bundle_adj_lsqr::
-vpgld_DG_bundle_adj_lsqr(const vcl_vector<vpgl_calibration_matrix<double> >& K,
+dvpgl_DG_bundle_adj_lsqr::
+dvpgl_DG_bundle_adj_lsqr(const vcl_vector<vpgl_calibration_matrix<double> >& K,
                       const vcl_vector<vgl_point_2d<double> >& image_points,
                       const vcl_vector<vnl_matrix<double> >& inv_covars,
                       const vcl_vector<vcl_vector<bool> >& mask,
@@ -87,7 +87,7 @@ vpgld_DG_bundle_adj_lsqr(const vcl_vector<vpgl_calibration_matrix<double> >& K,
 //  The parameters in b for each 3D point are {px, py, pz} 
 //  the non-homogeneous position.
 void
-vpgld_DG_bundle_adj_lsqr::f(vnl_vector<double> const& a, vnl_vector<double> const& b,
+dvpgl_DG_bundle_adj_lsqr::f(vnl_vector<double> const& a, vnl_vector<double> const& b,
                          vnl_vector<double>& e)
 {
   typedef vnl_crs_index::sparse_vector::iterator sv_itr;
@@ -240,7 +240,7 @@ vpgld_DG_bundle_adj_lsqr::f(vnl_vector<double> const& a, vnl_vector<double> cons
 
 //: Compute the sparse Jacobian in block form.
 void
-vpgld_DG_bundle_adj_lsqr::jac_blocks(vnl_vector<double> const& a, vnl_vector<double> const& b,
+dvpgl_DG_bundle_adj_lsqr::jac_blocks(vnl_vector<double> const& a, vnl_vector<double> const& b,
                                   vcl_vector<vnl_matrix<double> >& A,
                                   vcl_vector<vnl_matrix<double> >& B)
 {
@@ -401,7 +401,7 @@ vpgld_DG_bundle_adj_lsqr::jac_blocks(vnl_vector<double> const& a, vnl_vector<dou
 
 //: compute the Jacobian Bij
 void
-vpgld_DG_bundle_adj_lsqr::jac_Bij(vnl_double_3x4 const& Pi, vnl_vector<double> const& bj,
+dvpgl_DG_bundle_adj_lsqr::jac_Bij(vnl_double_3x4 const& Pi, vnl_vector<double> const& bj,
                                vnl_matrix<double>& Bij)
 {
   double denom = Pi(2,0)*bj[0] + Pi(2,1)*bj[1] + Pi(2,2)*bj[2] + Pi(2,3);
@@ -438,7 +438,7 @@ vpgld_DG_bundle_adj_lsqr::jac_Bij(vnl_double_3x4 const& Pi, vnl_vector<double> c
 
 //: Create the parameter vector \p a from a vector of cameras
 vnl_vector<double> 
-vpgld_DG_bundle_adj_lsqr::create_param_vector(const vcl_vector<vpgl_perspective_camera<double> >& cameras)
+dvpgl_DG_bundle_adj_lsqr::create_param_vector(const vcl_vector<vpgl_perspective_camera<double> >& cameras)
 {
   vnl_vector<double> a(6*cameras.size(),0.0);
   for(unsigned int i=0; i<cameras.size(); ++i){
@@ -464,7 +464,7 @@ vpgld_DG_bundle_adj_lsqr::create_param_vector(const vcl_vector<vpgl_perspective_
 
 //: Create the parameter vector \p b from a vector of 3D points
 vnl_vector<double> 
-vpgld_DG_bundle_adj_lsqr::create_param_vector(const vcl_vector<vgl_point_3d<double> >& world_points)
+dvpgl_DG_bundle_adj_lsqr::create_param_vector(const vcl_vector<vgl_point_3d<double> >& world_points)
 { 
   vnl_vector<double> b(3*world_points.size(),0.0);
   for(unsigned int j=0; j<world_points.size(); ++j){
