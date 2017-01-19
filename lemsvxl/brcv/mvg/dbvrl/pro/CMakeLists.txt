@@ -20,7 +20,7 @@ set(dbvrl_pro_sources
 
 add_library(dbvrl_pro ${dbvrl_pro_sources})
 
-target_link_libraries(dbvrl_pro dbvrl vidpro1 bsta)
+target_link_libraries(dbvrl_pro dbvrl bpro1 vidpro1 bsta brip)
 
 
 if(BUILD_TESTING)

@@ -5,6 +5,7 @@ include_directories( ${lems_SOURCE_DIR}/breye1 )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 
 if (VXL_VGUI_FOUND)
+find_package(OpenGL)
 
 set(dbvrl_vis_sources
    dbvrl_region_tableau.cxx      dbvrl_region_tableau.h       dbvrl_region_tableau_sptr.h
@@ -16,7 +17,7 @@ set(dbvrl_vis_sources
 
 add_library(dbvrl_vis ${dbvrl_vis_sources})
 
-target_link_libraries(dbvrl_vis dbvrl_pro bvis1)
+target_link_libraries(dbvrl_vis dbvrl_pro bvis1 vgui ${OPENGL_LIBRARIES})
 
 
 if(BUILD_TESTING)
