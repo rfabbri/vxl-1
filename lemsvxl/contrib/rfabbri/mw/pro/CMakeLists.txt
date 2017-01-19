@@ -2,7 +2,6 @@
 include_directories( ${lems_SOURCE_DIR}/contrib/rfabbri )
 
 set(mw_pro_sources
-dvpgl_load_camera_process.cxx dvpgl_load_camera_process.h
 #old/mw_cvmatch_process.cxx old/mw_cvmatch_process.h
 mw_discrete_corresp_storage.cxx mw_discrete_corresp_storage.h mw_discrete_corresp_storage_sptr.h
 mw_discrete_corresp_storage_3.cxx mw_discrete_corresp_storage_3.h mw_discrete_corresp_storage_3_sptr.h
