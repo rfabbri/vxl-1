@@ -344,22 +344,32 @@ in the file [additional-maintenance](./doc/additional-maintenance.md).
 git fetch vxl
 # git branch vxl-master vxl/master # create optional branch if you're fetching 
                                    # non-master branch, else use vxl-master normally
-
 git checkout master
-# TO BE CAREFUL: git co -b master-vxl-merge
-# merges vxl/master into vxl-master
-# TO BE CAREFUL: use master-vxl-merge below. vxl-master below seems to have no effect
-git merge -s recursive vxl-master -Xsubtree=vxl vxl/master    # optional branch vxl/anybranch
+git co -b vxl-master-merge
+# merges vxl/master into vxl-master-merge
+# TO BE CAREFUL TODO: use master-vxl-merge below. vxl-master below seems to have no effect
+git merge -s recursive vxl-master-merge -Xsubtree=vxl vxl/master    # optional branch vxl/anybranch
 # git merge -s recursive utils-master -Xsubtree=scripts/utils utils/master   # for utils
 
-# Check that vxl-master has the commits as you want them
-# If necessary, checkout vxl-master and see if the files are in the right subfolder
-git merge vxl-master  # optional branch
+# Check that vxl-master-merge has the commits as you want them
+# If necessary, checkout vxl-master-merge and see if the files are in the right subfolder
+# If the changes are substantial, compile first before merging below!
+git merge vxl-master-merge  # optional branch
 # Update VPE upstream
+
+git branch -D vxl-master-merge
+
+git co vxl-master
+git merge --ff-only vxl/master  # ff-only is to ensure vxl-master is really tracking vxl/master
+git co master
+
+cd vxl-orig
+git pull
+
 git push origin master
 git push origin vxl-master
 
-# you could also just merge directly! (be careful)
+# PS you could also just merge directly! (be careful)
 # git fetch vxl
 # git merge -s recursive -Xsubtree=vxl vxl/master
 ```
