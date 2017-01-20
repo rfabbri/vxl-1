@@ -20,9 +20,9 @@ else
     echo "Debian-based tools found"
     PKGS="qt-sdk libxmu-dev libxi-dev"
     for i in $PKGS; do
-      PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $i |grep "install ok installed")
-      echo Checking for $i: $PKG_OK
-      if [ "" == "$PKG_OK" ]; then
+      # PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $i |grep "install ok installed")
+      echo Checking for $i
+      if [ $(dpkg-query -W -f='${Status}' $i ]
         echo "No $i package. Setting up."
         sudo apt-get --force-yes --yes install $i
       fi
