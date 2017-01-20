@@ -24,7 +24,7 @@ else
       echo Checking for $i
       if [ $(dpkg-query -W -f='${Status}' $i 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
         echo "No $i package. Setting up."
-        sudo apt-get --force-yes --yes install $i
+        sudo apt-get --yes install $i
       fi
     done
   else
