@@ -26,6 +26,8 @@ git fetch lemsvxl &
 git fetch lemsvxl-bb &
 git fetch utils &
 
+wait
+
 # Basic deps
 echo '==> Installing dependencies.'
 scripts/devsetup/bootstrap
