@@ -26,7 +26,7 @@
 //: Computes the residuals for bundle adjustment similarly to vpgl_distmap_bundle_adj.
 //
 // This implementation is useful in practical cases where one wants to simply
-// refine an initial camera as much as possible, but technically it may get
+// refine an initial camera setup as much as possible, but technically it may get
 // stuck in non-differentiable regions of the cost function. We recommend
 // looking into the work of Irina Nurutdinova and Andrew Fitzgibbon:
 //
