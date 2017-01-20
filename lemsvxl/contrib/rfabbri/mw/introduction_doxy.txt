@@ -24,7 +24,6 @@
 *   Multiview Edgel lib
 *   
 *   Pointset Multiview matching lib - dbkpr_algo?
-*   - becld_epiline_interceptor. See also bdgl_curve_algos for line-curve intersect.
 *   - mw_match_position_band 
 *   - mw_match_tangent_band ?
 *   
@@ -37,9 +36,6 @@
 *   
 *   brct
 *   
-*   Generic correspondence lib - for any type of object
-*   - bmcsd_discrete_corresp_n
-*
 *   Geometric photogrammetry lib (a geometric version of vpgld)
 *   - algo/mw_qualitative_epipolar
 *   
