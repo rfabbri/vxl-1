@@ -18,8 +18,6 @@ mw_project_cube_process.cxx mw_project_cube_process.h
 mw_project_polyline_process.cxx mw_project_polyline_process.h
 dbmcs_project_curve_sketch_process.cxx dbmcs_project_curve_sketch_process.h
 mw_extend_corresp_process.cxx mw_extend_corresp_process.h
-dbmcs_stereo_filter.h dbmcs_stereo_filter.cxx
-dbmcs_stereo_driver.h dbmcs_stereo_driver.cxx
 dvcpl_bundle_adjust_driver.h dvcpl_bundle_adjust_driver.cxx
 dvcpl_bundle_adjust_sink.h dvcpl_bundle_adjust_sink.cxx
 dbmcs_nearest_edgels_process.h dbmcs_nearest_edgels_process.cxx
