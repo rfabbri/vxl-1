@@ -11,11 +11,12 @@ cd "$(dirname "$0")/.."
 if [[ "`uname`" != Linux ]]; then
   # MYOS="OSX"
   # Install macports or homebrew packages
+  echo "Non-linux OS: if on Mac, Macports or Homebrew packages might have to be installed by you"
 else
   # MYOS="Linux"
   # Attempt to install Ubuntu packages or other distro packages
 
-  if command -v apt-get >/dev/null 2>&1
+  if command -v apt-get >/dev/null 2>&1; then
     echo "Debian-based tools found"
     PKGS="qt-sdk libxmu-dev libxi-dev"
     for i in $PKGS; do
