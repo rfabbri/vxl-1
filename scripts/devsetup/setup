@@ -8,6 +8,10 @@ cd "$(dirname "$0")/../.."
 
 ./setup-for-use
 
+# Basic deps
+echo '==> Installing dependencies.'
+scripts/devsetup/bootstrap
+
 echo '==> Seting up sub remotes. All readonly for now (bulk of workflow).'
 git remote add vxl	https://github.com/vxl/vxl.git
 git remote add vxd	https://github.com/rfabbri/vxd.git
@@ -25,12 +29,6 @@ git fetch vpe &
 git fetch lemsvxl &
 git fetch lemsvxl-bb &
 git fetch utils &
-
-wait
-
-# Basic deps
-echo '==> Installing dependencies.'
-scripts/devsetup/bootstrap
 
 # Setup branches
 echo '==> Setting up branches and symlinks.'
