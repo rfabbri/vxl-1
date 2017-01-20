@@ -23,7 +23,20 @@
 #include <dbdet/edge/dbdet_edgemap_sptr.h>
 
 
-//: Computes the residuals for bundle adjustment similarly to vpgld_distmap_bundle_adj.
+//: Computes the residuals for bundle adjustment similarly to vpgl_distmap_bundle_adj.
+//
+// This implementation is useful in practical cases where one wants to simply
+// refine an initial camera as much as possible, but technically it may get
+// stuck in non-differentiable regions of the cost function. We recommend
+// looking into the work of Irina Nurutdinova and Andrew Fitzgibbon:
+//
+// @inproceedings{nurutdinova2015towards,
+//  title={Towards Pointless Structure from Motion: 3D reconstruction and camera parameters from general 3D curves},
+//  author={Nurutdinova, Irina and Fitzgibbon, Andrew},
+//  booktitle={Proceedings of the IEEE International Conference on Computer Vision},
+//  pages={2363--2371},
+//  year={2015}
+// }
 //
 // To achive this subpixel precision, we take in the original subpixel
 // feature map and a closest label map indexing into it so that the closest
