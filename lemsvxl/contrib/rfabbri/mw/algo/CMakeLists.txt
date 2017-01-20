@@ -17,8 +17,6 @@ set( mw_algo_sources
   mw_qualitative_epipolar.cxx mw_qualitative_epipolar.h
   mw_sift_curve_algo.cxx mw_sift_curve_algo.h
   siftpp/sift.cpp siftpp/sift.hpp siftpp/sift.ipp siftpp/sift-conv.tpp
-  dvcpl_distmap_bundle_adjust.cxx dvcpl_distmap_bundle_adjust.h
-  dvcpl_distmap_optimize_camera.cxx dvcpl_distmap_optimize_camera.h
   #  dg-estimation/mw_geometry_estimation.cxx dg-estimation/mw_geometry_estimation.h
   #  dg-estimation/mw_test_sel_geometry.cxx dg-estimation/mw_test_sel_geometry.h
   #  mw_cvmatch.cxx       mw_cvmatch.h mw_cvmatch_sptr.h
