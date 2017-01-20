@@ -22,13 +22,13 @@ git remote add lemsvxl git@visionserver.lems.brown.edu:kimia_group/lemsvxl.git
 # for collaborating outside of LEMS
 git remote add lemsvxl-bb git@bitbucket.org:rfabbri2/lemsvxl.git
 
-# Fetch in parallel
-git fetch vxl &
-git fetch vxd &
-git fetch vpe &
-git fetch lemsvxl &
-git fetch lemsvxl-bb &
-git fetch utils &
+# Fetch
+git fetch vxl
+git fetch vxd
+git fetch vpe
+git fetch lemsvxl
+git fetch lemsvxl-bb
+git fetch utils
 
 # Setup branches
 echo '==> Setting up branches and symlinks.'
