@@ -4,7 +4,7 @@ endif()
 set(BUILD_NONDEPRECATED_ONLY OFF CACHE BOOL "Build deprecated needed for LEMSVPE")
 set(BUILD_SHARED_LIBS ON CACHE BOOL "Reduce link time by using shared libs in LEMSVPE")
 set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Build Debug by default in LEMSVPE")
-set(VNL_CONFIG_LEGACY_METHODS ON CACHE BOOL "Whether backward-compatibility methods are provided by vnl. On in LEMSVPE")
-
+set(VNL_CONFIG_LEGACY_METHODS ON CACHE BOOL "backward-compatibility methods provided by vnl, for LEMSVPE")
+set(BUILD_VGUI ON CACHE BOOL "Build VGUI for LEMSVPE")
 
 message("Try to compile core first. Then Turn on VGUI in CMake and try to build it.")

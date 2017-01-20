@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # script/bootstrap: Resolve all dependencies that the application requires to
 #                   run.
@@ -8,10 +8,25 @@ set -e
 cd "$(dirname "$0")/.."
 
 
-#if [[ "`uname`" != Linux ]]; then
+if [[ "`uname`" != Linux ]]; then
   # MYOS="OSX"
   # Install macports or homebrew packages
-#else
+else
   # MYOS="Linux"
   # Attempt to install Ubuntu packages or other distro packages
-#fi
+
+  if command -v apt-get >/dev/null 2>&1
+    echo "Debian-based tools found"
+    PKGS="qt-sdk libxmu-dev libxi-dev"
+    for i in $PKGS; do
+      PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $i |grep "install ok installed")
+      echo Checking for $i: $PKG_OK
+      if [ "" == "$PKG_OK" ]; then
+        echo "No $i package. Setting up."
+        sudo apt-get --force-yes --yes install $i
+      fi
+    done
+  else
+    echo "WARNING: Not a debian-based distro, not installing dependencies."
+  fi
+fi

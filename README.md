@@ -124,41 +124,42 @@ then inspect the `vxl/master` branch instead of `vxl-master`.
 
 ## Building VPE
 
-### 1. Compile VXL
+### 1. Install dependencies for VXL
+
+#### Ubuntu Linux
+The following command installs many of the required packages for building VXL.
+While the './setup-for-development' already
+
+```bash
+  sudo sh scripts/utils/configure-ubuntu-for-programming
 ```
 
+### 2. Compile VXL
+```bash
   cd ./vxl-bin
   ccmake -C ../config/DefaultVXL.cmake ../vxl   # loads default CMake config for this project
   # press 'c' (configure) multiple times until 'g' (generate) appears
   cd core
   make   # use mymake from scripts/utils/vxl to run it from from both vxl-bin and vxl
 
-  # recompile core with VGUI ON
-  cd ..   # now we're in vxl-bin
-  ccmake ../vxl
-  # reconfigure to USE_VGUI = ON
-  # press 'c' (configure) multiple times until 'g' (generate) appears
-  cd core
-  make
-
   # if success, compile as much of vxl as you can
 
   cd ..         # now we're in vxl-bin
   make -j9 -k   # compile in parallel and keep going past errors
 
-  # Don't worry about the errors at this point. We will not use everything.
+  # Don't worry about errors at this point. We will not use everything.
 ```
 
-### 2. Compile VXD
-```
+### 3. Compile VXD
+```bash
   cd ../vxd-bin
   ccmake -C ../config/DefaultVXD.cmake ../vxd   # loads our default CMake config for this project
   make -j9 -k
   # you can try compiling core/basic libs first, in case you get errors, as we
   # did above
 ```
-### 3. Compile LEMSVXL
-```
+### 4. Compile LEMSVXL
+```bash
   cd ../lemsvxl-bin
   ccmake  -C ../config/DefaultLEMSVXL.cmake ../lemsvxl
 
