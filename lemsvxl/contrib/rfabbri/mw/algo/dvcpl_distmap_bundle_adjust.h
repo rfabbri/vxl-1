@@ -31,7 +31,8 @@
 // looking into the work of Irina Nurutdinova and Andrew Fitzgibbon:
 //
 // @inproceedings{nurutdinova2015towards,
-//  title={Towards Pointless Structure from Motion: 3D reconstruction and camera parameters from general 3D curves},
+//  title={Towards Pointless Structure from Motion: 3D reconstruction and camera
+//  parameters from general 3D curves},
 //  author={Nurutdinova, Irina and Fitzgibbon, Andrew},
 //  booktitle={Proceedings of the IEEE International Conference on Computer Vision},
 //  pages={2363--2371},
