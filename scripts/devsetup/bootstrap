@@ -22,7 +22,7 @@ else
     for i in $PKGS; do
       # PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $i |grep "install ok installed")
       echo Checking for $i
-      if [ $(dpkg-query -W -f='${Status}' $i ]; then
+      if [ $(dpkg-query -W -f='${Status}' $i 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
         echo "No $i package. Setting up."
         sudo apt-get --force-yes --yes install $i
       fi
