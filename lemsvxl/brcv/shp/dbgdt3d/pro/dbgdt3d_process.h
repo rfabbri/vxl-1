@@ -9,7 +9,7 @@
 
 #include <vgl/algo/vgl_h_matrix_3d.h>
 
-#include <dbul/dbul_dir_file.h>
+#include <buld/buld_dir_file.h>
 #include <dbmsh3d/dbmsh3d_mesh.h>
 #include <dbmsh3d/algo/dbmsh3d_fmm.h>
 #include <dbmsh3d/algo/dbmsh3d_sg3pi_algo.h>

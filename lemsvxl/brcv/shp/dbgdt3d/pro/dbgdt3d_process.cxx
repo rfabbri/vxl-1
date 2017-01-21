@@ -11,7 +11,7 @@ bool dbgdt3d_pro::load_ply2_gdt (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".ply2";
 
   reset_gdt_mesh ();
