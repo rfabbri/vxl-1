@@ -16,6 +16,7 @@
 
 #include <vcl_cmath.h>
 #include <vcl_fstream.h>
+#include <vcl_iostream.h>
 #include <vul/vul_printf.h>
 #include <vnl/vnl_random.h>
 #include <dbasn/dbasn_graph_algos.h>

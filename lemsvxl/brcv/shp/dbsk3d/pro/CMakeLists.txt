@@ -14,5 +14,5 @@ set(dbsk3d_pro_sources
 
 add_library(dbsk3d_pro ${dbsk3d_pro_sources})
 
-target_link_libraries(dbsk3d_pro dbmsh3d dbmsh3d_algo dbsk3d dbsk3d_algo dbsk3d_flowsheet )
+target_link_libraries(dbsk3d_pro dbmsh3d_pro dbmsh3d_algo dbmsh3d dbsk3d dbsk3d_algo dbsk3d_flowsheet )
 

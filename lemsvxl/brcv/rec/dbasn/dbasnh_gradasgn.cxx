@@ -25,7 +25,7 @@
 #include <vul/vul_printf.h>
 
 #include <dbasn/dbasnh_gradasgn.h>
-#include <dbgl/dbgl_rigid_align.h>
+#include <bgld/bgld_rigid_align.h>
 
 //: the order of a,b,c and i,j,k are End-Mid-End
 //  i.e., b and j are the Corner vertex. Corner[a][b][c], Corner[i][j][k]
@@ -760,7 +760,7 @@ void dbasnh_gradasgn_aug::update_new_R_T ()
   }
   
   //Solve for the best (R, T)
-  dbgl_get_rigid_alignment (Gnode, gnodeM, R, Cf, Cm);
+  bgld_get_rigid_alignment (Gnode, gnodeM, R, Cf, Cm);
 
   R_ = R;
   T_ = Cm - Cf;

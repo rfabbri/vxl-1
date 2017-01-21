@@ -31,7 +31,7 @@ dbasnh_gradasgn.cxx           dbasnh_gradasgn.h
 add_library(dbasn  ${dbasn_sources})
 
 # add the required libraries into this list
-target_link_libraries( dbasn dbgl vnl vul )
+target_link_libraries( dbasn bgld vnl vgl vul )
 
 if(BUILD_TESTING)
   add_subdirectory(tests)
