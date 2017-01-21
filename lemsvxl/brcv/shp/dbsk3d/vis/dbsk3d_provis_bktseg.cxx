@@ -2,8 +2,8 @@
 //: MingChing Chang
 //  Mar 28, 2007
 
-#include <dbgl/dbgl_dist.h>
-#include <dbnl/dbnl_min_max_3.h>
+#include <bgld/bgld_dist.h>
+#include <bnld/bnld_min_max_3.h>
 
 #include <dbmsh3d/algo/dbmsh3d_mesh_algos.h>
 #include <dbmsh3d/algo/dbmsh3d_fileio.h>

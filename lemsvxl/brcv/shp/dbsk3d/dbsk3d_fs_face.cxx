@@ -12,8 +12,8 @@
 #include <vgl/vgl_distance.h>
 #include <vgl/vgl_polygon_test.h>
 
-#include <dbgl/dbgl_dist.h>
-#include <dbgl/dbgl_barycentric.h>
+#include <bgld/bgld_dist.h>
+#include <bgld/bgld_barycentric.h>
 #include <dbsk3d/dbsk3d_fs_vertex.h>
 #include <dbsk3d/dbsk3d_fs_edge.h>
 #include <dbsk3d/dbsk3d_fs_face.h>
@@ -429,8 +429,8 @@ vgl_vector_3d<double> dbsk3d_fs_face::get_shock_flow (const vgl_point_3d<double>
   vgl_vector_3d<double> dir = pt-mid;  
   vgl_point_3d<double> gene = genes(0)->pt();  
   vgl_vector_3d<double> hyp = gene-pt;  
-  hyp = hyp*(1.0 / dbgl_dist_3d (hyp.x(), hyp.y(), hyp.z(), 0, 0, 0 ));
-  dir = dir*(1.0 / dbgl_dist_3d (dir.x(), dir.y(), dir.z(), 0, 0, 0 ));
+  hyp = hyp*(1.0 / bgld_dist_3d (hyp.x(), hyp.y(), hyp.z(), 0, 0, 0 ));
+  dir = dir*(1.0 / bgld_dist_3d (dir.x(), dir.y(), dir.z(), 0, 0, 0 ));
   double cosine = dir.x()*hyp.x() + dir.y()*hyp.y() + dir.z()*hyp.z(); 
   dir = dir*(-1/cosine);  
   return dir;

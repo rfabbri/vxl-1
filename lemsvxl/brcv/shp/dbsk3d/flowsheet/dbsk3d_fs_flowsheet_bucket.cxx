@@ -3,7 +3,7 @@
 #include <vul/vul_printf.h>
 #include <vgl/vgl_distance.h>
 
-#include <dbnl/dbnl_cbrt.h>
+#include <bnld/bnld_cbrt.h>
 #include <dbsk3d/flowsheet/dbsk3d_fs_flowsheet_bucket.h>
 
 //################## File: sort3dpts_space_v3.c  ###########################
@@ -259,7 +259,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
     /* Check that there is enough (integers) space along the X dimension */
     iNumBinsX = iX + 1;
     /* Cubic root: Projection along 3 axes */
-    dTmp = ceil(dbnl_cbrt((double) iNumMetaBucket));
+    dTmp = ceil(bnld_cbrt((double) iNumMetaBucket));
     iNumMetaBuckX = (int) dTmp;
     if (iNumMetaBuckX < 3) {
       /* Only a single Meta-Bucket0 is necessary */
@@ -347,7 +347,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
     iNumBinsY = iY + 1;
     iNumBinsXY = iNumMetaBuckX * iNumBinsY;
     
-    iTmp = (int) ceil(dbnl_cbrt((double) iNumMetaBucket));
+    iTmp = (int) ceil(bnld_cbrt((double) iNumMetaBucket));
     iNumMetaBuckXY = iTmp * iTmp;
     iTmp = iNumMetaBuckX * 3;
     if (iNumMetaBuckXY < iTmp)
@@ -646,7 +646,7 @@ void run_flowsheet_bucketing (dbmsh3d_mesh* geneset,
         iNumBucksXYZ = iNumBuckTarget = 27;
       }
       else {
-        dTmp = ceil(dbnl_cbrt((double) iNumBuckTarget));
+        dTmp = ceil(bnld_cbrt((double) iNumBuckTarget));
         iNumBucksX = (int) dTmp;
         iNumBucksXY = iNumBucksX * iNumBucksX;
         iNumBucksXYZ = iNumBuckTarget;

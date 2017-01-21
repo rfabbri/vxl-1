@@ -5,7 +5,7 @@
 #include <vcl_iostream.h>
 #include <vul/vul_printf.h>
 
-#include <dbgl/dbgl_triangle.h>
+#include <bgld/bgld_triangle.h>
 
 #include <dbmsh3d/vis/dbmsh3d_vis_utils.h>
 #include <dbmsh3d/vis/dbmsh3d_vis_point_set.h>

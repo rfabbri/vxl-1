@@ -34,7 +34,7 @@ dbsk3d_sg_sa.cxx                      dbsk3d_sg_sa.h
 
 add_library(dbsk3d ${dbsk3d_sources})
 
-target_link_libraries( dbsk3d dbmsh3d dbgl )  
+target_link_libraries( dbsk3d dbmsh3d bgld )  
 
 # Algorithm Library
 add_subdirectory(algo)

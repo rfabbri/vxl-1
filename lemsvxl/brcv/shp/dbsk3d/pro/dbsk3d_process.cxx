@@ -133,7 +133,7 @@ bool dbsk3d_pro::save_fs (vcl_string filename)
 {
   if (filename == "")
     filename = dir_file() + ".fs";
-  else if (dbul_get_suffix (filename) == "")
+  else if (buld_get_suffix (filename) == "")
     filename += ".fs";
   return save_to_fs (fs_mesh_, filename.c_str(), verbose_);
 }
@@ -142,7 +142,7 @@ bool dbsk3d_pro::load_fs (vcl_string filename, const bool read_gene)
 {
   if (filename == "")
     filename = dir_file() + ".fs";
-  else if (dbul_get_suffix (filename) == "")
+  else if (buld_get_suffix (filename) == "")
     filename += ".fs";
   return load_from_fs (fs_mesh_, filename.c_str(), read_gene, verbose_);
 }
@@ -325,7 +325,7 @@ void dbsk3d_pro::save_cms (vcl_string filename)
 {
   if (filename == "")
     filename = dir_file() + ".cms";
-  if (dbul_get_suffix (filename) == "")
+  if (buld_get_suffix (filename) == "")
     filename += ".cms";
   save_to_cms (ms_hypg_, filename.c_str(), verbose_);
 }
@@ -334,8 +334,8 @@ bool dbsk3d_pro::load_cms (vcl_string filename, const bool load_surf)
 {
   if (filename == "")
     filename = dir_file();
-  vcl_string dir_file = dbul_get_dir_file (filename);
-  vcl_string dir_prefix = dbul_get_dir_prefix (filename);
+  vcl_string dir_file = buld_get_dir_file (filename);
+  vcl_string dir_prefix = buld_get_dir_prefix (filename);
 
   //Load the fine-scale medial scaffold (dir_file.fs) first.
   vcl_string fs_file = dir_file + ".fs";
@@ -353,7 +353,7 @@ bool dbsk3d_pro::load_cms (vcl_string filename, const bool load_surf)
   }
 
   //Now load the coarse-scale medial scaffold file (*.cms).
-  if (dbul_get_suffix (dir_file) == "")
+  if (buld_get_suffix (dir_file) == "")
     dir_file += ".cms";
   return load_from_cms (ms_hypg_, dir_file.c_str(), verbose_);
 }
@@ -486,7 +486,7 @@ void dbsk3d_pro::save_sg (vcl_string filename)
 {
   if (filename == "")
     filename = dir_file() + ".sg";
-  if (dbul_get_suffix (filename) == "")
+  if (buld_get_suffix (filename) == "")
     filename += ".sg";
   save_to_sg (sg_sa_, filename.c_str());
 }
@@ -495,9 +495,9 @@ bool dbsk3d_pro::load_sg (vcl_string filename, const bool load_surf)
 {
   if (filename == "")
     filename = dir_file() + ".sg";
-  if (dbul_get_suffix (filename) == "")
+  if (buld_get_suffix (filename) == "")
     filename += ".sg";
-  vcl_string dir_prefix = dbul_get_dir_prefix (filename);
+  vcl_string dir_prefix = buld_get_dir_prefix (filename);
   
   bool result = load_from_sg (sg_sa_, filename.c_str());
 
@@ -515,7 +515,7 @@ bool dbsk3d_pro::save_fs_vtk (vcl_string filename)
 {
   if (filename == "")
     filename = dir_file() + ".vtk";
-  if (dbul_get_suffix (filename) == "")
+  if (buld_get_suffix (filename) == "")
     filename += ".vtk";
   fs_mesh_->reset_vertices_ids ();
   fs_mesh_->build_face_IFS ();  

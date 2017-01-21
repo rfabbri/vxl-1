@@ -47,8 +47,8 @@ bool dbsk3d_check_cmdproc (dbsk3d_pro_vis* pv, int argc, char **argv)
     //Assume the first parameter specifies the file to display.
     if (argc>1 && argv[1][0] != '-') {
       //Assume the first parameter specifies the file to display.
-      vcl_string dir_file = dbul_get_dir_file (argv[1]);
-      vcl_string suffix = dbul_get_suffix (argv[1]);
+      vcl_string dir_file = buld_get_dir_file (argv[1]);
+      vcl_string suffix = buld_get_suffix (argv[1]);
       if (suffix == ".fs") {
         pv->b_view_fs_ = true;
         pv->set_dir_file (dir_file);
@@ -153,7 +153,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
   //-fs prefix: 
   if (dbsk3d_cmd_fs_file()) {
     pv->b_view_fs_ = true;
-    pv->set_dir_file (dbul_get_dir_file (dbsk3d_cmd_fs_file()));
+    pv->set_dir_file (buld_get_dir_file (dbsk3d_cmd_fs_file()));
   }
   if (pv->b_view_fs_) {
     pv->reset_mesh ();
@@ -364,7 +364,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
   //-cms: View the coarse-scale medial scaffold file.
   if (dbsk3d_cmd_cms_file()) {
     pv->b_view_cms_ = true;
-    pv->set_dir_file (dbul_get_dir_file (dbsk3d_cmd_cms_file()));
+    pv->set_dir_file (buld_get_dir_file (dbsk3d_cmd_cms_file()));
   }
   if (pv->b_view_cms_) {
     pv->reset_mesh ();
@@ -514,7 +514,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
   //-sg: View the medial scaffold graph file.
   if (dbsk3d_cmd_sg_file()) {
     pv->b_view_sg_ = true;
-    pv->set_dir_file (dbul_get_dir_file (dbsk3d_cmd_sg_file()));
+    pv->set_dir_file (buld_get_dir_file (dbsk3d_cmd_sg_file()));
   }
   if (pv->b_view_sg_) {
     pv->reset_mesh ();
@@ -2430,7 +2430,7 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
     vcl_string dirfile;
     //-ovfs :
     if (dbsk3d_cmd_fs_vtk_ofile()) {
-      dirfile = dbul_get_dir_file (dbsk3d_cmd_fs_vtk_ofile());
+      dirfile = buld_get_dir_file (dbsk3d_cmd_fs_vtk_ofile());
       dirfile += ".vtk";
       vul_printf (vcl_cout, "Writing fs_mesh to VTK file (*.vtk) %s...\n", dirfile.c_str());
       pv->save_fs_vtk (dirfile);
@@ -2441,49 +2441,49 @@ SoSeparator* dbsk3d_cmdproc_execute (dbsk3d_pro_vis* pv)
     vcl_string dirfile;
     //-op3d:
     if (dbmsh3d_cmd_p3d_ofile()) {
-      dirfile = dbul_get_dir_file (dbmsh3d_cmd_p3d_ofile());
+      dirfile = buld_get_dir_file (dbmsh3d_cmd_p3d_ofile());
       dirfile += ".p3d";
       vul_printf (vcl_cout, "Writing ASCII point cloud file (*.p3d) %s...\n", dirfile.c_str());
       pv->save_p3d (dirfile);
     }
     //-oply:
     if (dbmsh3d_cmd_ply_ofile()) {
-      dirfile = dbul_get_dir_file (dbmsh3d_cmd_ply_ofile());
+      dirfile = buld_get_dir_file (dbmsh3d_cmd_ply_ofile());
       dirfile += ".ply";
       vul_printf (vcl_cout, "Writing ASCII PLY mesh file (*.ply) %s...\n", dirfile.c_str());
       pv->save_ply (dirfile, true);
     }
     //-oplyb:
     if (dbmsh3d_cmd_ply_ofileb()) {
-      dirfile = dbul_get_dir_file (dbmsh3d_cmd_ply_ofileb());
+      dirfile = buld_get_dir_file (dbmsh3d_cmd_ply_ofileb());
       dirfile += ".ply";
       vul_printf (vcl_cout, "Writing binary PLY mesh file (*.ply) %s...\n", dirfile.c_str());
       pv->save_ply (dirfile, false);
     }
     //-oply2:
     if (dbmsh3d_cmd_ply2_ofile()) {
-      dirfile = dbul_get_dir_file (dbmsh3d_cmd_ply2_ofile());
+      dirfile = buld_get_dir_file (dbmsh3d_cmd_ply2_ofile());
       dirfile += ".ply2";
       vul_printf (vcl_cout, "Writing PLY2 mesh file (*.ply2) %s...\n", dirfile.c_str());
       pv->save_ply2 (dirfile);
     }
     //-ooff:
     if (dbmsh3d_cmd_off_ofile()) {
-      dirfile = dbul_get_dir_file (dbmsh3d_cmd_off_ofile());
+      dirfile = buld_get_dir_file (dbmsh3d_cmd_off_ofile());
       dirfile += ".off";
       vul_printf (vcl_cout, "Writing Geomview OFF mesh file (*.off) %s...\n", dirfile.c_str());
       pv->save_off (dirfile);
     }
     //-oobj:
     if (dbmsh3d_cmd_obj_ofile()) {
-      dirfile = dbul_get_dir_file (dbmsh3d_cmd_obj_ofile());
+      dirfile = buld_get_dir_file (dbmsh3d_cmd_obj_ofile());
       dirfile += ".obj";
       vul_printf (vcl_cout, "Writing Wavefront OBJ mesh file (*.obj) %s...\n", dirfile.c_str());
       pv->save_obj (dirfile);
     }
     //-ovtk:
     if (dbmsh3d_cmd_vtk_ofile()) {
-      dirfile = dbul_get_dir_file (dbmsh3d_cmd_vtk_ofile());
+      dirfile = buld_get_dir_file (dbmsh3d_cmd_vtk_ofile());
       dirfile += ".vtk";
       vul_printf (vcl_cout, "Writing VTK mesh file (*.vtk) %s...\n", dirfile.c_str());
       pv->save_vtk (dirfile);

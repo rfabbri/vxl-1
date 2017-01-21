@@ -6,7 +6,7 @@
 #include <vul/vul_printf.h>
 #include <vul/vul_timer.h>
 #include <vnl/vnl_math.h>
-#include <dbgl/dbgl_barycentric.h>
+#include <bgld/bgld_barycentric.h>
 
 #include <dbmsh3d/dbmsh3d_face.h>
 #include <dbmsh3d/algo/dbmsh3d_mesh_algos.h>
@@ -1080,7 +1080,7 @@ void dbsk3d_fs_segre::L_compute_gap_cost (dbsk3d_fs_edge* FE, const int option)
 
   double Rmin = vcl_min (SC, EC);
 
-  if (dbgl_leq_m (SC, SE) == false || dbgl_leq_m (EC, SE) == false) {    
+  if (bgld_leq_m (SC, SE) == false || bgld_leq_m (EC, SE) == false) {    
     //2) For non-A13-2 shock links, put to the 2nd shock queue.
     FE->set_seg_type (FE_SEG_NO_A132);
     FE->set_cost (perimeter / (median_A122_dist() * compactness * compactness));
@@ -1088,8 +1088,8 @@ void dbsk3d_fs_segre::L_compute_gap_cost (dbsk3d_fs_edge* FE, const int option)
   else { 
     //3) For A13-2 acute and obtuse triangles.
     if (option == 1) { //For option 1 for the 1st shock queue.
-      if (dbgl_eq_m (Rmin, 0))
-        Rmin = DBGL_MID_EPSILON;
+      if (bgld_eq_m (Rmin, 0))
+        Rmin = BGLD_MID_EPSILON;
       FE->set_cost (perimeter / (Rmin * compactness * compactness));
     }
     else { //For option 2 for the 2nd shock queue.
@@ -1191,8 +1191,8 @@ void dbsk3d_fs_segre::add_nbr_cost (const dbsk3d_fs_edge* inputL,
 
   if (queue_option == 1 || (queue_option==0 && greedy_option_==1)) {
     double Rmin = FE->compute_min_radius (nG, Gene);
-    if (dbgl_eq_m (Rmin, 0))
-        Rmin = DBGL_MID_EPSILON;
+    if (bgld_eq_m (Rmin, 0))
+        Rmin = BGLD_MID_EPSILON;
     nbcont_cost = (bending - NB_CONT_COST_C) * lenE / (Rmin * compactness * compactness);
   }
   else {
@@ -1206,7 +1206,7 @@ void dbsk3d_fs_segre::add_nbr_cost (const dbsk3d_fs_edge* inputL,
 
   //Update the new cost.
   FE->set_cost ((float) (FE->cost() + nbcont_cost));  
-  if (FE->cost() < 0) ///if (dbgl_eq_c (FE->cost(), 0)) /// debug aorte 
+  if (FE->cost() < 0) ///if (bgld_eq_c (FE->cost(), 0)) /// debug aorte 
     FE->set_cost (0.0f);    
   assert (FE->cost() >= 0);
 
@@ -1294,7 +1294,7 @@ void dbsk3d_fs_segre::undo_nbr_cost (const dbsk3d_fs_edge* inputL,
 
   if (queue_option == 1 || (queue_option==0 && greedy_option_==1)) {
     double Rmin = FE->compute_min_radius (nG, Gene);
-    ///assert (dbgl_eq_m (Rmin, 0) == false); !!
+    ///assert (bgld_eq_m (Rmin, 0) == false); !!
     nbcont_cost = (bending - NB_CONT_COST_C) * lenE / (Rmin * compactness * compactness);
   }
   else {
@@ -1308,7 +1308,7 @@ void dbsk3d_fs_segre::undo_nbr_cost (const dbsk3d_fs_edge* inputL,
 
   //Update the new cost.
   FE->set_cost ((float) (FE->cost() - nbcont_cost));  
-  if (FE->cost() < 0) ///if (dbgl_eq_c (FE->cost(), 0)) debug aorte
+  if (FE->cost() < 0) ///if (bgld_eq_c (FE->cost(), 0)) debug aorte
     FE->set_cost (0.0f);    
   assert (FE->cost() >= 0);
 

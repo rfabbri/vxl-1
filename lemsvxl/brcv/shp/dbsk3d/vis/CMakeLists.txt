@@ -31,6 +31,6 @@ set(dbsk3d_vis_sources
 
 add_library(dbsk3d_vis ${dbsk3d_vis_sources})
 
-target_link_libraries(dbsk3d_vis dbsk3d dbsk3d_algo dbsk3d_pro dbmsh3d_vis dbgl bgui3d)
+target_link_libraries(dbsk3d_vis dbsk3d dbsk3d_algo dbsk3d_pro dbmsh3d_vis bgld bgui3d)
 
 endif (HAS_BGUI3D)

@@ -10,10 +10,10 @@
 #include <vgl/vgl_vector_3d.h>
 #include <vul/vul_printf.h>
 
-#include <dbgl/dbgl_dist.h>
-#include <dbgl/dbgl_barycentric.h>
-#include <dbgl/dbgl_triangle.h>
-#include <dbgl/algo/dbgl_intersect.h>
+#include <bgld/bgld_dist.h>
+#include <bgld/bgld_barycentric.h>
+#include <bgld/bgld_triangle.h>
+#include <bgld/algo/bgld_intersect.h>
 
 #include <dbsk3d/dbsk3d_fs_vertex.h>
 #include <dbsk3d/dbsk3d_fs_edge.h>
@@ -275,7 +275,7 @@ int dbsk3d_fs_edge::is_flow_bidirect (const vgl_point_3d<double>& C)
   vgl_vector_3d<double> CS (s_FV()->pt() - C);
   vgl_vector_3d<double> CE (e_FV()->pt() - C);
   double dot = dot_product (CS, CE);
-  if (dbgl_eq_m (dot, 0))
+  if (bgld_eq_m (dot, 0))
     return 1; //Case of center C fuzzily on boundary
   else if (dot > 0) {
     return 0; //Uni-directional
@@ -424,7 +424,7 @@ double dbsk3d_fs_edge::compute_min_radius (const int nG, dbmsh3d_vertex** G) con
 bool dbsk3d_fs_edge::dual_DT_contains_A13_2 (const int nG, dbmsh3d_vertex** G) const
 {
   if (nG == 3) { //test if dual Delaunay triangle is acute or not.
-    if (dbgl_is_tri_non_acute (G[0]->pt(), G[1]->pt(), G[2]->pt()))
+    if (bgld_is_tri_non_acute (G[0]->pt(), G[1]->pt(), G[2]->pt()))
       return false;
     else
       return true;
@@ -455,7 +455,7 @@ bool dbsk3d_fs_edge::_dual_polygon_contains_A13_2 (const vcl_vector<dbmsh3d_vert
     vgl_vector_3d<double> D = e_FV()->pt() - s_FV()->pt();
     D /= D.length();
 
-    if (dbgl_intersect_ray_tri (s_FV()->pt(), D, G0->pt(), G1->pt(), G2->pt(), t, u, v))
+    if (bgld_intersect_ray_tri (s_FV()->pt(), D, G0->pt(), G1->pt(), G2->pt(), t, u, v))
       return true;
   }
   return false;

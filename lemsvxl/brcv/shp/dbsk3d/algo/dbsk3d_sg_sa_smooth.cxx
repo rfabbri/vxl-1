@@ -8,7 +8,7 @@
 #include <vgl/vgl_point_3d.h>
 #include <vul/vul_printf.h>
 
-#include <dbgl/algo/dbgl_curve_smoothing.h>
+#include <bgld/algo/bgld_curve_smoothing.h>
 
 #include <dbsk3d/dbsk3d_ms_curve.h>
 #include <dbsk3d/dbsk3d_sg_sa.h>
@@ -29,7 +29,7 @@ void gaussian_sm_SC (dbsk3d_ms_curve* MC, int start, int end, int iters)
       curve.push_back (vgl_point_3d<double> (FV->pt().x(), FV->pt().y(), FV->pt().z()));
    }
 
-   dbgl_gaussian_smooth_curve_3d_fixedendpt (curve, 1, iters);
+   bgld_gaussian_smooth_curve_3d_fixedendpt (curve, 1, iters);
 
    //Put the smooth curve back to the structure...
    for (int j=start; j<=end; j++) {

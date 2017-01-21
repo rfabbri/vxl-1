@@ -9,8 +9,8 @@
 #include <rsdl/rsdl_point.h>
 #include <rsdl/rsdl_kd_tree.h>
 
-#include <dbgl/dbgl_dist.h>
-#include <dbnl/dbnl_min_max_3.h>
+#include <bgld/bgld_dist.h>
+#include <bnld/bnld_min_max_3.h>
 #include <dbmsh3d/algo/dbmsh3d_pt_mesh_dist.h>
 #include <dbmsh3d/algo/dbmsh3d_fileio.h>
 #include <dbmsh3d/algo/dbmsh3d_mesh_bnd.h>
@@ -160,8 +160,8 @@ bool bkt_pre_stitch_buckets (const char* prefix, const float rbox_ratio)
       box.set_max_z (maxz);
 
       //Compute the reduced box.      
-      double red = rbox_ratio * dbnl_max3 (box.width(), box.height(), box.depth());
-      vgl_box_3d<double> rbox = dbgl_reduce_box (box, red);
+      double red = rbox_ratio * bnld_max3 (box.width(), box.height(), box.depth());
+      vgl_box_3d<double> rbox = bgld_reduce_box (box, red);
       
       //Read in the richmesh from file bktfile.
       dbmsh3d_richmesh* RM = new dbmsh3d_richmesh;

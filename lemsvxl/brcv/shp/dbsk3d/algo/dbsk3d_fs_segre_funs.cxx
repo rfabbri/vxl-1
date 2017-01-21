@@ -27,7 +27,7 @@ double compute_bending_angle (const dbsk3d_fs_edge* inputL,
   cos_theta /= (input_link_vector.length() * link_vector.length());
 
   double theta;
-  if (dbgl_eq_m (cos_theta, 1))
+  if (bgld_eq_m (cos_theta, 1))
     theta = 0;
   else
     theta = vcl_acos (cos_theta);

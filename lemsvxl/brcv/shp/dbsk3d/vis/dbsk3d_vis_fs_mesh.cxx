@@ -5,7 +5,7 @@
 #include <vcl_iostream.h>
 #include <vul/vul_printf.h>
 
-#include <dbgl/dbgl_triangle.h>
+#include <bgld/bgld_triangle.h>
 
 #include <dbsk3d/algo/dbsk3d_fs_algo.h>
 
@@ -306,7 +306,7 @@ SoSeparator* draw_fs_mesh_links (vcl_map<int, dbmsh3d_edge*>& links,
       ///if (FE->contain_A13_2_src() == false)
       if (FE->is_flow_bidirect () > 0)
         vis = draw_fs_edge (FE, nona132Color, false, user_defined_class);
-      else if (dbgl_is_tri_non_acute (G0->pt(), G1->pt(), G2->pt()))
+      else if (bgld_is_tri_non_acute (G0->pt(), G1->pt(), G2->pt()))
         vis = draw_fs_edge (FE, obtuseColor, false, user_defined_class);
       else
         vis = draw_fs_edge (FE, acuteColor, false, user_defined_class);

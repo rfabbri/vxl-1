@@ -2,8 +2,8 @@
 //: MingChing Chang
 //  Mar 28, 2007
 
-#include <dbgl/dbgl_dist.h>
-#include <dbnl/dbnl_min_max_3.h>
+#include <bgld/bgld_dist.h>
+#include <bnld/bnld_min_max_3.h>
 
 #include <dbmsh3d/algo/dbmsh3d_mesh_algos.h>
 #include <dbmsh3d/algo/dbmsh3d_fileio.h>
@@ -63,8 +63,8 @@ void get_stitch_surface_pts (dbmsh3d_pt_bktstr* BktStruct,
         box.set_max_x (B->max_x());
 
         //Compute the reduced-box of B.
-        double reduce = bkt_box_ratio * dbnl_max3 (box.width(), box.height(), box.depth());
-        vgl_box_3d<double> reduced_box = dbgl_reduce_box (box, reduce);
+        double reduce = bkt_box_ratio * bnld_max3 (box.width(), box.height(), box.depth());
+        vgl_box_3d<double> reduced_box = bgld_reduce_box (box, reduce);
 
         //Get the points outside reduced box
         vcl_vector<vcl_pair<int, vgl_point_3d<double> > > idpts;

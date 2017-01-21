@@ -8,10 +8,10 @@
 #include <vnl/vnl_vector_fixed.h>
 #include <rsdl/rsdl_kd_tree.h>
 
-#include <dbgl/dbgl_dist.h>
-#include <dbgl/dbgl_barycentric.h>
-#include <dbgl/algo/dbgl_curve_smoothing.h>
-#include <dbnl/dbnl_min_max_3.h>
+#include <bgld/bgld_dist.h>
+#include <bgld/bgld_barycentric.h>
+#include <bgld/algo/bgld_curve_smoothing.h>
+#include <bnld/bnld_min_max_3.h>
 
 #include <dbmsh3d/algo/dbmsh3d_pt_mesh_dist.h>
 
@@ -240,10 +240,10 @@ void output_A13_file (dbsk3d_fs_mesh* fs_mesh)
     get_barycentric (Gene[0]->pt(), Gene[1]->pt(), Gene[2]->pt(),
                      alpha, beta, gamma);
 
-    double min_bary = dbnl_min3 (alpha, beta, gamma);
-    double max_bary = dbnl_max3 (alpha, beta, gamma);
+    double min_bary = bnld_min3 (alpha, beta, gamma);
+    double max_bary = bnld_max3 (alpha, beta, gamma);
 
-    if (dbgl_leq_m (SC, SE) == false || dbgl_leq_m (EC, SE) == false) { //Non-A13-2 links:
+    if (bgld_leq_m (SC, SE) == false || bgld_leq_m (EC, SE) == false) { //Non-A13-2 links:
       if (FE->b_visited()) { //with mesh face:
         vcl_fprintf (fp_2f, "%.16f %.16f %.16f %.16f %.16f %.16f\n", 
                      size, compactness, max_angle, min_angle, max_bary, min_bary);
@@ -366,7 +366,7 @@ void shock_pruning_box (dbsk3d_fs_sheet_set* fs_ss, const float box_ratio)
 
   vgl_box_3d<double> box;
   detect_bounding_box (fs_ss->fs_mesh()->bnd_mesh(), box);
-  vgl_box_3d<double> pruning_box = dbgl_extend_box_by_factor (box, box_ratio);
+  vgl_box_3d<double> pruning_box = bgld_extend_box_by_factor (box, box_ratio);
 
   //Go through each shock sheet, prune patch-elms outside the extended bounding box
   unsigned int count_elongated_bnd = 0;
@@ -977,7 +977,7 @@ bool FF_smooth_rib_curve (dbsk3d_fs_face* FF, const float psi, const int nsteps)
     get_digi_curve_E_chain (bnd_E_chains[i], curve);
 
     //DCS smooth the curve.
-    dbgl_curve_shorten_3d (curve, psi, nsteps);
+    bgld_curve_shorten_3d (curve, psi, nsteps);
 
     //Update the dbmsh3d_vertices in bndE_chains[i].
     update_digi_curve_E_chain (bnd_E_chains[i], curve);

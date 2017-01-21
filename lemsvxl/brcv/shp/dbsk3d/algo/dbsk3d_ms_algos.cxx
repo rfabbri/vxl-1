@@ -5,7 +5,7 @@
 #include <vnl/vnl_random.h>
 #include <vul/vul_printf.h>
 
-#include <dbgl/algo/dbgl_curve_smoothing.h>
+#include <bgld/algo/bgld_curve_smoothing.h>
 #include <dbmsh3d/algo/dbmsh3d_sheet_algo.h>
 
 #include <dbsk3d/dbsk3d_ms_hypg.h>
@@ -345,7 +345,7 @@ bool MC_DCS_smooth (dbsk3d_ms_curve* MC, const float psi, const int nsteps)
   get_digi_curve_E_chain (MC->E_vec(), curve);
 
   //DCS smooth the curve.
-  dbgl_curve_shorten_3d (curve, psi, nsteps);
+  bgld_curve_shorten_3d (curve, psi, nsteps);
 
   //Update the dbmsh3d_vertices in bndE_chains[i].
   update_digi_curve_E_chain (MC->E_vec(), curve);
@@ -386,7 +386,7 @@ bool MC_gaussian_smooth (dbsk3d_ms_curve* MC, const int iter, const float sigma)
   //Gaussian smooth the curve.
   //Break long curve into short ones to prevent shrinkage in Gaussian smoothing.
   if (curve.size() < CURVE_GAUSSIAN_SEG_TH) {
-    dbgl_gaussian_smooth_curve_3d_fixedendpt (curve, sigma, iter);
+    bgld_gaussian_smooth_curve_3d_fixedendpt (curve, sigma, iter);
   }
   else {
     vnl_random rand;
@@ -398,7 +398,7 @@ bool MC_gaussian_smooth (dbsk3d_ms_curve* MC, const int iter, const float sigma)
         int last = vcl_min (i+step, int(curve.size()));
         sc.insert (sc.begin(), curve.begin()+i, curve.begin()+last);
 
-        dbgl_gaussian_smooth_curve_3d_fixedendpt (sc, sigma, 1);
+        bgld_gaussian_smooth_curve_3d_fixedendpt (sc, sigma, 1);
 
         //write sc back to curve.
         for (int j=0; j<sc.size(); j++)

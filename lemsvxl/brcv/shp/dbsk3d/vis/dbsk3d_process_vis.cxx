@@ -740,7 +740,7 @@ SoSeparator* dbsk3d_pro_vis::vis_list_file (vcl_string filename,
 {
   SoSeparator* root = new SoSeparator;
   
-  if (dbul_get_suffix (filename) == "")
+  if (buld_get_suffix (filename) == "")
     filename += ".txt";
 
   vul_printf (vcl_cerr, "dbsk3dr_pro_vis::vis_list_file(): %s.\n", filename.c_str());
@@ -782,7 +782,7 @@ SoSeparator* dbsk3d_pro_vis::vis_list_file (vcl_string filename,
       pro_data_ = PD_MESH;
       reset_shock_data ();
       
-      vcl_string suffix = dbul_get_suffix (file);
+      vcl_string suffix = buld_get_suffix (file);
       if (suffix == ".cms") {
         type = DBMSH3D_FILE_CMS;
         load_cms (file);
