@@ -4,7 +4,7 @@
 
 #include "dbetl_epiprofile.h"
 #include "dbetl_point_2d.h" 
-#include <dbecl/dbecl_episeg.h>
+#include <becld/becld_episeg.h>
 #include <vcl_algorithm.h>
 #include <vil/vil_image_resource.h>
 #include <vil/vil_image_view.h>
@@ -21,11 +21,11 @@ bool dbetl_cmp_dist(const dbetl_point_2d_sptr& rhs,
 
 //: Computes the intersections of an epipolar line with a vector of episegs
 vcl_vector<dbetl_point_2d_sptr> 
-dbetl_epiprofile( const vcl_vector<dbecl_episeg_sptr>& episegs, double angle )
+dbetl_epiprofile( const vcl_vector<becld_episeg_sptr>& episegs, double angle )
 {
   vcl_vector<dbetl_point_2d_sptr> to_return;
   
-  for( vcl_vector<dbecl_episeg_sptr>::const_iterator itr = episegs.begin();
+  for( vcl_vector<becld_episeg_sptr>::const_iterator itr = episegs.begin();
        itr != episegs.end();  ++itr )
   {
     // intersect with the bounding wedge first
@@ -45,7 +45,7 @@ dbetl_epiprofile( const vcl_vector<dbecl_episeg_sptr>& episegs, double angle )
 //: Computes the intersections of an epipolar line with a vector of episegs
 //  and also compiles statistics from the image along the profile
 vcl_vector<dbetl_point_2d_sptr> 
-dbetl_epiprofile( const vcl_vector<dbecl_episeg_sptr>& episegs, 
+dbetl_epiprofile( const vcl_vector<becld_episeg_sptr>& episegs, 
                  const vil_image_resource_sptr& image,
                  double angle )
 {
@@ -101,7 +101,7 @@ dbetl_epiprofile( const vcl_vector<dbecl_episeg_sptr>& episegs,
 //  Also compiles statistics from the image along the profile.
 //  Also links intersection point across neighboring epipolar lines
 vcl_vector<vcl_vector<dbetl_point_2d_sptr> >
-dbetl_epiprofile( const vcl_vector<dbecl_episeg_sptr>& episegs, 
+dbetl_epiprofile( const vcl_vector<becld_episeg_sptr>& episegs, 
                  const vil_image_resource_sptr& image,
                  double start_angle, double step, int num )
 {

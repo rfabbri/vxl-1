@@ -9,7 +9,7 @@
 // \date   11/12/2004
 
 #include <vcl_vector.h>
-#include <dbecl/dbecl_episeg_sptr.h>
+#include <becld/becld_episeg_sptr.h>
 #include <dbetl/dbetl_point_2d_sptr.h>
 #include <vil/vil_image_resource_sptr.h>
 
@@ -20,7 +20,7 @@
 // \returns a vector of intersection points
 // \note it is assumed that all episegs share a common epipole
 vcl_vector<dbetl_point_2d_sptr> 
-dbetl_epiprofile( const vcl_vector<dbecl_episeg_sptr>& episegs, double angle );
+dbetl_epiprofile( const vcl_vector<becld_episeg_sptr>& episegs, double angle );
 
 
 //: Computes the intersections of an epipolar line with a vector of episegs
@@ -31,7 +31,7 @@ dbetl_epiprofile( const vcl_vector<dbecl_episeg_sptr>& episegs, double angle );
 // \returns a vector of intersection points
 // \note it is assumed that all episegs share a common epipole
 vcl_vector<dbetl_point_2d_sptr> 
-dbetl_epiprofile( const vcl_vector<dbecl_episeg_sptr>& episegs, 
+dbetl_epiprofile( const vcl_vector<becld_episeg_sptr>& episegs, 
                  const vil_image_resource_sptr& image,
                  double angle );
 
@@ -47,7 +47,7 @@ dbetl_epiprofile( const vcl_vector<dbecl_episeg_sptr>& episegs,
 // \returns a vector of vectors of intersection points of size \p num
 // \note it is assumed that all episegs share a common epipole
 vcl_vector<vcl_vector<dbetl_point_2d_sptr> >
-dbetl_epiprofile( const vcl_vector<dbecl_episeg_sptr>& episegs, 
+dbetl_epiprofile( const vcl_vector<becld_episeg_sptr>& episegs, 
                  const vil_image_resource_sptr& image,
                  double start_angle, double step, int num );
 

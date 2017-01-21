@@ -25,7 +25,7 @@ include_directories( ${VXL_COIN3D_INCLUDE_DIR} )
 
 add_library(dbetl_vis ${dbetl_vis_sources})
 
-target_link_libraries(dbetl_vis dbetl_pro dbecl_vis)
+target_link_libraries(dbetl_vis dbetl_pro becld_vis)
 
 # Add the bgui3d library if bgui3d is built is available for 3D rendering
 if (VXL_BGUI3D_FOUND)

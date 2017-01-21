@@ -4,7 +4,7 @@
 
 #include "dbetl_point_2d.h"
 #include "dbetl_camera.h"
-#include <dbecl/dbecl_episeg.h>
+#include <becld/becld_episeg.h>
 #include <vsol/vsol_digital_curve_2d.h>
 #include <vsol/vsol_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
@@ -12,9 +12,9 @@
 
 
 //: Constructor
-dbetl_point_2d::dbetl_point_2d( const dbecl_episeg_sptr& episeg, double index,
+dbetl_point_2d::dbetl_point_2d( const becld_episeg_sptr& episeg, double index,
                               const dbetl_camera_sptr& camera )
- : dbecl_episeg_point(episeg, index),
+ : becld_episeg_point(episeg, index),
    next_(NULL), prev_(NULL),
    camera_(camera)
 {

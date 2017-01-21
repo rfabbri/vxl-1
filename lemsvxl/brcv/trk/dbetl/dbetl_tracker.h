@@ -13,7 +13,7 @@
 #include <dbetl/dbetl_point_track_sptr.h>
 #include <dbetl/dbetl_camera_sptr.h>
 #include <vil/vil_image_resource_sptr.h>
-#include <dbecl/dbecl_episeg_sptr.h>
+#include <becld/becld_episeg_sptr.h>
 #include <vcl_vector.h>
  
 //: A class to perform the tracking
@@ -27,7 +27,7 @@ public:
   //: Set the current image
   void set_image(const vil_image_resource_sptr& image) { image_ = image; }
   //: Set the current episegs
-  void set_episegs(const vcl_vector<dbecl_episeg_sptr>& episegs) { episegs_ = episegs; }
+  void set_episegs(const vcl_vector<becld_episeg_sptr>& episegs) { episegs_ = episegs; }
 
   //: Combine all new points with existing tracks
   void track();
@@ -51,7 +51,7 @@ private:
   vil_image_resource_sptr image_;
 
   //: The current vector of episegs to extract points from
-  vcl_vector<dbecl_episeg_sptr> episegs_;
+  vcl_vector<becld_episeg_sptr> episegs_;
 
   //: The ordered set of tracks
   vcl_vector<vcl_vector<dbetl_point_track_sptr> > tracks_;

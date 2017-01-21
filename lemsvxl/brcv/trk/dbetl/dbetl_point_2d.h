@@ -9,7 +9,7 @@
 // \date   11/12/2004
 
 
-#include <dbecl/dbecl_episeg_point.h>
+#include <becld/becld_episeg_point.h>
 #include <dbetl/dbetl_point_2d_sptr.h>
 #include <dbetl/dbetl_camera_sptr.h>
 #include <dbetl/dbetl_image_stats.h>
@@ -17,11 +17,11 @@
 
 
 //: A 2D point along an epipolar track.
-class dbetl_point_2d : public dbecl_episeg_point 
+class dbetl_point_2d : public becld_episeg_point 
 {
 public:
   //: Constructor
-  dbetl_point_2d( const dbecl_episeg_sptr& episeg, double index, 
+  dbetl_point_2d( const becld_episeg_sptr& episeg, double index, 
                  const dbetl_camera_sptr& camera = NULL );
   
   //: Destructor

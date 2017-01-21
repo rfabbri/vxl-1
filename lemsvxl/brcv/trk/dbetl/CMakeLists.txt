@@ -2,7 +2,7 @@
 # Brown Epipolar Tracking Library
 
 include_directories(${VXL_GEL_INCLUDE_DIR} )
-include_directories(${lems_SOURCE_DIR}/brcv/mvg)
+include_directories(${lems_SOURCE_DIR}/bmvgd)
 
 set(dbetl_sources
                                    dbetl_image_stats.h 
@@ -18,7 +18,7 @@ aux_source_directory(Templates dbetl_sources)
 
 add_library(dbetl ${dbetl_sources})
 
-target_link_libraries(dbetl dbecl vil)
+target_link_libraries(dbetl becld vil)
 
 # Processing Library
 add_subdirectory(pro)

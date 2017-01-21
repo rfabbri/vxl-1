@@ -9,9 +9,9 @@
 #include <vgui/vgui_style.h>
 #include <vgui/vgui_projection_inspector.h>
 #include <vgui/internals/vgui_draw_line.h>
-#include <dbecl/pro/dbecl_episeg_storage.h> 
-#include <dbecl/vis/dbecl_episeg_soview2D.h>
-#include <dbecl/dbecl_episeg.h>
+#include <becld/pro/becld_episeg_storage.h> 
+#include <becld/vis/becld_episeg_soview2D.h>
+#include <becld/becld_episeg.h>
 #include <vgl/vgl_line_2d.h>
 #include <vgui/vgui_dialog.h>
 #include <vidpro1/vidpro1_repository.h>
@@ -152,7 +152,7 @@ dbetl_epiprofile_tool::handle( const vgui_event & e,
     
     vgui_soview2D* curr_obj =  (vgui_soview2D*)tableau_->get_highlighted_soview();
     if( curr_obj != object_ ){ 
-      object_ = (dbecl_episeg_soview2D*)curr_obj;
+      object_ = (becld_episeg_soview2D*)curr_obj;
       if(object_)
         epipole_ = object_->episeg()->epipole();
     }

@@ -8,9 +8,9 @@
 
 #include "dbetl_track_storage.h"
 #include <vidpro1/storage/vidpro1_image_storage.h>
-#include <dbecl/pro/dbecl_episeg_storage.h>
+#include <becld/pro/becld_episeg_storage.h>
 
-#include <dbecl/dbecl_episeg.h>
+#include <becld/becld_episeg.h>
 #include <dbetl/dbetl_camera.h>
 #include <dbetl/dbetl_point_track.h>
 
@@ -112,9 +112,9 @@ dbetl_tracker_process::execute()
   }
 
 
-  dbecl_episeg_storage_sptr frame_episegs;
+  becld_episeg_storage_sptr frame_episegs;
   frame_episegs.vertical_cast(input_data_[0][0]);
-  vcl_vector<dbecl_episeg_sptr> episegs = frame_episegs->episegs();
+  vcl_vector<becld_episeg_sptr> episegs = frame_episegs->episegs();
 
   vidpro1_image_storage_sptr frame_image;
   frame_image.vertical_cast(input_data_[0][1]);
