@@ -19,7 +19,7 @@ aux_source_directory(Templates dber_sources)
 
 add_library(dber  ${dber_sources})
 
-target_link_libraries(dber vnl dbsol dbru)
+target_link_libraries(dber vnl bsold dbru_algo)
 
 # algorithms library
 #add_subdirectory(algo)

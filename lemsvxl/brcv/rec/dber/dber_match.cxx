@@ -17,8 +17,8 @@
 #include <vgl/vgl_distance.h>
 
 
-#include <dbru/dbru_rcor.h>
-#include <dbru/dbru_rcor_sptr.h>
+#include <dbru/algo/dbru_rcor.h>
+#include <dbru/algo/dbru_rcor_sptr.h>
 #include <dbru/algo/dbru_rcor_generator.h>
 #include <dbinfo/dbinfo_observation.h>
 #include <dbinfo/dbinfo_observation_matcher.h>

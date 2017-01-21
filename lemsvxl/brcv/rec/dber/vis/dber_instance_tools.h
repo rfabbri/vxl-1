@@ -20,7 +20,6 @@
 #include <dber/pro/dber_instance_storage_sptr.h>
 #include <dbru/dbru_label_sptr.h>
 #include <vcl_utility.h>
-#include <vidl1/vidl1_movie_sptr.h>
 
 
 //:------------------- OSL LABEK INSTANCES TOOL ------------------------

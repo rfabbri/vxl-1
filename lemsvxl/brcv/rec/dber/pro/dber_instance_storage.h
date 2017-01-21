@@ -3,7 +3,7 @@
 #define dber_instance_storage_h_
 //:
 // \file
-// \brief Storage class for arrays of dbrl_multiple_instances
+// \brief Storage class for arrays of brld_multiple_instances
 
 // \author Ozge Can Ozcanli
 // \date Nov 08 2006

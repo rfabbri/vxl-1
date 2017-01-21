@@ -25,5 +25,5 @@ set(dber_pro_sources
 
 add_library(dber_pro ${dber_pro_sources})
 
-target_link_libraries(dber_pro dber dbru vidpro1 vsl vil_io)
+target_link_libraries(dber_pro dber dbru vidpro1 bvis1 vsl vil_io)
 
