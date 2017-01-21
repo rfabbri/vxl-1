@@ -13,12 +13,12 @@ dbdet_compute_linked_curves_process.cxx dbdet_compute_linked_curves_process.h
 #  mw_synthetic_corresp_process.cxx mw_synthetic_corresp_process.h
 #  mw_project_cube_process.cxx mw_project_cube_process.h
 mw_project_polyline_process.cxx mw_project_polyline_process.h
-#  mw_extend_corresp_process.cxx mw_extend_corresp_process.h
-#  dbmcs_nearest_edgels_process.h dbmcs_nearest_edgels_process.cxx
+mw_extend_corresp_process.cxx mw_extend_corresp_process.h
+#dbmcs_nearest_edgels_process.h dbmcs_nearest_edgels_process.cxx
 )
 
 
 add_library(mw_pro ${mw_pro_sources})
 
-target_link_libraries(mw_pro mw_algo bpgl_algo vpgl_algo dbkpr_pro vpgld_pro dbdet_pro bvis1 bpro1 bprod vsl)
+target_link_libraries(mw_pro mw_algo bmcsd_pro bmcsd_algo bpgl_algo vpgl_algo dbkpr_pro vpgld_pro dbdet_pro bvis1 bpro1 bprod vsl)
 

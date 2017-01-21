@@ -13,8 +13,8 @@
 #include <vsol/vsol_polyline_2d_sptr.h>
 #include <vsol/vsol_region_2d.h>
 #include <vsol/vsol_polygon_2d.h>
-#include <mw/algo/bmcsd_discrete_corresp_algo.h>
-#include <mw/pro/bmcsd_discrete_corresp_storage.h>
+#include <bmcsd/algo/bmcsd_discrete_corresp_algo.h>
+#include <bmcsd/pro/bmcsd_discrete_corresp_storage.h>
 
 
 
