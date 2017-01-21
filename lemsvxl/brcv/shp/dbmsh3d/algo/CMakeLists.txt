@@ -4,6 +4,8 @@
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_RPL_INCLUDE_DIR} )
 include_directories( ${lems_SOURCE_DIR}/brcv/shp )
+include_directories(${VXD_B3PD_INCLUDE_DIR})
+
 
 set( dbmsh3d_algo_sources
 
@@ -51,7 +53,7 @@ aux_source_directory(Templates dbmsh3d_algo_sources )
 
 add_library( dbmsh3d_algo  ${dbmsh3d_algo_sources})
 
-target_link_libraries( dbmsh3d_algo dbmsh3d rply mesh_tri ray_tri rsdl rgrl bgld_algo vgl_algo )
+target_link_libraries( dbmsh3d_algo dbmsh3d rply mesh_tri ray_tri rsdl rgrl bgld_algo bnld bsol vgl_algo )
 
 add_subdirectory(tests)
 
