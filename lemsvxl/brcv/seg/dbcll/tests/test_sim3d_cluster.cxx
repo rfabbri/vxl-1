@@ -8,15 +8,15 @@ static double pi = 3.141592653;
 
 namespace{
 
-vcl_vector<dbgl_similarity_3d<double> > random_xforms(unsigned num)
+vcl_vector<bgld_similarity_3d<double> > random_xforms(unsigned num)
 {
   vnl_random rand;
-  vcl_vector<dbgl_similarity_3d<double> > xforms;
+  vcl_vector<bgld_similarity_3d<double> > xforms;
   for(unsigned i=0; i<num; ++i){
     double s = vcl_exp(rand.normal64());
     vgl_rotation_3d<double> R(vnl_double_3(rand.normal64(),rand.normal64(),rand.normal64()));
     vgl_vector_3d<double> t(rand.normal64(),rand.normal64(),rand.normal64());
-    xforms.push_back(dbgl_similarity_3d<double>(s,R,t));
+    xforms.push_back(bgld_similarity_3d<double>(s,R,t));
   }
   return xforms;
 }
@@ -27,15 +27,15 @@ vcl_vector<dbgl_similarity_3d<double> > random_xforms(unsigned num)
 MAIN( test_sim3d_cluster )
 {
   {
-    vcl_vector<dbgl_similarity_3d<double> > sim(4);
+    vcl_vector<bgld_similarity_3d<double> > sim(4);
 
-    sim[0] = dbgl_similarity_3d<double>(1.0, vgl_rotation_3d<double>(),
+    sim[0] = bgld_similarity_3d<double>(1.0, vgl_rotation_3d<double>(),
                                         vgl_vector_3d<double>(0.0, 0.0, 0.0));
-    sim[1] = dbgl_similarity_3d<double>(2.0, vgl_rotation_3d<double>(pi/4, 0.0, 0.0),
+    sim[1] = bgld_similarity_3d<double>(2.0, vgl_rotation_3d<double>(pi/4, 0.0, 0.0),
                                         vgl_vector_3d<double>(1.0, 2.0, 3.0));
-    sim[2] = dbgl_similarity_3d<double>(0.9, vgl_rotation_3d<double>(0.0, pi/6, 0.0),
+    sim[2] = bgld_similarity_3d<double>(0.9, vgl_rotation_3d<double>(0.0, pi/6, 0.0),
                                         vgl_vector_3d<double>(0.0, -0.5, 0.0));
-    sim[3] = dbgl_similarity_3d<double>(1.5, vgl_rotation_3d<double>(pi/4, 0.0, pi/2),
+    sim[3] = bgld_similarity_3d<double>(1.5, vgl_rotation_3d<double>(pi/4, 0.0, pi/2),
                                         vgl_vector_3d<double>(-0.4, 2.0, -2.0));
 
     vcl_vector<dbcll_sim3d_cluster> c(4);
@@ -66,7 +66,7 @@ MAIN( test_sim3d_cluster )
 
   {
     unsigned num = 100;
-    vcl_vector<dbgl_similarity_3d<double> > sim = random_xforms(num);
+    vcl_vector<bgld_similarity_3d<double> > sim = random_xforms(num);
     vcl_vector<dbcll_sim3d_cluster> c;
     vcl_vector<unsigned> inds;
     for(unsigned i=0; i<num; ++i){
@@ -76,7 +76,7 @@ MAIN( test_sim3d_cluster )
 
     dbcll_sim3d_cluster super_c(sim,inds);
     vcl_cout << "var: " << super_c.var() << vcl_endl;
-    dbgl_similarity_3d<double> mi = super_c.mean().inverse();
+    bgld_similarity_3d<double> mi = super_c.mean().inverse();
     vnl_vector_fixed<double,7> mt(0.0);
     for(unsigned i=0; i<num; ++i){
       mt += (mi*sim[i]).lie_algebra_basis();

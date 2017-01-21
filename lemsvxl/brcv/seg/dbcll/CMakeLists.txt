@@ -21,7 +21,7 @@ aux_source_directory(Templates dbcll_sources)
 add_library(dbcll ${dbcll_sources})
 
 # add the required libraries into this list
-target_link_libraries(dbcll vnl vbl dbgl bxml)
+target_link_libraries(dbcll vnl_algo vnl vbl bgld bxml)
 
 
 if(BUILD_TESTING)

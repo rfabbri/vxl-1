@@ -41,10 +41,10 @@ double dbcll_sim3d_cluster::similarity(const dbcll_cluster& other) const
 
 
 //: compute similarity with a point
-double dbcll_sim3d_cluster::similarity(const dbgl_similarity_3d<double>& pt) const
+double dbcll_sim3d_cluster::similarity(const bgld_similarity_3d<double>& pt) const
 {
 #if 0
-  dbgl_similarity_3d<double> pti = pt.inverse();
+  bgld_similarity_3d<double> pti = pt.inverse();
   double d = 0.0;
   for(vcl_vector<unsigned>::const_iterator i=members_.begin();
       i!=members_.end(); ++i)
@@ -74,7 +74,7 @@ void dbcll_sim3d_cluster::merge(const dbcll_cluster& other)
 
   vnl_vector_fixed<double,7> geodesic((this->mean_.inverse()*c2.mean_).lie_algebra_basis());
   geodesic *= m/(n+m);
-  this->mean_ = this->mean_ * dbgl_similarity_3d<double>(geodesic);
+  this->mean_ = this->mean_ * bgld_similarity_3d<double>(geodesic);
 
 
   dbcll_cluster::merge(other);
@@ -97,7 +97,7 @@ void dbcll_sim3d_cluster::compute_stats()
   for(vcl_vector<unsigned>::const_iterator i=members_.begin();
       i!=members_.end(); ++i)
   {
-    const dbgl_similarity_3d<double>& sim = (*xforms_)[*i];
+    const bgld_similarity_3d<double>& sim = (*xforms_)[*i];
     rotations.push_back(sim.rotation());
     ls += vcl_log(sim.scale());
   }
@@ -123,7 +123,7 @@ void dbcll_sim3d_cluster::compute_stats()
   mean_.set_rotation(mean_Ri.inverse());
 
   // compute translation components in closed form
-  dbgl_similarity_3d<double> mi(mean_.inverse());
+  bgld_similarity_3d<double> mi(mean_.inverse());
   mi.set_translation(vgl_vector_3d<double>(0,0,0));
 
   vnl_double_3x3 Ac(0.0);
@@ -131,8 +131,8 @@ void dbcll_sim3d_cluster::compute_stats()
   for(vcl_vector<unsigned>::const_iterator i=members_.begin();
       i!=members_.end(); ++i)
   {
-    const dbgl_similarity_3d<double>& sim = (*xforms_)[*i];
-    dbgl_similarity_3d<double> sim2 = mi*sim;
+    const bgld_similarity_3d<double>& sim = (*xforms_)[*i];
+    bgld_similarity_3d<double> sim2 = mi*sim;
     Ac += sim2.lie_log_t_matrix();
     t += sim2.lie_algebra_basis().extract(3,4);
   }
@@ -159,7 +159,7 @@ void dbcll_sim3d_cluster::compute_stats()
 
 //: Generate a vector of single element clusters
 vcl_vector<dbcll_cluster_sptr> 
-dbcll_init_sim3d_clusters(const vcl_vector<dbgl_similarity_3d<double> >& pts)
+dbcll_init_sim3d_clusters(const vcl_vector<bgld_similarity_3d<double> >& pts)
 {
   vcl_vector<dbcll_cluster_sptr> results;
   for(unsigned i=0; i<pts.size(); ++i)
