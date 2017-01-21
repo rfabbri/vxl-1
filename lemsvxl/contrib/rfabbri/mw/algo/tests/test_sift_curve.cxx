@@ -2,12 +2,12 @@
 
 #include <vnl/vnl_math.h>
 #include <vil/vil_image_view.h>
-#include <mw/algo/mw_sift_curve_algo.h>
+#include <mw/algo/bmcsd_sift_curve_algo.h>
 
 #define DATA(I) (I).top_left_ptr()
 
 static void
-print_all(const mw_sift_curve_algo &computor, const mw_sift_curve &sc)
+print_all(const bmcsd_sift_curve_algo &computor, const bmcsd_sift_curve &sc)
 {
   vcl_cout << "Number of descriptor dimensions: " << sc.num_dims() << vcl_endl;
   vcl_cout << "Total number of scales: " << sc.num_scales() << vcl_endl;
