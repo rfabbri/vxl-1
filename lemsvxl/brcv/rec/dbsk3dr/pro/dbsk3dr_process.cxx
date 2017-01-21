@@ -4,7 +4,7 @@
 
 #include <vul/vul_printf.h>
 #include <vul/vul_sprintf.h>
-#include <dbgl/dbgl_rigid_align.h>
+#include <bgld/bgld_rigid_align.h>
 
 #include <dbmsh3d/dbmsh3d_mesh.h>
 #include <dbmsh3d/algo/dbmsh3d_xform.h>
@@ -124,8 +124,8 @@ bool dbsk3dr_pro::run_shock_match (const int option, const bool register_rigid,
   vcl_string tmp = vul_sprintf ("%d", option);
   smatch_match_result_file += tmp;
   smatch_match_result_file += "_";      
-  vcl_string file1 = dbul_get_file(pro(0)->dir_file());
-  vcl_string file2 = dbul_get_file(pro(1)->dir_file());
+  vcl_string file1 = buld_get_file(pro(0)->dir_file());
+  vcl_string file2 = buld_get_file(pro(1)->dir_file());
   smatch_match_result_file += file1;
   smatch_match_result_file += "__";
   smatch_match_result_file += file2;

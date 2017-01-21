@@ -14,7 +14,7 @@
 #include <vnl/algo/vnl_svd.h>
 #include <vnl/vnl_matrix_fixed.h>
 
-#include <dbgl/dbgl_rigid_align.h>
+#include <bgld/bgld_rigid_align.h>
 
 #include <dbmsh3dr/dbmsh3dr_match.h>
 
@@ -42,7 +42,7 @@ void EuclideanTransform3D_test ()
   vnl_vector_fixed<double,3> C1 (0.0);
   vnl_vector_fixed<double,3> C2 (0.0);
 
-  dbgl_get_rigid_alignment (PS1, PS2, R, C1, C2);
+  bgld_get_rigid_alignment (PS1, PS2, R, C1, C2);
 
   vcl_vector<double> ppx, ppy, ppz;
   for (unsigned int i=0; i<PS1.size(); i++) {

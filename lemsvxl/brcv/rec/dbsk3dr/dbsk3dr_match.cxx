@@ -9,7 +9,7 @@
 #include <vnl/vnl_math.h>
 #include <vul/vul_printf.h>
 
-#include <dbgl/dbgl_rigid_align.h>
+#include <bgld/bgld_rigid_align.h>
 
 #include <dbmsh3dr/dbmsh3dr_match.h>
 #include <dbsk3dr/dbsk3dr_match.h>
@@ -1237,7 +1237,7 @@ void dbsk3dr_match::get_rigid_xform_matrices (const bool node_only,  const int v
 
   //3)Compute the centroids and rotation matrix R, such that
   //  it matches P1 to P2 (P2 fixed). The vector size are the same.
-  dbgl_get_rigid_alignment (cor_fixPS, cor_movPS, R_, Cf_, Cm_);
+  bgld_get_rigid_alignment (cor_fixPS, cor_movPS, R_, Cf_, Cm_);
 }
 
 double dbsk3dr_match::get_curve_align_avg_Eu_dist (dbmsh3d_curve* C1, dbmsh3d_curve* C2, 
@@ -1264,7 +1264,7 @@ double dbsk3dr_match::get_curve_align_avg_Eu_dist (dbmsh3d_curve* C1, dbmsh3d_cu
   }
 
   //Match P1 to P2 (P2 fixed). The vector size are the same.
-  dbgl_get_rigid_alignment (cor_fixPS, cor_movPS, R_, Cf_, Cm_);  
+  bgld_get_rigid_alignment (cor_fixPS, cor_movPS, R_, Cf_, Cm_);  
   ///print_R_C1_C2 (R_, Cf_, Cm_);
 
   //The cor_fixPS[] and cor_movPS[] is now shifted to their object centers.

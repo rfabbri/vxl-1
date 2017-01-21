@@ -7,6 +7,7 @@ include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${lems_SOURCE_DIR}/contrib/Gregistration )
 
 if (VXL_VGUI_FOUND)
+find_package(OpenGL)
 
 set(dber_vis_sources
 
@@ -25,6 +26,6 @@ set(dber_vis_sources
 
 add_library(dber_vis ${dber_vis_sources})
 
-target_link_libraries(dber_vis dber_pro bvis1)
+target_link_libraries(dber_vis dber_pro bvis1 bgui vgui ${OPENGL_LIBRARIES})
 
 endif (VXL_VGUI_FOUND)

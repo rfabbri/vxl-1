@@ -3,7 +3,7 @@
 
 #include <vul/vul_printf.h>
 #include <vul/vul_sprintf.h>
-#include <dbgl/dbgl_rigid_align.h>
+#include <bgld/bgld_rigid_align.h>
 
 #include <dbmsh3d/algo/dbmsh3d_fileio.h>
 #include <dbmsh3d/algo/dbmsh3d_xform.h>
@@ -63,7 +63,7 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
   //-cms_2: 
   if (dbsk3d_cmd_cms_file2()) {
     spvr->pv1()->b_view_cms_ = true;
-    spvr->pv1()->set_dir_file (dbul_get_dir_file (dbsk3d_cmd_cms_file2()));
+    spvr->pv1()->set_dir_file (buld_get_dir_file (dbsk3d_cmd_cms_file2()));
   }
   if (spvr->pv1()->b_view_cms_) {
     spvr->pv1()->reset_mesh ();
@@ -112,7 +112,7 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
   //-sg_2: 
   if (dbsk3d_cmd_sg_file2()) {
     spvr->pv1()->b_view_sg_ = true;
-    spvr->pv1()->set_dir_file (dbul_get_dir_file (dbsk3d_cmd_sg_file2()));
+    spvr->pv1()->set_dir_file (buld_get_dir_file (dbsk3d_cmd_sg_file2()));
   }
   if (spvr->pv1()->b_view_sg_) {
     spvr->pv1()->load_sg ();
@@ -1393,8 +1393,8 @@ SoSeparator* dbsk3dr_cmdproc_execute (dbsk3dr_pro_vis* spvr)
           }
         }
 
-        vcl_string file1 = dbul_get_file (dbmsh3d_cmd_fileprefix1());
-        vcl_string file2 = dbul_get_file (dbmsh3d_cmd_fileprefix2());
+        vcl_string file1 = buld_get_file (dbmsh3d_cmd_fileprefix1());
+        vcl_string file2 = buld_get_file (dbmsh3d_cmd_fileprefix2());
         dbmsh3d_app_window_title += " - " + file1;
         dbmsh3d_app_window_title += " to ";
         dbmsh3d_app_window_title += file2;
