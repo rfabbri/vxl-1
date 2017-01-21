@@ -79,8 +79,8 @@ bool dbmsh3d_check_cmdproc (dbmsh3d_pro_vis* pv, int argc, char **argv)
     //Default Viewer: try to open the argv[1] file and visualize it.
     //Assume the first parameter specifies the file to display.
     if (argc>1 && argv[1][0] != '-') {      
-      vcl_string dirfile = dbul_get_dir_file (argv[1]);
-      vcl_string suffix = dbul_get_suffix (argv[1]);
+      vcl_string dirfile = buld_get_dir_file (argv[1]);
+      vcl_string suffix = buld_get_suffix (argv[1]);
       if (suffix == ".p3d") {
         pv->b_view_p3d_ = true;
         pv->set_dir_file (dirfile);
@@ -213,7 +213,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   //-p3d: 
   if (dbmsh3d_cmd_p3d_file()) {
     pv->b_view_p3d_ = true;
-    pv->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_p3d_file()));
+    pv->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_p3d_file()));
   }
   if (pv->b_view_p3d_) {
     pv->reset_mesh ();
@@ -233,7 +233,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   //-g3d: 
   if (dbmsh3d_cmd_g3d_file()) {
     pv->b_view_g3d_ = true;
-    pv->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_g3d_file()));
+    pv->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_g3d_file()));
   }
   if (pv->b_view_g3d_) {
     pv->reset_mesh ();
@@ -247,7 +247,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   //-xyz: 
   if (dbmsh3d_cmd_xyz_file()) {
     pv->b_view_xyz_ = true;
-    pv->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_xyz_file()));
+    pv->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_xyz_file()));
   }
   if (pv->b_view_xyz_) {
     pv->reset_mesh ();
@@ -271,7 +271,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   //-xyzn1: 
   if (dbmsh3d_cmd_xyzn1_file()) {
     pv->b_view_xyzn1_ = true;
-    pv->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_xyzn1_file()));
+    pv->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_xyzn1_file()));
   }
   if (pv->b_view_xyzn1_) {
     vcl_string xyzn1_file = pv->dir_file() + ".xyzn1";
@@ -296,7 +296,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   //-xyznw: 
   if (dbmsh3d_cmd_xyznw_file()) {
     pv->b_view_xyznw_ = true;
-    pv->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_xyznw_file()));
+    pv->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_xyznw_file()));
   }
   if (pv->b_view_xyznw_) {
     pv->set_pro_data (dbmsh3d_pro::PD_ORIPTS);
@@ -319,7 +319,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   //-pts: 
   if (dbmsh3d_cmd_pts_file()) {
     pv->b_view_pts_ = true;
-    pv->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_pts_file()));
+    pv->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_pts_file()));
   }
   if (pv->b_view_pts_) {
     pv->set_pro_data (dbmsh3d_pro::PD_MESH);
@@ -340,7 +340,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   //-3pi: 
   if (dbmsh3d_cmd_3pi_file()) {
     pv->b_view_3pi_ = true;
-    pv->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_3pi_file()));
+    pv->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_3pi_file()));
   }
   if (pv->b_view_3pi_) {
     pv->reset_mesh ();
@@ -441,7 +441,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   
       //-o3pi: output 3pi file.
       if (dbmsh3d_cmd_3pi_ofile()) {
-        vcl_string file_3pi = dbul_get_dir_file (dbmsh3d_cmd_3pi_ofile()) + ".3pi";
+        vcl_string file_3pi = buld_get_dir_file (dbmsh3d_cmd_3pi_ofile()) + ".3pi";
         dbmsh3d_save_sg3pi (pv->sg3pi(), file_3pi.c_str());
       }
 
@@ -459,7 +459,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   //-ply: 
   if (dbmsh3d_cmd_ply_file()) {
     pv->b_view_ply_ = true;
-    pv->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_ply_file()));
+    pv->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_ply_file()));
   }
   if (pv->b_view_ply_) {
     if (pv->load_ply () == false) {
@@ -509,7 +509,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   //-ply2: 
   if (dbmsh3d_cmd_ply2_file()) {
     pv->b_view_ply2_ = true;
-    pv->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_ply2_file()));
+    pv->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_ply2_file()));
   }
   if (pv->b_view_ply2_) {
     pv->reset_mesh ();
@@ -559,7 +559,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   //-off: 
   if (dbmsh3d_cmd_off_file()) {
     pv->b_view_off_ = true;
-    pv->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_off_file()));
+    pv->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_off_file()));
   }
   if (pv->b_view_off_) {
     pv->reset_mesh ();
@@ -603,7 +603,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   //-obj: 
   if (dbmsh3d_cmd_obj_file()) {
     pv->b_view_obj_ = true;
-    pv->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_obj_file()));
+    pv->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_obj_file()));
   }
   if (pv->b_view_obj_) {
     pv->reset_mesh ();
@@ -647,7 +647,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   //-m:
   if (dbmsh3d_cmd_m_file()) {
     pv->b_view_m_ = true;
-    pv->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_m_file()));
+    pv->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_m_file()));
   }
   if (pv->b_view_m_) {
     pv->reset_mesh ();
@@ -691,7 +691,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   //-iv:
   if (dbmsh3d_cmd_iv_file()) {
     pv->b_view_iv_ = true;
-    pv->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_iv_file()));
+    pv->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_iv_file()));
   }
   if (pv->b_view_iv_) {
     if (dbmsh3d_cmd_ply2_ofile()) {
@@ -712,7 +712,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   //-vrml: 
   if (dbmsh3d_cmd_wrl_file()) {
     pv->b_view_wrl_ = true;
-    pv->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_wrl_file()));
+    pv->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_wrl_file()));
   }
   if (pv->b_view_wrl_) {
     _root->addChild (pv->view_wrl (pv->dir_file()));
@@ -723,7 +723,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   //-vtk: 
   if (dbmsh3d_cmd_vtk_file()) {
     pv->b_view_vtk_ = true;
-    pv->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_vtk_file()));
+    pv->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_vtk_file()));
   }
   if (pv->b_view_vtk_) {
     pv->reset_mesh ();
@@ -814,7 +814,7 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
 
   //############### Parse/Sample Polygonal Mesh ###############
   if (dbmsh3d_cmd_iv_pfile()) {
-    pv->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_iv_pfile()));  
+    pv->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_iv_pfile()));  
     pv->sample_iv_to_pts (1, 100, dbmsh3d_cmd_ptb());
     
     if (dbmsh3d_cmd_gui()) {
@@ -1185,8 +1185,8 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   //######### Geodesic Shortest Path via FMM #########
   //-fmm 1
   if (dbmsh3d_cmd_fmm()) {
-    pv->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_fileprefix()));
-    vcl_string suffix = dbul_get_suffix (dbmsh3d_cmd_fileprefix());
+    pv->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_fileprefix()));
+    vcl_string suffix = buld_get_suffix (dbmsh3d_cmd_fileprefix());
 
     //: read in the mesh file
     pv->load_ply2_fmm ();
@@ -1344,25 +1344,25 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
   //########################### Save Output Files ############################
   vcl_string dirfile;  
   if (dbmsh3d_cmd_p3d_ofile()) {
-    dirfile = dbul_get_dir_file (dbmsh3d_cmd_p3d_ofile());
+    dirfile = buld_get_dir_file (dbmsh3d_cmd_p3d_ofile());
     dirfile += ".p3d";
     vul_printf (vcl_cout, "Writing ASCII point cloud file (*.p3d) %s...\n", dirfile.c_str());
     pv->save_p3d (dirfile);
   }
   if (dbmsh3d_cmd_g3d_ofile()) {
-    dirfile = dbul_get_dir_file (dbmsh3d_cmd_g3d_ofile());
+    dirfile = buld_get_dir_file (dbmsh3d_cmd_g3d_ofile());
     dirfile += ".g3d";
     vul_printf (vcl_cout, "Writing color point cloud file (*.g3d) %s...\n", dirfile.c_str());
     pv->save_g3d (dirfile);
   }
   if (dbmsh3d_cmd_xyz_ofile()) {
-    dirfile = dbul_get_dir_file (dbmsh3d_cmd_xyz_ofile());
+    dirfile = buld_get_dir_file (dbmsh3d_cmd_xyz_ofile());
     dirfile += ".xyz";
     vul_printf (vcl_cout, "Writing ASCII point cloud file (*.xyz) %s...\n", dirfile.c_str());
     pv->save_xyz (dirfile);
   }
   if (dbmsh3d_cmd_xyzn1_ofile()) {
-    dirfile = dbul_get_dir_file (dbmsh3d_cmd_xyzn1_ofile());
+    dirfile = buld_get_dir_file (dbmsh3d_cmd_xyzn1_ofile());
     dirfile += ".xyzn1";
     vul_printf (vcl_cout, "Writing oriented point cloud file (*.xyzn1) %s...\n", dirfile.c_str());
     pv->save_xyzn1 (dirfile);
@@ -1372,37 +1372,37 @@ SoSeparator* dbmsh3d_cmdproc_execute (dbmsh3d_pro_vis* pv)
     ///pv->save_xyznw (vcl_string (dbmsh3d_cmd_xyznw_ofile()) + ".xyznw");
   }
   if (dbmsh3d_cmd_ply_ofile()) {
-    dirfile = dbul_get_dir_file (dbmsh3d_cmd_ply_ofile());
+    dirfile = buld_get_dir_file (dbmsh3d_cmd_ply_ofile());
     dirfile += ".ply";
     vul_printf (vcl_cout, "Writing ASCII PLY mesh file (*.ply) %s...\n", dirfile.c_str());
     pv->save_ply (dirfile, true);
   }
   if (dbmsh3d_cmd_ply_ofileb()) {
-    dirfile = dbul_get_dir_file (dbmsh3d_cmd_ply_ofileb());
+    dirfile = buld_get_dir_file (dbmsh3d_cmd_ply_ofileb());
     dirfile += ".ply";
     vul_printf (vcl_cout, "Writing binary PLY mesh file (*.ply) %s...\n", dirfile.c_str());
     pv->save_ply (dirfile, false);
   }
   if (dbmsh3d_cmd_ply2_ofile()) {
-    dirfile = dbul_get_dir_file (dbmsh3d_cmd_ply2_ofile());
+    dirfile = buld_get_dir_file (dbmsh3d_cmd_ply2_ofile());
     dirfile += ".ply2";
     vul_printf (vcl_cout, "Writing ASCII PLY2 mesh file (*.ply2) %s...\n", dirfile.c_str());
     pv->save_ply2 (dirfile);
   }
   if (dbmsh3d_cmd_off_ofile()) {
-    dirfile = dbul_get_dir_file (dbmsh3d_cmd_off_ofile());
+    dirfile = buld_get_dir_file (dbmsh3d_cmd_off_ofile());
     dirfile += ".off";
     vul_printf (vcl_cout, "Writing Geomview OFF mesh file (*.off) %s...\n", dirfile.c_str());
     pv->save_off (dirfile);
   }
   if (dbmsh3d_cmd_obj_ofile()) {
-    dirfile = dbul_get_dir_file (dbmsh3d_cmd_obj_ofile());
+    dirfile = buld_get_dir_file (dbmsh3d_cmd_obj_ofile());
     dirfile += ".obj";
     vul_printf (vcl_cout, "Writing Wavefront OBJ mesh file (*.obj) %s...\n", dirfile.c_str());
     pv->save_obj (dirfile);
   }
   if (dbmsh3d_cmd_vtk_ofile()) {
-    dirfile = dbul_get_dir_file (dbmsh3d_cmd_vtk_ofile());
+    dirfile = buld_get_dir_file (dbmsh3d_cmd_vtk_ofile());
     dirfile += ".vtk";
     vul_printf (vcl_cout, "Writing VTK mesh file (*.vtk) %s...\n", dirfile.c_str());
     pv->save_vtk (dirfile);
@@ -1579,7 +1579,7 @@ SoSeparator* dbmsh3d_cmdproc_execute_2 (dbmsh3d_pro_vis* mpv2)
   //############### Viewing IV File 3 ###############
   if (dbmsh3d_cmd_iv_file3()) {
     mpv2->b_view_iv_ = true;
-    mpv2->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_iv_file3()));
+    mpv2->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_iv_file3()));
   }
   if (mpv2->b_view_iv_) {
     _root->addChild (mpv2->view_iv ());

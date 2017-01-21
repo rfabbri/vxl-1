@@ -7,10 +7,10 @@
 #include <vul/vul_printf.h>
 #include <vnl/vnl_vector_fixed.h>
 
-#include <dbgl/dbgl_dist.h>
-#include <dbgl/dbgl_triangle.h>
-#include <dbgl/algo/dbgl_distance.h>
-#include <dbgl/algo/dbgl_curve_smoothing.h>
+#include <bgld/bgld_dist.h>
+#include <bgld/bgld_triangle.h>
+#include <bgld/algo/bgld_distance.h>
+#include <bgld/algo/bgld_curve_smoothing.h>
 #include <dbmsh3d/algo/dbmsh3d_sg3pi_algo.h>
 
 // #################################################################
@@ -126,7 +126,7 @@ void dcs_smooth_scanlines_3pi (dbmsh3d_sg3pi* sg3pi, const unsigned int nsteps,
       scanline.push_back (sg3pi->data(i,j)->pt());
 
     //Smooth each scanline with thresholding
-    dbgl_curve_shorten_3d_th (scanline, intra_sl_kth, DCS_psi, nsteps);
+    bgld_curve_shorten_3d_th (scanline, intra_sl_kth, DCS_psi, nsteps);
     
     //Put the smoothed scanline back.
     for (unsigned int j=0; j<sg3pi->data(i).size(); j++)
@@ -137,7 +137,7 @@ void dcs_smooth_scanlines_3pi (dbmsh3d_sg3pi* sg3pi, const unsigned int nsteps,
 
 
 //: Build curve of consecutive points with same index across scanlines.
-//  Smooth each curve using dbgl_curve_smooth
+//  Smooth each curve using bgld_curve_smooth
 void dcs_smooth_across_scanlines_3pi (dbmsh3d_sg3pi* sg3pi, const unsigned int nsteps,
                                       const float DCS_psi, const float DCS_th_ratio)
 {
@@ -192,7 +192,7 @@ void dcs_smooth_across_scanlines_3pi (dbmsh3d_sg3pi* sg3pi, const unsigned int n
       continue;
 
     //smooth the curve.
-    dbgl_curve_shorten_3d (curve, DCS_psi, nsteps);
+    bgld_curve_shorten_3d (curve, DCS_psi, nsteps);
 
     //put smoothed points back to the curve of datat[j]
     count=0; 
@@ -235,7 +235,7 @@ void dcs_smooth_scanlines_2dirs_3pi (dbmsh3d_sg3pi* sg3pi,
       scanline.push_back (sg3pi->data(i,j)->pt());
 
     //Smooth each scanline with thresholding
-    dbgl_curve_shorten_3d_th (scanline, intra_sl_kth, DCS_psi, n_intra);
+    bgld_curve_shorten_3d_th (scanline, intra_sl_kth, DCS_psi, n_intra);
     
     //Put the smoothed scanline back.
     for (unsigned int j=0; j<sg3pi->data(i).size(); j++)
@@ -289,7 +289,7 @@ void dcs_smooth_scanlines_2dirs_3pi (dbmsh3d_sg3pi* sg3pi,
       continue;
     
     //Smooth each scanline with thresholding
-    dbgl_curve_shorten_3d_th (curve, inter_sl_kth, DCS_psi, n_inter);
+    bgld_curve_shorten_3d_th (curve, inter_sl_kth, DCS_psi, n_inter);
 
     //put smoothed points back to the curve of datat[j]
     count=0; 
@@ -308,7 +308,7 @@ void dcs_smooth_scanlines_2dirs_3pi (dbmsh3d_sg3pi* sg3pi,
 }
 
 //: only smooth the range z(x,y)
-bool dbgl_curve_shorten_z (vcl_vector<dbmsh3d_sg3pi_pt*>& scanline, 
+bool bgld_curve_shorten_z (vcl_vector<dbmsh3d_sg3pi_pt*>& scanline, 
                            const float psi, const unsigned int nsteps)
 {
   unsigned int n = scanline.size();
@@ -532,7 +532,7 @@ void gaussian_smooth_scanlines_3pi (dbmsh3d_sg3pi* sg3pi, const int nsteps,
       for (unsigned int j=js; j<=je; j++)
         curve.push_back (sg3pi->data(i,j)->pt());
 
-      dbgl_gaussian_smooth_curve_z_th_fixedendpt (curve, intra_sl_kth, 1.0f, nsteps);
+      bgld_gaussian_smooth_curve_z_th_fixedendpt (curve, intra_sl_kth, 1.0f, nsteps);
 
       for (unsigned int j=js; j<=je; j++)
         sg3pi->get_data(i,j)->set_pt (curve[j-js]);
@@ -576,7 +576,7 @@ void gaussian_smooth_2d_3pi (dbmsh3d_sg3pi* sg3pi, const int nsteps,
   }
 
   //Apply 2D Gaussian smoothing
-  dbgl_gaussian_smooth_2d_th (range, float(sg3pi->intra_sl_dist()), float(sg3pi->inter_sl_dist()), 
+  bgld_gaussian_smooth_2d_th (range, float(sg3pi->intra_sl_dist()), float(sg3pi->inter_sl_dist()), 
                               nsteps, G_sigma_ratio, G_radius_ratio, G_th_ratio);
 
   //Put the smoothed range value back to sg3pi->data()
@@ -645,7 +645,7 @@ void mesh_between_scanlines (const vcl_vector<dbmsh3d_sg3pi_pt*>& scanline0,
       SA = scanline1[j];
       SB = scanline1[j+1];
 
-      test_foot = dbgl_footpt_on_line (SP->pt(), SA->pt(), SB->pt(), t, l);
+      test_foot = bgld_footpt_on_line (SP->pt(), SA->pt(), SB->pt(), t, l);
       test_size = l < intra_scanline_th && 
                   vgl_distance (SP->pt(), SA->pt()) < intra_scanline_th && 
                   vgl_distance (SP->pt(), SB->pt()) < intra_scanline_th;
@@ -675,7 +675,7 @@ void mesh_between_scanlines (const vcl_vector<dbmsh3d_sg3pi_pt*>& scanline0,
       SA = scanline0[j];
       SB = scanline0[j+1];
 
-      test_foot = dbgl_footpt_on_line (SP->pt(), SA->pt(), SB->pt(), t, l);
+      test_foot = bgld_footpt_on_line (SP->pt(), SA->pt(), SB->pt(), t, l);
       test_size = l < intra_scanline_th && 
                   vgl_distance (SP->pt(), SA->pt()) < intra_scanline_th && 
                   vgl_distance (SP->pt(), SB->pt()) < intra_scanline_th;

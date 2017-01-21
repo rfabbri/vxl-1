@@ -7,7 +7,7 @@
 #include <vnl/vnl_vector_fixed.h>
 #include <rsdl/rsdl_kd_tree.h>
 
-#include <dbgl/algo/dbgl_distance.h>
+#include <bgld/algo/bgld_distance.h>
 #include <dbmsh3d/algo/dbmsh3d_pt_mesh_dist.h>
 #include <dbmsh3d/algo/dbmsh3d_mesh_triangulate.h>
 
@@ -31,7 +31,7 @@ double dbmsh3d_pt_face_dist_3d (const vgl_point_3d<double>& P, const dbmsh3d_fac
     else
       C = HF->edge()->other_V (B);
 
-    return dbgl_pt_tri_dist_3d (P, A->pt(), B->pt(), C->pt(), G);
+    return bgld_pt_tri_dist_3d (P, A->pt(), B->pt(), C->pt(), G);
   }
   else {
     //Triangulate the mesh face and check all triangles.
@@ -48,7 +48,7 @@ double dbmsh3d_pt_face_dist_3d (const vgl_point_3d<double>& P, const dbmsh3d_fac
       const dbmsh3d_vertex* B = vertices[tri_faces[i][1]];
       const dbmsh3d_vertex* C = vertices[tri_faces[i][2]];
 
-      double d = dbgl_pt_tri_dist_3d (P, A->pt(), B->pt(), C->pt(), g);
+      double d = bgld_pt_tri_dist_3d (P, A->pt(), B->pt(), C->pt(), g);
       if (d < min_dist) {
         G = g;
         min_dist = d;

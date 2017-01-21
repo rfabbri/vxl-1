@@ -51,7 +51,7 @@ aux_source_directory(Templates dbmsh3d_algo_sources )
 
 add_library( dbmsh3d_algo  ${dbmsh3d_algo_sources})
 
-target_link_libraries( dbmsh3d_algo dbmsh3d rply mesh_tri ray_tri rsdl rgrl dbgl_algo vgl_algo )
+target_link_libraries( dbmsh3d_algo dbmsh3d rply mesh_tri ray_tri rsdl rgrl bgld_algo vgl_algo )
 
 add_subdirectory(tests)
 

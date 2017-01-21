@@ -1,4 +1,4 @@
-// This is basic/dbgl/algo/dbmsh3d_isosurface.cxx
+// This is bbasd/bgld/algo/dbmsh3d_isosurface.cxx
 
 #ifdef VCL_NEEDS_PRAGMA_INTERFACE
 #pragma implementation

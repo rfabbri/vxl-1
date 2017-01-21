@@ -6,7 +6,7 @@
 #include <vcl_iostream.h>
 #include <vul/vul_printf.h>
 
-#include <dbgl/dbgl_dist.h>
+#include <bgld/bgld_dist.h>
 #include <dbmsh3d/vis/dbmsh3d_vis_bucket_3d.h>
 #include <dbmsh3d/vis/dbmsh3d_vis_utils.h>
 
@@ -63,7 +63,7 @@ SoSeparator* draw_bktstr_reduced (const dbmsh3d_pt_bktstr* BktStruct,
         box.set_min_x (B->min_x());
         box.set_max_x (B->max_x());
 
-        reduc_box = dbgl_reduce_box (box, reduc_dist);
+        reduc_box = bgld_reduce_box (box, reduc_dist);
 
         root->addChild (draw_box (reduc_box, width, color));
       }

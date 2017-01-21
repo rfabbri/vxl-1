@@ -10,7 +10,7 @@
 #include <vnl/vnl_random.h>
 #include <vul/vul_printf.h>
 #include <vul/vul_sprintf.h>
-#include <dbnl/dbnl_min_max_3.h>
+#include <bnld/bnld_min_max_3.h>
 #include <dbmsh3d/algo/dbmsh3d_xform.h>
 #include <dbmsh3d/algo/dbmsh3d_scan_sim.h>
 #include <dbmsh3d/algo/dbmsh3d_sg3pi_algo.h>
@@ -72,7 +72,7 @@ bool scan_sim (dbmsh3d_mesh* M,
   //Repeat scan simulation for n views.
   //Use the center as origin O.
   //Use dOC as distance from scanner to O.
-  double dOC = dbnl_max3 (bbox.width(), bbox.height(), bbox.depth());
+  double dOC = bnld_max3 (bbox.width(), bbox.height(), bbox.depth());
   dOC *= SCAN_CENTER_D_BOX_RATIO;
 
   //number of intra- scanline samples: [minY to maxY]

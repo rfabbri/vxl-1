@@ -8,10 +8,10 @@
 #include <vul/vul_printf.h>
 #include <vnl/vnl_vector_fixed.h>
 
-#include <dbgl/dbgl_dist.h>
-#include <dbgl/dbgl_triangle.h>
-#include <dbgl/algo/dbgl_distance.h>
-#include <dbgl/algo/dbgl_curve_smoothing.h>
+#include <bgld/bgld_dist.h>
+#include <bgld/bgld_triangle.h>
+#include <bgld/algo/bgld_distance.h>
+#include <bgld/algo/bgld_curve_smoothing.h>
 #include <dbmsh3d/dbmsh3d_sg3pi.h>
 
 int dbmsh3d_sg3pi::get_num_points () const
@@ -47,7 +47,7 @@ void dbmsh3d_sg3pi::get_sl_sample_dist ()
   vcl_vector<double> sqdists;
   for (unsigned int i=0; i<data_.size(); i++) {
     for (int j=0; j<int(data_[i].size())-1; j++) {
-      double sqd = dbgl_sqdist_3d (data_[i][j]->pt(), data_[i][j+1]->pt());
+      double sqd = bgld_sqdist_3d (data_[i][j]->pt(), data_[i][j+1]->pt());
       sqdists.push_back (sqd);
     }
   }
@@ -159,7 +159,7 @@ double _min_sqd_between_scanlines (vcl_vector<dbmsh3d_sg3pi_pt*>& scanline0,
 
   for (unsigned int i=0; i<scanline0.size(); i++) {
     for (unsigned int j=0; j<scanline1.size(); j++) {
-      double sqd = dbgl_sqdist_3d (scanline0[i]->pt(), scanline1[j]->pt());
+      double sqd = bgld_sqdist_3d (scanline0[i]->pt(), scanline1[j]->pt());
       if (sqd < min_sq_dist)
         min_sq_dist = sqd;
     }
@@ -181,7 +181,7 @@ vgl_vector_3d<double> _compute_scanline_normal (const vcl_vector<dbmsh3d_sg3pi_p
   for (unsigned int i=1; i<scanline.size()-1; i++) {
     vgl_point_3d<double> P = scanline[i]->pt();
     double t = dot_product (P-A, AB) / vgl_distance (A, B);
-    double d = vcl_sqrt (dbgl_sqdist_3d (A, P) - t*t);
+    double d = vcl_sqrt (bgld_sqdist_3d (A, P) - t*t);
     if (d > dmax) {
       dmax = d;
       Pmax = P;
@@ -204,7 +204,7 @@ bool _get_closest_pts (const vcl_vector<dbmsh3d_sg3pi_pt*>& scanline,
   for (int i=0; i<int(scanline.size())-1; i++) {
     dbmsh3d_sg3pi_pt* SA = scanline[i];
     dbmsh3d_sg3pi_pt* SB = scanline[i+1];
-    bool test_foot = dbgl_footpt_on_line (SP->pt(), SA->pt(), SB->pt(), t, l);
+    bool test_foot = bgld_footpt_on_line (SP->pt(), SA->pt(), SB->pt(), t, l);
     bool test_size = l < intra_scanline_th && 
                      vgl_distance (SP->pt(), SA->pt()) < intra_scanline_th && 
                      vgl_distance (SP->pt(), SB->pt()) < intra_scanline_th;
@@ -228,7 +228,7 @@ void _add_to_kernel_1 (const dbmsh3d_sg3pi_pt* SP, const double& dist_th,
   double min_sqd = FLT_MAX;
   unsigned int min_i;
   for (unsigned int i=0; i<scanline.size(); i++) {
-    double sqd = dbgl_sqdist_3d (SP->pt(), scanline[i]->pt());
+    double sqd = bgld_sqdist_3d (SP->pt(), scanline[i]->pt());
     if (sqd < min_sqd) {
       min_sqd = sqd;
       min_i = i;

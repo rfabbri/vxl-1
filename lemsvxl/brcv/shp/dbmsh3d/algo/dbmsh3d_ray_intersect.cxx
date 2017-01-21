@@ -2,7 +2,7 @@
 #include <vcl_iostream.h>
 #include <vul/vul_printf.h>
 
-#include <dbgl/dbgl_triangle.h>
+#include <bgld/bgld_triangle.h>
 #include <ray_tri/ray_tri.h>
 #include <dbmsh3d/algo/dbmsh3d_ray_intersect.h>
 

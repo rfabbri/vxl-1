@@ -29,7 +29,7 @@
 
 #include <vnl/vnl_numeric_traits.h>
 
-#include <dbul/dbul_dir_file.h>
+#include <buld/buld_dir_file.h>
 #include <dbmsh3d/algo/dbmsh3d_fileio.h>
 
 #include <rply/rply.h>
@@ -1314,7 +1314,7 @@ bool dbmsh3d_read_list_file (const char* file,
                              vcl_vector<vcl_string>& align_files)
 {
   vcl_string filename (file);
-  if (dbul_get_suffix (filename) == "")
+  if (buld_get_suffix (filename) == "")
     filename += ".txt";
   vul_printf (vcl_cout, "dbmsh3d_read_list_file(): %s.\n", filename.c_str());
 

@@ -43,7 +43,7 @@ set(dbmsh3d_sources
 
 add_library( dbmsh3d  ${dbmsh3d_sources})
 
-target_link_libraries( dbmsh3d vsol dbgl dbul rply vil)
+target_link_libraries( dbmsh3d vsol bgld buld rply vil)
 
 add_subdirectory( algo )
 add_subdirectory( pro )

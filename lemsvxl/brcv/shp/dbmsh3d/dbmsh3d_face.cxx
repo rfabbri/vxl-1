@@ -20,7 +20,7 @@
 #include <vgl/vgl_point_2d.h>
 
 #include <vnl/vnl_math.h>
-#include <dbgl/dbgl_triangle.h>
+#include <bgld/bgld_triangle.h>
 #include <dbmsh3d/dbmsh3d_face.h>
 #include <dbmsh3d/dbmsh3d_sheet.h>
 #include <dbmsh3d/dbmsh3d_mesh.h>
@@ -1478,7 +1478,7 @@ bool is_tri_non_acute (const vcl_vector<dbmsh3d_vertex*>& vertices)
   dbmsh3d_vertex* V0 = vertices[0]; 
   dbmsh3d_vertex* V1 = vertices[1]; 
   dbmsh3d_vertex* V2 = vertices[2]; 
-  return dbgl_is_tri_non_acute (V0->pt(), V1->pt(), V2->pt());
+  return bgld_is_tri_non_acute (V0->pt(), V1->pt(), V2->pt());
 }
 
 //: Return true if F (triangle) is (1,1,3+) or (1,3+,3+) extraneous

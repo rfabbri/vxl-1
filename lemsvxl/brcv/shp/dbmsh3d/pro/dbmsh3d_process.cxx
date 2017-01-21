@@ -268,7 +268,7 @@ void dbmsh3d_pro_base::save_xyz (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".xyz";
 
   if (pro_data_ == PD_MESH)
@@ -283,7 +283,7 @@ bool dbmsh3d_pro_base::load_xyz (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".xyz";
 
   if (pro_data_ == PD_MESH) {
@@ -303,7 +303,7 @@ void dbmsh3d_pro_base::save_p3d (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".p3d";
 
   if (pro_data_ == PD_MESH)
@@ -318,7 +318,7 @@ bool dbmsh3d_pro_base::load_p3d (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".p3d";
 
   if (pro_data_ == PD_MESH) {
@@ -338,7 +338,7 @@ void dbmsh3d_pro_base::save_xyzn1 (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".xyzn1";
 
   assert (pro_data_ == PD_ORIPTS);
@@ -349,7 +349,7 @@ bool dbmsh3d_pro_base::load_xyzn1 (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".xyzn1";
 
   oripts_.clear();
@@ -363,7 +363,7 @@ void dbmsh3d_pro_base::save_3pi (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".3pi";
 
   assert (pro_data_ == PD_SG3PI);
@@ -374,7 +374,7 @@ bool dbmsh3d_pro_base::load_3pi (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".3pi";
 
   reset_sg3pi ();
@@ -388,7 +388,7 @@ void dbmsh3d_pro_base::save_ply (vcl_string dirfile, const bool ascii_mode)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".ply";
 
   assert (pro_data_ == PD_MESH);
@@ -399,7 +399,7 @@ bool dbmsh3d_pro_base::load_ply (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".ply";
 
   reset_mesh ();
@@ -414,7 +414,7 @@ bool dbmsh3d_pro_base::load_ply_v (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".ply";
  
   reset_mesh ();
@@ -426,7 +426,7 @@ bool dbmsh3d_pro_base::load_ply_f (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".ply";
   if (vul_file::exists(dirfile) == false)
     return false;
@@ -437,7 +437,7 @@ void dbmsh3d_pro_base::save_ply2 (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".ply2";
 
   if (pro_data_ == PD_MESH)
@@ -452,7 +452,7 @@ bool dbmsh3d_pro_base::load_ply2 (vcl_string dirfile, const bool IFS_to_MHE)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".ply2";
 
   reset_mesh ();
@@ -469,7 +469,7 @@ bool dbmsh3d_pro_base::load_ply2_v (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".ply2";
 
   reset_mesh ();
@@ -481,7 +481,7 @@ bool dbmsh3d_pro_base::load_ply2_f (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".ply2";
 
   return dbmsh3d_load_ply2_f (mesh_, dirfile.c_str());
@@ -491,7 +491,7 @@ void dbmsh3d_pro_base::save_off (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".off";
 
   assert (pro_data_ == PD_MESH);
@@ -502,7 +502,7 @@ bool dbmsh3d_pro_base::load_off (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".off";
   
   reset_mesh ();
@@ -513,7 +513,7 @@ void dbmsh3d_pro_base::save_obj (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".obj";
 
   assert (pro_data_ == PD_MESH);
@@ -524,7 +524,7 @@ bool dbmsh3d_pro_base::load_obj (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".obj";
 
   reset_mesh ();
@@ -535,7 +535,7 @@ void dbmsh3d_pro_base::save_iv_ifs (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".iv";
 
   assert (pro_data_ == PD_MESH);
@@ -546,7 +546,7 @@ bool dbmsh3d_pro_base::load_iv_ifs (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".iv";
 
   reset_mesh ();
@@ -557,7 +557,7 @@ void dbmsh3d_pro_base::save_m (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".m";
 
   assert (pro_data_ == PD_MESH);
@@ -568,7 +568,7 @@ bool dbmsh3d_pro_base::load_m (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".m";
 
   reset_mesh ();
@@ -580,7 +580,7 @@ void dbmsh3d_pro_base::save_vtk (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".vtk";
 
   assert (pro_data_ == PD_MESH);
@@ -591,7 +591,7 @@ bool dbmsh3d_pro_base::load_vtk (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".vtk";
 
   reset_mesh ();
@@ -602,7 +602,7 @@ bool dbmsh3d_pro_base::load_hmatrix (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".txt";
   return dbmsh3d_read_xform_file (dirfile.c_str(), hmatrix_);
 }
@@ -613,7 +613,7 @@ bool dbmsh3d_pro::load_ply2_fmm (vcl_string dirfile)
 {
   if (dirfile == "")
     dirfile = dir_file();
-  if (dbul_get_suffix (dirfile) == "")
+  if (buld_get_suffix (dirfile) == "")
     dirfile += ".ply2";
 
   reset_fmm_mesh ();

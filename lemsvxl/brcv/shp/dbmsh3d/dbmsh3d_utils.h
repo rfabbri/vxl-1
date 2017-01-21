@@ -13,7 +13,7 @@
 #include <vgl/vgl_point_3d.h>
 #include <vgl/vgl_box_3d.h>
 
-#include <dbgl/dbgl_fuzzy_boolean.h>
+#include <bgld/bgld_fuzzy_boolean.h>
 
 //: Setting of level of details of debug info.
 //    0: off.

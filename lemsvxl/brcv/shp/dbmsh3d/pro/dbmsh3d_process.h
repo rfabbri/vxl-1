@@ -9,7 +9,7 @@
 
 #include <vgl/algo/vgl_h_matrix_3d.h>
 
-#include <dbul/dbul_dir_file.h>
+#include <buld/buld_dir_file.h>
 #include <dbmsh3d/dbmsh3d_mesh.h>
 #include <dbmsh3d/algo/dbmsh3d_fmm.h>
 #include <dbmsh3d/algo/dbmsh3d_sg3pi_algo.h>
@@ -95,14 +95,14 @@ public:
     return dir_file_;
   }
   vcl_string dir() const {
-    return dbul_get_dir (dir_prefix_);
+    return buld_get_dir (dir_prefix_);
   }
   void set_dir_prefix (const vcl_string& str) {
     dir_prefix_ = str;
   }
   void set_dir_file (const vcl_string& str) {
     dir_file_ = str;
-    dir_prefix_ = dbul_get_dir_prefix (str);
+    dir_prefix_ = buld_get_dir_prefix (str);
   }
 
   PRO_DATA pro_data() {

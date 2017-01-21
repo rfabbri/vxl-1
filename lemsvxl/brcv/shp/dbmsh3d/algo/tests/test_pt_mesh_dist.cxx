@@ -3,7 +3,7 @@
 #include <vcl_cmath.h>
 #include <testlib/testlib_test.h>
 
-#include <dbgl/algo/dbgl_distance.h>
+#include <bgld/algo/bgld_distance.h>
 
 #include <dbmsh3d/algo/dbmsh3d_pt_mesh_dist.h>
 #include <dbmsh3d/algo/dbmsh3d_fileio.h>
@@ -159,7 +159,7 @@ MAIN( test_pt_mesh_dist )
 
   //vgl_point_3d<double> G;
 
-  double d = dbgl_pt_tri_dist_3d (P, A, B, C, G);*/
+  double d = bgld_pt_tri_dist_3d (P, A, B, C, G);*/
 
 
   

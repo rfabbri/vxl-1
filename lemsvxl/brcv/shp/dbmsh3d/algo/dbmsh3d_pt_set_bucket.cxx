@@ -8,9 +8,9 @@
 #include <vul/vul_printf.h>
 #include <vnl/vnl_vector_fixed.h>
 
-#include <dbnl/dbnl_cbrt.h>
-#include <dbgl/dbgl_dist.h>
-#include <dbnl/dbnl_min_max_3.h>
+#include <bnld/bnld_cbrt.h>
+#include <bgld/bgld_dist.h>
+#include <bnld/bnld_min_max_3.h>
 #include <dbmsh3d/dbmsh3d_edge.h>
 #include <dbmsh3d/algo/dbmsh3d_pt_set_bucket.h>
 #include <dbmsh3d/algo/dbmsh3d_fileio.h>
@@ -113,8 +113,8 @@ void dbmsh3d_pt_bktstr::save_extend_bkt_p3d (const vcl_string prefix, const floa
         box.set_max_x (B->max_x());
 
         //Compute the extended bounding box of B.
-        double ext = extr * dbnl_max3 (box.width(), box.height(), box.depth());
-        vgl_box_3d<double> extbox = dbgl_extend_box (box, ext);
+        double ext = extr * bnld_max3 (box.width(), box.height(), box.depth());
+        vgl_box_3d<double> extbox = bgld_extend_box (box, ext);
 
         vcl_vector<vcl_pair<int, vgl_point_3d<double> > > idpts;
         idpts.clear();
@@ -274,7 +274,7 @@ void run_cell_bucketing (dbmsh3d_pt_set* pts, const vcl_string prefix,
 // ###########################################################################
 
 #define BUCKET_FUZINESS_SEARCH    5
-#define BUCKET_FUZINESS           DBGL_MID_EPSILON //1E-10
+#define BUCKET_FUZINESS           BGLD_MID_EPSILON //1E-10
 
 #define CHECK_DUP_BKTPT           18
 
@@ -313,7 +313,7 @@ dbmsh3d_pt_bktstr* adpt_bucketing_idpts (vcl_vector<vcl_pair<int, vgl_point_3d<d
 
   vul_printf (vcl_cout, "adpt_bucketing(): %u points.\n", all_pts.size());
   const unsigned int N = all_pts.size();
-  const unsigned int U = (int) vcl_ceil (dbnl_cbrt ((double)N/M));
+  const unsigned int U = (int) vcl_ceil (bnld_cbrt ((double)N/M));
   vul_printf (vcl_cout, "  %u points per bucket, %u buckets in one dimension.\n", M, U);
   const unsigned int npt_slice = U*U*M;
   const unsigned int npt_row = U*M;
@@ -504,7 +504,7 @@ dbmsh3d_pt_bktstr* adpt_bucketing_pts (vcl_vector<vgl_point_3d<double> >& input_
 
   vul_printf (vcl_cout, "adpt_bucketing(): %u points.\n", input_pts.size());
   const unsigned int N = input_pts.size();
-  const unsigned int U = (int) vcl_ceil (dbnl_cbrt ((double)N/M));
+  const unsigned int U = (int) vcl_ceil (bnld_cbrt ((double)N/M));
   vul_printf (vcl_cout, "  %u points per bucket, %u buckets in one dimension.\n", M, U);
   const unsigned int npt_slice = U*U*M;
   const unsigned int npt_row = U*M;
@@ -696,7 +696,7 @@ int check_dup_adpt_bucketing (vcl_vector<vcl_pair<int, vgl_point_3d<double> > >&
 
   vul_printf (vcl_cout, "  check_dup_adpt_bucketing(): %u points.\n", idpts.size());
   const unsigned int N = idpts.size();
-  const unsigned int U = (int) vcl_ceil (dbnl_cbrt ((double)N/M));
+  const unsigned int U = (int) vcl_ceil (bnld_cbrt ((double)N/M));
   vul_printf (vcl_cout, "    %u points per bucket, %u buckets in one dimension.\n", M, U);
   vul_printf (vcl_cout, "    duplicate points: ");
   const unsigned int npt_slice = U*U*M;
@@ -920,9 +920,9 @@ int check_dup_pts (vcl_vector<vcl_pair<int, vgl_point_3d<double> > >& idpts,
     while (it2 != idpts.end()) {
       vgl_point_3d<double> v2 = (*it2).second;
 
-      if (dbgl_eq (v1.x(), v2.x(), epsilon) && 
-          dbgl_eq (v1.y(), v2.y(), epsilon) && 
-          dbgl_eq (v1.z(), v2.z(), epsilon)) {
+      if (bgld_eq (v1.x(), v2.x(), epsilon) && 
+          bgld_eq (v1.y(), v2.y(), epsilon) && 
+          bgld_eq (v1.z(), v2.z(), epsilon)) {
         //found, delete it2.
         vcl_vector<vcl_pair<int, vgl_point_3d<double> > >::iterator tmp = it2;
         tmp--;
@@ -982,15 +982,15 @@ bool cell_bucketing (dbmsh3d_pt_set* pt_set, const vcl_string prefix,
         bucket.set_min_y (bbox.min_y() + BUCKET_LY*y);
         bucket.set_min_z (bbox.min_z() + BUCKET_LZ*z);
         bucket.set_max_x (bbox.min_x() + BUCKET_LX*(x+1));
-        if (dbgl_eq_c (bucket.max_x(), bbox.max_x())) {
+        if (bgld_eq_c (bucket.max_x(), bbox.max_x())) {
           bucket.set_max_x (bbox.max_x() + 1E-5);
         }
         bucket.set_max_y (bbox.min_y() + BUCKET_LY*(y+1));
-        if (dbgl_eq_c (bucket.max_y(), bbox.max_y())) {
+        if (bgld_eq_c (bucket.max_y(), bbox.max_y())) {
           bucket.set_max_y (bbox.max_y() + 1E-5);
         }
         bucket.set_max_z (bbox.min_z() + BUCKET_LZ*(z+1));
-        if (dbgl_eq_c (bucket.max_z(), bbox.max_z())) {
+        if (bgld_eq_c (bucket.max_z(), bbox.max_z())) {
           bucket.set_max_z (bbox.max_z() + 1E-5);
         }
         int num = put_pts_into_bucket (pt_set,

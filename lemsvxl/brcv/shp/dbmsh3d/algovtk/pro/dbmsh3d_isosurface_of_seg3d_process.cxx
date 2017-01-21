@@ -19,8 +19,8 @@
 #include <vsol/vsol_polyline_2d.h>
 #include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_point_2d.h>
-#include <dbsol/dbsol_file_io.h>
-#include <dbdet/xio/dbdet_xio_seg3d_info.h>
+#include <bsold/bsold_file_io.h>
+#include <sdetd/xio/sdetd_xio_seg3d_info.h>
 
 
 
@@ -137,7 +137,7 @@ execute()
   this->parameters()->get_value( "-dz" , dz );    
   
 
-  dbdet_seg3d_info_sptr seg3d = new dbdet_seg3d_info();
+  sdetd_seg3d_info_sptr seg3d = new sdetd_seg3d_info();
 
   
   x_read(xml_filename, seg3d);
@@ -149,7 +149,7 @@ execute()
   vcl_cout << "Load the image resources to get image dimension\n";
   for (int i=0; i<seg3d->num_frames(); ++i)
   {
-    dbdet_seg3d_info_frame frame = seg3d->frame(i);
+    sdetd_seg3d_info_frame frame = seg3d->frame(i);
 
     // 1) load image
     vcl_string image_filename = seg3d->image_folder() + 
@@ -180,7 +180,7 @@ execute()
     mask.fill(false);
 
     // load the contours
-    dbdet_seg3d_info_frame frame = seg3d->frame(i);
+    sdetd_seg3d_info_frame frame = seg3d->frame(i);
     for (unsigned int k=0; k<frame.contour_file_list.size(); ++k)
     {
       // full filename
@@ -188,7 +188,7 @@ execute()
         "/" + frame.contour_file_list[k];
 
       // load the contour
-      vsol_spatial_object_2d_sptr contour = dbsol_load_con_file(
+      vsol_spatial_object_2d_sptr contour = bsold_load_con_file(
         contour_filename.c_str());
 
       if (! contour)

@@ -257,7 +257,7 @@ bool dbmsh3d_pro_vis::load_g3d (vcl_string filename)
 {
   if (filename == "")
     filename = dir_prefix() + ".g3d";
-  else if (dbul_get_suffix (filename) == "")
+  else if (buld_get_suffix (filename) == "")
     filename += ".g3d";
   mesh_vertex_color_set_.clear();
   return dbmsh3d_load_g3d (mesh_, mesh_vertex_color_set_, filename.c_str());
@@ -267,7 +267,7 @@ void dbmsh3d_pro_vis::save_g3d (vcl_string filename)
 {
   if (filename == "")
     filename = dir_prefix() + ".g3d";
-  else if (dbul_get_suffix (filename) == "")
+  else if (buld_get_suffix (filename) == "")
     filename += ".g3d";
   dbmsh3d_save_g3d (mesh_, filename.c_str());
 }
@@ -278,7 +278,7 @@ SoSeparator* dbmsh3d_pro_vis::view_xyz (vcl_string filename, const int colorcode
 {
   if (filename == "")
     filename = dir_file() + ".xyz";
-  else if (dbul_get_suffix (filename) == "")
+  else if (buld_get_suffix (filename) == "")
     filename += ".xyz";
 
   if (load_xyz(filename))
@@ -291,7 +291,7 @@ SoSeparator* dbmsh3d_pro_vis::view_p3d (vcl_string filename, const int colorcode
 {
   if (filename == "")
     filename = dir_file() + ".p3d";
-  else if (dbul_get_suffix (filename) == "")
+  else if (buld_get_suffix (filename) == "")
     filename += ".p3d";
 
   if (load_p3d(filename))
@@ -304,7 +304,7 @@ SoSeparator* dbmsh3d_pro_vis::view_g3d (vcl_string filename)
 {
   if (filename == "")
     filename = dir_file() + ".g3d";
-  else if (dbul_get_suffix (filename) == "")
+  else if (buld_get_suffix (filename) == "")
     filename += ".g3d";
 
   if (load_g3d(filename))
@@ -319,7 +319,7 @@ SoSeparator* dbmsh3d_pro_vis::view_ply (vcl_string filename, bool b_shape_hints,
 {
   if (filename == "")
     filename = dir_file() + ".ply";
-  else if (dbul_get_suffix (filename) == "")
+  else if (buld_get_suffix (filename) == "")
     filename += ".ply";
 
   if (load_ply(filename))
@@ -334,7 +334,7 @@ SoSeparator* dbmsh3d_pro_vis::view_ply2 (vcl_string filename, bool b_shape_hints
 {
   if (filename == "")
     filename = dir_file() + ".ply2";
-  else if (dbul_get_suffix (filename) == "")
+  else if (buld_get_suffix (filename) == "")
     filename += ".ply2";
 
   if (load_ply2(filename))
@@ -348,7 +348,7 @@ SoSeparator* dbmsh3d_pro_vis::view_iv (vcl_string filename)
 {
   if (filename == "")
     filename = dir_file() + ".iv";
-  else if (dbul_get_suffix (filename) == "")
+  else if (buld_get_suffix (filename) == "")
     filename += ".iv";
   return (SoSeparator*) bgui3d_import_file (filename);
 }
@@ -357,7 +357,7 @@ SoSeparator* dbmsh3d_pro_vis::view_wrl (vcl_string filename)
 {
   if (filename == "")
     filename = dir_file() + ".wrl";
-  else if (dbul_get_suffix (filename) == "")
+  else if (buld_get_suffix (filename) == "")
     filename += ".wrl";
   return (SoSeparator*) bgui3d_import_file (filename);
 }
@@ -380,7 +380,7 @@ SoSeparator* dbmsh3d_pro_vis::vis_list_file (vcl_string filename,
 {
   SoSeparator* root = new SoSeparator;
   
-  if (dbul_get_suffix (filename) == "")
+  if (buld_get_suffix (filename) == "")
     filename += ".txt";
 
   vul_printf (vcl_cout, "vis_list_file(): %s.\n", filename.c_str());
@@ -420,7 +420,7 @@ SoSeparator* dbmsh3d_pro_vis::vis_list_file (vcl_string filename,
       reset_data (); //clean up the datastructure before loading.
       pro_data_ = PD_MESH;
       
-      vcl_string suffix = dbul_get_suffix (file);
+      vcl_string suffix = buld_get_suffix (file);
       if (suffix == ".p3d") {
         type = DBMSH3D_FILE_P3D;
         load_p3d (file);
