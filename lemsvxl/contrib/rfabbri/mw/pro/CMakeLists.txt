@@ -3,7 +3,6 @@ include_directories( ${lems_SOURCE_DIR}/contrib/rfabbri )
 
 set(mw_pro_sources
 #old/mw_cvmatch_process.cxx old/mw_cvmatch_process.h
-mw_load_discrete_corresp_process.cxx mw_load_discrete_corresp_process.h
 mw_save_discrete_corresp_process.cxx mw_save_discrete_corresp_process.h
 #dbdet_test_sel_circle_process.cxx dbdet_test_sel_circle_process.h
 dbdet_combine_curves_process.cxx dbdet_combine_curves_process.h
