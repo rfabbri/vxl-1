@@ -10,7 +10,7 @@ set(dbirl_pro_sources
 
 add_library(dbirl_pro ${dbirl_pro_sources})
 
-target_link_libraries(dbirl_pro dbirl dbinfo vidpro1)
+target_link_libraries(dbirl_pro dbirl dbinfo_pro dbinfo vidpro1)
 
 
 if(BUILD_TESTING)
