@@ -18,7 +18,7 @@ aux_source_directory(Templates dbetl_sources)
 
 add_library(dbetl ${dbetl_sources})
 
-target_link_libraries(dbetl becld vil)
+target_link_libraries(dbetl becld vsol vnl_algo vil vgl)
 
 # Processing Library
 add_subdirectory(pro)

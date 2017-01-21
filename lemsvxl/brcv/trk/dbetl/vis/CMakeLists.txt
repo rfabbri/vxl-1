@@ -6,6 +6,8 @@ include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${VXL_GEL_INCLUDE_DIR}/mrc )
 
 if (VXL_VGUI_FOUND)
+find_package(OpenGL)
+  
 
 set(dbetl_vis_sources
    dbetl_episeg_tools.cxx        dbetl_episeg_tools.h
@@ -25,7 +27,7 @@ include_directories( ${VXL_COIN3D_INCLUDE_DIR} )
 
 add_library(dbetl_vis ${dbetl_vis_sources})
 
-target_link_libraries(dbetl_vis dbetl_pro becld_vis)
+target_link_libraries(dbetl_vis dbetl_pro becld_vis bvis1 vgui ${OPENGL_LIBRARIES})
 
 # Add the bgui3d library if bgui3d is built is available for 3D rendering
 if (VXL_BGUI3D_FOUND)
