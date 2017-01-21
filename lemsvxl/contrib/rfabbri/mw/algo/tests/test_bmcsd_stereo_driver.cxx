@@ -4,21 +4,21 @@
 //\author Ricardo Fabbri (rfabbri), Brown University  (rfabbri@gmail.com)
 //
 #include <testlib/testlib_test.h>
-#include <mw/pro/bmcsd_stereo_driver.h>
+#include <bmcsd/pro/bmcsd_stereo_driver.h>
 
-MAIN( test_dbmcs_stereo_driver )
+MAIN( test_bmcsd_stereo_driver )
 {
    bmcsd_curve_stereo_data_path dpath;
    vcl_string fname_path("/usr/local/moredata/subset/");
 
   // Hardcoded:
-  // mw_data::get_capitol_building_subset(&dpath);
+  // bmcsd_data::get_capitol_building_subset(&dpath);
 
   // Files:
-  bool retval = mw_data::read_frame_data_list_txt(
+  bool retval = bmcsd_data::read_frame_data_list_txt(
       fname_path,
       &dpath,
-      bmcsd_util::MW_INTRINSIC_EXTRINSIC
+      bmcsd_util::BMCS_INTRINSIC_EXTRINSIC
       );
   TEST("data list from file", retval, true);
   if (!retval)
