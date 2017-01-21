@@ -1,16 +1,16 @@
 #include <testlib/testlib_test.h>
 #include <bmcsd/bmcsd_util.h>
-#include <mw/algo/dvcpl_distmap_bundle_adjust.h>
-#include <mw/algo/dvcpl_distmap_optimize_camera.h>
-#include <dbdet/algo/dbdet_load_edg.h>
-#include <dbdet/algo/dbdet_convert_edgemap.h>
+#include <vcpld/algo/vcpld_distmap_bundle_adjust.h>
+#include <vcpld/algo/vcpld_distmap_optimize_camera.h>
+#include <sdetd/algo/sdetd_load_edg.h>
+#include <sdetd/algo/sdetd_convert_edgemap.h>
 #include <bprod/bprod_process.h>
 #include <bild/algo/bild_exact_distance_transform.h>
 
 
-class dvcpl_bundle_adjust_tester {
+class vcpld_bundle_adjust_tester {
 public:
-  dvcpl_bundle_adjust_tester (
+  vcpld_bundle_adjust_tester (
     const vcl_vector<vcl_string> &edgemaps_fnames, 
     const vcl_vector<vcl_string> &cams_fnames):
     nviews_(edgemaps_fnames.size()),
@@ -33,7 +33,7 @@ public:
       bool bSubPixel = true;
       double scale=1.0;
 
-      bool retval = dbdet_load_edg(
+      bool retval = sdetd_load_edg(
           edgemaps_fnames[v],
           bSubPixel,
           scale,
@@ -69,8 +69,8 @@ public:
 
   void write_points()
   {
-    mywritev("dat/dvcpl_test_pts3d_0-optimized.dat", pts3d_[0]);
-    mywritev("dat/dvcpl_test_pts3d_1-optimized.dat", pts3d_[1]);
+    mywritev("dat/vcpld_test_pts3d_0-optimized.dat", pts3d_[0]);
+    mywritev("dat/vcpld_test_pts3d_1-optimized.dat", pts3d_[1]);
   }
 
   void compute_dts()
@@ -79,7 +79,7 @@ public:
     for (unsigned v=0; v < nviews_; ++v) {
       vil_image_view<vxl_byte > bw_image;
       //: Assumes the conversion maps edges to 255 and others to 0.
-      bool retval = dbdet_convert_edgemap_to_image(*em_[v], bw_image);
+      bool retval = sdetd_convert_edgemap_to_image(*em_[v], bw_image);
       
       if (!retval) abort();
 
@@ -110,16 +110,16 @@ public:
   typedef vcl_vector<vgl_point_3d<double> > single_3d_curve;
   vcl_vector< single_3d_curve > pts3d_;
 
-  vcl_vector<dbdet_edgemap_sptr> em_;
+  vcl_vector<sdetd_edgemap_sptr> em_;
   vcl_vector<vpgl_perspective_camera<double> > cam_;
   vcl_vector<vil_image_view<vxl_uint_32> > dt_;
   vcl_vector<vil_image_view<unsigned> > label_;
 };
 
 
-MAIN( test_dvcpl_distmap_bundle_adjust )
+MAIN( test_vcpld_distmap_bundle_adjust )
 {
-  START ("dvcpl bundle adjustment of curves using distance transforms");
+  START ("vcpld bundle adjustment of curves using distance transforms");
   // Specify the data
   vcl_vector<vcl_string> edgemaps_fnames, cams_fnames;
 
@@ -138,16 +138,16 @@ MAIN( test_dvcpl_distmap_bundle_adjust )
   cams_fnames.push_back(path + vcl_string("frame_00137.extrinsic"));
   cams_fnames.push_back(path + vcl_string("frame_00177.extrinsic"));
 
-  dvcpl_bundle_adjust_tester t(
+  vcpld_bundle_adjust_tester t(
     edgemaps_fnames, 
     cams_fnames);
 
   t.compute_dts();
   
   vcl_vector<vcl_string> pts3d_fnames;
-//  pts3d_fnames.push_back("dat/dvcpl_test_pts3d_0.dat");
-  pts3d_fnames.push_back("dat/dvcpl_test_pts3d_1.dat");
-  pts3d_fnames.push_back("dat/dvcpl_test_pts3d_2.dat");
+//  pts3d_fnames.push_back("dat/vcpld_test_pts3d_0.dat");
+  pts3d_fnames.push_back("dat/vcpld_test_pts3d_1.dat");
+  pts3d_fnames.push_back("dat/vcpld_test_pts3d_2.dat");
   // Read in two 3D curves.
   t.read_3d_curves(pts3d_fnames);
 
@@ -166,7 +166,7 @@ MAIN( test_dvcpl_distmap_bundle_adjust )
   SUMMARY();
 }
 
-void dvcpl_bundle_adjust_tester::
+void vcpld_bundle_adjust_tester::
 read_3d_curves(vcl_vector<vcl_string> pts3d_fnames)
 {
   pts3d_.resize(2);
@@ -181,10 +181,10 @@ read_3d_curves(vcl_vector<vcl_string> pts3d_fnames)
   vcl_cout << "Curve 1 size: " << pts3d_[1].size() << vcl_endl;
 }
 
-void dvcpl_bundle_adjust_tester::
+void vcpld_bundle_adjust_tester::
 do_optimization()
 {
-  dvcpl_distmap_bundle_adjust o;
+  vcpld_distmap_bundle_adjust o;
 
   unsigned total_npts = pts3d_[0].size() + pts3d_[1].size();
 //  unsigned total_npts = pts3d_[0].size();
@@ -209,13 +209,13 @@ do_optimization()
   TEST("Error improved", o.start_error() > o.end_error(), true);
 }
 
-void dvcpl_bundle_adjust_tester::
+void vcpld_bundle_adjust_tester::
 do_one_cam_optimization()
 {
   vcl_cout << "------- Optimizing first camera only -------\n";
 
   vpgl_perspective_camera<double> opt = 
-  dvcpl_distmap_optimize_camera::opt_orient_pos(
+  vcpld_distmap_optimize_camera::opt_orient_pos(
       cam_[5],
       pts3d_,
       dt_[5],

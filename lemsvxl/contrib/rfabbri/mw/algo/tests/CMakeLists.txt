@@ -16,7 +16,7 @@ add_executable (mw_algo_test_all
    test_bprod_process.cxx
    test_multiview_bprod_process.cxx
    test_bmcsd_stereo_driver.cxx
-   #    test_dvcpl_distmap_bundle_adjust.cxx
+   test_dvcpl_distmap_bundle_adjust.cxx
 )
 
 #add_test( mw_algo_test_reprojection_errors mw_algo_test_all test_reprojection_errors )
