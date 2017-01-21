@@ -20,17 +20,15 @@ add_executable (mw_algo_test_all
 )
 
 #add_test( mw_algo_test_reprojection_errors mw_algo_test_all test_reprojection_errors )
-
-add_test( mw_algo_test_discrete_corresp_n_algo mw_algo_test_all test_discrete_corresp_n_algo )
 #add_test( mw_algo_test_stereo_band mw_algo_test_all test_stereo_band )
 #add_test( mw_algo_test_tangent_band mw_algo_test_all test_tangent_band)
 add_test( mw_algo_test_util mw_algo_test_all test_util )
-#add_test( mw_algo_test_cam mw_algo_test_all test_cam )
-#add_test( mw_algo_test_sift_curve mw_algo_test_all test_sift_curve )
+add_test( mw_algo_test_cam mw_algo_test_all test_cam )
+add_test( mw_algo_test_sift_curve mw_algo_test_all test_sift_curve )
 #add_test( mw_algo_test_bprod_process mw_algo_test_all test_bprod_process )
-#add_test( mw_algo_test_multiview_bprod_process mw_algo_test_all test_multiview_bprod_process )
-#add_test( mw_algo_test_bmcsd_stereo_driver mw_algo_test_all test_bmcsd_stereo_driver)
-#add_test( mw_algo_test_dvcpl_distmap_bundle_ajust mw_algo_test_all test_dvcpl_distmap_bundle_adjust )
+add_test( mw_algo_test_multiview_bprod_process mw_algo_test_all test_multiview_bprod_process )
+add_test( mw_algo_test_bmcsd_stereo_driver mw_algo_test_all test_bmcsd_stereo_driver)
+add_test( mw_algo_test_dvcpl_distmap_bundle_ajust mw_algo_test_all test_dvcpl_distmap_bundle_adjust )
 
 add_executable( mw_algo_test_include test_include.cxx )
 

@@ -2,7 +2,7 @@
 #include <bmcsd/bmcsd_util.h>
 #include <vcpld/algo/vcpld_distmap_bundle_adjust.h>
 #include <vcpld/algo/vcpld_distmap_optimize_camera.h>
-#include <sdetd/algo/sdetd_load_edg.h>
+#include <sdetd/io/sdetd_load_edg.h>
 #include <sdetd/algo/sdetd_convert_edgemap.h>
 #include <bprod/bprod_process.h>
 #include <bild/algo/bild_exact_distance_transform.h>
@@ -52,7 +52,7 @@ public:
   {
     for (unsigned v=0; v < cams_fnames.size(); ++v) {
       bool retval = bmcsd_util::read_cam_anytype(cams_fnames[v], 
-          bmcsd_util::MW_INTRINSIC_EXTRINSIC, &cam_[v]);
+          bmcsd_util::BMCS_INTRINSIC_EXTRINSIC, &cam_[v]);
       if (!retval)
         abort();
     }
@@ -62,7 +62,7 @@ public:
   void write_cams(vcl_string dir, vcl_string prefix)
   {
     bool retval =  
-      bmcsd_util::write_cams(dir, prefix, bmcsd_util::MW_INTRINSIC_EXTRINSIC, cam_);
+      bmcsd_util::write_cams(dir, prefix, bmcsd_util::BMCS_INTRINSIC_EXTRINSIC, cam_);
     if (!retval)
       abort();
   }
@@ -110,7 +110,7 @@ public:
   typedef vcl_vector<vgl_point_3d<double> > single_3d_curve;
   vcl_vector< single_3d_curve > pts3d_;
 
-  vcl_vector<sdetd_edgemap_sptr> em_;
+  vcl_vector<sdet_edgemap_sptr> em_;
   vcl_vector<vpgl_perspective_camera<double> > cam_;
   vcl_vector<vil_image_view<vxl_uint_32> > dt_;
   vcl_vector<vil_image_view<unsigned> > label_;
@@ -227,7 +227,7 @@ do_one_cam_optimization()
   vcl_vector<vpgl_perspective_camera<double> > cams;
   cams.push_back(opt);
   bool retval =  
-    bmcsd_util::write_cams("dat", "result-1cam", bmcsd_util::MW_INTRINSIC_EXTRINSIC, cams);
+    bmcsd_util::write_cams("dat", "result-1cam", bmcsd_util::BMCS_INTRINSIC_EXTRINSIC, cams);
   if (!retval)
     abort();
 }
