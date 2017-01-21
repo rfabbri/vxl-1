@@ -5,8 +5,8 @@
 #include <rsdl/rsdl_point.h>
 #include <rsdl/rsdl_kd_tree.h>
 
-#include <dbgl/dbgl_dist.h>
-#include <dbgl/dbgl_rigid_align.h>
+#include <bgld/bgld_dist.h>
+#include <bgld/bgld_rigid_align.h>
 #include <dbmsh3d/algo/dbmsh3d_pt_mesh_dist.h>
 #include <dbmsh3dr/dbmsh3dr_match.h>
 
@@ -85,7 +85,7 @@ START_ICP_ITERATION:
   assert (cor_movPS.size() != 0);
 
   //:3) Find the xform for this iteration.
-  dbgl_get_rigid_alignment (cor_fixPS, cor_movPS, R, fixC, movC);
+  bgld_get_rigid_alignment (cor_fixPS, cor_movPS, R, fixC, movC);
 
   //:4) Rigidly transform movPS to approach fixPS.
   for (unsigned int i=0; i<movPS.size(); i++) {
@@ -183,7 +183,7 @@ START_ICP_ITERATION:
   assert (cor_movPS.size() != 0);
 
   //:3) Find the xform for this iteration.
-  dbgl_get_rigid_alignment (cor_fixPS, cor_movPS, R, fixC, movC);
+  bgld_get_rigid_alignment (cor_fixPS, cor_movPS, R, fixC, movC);
 
   //:4) Rigidly transform movM to approach fixM.
   it = movM->vertexmap().begin();

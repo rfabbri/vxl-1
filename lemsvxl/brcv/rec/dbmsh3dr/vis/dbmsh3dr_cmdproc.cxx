@@ -61,7 +61,7 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
   //-p3d_2: 
   if (dbmsh3d_cmd_p3d_file2()) {
     mpvr->pv1()->b_view_p3d_ = true;
-    mpvr->pv1()->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_p3d_file2()));
+    mpvr->pv1()->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_p3d_file2()));
   }
   if (mpvr->pv1()->b_view_p3d_) {
     mpvr->pv1()->reset_mesh ();
@@ -71,7 +71,7 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
       mpvr->xform_hmatrix_01_pro1 ();
 
       if (dbmsh3d_cmd_fileprefix2()) { //-f2: specify output file name    
-        vcl_string dirfile = dbul_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".p3d";
+        vcl_string dirfile = buld_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".p3d";
         vul_printf (vcl_cout, "Writing transformed file (*.p3d) %s...\n", dirfile.c_str());
         dbmsh3d_save_p3d (mpvr->pv1()->mesh(), dirfile.c_str());        
       }
@@ -84,7 +84,7 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
   //-xyz_2: 
   if (dbmsh3d_cmd_xyz_file2()) {
     mpvr->pv1()->b_view_xyz_ = true;
-    mpvr->pv1()->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_xyz_file2()));
+    mpvr->pv1()->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_xyz_file2()));
   }
   if (mpvr->pv1()->b_view_xyz_) {
     mpvr->pv1()->reset_mesh ();
@@ -94,7 +94,7 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
       mpvr->xform_hmatrix_01_pro1 ();
 
       if (dbmsh3d_cmd_fileprefix2()) { //-f2: specify output file name    
-        vcl_string dirfile = dbul_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".xyz";
+        vcl_string dirfile = buld_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".xyz";
         vul_printf (vcl_cout, "Writing transformed file (*.xyz) %s...\n", dirfile.c_str());
         dbmsh3d_save_xyz (mpvr->pv1()->mesh(), dirfile.c_str());        
       }
@@ -107,7 +107,7 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
   //-xyzn1_2: 
   if (dbmsh3d_cmd_xyzn1_file2()) {
     mpvr->pv1()->b_view_xyzn1_ = true;
-    mpvr->pv1()->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_xyzn1_file2()));
+    mpvr->pv1()->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_xyzn1_file2()));
   }
   if (mpvr->pv1()->b_view_xyzn1_) {
     vcl_string xyzn1_file = mpvr->pv1()->dir_file() + ".xyzn1";
@@ -131,7 +131,7 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
   //-3pi_2: 
   if (dbmsh3d_cmd_3pi_file2()) {
     mpvr->pv1()->b_view_3pi_ = true;
-    mpvr->pv1()->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_3pi_file2()));
+    mpvr->pv1()->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_3pi_file2()));
   }
   if (mpvr->pv1()->b_view_3pi_) {
     if (mpvr->pv1()->load_3pi(mpvr->pv1()->dir_file())) {
@@ -140,7 +140,7 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
       mpvr->pv1()->move_sg3pi_to_mesh ();
 
       if (dbmsh3d_cmd_fileprefix2()) { //-f2: specify output file name    
-        vcl_string dirfile = dbul_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".xyz";
+        vcl_string dirfile = buld_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".xyz";
         vul_printf (vcl_cout, "Writing transformed file (*.xyz) %s...\n", dirfile.c_str());
         dbmsh3d_save_xyz (mpvr->pv1()->mesh(), dirfile.c_str());        
       }
@@ -153,7 +153,7 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
   //-ply_2: 
   if (dbmsh3d_cmd_ply_file2()) {
     mpvr->pv1()->b_view_ply_ = true;
-    mpvr->pv1()->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_ply_file2()));
+    mpvr->pv1()->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_ply_file2()));
   }
   if (mpvr->pv1()->b_view_ply_) {
     if (mpvr->pv1()->load_ply (mpvr->pv1()->dir_file()) == false)
@@ -164,7 +164,7 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
       mpvr->xform_hmatrix_01_pro1 ();
 
       if (dbmsh3d_cmd_fileprefix2()) { //-f2: specify output file name    
-        vcl_string dirfile = dbul_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".ply";
+        vcl_string dirfile = buld_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".ply";
         vul_printf (vcl_cout, "Writing transformed file (*.ply) %s...\n", dirfile.c_str());
         dbmsh3d_save_ply (mpvr->pv1()->mesh(), dirfile.c_str());        
       }
@@ -179,7 +179,7 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
   //-ply2_2: 
   if (dbmsh3d_cmd_ply2_file2()) {
     mpvr->pv1()->b_view_ply2_ = true;
-    mpvr->pv1()->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_ply2_file2()));
+    mpvr->pv1()->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_ply2_file2()));
   }
   if (mpvr->pv1()->b_view_ply2_) {
     mpvr->pv1()->reset_mesh ();
@@ -191,7 +191,7 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
       mpvr->xform_hmatrix_01_pro1 ();
 
       if (dbmsh3d_cmd_fileprefix2()) { //-f2: specify output file name    
-        vcl_string dirfile = dbul_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".ply2";
+        vcl_string dirfile = buld_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".ply2";
         vul_printf (vcl_cout, "Writing transformed file (*.ply2) %s...\n", dirfile.c_str());
         dbmsh3d_save_ply2 (mpvr->pv1()->mesh(), dirfile.c_str());        
       }
@@ -206,7 +206,7 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
   //-iv_2: 
   if (dbmsh3d_cmd_iv_file2()) {
     mpvr->pv1()->b_view_iv_ = true;
-    mpvr->pv1()->set_dir_file (dbul_get_dir_file (dbmsh3d_cmd_iv_file2()));
+    mpvr->pv1()->set_dir_file (buld_get_dir_file (dbmsh3d_cmd_iv_file2()));
   }
   if (mpvr->pv1()->b_view_iv_) {
     _root->addChild (mpvr->pv1()->view_iv ());
@@ -351,9 +351,9 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
       }
     }
     else if (dbmsh3dr_cmd_icp() == 3) { //-icp 3: Run RGRL ICP.
-      bool result = mpvr->pv0()->load_xyzn1 (dbul_get_dir_file (dbmsh3d_cmd_fileprefix1()) + ".xyzn1");
+      bool result = mpvr->pv0()->load_xyzn1 (buld_get_dir_file (dbmsh3d_cmd_fileprefix1()) + ".xyzn1");
       assert (result);
-      result = mpvr->pv1()->load_xyzn1 (dbul_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".xyzn1");
+      result = mpvr->pv1()->load_xyzn1 (buld_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".xyzn1");
       assert (result);
 
       //Register the two oriented point sets.
@@ -419,13 +419,13 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
   }
   else if (dbmsh3dr_cmd_verr() == 2) { //-verr 2: compute and visualize pt-pt dist (showing surface)
     //Load file 1 via -f1 prefix
-    mpvr->pv0()->load_ply2 (dbul_get_dir_file (dbmsh3d_cmd_fileprefix1()) + "-surface.ply2");
+    mpvr->pv0()->load_ply2 (buld_get_dir_file (dbmsh3d_cmd_fileprefix1()) + "-surface.ply2");
     
     if (dbmsh3d_cmd_n1() != -1) //draw the first point cloud.
       _root->addChild (mpvr->pv0()->vis_mesh (false, true));
     
     //Load file 2 via -f2 prefix
-    mpvr->pv1()->load_p3d (dbul_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".p3d");
+    mpvr->pv1()->load_p3d (buld_get_dir_file (dbmsh3d_cmd_fileprefix2()) + ".p3d");
     
     //Estimate dist. threshold for error estimation.
     // -dthr: dist_th_ratio for error estimation.
@@ -545,7 +545,7 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
 
   //############### Debug the point-mesh distance code ###############  
   if (dbmsh3dr_cmd_debug_verr() == 1) { //-dbverr 1: debug point-mesh distance
-    mpvr->pv0()->load_ply2 (dbul_get_dir_file (dbmsh3d_cmd_fileprefix()) + ".ply2", true);
+    mpvr->pv0()->load_ply2 (buld_get_dir_file (dbmsh3d_cmd_fileprefix()) + ".ply2", true);
     
     if (dbmsh3d_cmd_n1() != -1) { //-n1 1: draw the first surface mesh.
       _root->addChild (mpvr->pv0()->vis_mesh (false, true));
@@ -606,7 +606,7 @@ SoSeparator* dbmsh3dr_cmdproc_execute (dbmsh3dr_pro_vis* mpvr)
       mpvr->reduce_surf_thickness (dbmsh3dr_cmd_dthr(), dbmsh3d_cmd_n2(), dbmsh3d_cmd_n3(), dbmsh3d_cmd_o());
       
       //Save all pt clouds into "prefix_all_pts.xyz" file.
-      vcl_string all_pts_file = dbul_get_dir_prefix (dbmsh3d_cmd_fileprefix());
+      vcl_string all_pts_file = buld_get_dir_prefix (dbmsh3d_cmd_fileprefix());
       all_pts_file += "-all-pts.xyz";
       mpvr->save_all_pts_xyz (all_pts_file.c_str());
     }

@@ -331,7 +331,7 @@ bool test_perturb_compute_dist (dbmsh3d_mesh* M, const int iteration,
       //brute-forcely compute the exact point-mesh distance.
       double d_exact = dbmsh3d_pt_mesh_dist_bf (pt, M, G);
 
-      if (dbgl_eq_m (d, d_exact) == false) {
+      if (bgld_eq_m (d, d_exact) == false) {
         vul_printf (vcl_cout, "\n  Problematic query point: (%lf, %lf, %lf).\n",
                     pt.x(), pt.y(), pt.z());
         vul_printf (vcl_cout, "     perturbed from V %d, iter %d, top_n %d.\n", V->id(), i, top_n);

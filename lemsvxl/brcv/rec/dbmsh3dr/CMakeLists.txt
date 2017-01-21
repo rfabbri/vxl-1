@@ -21,7 +21,7 @@ dbmsh3dr_scan_fuse.cxx
 add_library(dbmsh3dr  ${dbmsh3dr_sources})
 
 # add the required libraries into this list
-target_link_libraries( dbmsh3dr dbmsh3d dbmsh3d_algo dbgl rgrl )  
+target_link_libraries( dbmsh3dr dbmsh3d dbmsh3d_algo bgld rgrl )  
 
 add_subdirectory( vis )
 

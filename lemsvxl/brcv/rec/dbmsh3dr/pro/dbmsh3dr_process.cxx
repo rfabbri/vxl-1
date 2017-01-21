@@ -438,7 +438,7 @@ bool dbmsh3dr_pro_base::compute_adj_graph_weight (const float dthr,
     pro_[0]->reset_mesh();
     //Read in the data_files_[i] .3pi file
     pro_[0]->set_dir_prefix (data_files_[i]);    
-    vcl_string suffix = dbul_get_suffix (data_files_[i]);
+    vcl_string suffix = buld_get_suffix (data_files_[i]);
 
     if (vcl_strcmp (suffix.c_str(), ".3pi")==0 && pro_[0]->load_3pi (data_files_[i])) {
       dfi = DATAFILE_3PI;      
@@ -477,7 +477,7 @@ bool dbmsh3dr_pro_base::compute_adj_graph_weight (const float dthr,
       pro_[1]->reset_mesh();
       //Read in the data_files_[j] .3pi file
       pro_[1]->set_dir_prefix (data_files_[j]);
-      suffix = dbul_get_suffix (data_files_[j]);
+      suffix = buld_get_suffix (data_files_[j]);
 
       if (vcl_strcmp (suffix.c_str(), ".3pi")==0 && pro_[1]->load_3pi (data_files_[j])) {    
         dfj = DATAFILE_3PI;
@@ -558,7 +558,7 @@ bool dbmsh3dr_pro_base::fuse_scan_MST (const vcl_vector<vcl_pair<int, int> >& MS
   fusion_idx[root_sid] = true;
 
   //Save the root scan's scan_##_fixed.txt to scan_##_mst.txt
-  pro_[0]->set_dir_prefix (dbul_get_str_prior (align_files_[root_sid], "_fixed"));
+  pro_[0]->set_dir_prefix (buld_get_str_prior (align_files_[root_sid], "_fixed"));
   bool result = pro_[0]->load_hmatrix (align_files_[root_sid]);
   assert (result);
   dbmsh3d_write_xform_file (pro_[0]->dir_prefix() + "_mst.txt", pro_[0]->hmatrix());
@@ -572,8 +572,8 @@ bool dbmsh3dr_pro_base::fuse_scan_MST (const vcl_vector<vcl_pair<int, int> >& MS
     //Fix the position of cur_scan and move next_scan to fuse with cur_scan.
 
     //1) Set dir_prefix for pro_[0] and pro_[1].
-    pro_[0]->set_dir_prefix (dbul_get_str_prior (align_files_[cur_sid], "_fixed"));
-    pro_[1]->set_dir_prefix (dbul_get_str_prior (align_files_[next_sid], "_fixed"));
+    pro_[0]->set_dir_prefix (buld_get_str_prior (align_files_[cur_sid], "_fixed"));
+    pro_[1]->set_dir_prefix (buld_get_str_prior (align_files_[next_sid], "_fixed"));
 
     //2) Read in original scan to estimate error_dist_th.
     bool result = pro_[0]->load_3pi (pro_[0]->dir_prefix() + "_crop.3pi");  
@@ -770,7 +770,7 @@ bool dbmsh3dr_pro_base::setup_n_surfs (const float dthr, double& avg_sample_dist
   //Read in all data files in data_files[] to pro_[] 
   //and apply translation & rotation with align_files[].
   for (int i=0; i<N_DATA; i++) {
-    pro_[i]->set_dir_file (dbul_get_dir_file (data_files_[i]));
+    pro_[i]->set_dir_file (buld_get_dir_file (data_files_[i]));
     if (pro_[i]->load_meshes_files (data_files_[i]) == false)
       return false;
     if (align_files_[i] != "") {
