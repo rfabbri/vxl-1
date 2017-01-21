@@ -5,8 +5,8 @@
 #include <vil/vil_image_view.h>
 #include <vil/vil_rgb.h>
 #include <vil/vil_border.h>
-#include <sel/dbdet_edgel.h>
-#include <edge/dbdet_edgemap.h>
+#include <dbdet/sel/dbdet_edgel.h>
+#include <dbdet/edge/dbdet_edgemap.h>
 #include "dbdet_yuliang_features.h"
 
 

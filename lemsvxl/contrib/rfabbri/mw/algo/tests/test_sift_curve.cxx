@@ -2,12 +2,13 @@
 
 #include <vnl/vnl_math.h>
 #include <vil/vil_image_view.h>
-#include <mw/algo/bmcsd_sift_curve_algo.h>
+#include <dbdet/algo/dbdet_curve_fragment_cues.h>
+#include <mw/algo/mw_sift_curve_algo.h>
 
 #define DATA(I) (I).top_left_ptr()
 
 static void
-print_all(const bmcsd_sift_curve_algo &computor, const bmcsd_sift_curve &sc)
+print_all(const mw_sift_curve_algo &computor, const bmcsd_sift_curve &sc)
 {
   vcl_cout << "Number of descriptor dimensions: " << sc.num_dims() << vcl_endl;
   vcl_cout << "Total number of scales: " << sc.num_scales() << vcl_endl;
@@ -45,10 +46,11 @@ MAIN( test_sift_curve )
   // Curve to itself should have match cost equal to zero.
 
   // TODO build edge map
+  /*
 
-  sdetd_curve_fragment_cues cue_computer(image, edgemap);
+  dbdet_curve_fragment_cues cue_computer(image, edgemap);
 
-  sdetd_edgel_chain crv;
+  dbdet_edgel_chain crv;
   y_feature_vector v;
 
   // corner case: empty curve -- should work
@@ -58,17 +60,17 @@ MAIN( test_sift_curve )
 
   vcl_cout << "\n--- Testing 3-edgel curve case ---\n";
 
-  sdetd_edgel e1;
+  dbdet_edgel e1;
   e1.pt.set(3.,3.);
   e1.tangent = 0;
   crv.push_back(&e1);
 
-  sdetd_edgel e2;
+  dbdet_edgel e2;
   e2.pt.set(4.,2.);
   e2.tangent = vnl_math::pi/2.;
   crv.push_back(&e2);
 
-  sdetd_edgel e3;
+  dbdet_edgel e3;
   e3.pt.set(5.5,0.8); //< out of bounds
   e3.tangent = vnl_math::pi/4.;
   crv.push_back(&e3);
@@ -79,6 +81,7 @@ MAIN( test_sift_curve )
 
   // computor.compute_many(ec_v, &sc_v);
 
+  */
 
   SUMMARY();
 }

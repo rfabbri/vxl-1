@@ -12,11 +12,11 @@
 #include <vil/vil_save.h>
 #include <vil/vil_convert.h>
 
-#include <mw/algo/mw_data.h>
-#include <mw/pro/bprod_load_camera_source.h>
-#include <mw/pro/bprod_load_edg_source.h>
-#include <mw/pro/bprod_load_vsol_polyline_source.h>
-#include <mw/pro/bprod_fragment_tangents.h>
+#include <bmcsd/algo/bmcsd_data.h>
+#include <bmcsd/pro/bmcsd_load_camera_source.h>
+#include <bmcsd/pro/bmcsd_load_edg_source.h>
+#include <bmcsd/pro/bmcsd_load_vsol_polyline_source.h>
+#include <bmcsd/pro/bmcsd_fragment_tangents_filter.h>
 
 class views_aggregator : public bprod_sink
 {
@@ -45,8 +45,8 @@ class views_aggregator : public bprod_sink
       cam_.push_back(input<vpgl_perspective_camera<double> >(CAM_ID));
 
       //: Edge map
-      assert(input_type_id(i*sources_per_view +EDG_ID) == typeid(dbdet_edgemap_sptr));
-      em_.push_back(input<dbdet_edgemap_sptr>(EDG_ID));
+      assert(input_type_id(i*sources_per_view +EDG_ID) == typeid(sdet_edgemap_sptr));
+      em_.push_back(input<sdet_edgemap_sptr>(EDG_ID));
 
       //: Distance transform of the pixelized edge map
       assert(input_type_id(i*sources_per_view +DT_ID) == typeid(vil_image_view<vxl_uint_32>));
@@ -93,7 +93,7 @@ class views_aggregator : public bprod_sink
   vcl_vector<vpgl_perspective_camera<double> > cam_;
   vcl_vector<vil_image_view<vxl_uint_32> > dt_;
   vcl_vector<vil_image_view<unsigned> > label_;
-  vcl_vector<dbdet_edgemap_sptr > em_;
+  vcl_vector<sdet_edgemap_sptr > em_;
   vcl_vector<vcl_vector< vsol_polyline_2d_sptr > > curves_;
   vcl_vector<vcl_vector< vcl_vector<double> > > tgts_;
 };
@@ -109,7 +109,7 @@ MAIN( test_multiview_bprod_process )
   static const unsigned max_num_active_frames = 6;
 
   bmcsd_curve_stereo_data_path dpath;
-  mw_data::get_capitol_building_subset(&dpath);
+  bmcsd_data::get_capitol_building_subset(&dpath);
 
   unsigned nviews =  vcl_min(dpath.nviews(), max_num_active_frames);
 
@@ -127,7 +127,7 @@ MAIN( test_multiview_bprod_process )
 
     // 1 Cam loader
     bprod_process_sptr 
-      cam_src = new bprod_load_camera_source<double>(
+      cam_src = new bmcsd_load_camera_source<double>(
           dpath[v].cam_full_path(), dpath[v].cam_file_type());
 
     process_pool.push_back(cam_src);
@@ -136,7 +136,7 @@ MAIN( test_multiview_bprod_process )
     static const bool my_bSubPixel = true;
     static const double my_scale=1.0;
     bprod_process_sptr 
-      edg_src = new bprod_load_edg_source(dpath[v].edg_full_path(), my_bSubPixel, my_scale);
+      edg_src = new bmcsd_load_edg_source(dpath[v].edg_full_path(), my_bSubPixel, my_scale);
 
     process_pool.push_back(edg_src);
 
@@ -148,12 +148,12 @@ MAIN( test_multiview_bprod_process )
 
     // 1 curve fragment loader
     bprod_process_sptr
-      frag_src = new bprod_load_vsol_polyline_source(dpath[v].frag_full_path());
+      frag_src = new bmcsd_load_vsol_polyline_source(dpath[v].frag_full_path());
 
     process_pool.push_back(frag_src);
 
     bprod_process_sptr
-      tgts = new bprod_fragment_tangents;
+      tgts = new bmcsd_fragment_tangents_filter;
 
     process_pool.push_back(tgts);
 
