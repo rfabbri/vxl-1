@@ -35,7 +35,7 @@ aux_source_directory(Templates dbacm3d_sources)
 add_library(dbacm3d  ${dbacm3d_sources})
 
 # add the required libraries into this list
-target_link_libraries( dbacm3d vil3d vbl dbnl_algo dbil3d_algo )
+target_link_libraries( dbacm3d vil3d vbl dbil3d_algo )
 
 #add_subdirectory(pro)
 
