@@ -46,9 +46,9 @@ MAIN( test_sift_curve )
 
   // TODO build edge map
 
-  dbdet_curve_fragment_cues cue_computer(image, edgemap);
+  sdetd_curve_fragment_cues cue_computer(image, edgemap);
 
-  dbdet_edgel_chain crv;
+  sdetd_edgel_chain crv;
   y_feature_vector v;
 
   // corner case: empty curve -- should work
@@ -58,17 +58,17 @@ MAIN( test_sift_curve )
 
   vcl_cout << "\n--- Testing 3-edgel curve case ---\n";
 
-  dbdet_edgel e1;
+  sdetd_edgel e1;
   e1.pt.set(3.,3.);
   e1.tangent = 0;
   crv.push_back(&e1);
 
-  dbdet_edgel e2;
+  sdetd_edgel e2;
   e2.pt.set(4.,2.);
   e2.tangent = vnl_math::pi/2.;
   crv.push_back(&e2);
 
-  dbdet_edgel e3;
+  sdetd_edgel e3;
   e3.pt.set(5.5,0.8); //< out of bounds
   e3.tangent = vnl_math::pi/4.;
   crv.push_back(&e3);

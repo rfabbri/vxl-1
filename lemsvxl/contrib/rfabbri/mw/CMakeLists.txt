@@ -14,9 +14,9 @@ include_directories( ${lems_SOURCE_DIR}/bmvgd)
 include_directories( ${lems_SOURCE_DIR}/bmvgd/bmvl)
 include_directories( ${lems_SOURCE_DIR}/brcv/rec )
 include_directories( ${lems_SOURCE_DIR}/basic )
-
-
 include_directories( ${lems_SOURCE_DIR}/contrib/rfabbri )
+
+include_directories( ${Boost_INCLUDE_DIRS} )
 
 # Personal Multiview Lib
 

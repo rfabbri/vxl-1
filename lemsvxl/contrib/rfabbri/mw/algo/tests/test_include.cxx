@@ -9,10 +9,5 @@
 #include <mw/algo/mw_sift_curve_algo.h>
 #include <mw/algo/mw_match_position_band.h>
 #include <mw/algo/mw_match_tangent_band.h>
-#include <mw/algo/mw_data.h>
-#include <bmcsd/algo/bmcsd_curve_stereo.h>
-#include <bmcsd/algo/bmcsd_dt_curve_stereo.h>
-#include <bmcsd/algo/bmcsd_odt_curve_stereo.h>
-#include <mw/algo/dvcpl_distmap_bundle_adjust.h>
 
 int main() { return 0; }
