@@ -15,7 +15,7 @@
 #include <vimt/vimt_transform_2d.h>
 #include <vimt/vimt_resample_bilin.h>
 #include <vpgl/vpgl_proj_camera.h>
-#include <vpgl/algo/vpgl_list.h>
+#include <bpgl/algo/bpgl_list.h>
 #include <vcl_cstdlib.h>
 
 // Given cameras of a registered scene, use this app to get the cameras of the original
@@ -53,9 +53,9 @@ int main( int argc, char* argv[] )
 
   vcl_vector< vpgl_proj_camera<double> > camera_list, output_camera_list;
   vcl_vector< vgl_h_matrix_2d<double> > homog_list;
-  if( !vpgl_read_list( camera_list, input_cameras ) )
+  if( !bpgl_read_list( camera_list, input_cameras ) )
     return -1;
-  if( !vpgl_read_list( homog_list, input_homogs ) )
+  if( !bpgl_read_list( homog_list, input_homogs ) )
     return -1;
 
   
@@ -111,7 +111,7 @@ int main( int argc, char* argv[] )
     output_camera_list.push_back( new_camera );
   }
 
-  if( !vpgl_write_list( output_camera_list, output_cameras ) )
+  if( !bpgl_write_list( output_camera_list, output_cameras ) )
     return -1;
 
   return 0;

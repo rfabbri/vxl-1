@@ -19,7 +19,7 @@ add_executable( dbrcl_camera_app  dbrcl_camera_app.cxx )
 target_link_libraries( dbrcl_camera_app dbrcl vpgl vpgl_algo dbinfo dbinfo_pro vnl vgl vil vsol bsta vimt brip vbl vul)
 
 add_executable ( dbrcl_unregister_app dbrcl_unregister_app.cxx )
-target_link_libraries( dbrcl_unregister_app vcl vgl vnl vpgl vpgl_algo vgl_algo vil vimt vbl vul )
+target_link_libraries( dbrcl_unregister_app bpgl_algo vcl vgl vnl vpgl vpgl_algo vgl_algo vil vimt vbl vul )
 
 add_executable ( dbrcl_reproject_app dbrcl_reproject_app.cxx )
 target_link_libraries( dbrcl_reproject_app vcl vgl vnl vil vpgl vpgl_algo vgl_algo dbrcl )

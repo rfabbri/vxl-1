@@ -13,7 +13,7 @@
 #include <vul/vul_file.h>
 #include <vul/vul_file_iterator.h>
 #include <vpgl/vpgl_proj_camera.h>
-#include <vpgl/algo/vpgl_list.h>
+#include <bpgl/algo/bpgl_list.h>
 #include <dbrcl/dbrcl_compute_constrained_cameras.h>
 
 
@@ -67,7 +67,7 @@ int main( int argc, char* argv[] )
 
   // Get cameras.
   vcl_vector< vpgl_proj_camera<double> > camera_list;
-  if( !vpgl_read_list( camera_list, camera_file ) )
+  if( !bpgl_read_list( camera_list, camera_file ) )
     return -1;
 
   // Get the world points to project.

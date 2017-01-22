@@ -1,10 +1,10 @@
 #include <vcl_string.h>
 #include <vcl_vector.h>
-#include<vcl_cstdio.h>
+#include <vcl_cstdio.h>
 #include <vbl/vbl_bounding_box.h>
 #include <vcl_vector.h>
 #include <vnl/vnl_matrix.h>
-#include <vpgl/algo/vpgl_list.h>
+#include <bpgl/algo/bpgl_list.h>
 #include <dbinfo/dbinfo_track.h>
 #include <dbinfo/pro/dbinfo_track_storage.h>
 #include <dbinfo/pro/dbinfo_track_storage_sptr.h>
@@ -36,7 +36,7 @@ int main( int argc, char* argv[] )
   if( argc == 3 ){
     if( !ccc.compute_cameras_separately( constrained_cameras, constrained_frames ) )
       return -1;
-    if( !vpgl_write_list( constrained_cameras, camera_file_name ) )
+    if( !bpgl_write_list( constrained_cameras, camera_file_name ) )
       return -1;
     else return 0;
   }
@@ -61,7 +61,7 @@ int main( int argc, char* argv[] )
     return -1;
 
   // Record the cameras in a file.
-  if( !vpgl_write_list( cameras, camera_file_name ) )
+  if( !bpgl_write_list( cameras, camera_file_name ) )
     return -1;
 
   return 0;
