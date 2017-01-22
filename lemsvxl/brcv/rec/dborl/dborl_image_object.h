@@ -29,7 +29,7 @@ public:
   inline dborl_image_object(vcl_string name, vil_image_resource_sptr img) : dborl_object_base(name), image_(img) {}
   dborl_image_object(dborl_image_object& rhs);
 
-  virtual unsigned get_object_type() { return dborl_object_type::image; }
+  virtual unsigned get_object_type() { return borld_object_type::image; }
 
   void set_image(vil_image_resource_sptr img);
   void set_description(borld_image_description_sptr t);

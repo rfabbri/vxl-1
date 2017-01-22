@@ -1,17 +1,3 @@
-#include <dborl/dborl_description_base.h>
-#include <dborl/dborl_description_base_sptr.h>
-#include <dborl/dborl_image_bbox_description.h>
-#include <dborl/dborl_image_bbox_description_sptr.h>
-#include <dborl/dborl_image_data_description_base.h>
-#include <dborl/dborl_image_data_description_base_sptr.h>
-#include <dborl/dborl_image_description.h>
-#include <dborl/dborl_image_description_sptr.h>
-#include <dborl/dborl_image_mask_description.h>
-#include <dborl/dborl_image_mask_description_sptr.h>
-#include <dborl/dborl_image_object.h>
-#include <dborl/dborl_image_object_sptr.h>
-#include <dborl/dborl_image_polygon_description.h>
-#include <dborl/dborl_image_polygon_description_sptr.h>
 #include <dborl/dborl_object_base.h>
 #include <dborl/dborl_object_base_sptr.h>
 #include <dborl/dborl_dataset.h>

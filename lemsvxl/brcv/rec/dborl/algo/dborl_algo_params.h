@@ -65,7 +65,7 @@
 #include <bxml/bxml_write.h>
 #include <bxml/bxml_find.h>
 #include <vgl/vgl_point_2d.h>
-#include <dborl/dborl_evaluation.h>
+#include <borld/borld_evaluation.h>
 
 //: base class that the algorithm params should be inherited from
 //  for inheritence from this class, it is enough to add the extra parameters needed for the algorithm 
@@ -142,7 +142,7 @@ public:
   void print_perf_xml(vcl_string description);
 
   //: print evaluation.xml with the statistics passed
-  void print_evaluation_xml(vcl_map<vcl_string, dborl_exp_stat_sptr>& category_statistics, bool print_FN);
+  void print_evaluation_xml(vcl_map<vcl_string, buld_exp_stat_sptr>& category_statistics, bool print_FN);
 
   //: the name of the algo is used as root node in input.xml 
   vcl_string input_param_filename_;

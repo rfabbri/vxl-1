@@ -444,7 +444,7 @@ void dborl_algo_params::print_perf_xml(vcl_string description)
   }
   
   of << "<type name = \"performance\">\n";
-  of << "<plot type = \"" << dborl_evaluation_plot_type::get_plot_type_str(plot_type_) << "\" description = \"" << description << "\"></plot>\n";
+  of << "<plot type = \"" << borld_evaluation_plot_type::get_plot_type_str(plot_type_) << "\" description = \"" << description << "\"></plot>\n";
   
   for (vcl_map<vcl_string, vgl_point_2d<double> >::iterator iter = perf_param_map_.begin(); iter != perf_param_map_.end(); iter++) {
     of << "<point legend =\"" << iter->first << "\" y = \"" << (iter->second).y() << "\" x = \"" << (iter->second).x() << "\"></point>\n"; 
@@ -455,7 +455,7 @@ void dborl_algo_params::print_perf_xml(vcl_string description)
 }
 
 //: print evaluation.xml with the statistics passed
-void dborl_algo_params::print_evaluation_xml(vcl_map<vcl_string, dborl_exp_stat_sptr>& category_statistics, bool print_FN)
+void dborl_algo_params::print_evaluation_xml(vcl_map<vcl_string, buld_exp_stat_sptr>& category_statistics, bool print_FN)
 {
   vcl_ofstream of(evaluation_file().c_str());
   if (!of) {
@@ -466,7 +466,7 @@ void dborl_algo_params::print_evaluation_xml(vcl_map<vcl_string, dborl_exp_stat_
   of << "<type name = \"evaluation\">\n";
   of << "<algorithm name=\"" << algo_name_ << "\"></algorithm>\n";
   
-  for (vcl_map<vcl_string, dborl_exp_stat_sptr>::iterator itt = category_statistics.begin(); itt != category_statistics.end(); itt++)
+  for (vcl_map<vcl_string, buld_exp_stat_sptr>::iterator itt = category_statistics.begin(); itt != category_statistics.end(); itt++)
     itt->second->print_stats(itt->first, of, print_FN);
   
   of << "</type>\n";
