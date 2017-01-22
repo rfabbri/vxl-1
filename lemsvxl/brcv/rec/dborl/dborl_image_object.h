@@ -15,7 +15,7 @@
 #define _DBORL_IMAGE_OBJECT_H
 
 #include "dborl_object_base.h"
-#include <dborl/dborl_image_description_sptr.h>
+#include <dborl/borld_image_description_sptr.h>
 
 #include <vil/vil_image_resource_sptr.h>
 
@@ -32,8 +32,8 @@ public:
   virtual unsigned get_object_type() { return dborl_object_type::image; }
 
   void set_image(vil_image_resource_sptr img);
-  void set_description(dborl_image_description_sptr t);
-  dborl_image_description_sptr get_description();
+  void set_description(borld_image_description_sptr t);
+  borld_image_description_sptr get_description();
 
   virtual dborl_image_object* cast_to_image_object() { return this; }
 };
