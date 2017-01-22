@@ -2,15 +2,13 @@
 #include <vcl_algorithm.h>
 #include <vcl_fstream.h>
 #include <vcl_iostream.h>
-
-#include "dborl_utilities.h"
 #include <borld/borld_category_info.h>
-
 #include <bxml/bxml_read.h>
 #include <bxml/bxml_write.h>
 #include <bxml/bxml_find.h>
 #include <vul/vul_file.h>
 #include <vsol/vsol_box_2d.h>
+#include "dborl_utilities.h"
 
 //: simple parse: put each string in the file into the strings vector
 bool parse_strings_from_file(vcl_string fname, vcl_vector<vcl_string>& strings)
