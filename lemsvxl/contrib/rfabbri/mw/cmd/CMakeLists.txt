@@ -17,7 +17,7 @@ set(vox_mcs_stereo_eval_sources
 )
 
 add_executable(mcr ${mcr_stereo_sources})
-target_link_libraries(mcr mw_pro)
+target_link_libraries(mcr mw_pro bmcsd_algo)
 
 add_executable(pad ${pad_sources})
 target_link_libraries(pad vcl)

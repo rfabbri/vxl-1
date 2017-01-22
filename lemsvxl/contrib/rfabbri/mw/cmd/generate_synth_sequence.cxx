@@ -5,8 +5,8 @@
 #include <bdifd/bdifd_camera.h>
 #include <bdifd/algo/bdifd_data.h>
 #include <bsold/bsold_file_io.h>
-#include <dbdet/edge/dbdet_edgemap.h>
-#include <dbdet/algo/dbdet_load_edg.h>
+#include <sdet/sdet_edgemap.h>
+#include <sdetd/io/sdetd_load_edg.h>
 #include <bmcsd/bmcsd_util.h>
 #include <bmcsd/algo/bmcsd_algo_util.h>
 #include <bmcsd/bmcsd_curve_3d_sketch.h>
@@ -53,7 +53,7 @@ main(int argc, char **argv)
   vul_file::make_directory(dir);
 
   bool retval =  
-    bmcsd_util::write_cams(dir, prefix, bmcsd_util::MW_INTRINSIC_EXTRINSIC, cam_vpgl);
+    bmcsd_util::write_cams(dir, prefix, bmcsd_util::BMCS_INTRINSIC_EXTRINSIC, cam_vpgl);
   if (!retval)
     abort();
   
@@ -114,19 +114,19 @@ main(int argc, char **argv)
   // We now need to generate the edgemaps.
 
   for (unsigned  k=0; k < nviews; ++k) {
-    vcl_vector< dbdet_edgel *> edgels;
+    vcl_vector< sdet_edgel *> edgels;
     for (unsigned i=0; i<number_of_curves; ++i) {
       for (unsigned  j=0; j < crv2d[i][k].size(); ++j) {
-        edgels.push_back(new dbdet_edgel);
-        bmcsd_algo_util::bdifd_to_dbdet(crv2d[i][k][j], edgels.back());
+        edgels.push_back(new sdet_edgel);
+        bmcsd_algo_util::bdifd_to_sdet(crv2d[i][k][j], edgels.back());
       }
     }
-    dbdet_edgemap_sptr em = new dbdet_edgemap(520, 380, edgels);
+    sdet_edgemap_sptr em = new sdet_edgemap(520, 380, edgels);
 
     vcl_ostringstream v_str;
     v_str << vcl_setw(4) << vcl_setfill('0') << k;
     vcl_string filename = dir + vcl_string("/") + prefix + v_str.str() + vcl_string(".edg.gz");
-    bool retval = dbdet_save_edg(filename, em);
+    bool retval = sdetd_save_edg(filename, em);
     if (!retval)
       abort();
   }

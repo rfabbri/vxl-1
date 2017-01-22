@@ -8,30 +8,30 @@
 #include <bmcsd/algo/bmcsd_algo_util.h>
 #include <bmcsd/bmcsd_curve_3d_sketch.h>
 #include <bmcsd/bmcsd_curve_3d_attributes.h>
-#include <mw/algo/mw_data.h>
-#include <mw/pro/bprod_load_camera_source.h>
-#include <mw/pro/bprod_load_edg_source.h>
+#include <bmcsd/algo/bmcsd_data.h>
+#include <bmcsd/pro/bmcsd_load_camera_source.h>
+#include <bmcsd/pro/bmcsd_load_edg_source.h>
 
 
 #define MW_ASSERT(msg, a, b) if ((a) != (b)) { vcl_cerr << (msg) << vcl_endl; abort(); }
 
 
 //: Stores the concatenation of all inputs from many bmcsd_stereo_jobs
-class dvcpl_edgemap_cam_aggregator: public bprod_sink {
+class vcpld_edgemap_cam_aggregator: public bprod_sink {
 public:
 
-  dvcpl_edgemap_cam_aggregator()
+  vcpld_edgemap_cam_aggregator()
   {}
 
   bprod_signal execute()
   {
     assert(input_type_id(0) == typeid(vpgl_perspective_camera<double>));
-    assert(input_type_id(1) == typeid(dbdet_edgemap_sptr));
+    assert(input_type_id(1) == typeid(sdet_edgemap_sptr));
     assert(input_type_id(2) == typeid(vil_image_view<vxl_uint_32>));
     assert(input_type_id(3) == typeid(vil_image_view<unsigned>));
 
     cam_.set_p(input<vpgl_perspective_camera<double> >(0));
-    edge_map_ = input<dbdet_edgemap_sptr>(1);
+    edge_map_ = input<sdet_edgemap_sptr>(1);
     dt_ = input<vil_image_view<vxl_uint_32> >(2);
     label_ = input<vil_image_view<unsigned> > (3);
 
@@ -39,12 +39,12 @@ public:
   }
 
   bdifd_camera cam_;
-  dbdet_edgemap_sptr edge_map_;
+  sdet_edgemap_sptr edge_map_;
   vil_image_view<vxl_uint_32> dt_;
   vil_image_view<unsigned> label_;
 };
 
-void dvcpl_reproject_to_find_inliers (
+void vcpld_reproject_to_find_inliers (
       const bmcsd_curve_stereo_data_path &dpath, 
       bmcsd_curve_3d_sketch *csk,
       double tau_distance,
@@ -83,10 +83,10 @@ main(int argc, char **argv)
   bmcsd_util::camera_file_type cam_type;
 
   if (a_cam_type() == "intrinsic_extrinsic") {
-    cam_type = bmcsd_util::MW_INTRINSIC_EXTRINSIC;
+    cam_type = bmcsd_util::BMCS_INTRINSIC_EXTRINSIC;
   } else {
     if (a_cam_type() == "projcamera")
-      cam_type = bmcsd_util::MW_3X4;
+      cam_type = bmcsd_util::BMCS_3X4;
     else  {
       vcl_cerr << "Error: invalid camera type " << a_cam_type() << vcl_endl;
       return 1;
@@ -95,7 +95,7 @@ main(int argc, char **argv)
 
   bmcsd_curve_stereo_data_path dpath;
   bool retval = 
-    mw_data::read_frame_data_list_txt(a_prefix(), &dpath, cam_type);
+    bmcsd_data::read_frame_data_list_txt(a_prefix(), &dpath, cam_type);
   if (!retval) return 1;
   vcl_cout << "Dpath:\n" << dpath << vcl_endl;
 
@@ -105,8 +105,8 @@ main(int argc, char **argv)
   retval  = csk->read_dir_format(csk_fname);
   MW_ASSERT(vcl_string("Error reading 3D curve sketch: ") + csk_fname, retval, true);
 
-  // Now define dvcpl_bundle_adjust_driver.
-  dvcpl_reproject_to_find_inliers(dpath, csk, a_distance_threshold(), a_dtheta_threshold(),
+  // Now define vcpld_bundle_adjust_driver.
+  vcpld_reproject_to_find_inliers(dpath, csk, a_distance_threshold(), a_dtheta_threshold(),
       a_total_support());
 
   //: Write out:
@@ -121,7 +121,7 @@ main(int argc, char **argv)
   return 0;
 }
 
-void dvcpl_reproject_to_find_inliers (
+void vcpld_reproject_to_find_inliers (
       const bmcsd_curve_stereo_data_path &dpath, 
       bmcsd_curve_3d_sketch *csk,
       double tau_distance,
@@ -140,21 +140,21 @@ void dvcpl_reproject_to_find_inliers (
   for (unsigned v=0; v < dpath.nviews(); ++v) {
     // read edge info
     bprod_process_sptr
-      cam_src = new bprod_load_camera_source<double>(
+      cam_src = new bmcsd_load_camera_source<double>(
           dpath[v].cam_full_path(), dpath[v].cam_file_type());
 
     // 1 Edge map loader
     static const bool my_bSubPixel = true;
     static const double my_scale=1.0;
     bprod_process_sptr
-    edg_src = new bprod_load_edg_source(dpath[v].edg_full_path(), my_bSubPixel, my_scale);
+    edg_src = new bmcsd_load_edg_source(dpath[v].edg_full_path(), my_bSubPixel, my_scale);
 
     // 1 dt and label loader
     bprod_process_sptr
     edg_dt = new bprod_edg_dt;
     edg_dt->connect_input(0, edg_src, 0);
 
-    dvcpl_edgemap_cam_aggregator ag;
+    vcpld_edgemap_cam_aggregator ag;
     ag.connect_input(0, cam_src, 0);
     ag.connect_input(1, edg_src, 0);
     ag.connect_input(2, edg_dt, 0);
@@ -191,7 +191,7 @@ void dvcpl_reproject_to_find_inliers (
 
       // translate reproj. curve into edgel sequence
       bcsid_edgel_seq reproj_edgels;
-      bmcsd_algo_util::bdifd_to_dbdet(reprojected_curve, &reproj_edgels);
+      bmcsd_algo_util::bdifd_to_sdet(reprojected_curve, &reproj_edgels);
 
       assert (reproj_edgels.size() == reprojected_curve.size());
 
