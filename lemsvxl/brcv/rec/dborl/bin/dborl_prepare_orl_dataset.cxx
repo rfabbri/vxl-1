@@ -2,13 +2,13 @@
 
 #include "dborl_command_line.h"
 #include <dborl/algo/dborl_utilities.h>
-#include <dborl/dborl_category_info_sptr.h>
-#include <dborl/dborl_category_info.h>
+#include <borld/borld_category_info_sptr.h>
+#include <borld/borld_category_info.h>
 #include <dborl/dborl_dataset.h>
 #include <dborl/algo/dborl_category_info_parser.h>
 #include <dborl/algo/dborl_image_desc_parser.h>
-#include <dborl/dborl_image_bbox_description.h>
-#include <dborl/dborl_image_description.h>
+#include <borld/borld_image_bbox_description.h>
+#include <borld/borld_image_description.h>
 #include <dborl/dborl_image_object_sptr.h>
 #include <dborl/dborl_image_object.h>
 #include <dborl/dborl_index.h>
@@ -118,7 +118,7 @@ bool prepare_dataset_folder_from_images_and_cons(vcl_string image_folder,
     return false;
 
   // read the category_info file
-  vcl_vector<dborl_category_info_sptr> categories;
+  vcl_vector<borld_category_info_sptr> categories;
   dborl_category_info_parser parser;
   if (!parse(category_info_file, parser, categories)) 
     return false;
@@ -245,12 +245,12 @@ bool prepare_ground_truth_from_pascal_annot_ver_one(vcl_string input_folder, vcl
     
     if (category.compare("bg") == 0) {
 
-      dborl_image_bbox_description_sptr ip = new dborl_image_bbox_description();
+      borld_image_bbox_description_sptr ip = new borld_image_bbox_description();
       vsol_box_2d_sptr dummy = new vsol_box_2d();
       dummy->add_point(0, 0);
       dummy->add_point(0, 1);
       ip->add_box(category, dummy);
-      dborl_image_description_sptr id = new dborl_image_description(ip);
+      borld_image_description_sptr id = new borld_image_description(ip);
     
       vcl_ofstream os;
       os.open(output_fname.c_str(), vcl_ios_out);
@@ -340,7 +340,7 @@ bool prepare_ground_truth_from_pascal_annot_ver_one(vcl_string input_folder, vcl
   vcl_cout << "max_y: " << max_y << vcl_endl;
 */
 
-      dborl_image_bbox_description_sptr ip = new dborl_image_bbox_description();
+      borld_image_bbox_description_sptr ip = new borld_image_bbox_description();
     fp >> min_x;
     while (!fp.eof()) {
     fp >> min_y;
@@ -357,7 +357,7 @@ bool prepare_ground_truth_from_pascal_annot_ver_one(vcl_string input_folder, vcl
     }
     fp.close();
 
-      dborl_image_description_sptr id = new dborl_image_description(ip);
+      borld_image_description_sptr id = new borld_image_description(ip);
     
       vcl_ofstream os;
       os.open(output_fname.c_str(), vcl_ios_out);
@@ -468,7 +468,7 @@ dborl_dataset_sptr load_image_dataset(vcl_string dataset_folder, vcl_string imag
     //groundtruth_file = groundtruth_file + "/groundtruth.xml";
     groundtruth_file = groundtruth_file + "/" + object_name + ".xml";
     dborl_image_desc_parser parser;
-    dborl_image_description_sptr id = dborl_image_description_parse(groundtruth_file, parser);
+    borld_image_description_sptr id = borld_image_description_parse(groundtruth_file, parser);
     io->set_description(id);
     ds->add_object(io->cast_to_object_base());
   }

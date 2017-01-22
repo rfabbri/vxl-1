@@ -9,7 +9,7 @@
 #include <dbskr/algo/dbskr_shock_patch_match.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
-#include <dborl/dborl_image_description.h>
+#include <borld/borld_image_description.h>
 #include <vul/vul_file.h>
 #include <bbas/bsol/bsol_algs.h>
 #include <vsol/vsol_polygon_2d.h>

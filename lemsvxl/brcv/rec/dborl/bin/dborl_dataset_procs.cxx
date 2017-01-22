@@ -2,13 +2,13 @@
 
 #include "dborl_dataset_procs.h"
 #include <dborl/algo/dborl_utilities.h>
-#include <dborl/dborl_category_info_sptr.h>
-#include <dborl/dborl_category_info.h>
+#include <borld/borld_category_info_sptr.h>
+#include <borld/borld_category_info.h>
 #include <dborl/dborl_dataset.h>
 #include <dborl/algo/dborl_category_info_parser.h>
 #include <dborl/algo/dborl_image_desc_parser.h>
-#include <dborl/dborl_image_bbox_description.h>
-#include <dborl/dborl_image_description.h>
+#include <borld/borld_image_bbox_description.h>
+#include <borld/borld_image_description.h>
 #include <dborl/dborl_image_object_sptr.h>
 #include <dborl/dborl_image_object.h>
 #include <dborl/dborl_index.h>
