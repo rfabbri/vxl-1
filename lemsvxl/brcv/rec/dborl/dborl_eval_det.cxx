@@ -6,9 +6,9 @@
 #include "dborl_eval_det.h"
 
 #include <dborl/dborl_det_desc.h>
-#include <dborl/dborl_evaluation.h>
+#include <borld/borld_evaluation.h>
 
-#include <dborl/dborl_image_description_utils.h>
+#include <borld/borld_image_description_utils.h>
 
 #include <bsol/bsol_algs.h>
 #include <vsol/vsol_box_2d.h>
@@ -18,7 +18,7 @@
 
 // -----------------------------------------------------------------------------
 //: Detect an object, represented as a shock graph, in an image
-bool dborl_VOC2008_eval_det(const dborl_image_description_sptr& image_desc, 
+bool dborl_VOC2008_eval_det(const borld_image_description_sptr& image_desc, 
                         const vcl_string& model_category,
                         double min_required_overlap,
                         const vcl_vector<dborl_det_desc_sptr >& list_det,
