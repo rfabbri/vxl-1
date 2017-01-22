@@ -29,7 +29,7 @@ bool dborl_VOC2008_eval_det(const borld_image_description_sptr& image_desc,
 {
   // get a set of ground truth bounding boxes from the image description
   vcl_vector<vsol_box_2d_sptr > gt_boxes;
-  dborl_get_boxes(gt_boxes, image_desc, model_category);
+  borld_get_boxes(gt_boxes, image_desc, model_category);
   num_positives = gt_boxes.size();
 
   // keep track of whether the ground truth objects have been counted (detected) by one of the detection solutions
