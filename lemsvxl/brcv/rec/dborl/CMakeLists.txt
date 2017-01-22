@@ -47,9 +47,6 @@ dborl_dataset_sptr.h
 dborl_category_info.h                  dborl_category_info.cxx
 dborl_category_info_sptr.h
 
-dborl_evaluation.h                     dborl_evaluation.cxx
-dborl_exp_stat_sptr.h
-
 dborl_index_node_base.h
 dborl_index_node_base_sptr.h
 
@@ -81,7 +78,7 @@ aux_source_directory(Templates dborl_sources)
 
 add_library(dborl ${dborl_sources})
 
-target_link_libraries(dborl bsol vsol bgrld bdgl vil vbl)
+target_link_libraries(dborl borld bsol vsol bgrld bdgl vil vbl)
 
 # Brown Recognition Tools to aid Testing
 #add_subdirectory( vis )
