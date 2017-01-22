@@ -3,7 +3,6 @@
 // \brief 
 // \author Ozge C Ozcanli (ozge@lems.brown.edu)
 // \date 10/15/07
-#include "borld_category_info_parser.h"
 
 #include <vcl_string.h>
 #include <vcl_cstring.h>
@@ -13,6 +12,7 @@
 #include <vcl_sstream.h>
 
 #include <borld/borld_category_info.h>
+#include <dborl/algo//dborl_category_info_parser.h>
 #include <dborl/algo/dborl_utilities.h>
 
 //: a function used in the parsers
@@ -26,7 +26,7 @@ void convert(const char* t, T& d)
 }
 
 void 
-borld_category_info_parser::cdataHandler(vcl_string name, vcl_string data)
+dborl_category_info_parser::cdataHandler(vcl_string name, vcl_string data)
 {
   // create a vector of tokens out of cdata and convert them later
   vcl_vector<vcl_string> tokens;
@@ -74,7 +74,7 @@ borld_category_info_parser::cdataHandler(vcl_string name, vcl_string data)
 }
 
 void 
-borld_category_info_parser::startElement(const char* name, const char** atts)
+dborl_category_info_parser::startElement(const char* name, const char** atts)
 {
   //vcl_cout<< "element=" << name << vcl_endl; 
 
@@ -87,7 +87,7 @@ borld_category_info_parser::startElement(const char* name, const char** atts)
         if (vcl_strcmp(atts[i+1], "category-info") == 0)
           vcl_cout << "parsing category description file\n";
         else
-          vcl_cout << "WARNING: borld_category_info_parser expects attribute name: category-info, but the name is: " << atts[i+1] << vcl_endl;
+          vcl_cout << "WARNING: dborl_category_info_parser expects attribute name: category-info, but the name is: " << atts[i+1] << vcl_endl;
       }
     }
 
@@ -101,7 +101,7 @@ borld_category_info_parser::startElement(const char* name, const char** atts)
 
 
 void 
-borld_category_info_parser::endElement(const char* name)
+dborl_category_info_parser::endElement(const char* name)
 {
   //vcl_cout << "end element=" << name << vcl_endl;
   // our tags are category_tag_, instance_tag_, box_tag_, polygon_tag_
@@ -116,7 +116,7 @@ borld_category_info_parser::endElement(const char* name)
       }
 }
 
-void borld_category_info_parser::charData(const XML_Char* s, int len)
+void dborl_category_info_parser::charData(const XML_Char* s, int len)
 {
   const int leadingSpace = skipWhiteSpace(s);
   if (len==0)// || len<=leadingSpace)
@@ -129,7 +129,7 @@ void borld_category_info_parser::charData(const XML_Char* s, int len)
 }
 
 //: inserts parsed categories at the beginning of cats
-bool parse(vcl_string fname, borld_category_info_parser& parser, vcl_vector<borld_category_info_sptr>& cats)
+bool parse(vcl_string fname, dborl_category_info_parser& parser, vcl_vector<borld_category_info_sptr>& cats)
 {
   vcl_FILE *xmlFile;
 

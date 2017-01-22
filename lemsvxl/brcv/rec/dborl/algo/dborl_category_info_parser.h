@@ -30,10 +30,10 @@
 
 #include <borld/borld_category_info_sptr.h>
 
-class borld_category_info_parser : public expatpp {
+class dborl_category_info_parser : public expatpp {
 public:
-  borld_category_info_parser(void) : version(1) {};
-  ~borld_category_info_parser(void) { clear(); }
+  dborl_category_info_parser(void) : version(1) {};
+  ~dborl_category_info_parser(void) { clear(); }
   
   vcl_vector<borld_category_info_sptr>& get_categories(void) { return cats_; }
 
@@ -57,7 +57,7 @@ private:
 };
 
 //: inserts parsed categories at the beginning of cats
-bool parse(vcl_string fname, borld_category_info_parser& parser, vcl_vector<borld_category_info_sptr>& cats);
+bool parse(vcl_string fname, dborl_category_info_parser& parser, vcl_vector<borld_category_info_sptr>& cats);
 void write_categories_xml(vcl_vector<borld_category_info_sptr>& cats, vcl_ostream& os);
 
 #endif  // _DBORL_CATEGORY_INFO_PARSER_H

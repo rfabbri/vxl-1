@@ -65,7 +65,7 @@ static void test_algo_params(int argc, char* argv[])
   vcl_cout << "out_name2: " << out_name << vcl_endl;
 
   //: test parsing evaluation.xml file
-  //vcl_map<vcl_string, dborl_exp_stat_sptr> category_statistics;
+  //vcl_map<vcl_string, buld_exp_stat_sptr> category_statistics;
   //vcl_string algo_name;
   //TEST("testing parse evaluation", parse_evaluation_file("evaluation_k_1_N_1_0.5.xml", category_statistics, algo_name), true);
 
@@ -82,7 +82,7 @@ static void test_algo_params(int argc, char* argv[])
   vcl_vector<vcl_string> categories;
   categories.push_back("dummy_cat1");
   categories.push_back("dummy_cat2");
-  dborl_exp_stat stat;
+  buld_exp_stat stat;
   stat.increment_TP_by(4);
   stat.increment_FP_by(0);
   stat.increment_TN_by(400);
@@ -92,7 +92,7 @@ static void test_algo_params(int argc, char* argv[])
   detected_boxes.clear();
   categories.clear();
   vcl_string new_name;
-  dborl_exp_stat new_stat;
+  buld_exp_stat new_stat;
   bool out = parse_obj_evaluation(out_file, new_name, detected_boxes, categories, new_stat);
   TEST("test parsing obj evaluation parsing", out, true);
   TEST("test parsing obj evaluation obj name", new_name.compare(obj_name), 0);
