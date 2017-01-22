@@ -1,10 +1,10 @@
 #include <testlib/testlib_test.h>
 #include <dborl/algo/dborl_image_desc_parser.h>
-#include <dborl/dborl_image_description_sptr.h>
-#include <dborl/dborl_image_description.h>
+#include <borld/borld_image_description_sptr.h>
+#include <borld/borld_image_description.h>
 #include <dborl/dborl_image_data_description_base.h>
-#include <dborl/dborl_image_bbox_description.h>
-#include <dborl/dborl_image_polygon_description.h>
+#include <borld/borld_image_bbox_description.h>
+#include <borld/borld_image_polygon_description.h>
 
 #include <vcl_iostream.h>
 #include <vcl_fstream.h>
@@ -22,7 +22,7 @@ static void test_image_desc_parser(int argc, char* argv[])
   dborl_image_desc_parser parser;
   parser.set_pascal_tags();
   parser.clear();
-  dborl_image_description_sptr id = dborl_image_description_parse("pascal_000005.xml", parser);
+  borld_image_description_sptr id = borld_image_description_parse("pascal_000005.xml", parser);
 
   TEST("parse() ", id->category_exists("chair"), true);
   TEST("parse() ", id->category_exists("dog"), true);
@@ -48,14 +48,14 @@ static void test_image_desc_parser(int argc, char* argv[])
 
   parser.set_default_tags();
   parser.clear();
-  dborl_image_description_sptr id2 = dborl_image_description_parse("test_box.xml", parser);
+  borld_image_description_sptr id2 = borld_image_description_parse("test_box.xml", parser);
 
   TEST("parse() bone 1", id2->category_exists("chair"), true);
   TEST("parse() bone 2", id2->category_exists("bone"), true);
   TEST("parse() bone 3", id2->category_list_["chair"], 2);
   TEST("parse() bone 4", id2->category_list_["bone"], 1);
 
-  dborl_image_bbox_description_sptr bd = id2->category_data_->cast_to_image_bbox_description();
+  borld_image_bbox_description_sptr bd = id2->category_data_->cast_to_image_bbox_description();
   TEST("parse() bone 5", !(bd), false);
   TEST("parse() bone 6", bd->category_exists("chair"), true);
   TEST("parse() bone 7", bd->category_exists("bone"), true);
@@ -79,14 +79,14 @@ static void test_image_desc_parser(int argc, char* argv[])
   TEST_NEAR("parse() bone 21", bd->get_box_vector("bone")[0]->get_max_y(), 0.23, 0.001);
 
   parser.clear();
-  dborl_image_description_sptr id3 = dborl_image_description_parse("test_polygon.xml", parser);
+  borld_image_description_sptr id3 = borld_image_description_parse("test_polygon.xml", parser);
 
   TEST("parse() polygon 1", id3->category_exists("tool"), true);
   TEST("parse() polygon 2", id3->category_exists("skyhawk"), true);
   TEST("parse() polygon 3", id3->category_list_["tool"], 1);
   TEST("parse() polygon 4", id3->category_list_["skyhawk"], 3);
 
-  dborl_image_polygon_description_sptr pd = id3->category_data_->cast_to_image_polygon_description();
+  borld_image_polygon_description_sptr pd = id3->category_data_->cast_to_image_polygon_description();
   TEST("parse() polygon 5", !(pd), false);
 
   TEST("parse() polygon 6", pd->category_exists("tool"), true);
@@ -130,12 +130,12 @@ static void test_image_desc_parser(int argc, char* argv[])
   os4.close();
 
   parser.clear();
-  dborl_image_description_sptr id33 = dborl_image_description_parse("test3.xml", parser);
+  borld_image_description_sptr id33 = borld_image_description_parse("test3.xml", parser);
   TEST("write() ", id33->category_list_["tool"], id3->category_list_["tool"]);
 
   parse_pascal_write_default_xml("pascal_000005.xml", "test3.xml");
   parser.clear();
-  dborl_image_description_sptr id5 = dborl_image_description_parse("test3.xml", parser);
+  borld_image_description_sptr id5 = borld_image_description_parse("test3.xml", parser);
   TEST("write() ", id->category_list_["chair"], id5->category_list_["chair"]);
   TEST("parse() ", id5->category_data_->cast_to_image_bbox_description()->get_box_vector("dog")[0]->get_min_x(), 277);
 
@@ -143,7 +143,7 @@ static void test_image_desc_parser(int argc, char* argv[])
   vcl_string output_f = "test2.xml";
   if (read_con_write_image_description_xml(input_f, "dog", output_f)) {
     parser.clear();
-    dborl_image_description_sptr id6 = dborl_image_description_parse("test2.xml", parser);
+    borld_image_description_sptr id6 = borld_image_description_parse("test2.xml", parser);
     TEST("read con write xml() ", id6->category_list_["dog"], 1);
     TEST("read con write xml() ", !(id6->category_data_->cast_to_image_polygon_description()), false);
     TEST("read con write xml() ", id6->category_data_->cast_to_image_polygon_description()->get_polygon_vector("dog")[0]->size(), 272);
@@ -155,7 +155,7 @@ static void test_image_desc_parser(int argc, char* argv[])
 
   parser.set_default_tags();
   parser.clear();
-  dborl_image_description_sptr id7 = dborl_image_description_parse("test_mask.xml", parser);
+  borld_image_description_sptr id7 = borld_image_description_parse("test_mask.xml", parser);
   TEST("parse() mask description ", !(id7->category_data_->cast_to_image_mask_description()), false);
   TEST("parse() mask description", id7->category_exists("tool"), true);
   TEST("parse() mask description", id7->category_exists("skyhawk"), true);

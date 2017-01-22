@@ -1,6 +1,6 @@
 #include <testlib/testlib_test.h>
 #include <dborl/algo/dborl_category_info_parser.h>
-#include <dborl/dborl_category_info.h>
+#include <borld/borld_category_info.h>
 
 #include <vcl_iostream.h>
 //#include <vcl_cmath.h>
