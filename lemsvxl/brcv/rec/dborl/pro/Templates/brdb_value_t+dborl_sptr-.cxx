@@ -1,6 +1,7 @@
 #include <brdb/brdb_value.hxx>
 #include <vbl/io/vbl_io_smart_ptr.h>
 #include <buld/buld_exp_stat_sptr.h>
+#include <borld/borld_category_info.h>
 #include <borld/borld_category_info_sptr.h>
 
 BRDB_VALUE_INSTANTIATE(buld_exp_stat_sptr, "buld_exp_stat_sptr");

@@ -21,7 +21,7 @@ aux_source_directory(processes dborl_pro_sources)
 
 add_library(dborl_pro ${dborl_pro_sources})
 
-target_link_libraries(dborl_pro dborl_algo brdb bprb )
+target_link_libraries(dborl_pro dborl_algo borld brdb bprb vbl vsl)
 
 #if( BUILD_TESTING )
 #  add_subdirectory(tests)
