@@ -4,7 +4,7 @@
 #include <vcl_iostream.h>
 
 #include "dborl_utilities.h"
-#include <dborl/dborl_category_info.h>
+#include <borld/borld_category_info.h>
 
 #include <bxml/bxml_read.h>
 #include <bxml/bxml_write.h>
@@ -54,7 +54,7 @@ bool parse_lines_from_file(vcl_string fname, vcl_vector<vcl_string>& strings)
 }
 
 //: return the id in the categories vector for the category one of whose prefixes matches the object name
-int dborl_get_category(vcl_string object_name, vcl_vector<dborl_category_info_sptr>& cats)
+int dborl_get_category(vcl_string object_name, vcl_vector<borld_category_info_sptr>& cats)
 {
   for (unsigned i = 0; i < cats.size(); i++) {
     for (unsigned j = 0; j < cats[i]->prefix_list_.size(); j++) {
@@ -66,7 +66,7 @@ int dborl_get_category(vcl_string object_name, vcl_vector<dborl_category_info_sp
   return -1;
 }
 
-bool parse_evaluation_file(vcl_string fname, vcl_map<vcl_string, dborl_exp_stat_sptr>& category_statistics, vcl_string& algo_name)
+bool parse_evaluation_file(vcl_string fname, vcl_map<vcl_string, buld_exp_stat_sptr>& category_statistics, vcl_string& algo_name)
 {
 
   bxml_document param_doc = bxml_read(fname);
@@ -104,7 +104,7 @@ bool parse_evaluation_file(vcl_string fname, vcl_map<vcl_string, dborl_exp_stat_
       continue;
     }
 
-    dborl_exp_stat_sptr s = new dborl_exp_stat();
+    buld_exp_stat_sptr s = new buld_exp_stat();
     
     vcl_stringstream ss(elm->attribute("TP"));
     ss >> ival;
@@ -129,7 +129,7 @@ bool parse_evaluation_file(vcl_string fname, vcl_map<vcl_string, dborl_exp_stat_
 }
 
 //: print the evaluation result of an instance along with the detected boxes
-bool print_obj_evaluation(vcl_string out_file, vcl_string obj_name, vcl_vector<vsol_box_2d_sptr>& detected_boxes, vcl_vector<vcl_string>& categories, dborl_exp_stat& stat)
+bool print_obj_evaluation(vcl_string out_file, vcl_string obj_name, vcl_vector<vsol_box_2d_sptr>& detected_boxes, vcl_vector<vcl_string>& categories, buld_exp_stat& stat)
 {
   if (!detected_boxes.size() == categories.size()) {
     vcl_cout << "print_evaluation() - detected boxes size: " << detected_boxes.size() << " categories size: " << categories.size() << " they are not equal! exiting without printing!\n"; 
@@ -157,7 +157,7 @@ bool print_obj_evaluation(vcl_string out_file, vcl_string obj_name, vcl_vector<v
   of.close();
   return true;
 }
-bool parse_obj_evaluation(vcl_string out_file, vcl_string& obj_name, vcl_vector<vsol_box_2d_sptr>& detected_boxes, vcl_vector<vcl_string>& categories, dborl_exp_stat& stat)
+bool parse_obj_evaluation(vcl_string out_file, vcl_string& obj_name, vcl_vector<vsol_box_2d_sptr>& detected_boxes, vcl_vector<vcl_string>& categories, buld_exp_stat& stat)
 {
   detected_boxes.clear();
   categories.clear();

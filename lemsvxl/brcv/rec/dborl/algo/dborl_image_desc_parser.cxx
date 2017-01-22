@@ -16,8 +16,8 @@
 #include <borld/borld_image_description.h>
 #include <borld/borld_image_bbox_description.h>
 #include <borld/borld_image_polygon_description.h>
-#include <dborl/dborl_image_mask_description.h>
-#include <dborl/dborl_image_mask_description_sptr.h>
+#include <borld/borld_image_mask_description.h>
+#include <borld/borld_image_mask_description_sptr.h>
 #include <dborl/algo/dborl_utilities.h>
 
 #include <vsol/vsol_box_2d.h>
@@ -167,7 +167,7 @@ dborl_image_desc_parser::endElement(const char* name)
     else if (poly_desc_)
       idesc_ = new borld_image_description(poly_desc_);
     else {  // if neither box nor polygon descriptions are available then assumes map description, whose image will be set later!!
-      dborl_image_mask_description_sptr md = new dborl_image_mask_description();
+      borld_image_mask_description_sptr md = new borld_image_mask_description();
       idesc_ = new borld_image_description(md, cats_);
     }
   } 
