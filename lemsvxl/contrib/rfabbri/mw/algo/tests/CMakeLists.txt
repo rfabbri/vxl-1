@@ -5,12 +5,11 @@ add_executable (mw_algo_test_all
    test_driver.cxx
 
    # The tests
-   #    test_discrete_corresp_n_algo.cxx
-   #    test_reprojection_errors.cxx
-   #    test_stereo_band.cxx
-   #    test_tangent_band.cxx
+   test_reprojection_errors.cxx
+   test_stereo_band.cxx
+   test_tangent_band.cxx
    test_util.cxx
-   #    test_qualitative_epipolar.cxx
+   test_qualitative_epipolar.cxx
    test_cam.cxx
    test_sift_curve.cxx        # TODO Under development
    test_bprod_process.cxx
@@ -36,9 +35,9 @@ add_executable( mw_algo_test_include test_include.cxx )
 
 find_package( Boost 1.35.0 COMPONENTS iostreams)
 if(Boost_FOUND)
-  target_link_libraries(mw_algo_test_all mw_algo testlib bmcsd_algo bprod ${Boost_LIBRARIES})
+  target_link_libraries(mw_algo_test_all mw_algo testlib bmcsd_algo bprod sdetd_io sdetd_algo bmcsd_pro bmcsd_algo vcpld_algo ${Boost_LIBRARIES})
   include_directories(${Boost_INCLUDE_DIRS})
 else()
-  target_link_libraries(mw_algo_test_all mw_algo testlib bmcsd_algo bprod )
+  target_link_libraries(mw_algo_test_all mw_algo testlib bmcsd_algo bprod sdetd_io sdetd_algo bmcsd_pro bmcsd_algo vcpld_algo )
 endif()
 

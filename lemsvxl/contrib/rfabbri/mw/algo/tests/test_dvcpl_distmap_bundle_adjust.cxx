@@ -8,9 +8,9 @@
 #include <bild/algo/bild_exact_distance_transform.h>
 
 
-class vcpld_bundle_adjust_tester {
+class dvcpl_bundle_ajudt_tester {
 public:
-  vcpld_bundle_adjust_tester (
+  dvcpl_bundle_ajudt_tester (
     const vcl_vector<vcl_string> &edgemaps_fnames, 
     const vcl_vector<vcl_string> &cams_fnames):
     nviews_(edgemaps_fnames.size()),
@@ -117,7 +117,7 @@ public:
 };
 
 
-MAIN( test_vcpld_distmap_bundle_adjust )
+MAIN( test_dvcpl_distmap_bundle_adjust )
 {
   START ("vcpld bundle adjustment of curves using distance transforms");
   // Specify the data
@@ -138,7 +138,7 @@ MAIN( test_vcpld_distmap_bundle_adjust )
   cams_fnames.push_back(path + vcl_string("frame_00137.extrinsic"));
   cams_fnames.push_back(path + vcl_string("frame_00177.extrinsic"));
 
-  vcpld_bundle_adjust_tester t(
+  dvcpl_bundle_ajudt_tester t(
     edgemaps_fnames, 
     cams_fnames);
 
@@ -166,7 +166,7 @@ MAIN( test_vcpld_distmap_bundle_adjust )
   SUMMARY();
 }
 
-void vcpld_bundle_adjust_tester::
+void dvcpl_bundle_ajudt_tester::
 read_3d_curves(vcl_vector<vcl_string> pts3d_fnames)
 {
   pts3d_.resize(2);
@@ -181,7 +181,7 @@ read_3d_curves(vcl_vector<vcl_string> pts3d_fnames)
   vcl_cout << "Curve 1 size: " << pts3d_[1].size() << vcl_endl;
 }
 
-void vcpld_bundle_adjust_tester::
+void dvcpl_bundle_ajudt_tester::
 do_optimization()
 {
   vcpld_distmap_bundle_adjust o;
@@ -209,7 +209,7 @@ do_optimization()
   TEST("Error improved", o.start_error() > o.end_error(), true);
 }
 
-void vcpld_bundle_adjust_tester::
+void dvcpl_bundle_ajudt_tester::
 do_one_cam_optimization()
 {
   vcl_cout << "------- Optimizing first camera only -------\n";
