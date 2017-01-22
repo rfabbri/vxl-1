@@ -23,6 +23,7 @@
 #include <vdgl/vdgl_digital_curve.h>
 #include <vdgl/vdgl_digital_curve_sptr.h>
 #include <bdgl/bdgl_curve_algs.h>
+#include <vpgld/algo/vpgld_triangulation.h>
 #include "brct_structure_estimator.h"
 #include "brct_algos.h"
 
