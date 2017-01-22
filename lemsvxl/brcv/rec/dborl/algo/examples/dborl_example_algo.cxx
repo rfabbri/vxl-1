@@ -9,7 +9,7 @@
 #include "dborl_example_algo.h"
 #include "dborl_example_algo_params.h"
 #include <dborl/algo/dborl_utilities.h>
-#include <dborl/dborl_evaluation.h>
+#include <borld/borld_evaluation.h>
 #include <vcl_iostream.h>
 #include <vul/vul_file.h>
 
@@ -63,11 +63,11 @@ bool dborl_example_algo::finalize()
   double tpr = params_->a_float_()/10.0f;
   double fpr = params_->another_float_()/10.0f;
   params_->perf_map_insert("some_category", fpr, tpr);
-  params_->perf_plot_set_type(dborl_evaluation_plot_type::ROC);
+  params_->perf_plot_set_type(borld_evaluation_plot_type::ROC);
   params_->print_perf_xml("ROC plot: TPR vs FPR");
 
-  vcl_map<vcl_string, dborl_exp_stat_sptr> category_statistics;
-  dborl_exp_stat_sptr stat = new dborl_exp_stat();
+  vcl_map<vcl_string, buld_exp_stat_sptr> category_statistics;
+  buld_exp_stat_sptr stat = new buld_exp_stat();
   stat->increment_TP();
   stat->increment_FP();
   category_statistics["some other category"] = stat;

@@ -16,7 +16,7 @@
 
 #include <vul/vul_file.h>
 
-#include <dborl/dborl_evaluation.h>
+#include <borld/borld_evaluation.h>
 
 
 bool dborl_categorization_evaluate::parse_command_line(int argc, char* argv[])
@@ -84,7 +84,7 @@ void dborl_categorization_evaluate::print_default_file(const char* def_file)
 //  load the image and trace contour
 bool dborl_categorization_evaluate::process()
 {
-  vcl_map<vcl_string, dborl_exp_stat_sptr> category_statistics;
+  vcl_map<vcl_string, buld_exp_stat_sptr> category_statistics;
 
   dborl_index_node_sptr root = ind_->root_->cast_to_index_node();
   for (unsigned i = 0; i < root->paths().size(); i++) {
@@ -134,10 +134,10 @@ bool dborl_categorization_evaluate::process()
      vcl_string gt_category = data2_text->data();
 
      //: find the exp stat counter for this category 
-     vcl_map<vcl_string, dborl_exp_stat_sptr>::iterator cat_iter = category_statistics.find(category);
-     dborl_exp_stat_sptr current_stat;
+     vcl_map<vcl_string, buld_exp_stat_sptr>::iterator cat_iter = category_statistics.find(category);
+     buld_exp_stat_sptr current_stat;
      if (cat_iter == category_statistics.end()) {  // encountered this category for the first time
-       current_stat = new dborl_exp_stat();
+       current_stat = new buld_exp_stat();
        category_statistics[category] = current_stat;
      } else
        current_stat = cat_iter->second;
@@ -150,9 +150,9 @@ bool dborl_categorization_evaluate::process()
 
      //: find the exp stat counter for this gt_category 
      cat_iter = category_statistics.find(gt_category);
-     dborl_exp_stat_sptr gt_stat;
+     buld_exp_stat_sptr gt_stat;
      if (cat_iter == category_statistics.end()) {  // encountered this category for the first time
-       gt_stat = new dborl_exp_stat();
+       gt_stat = new buld_exp_stat();
        category_statistics[gt_category] = gt_stat;
      } else
        gt_stat = cat_iter->second;
@@ -161,9 +161,9 @@ bool dborl_categorization_evaluate::process()
   }
 
   //: update the negative cnts for all the categories in this experiment
-  for (vcl_map<vcl_string, dborl_exp_stat_sptr>::iterator temp_iter = category_statistics.begin(); temp_iter != category_statistics.end(); temp_iter++) {
+  for (vcl_map<vcl_string, buld_exp_stat_sptr>::iterator temp_iter = category_statistics.begin(); temp_iter != category_statistics.end(); temp_iter++) {
     int neg_cnt = 0;
-    for (vcl_map<vcl_string, dborl_exp_stat_sptr>::iterator temp_iter2 = category_statistics.begin(); temp_iter2 != category_statistics.end(); temp_iter2++) {
+    for (vcl_map<vcl_string, buld_exp_stat_sptr>::iterator temp_iter2 = category_statistics.begin(); temp_iter2 != category_statistics.end(); temp_iter2++) {
       if (temp_iter == temp_iter2)
         continue;
       neg_cnt += temp_iter2->second->positive_cnt_;
@@ -172,14 +172,14 @@ bool dborl_categorization_evaluate::process()
   }
 
   //: print the statistics for all the categories
-  for (vcl_map<vcl_string, dborl_exp_stat_sptr>::iterator temp_iter = category_statistics.begin(); temp_iter != category_statistics.end(); temp_iter++) {
-    dborl_exp_stat_sptr current_stat = temp_iter->second;
+  for (vcl_map<vcl_string, buld_exp_stat_sptr>::iterator temp_iter = category_statistics.begin(); temp_iter != category_statistics.end(); temp_iter++) {
+    buld_exp_stat_sptr current_stat = temp_iter->second;
     vcl_cout << "category: " << temp_iter->first << " neg cnt: " << current_stat->negative_cnt_ << " pos cnt: " << current_stat->positive_cnt_;
     vcl_cout << " TPs: " << current_stat->TP_ << " FP: " << current_stat->FP_ << "\n";
     float tpr = current_stat->TPR();
     float fpr = current_stat->FPR();
     params_->perf_map_insert(temp_iter->first, fpr, tpr);
-    params_->perf_plot_set_type(dborl_evaluation_plot_type::ROC);
+    params_->perf_plot_set_type(borld_evaluation_plot_type::ROC);
     params_->print_perf_xml("ROC plot: TPR vs FPR");
   }
   

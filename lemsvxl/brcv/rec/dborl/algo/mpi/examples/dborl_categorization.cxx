@@ -12,8 +12,8 @@
 
 #include <dborl/algo/dborl_index_parser.h>
 #include <dborl/algo/dborl_image_desc_parser.h>
-#include <dborl/dborl_image_description.h>
-#include <dborl/dborl_image_mask_description.h>
+#include <borld/borld_image_description.h>
+#include <borld/borld_image_mask_description.h>
 #include <dborl/dborl_index.h>
 #include <dborl/dborl_index_node.h>
 
@@ -130,7 +130,7 @@ bool dborl_categorization::parse(const char* param_file)
 
   // assuming its an image ground truth description:
   dborl_image_desc_parser parser;
-  dborl_image_description_sptr object_desc = dborl_image_description_parse(obj_groundtruth, parser);
+  borld_image_description_sptr object_desc = borld_image_description_parse(obj_groundtruth, parser);
   if (!object_desc->has_single_category()) {
     vcl_cout << "dborl_categorization::parse() - WARNING: image description: " << obj_groundtruth << " has more than one category! ambiguity in category comparison! using the first category\n";
   }
@@ -311,7 +311,7 @@ bool dborl_categorization::finalize(vcl_vector<float>& results)
 
   // assuming its an image ground truth description:
   dborl_image_desc_parser parser;
-  dborl_image_description_sptr object_desc = dborl_image_description_parse(obj_groundtruth, parser);
+  borld_image_description_sptr object_desc = borld_image_description_parse(obj_groundtruth, parser);
   if (!object_desc->has_single_category()) {
     vcl_cout << "dborl_categorization::finalize() - WARNING: image description: " << obj_groundtruth << " has more than one category! not a good model! using the first category\n";
   }

@@ -9,7 +9,7 @@
 #include "dborl_curve_deletions_algo.h"
 #include "dborl_curve_deletions_algo_params.h"
 #include <dborl/algo/dborl_utilities.h>
-#include <dborl/dborl_evaluation.h>
+#include <borld/borld_evaluation.h>
 #include <vcl_iostream.h>
 #include <vul/vul_file.h>
 #include <bsold/bsold_file_io.h>

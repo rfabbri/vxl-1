@@ -13,7 +13,7 @@
 #include <bxml/bxml_find.h>
 #include <dborl/dborl_index.h>
 #include <dborl/dborl_index_node.h>
-#include <dborl/dborl_image_description.h>
+#include <borld/borld_image_description.h>
 #include <dbskr/algo/dbskr_rec_algs.h>
 #include <dbskr/algo/dbskr_shock_patch_match.h>
 #include <dbskr/pro/dbskr_shock_patch_storage.h>
@@ -21,7 +21,7 @@
 #include <dborl/algo/dborl_utilities.h>
 #include <dborl/algo/dborl_index_parser.h>
 #include <dborl/algo/dborl_image_desc_parser.h>
-#include <dborl/dborl_evaluation.h>
+#include <borld/borld_evaluation.h>
 #include <vcl_iostream.h>
 #include <vcl_fstream.h>
 #include <vcl_algorithm.h>
@@ -186,7 +186,7 @@ bool dborl_detect_patch_processor::initialize(vcl_vector<dborl_detect_patch_proc
   }
     
   dborl_image_desc_parser parser;
-  dborl_image_description_sptr model_id = dborl_image_description_parse(model_gt_file, parser);
+  borld_image_description_sptr model_id = borld_image_description_parse(model_gt_file, parser);
   if (!model_id->has_single_category()) {
     vcl_cout << "dborl_detect_patch_processor::initialize() - model image description has more than one category! image was not a valid map for a model\n";
     return false;
@@ -201,7 +201,7 @@ bool dborl_detect_patch_processor::initialize(vcl_vector<dborl_detect_patch_proc
   }
 
   vcl_vector<dbskr_shock_patch_storage_sptr> test_str;
-  vcl_vector<dborl_image_description_sptr> test_desc;
+  vcl_vector<borld_image_description_sptr> test_desc;
   //: find the number of positive and negative instances in the test set
   positive_cnt_ = 0;
   negative_cnt_ = 0;
@@ -253,7 +253,7 @@ bool dborl_detect_patch_processor::initialize(vcl_vector<dborl_detect_patch_proc
     
     //vcl_cout << "query description file: " << gt_file << vcl_endl;
     dborl_image_desc_parser parser;
-    dborl_image_description_sptr id = dborl_image_description_parse(gt_file, parser);
+    borld_image_description_sptr id = borld_image_description_parse(gt_file, parser);
     if (id->category_exists(model_category_)) {
       positive_cnt_++;
       if (id->get_category_cnt(model_category_) != 1) {
@@ -333,7 +333,7 @@ bool dborl_detect_patch_processor::process(dborl_detect_patch_processor_input in
   }
   //vcl_cout << " prepared id maps.. ";
 
-  dborl_exp_stat instance_stat;
+  buld_exp_stat instance_stat;
   
   vsol_box_2d_sptr box;
   if (!match->detect_instance(box, params_.det_params_.top_N_, params_.det_params_.k_, inp.threshold)) {
@@ -363,7 +363,7 @@ bool dborl_detect_patch_processor::process(dborl_detect_patch_processor_input in
     
   } else {  // detection, we do not know N- in this case. so ROC cannot be plotted
     //: check each gt_box of the model_category in this query image
-    vsol_box_2d_sptr gt_box = dborl_evaluation_evaluate_detection(instance_stat, model_category_, 
+    vsol_box_2d_sptr gt_box = borld_evaluation_evaluate_detection(instance_stat, model_category_, 
                           inp.query_desc, box, params_.box_overlap_ratio_threshold_);
 
     //if (gt_box)
@@ -401,13 +401,13 @@ bool dborl_detect_patch_processor::finalize(vcl_vector<dborl_detect_patch_proces
   vcl_cout.flush();
 
   //: collect statistics for each threshold
-  vcl_vector<dborl_exp_stat_sptr> thres_stats(size_t_, 0);
+  vcl_vector<buld_exp_stat_sptr> thres_stats(size_t_, 0);
 
   unsigned result_ind = 0;
   for (unsigned int i = 0; i<query_set_size_; i++) { 
     for (unsigned t = 0; t < size_t_; t++) {
       if (!thres_stats[t])
-        thres_stats[t] = new dborl_exp_stat(positive_cnt_, negative_cnt_);
+        thres_stats[t] = new buld_exp_stat(positive_cnt_, negative_cnt_);
 
       if (results[result_ind].FP_)
         thres_stats[t]->increment_FP();
@@ -457,15 +457,15 @@ bool dborl_detect_patch_processor::finalize(vcl_vector<dborl_detect_patch_proces
   ofp << params_.model_name_ << vcl_endl;
   ofp << size_t_ << vcl_endl;
   //ofp << "# ROC data, thres range (" << params_.min_thres_ << ", " << params_.max_thres_ << ") inc: " << params_.thres_inc_ << " cnt: " << size_t_ << "\n";
-  dborl_evaluation_print_ROC_data(thres_stats, ofp);
-  ofp << dborl_evaluation_ROC_EER(thres_stats) << vcl_endl;
+  borld_evaluation_print_ROC_data(thres_stats, ofp);
+  ofp << borld_evaluation_ROC_EER(thres_stats) << vcl_endl;
   //ofp << "# -------------------------------\n";
   //ofp << "# RPC data, thres range (" << params_.min_thres_ << ", " << params_.max_thres_ << ") inc: " << params_.thres_inc_ << " cnt: " << size_t_ << "\n";
-  dborl_evaluation_print_RPC_data(thres_stats, ofp);
-  ofp << dborl_evaluation_RPC_EER(thres_stats) << vcl_endl;
+  borld_evaluation_print_RPC_data(thres_stats, ofp);
+  ofp << borld_evaluation_RPC_EER(thres_stats) << vcl_endl;
   //ofp << "#-------------------------------\n";
   //ofp << "# PRC data, thres range (" << params_.min_thres_ << ", " << params_.max_thres_ << ") inc: " << params_.thres_inc_ << " cnt: " << size_t_ << "\n";
-  dborl_evaluation_print_PRC_data(thres_stats, ofp);
+  borld_evaluation_print_PRC_data(thres_stats, ofp);
   //ofp << "#-------------------------------\n";
   
   ofp.close();

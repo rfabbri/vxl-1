@@ -244,7 +244,7 @@ int main(int argc, char *argv[])
 
   vcl_cout << "\n>> Load groundtruth file: " << image_desc_file << "...";
 
-  dborl_image_description_sptr image_desc;
+  borld_image_description_sptr image_desc;
   if (!x_read(image_desc_file, image_desc))
   {
     vcl_cout << "Failed.\n";

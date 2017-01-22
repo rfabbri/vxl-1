@@ -27,12 +27,12 @@
 #include <dborl/algo/dborl_image_desc_parser.h>
 #include <dborl/dborl_index.h>
 #include <dborl/dborl_index_node.h>
-#include <dborl/dborl_image_description.h>
-#include <dborl/dborl_evaluation.h>
+#include <borld/borld_image_description.h>
+#include <borld/borld_evaluation.h>
 
-dborl_exp_stat_sptr dborl_patch_match_output::get_exp_stat()
+buld_exp_stat_sptr dborl_patch_match_output::get_exp_stat()
 {
-  dborl_exp_stat_sptr es = new dborl_exp_stat();
+  buld_exp_stat_sptr es = new buld_exp_stat();
   es->increment_TP_by(TP_);
   es->increment_FP_by(FP_);
   es->increment_TN_by(TN_);
@@ -40,7 +40,7 @@ dborl_exp_stat_sptr dborl_patch_match_output::get_exp_stat()
   return es;
 }
 
-void dborl_patch_match_output::set_values(dborl_exp_stat& stat)
+void dborl_patch_match_output::set_values(buld_exp_stat& stat)
 {
   TP_ = stat.TP_; 
   FP_ = stat.FP_;
@@ -148,7 +148,7 @@ bool dborl_patch_match::initialize(vcl_vector<dborl_patch_match_input>& t)
     }
 
     dborl_image_desc_parser parser;
-    dborl_image_description_sptr proto_id = dborl_image_description_parse(proto_gt_file, parser);
+    borld_image_description_sptr proto_id = borld_image_description_parse(proto_gt_file, parser);
     proto_img_d_.push_back(proto_id);
   }
 
@@ -160,7 +160,7 @@ bool dborl_patch_match::initialize(vcl_vector<dborl_patch_match_input>& t)
     }
 
     dborl_image_desc_parser parser;
-    dborl_image_description_sptr query_id = dborl_image_description_parse(query_gt_file, parser);
+    borld_image_description_sptr query_id = borld_image_description_parse(query_gt_file, parser);
     query_img_d_.push_back(query_id);
   }
 
@@ -221,7 +221,7 @@ bool dborl_patch_match::process(dborl_patch_match_input inp, dborl_patch_match_o
     if (vul_file::exists(det_name)) {  // if not exists then compute
       vcl_vector<vcl_string> names;
       vcl_string obj_name;
-      dborl_exp_stat stat;
+      buld_exp_stat stat;
       if (parse_obj_evaluation(det_name, obj_name, det_boxes, names, stat)) {
         vcl_cout << "parsed: " << det_name << "\n";
         f.set_values(stat);
@@ -490,8 +490,8 @@ bool dborl_patch_match::process(dborl_patch_match_input inp, dborl_patch_match_o
     if (det_boxes.size()>0)
       box = det_boxes[0];
 
-    dborl_exp_stat instance_stat;
-    vsol_box_2d_sptr gt_box = dborl_evaluation_evaluate_detection(instance_stat, inp.proto_id->get_first_category(), 
+    buld_exp_stat instance_stat;
+    vsol_box_2d_sptr gt_box = borld_evaluation_evaluate_detection(instance_stat, inp.proto_id->get_first_category(), 
       inp.query_id, box, params_.evaluate_params_.box_overlap_ratio_threshold_());
 
     //if (gt_box)
@@ -511,7 +511,7 @@ bool dborl_patch_match::process(dborl_patch_match_input inp, dborl_patch_match_o
       vul_file::make_directory(det_name);
     det_name = det_name + inp.query_name + "_eval.out";
 
-    dborl_exp_stat_sptr es = f.get_exp_stat();
+    buld_exp_stat_sptr es = f.get_exp_stat();
     vcl_vector<vcl_string> categories(det_boxes.size(), inp.proto_id->get_first_category());
     print_obj_evaluation(det_name, inp.query_name, det_boxes, categories, *es);
   }
@@ -534,7 +534,7 @@ bool dborl_patch_match::finalize(vcl_vector<dborl_patch_match_output>& results)
   params_.percent_completed = 10.0f;
   params_.print_status_xml();
 
-  vcl_map<vcl_string, dborl_exp_stat_sptr> stat_map;
+  vcl_map<vcl_string, buld_exp_stat_sptr> stat_map;
   vcl_string algo_prefix;
   if (params_.detection_params_.use_only_patches_())
     algo_prefix = "patches ";
@@ -557,7 +557,7 @@ bool dborl_patch_match::finalize(vcl_vector<dborl_patch_match_output>& results)
 
     //: find the stats for this proto
     vcl_string name = algo_prefix + proto_root_->names()[i];
-    dborl_exp_stat_sptr s = new dborl_exp_stat();
+    buld_exp_stat_sptr s = new buld_exp_stat();
     stat_map[name] = s;
 
     for (unsigned j = 0; j < Q; j++) {
@@ -589,8 +589,8 @@ bool dborl_patch_match::finalize(vcl_vector<dborl_patch_match_output>& results)
   }
 
   //: find the cumulative statistics of all categories
-  dborl_exp_stat_sptr cum = new dborl_exp_stat();
-  vcl_map<vcl_string, dborl_exp_stat_sptr>::iterator it = stat_map.begin();
+  buld_exp_stat_sptr cum = new buld_exp_stat();
+  vcl_map<vcl_string, buld_exp_stat_sptr>::iterator it = stat_map.begin();
   for ( ; it != stat_map.end(); it++) {
     cum->increment_TP_by(it->second->TP_);
     cum->increment_FP_by(it->second->FP_);
@@ -603,16 +603,16 @@ bool dborl_patch_match::finalize(vcl_vector<dborl_patch_match_output>& results)
   for (unsigned i = 0; i < P; i++) {
     vcl_string cat = proto_img_d_[i]->get_first_category();
     vcl_string name = algo_prefix + cat;
-    vcl_map<vcl_string, dborl_exp_stat_sptr>::iterator it = stat_map.find(name);
+    vcl_map<vcl_string, buld_exp_stat_sptr>::iterator it = stat_map.find(name);
     if (it == stat_map.end()) {
-      dborl_exp_stat_sptr s_cum = new dborl_exp_stat();
+      buld_exp_stat_sptr s_cum = new buld_exp_stat();
       stat_map[name] = s_cum;
       for (unsigned ii = 0; ii < P; ii++) {
         if (proto_img_d_[ii]->get_first_category().compare(cat) != 0)
           continue;
 
         vcl_string name_ii = algo_prefix + proto_root_->names()[ii];
-        dborl_exp_stat_sptr s = stat_map[name_ii];
+        buld_exp_stat_sptr s = stat_map[name_ii];
         s_cum->increment_TP_by(s->TP_);
         s_cum->increment_FP_by(s->FP_);
         s_cum->increment_TN_by(s->TN_);

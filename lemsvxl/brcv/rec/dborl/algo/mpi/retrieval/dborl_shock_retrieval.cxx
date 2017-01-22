@@ -21,13 +21,13 @@
 #include <dborl/algo/dborl_image_desc_parser.h>
 #include <dborl/dborl_index.h>
 #include <dborl/dborl_index_node.h>
-#include <dborl/dborl_image_description.h>
+#include <borld/borld_image_description.h>
 #include <vcl_iostream.h>
 #include <vcl_fstream.h>
 #include <vcl_algorithm.h>
 #include <vul/vul_arg.h>
 #include <vul/vul_file.h>
-#include <dborl/dborl_evaluation.h>
+#include <borld/borld_evaluation.h>
 
 //: this method is run on each processor after lead processor broadcasts its command
 //  line arguments to all the processors since only on the lead processor is passed the command line arguments by mpirun
@@ -233,8 +233,8 @@ bool dborl_shock_retrieval::load_sim_matrix(vcl_string sim_file)
 
 //: For sorting pairs by their second elements cost
 inline bool
-final_cost_less( const vcl_pair<float, dborl_image_description_sptr>& left,
-                 const vcl_pair<float, dborl_image_description_sptr>& right )
+final_cost_less( const vcl_pair<float, borld_image_description_sptr>& left,
+                 const vcl_pair<float, borld_image_description_sptr>& right )
 {
   return left.first < right.first;
 }
@@ -260,7 +260,7 @@ void dborl_shock_retrieval::write_sim_matrix(vcl_string sim_file)
   of << "# db vs db matrix categories after sorting: \n";
   for(unsigned int i = 0; i<D; i++){
     //: sort each row
-    vcl_vector<vcl_pair<float, dborl_image_description_sptr> >* v = new vcl_vector<vcl_pair<float, dborl_image_description_sptr> >();
+    vcl_vector<vcl_pair<float, borld_image_description_sptr> >* v = new vcl_vector<vcl_pair<float, borld_image_description_sptr> >();
     
     for (unsigned kk = 0; kk < (*sim_matrix_[i]).size(); kk++) 
       v->push_back((*sim_matrix_[i])[kk]);
@@ -361,8 +361,8 @@ void dborl_shock_retrieval::print_time()
 void dborl_shock_retrieval::initialize_sim_matrix(unsigned D)
 {
   for (unsigned i = 0; i < D; i++) {
-    vcl_pair<float, dborl_image_description_sptr> p(10000.0f, 0);
-    vcl_vector<vcl_pair<float, dborl_image_description_sptr> >* tmp = new vcl_vector<vcl_pair<float, dborl_image_description_sptr> >(database_indices_.size(), p);
+    vcl_pair<float, borld_image_description_sptr> p(10000.0f, 0);
+    vcl_vector<vcl_pair<float, borld_image_description_sptr> >* tmp = new vcl_vector<vcl_pair<float, borld_image_description_sptr> >(database_indices_.size(), p);
     sim_matrix_.push_back(tmp);
   }
 }
@@ -377,7 +377,7 @@ bool dborl_shock_retrieval::finalize(vcl_vector<float>& results)
   unsigned D = database_indices_.size();
 
   //: load ground truth files of the objects
-  vcl_vector<dborl_image_description_sptr> ids;
+  vcl_vector<borld_image_description_sptr> ids;
   for (unsigned i = 0; i < D; i++) {
     vcl_string name = (root->names())[database_indices_[i]];
     vcl_string full = (root->paths())[database_indices_[i]] + "/" + (root->names())[database_indices_[i]] + ".xml";
@@ -388,7 +388,7 @@ bool dborl_shock_retrieval::finalize(vcl_vector<float>& results)
 
     //: assuming image description
     dborl_image_desc_parser parser;
-    dborl_image_description_sptr id = dborl_image_description_parse(full, parser);
+    borld_image_description_sptr id = borld_image_description_parse(full, parser);
     if (!id->has_single_category()) {
       vcl_cout << "dborl_shock_retrieval::finalize() -- image description has more than one category! this image is not valid for this retrieval\n";
       return false;
@@ -446,19 +446,19 @@ bool dborl_shock_retrieval::finalize(vcl_vector<float>& results)
     
   //: sort the sim_matrix rows
   for (unsigned i = 0; i < D; i++) {
-    vcl_vector<vcl_pair<float, dborl_image_description_sptr> >* v = sim_matrix_[i];
+    vcl_vector<vcl_pair<float, borld_image_description_sptr> >* v = sim_matrix_[i];
     vcl_sort(v->begin(), v->end(), final_cost_less);
   }
 
-  vcl_map<vcl_string, dborl_exp_stat_sptr> stat_map;
+  vcl_map<vcl_string, buld_exp_stat_sptr> stat_map;
   vcl_string algo_prefix = "Method I";
   for (unsigned i = 0; i < D; i++) {
-    vcl_vector<vcl_pair<float, dborl_image_description_sptr> >* v = sim_matrix_[i];
+    vcl_vector<vcl_pair<float, borld_image_description_sptr> >* v = sim_matrix_[i];
     vcl_string category = ids[i]->get_first_category();
-    vcl_map<vcl_string, dborl_exp_stat_sptr>::iterator it = stat_map.find(algo_prefix + category);
-    dborl_exp_stat_sptr s;
+    vcl_map<vcl_string, buld_exp_stat_sptr>::iterator it = stat_map.find(algo_prefix + category);
+    buld_exp_stat_sptr s;
     if (it == stat_map.end()) {
-      s = new dborl_exp_stat();
+      s = new buld_exp_stat();
       stat_map[algo_prefix + category] = s;
     } else {
       s = it->second;
@@ -510,8 +510,8 @@ bool dborl_shock_retrieval::finalize(vcl_vector<float>& results)
   }
 
   //: find the cumulative statistics of all categories
-  dborl_exp_stat_sptr cum = new dborl_exp_stat();
-  vcl_map<vcl_string, dborl_exp_stat_sptr>::iterator it = stat_map.begin();
+  buld_exp_stat_sptr cum = new buld_exp_stat();
+  vcl_map<vcl_string, buld_exp_stat_sptr>::iterator it = stat_map.begin();
   for ( ; it != stat_map.end(); it++) {
     cum->increment_TP_by(it->second->TP_);
     cum->increment_FP_by(it->second->FP_);

@@ -12,8 +12,8 @@
 
 #include <dborl/algo/dborl_index_parser.h>
 #include <dborl/algo/dborl_image_desc_parser.h>
-#include <dborl/dborl_image_description.h>
-#include <dborl/dborl_image_mask_description.h>
+#include <borld/borld_image_description.h>
+#include <borld/borld_image_mask_description.h>
 #include <dborl/dborl_index.h>
 #include <dborl/dborl_index_node.h>
 
@@ -32,7 +32,7 @@
 #include <dbcvr/dbcvr_clsd_cvmatch.h>
 #include <dbcvr/dbcvr_clsd_cvmatch_sptr.h>
 
-#include <dborl/dborl_evaluation.h>
+#include <borld/borld_evaluation.h>
 
 //: this method is run on each processor after lead processor broadcasts its command
 //  line arguments to all the processors since only on the lead processor is passed the command line arguments by mpirun
@@ -136,7 +136,7 @@ bool dborl_categorization_simple::parse(const char* param_file)
 
   // assuming its an image ground truth description:
   dborl_image_desc_parser parser;
-  dborl_image_description_sptr object_desc = dborl_image_description_parse(obj_groundtruth, parser);
+  borld_image_description_sptr object_desc = borld_image_description_parse(obj_groundtruth, parser);
   if (!object_desc->has_single_category()) {
     vcl_cout << "dborl_categorization_simple::parse() - WARNING: image description: " << obj_groundtruth << " has more than one category! ambiguity in category comparison! using the first category\n";
   }
@@ -325,20 +325,20 @@ bool dborl_categorization_simple::finalize(vcl_vector<float>& results)
 
   // assuming its an image ground truth description:
   dborl_image_desc_parser parser;
-  dborl_image_description_sptr object_desc = dborl_image_description_parse(obj_groundtruth, parser);
+  borld_image_description_sptr object_desc = borld_image_description_parse(obj_groundtruth, parser);
   if (!object_desc->has_single_category()) {
     vcl_cout << "dborl_categorization_simple::finalize() - WARNING: image description: " << obj_groundtruth << " has more than one category! not a good model! using the first category\n";
   }
   current_category_ = object_desc->get_first_category();
 
   //: calculate the evaluation statistics regarding this categorization
-  vcl_map<vcl_string, dborl_exp_stat_sptr> category_statistics;
+  vcl_map<vcl_string, buld_exp_stat_sptr> category_statistics;
 
   //: first find all the categories encountered in this dataset, initialize its stat pointer to zero
   for (unsigned i = 0; i < current_node_->paths().size(); i++) {
     vcl_string obj_groundtruth = current_node_->paths()[i] + "/" + current_node_->names()[i] + ".xml";
     dborl_image_desc_parser parser;
-    dborl_image_description_sptr object_desc = dborl_image_description_parse(obj_groundtruth, parser);
+    borld_image_description_sptr object_desc = borld_image_description_parse(obj_groundtruth, parser);
     //: add all the categories in this description
     for (vcl_map<vcl_string, int>::iterator iter = object_desc->category_list_.begin(); iter != object_desc->category_list_.end(); iter++) 
       category_statistics[iter->first] = 0;   // vcl_map makes sure that each category appears only once, even if this statement called more than once for the same category
@@ -348,11 +348,11 @@ bool dborl_categorization_simple::finalize(vcl_vector<float>& results)
   vcl_cout << "there are: " <<  category_statistics.size() << " categories encountered in this database, or in the input\n";
 
   //: now we declared an instance from current_category_ --> update the statistics for this category
-  vcl_map<vcl_string, dborl_exp_stat_sptr>::iterator it = category_statistics.find(current_category_);
-  it->second = new dborl_exp_stat();
+  vcl_map<vcl_string, buld_exp_stat_sptr>::iterator it = category_statistics.find(current_category_);
+  it->second = new buld_exp_stat();
 
-  vcl_map<vcl_string, dborl_exp_stat_sptr>::iterator it_gt = category_statistics.find(input_gt_category_);
-  it_gt->second = new dborl_exp_stat();
+  vcl_map<vcl_string, buld_exp_stat_sptr>::iterator it_gt = category_statistics.find(input_gt_category_);
+  it_gt->second = new buld_exp_stat();
 
   if (current_category_.compare(input_gt_category_) == 0) { // the same --> TP of current_category_
     it->second->increment_TP();
@@ -362,10 +362,10 @@ bool dborl_categorization_simple::finalize(vcl_vector<float>& results)
   }
 
   //: similarly true negative for all other categories.
-  for (vcl_map<vcl_string, dborl_exp_stat_sptr>::iterator itt = category_statistics.begin(); itt != category_statistics.end(); itt++) {
+  for (vcl_map<vcl_string, buld_exp_stat_sptr>::iterator itt = category_statistics.begin(); itt != category_statistics.end(); itt++) {
     if (itt == it || itt == it_gt)
       continue;
-    itt->second = new dborl_exp_stat();
+    itt->second = new buld_exp_stat();
     itt->second->increment_TN();
   }
 

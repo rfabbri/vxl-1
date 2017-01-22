@@ -40,15 +40,15 @@
 class dborl_patch_match_input
 { public:
     dborl_patch_match_input(vcl_string pn, vcl_string qn, 
-                            dborl_image_description_sptr pi, 
-                            dborl_image_description_sptr qi,
+                            borld_image_description_sptr pi, 
+                            borld_image_description_sptr qi,
                             vcl_string pstn, vcl_string qstn,
                             vcl_string pp, vcl_string qp) : proto_name(pn), query_name(qn), proto_id(pi), query_id(qi),
                                                                 proto_st_name(pstn), query_st_name(qstn),
                                                                 proto_path(pp), query_path(qp) {}
 
-    dborl_image_description_sptr proto_id;
-    dborl_image_description_sptr query_id;
+    borld_image_description_sptr proto_id;
+    borld_image_description_sptr query_id;
     vcl_string proto_name;
     vcl_string query_name;
     vcl_string proto_st_name;
@@ -63,8 +63,8 @@ public:
   dborl_patch_match_output() : TP_(0), FP_(0), TN_(0), FN_(0) {}
   
   inline void set_values(int tp, int fp, int tn, int fn) { TP_ = tp, FP_ = fp, TN_ = tn, FN_ = fn; }
-  void set_values(dborl_exp_stat& stat);
-  dborl_exp_stat_sptr get_exp_stat();
+  void set_values(buld_exp_stat& stat);
+  buld_exp_stat_sptr get_exp_stat();
   
   int TP_;
   int FP_;
@@ -120,8 +120,8 @@ protected:
   dborl_index_sptr proto_ind_, query_ind_;
   dborl_index_node_sptr proto_root_, query_root_;
 
-  vcl_vector<dborl_image_description_sptr> query_img_d_;
-  vcl_vector<dborl_image_description_sptr> proto_img_d_;
+  vcl_vector<borld_image_description_sptr> query_img_d_;
+  vcl_vector<borld_image_description_sptr> proto_img_d_;
 
   vul_timer t_;
   unsigned total_processors_;

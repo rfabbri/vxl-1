@@ -16,7 +16,7 @@
 #include <dbxml/dbxml_algos.h>
 #include <dbxml/dbxml_xio.h>
 #include <vsol/vsol_box_2d.h>
-#include <dborl/dborl_image_description.h>
+#include <borld/borld_image_description.h>
 
 //: Default ctor
 vox_eval_shock_patches::vox_eval_shock_patches
@@ -137,7 +137,7 @@ bool vox_eval_shock_patches::initialize()
     unsigned int number_of_queries = root->paths().size();
     unsigned int i(0);
     vcl_string query_gt_file;
-    dborl_image_description_sptr query_id;
+    borld_image_description_sptr query_id;
 
     // Find number of negative instances and postive instances
     unsigned int positive_cnt(0);
@@ -177,7 +177,7 @@ bool vox_eval_shock_patches::initialize()
     for ( ; t < num_thresholds; ++t)
     {
 
-        stats_at_threshold_.push_back(dborl_exp_stat());
+        stats_at_threshold_.push_back(buld_exp_stat());
         stats_at_threshold_[t].positive_cnt_ = positive_cnt;
         stats_at_threshold_[t].negative_cnt_ = negative_cnt;
     }
@@ -256,8 +256,8 @@ bool vox_eval_shock_patches::perform_eval()
 
             }
 
-            dborl_exp_stat instance_stat;
-            vsol_box_2d_sptr gt_box = dborl_evaluation_evaluate_detection
+            buld_exp_stat instance_stat;
+            vsol_box_2d_sptr gt_box = borld_evaluation_evaluate_detection
                 (instance_stat, 
                  model_id_->get_first_category(), 
                  query_ids_[i], 

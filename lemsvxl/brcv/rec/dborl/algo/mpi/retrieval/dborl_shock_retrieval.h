@@ -104,7 +104,7 @@ protected:
 
   //: the following 2D sim matrix, will carry for a given i: row, j: col, sim of i and j and the description of j
   //  since when we sort the rows wrt sim, then we want to keep columns' descriptions
-  vcl_vector<vcl_vector<vcl_pair<float, dborl_image_description_sptr> >* > sim_matrix_;
+  vcl_vector<vcl_vector<vcl_pair<float, borld_image_description_sptr> >* > sim_matrix_;
 
   vul_timer t_;
   

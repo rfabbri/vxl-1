@@ -34,7 +34,7 @@
 #define _dborl_detect_patch_processor_h
 
 #include <dborl/algo/mpi/dborl_dataset_processor.h>
-#include <dborl/dborl_image_description_sptr.h>
+#include <borld/borld_image_description_sptr.h>
 #include <bxml/bxml_document.h>
 #include <dbskr/pro/dbskr_shock_patch_storage_sptr.h>
 #include <dbskr/algo/io/dbskr_detect_patch_params.h>
@@ -46,7 +46,7 @@ class dborl_detect_patch_processor_input
 { public:
     dborl_detect_patch_processor_input(dbskr_shock_patch_storage_sptr model_s, 
                                       dbskr_shock_patch_storage_sptr query_s, 
-                                      vcl_string model_n, vcl_string query_n, float t, dborl_image_description_sptr query_d) :
+                                      vcl_string model_n, vcl_string query_n, float t, borld_image_description_sptr query_d) :
                                       model_st(model_s), query_st(query_s), model_name(model_n), query_name(query_n), 
                                       threshold(t), query_desc(query_d) {}
     dbskr_shock_patch_storage_sptr model_st;  // model storage
@@ -54,7 +54,7 @@ class dborl_detect_patch_processor_input
     vcl_string model_name;  // model's name
     vcl_string query_name;  // query's name
     float threshold;
-    dborl_image_description_sptr query_desc;
+    borld_image_description_sptr query_desc;
 };
 
 //: turn the detection boxes into fixed sized arrays for message passing
