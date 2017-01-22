@@ -18,7 +18,7 @@
 #include <bpro1/bpro1_process.h>
 #include <bpro1/bpro1_parameters.h>
 #include <vcl_vector.h>
-#include <dborl/dborl_evaluation.h>
+#include <borld/borld_evaluation.h>
 
 //: This process is for matching extrinsic shock graphs
 class dbskr_detect_shock_patches_process : public bpro1_process
