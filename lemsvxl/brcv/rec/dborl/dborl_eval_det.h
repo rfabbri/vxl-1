@@ -15,7 +15,7 @@
 #include <vcl_vector.h>
 #include <vcl_string.h>
 #include <dborl/dborl_det_desc_sptr.h>
-#include <dborl/dborl_image_description_sptr.h>
+#include <borld/borld_image_description_sptr.h>
 
 
 
@@ -29,7 +29,7 @@
 // "list_det" : list of detection result returned by the algorithm
 // "confidence", "TP", "FP": total number of true positives (TP) and false positive (FP)
 // for each confidence threshold level of the detection result
-bool dborl_VOC2008_eval_det(const dborl_image_description_sptr& image_desc, 
+bool dborl_VOC2008_eval_det(const borld_image_description_sptr& image_desc, 
                         const vcl_string& model_category,
                         double min_required_overlap,
                         const vcl_vector<dborl_det_desc_sptr >& list_det,

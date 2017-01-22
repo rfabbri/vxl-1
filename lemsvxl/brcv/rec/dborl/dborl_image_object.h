@@ -15,7 +15,7 @@
 #define _DBORL_IMAGE_OBJECT_H
 
 #include "dborl_object_base.h"
-#include <dborl/borld_image_description_sptr.h>
+#include <borld/borld_image_description_sptr.h>
 
 #include <vil/vil_image_resource_sptr.h>
 
