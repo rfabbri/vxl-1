@@ -21,31 +21,8 @@ dborl_object_base_sptr.h
 dborl_image_object.h                 dborl_image_object.cxx
 dborl_image_object_sptr.h 
 
-dborl_description_base.h
-dborl_description_base_sptr.h
-
-dborl_image_bbox_description.h         dborl_image_bbox_description.cxx
-dborl_image_bbox_description_sptr.h
-
-dborl_image_data_description_base.h    #dborl_image_data_description_base.cxx
-dborl_image_data_description_base_sptr.h
-
-dborl_image_description.h              dborl_image_description.cxx
-dborl_image_description_sptr.h
-
-dborl_image_mask_description.h         dborl_image_mask_description.cxx
-dborl_image_mask_description_sptr.h
-
-dborl_image_polygon_description.h      dborl_image_polygon_description.cxx
-dborl_image_polygon_description_sptr.h
-
-dborl_image_description_utils.h        dborl_image_description_utils.cxx
-
 dborl_dataset.h                        dborl_dataset.cxx
 dborl_dataset_sptr.h
-
-dborl_category_info.h                  dborl_category_info.cxx
-dborl_category_info_sptr.h
 
 dborl_index_node_base.h
 dborl_index_node_base_sptr.h
