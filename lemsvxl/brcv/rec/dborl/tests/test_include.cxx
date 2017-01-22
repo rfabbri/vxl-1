@@ -2,8 +2,8 @@
 #include <dborl/dborl_object_base_sptr.h>
 #include <dborl/dborl_dataset.h>
 #include <dborl/dborl_dataset_sptr.h>
-#include <dborl/dborl_category_info.h>
-#include <dborl/dborl_category_info_sptr.h>
+#include <borld/borld_category_info.h>
+#include <borld/borld_category_info_sptr.h>
 #include <dborl/dborl_index_node_base.h>
 #include <dborl/dborl_index_node_base_sptr.h>
 #include <dborl/dborl_index_node_sptr.h>

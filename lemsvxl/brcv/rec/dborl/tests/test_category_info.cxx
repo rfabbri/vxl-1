@@ -1,6 +1,6 @@
 #include <testlib/testlib_test.h>
-#include <dborl/dborl_category_info.h>
-#include <dborl/dborl_category_info_sptr.h>
+#include <borld/borld_category_info.h>
+#include <borld/borld_category_info_sptr.h>
 
 #include <vcl_iostream.h>
 //#include <vcl_cmath.h>
@@ -13,13 +13,13 @@ MAIN_ARGS(test_category_info)
 {
   testlib_test_start("testing category_info class ");
  
-  dborl_category_info_sptr ci = new dborl_category_info();
+  borld_category_info_sptr ci = new borld_category_info();
   TEST("test category_info constructor ", ci->prefix_list_.size(), 0);
   ci->set_name("test1");
   ci->add_prefix("test");
   TEST("test category_info constructor ", ci->prefix_list_.size(), 1);
   
-  dborl_category_info_sptr ci2 = new dborl_category_info("test22");
+  borld_category_info_sptr ci2 = new borld_category_info("test22");
   vcl_vector<vcl_string> prefixes;
   prefixes.push_back("test2");
   prefixes.push_back("test3");

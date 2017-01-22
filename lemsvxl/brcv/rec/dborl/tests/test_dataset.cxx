@@ -1,9 +1,9 @@
 #include <testlib/testlib_test.h>
 #include <dborl/dborl_image_object.h>
 #include <dborl/dborl_image_object_sptr.h>
-#include <dborl/dborl_image_bbox_description_sptr.h>
-#include <dborl/dborl_image_bbox_description.h>
-#include <dborl/dborl_image_description.h>
+#include <borld/borld_image_bbox_description_sptr.h>
+#include <borld/borld_image_bbox_description.h>
+#include <borld/borld_image_description.h>
 #include <dborl/dborl_dataset.h>
 #include <dborl/dborl_dataset_sptr.h>
 #include <vcl_iostream.h>
@@ -25,13 +25,13 @@ MAIN_ARGS(test_dataset)
 
   dborl_image_object_sptr io = new dborl_image_object("test_image", img);
   
-  dborl_image_bbox_description_sptr box_d = new dborl_image_bbox_description();
+  borld_image_bbox_description_sptr box_d = new borld_image_bbox_description();
   vsol_box_2d_sptr b = new vsol_box_2d();
   b->add_point(10, 10);
   b->add_point(20, 20);
   box_d->add_box("test_cat", b);
 
-  dborl_image_description_sptr img_d = new dborl_image_description(box_d);
+  borld_image_description_sptr img_d = new borld_image_description(box_d);
   io->set_description(img_d);
 
   dborl_dataset_sptr ds = new dborl_dataset();
@@ -45,7 +45,7 @@ MAIN_ARGS(test_dataset)
   vil_image_resource_sptr img2 = vil_new_image_resource_of_view(image2);
 
   dborl_image_object_sptr io2 = new dborl_image_object("test_image2", img2);
-  dborl_image_bbox_description_sptr box_d2 = new dborl_image_bbox_description();
+  borld_image_bbox_description_sptr box_d2 = new borld_image_bbox_description();
   vsol_box_2d_sptr b2 = new vsol_box_2d();
   b2->add_point(15, 12);
   b2->add_point(22, 23);
@@ -56,7 +56,7 @@ MAIN_ARGS(test_dataset)
   b3->add_point(2, 9);
   box_d2->add_box("test_cat2", b3);
 
-  dborl_image_description_sptr img_d2 = new dborl_image_description(box_d2);
+  borld_image_description_sptr img_d2 = new borld_image_description(box_d2);
   io2->set_description(img_d2);
 
   ds->add_object(io2->cast_to_object_base());

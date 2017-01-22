@@ -1,9 +1,9 @@
 #include <testlib/testlib_test.h>
 #include <dborl/dborl_image_object.h>
 #include <dborl/dborl_image_object_sptr.h>
-#include <dborl/dborl_image_bbox_description_sptr.h>
-#include <dborl/dborl_image_bbox_description.h>
-#include <dborl/dborl_image_description.h>
+#include <borld/borld_image_bbox_description_sptr.h>
+#include <borld/borld_image_bbox_description.h>
+#include <borld/borld_image_description.h>
 #include <vcl_iostream.h>
 //#include <vcl_cmath.h>
 #include <vil/vil_load.h>
@@ -28,9 +28,9 @@ static void test_image_object(int argc, char* argv[])
   vcl_cout << "img size: " << img->ni() << " " << img->nj() << vcl_endl;
 
   dborl_image_object_sptr io = new dborl_image_object("test_image", img);
-  TEST("test constructor ", io->get_object_type(), dborl_object_type::image);
+  TEST("test constructor ", io->get_object_type(), borld_object_type::image);
 
-  dborl_image_bbox_description_sptr box_d = new dborl_image_bbox_description();
+  borld_image_bbox_description_sptr box_d = new borld_image_bbox_description();
 
   TEST("test category_exists() ", box_d->category_exists("test_cat"), false);
   vsol_box_2d_sptr b = new vsol_box_2d();
@@ -43,7 +43,7 @@ static void test_image_object(int argc, char* argv[])
   TEST("test get_box_vector() ", v.size(), 1);
   TEST("test get_box_vector() ", v[0]->area(), b->area());
 
-  dborl_image_description_sptr img_d = new dborl_image_description(box_d);
+  borld_image_description_sptr img_d = new borld_image_description(box_d);
   io->set_description(img_d);
 
   TEST("test set_description() get_description()", io->get_description()->category_exists("test_cat"), true);

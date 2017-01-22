@@ -4,5 +4,5 @@
 #include <borld/borld_category_info_sptr.h>
 
 BRDB_VALUE_INSTANTIATE(buld_exp_stat_sptr, "buld_exp_stat_sptr");
-BRDB_VALUE_INSTANTIATE(dborl_category_info_set_sptr, "dborl_category_info_set_sptr");
+BRDB_VALUE_INSTANTIATE(borld_category_info_set_sptr, "borld_category_info_set_sptr");
 

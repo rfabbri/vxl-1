@@ -184,7 +184,7 @@ bool dborl_category_info_set_create_process_cons(bprb_func_process& pro)
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
   vcl_vector<vcl_string> output_types;
-  output_types.push_back("dborl_category_info_set_sptr");
+  output_types.push_back("borld_category_info_set_sptr");
   ok = pro.set_output_types(output_types);
   return ok;
 }
@@ -197,7 +197,7 @@ bool dborl_category_info_set_create_process(bprb_func_process& pro)
   }
   unsigned i = 0;
   vcl_string file_name = pro.get_input<vcl_string>(i++);
-  dborl_category_info_set_sptr cs = new dborl_category_info_set;
+  borld_category_info_set_sptr cs = new borld_category_info_set;
   vcl_ifstream is(file_name.c_str());
   if (!is) {
     vcl_cerr << "dborl_category_info_set_create_process - cannot open file: " << file_name << "\n";
@@ -205,7 +205,7 @@ bool dborl_category_info_set_create_process(bprb_func_process& pro)
   }
   cs->read_cats_from_a_simple_file(is);
   is.close();
-  pro.set_output_val<dborl_category_info_set_sptr>(0, cs);
+  pro.set_output_val<borld_category_info_set_sptr>(0, cs);
   return true;
 }
 //: write a category info set instance as an xml file
@@ -213,7 +213,7 @@ bool dborl_category_info_set_write_xml_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
   vcl_vector<vcl_string> input_types;
-  input_types.push_back("dborl_category_info_set_sptr");
+  input_types.push_back("borld_category_info_set_sptr");
   input_types.push_back("vcl_string"); // output file name
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
@@ -229,7 +229,7 @@ bool dborl_category_info_set_write_xml_process(bprb_func_process& pro)
     return false;
   }
   unsigned i = 0;
-  dborl_category_info_set_sptr cis = pro.get_input<dborl_category_info_set_sptr>(i++);
+  borld_category_info_set_sptr cis = pro.get_input<borld_category_info_set_sptr>(i++);
   vcl_string file_name = pro.get_input<vcl_string>(i++);
   
   vcl_ofstream ofs(file_name.c_str());
@@ -242,7 +242,7 @@ bool dborl_category_info_set_get_id_process_cons(bprb_func_process& pro)
 {
   bool ok=false;
   vcl_vector<vcl_string> input_types;
-  input_types.push_back("dborl_category_info_set_sptr");
+  input_types.push_back("borld_category_info_set_sptr");
   input_types.push_back("vcl_string"); // category name
   ok = pro.set_input_types(input_types);
   if (!ok) return ok;
@@ -259,7 +259,7 @@ bool dborl_category_info_set_get_id_process(bprb_func_process& pro)
     return false;
   }
   unsigned i = 0;
-  dborl_category_info_set_sptr cs = pro.get_input<dborl_category_info_set_sptr>(i++);
+  borld_category_info_set_sptr cs = pro.get_input<borld_category_info_set_sptr>(i++);
   vcl_string cat_name = pro.get_input<vcl_string>(i++);
   borld_category_info_sptr cinfo = cs->find_category(cat_name);
   if (!cinfo) {
@@ -278,7 +278,7 @@ bool buld_exp_stat_eval_classification_using_id_process_cons(bprb_func_process& 
   bool ok=false;
   vcl_vector<vcl_string> input_types;
   input_types.push_back("buld_exp_stat_sptr");
-  input_types.push_back("dborl_category_info_set_sptr");  // pass a category info set instance for this process to match the name to the id
+  input_types.push_back("borld_category_info_set_sptr");  // pass a category info set instance for this process to match the name to the id
   input_types.push_back("vcl_string"); // gt class
   input_types.push_back("int"); // class id outputted by a classifier
   ok = pro.set_input_types(input_types);
@@ -300,7 +300,7 @@ bool buld_exp_stat_eval_classification_using_id_process(bprb_func_process& pro)
   // get the inputs
   unsigned i = 0;
   buld_exp_stat_sptr es = pro.get_input<buld_exp_stat_sptr>(i++);
-  dborl_category_info_set_sptr cis = pro.get_input<dborl_category_info_set_sptr>(i++);
+  borld_category_info_set_sptr cis = pro.get_input<borld_category_info_set_sptr>(i++);
   vcl_string gt_class = pro.get_input<vcl_string>(i++);
   int outputted_class = pro.get_input<int>(i++);
   borld_evaluation_evaluate_classification(es, cis, gt_class, outputted_class);

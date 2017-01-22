@@ -11,7 +11,7 @@
 void dborl_register::register_datatype()
 {
   REGISTER_DATATYPE( buld_exp_stat_sptr );
-  REGISTER_DATATYPE( dborl_category_info_set_sptr );
+  REGISTER_DATATYPE( borld_category_info_set_sptr );
 }
 
 void dborl_register::register_process()
