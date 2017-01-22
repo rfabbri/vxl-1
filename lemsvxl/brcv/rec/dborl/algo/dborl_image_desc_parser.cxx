@@ -13,9 +13,9 @@
 #include <vcl_iostream.h>
 #include <vcl_sstream.h>
 
-#include <dborl/dborl_image_description.h>
-#include <dborl/dborl_image_bbox_description.h>
-#include <dborl/dborl_image_polygon_description.h>
+#include <borld/borld_image_description.h>
+#include <borld/borld_image_bbox_description.h>
+#include <borld/borld_image_polygon_description.h>
 #include <dborl/dborl_image_mask_description.h>
 #include <dborl/dborl_image_mask_description_sptr.h>
 #include <dborl/algo/dborl_utilities.h>
@@ -147,12 +147,12 @@ dborl_image_desc_parser::endElement(const char* name)
     cats_.push_back(current_cat_);  // save all the categories encountered
     if (current_box_) {
       if (!box_desc_) 
-        box_desc_ = new dborl_image_bbox_description();
+        box_desc_ = new borld_image_bbox_description();
       box_desc_->add_box(current_cat_, current_box_);
     }
     if (current_poly_) {
       if (!poly_desc_)
-        poly_desc_ = new dborl_image_polygon_description();
+        poly_desc_ = new borld_image_polygon_description();
       poly_desc_->add_polygon(current_cat_, current_poly_);
     } 
 
@@ -163,12 +163,12 @@ dborl_image_desc_parser::endElement(const char* name)
 
   } else if (vcl_strcmp(name,description_tag_.c_str())== 0) {
     if (box_desc_)
-      idesc_ = new dborl_image_description(box_desc_);
+      idesc_ = new borld_image_description(box_desc_);
     else if (poly_desc_)
-      idesc_ = new dborl_image_description(poly_desc_);
+      idesc_ = new borld_image_description(poly_desc_);
     else {  // if neither box nor polygon descriptions are available then assumes map description, whose image will be set later!!
       dborl_image_mask_description_sptr md = new dborl_image_mask_description();
-      idesc_ = new dborl_image_description(md, cats_);
+      idesc_ = new borld_image_description(md, cats_);
     }
   } 
 
@@ -189,7 +189,7 @@ void dborl_image_desc_parser::charData(const XML_Char* s, int len)
   cdata_.append(s, len);
 }
 
-dborl_image_description_sptr dborl_image_description_parse(vcl_string fname, dborl_image_desc_parser& parser) 
+borld_image_description_sptr borld_image_description_parse(vcl_string fname, dborl_image_desc_parser& parser) 
 {
   vcl_FILE *xmlFile;
 
@@ -223,7 +223,7 @@ void parse_pascal_write_default_xml(vcl_string input_fname, vcl_string output_fn
 {
   dborl_image_desc_parser parser;
   parser.set_pascal_tags();
-  dborl_image_description_sptr id = dborl_image_description_parse(input_fname, parser);
+  borld_image_description_sptr id = borld_image_description_parse(input_fname, parser);
 
   vcl_ofstream os;
   os.open(output_fname.c_str(), vcl_ios_out);
@@ -237,9 +237,9 @@ bool read_con_write_image_description_xml(vcl_string input_fname, vcl_string cat
   bool is_closed;
   if (bsold_load_con_file(input_fname.c_str(), points, is_closed)) {
     vsol_polygon_2d_sptr poly = new vsol_polygon_2d(points);
-    dborl_image_polygon_description_sptr ip = new dborl_image_polygon_description();
+    borld_image_polygon_description_sptr ip = new borld_image_polygon_description();
     ip->add_polygon(category, poly);
-    dborl_image_description_sptr id = new dborl_image_description(ip);
+    borld_image_description_sptr id = new borld_image_description(ip);
     
     vcl_ofstream os;
     os.open(output_fname.c_str(), vcl_ios_out);

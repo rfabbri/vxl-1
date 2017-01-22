@@ -28,14 +28,14 @@
 #include <vcl_cstdio.h>
 #include <vcl_vector.h>
 
-#include <dborl/dborl_category_info_sptr.h>
+#include <borld/borld_category_info_sptr.h>
 
-class dborl_category_info_parser : public expatpp {
+class borld_category_info_parser : public expatpp {
 public:
-  dborl_category_info_parser(void) : version(1) {};
-  ~dborl_category_info_parser(void) { clear(); }
+  borld_category_info_parser(void) : version(1) {};
+  ~borld_category_info_parser(void) { clear(); }
   
-  vcl_vector<dborl_category_info_sptr>& get_categories(void) { return cats_; }
+  vcl_vector<borld_category_info_sptr>& get_categories(void) { return cats_; }
 
   void clear() { cats_.clear(); current_cat_ = 0; }
 
@@ -51,13 +51,13 @@ private:
 
   int version;
 
-  vcl_vector<dborl_category_info_sptr> cats_;
+  vcl_vector<borld_category_info_sptr> cats_;
   vcl_string cdata_;
-  dborl_category_info_sptr current_cat_;
+  borld_category_info_sptr current_cat_;
 };
 
 //: inserts parsed categories at the beginning of cats
-bool parse(vcl_string fname, dborl_category_info_parser& parser, vcl_vector<dborl_category_info_sptr>& cats);
-void write_categories_xml(vcl_vector<dborl_category_info_sptr>& cats, vcl_ostream& os);
+bool parse(vcl_string fname, borld_category_info_parser& parser, vcl_vector<borld_category_info_sptr>& cats);
+void write_categories_xml(vcl_vector<borld_category_info_sptr>& cats, vcl_ostream& os);
 
 #endif  // _DBORL_CATEGORY_INFO_PARSER_H

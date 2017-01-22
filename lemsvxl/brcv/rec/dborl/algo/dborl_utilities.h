@@ -17,7 +17,7 @@
 #include <vcl_utility.h>
 #include <vcl_string.h>
 
-#include <dborl/dborl_category_info_sptr.h>
+#include <borld/borld_category_info_sptr.h>
 #include <borld/borld_evaluation.h>
 #include <dborl/algo/dborl_algo_params.h>
 
@@ -30,7 +30,7 @@ bool parse_strings_from_file(vcl_string fname, vcl_vector<vcl_string>& strings);
 bool parse_lines_from_file(vcl_string fname, vcl_vector<vcl_string>& strings);
 
 //: return the id in the categories vector for the category one of whose prefixes matches the object name
-int dborl_get_category(vcl_string object_name, vcl_vector<dborl_category_info_sptr>& cats);
+int dborl_get_category(vcl_string object_name, vcl_vector<borld_category_info_sptr>& cats);
 
 bool parse_evaluation_file(vcl_string fname, vcl_map<vcl_string, buld_exp_stat_sptr>& category_statistics, vcl_string& algo_name);
 
