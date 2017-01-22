@@ -119,7 +119,7 @@ bugl_gaussian_point_2d<double> brct_algos::project_3d_point(const vnl_double_3x4
 //:  Given a set of perspective views of a point reconstruct the point according to least squares (SVD).
 //   The cameras for each view are given.
 //
-vgl_point_3d<double> reconstruct_3d_points_nviews_linear(vcl_vector<vnl_double_2> &pts, vcl_vector<vnl_double_3x4> &Ps)
+vgl_point_3d<double> vpgld_reconstruct_3d_points_nviews_linear(vcl_vector<vnl_double_2> &pts, vcl_vector<vnl_double_3x4> &Ps)
 {
   assert(pts.size() == Ps.size());
   unsigned int nviews = pts.size();

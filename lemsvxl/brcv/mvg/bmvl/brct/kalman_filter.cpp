@@ -455,7 +455,7 @@ void kalman_filter::inc()
       }
     }
 
-    vgl_point_3d<double> X3d = reconstruct_3d_points_nviews_linear(pts, Ps);
+    vgl_point_3d<double> X3d = vpgld_reconstruct_3d_points_nviews_linear(pts, Ps);
     // update covariant matrix
     bugl_normal_point_3d_sptr p3d_sptr = curve_3d_.get_point(i);
     vnl_double_3 dX(X3d.x() - p3d_sptr->x(), X3d.y() - p3d_sptr->y(), X3d.z() - p3d_sptr->z());

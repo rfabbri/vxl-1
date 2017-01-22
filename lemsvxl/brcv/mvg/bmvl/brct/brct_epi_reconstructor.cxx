@@ -628,7 +628,7 @@ void brct_epi_reconstructor::inc()
     }
 
     //least squares reconstruction of the point using SVD
-    vgl_point_3d<double> X3d = reconstruct_3d_points_nviews_linear(pts, Ps);
+    vgl_point_3d<double> X3d = vpgld_reconstruct_3d_points_nviews_linear(pts, Ps);
 //     vcl_cout << "Pi[" << i << "]= (" << X3d.x()
 //              << ' ' << X3d.y() << ' ' << X3d.z()
 //              << ")\n";
@@ -736,7 +736,7 @@ void brct_epi_reconstructor::inc()
         }
       //least squares reconstruction of the point using SVD
       vgl_point_3d<double> X3d =
-        reconstruct_3d_points_nviews_linear(pts, Ps);
+        vpgld_reconstruct_3d_points_nviews_linear(pts, Ps);
       if (debug_)
         vcl_cout << "Pi[" << ipt << "]= (" << X3d.x()
                  << ' ' << X3d.y() << ' ' << X3d.z()
