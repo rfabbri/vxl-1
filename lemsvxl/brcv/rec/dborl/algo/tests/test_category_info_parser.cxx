@@ -16,7 +16,7 @@ static void test_category_info_parser(int argc, char* argv[])
  
   dborl_category_info_parser parser;
   parser.clear();
-  vcl_vector<dborl_category_info_sptr> cats;
+  vcl_vector<borld_category_info_sptr> cats;
   TEST("parse() category info", parse("99-db-description.xml", parser, cats), true);
   TEST("parse() category info", cats.size(), 9);
   

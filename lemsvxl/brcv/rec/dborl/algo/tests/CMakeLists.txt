@@ -9,7 +9,7 @@ add_executable( dborl_algo_test_all
   test_index_parser.cxx
   test_algo_params.cxx
 )
-target_link_libraries( dborl_algo_test_all dborl_algo testlib )
+target_link_libraries( dborl_algo_test_all dborl_algo buld vbl testlib )
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/pascal_000005.xml          ${CMAKE_CURRENT_BINARY_DIR}/pascal_000005.xml )
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/test_box.xml               ${CMAKE_CURRENT_BINARY_DIR}/test_box.xml )

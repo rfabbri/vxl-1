@@ -2,7 +2,7 @@
 #include <dborl/algo/dborl_image_desc_parser.h>
 #include <borld/borld_image_description_sptr.h>
 #include <borld/borld_image_description.h>
-#include <dborl/dborl_image_data_description_base.h>
+#include <borld/borld_image_data_description_base.h>
 #include <borld/borld_image_bbox_description.h>
 #include <borld/borld_image_polygon_description.h>
 
