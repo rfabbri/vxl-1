@@ -12,7 +12,8 @@
 #include <vul/vul_timer.h>
 #include <dborl/algo/dborl_utilities.h>
 #include <dbxml/dbxml_algos.h>
-#include <mw/pro/bmcsd_stereo_driver.h>
+#include <bmcsd/algo/bmcsd_discrete_corresp_algo.h>
+#include <bmcsd/pro/bmcsd_stereo_driver.h>
 
 
 #define MW_ASSERT(msg, a, b) if ((a) != (b)) { vcl_cerr << (msg) \
@@ -20,7 +21,7 @@
 
 /*
 static bool write_stats(const vcl_string &dataset_name, 
-    const vcl_vector<dborl_exp_stat> &stats_at_threshold,
+    const vcl_vector<buld_exp_stat> &stats_at_threshold,
     vcl_string fname
     );
     */
@@ -28,7 +29,7 @@ static bool write_stats(const vcl_string &dataset_name,
 static bool 
 write_stats_with_params(
     const vcl_string &dataset_name, 
-    const vcl_vector<dborl_exp_stat> &stats_at_threshold,
+    const vcl_vector<buld_exp_stat> &stats_at_threshold,
     vcl_vector<vcl_vector<vcl_string> >eval_params_names,
     vcl_vector<vcl_vector<vcl_string> >eval_params_values,
     vcl_string fname
@@ -162,7 +163,7 @@ main(int argc, char *argv[])
     // Prune at different thresholds and measure the stats.
 
     // TODO assert gt is compatible with the read-in curves.
-    vcl_vector<dborl_exp_stat> stats;
+    vcl_vector<buld_exp_stat> stats;
     const unsigned num_its = e.min_total_inliers_list_.size();
     stats.reserve(num_its);
 
@@ -173,9 +174,9 @@ main(int argc, char *argv[])
     // TODO Reconstruct from ground truth and write this out.
 
     for (unsigned i5 = 0; i5 < e.min_total_inliers_list_.size(); ++i5) {
-      dborl_exp_stat stt;
+      buld_exp_stat stt;
       corr.threshold_by_cost_lteq(e.min_total_inliers_list_[i5]);
-      corr.exp_stats_hitmiss(stt, &e.gt_);
+      bmcsd_discrete_corresp_algo::exp_stats_hitmiss(&corr, stt, &e.gt_);
 
       // Set values in stats, eval_params_names, and eval_params_values
 
@@ -253,7 +254,7 @@ main(int argc, char *argv[])
 bool 
 write_stats(
     const vcl_string &dataset_name, 
-    const vcl_vector<dborl_exp_stat> &stats_at_threshold,
+    const vcl_vector<buld_exp_stat> &stats_at_threshold,
     vcl_string fname
     )
 {
@@ -348,10 +349,10 @@ void vox_mcs_eval::
 read_cams()
 {
   if (params_->cam_type_() == "intrinsic_extrinsic") {
-    cam_type_ = bmcsd_util::MW_INTRINSIC_EXTRINSIC;
+    cam_type_ = bmcsd_util::BMCS_INTRINSIC_EXTRINSIC;
   } else {
     if (params_->cam_type_() == "projcamera")
-      cam_type_ = bmcsd_util::MW_3X4;
+      cam_type_ = bmcsd_util::BMCS_3X4;
     else  {
       vcl_cerr << "Error: invalid camera type " << params_->cam_type_() << vcl_endl;
       exit(1);
@@ -364,7 +365,7 @@ void vox_mcs_eval::
 read_frame_data()
 {
   bool retval = 
-    mw_data::read_frame_data_list_txt(params_->input_folder_(), &dpath_, 
+    bmcsd_data::read_frame_data_list_txt(params_->input_folder_(), &dpath_, 
         cam_type_);
   if (!retval)
     exit(1);
@@ -424,7 +425,7 @@ read_param_lists()
 bool 
 write_stats_with_params(
     const vcl_string &dataset_name, 
-    const vcl_vector<dborl_exp_stat> &stats_at_threshold,
+    const vcl_vector<buld_exp_stat> &stats_at_threshold,
     vcl_vector<vcl_vector<vcl_string> >eval_params_names,
     vcl_vector<vcl_vector<vcl_string> >eval_params_values,
     vcl_string fname

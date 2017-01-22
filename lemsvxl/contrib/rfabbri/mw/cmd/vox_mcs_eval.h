@@ -10,10 +10,10 @@
 
 #include <mw/cmd/vox_mcs_eval_params_sptr.h>
 #include <mw/cmd/vox_mcs_eval_params.h>
+#include <bmcsd/algo/bmcsd_data.h>
 #include <bmcsd/bmcsd_util.h>
 #include <bmcsd/bmcsd_discrete_corresp.h>
 #include <bmcsd/bmcsd_view_set.h>
-#include <mw/algo/mw_data.h>
 
 class vox_mcs_eval {
 public:
