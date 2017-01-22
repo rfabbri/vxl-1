@@ -30,6 +30,8 @@ s/dbmcs/bmcsd/g
 s/DBMCS/BMCSD/g
 s/rfabbri\/bmcsd/bmvgd\/bmcsd/g
 #
+s/dborl_exp_stat\>/borld_exp_stat/g
+#
 #s/mw_/bmcsd_/g
 #s/rfabbri\/bmcsd/bmvgd\/bmcsd/g
 #s/MW_/BMCSD_/g
@@ -89,6 +91,8 @@ s/DVPGL/VPGLD/g
 s/basic\/vpgld/bmvgd\/vpgld/g
 s/dvpgl_load_camera_process/dbmcs_load_camera_process/g
 s/dbmcs_load_camera_process/bmcsd_load_camera_process/g
+s/mw_\(save_discrete_corresp_process\)/bmcsd_\1/g
+s/mw_\(load_discrete_corresp_process\)/bmcsd_\1/g
 s/vpgld_load_camera_process/bmcsd_load_camera_process/g
 #
 s/brcv\/mvg/bmvgd/g
@@ -117,6 +121,7 @@ s/mw\(_attributed_object\)/bmcsd\1/g
 s/mw\(_dereference_equal\)/bmcsd\1/g
 s/mw\(_match_attribute\)/bmcsd\1/g
 s/mw\(_ntuplet\)/bmcsd\1/g
+s/mw\(_sift_curve\>\)/bmcsd\1/g
 #
 s/dbgrl/bgrld/g
 s/DBGRL/BGRLD/g
@@ -140,6 +145,11 @@ s/dbru_object_matcher/dbskr_object_matcher/g
 s/dbru\/algo\/\(dbskr_object_matcher\)/dbskr\/algo\/\1/g
 s/dbskr\/algo\/\(dbskr_shock_patch_selector\)/dbskr\/pro\/\1/g
 s/dbskr\/algo\/\(dbskr_shock_patch_model_selector\)/dbskr\/pro\/\1/g
+#
+s/dvcpl/vcpld/g
+s/DVCPL/VCPLD/g
+s/basic\/vcpld/bbasd\/vcpld/g
+#
 
 
 ######################################
