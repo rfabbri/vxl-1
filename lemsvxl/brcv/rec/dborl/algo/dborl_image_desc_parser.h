@@ -27,9 +27,9 @@
 #include <vcl_string.h>
 #include <vcl_cstdio.h>
 
-#include <dborl/dborl_image_description_sptr.h>
-#include <dborl/dborl_image_bbox_description_sptr.h>
-#include <dborl/dborl_image_polygon_description_sptr.h>
+#include <borld/borld_image_description_sptr.h>
+#include <borld/borld_image_bbox_description_sptr.h>
+#include <borld/borld_image_polygon_description_sptr.h>
 
 #include <vsol/vsol_box_2d_sptr.h>
 #include <vsol/vsol_box_2d.h>
@@ -46,8 +46,8 @@ public:
                                   description_tag_("description") {};
   ~dborl_image_desc_parser(void) { clear(); }
   
-  void set_image_desc(dborl_image_description_sptr id) { idesc_ = id; }
-  dborl_image_description_sptr get_image_desc(void) { return idesc_; }
+  void set_image_desc(borld_image_description_sptr id) { idesc_ = id; }
+  borld_image_description_sptr get_image_desc(void) { return idesc_; }
 
   void clear() { idesc_ = 0; box_desc_ = 0; poly_desc_ = 0; current_box_ = 0; current_poly_ = 0; cats_.clear(); }
 
@@ -80,12 +80,12 @@ private:
   
   vsol_polygon_2d_sptr current_poly_;
 
-  dborl_image_description_sptr idesc_;
-  dborl_image_bbox_description_sptr box_desc_;
-  dborl_image_polygon_description_sptr poly_desc_;
+  borld_image_description_sptr idesc_;
+  borld_image_bbox_description_sptr box_desc_;
+  borld_image_polygon_description_sptr poly_desc_;
 };
 
-dborl_image_description_sptr dborl_image_description_parse(vcl_string fname, dborl_image_desc_parser& parser);
+borld_image_description_sptr borld_image_description_parse(vcl_string fname, dborl_image_desc_parser& parser);
 
 void parse_pascal_write_default_xml(vcl_string input_fname, vcl_string output_fname);
 bool read_con_write_image_description_xml(vcl_string input_fname, vcl_string category, vcl_string output_fname);
