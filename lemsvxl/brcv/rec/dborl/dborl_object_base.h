@@ -14,8 +14,8 @@
 #if !defined(_DBORL_OBJECT_BASE_H)
 #define _DBORL_OBJECT_BASE_H
 
-#include "dborl_description_base.h"
-#include "dborl_description_base_sptr.h"
+#include <borld/borld_description_base.h>
+#include <borld/borld_description_base_sptr.h>
 
 class dborl_image_object;
 
@@ -24,7 +24,7 @@ class dborl_object_base : public vbl_ref_count
 public:
   vcl_string name_;
   vcl_string path_;
-  dborl_description_base_sptr desc_;
+  borld_description_base_sptr desc_;
 
   inline dborl_object_base() : name_("") {}
   inline dborl_object_base(vcl_string name) : name_(name) {}
