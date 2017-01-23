@@ -30,7 +30,24 @@ s/dbmcs/bmcsd/g
 s/DBMCS/BMCSD/g
 s/rfabbri\/bmcsd/bmvgd\/bmcsd/g
 #
-s/dborl_exp_stat\>/borld_exp_stat/g
+s/dborl_exp_stat/buld_exp_stat/g
+s/dborl\(_description_base\)/borld\1/g
+s/dborl\(_evaluation\)/borld\1/g
+s/dborl\(_image_descr\)/borld\1/g
+s/dborl\(_image_bbox\)/borld\1/g
+s/dborl\(_image_poly\)/borld\1/g
+s/dborl\(_image_mask\)/borld\1/g
+s/dborl\(_image_data\)/borld\1/g
+s/dborl\(_get_box\)/borld\1/g
+s/dborl\(_object_type\)/borld\1/g
+s/dborl\(_category_info\>\)/borld\1/g
+s/dborl\(_category_info_sptr\>\)/borld\1/g
+s/dborl\(_category_info_set_sptr\>\)/borld\1/g
+s/dborl\(_category_info_set\>\)/borld\1/g
+s/borld_exp_stat/buld_exp_stat/g
+s/borld\/buld/buld\/buld/g
+s/dborl\/buld/buld\/buld/g
+s/dborl\/borld/borld\/borld/g
 #
 #s/mw_/bmcsd_/g
 #s/rfabbri\/bmcsd/bmvgd\/bmcsd/g
@@ -90,6 +107,8 @@ s/dvpgl/vpgld/g
 s/DVPGL/VPGLD/g
 s/basic\/vpgld/bmvgd\/vpgld/g
 s/dvpgl_load_camera_process/dbmcs_load_camera_process/g
+s/\<reconstruct_3d_points_nviews_linear/vpgld_reconstruct_3d_points_nviews_linear/g
+s/triangulate_3d_point_optimal_kanatani/vpgld_triangulate_3d_point_optimal_kanatani/g
 s/dbmcs_load_camera_process/bmcsd_load_camera_process/g
 s/mw_\(save_discrete_corresp_process\)/bmcsd_\1/g
 s/mw_\(load_discrete_corresp_process\)/bmcsd_\1/g
@@ -104,14 +123,14 @@ s/DBCSI/BCSID/g
 s/bmvgd\/bcsid/bbasd\/bcsid/g
 #
 #XXX 
-s/dbdet\/edge/sdet/g
-s/dbdet\/sel/sdet/g
-s/dbdet/sdetd/g
+# s/dbdet\/edge/sdet/g
+# s/dbdet\/sel/sdet/g
+# s/dbdet/sdetd/g
 #
 # sdet/dbdet: XXX
-s/\<curvelet_list/sdet_curvelet_list/g
-s/cvlet_list/sdet_curvelet_list/g
-s/dbdet_curve_fragment_graph/sdet_curve_fragment_graph/g
+# s/\<curvelet_list/sdet_curvelet_list/g
+# s/cvlet_list/sdet_curvelet_list/g
+# s/dbdet_curve_fragment_graph/sdet_curve_fragment_graph/g
 #
 s/mw_algo_util/bmcsd_algo_util/g
 s/mw\(_discrete_corresp\)/bmcsd\1/g
