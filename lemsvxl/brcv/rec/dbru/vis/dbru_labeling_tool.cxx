@@ -31,6 +31,9 @@
 #include <vil1/vil1_memory_image_of.h>
 #include <brip/brip_vil1_float_ops.h>
 #include <vil1/vil1_vil.h>
+#include <vidl1/vidl1_movie_sptr.h>
+#include <vidl1/vidl1_movie.h>
+#include <vidl1/vidl1_io.h>
 #include <vil/vil_save.h>
 //#include <dbru/dbru_osl_sptr.h>
 #include <dbru/dbru_osl.h>

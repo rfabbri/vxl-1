@@ -61,9 +61,6 @@
 #include <dbru/dbru_object_sptr.h>
 
 #include <vsol/vsol_polygon_2d_sptr.h>
-#include <vidl1/vidl1_movie_sptr.h>
-#include <vidl1/vidl1_movie.h>
-#include <vidl1/vidl1_io.h>
 
 /*
 #include <dbdet/lvwr/dbdet_lvwr.h>
