@@ -152,7 +152,7 @@ handle( const vgui_event & e,
   if( e.type == vgui_OVERLAY_DRAW ) {
     // If curve is selected, draw the curvelets within a distance threshold of it.
 
-    dbdet_curvelet_list inlier_curvelets;
+    curvelet_list inlier_curvelets;
 
     unsigned num_inliers = bcsid_curve_distance::inlier_curvelets_dt(
         curves_[current_curve_id_], tau_distance_, dt_, label_, 

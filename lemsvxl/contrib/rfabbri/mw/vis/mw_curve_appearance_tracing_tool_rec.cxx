@@ -3,11 +3,10 @@
 #include <vnl/vnl_random.h>
 #include <mvl/PMatrix.h>
 #include <mvl/TriTensor.h>
-#include <brct/brct_algos.h>
-
 #include <vcl_algorithm.h>
 #include <bgld/algo/bgld_intersect.h>
 #include <vpgl/algo/vpgl_ray_intersect.h>
+#include <vpgld/algo/vpgld_triangulation.h>
 
 
 struct my_lst_elt {
@@ -468,7 +467,7 @@ linearly_reconstruct_pts(
     pts.push_back(vnl_double_2(pt_img[v+1]->x(),pt_img[v+1]->y()));
     projs.push_back(cam_[views[v]].Pr_.get_matrix());
   }
-  *pt_3D = reconstruct_3d_points_nviews_linear(pts, projs);
+  *pt_3D = vpgld_reconstruct_3d_points_nviews_linear(pts, projs);
 }
 
 // \param[in] views: views[i] specify from which view does pt_img[i] come from
@@ -483,10 +482,10 @@ nonlinearly_optimize_reconstruction(
   vcl_cout << "  Reconstructing optimized.\n";
   assert(pt_img.size() > 1);
   assert(views.size() > 0);
-  vpgl_ray_intersect isect(views.size()+1);
+  vpgl_ray_intersect<double> isect(views.size()+1);
 
   vcl_vector<vgl_point_2d<double> > pts;
-  vcl_vector<vpgl_camera<double> * > projs;
+  vcl_vector<const vpgl_camera<double> * > projs;
 
   pts.push_back(pt_img[0]->get_p());
   projs.push_back(new vpgl_perspective_camera <double> (cam_[0].Pr_) );
