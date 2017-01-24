@@ -30,7 +30,7 @@ aux_source_directory(Templates dbctrk_sources)
 
 add_library(dbctrk  ${dbctrk_sources})
 
-target_link_libraries(dbctrk vbl bdgl btol vsol vil vnl mvl mbl brct  vsl dbspi)
+target_link_libraries(dbctrk vbl bdgl btol vsol vil vnl mvl mbl brct bspid vsl)
 
 
 add_subdirectory(pro)

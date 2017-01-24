@@ -32,7 +32,7 @@ endif (HAS_MATLAB)
 
 add_library(dbctrk_vis  ${dbctrk_vis_sources})
 
-target_link_libraries(dbctrk_vis dbctrk_pro)
+target_link_libraries(dbctrk_vis dbctrk_pro bgui)
 
 if (HAS_MATLAB)
 target_link_libraries(dbctrk_vis ${MATLAB_LIBRARIES})

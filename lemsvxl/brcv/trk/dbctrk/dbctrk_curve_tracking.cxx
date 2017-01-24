@@ -578,7 +578,7 @@ bool dbctrk_curve_tracking::compute_chamfer_image(int frame)
   int height=plane0[frame].nj();
   vcl_cout<<"\n width is "<<width;
   vcl_cout<<"\n height is "<<height;
-  dbspi_curve_map map(curves, width, height);
+  bspid_curve_map map(curves, width, height);
 
   int ni = map.width();
   int nj = map.height();

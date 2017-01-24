@@ -3,6 +3,7 @@
 #include<vcl_utility.h>
 #include<vcl_cmath.h>
 #include<vcl_fstream.h>
+#include<vcl_iostream.h>
 #include<vcl_cstring.h>
 #include<vcl_cstdlib.h> // for exit()
 #include<vgl/vgl_point_2d.h>
