@@ -8,6 +8,7 @@ include_directories( ${VXL_OXL_INCLUDE_DIR} )
 include_directories( ${VXD_UNMAINTAINED_VXDCORE_INCLUDE_DIR} )
 
 if (VXL_VGUI_FOUND)
+find_package(OpenGL)
 
 set(dbru_vis_sources  
 
@@ -30,6 +31,6 @@ dbru_osl_tools.h                       dbru_osl_tools.cxx
 
 add_library(dbru_vis ${dbru_vis_sources})
 
-target_link_libraries(dbru_vis bvis1 dbru dbdet)
+target_link_libraries(dbru_vis bvis1 dbru dbdet dbskr_algo dbskr_pro bvis1 vidl1 bgui vgui ${OPENGL_LIBRARIES})
 
 endif (VXL_VGUI_FOUND)
