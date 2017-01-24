@@ -11,7 +11,7 @@ set(dbetrk_pro_sources
 
 add_library(dbetrk_pro ${dbetrk_pro_sources})
 
-target_link_libraries(dbetrk_pro dbetrk vidpro1)
+target_link_libraries(dbetrk_pro dbetrk bpro1 vidpro1)
 
 
 

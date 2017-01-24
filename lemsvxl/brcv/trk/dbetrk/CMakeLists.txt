@@ -15,7 +15,7 @@ aux_source_directory(Templates dbetrk_sources)
 
 add_library(dbetrk  ${dbetrk_sources})
 
-target_link_libraries(dbetrk vbl vdgl vtol vsol vil vnl  btol mvl mbl vsl brip)
+target_link_libraries(dbetrk dbctrk vbl vdgl vtol vsol vil vnl  btol mvl mbl vsl brip)
 
 add_subdirectory(pro)
 if (VXL_VGUI_FOUND)

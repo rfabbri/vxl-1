@@ -44,4 +44,4 @@ add_library(dbsk2d_vis ${dbsk2d_vis_sources})
 
 target_link_libraries(dbsk2d_vis dbsk2d_pro dbsk2d_algo bvis1 vgui ${OPENGL_LIBRARIES})
 
-endif (VXL_VGUI_FOUND)
+endif ()
