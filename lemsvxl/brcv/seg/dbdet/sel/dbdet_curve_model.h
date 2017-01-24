@@ -568,7 +568,7 @@ public:
 //: compute the min of each element and create a new array
 // User is responsible for providing an array of the right size.
 template <class T>
-inline void vbl_array_2d_min(
+inline void dbdet_vbl_array_2d_min(
     const vbl_array_2d<T> &a1, 
     const vbl_array_2d<T> &a2,
     vbl_array_2d<T> &out
@@ -587,7 +587,7 @@ inline void vbl_array_2d_min(
 //: compute the max of each element and create a new array
 // User is responsible for providing an array of the right size.
 template <class T>
-inline void vbl_array_2d_max(
+inline void dbdet_vbl_array_2d_max(
     const vbl_array_2d<T> &a1, 
     const vbl_array_2d<T> &a2,
     vbl_array_2d<T> &out
@@ -605,7 +605,7 @@ inline void vbl_array_2d_max(
 
 //: compute the min of each element and store in a1
 template <class T>
-inline void vbl_array_2d_min_replace(vbl_array_2d<T> &a1, const vbl_array_2d<T> &a2)
+inline void dbdet_vbl_array_2d_min_replace(vbl_array_2d<T> &a1, const vbl_array_2d<T> &a2)
 {
   assert(a1.size()==a2.size()); //make sure the arrays are the same size
 
@@ -619,7 +619,7 @@ inline void vbl_array_2d_min_replace(vbl_array_2d<T> &a1, const vbl_array_2d<T> 
 
 //: compute the max of each element and store in a1
 template <class T>
-inline void vbl_array_2d_max_replace(vbl_array_2d<T> &a1, const vbl_array_2d<T> &a2)
+inline void dbdet_vbl_array_2d_max_replace(vbl_array_2d<T> &a1, const vbl_array_2d<T> &a2)
 {
   assert(a1.size()==a2.size()); //make sure the arrays are the same size
 
@@ -695,8 +695,8 @@ public:
     k(0.0)
   {
     //take the intersection of the two bundles by intersecting the four bounding surfaces
-    vbl_array_2d_max(cm1->Kmin, cm2->Kmin, Kmin);
-    vbl_array_2d_min(cm1->Kmax, cm2->Kmax, Kmax);
+    dbdet_vbl_array_2d_max(cm1->Kmin, cm2->Kmin, Kmin);
+    dbdet_vbl_array_2d_min(cm1->Kmax, cm2->Kmax, Kmax);
 
     //Dx = cm1->Dx;
     //Dt = cm1->Dt;

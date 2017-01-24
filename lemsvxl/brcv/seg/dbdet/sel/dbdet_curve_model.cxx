@@ -2676,11 +2676,11 @@ compute_curve_bundle(dbdet_edgel* e1, dbdet_edgel* e2, dbdet_edgel* ref_e,
   }
 
   //Now compute the intersection of all the surfaces to compute the final bundle
-  vbl_array_2d_max_replace(Kmin, k_dx_min);
-  vbl_array_2d_max_replace(Kmin, k_dt_min);
+  dbdet_vbl_array_2d_max_replace(Kmin, k_dx_min);
+  dbdet_vbl_array_2d_max_replace(Kmin, k_dt_min);
 
-  vbl_array_2d_min_replace(Kmax, k_dx_max);
-  vbl_array_2d_min_replace(Kmax, k_dt_max);
+  dbdet_vbl_array_2d_min_replace(Kmax, k_dx_max);
+  dbdet_vbl_array_2d_min_replace(Kmax, k_dt_max);
   
 }
 */
