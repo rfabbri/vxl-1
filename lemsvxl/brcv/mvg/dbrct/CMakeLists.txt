@@ -3,6 +3,7 @@
 
 include_directories(${VXL_GEL_INCLUDE_DIR} )
 include_directories(${VXL_OXL_INCLUDE_DIR} )
+include_directories(${VXD_UNMAINTAINED_GEL_INCLUDE_DIR})
 
 set( dbrct_sources   
    dbrct_wide_dense_match.cxx         dbrct_wide_dense_match.h
