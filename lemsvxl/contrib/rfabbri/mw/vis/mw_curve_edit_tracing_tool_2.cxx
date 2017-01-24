@@ -4,8 +4,8 @@
 #include <vnl/vnl_random.h>
 #include <vil/algo/vil_colour_space.h>
 #include <vgui/vgui_dialog.h>
-#include <mw/algo/bmcsd_discrete_corresp_algo.h>
-#include <mw/pro/bmcsd_discrete_corresp_storage.h>
+#include <bmcsd/algo/bmcsd_discrete_corresp_algo.h>
+#include <bmcsd/pro/bmcsd_discrete_corresp_storage.h>
 
 
 static vnl_random g_myrand;

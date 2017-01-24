@@ -38,7 +38,7 @@
 #include <bdifd/bdifd_rig.h>
 #include <becld/becld_intersection_sets.h>
 #include <mw/mw_dist.h>
-#include <mw/mw_sift_curve.h>
+#include <bmcsd/bmcsd_sift_curve.h>
 #include <mw/algo/mw_sift_curve_algo.h>
 
 #define MANAGER bvis1_manager::instance()

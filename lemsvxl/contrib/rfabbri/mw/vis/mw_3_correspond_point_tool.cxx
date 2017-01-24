@@ -40,7 +40,7 @@
 #include <mw/algo/mw_match_position_band.h>
 #include <mw/algo/mw_match_tangent_band.h>
 
-#include <mw/pro/bmcsd_discrete_corresp_storage_3.h>
+#include <bmcsd/pro/bmcsd_discrete_corresp_storage_3.h>
 #include <bgld/algo/bgld_eulerspiral.h>
 
 

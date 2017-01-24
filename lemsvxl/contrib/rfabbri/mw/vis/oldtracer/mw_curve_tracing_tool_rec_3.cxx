@@ -1,13 +1,13 @@
 #include "mw_curve_tracing_tool_common_3.h"
 #include "mw_curve_tracing_tool_3.h"
 #include <vnl/vnl_random.h>
+#include <vpgl/algo/vpgl_ray_intersect.h>
 #include <mvl/PMatrix.h>
 #include <mvl/TriTensor.h>
-#include <brct/brct_algos.h>
 
 #include <vcl_algorithm.h>
 #include <bgld/algo/bgld_intersect.h>
-#include <vpgl/algo/vpgl_ray_intersect.h>
+#include <vpgld/algo/vpgld_triangulation.h>
 
 
 static vnl_random myrand;
@@ -240,21 +240,21 @@ reconstruct_trinocular()
       projs.push_back(cam_[2].Pr_.get_matrix());
 
 
-      pt_3D_linear_vgl = reconstruct_3d_points_nviews_linear(pts, projs);
+      pt_3D_linear_vgl = vpgld_reconstruct_3d_points_nviews_linear(pts, projs);
       pt_3D_linear = bmcsd_util::vgl_to_vnl(pt_3D_linear_vgl);
     }
 
     // nonlinear optimization of reprojection errors
 
     {
-      vpgl_ray_intersect isect(3);
+      vpgl_ray_intersect<double> isect(3);
 
       vcl_vector<vgl_point_2d<double> > pts;
       pts.push_back(pt_img0->get_p());
       pts.push_back(pt_img1->get_p());
       pts.push_back(pt_img2->get_p());
 
-      vcl_vector<vpgl_camera<double> * > projs;
+      vcl_vector<const vpgl_camera<double> * > projs;
       projs.push_back(&(cam_[0].Pr_));
       projs.push_back(&(cam_[1].Pr_));
       projs.push_back(&(cam_[2].Pr_));

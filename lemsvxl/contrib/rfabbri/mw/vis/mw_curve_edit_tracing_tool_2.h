@@ -9,7 +9,7 @@
 //
 
 #include <bmcsd/bmcsd_discrete_corresp.h>
-#include <mw/pro/bmcsd_discrete_corresp_storage.h>
+#include <bmcsd/pro/bmcsd_discrete_corresp_storage.h>
 #include <mw/vis/mw_curve_tracing_tool_2.h>
 
 //: Same as \c mw_curve_tracing_tool, 

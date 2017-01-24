@@ -14,7 +14,7 @@
 #include <vidpro1/vidpro1_repository.h>
 #define MANAGER bvis1_manager::instance()
 
-#include <dbdet/algo/dbdet_sel.h>
+#include <sdetd/algo/sdetd_sel.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
@@ -45,7 +45,7 @@ void
 mw_sel_inliers_to_curve::
 activate ()
 {
-  dbdet_sel_explorer_tool::activate();
+  sdetd_sel_explorer_tool::activate();
 
   // tool only works in 1 view
   assert (nviews_ == 1);
@@ -140,19 +140,19 @@ void mw_sel_inliers_to_curve::
 deactivate ()
 {
   vcl_cout << "mw_sel_inliers_to_curve OFF\n";
-  dbdet_sel_explorer_tool::deactivate();
+  sdetd_sel_explorer_tool::deactivate();
 }
 
 bool mw_sel_inliers_to_curve::
 handle( const vgui_event & e, 
         const bvis1_view_tableau_sptr& view )
 {
-  bool stat = dbdet_sel_explorer_tool::handle(e,view);
+  bool stat = sdetd_sel_explorer_tool::handle(e,view);
 
   if( e.type == vgui_OVERLAY_DRAW ) {
     // If curve is selected, draw the curvelets within a distance threshold of it.
 
-    curvelet_list inlier_curvelets;
+    sdet_curvelet_list inlier_curvelets;
 
     unsigned num_inliers = bcsid_curve_distance::inlier_curvelets_dt(
         curves_[current_curve_id_], tau_distance_, dt_, label_, 
@@ -167,14 +167,14 @@ handle( const vgui_event & e,
 }
 
 void mw_sel_inliers_to_curve::
-draw_curvelets(const curvelet_list &curvelets)
+draw_curvelets(const sdet_curvelet_list &curvelets)
 {
   for ( 
-    curvelet_list_const_iter cv_it = curvelets.begin();
+    sdet_curvelet_list_const_iter cv_it = curvelets.begin();
     cv_it != curvelets.end(); 
     cv_it++) {
 
-    const dbdet_curvelet *cvlet = *cv_it;
+    const sdetd_curvelet *cvlet = *cv_it;
 
     if (cvlet->order() > min_order_to_display_)
       draw_grouping(cvlet);
