@@ -12,7 +12,7 @@
 #include <vil1/vil1_rgb.h>
 #include <vsl/vsl_binary_io.h>
 #include <vil/vil_image_view.h>
-#include <dbspi/dbspi_curve_map.h>
+#include <bspid/bspid_curve_map.h>
 #include<vcl_iostream.h>
 class dbctrk_curve_tracking_params
 {
@@ -121,7 +121,7 @@ class dbctrk_curve_tracking
   short version();
   void b_write(vsl_b_ostream & os);
   void b_read(vsl_b_istream & is);
-  dbspi_curve_map * chamfermap_;
+  bspid_curve_map * chamfermap_;
   bool compute_chamfer_image(int frame);
  protected:
    
