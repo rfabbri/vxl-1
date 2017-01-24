@@ -1,7 +1,7 @@
 #include "mw_curve_tracing_tool_2.h"
 #include "mw_curve_tracing_tool_common_2.h"
 
-#include <dbdet/pro/dbdet_sel_storage.h>
+#include <sdetd/pro/sdetd_sel_storage.h>
 #include <vpgld/io/vpgld_io_cameras.h>
 #include <bmcsd/algo/bmcsd_algo_util.h>
 
@@ -642,7 +642,7 @@ get_sels(
   bpro1_storage_sptr 
       p = MANAGER->storage_from_tableau(view->selector()->active_tableau());
 
-  dbdet_sel_storage_sptr sel_storage = NULL;
+  sdetd_sel_storage_sptr sel_storage = NULL;
   sel_storage.vertical_cast(p);
   if(!sel_storage)
     return false;
@@ -653,14 +653,14 @@ get_sels(
   if (sels_.back()->CFG().frags.empty())
     return false;
 
-  dbdet_edgel_chain_list &frags = sels_.back()->CFG().frags;
+  sdet_edgel_chain_list &frags = sels_.back()->CFG().frags;
   curves.reserve(frags.size());
 
-  for (dbdet_edgel_chain_list_iter f_it = frags.begin(); 
+  for (sdet_edgel_chain_list_iter f_it = frags.begin(); 
       f_it != frags.end(); ++f_it) {
 
     vcl_vector<vsol_point_2d_sptr> pts;
-    bmcsd_algo_util::dbdet_to_vsol((*f_it)->edgels, &pts);
+    bmcsd_algo_util::sdet_to_vsol((*f_it)->edgels, &pts);
     curves.push_back(new vsol_polyline_2d(pts));
   }
 
