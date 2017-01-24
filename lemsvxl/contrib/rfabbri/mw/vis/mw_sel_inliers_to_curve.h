@@ -1,4 +1,4 @@
-// This is brcv/seg/sdetd/vis/mw_sel_inliers_to_curve.h
+// This is brcv/seg/dbdet/vis/mw_sel_inliers_to_curve.h
 #ifndef mw_sel_inliers_to_curve_h
 #define mw_sel_inliers_to_curve_h
 //:
@@ -9,12 +9,13 @@
 //
 
 #include <bvis1/bvis1_tool.h>
-#include <sdetd/vis/sdetd_sel_explorer_tool.h>
+#include <dbdet/sel/dbdet_edgel.h>
+#include <dbdet/vis/dbdet_sel_explorer_tool.h>
 #include <vil/vil_image_view.h>
 
 //: Given an input vsol curve (polyline for now), show all curvelets that fall
 // within a distance threshold.
-class mw_sel_inliers_to_curve  : public sdetd_sel_explorer_tool {
+class mw_sel_inliers_to_curve  : public dbdet_sel_explorer_tool {
 public:
   //: Constructor
   mw_sel_inliers_to_curve();
@@ -46,7 +47,7 @@ protected:
   vil_image_view<vxl_uint_32> label_; //: closest label transform images 
 
   // ------ Methods ------
-  void draw_curvelets(const sdet_curvelet_list &curvelets);
+  void draw_curvelets(const curvelet_list &curvelets);
 };
 
 
