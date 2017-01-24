@@ -5,6 +5,7 @@ include_directories( ${lems_SOURCE_DIR}/breye1 )
 include_directories( ${VXL_BRL_INCLUDE_DIR}/bbas )
 include_directories( ${lems_SOURCE_DIR}/brcv/seg )
 include_directories( ${VXL_OXL_INCLUDE_DIR} )
+include_directories( ${VXD_UNMAINTAINED_VXDCORE_INCLUDE_DIR} )
 
 if (VXL_VGUI_FOUND)
 
