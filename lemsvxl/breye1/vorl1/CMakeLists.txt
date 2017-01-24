@@ -3,8 +3,8 @@
 include_directories( ${lems_SOURCE_DIR}/db3p )
 include_directories( ${VXL_BRL_INCLUDE_DIR} )
 include_directories( ${VXL_EXPAT_INCLUDE_DIR} )
-
 include_directories (${VXL_BRL_INCLUDE_DIR}/b3p )
+include_directories(${VXD_UNMAINTAINED_VXDCORE_INCLUDE_DIR})
 
 set(vorl1_sources
                                    vorl1.h
@@ -27,7 +27,7 @@ endif( BUILD_EXAMPLES )
 add_library(vorl1  ${vorl1_sources})
 
 
-target_link_libraries(vorl1 vul vidpro1 vidl1)
+target_link_libraries(vorl1 vul vidpro1 vidl1 bpro1 vbl vsl)
 
 add_subdirectory(exec)
 
