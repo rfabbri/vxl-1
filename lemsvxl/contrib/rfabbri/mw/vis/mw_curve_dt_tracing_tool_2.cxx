@@ -5,9 +5,9 @@
 #include <vsol/vsol_line_2d.h>
 
 #include <vidpro1/storage/vidpro1_image_storage.h>
-#include <dbdet/pro/dbdet_edgemap_storage.h>
-#include <dbdet/pro/dbdet_edgemap_storage_sptr.h>
-#include <dbdet/pro/dbdet_sel_storage.h>
+#include <sdetd/pro/sdetd_edgemap_storage.h>
+#include <sdetd/pro/sdetd_edgemap_storage_sptr.h>
+#include <sdetd/pro/sdetd_sel_storage.h>
 
 #include <bmcsd/bmcsd_discrete_corresp.h>
 #include <bmcsd/algo/bmcsd_algo_util.h>
@@ -116,7 +116,7 @@ get_images()
 void mw_curve_dt_tracing_tool_2::
 get_edgemaps()
 {
-  vcl_vector<dbdet_edgemap_sptr> em;
+  vcl_vector<sdet_edgemap_sptr> em;
   
   em.reserve(nviews());
 
@@ -139,7 +139,7 @@ get_edgemaps()
       = MANAGER->repository()->get_data_by_name_at(edgemap_storages.back(), 
           frame_v_[i]);
 
-    dbdet_edgemap_storage_sptr edgemap_storage = NULL;
+    sdetd_edgemap_storage_sptr edgemap_storage = NULL;
     edgemap_storage.vertical_cast(p);
     if(!edgemap_storage->get_edgemap()) {
       vcl_cerr << "The edgemap storage in view[" << i << "] is NULL (Ok as long\n"
@@ -168,7 +168,7 @@ get_tangents()
     for (unsigned v=0; v < nviews(); ++v) {
       tangents[v].resize(s_->num_curves(v));
       for (unsigned c=0; c < s_->num_curves(v); ++c) {
-        dbdet_edgel_chain ec;
+        sdet_edgel_chain ec;
         bmcsd_algo_util::extract_edgel_chain(*(s_->curves(v,c)), &ec);
 
         tangents[v][c].resize(ec.edgels.size());
@@ -191,15 +191,15 @@ get_tangents()
         return;
       }
       // Read-off tangents from SEL
-      dbdet_edgel_chain_list &frags = sels_[v]->CFG().frags;
+      sdet_edgel_chain_list &frags = sels_[v]->CFG().frags;
       tangents[v].reserve(frags.size());
       assert(frags.size() == s_->num_curves(v));
 
       unsigned c=0;
-      for (dbdet_edgel_chain_list_iter f_it = frags.begin(); 
+      for (sdet_edgel_chain_list_iter f_it = frags.begin(); 
           f_it != frags.end(); 
           ++f_it, ++c) {
-        const dbdet_edgel_list &edgels = (*f_it)->edgels;
+        const sdet_edgel_list &edgels = (*f_it)->edgels;
         tangents[v][c].resize(edgels.size());
         for (unsigned i=0; i < edgels.size(); ++i)
           tangents[v][c][i] = edgels[i]->tangent;
@@ -414,7 +414,7 @@ compute_selected_tangents(vcl_vector<vcl_vector<vsol_line_2d_sptr> > *tgts_ptr) 
       unsigned n = s_dt_->reprojection_crv_size(id_candidate, v);
       tgts[v].resize(n);
       for (unsigned i=0; i < n; ++i) {
-        dbdet_edgel edg = s_dt_->reprojection_crv(id_candidate, v, i);
+        sdet_edgel edg = s_dt_->reprojection_crv(id_candidate, v, i);
         tgts[v][i] = new vsol_line_2d(vgl_vector_2d<double>(vcl_cos(edg.tangent)/2.0, 
           vcl_sin(edg.tangent)/2.0), new vsol_point_2d(edg.pt));
       }

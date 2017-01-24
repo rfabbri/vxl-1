@@ -18,7 +18,7 @@
 
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vpgl/vpgl_fundamental_matrix.h>
-#include <dbdet/pro/dbdet_sel_storage_sptr.h>
+#include <sdetd/pro/sdetd_sel_storage_sptr.h>
 #include <becld/becld_intersection_sets.h>
 #include <bdifd/bdifd_camera.h>
 #include <bdifd/bdifd_rig.h>
@@ -113,7 +113,7 @@ protected:
 
   unsigned nviews() const { return s_->nviews(); }
 
-  vcl_vector<dbdet_sel_storage_sptr> sels_; 
+  vcl_vector<sdetd_sel_storage_sptr> sels_; 
 
   // ------ GUI Members -------
 
