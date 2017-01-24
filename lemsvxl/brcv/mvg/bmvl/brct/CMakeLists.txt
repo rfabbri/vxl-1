@@ -5,11 +5,12 @@
 include( ${LEMS_CMAKE_DIR}/config/vxl_utils.cmake )
 
 include_directories(${VXL_BRL_INCLUDE_DIR})
-include_directories(${lems_SOURCE_DIR}/brcv/mvg/bmvl )
-include_directories(${VXL_GEL_INCLUDE_DIR} )
-include_directories(${VXL_GEL_INCLUDE_DIR}/mrc )
-include_directories(${VXL_OXL_INCLUDE_DIR} )
-include_directories(${VXL_RPL_INCLUDE_DIR} )
+include_directories(${lems_SOURCE_DIR}/brcv/mvg/bmvl)
+include_directories(${VXL_GEL_INCLUDE_DIR})
+include_directories(${VXL_GEL_INCLUDE_DIR}/mrc)
+include_directories(${VXL_OXL_INCLUDE_DIR})
+include_directories(${VXL_RPL_INCLUDE_DIR})
+include_directories(${VXD_UNMAINTAINED_GEL_INCLUDE_DIR})
 
 
 set(brct_sources
@@ -37,7 +38,7 @@ add_library(brct ${brct_sources})
 install_targets(/lib brct)
 INSTALL_NOBASE_HEADER_FILES(/include/vxl/contrib/brl/bmvl/brct ${brct_sources})
 
-target_link_libraries(brct sdet brip rrel bsol vpgl gevd vdgl vsol mvl bdgl bugl vil vil1 vgl_algo vgl vnl_algo vnl vbl)
+target_link_libraries(brct sdet brip rrel bsol vpgld_algo  vpgl gevd vdgl vsol mvl bdgl bugl vil vil1 vgl_algo vgl vnl_algo vnl vbl)
 target_link_libraries(brct vsrl)
 
 
