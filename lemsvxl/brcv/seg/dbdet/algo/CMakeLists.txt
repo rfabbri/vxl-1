@@ -55,6 +55,7 @@ set( dbdet_algo_sources
   
 # Utilities
   dbdet_resize_edgemap.h      dbdet_resize_edgemap.cxx
+  dbdet_conversion.h
 # Curve Cues
   dbdet_curve_fragment_cues.h dbdet_curve_fragment_cues.cxx
 # Contour breaker/merge

@@ -1,7 +1,7 @@
 #include "mw_sift_curve_algo.h"
 
 void mw_sift_curve_algo::
-compute( const dbdet_edgel_chain &crv, bmcsd_sift_curve *s_crv)
+compute( const sdet_edgel_chain &crv, bmcsd_sift_curve *s_crv)
 {
   unsigned num_scales = sift_.get_total_num_scales(); /* compute total number of scales in scale-space */
   s_crv->set_size(num_scales, crv.edgels.size());
@@ -26,7 +26,7 @@ compute( const dbdet_edgel_chain &crv, bmcsd_sift_curve *s_crv)
 }
 
 void mw_sift_curve_algo::
-compute_many(const vcl_vector<dbdet_edgel_chain> &ec_v, vcl_vector<bmcsd_sift_curve> *ptr_sc_v)
+compute_many(const vcl_vector<sdet_edgel_chain> &ec_v, vcl_vector<bmcsd_sift_curve> *ptr_sc_v)
 {
   vcl_vector<bmcsd_sift_curve> &sc_v = *ptr_sc_v;
   unsigned num_scales = sift_.get_total_num_scales(); /* compute total number of scales in scale-space */

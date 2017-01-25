@@ -23,7 +23,7 @@
 #include <vgl/vgl_clip.h>
 #include <vgl/vgl_area.h>
 
-#include "dbdet_sel1.h"
+#include <dbdet/algo/dbdet_sel.h>
 
 //: Multiscale edge detector using geometric evidence
 class dbdet_med : public vbl_ref_count

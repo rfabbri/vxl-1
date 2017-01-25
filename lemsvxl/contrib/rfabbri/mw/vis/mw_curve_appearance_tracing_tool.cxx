@@ -5,6 +5,7 @@
 #include <vcl_algorithm.h>
 #include <vgl/vgl_intersection.h>
 #include <vil/vil_convert.h>
+#include <sdet/sdet_edgel.h>
 #include <vpgld/io/vpgld_io_cameras.h>
 #include <bmcsd/algo/bmcsd_algo_util.h>
 
@@ -968,7 +969,7 @@ match_using_hog()
 
   vcl_cout << "Started computing HOGs" << vcl_endl;
 
-  mw_sift_curve sc0;
+  bmcsd_sift_curve sc0;
   vcl_cout << "Initializign SIFT / Gaussian Scale Space for image[0]." << vcl_endl;
   mw_sift_curve_algo computor(img_[0]);
   computor.print_sigmas();
@@ -976,7 +977,7 @@ match_using_hog()
 
   vcl_cout << "Computing descriptors for the curve in image[0]. Also computing the image gradient." << vcl_endl;
   {
-  dbdet_edgel_chain curvelet_ec;
+  sdet_edgel_chain curvelet_ec;
   bmcsd_algo_util::extract_edgel_chain(*subcurve_, &curvelet_ec);
   computor.compute(curvelet_ec, &sc0);
 
@@ -992,14 +993,14 @@ match_using_hog()
   computor.print_sigmas();
   vcl_cout << "Done initializign SIFT / Gaussian Scale Space for image[1]." << vcl_endl;
 
-  vcl_vector<dbdet_edgel_chain> ec_v(crv_candidates_ptrs_.size());
+  vcl_vector<sdet_edgel_chain> ec_v(crv_candidates_ptrs_.size());
 
   vcl_cout << "\tExtracting edgel chain/tangents in image[1]" << vcl_endl;
   for (unsigned ii=0; ii < crv_candidates_ptrs_.size(); ++ii)
     bmcsd_algo_util::extract_edgel_chain(*(crv_candidates_ptrs_[ii]), &(ec_v[ii]));
   vcl_cout << "\tDone extracting edgel chain/tangents in image[1]" << vcl_endl;
 
-  vcl_vector<mw_sift_curve> sc_img1(crv_candidates_ptrs_.size());
+  vcl_vector<bmcsd_sift_curve> sc_img1(crv_candidates_ptrs_.size());
 
   computor1.compute_many(ec_v, &sc_img1);
 

@@ -22,7 +22,7 @@
 #include <vsol/vsol_polyline_2d.h>
 #include <vil/vil_convert.h>
 #include <vil/vil_image_view_base.h>
-#include <bcsid/bcsid_curve_distance.h>
+#include <dbcsi/dbcsi_curve_distance.h>
 #include <bmcsd/bmcsd_util.h>
 
 
@@ -153,8 +153,7 @@ handle( const vgui_event & e,
     // If curve is selected, draw the curvelets within a distance threshold of it.
 
     curvelet_list inlier_curvelets;
-
-    unsigned num_inliers = bcsid_curve_distance::inlier_curvelets_dt(
+    unsigned num_inliers = dbcsi_curve_distance::inlier_curvelets_dt(
         curves_[current_curve_id_], tau_distance_, dt_, label_, 
         sel_storage_->CM(), &inlier_curvelets);
 
