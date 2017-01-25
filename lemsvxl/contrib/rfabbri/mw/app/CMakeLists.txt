@@ -86,7 +86,7 @@ add_executable(sexp ${mw_stereo_exp_sources})
 #target_link_libraries(sel_geom mw_pro mw_vis dbdet_vis dbdet_pro bsold_pro)
 #target_link_libraries(cmd mw_algo) 
 #target_link_libraries(estimation mw vpgl bsold_algo vidpro1 bpro1 bvis1)
-target_link_libraries(sgui mw_pro mw_algo mw_vis dbdet_vis dbdet_pro dbkpr_vis bsold_pro vpgld_pro vpgld_vis vpgl_algo vpgld_algo_pro bdifd_pro vidpro1 dbetl_vis bild_pro mvl)
+target_link_libraries(sgui mw_pro mw_algo mw_vis dbdet_vis dbdet_pro dbkpr_vis dbkpr_pro bmcsd_pro bsold_pro vpgld_pro vpgld_vis vpgl_algo vpgld_algo_pro bdifd_pro bgld vidpro1 dbetl_vis bild_pro mvl)
 target_link_libraries(scmd mw_pro bdifd_pro dbkpr_pro vpgl_algo) 
 target_link_libraries(sexp mw_pro testlib) 
 # Requires a CMakeLists.txt file if SUBDIRS - JLM

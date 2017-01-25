@@ -26,8 +26,8 @@
 #include <dbdet/pro/dbdet_edgemap_storage.h>
 #include <dbdet/pro/dbdet_keypoint_storage.h>   
 #include <dbkpr/pro/dbkpr_corr3d_storage.h>  
-#include <mw/pro/bmcsd_discrete_corresp_storage.h>
-#include <mw/pro/bmcsd_discrete_corresp_storage_3.h>
+#include <bmcsd/pro/bmcsd_discrete_corresp_storage.h>
+#include <bmcsd/pro/bmcsd_discrete_corresp_storage_3.h>
 #include <bdifd/pro/bdifd_3rd_order_geometry_storage.h>
 
 
@@ -96,19 +96,19 @@
 #include <dbkpr/pro/dbkpr_interp_depth_process.h>
 //#include <vpgld/algo/pro/vpgld_vsol_lens_warp_process.h>
 //#include <vpgld/algo/pro/vpgld_image_lens_warp_process.h>
-#include <mw/pro/vpgld_load_camera_process.h>
-#include <mw/pro/mw_load_discrete_corresp_process.h>
-#include <mw/pro/mw_save_discrete_corresp_process.h>
+#include <bmcsd/pro/bmcsd_load_camera_process.h>
+#include <bmcsd/pro/bmcsd_load_discrete_corresp_process.h>
+#include <bmcsd/pro/bmcsd_save_discrete_corresp_process.h>
 #include <bdifd/pro/bdifd_edgel_data_process.h>
 #include <mw/pro/dbdet_combine_curves_process.h>
 #include <mw/pro/dbkpr_projective_reconstruct_process.h>
 #include <mw/pro/mw_synthetic_corresp_process.h>
 #include <mw/pro/mw_project_cube_process.h>
 #include <mw/pro/mw_project_polyline_process.h>
-#include <mw/pro/bmcsd_project_curve_sketch_process.h>
+#include <bmcsd/pro/bmcsd_project_curve_sketch_process.h>
 #include <mw/pro/dbdet_compute_linked_curves_process.h>
 #include <mw/pro/mw_extend_corresp_process.h>
-#include <mw/pro/bmcsd_nearest_edgels_process.h>
+#include <mw/pro/dbmcs_nearest_edgels_process.h>
 
 #ifdef HAS_BGUI3D
 #include <bgui3d/bgui3d.h>
@@ -205,11 +205,11 @@ int main(int argc, char** argv)
   REG_PROCESS( dbkpr_interp_depth_process );
 //  REG_PROCESS( vpgld_vsol_lens_warp_process );
 //  REG_PROCESS( vpgld_image_lens_warp_process );
-  REG_PROCESS( vpgld_load_camera_process );
+  REG_PROCESS( bmcsd_load_camera_process );
   REG_PROCESS( show_contours_process );
 
-  REG_PROCESS( mw_load_discrete_corresp_process );
-  REG_PROCESS( mw_save_discrete_corresp_process );
+  REG_PROCESS( bmcsd_load_discrete_corresp_process );
+  REG_PROCESS( bmcsd_save_discrete_corresp_process );
   REG_PROCESS( vidpro1_load_vsol_process );
   REG_PROCESS( vidpro1_save_vsol_process );
   REG_PROCESS( bdifd_edgel_data_process );
@@ -218,7 +218,7 @@ int main(int argc, char** argv)
   REG_PROCESS( mw_project_cube_process );
   REG_PROCESS( mw_project_polyline_process );
   REG_PROCESS( bmcsd_project_curve_sketch_process );
-  REG_PROCESS( bmcsd_nearest_edgels_process );
+  REG_PROCESS( dbmcs_nearest_edgels_process );
   REG_PROCESS( mw_extend_corresp_process );
 
   mw_stereo_menu menubar;

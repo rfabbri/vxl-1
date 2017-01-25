@@ -21,7 +21,8 @@
 #include <bpro1/bpro1_parameters.h>
 #include <bdifd/bdifd_frenet.h>
 #include <bmcsd/algo/bmcsd_algo_util.h>
-#include <mw/algo/vpgld_DG_bundle_adjust.h>
+#include <mw/algo/mw_algo_util.h>
+#include <mw/algo/dvpgl_DG_bundle_adjust.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage.h>
 #include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
 #include <dbdet/pro/dbdet_edgemap_storage.h>
@@ -196,7 +197,7 @@ dbkpr_frenet_reconstruct_process::finish()
         dbdet_frenet_keypoint *kp = dynamic_cast<dbdet_frenet_keypoint *>(some_corr3d[j]->in_view(i).ptr());
         if(kp){
           mask[i][j] = true;
-          image_points.push_back(bmcsd_algo_util::mw_get_3rd_order_point_2d(*kp));
+          image_points.push_back(mw_algo_util::mw_get_3rd_order_point_2d(*kp));
         } else
           abort();
       }
@@ -244,7 +245,7 @@ dbkpr_frenet_reconstruct_process::finish()
       for (unsigned iv=0; iv < nviews; ++iv) {
         dbdet_frenet_keypoint *kp = dynamic_cast<dbdet_frenet_keypoint *>(some_corr3d[ip]->in_view(iv).ptr());
         if(kp){
-          pts[iv] = bmcsd_algo_util::mw_get_3rd_order_point_2d(*kp);
+          pts[iv] = mw_algo_util::mw_get_3rd_order_point_2d(*kp);
         } else
           abort();
       }
@@ -290,7 +291,7 @@ dbkpr_frenet_reconstruct_process::finish()
   // ------- CORE
   
   vnl_vector<double> a(init_a), b(init_b), c(0);
-  vpgld_DG_bundle_adj_lsqr ba_func(Ks,image_points,mask,usewgt);
+  dvpgl_DG_bundle_adj_lsqr ba_func(Ks,image_points,mask,usewgt);
   vnl_sparse_lm lm(ba_func);
   lm.set_max_function_evals(maxitr);
   lm.set_g_tolerance(gtol);
@@ -446,7 +447,7 @@ dbkpr_frenet_reconstruct_process::finish()
 
       assert(fp);
 
-      bdifd_3rd_order_point_2d frenet_pt = bmcsd_algo_util::mw_get_3rd_order_point_2d(*fp);
+      bdifd_3rd_order_point_2d frenet_pt = mw_algo_util::mw_get_3rd_order_point_2d(*fp);
 
       vgl_point_2d<double> pt(cameras[i](vgl_homg_point_3d<double>(world_points[p])));
 

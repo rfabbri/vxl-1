@@ -5,6 +5,7 @@
 #include <dbkpr/pro/dbkpr_corr3d_storage.h>
 #include <vgl/vgl_distance.h>
 #include <bdifd/algo/bdifd_data.h>
+#include <mw/algo/mw_algo_util.h>
 #include <bmcsd/algo/bmcsd_algo_util.h>
 #include <bpgl/algo/bpgl_construct_cameras.h>
 
@@ -166,7 +167,7 @@ finish()
 
       assert(fp);
 
-      bdifd_3rd_order_point_2d frenet_pt = bmcsd_algo_util::mw_get_3rd_order_point_2d(*fp);
+      bdifd_3rd_order_point_2d frenet_pt = mw_algo_util::mw_get_3rd_order_point_2d(*fp);
 
       double x; double y; double dir;
 
@@ -308,7 +309,7 @@ generate_corr_pts(vcl_vector<dbdet_keypoint_corr3d_sptr> &corr_pts)
       dbdet_keypoint_sptr p;
 //      p = new dbdet_keypoint(crv2d_[iv][pt_id_[i]].gama[0],crv2d_[iv][pt_id_[i]].gama[1]);
 
-      p = new dbdet_frenet_keypoint(bmcsd_algo_util::mw_get_frenet_keypoint(crv2d_[iv][pt_id_[i]]));
+      p = new dbdet_frenet_keypoint(mw_algo_util::mw_get_frenet_keypoint(crv2d_[iv][pt_id_[i]]));
       corr->add_correspondence(p,iv);
     }
 

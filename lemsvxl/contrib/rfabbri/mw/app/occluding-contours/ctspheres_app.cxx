@@ -726,7 +726,7 @@ match_contours(
 
       if (normal_matching) {
         // Normal matching, along plane with normal gamma_s
-        l = mw_normal_correspondence_line(con[i],k);
+        l = bmcsd_normal_correspondence_line(con[i],k);
       } else {
         /*epipolar_matching*/
         l = rig.f12.l_epipolar_line(p);

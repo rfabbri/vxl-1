@@ -55,7 +55,7 @@
 #include <bdifd/bdifd_analytic.h>
 #include <bmcsd/bmcsd_util.h>
 #include <bmcsd/bmcsd_view_set.h>
-#include <mw/algo/mw_data.h>
+#include <bmcsd/algo/bmcsd_data.h>
 #include <mw/app/differential-estimates/mw_gradient_descent.h>
 #include <vpgl/vpgl_perspective_camera.h>
 #include <vpgld/pro/vpgld_camera_storage.h>
@@ -116,12 +116,12 @@ void
 mw_load_mcs_instance()
 {
   vcl_string data_dir="./";
-  bmcsd_util::camera_file_type cam_type = bmcsd_util::MW_INTRINSIC_EXTRINSIC;
+  bmcsd_util::camera_file_type cam_type = bmcsd_util::BMCS_INTRINSIC_EXTRINSIC;
   unsigned instance_id = 0;
 
   bmcsd_curve_stereo_data_path dpath;
   bool retval = 
-    mw_data::read_frame_data_list_txt(data_dir, &dpath, cam_type);
+    bmcsd_data::read_frame_data_list_txt(data_dir, &dpath, cam_type);
   if (!retval) return;
   vcl_cout << "Dpath:\n" << dpath << vcl_endl;
   bmcsd_stereo_instance_views all_instances_;
@@ -245,12 +245,12 @@ mw_load_current_working_repository_curve_tracing_tool()
 
   MANAGER->load_repository_from_file(data_dir + rep_fname);
 
-  bmcsd_util::camera_file_type cam_type = bmcsd_util::MW_INTRINSIC_EXTRINSIC;
+  bmcsd_util::camera_file_type cam_type = bmcsd_util::BMCS_INTRINSIC_EXTRINSIC;
   unsigned instance_id = 0;
 
   bmcsd_curve_stereo_data_path dpath;
   bool retval = 
-    mw_data::read_frame_data_list_txt(data_dir, &dpath, cam_type);
+    bmcsd_data::read_frame_data_list_txt(data_dir, &dpath, cam_type);
   if (!retval) return;
   vcl_cout << "Dpath:\n" << dpath << vcl_endl;
   bmcsd_stereo_instance_views all_instances_;
@@ -400,12 +400,12 @@ mw_load_current_working_repository_edgel_tracing_tool()
   MANAGER->load_repository_from_file(data_dir + rep_fname);
 
   // Instance-controlled loading not yet used ----------------------
-  bmcsd_util::camera_file_type cam_type = bmcsd_util::MW_INTRINSIC_EXTRINSIC;
+  bmcsd_util::camera_file_type cam_type = bmcsd_util::BMCS_INTRINSIC_EXTRINSIC;
   unsigned instance_id = 0;
 
   bmcsd_curve_stereo_data_path dpath;
   bool retval = 
-    mw_data::read_frame_data_list_txt(data_dir, &dpath, cam_type);
+    bmcsd_data::read_frame_data_list_txt(data_dir, &dpath, cam_type);
   if (!retval) return;
   vcl_cout << "Dpath:\n" << dpath << vcl_endl;
   bmcsd_stereo_instance_views all_instances_;
@@ -695,7 +695,7 @@ test_point_reconstruct()
    p1.set(1482,217);
    p2.set(1895,307);
  
-   p3 = mw_epipolar_point_transfer(p1,p2,f13,f23);
+   p3 = bmcsd_epipolar_point_transfer(p1,p2,f13,f23);
    vcl_cout << "P3: " << p3.x()/p3.w() << "  " << p3.y()/p3.w() <<  vcl_endl;
  
  
