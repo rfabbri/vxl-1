@@ -166,10 +166,10 @@ handle( const vgui_event & e,
 }
 
 void mw_sel_inliers_to_curve::
-draw_curvelets(const dbdet_curvelet_list &curvelets)
+draw_curvelets(const curvelet_list &curvelets)
 {
   for ( 
-    dbdet_curvelet_list_const_iter cv_it = curvelets.begin();
+    curvelet_list_const_iter cv_it = curvelets.begin();
     cv_it != curvelets.end(); 
     cv_it++) {
 
