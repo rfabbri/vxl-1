@@ -11,7 +11,7 @@ if test "`git remote | grep vxl`" = 'vxl'; then
   exit
 fi
 
-echo '==> In case of errors, perform a fresh git clone and start from scratch."
+echo '==> In case of errors, perform a fresh git clone and start from scratch.'
 
 # Install dependencies,
 # scripts/devsetup/bootstrap
