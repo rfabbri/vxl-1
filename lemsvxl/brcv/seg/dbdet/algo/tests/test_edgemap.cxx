@@ -62,8 +62,7 @@ MAIN( test_edgemap )
   dbdet_edgemap_sptr vxl_map;
   vxl_map = new dbdet_edgemap(img_grey.ni(), img_grey.nj());
   
-  for (unsigned i=0; i<my_edgels.size(); i++)
-  {
+  for (unsigned i=0; i<my_edgels.size(); i++) {
       dbdet_edgel* new_edgel = new dbdet_edgel(my_edgels[i].get_pt(), my_edgels[i].get_theta(), my_edgels[i].get_grad()); 
       vxl_map->insert(new_edgel);
   }
