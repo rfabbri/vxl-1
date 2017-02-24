@@ -2,9 +2,17 @@
 #
 # Utility for performing edge detection on images.
 
+# 1) adapt these commands and run:
+ln -s $HOME/cprg/vxlprg/lemsvpe/lemsvxl-bin/brcv/rec/dborl/algo/edge/dborl_edge_third_order ~/bin
+ln -s $HOME/cprg/vxlprg/lemsvpe/lemsvxl-bin/brcv/rec/dborl/algo/edge/dborl_edge_third_order-input.xml ~/bin
+# 
+# 2) edit ~/bin/dborl_edge_third_order-input.xml with your parameters
+#
+# 3) run per usage message below
 
 vorlexecname=dborl_edge_third_order
-vorldirname=$HOME/src/vxlprg/lemsvxl-bin/brcv/rec/dborl/algo/edge/dborl_edge_third_order
+vorldirname=$HOME/bin/$vorlexecname
+xmlorig="$HOME/bin/mw-scripts/$vorlexecname-input.xml"
 
 # set -x
 case $# in
@@ -19,7 +27,6 @@ img_dir=`dirname $1`
 echo image extension: $img_ext
 echo image base: $img_base
 
-xmlorig="$HOME/.$vorlexecname-input.xml"
 tmpfile=/tmp/$$-tmp-$vorlexecname-input.xml
 
 sed "s%@IMGEXT@%$img_ext%g
