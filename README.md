@@ -381,6 +381,7 @@ git push origin vxl-master
 ```
 
 ### Pushing to VXL/VXD/LEMSVXL upstream from VPE
+
 #### 1. Make edits to VXL/VXD/LEMSVXL in an organized way
 ```bash
 # Edit vxl/ normally (best to organize your commits in a separate branch)
@@ -396,12 +397,46 @@ git ci -am "VPE->VXL: cmakelists"  # this message shows up on upstream
 # Or, if we forgot, we can tag the commit "TO-VXD"
 ```
 Keep doing other commits anywhere in the tree.  When backporting, we have to
-cherry-pick when the original team has made free commits anywhere in the tree.
-If you yourself are working on the tree, and separate your commits to vxl/ and
-vxd/ folders in separate branches merged to your master, this becomes a rebase
-instead of cherrypicking.
+cherry-pick or rebase; if there are commits that touch a subfolder but which you
+do not want to see, you will have to cherry-pick by hand. Otherwise, you can let
+rebase pick the commits that touch the subtree. 
 
-#### 2. Cherrypick/Rebase edits
+When you rebase or cherry-pick commits done freely on lemsvpe, three things
+may occur:
+
+1. Commits that touch only the VXL subproject will be kept cleanly
+2. Commits that touch only files outside the VXL subproject will not show up. If
+   you are rebasing, these are silently ignored. If you are cherry-picking this
+   type of commit, an error will occur telling that empty commits are not
+   allowed (future Git versions may have git cherry-pick --skipt-empty)
+3. Commits that have changes to both VXL subproject and outside of it will be
+   kept with the exact same message, but with only the relevant changes/files
+   kept, the rest being cleanly ignored
+4. Merge commits are cleanly accounted for, but you must ignore the latest merge
+   commit you did to the monorepoo master branch coming from the VXL subproject
+   (the commands below do this).
+5. Renames to VXL are cleanly rewritten as creations
+
+
+#### 2a. Rebase
+```bash
+git fetch vxd
+git co master       # or use an earlier branch up to which you want to integrate upstream
+git co -b vxd-integration
+git branch vxd-master-integration vxd-master   # so we don't mess up vxd-master
+# Take note of the latest merge you did from VXD to the monorepo's master
+
+# Rebase from vxd-master all the way up to the monorepo's master, picking and
+# adapting the relevant commits automatically
+git rebase -s subtree -Xsubtree=vxd --onto vxd-master-integration latest-merge-sha vxd-integration
+
+# check from git log or gitk if that generates a commit with the wrong prefix,
+# if so, remove the branch and redo
+# If all worked, clean up
+git branch -D vxd-master-integration
+```
+
+#### 2b. Cherrypick
 ```bash
 git fetch vxl
 git checkout -b vxl-integration vxl-master
