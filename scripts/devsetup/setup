@@ -68,5 +68,10 @@ git fetch lemsvxl-bb
 
 cd ..
 
+# Git hooks
+
+ln -s scripts/devsetup/hooks/prepare-commit-msg .git/hooks
+
 # Extra things to do
 # - git tags
+
