@@ -70,7 +70,9 @@ cd ..
 
 # Git hooks
 
-ln -s scripts/devsetup/hooks/prepare-commit-msg .git/hooks
+cd .git/hooks 
+ln -s ../../scripts/devsetup/hooks/prepare-commit-msg .
+cd ../..
 
 # Extra things to do
 # - git tags
