@@ -71,7 +71,7 @@ cd ..
 # Git hooks
 
 cd .git/hooks 
-ln -s ../../scripts/devsetup/hooks/prepare-commit-msg .
+ln ../../scripts/devsetup/hooks/prepare-commit-msg .
 cd ../..
 
 # Extra things to do
