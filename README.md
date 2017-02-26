@@ -359,8 +359,6 @@ git checkout master
 git merge vxl-master-merge  # optional branch
 # Update VPE upstream
 
-git branch -D vxl-master-merge
-
 git co vxl-master
 git merge --ff-only vxl/master  # ff-only is to ensure vxl-master is really tracking vxl/master
 git co master
@@ -371,6 +369,7 @@ cd ..
 
 git push origin master
 git push origin vxl-master
+git push origin vxl-master-merge
 ```
 
 ```bash
@@ -424,11 +423,22 @@ git fetch vxd
 git co master       # or use an earlier branch up to which you want to integrate upstream
 git co -b vxd-integration
 git branch vxd-master-integration vxd-master   # so we don't mess up vxd-master
-# Take note of the latest merge you did from VXD to the monorepo's master
+# Take note of the latest merge you did from VXD to the monorepo's master, you
+# need to skip it
 
 # Rebase from vxd-master all the way up to the monorepo's master, picking and
 # adapting the relevant commits automatically
-git rebase -s subtree -Xsubtree=vxd --onto vxd-master-integration latest-merge-sha vxd-integration
+git rebase -s subtree -Xsubtree=vxd --onto vxd-master-integration vxd-master-merge vxd-integration
+
+# Transplant initial-ref to vxd-integration's monorepo commits adapted on top of
+# vxd-master-integration, turning into subrepo commits
+# Note that initial-ref must skip the last merge
+git rebase -s subtree -Xsubtree=vxd --onto vxd-master-integration initial-ref vxd-integration
+
+# If there is a merge commit with conflict, I had to:
+git cherry-pick -x --strategy=subtree -Xsubtree=vxd/ -m 2 SHA1OFMERGE
+# where for -m I tried 1 and 2 until I got it right. Triple-checked the tree
+state is the same.
 
 # check from git log or gitk if that generates a commit with the wrong prefix,
 # if so, remove the branch and redo
@@ -484,6 +494,7 @@ git co master
 git tag -d integrated-VXL 
 git push origin :refs/tags/integrated-VXL
 git tag -a integrated-VXL -m "Integrated all commits touching VXD up to this point."
+git push origin --tags
 ```
 
 Rebase is nice, since rebasing interactively means that you have a chance to
