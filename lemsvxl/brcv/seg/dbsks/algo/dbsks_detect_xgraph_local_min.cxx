@@ -3,6 +3,7 @@
 //:
 // \file
 
+#include <cstdlib>
 #include "dbsks_detect_xgraph_local_min.h"
 
 //#include <dbsks/dbsks_det_desc_xgraph.h>
