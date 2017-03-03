@@ -23,7 +23,7 @@ set( dborl_algo_sources
 
 aux_source_directory(Templates dborl_algo_sources)
 
-add_library( dborl_algo STATIC ${dborl_algo_sources} )
+add_library( dborl_algo ${dborl_algo_sources} )
 
 target_link_libraries( dborl_algo dborl buld expatpp bsold bxml bpro1 dbxml vbl) 
 
