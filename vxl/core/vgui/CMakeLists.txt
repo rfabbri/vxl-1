@@ -423,9 +423,19 @@ endif()
 
 message("GTK2_INCLUDE_DIRS: ${GTK2_INCLUDE_DIRS}")
 if(GTK2_FOUND)
-
   # We need to make sure we have the gl extension before building this component.
-  find_file(GTKGL gtk/gtkgl.h PATHS ${GTK2_INCLUDE_DIRS})
+  find_file(GTKGL gtkgl/gdkgl.h PATHS ${GTK2_INCLUDE_DIRS})
+  if (NOT GTKGL)
+    find_package(PkgConfig)
+    if (PkgConfig_FOUND)
+      pkg_search_module(GTK2_GL gtkgl+-2.0)
+      if (GTK2_GL_INCLUDE_DIRS)
+        set(GTK2_INCLUDE_DIRS ${GTK2_INCLUDE_DIRS} ${GTK2_GL_INCLUDE_DIRS)
+        find_file(GTKGL gtk/gdkgl.h PATHS ${GTK2_INCLUDE_DIRS})
+      endif()
+    endif()
+  endif()
+
   if (GTKGL)
     option(VGUI_USE_GTK2 "Should GTK2 support be compiled into vgui?" YES)
 
