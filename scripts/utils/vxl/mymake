@@ -20,6 +20,8 @@ echo
 echo "MYMAKEOPTS=$MYMAKEOPTS"
 echo
 
+SECONDS=0
+
 if test `echo $mypwd|grep /pet/`; then
   echo $0: In pet project area.
   # TODO cd root
@@ -32,4 +34,6 @@ else
   $makecmd $*
 fi
 
-mysay 'yes.'
+if [ $SECONDS -ge 10 ]; then
+  mysay 'yes.'
+fi

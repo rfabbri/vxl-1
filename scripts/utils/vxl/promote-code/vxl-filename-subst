@@ -1,2 +1,2 @@
 #!/bin/sh
-for i in `lsc -r; find . -name '*.in'`; do git mv $i `echo $i|sed s/dbmcs/bmcsd/g`; done
+for i in `lsc -r; find . -name '*.in'`; do git mv $i `echo $i|sed s/dbdet_/sdetd_/g`; done
