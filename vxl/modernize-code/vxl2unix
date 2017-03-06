@@ -1,5 +1,6 @@
 #!/bin/sh
 
-git ls-files -z -- bootstrap '*.cmake' '*.cmake.in' '*CMakeLists.txt' |xargs -0 dos2unix
-#lsc -r |xargs dos2unix
+# git ls-files -z -- bootstrap '*.cmake' '*.cmake.in' '*CMakeLists.txt' |xargs -0 dos2unix
+lsc -r |xargs dos2unix
 
+#find . -name '*.cmake' -o -name '*.cmake.in' -o -name '*CMakeLists.txt' -print0 | xargs -0 dos2unix

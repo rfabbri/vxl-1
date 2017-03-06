@@ -123,14 +123,18 @@ s/DBCSI/BCSID/g
 s/bmvgd\/bcsid/bbasd\/bcsid/g
 #
 #XXX 
-# s/dbdet\/edge/sdet/g
-# s/dbdet\/sel/sdet/g
-# s/dbdet/sdetd/g
+s/dbdet\/edge/sdet/g
+s/dbdet\/sel/sdet/g
 #
 # sdet/dbdet: XXX
-# s/\<curvelet_list/sdet_curvelet_list/g
-# s/cvlet_list/sdet_curvelet_list/g
-# s/dbdet_curve_fragment_graph/sdet_curve_fragment_graph/g
+s/\<curvelet_list/sdet_curvelet_list/g
+s/cvlet_list/sdet_curvelet_list/g
+s/dbdet_curve_fragment_graph/sdet_curve_fragment_graph/g
+s/dbdet_edgel/sdet_edgel/g
+s/dbdet\(_edgemap_sptr\)/sdet\1/g
+s/dbdet\(_edgemap\>\)/sdet\1/g
+s/dbdet_\(sel_storage\)/sdetd_\1/g
+s/dbdet/sdetd/g
 #
 s/mw_algo_util/bmcsd_algo_util/g
 s/mw\(_discrete_corresp\)/bmcsd\1/g
@@ -169,6 +173,10 @@ s/dvcpl/vcpld/g
 s/DVCPL/VCPLD/g
 s/basic\/vcpld/bbasd\/vcpld/g
 #
+#s/vbl\(_array_2d_min\)/dbdet\1/g
+#s/vbl\(_array_2d_max\)/dbdet\1/g
+#s/vbl\(_array_2d_min_replace\)/dbdet\1/g
+#s/vbl\(_array_2d_max_replace\)/dbdet\1/g
 
 
 ######################################
