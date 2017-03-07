@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+# Utility for performing edge detection on images.
+#
+# 1) install edge
+
+toe_sigma_list="1 2 3"
+toe_thresh_list="1 2 3 5 7"
+
+# set -x
+case $# in
+  0) echo "Usage: $0 [image_filenames]" 1>&2; exit 2
+esac
+
+# for one image filename:
+parallel edge --sigma {1} --thresh {2} --suffix _sigma-{1}_thresh-{2} $1 ::: $toe_sigma_list ::: $toe_thresh_list
