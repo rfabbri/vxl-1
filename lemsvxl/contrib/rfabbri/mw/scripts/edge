@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Utility for performing edge detection on images.
 
@@ -13,25 +13,85 @@
 vorlexecname=dborl_edge_third_order
 vorldirname=$HOME/bin/$vorlexecname
 xmlorig="$HOME/bin/$vorlexecname-input.xml"
+program=edge
+
+myusage () { 
+  echo "Usage: $0 [options] image_filename" 1>&2; 
+  echo "Options: please see the source file" 1>&2; 
+  exit 0
+}
 
 # set -x
 case $# in
-  0) echo "Usage: $0 [image_filename]" 1>&2; exit 2
+  0) myusage
+    ;;
 esac
+
+while [[ $# -gt 0 ]]; do
+  arg="$1"
+  case $arg in
+      --version|-V|-v)
+        echo "VXD edge"
+        exit 0
+        ;;
+      --help|-h) 
+        myusage
+        ;;
+      -s|--sigma)  # overrides the value in the XML file
+      sigma="$2"
+      nondefault=1
+      shift 2
+      ;;
+      -t|--threshold|--thresh)  # overrides the value in the XML file
+      thresh="$2"
+      nondefault=1
+      shift 2
+      ;;
+      -*)
+      echo "$program: $arg: unknown option"
+      exit 1
+      ;;
+      *) break;;
+  esac
+done
+
+if [[ -z $nondefault ]]; then
+  echo default
+fi
+
+echo Sigma $sigma
+echo Thresh $thresh
+exit
+
+#
+# if nondefault, we copy a different file
+# and set the defaults. 
+
 
 img_ext=`echo $1|grep -o '\.[^\.]*$'`
 img_base="${1%$img_ext}"
 img_dir=`dirname $1`
-
 
 echo image extension: $img_ext
 echo image base: $img_base
 
 tmpfile=/tmp/$$-tmp-$vorlexecname-input.xml
 
+if test -n "$sigma"; then
+  # sed cmd1
+  sigma_subst='s%\(toe-sigma=\)\"[0-9]*\"%\1\"$sigma\"%g'
+fi
+
+if test -n "$thresh"; then
+  thresh_subst='s%\(toe-thresh=\)\"[0-9]*\"%\1\"$thresh\"%g'
+fi
+
 sed "s%@IMGEXT@%$img_ext%g
 s%@IMGBASENAME@%$img_base%g
 s%@INPUTDIR@%$img_dir%g
-s%@OUTPUTDIR@%$img_dir%g" $xmlorig  > $tmpfile
+s%@OUTPUTDIR@%$img_dir%g
+$sigma_subst
+$thresh_subst
+" $xmlorig  > $tmpfile
 
 $vorldirname -x $tmpfile
