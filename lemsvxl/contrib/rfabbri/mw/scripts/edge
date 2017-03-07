@@ -17,13 +17,13 @@ program=edge
 
 myusage () { 
   echo "Usage: $0 [options] image_filename" 1>&2; 
-  echo "Options: please see the source file" 1>&2; 
-  exit 0
+  echo "Options: refer to the source file" 1>&2; 
 }
 
 # set -x
 case $# in
   0) myusage
+    exit 2
     ;;
 esac
 
@@ -36,15 +36,18 @@ while [[ $# -gt 0 ]]; do
         ;;
       --help|-h) 
         myusage
+        exit 0
         ;;
-      -s|--sigma)  # overrides the value in the XML file
+      -s|--sigma)  # overrides the value in the config file
       sigma="$2"
-      nondefault=1
       shift 2
       ;;
-      -t|--threshold|--thresh)  # overrides the value in the XML file
+      -t|--threshold|--thresh)  # overrides the value in the config file
       thresh="$2"
-      nondefault=1
+      shift 2
+      ;;
+      -x|--suffix)  # override the output_extension in the config file
+      suffix="$2.edg"
       shift 2
       ;;
       -*)
@@ -55,18 +58,14 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if [[ -z $nondefault ]]; then
-  echo default
-fi
+case $# in
+  0) myusage
+    exit 2
+    ;;
+esac
 
 echo Sigma $sigma
 echo Thresh $thresh
-exit
-
-#
-# if nondefault, we copy a different file
-# and set the defaults. 
-
 
 img_ext=`echo $1|grep -o '\.[^\.]*$'`
 img_base="${1%$img_ext}"
@@ -79,17 +78,22 @@ tmpfile=/tmp/$$-tmp-$vorlexecname-input.xml
 
 if test -n "$sigma"; then
   # sed cmd1
-  sigma_subst='s%\(toe-sigma=\)\"[0-9]*\"%\1\"$sigma\"%g'
+  sigma_subst="s%\(toe-sigma=\)\"[0-9]*\"%\1\"$sigma\"%g"
 fi
 
 if test -n "$thresh"; then
-  thresh_subst='s%\(toe-thresh=\)\"[0-9]*\"%\1\"$thresh\"%g'
+  thresh_subst="s%\(toe-thresh=\)\"[0-9]*\"%\1\"$thresh\"%g"
+fi
+
+if test -n "$suffix"; then
+  suffix_subst="s%\(output_extension=\)\"[^\"]*\"%\1\"$suffix\"%g"
 fi
 
 sed "s%@IMGEXT@%$img_ext%g
 s%@IMGBASENAME@%$img_base%g
 s%@INPUTDIR@%$img_dir%g
 s%@OUTPUTDIR@%$img_dir%g
+$suffix_subst
 $sigma_subst
 $thresh_subst
 " $xmlorig  > $tmpfile
