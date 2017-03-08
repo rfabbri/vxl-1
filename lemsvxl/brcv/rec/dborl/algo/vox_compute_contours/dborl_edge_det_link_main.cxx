@@ -613,7 +613,7 @@ int main(int argc, char *argv[]) {
     if ( params->trace_contours_() )
     {
 
-        if ( params->output_extension_() == ".con" )
+        if ( vul_file::extension(params->output_extension_()) == ".con" )
         {
             bpro1_filepath output(output_file,params->output_extension_());
 
@@ -633,9 +633,9 @@ int main(int argc, char *argv[]) {
             save_con_pro.clear_input();
             save_con_pro.clear_output();
         }
-        else if ( params->output_extension_() == ".cem" ||
-                  params->output_extension_() == ".cemv" || 
-                  params->output_extension_() == ".cemv.gz")
+        else if ( vul_file::extension(params->output_extension_()) == ".cem" ||
+                  vul_file::extension(params->output_extension_()) == ".cemv" || 
+                  vul_file::extension(params->output_extension_()) == ".cemv.gz")
         {
             output_file = output_file + params->output_extension_();
             bpro1_filepath output(output_file,params->output_extension_());
@@ -674,9 +674,9 @@ int main(int argc, char *argv[]) {
         }
  
     }
-    else if (params->output_extension_() == ".cem" ||
-                params->output_extension_() == ".cemv" ||
-                params->output_extension_() == ".cemv.gz")
+    else if (vul_file::extension(params->output_extension_()) == ".cem" ||
+             vul_file::extension(params->output_extension_()) == ".cemv" ||
+             vul_file::extension(params->output_extension_()) == ".cemv.gz")
     {
 
         output_file = output_file + params->output_extension_();
@@ -708,7 +708,7 @@ int main(int argc, char *argv[]) {
         save_cem_pro.clear_input();
         save_cem_pro.clear_output();
     }
-    else if (params->output_extension_() == ".cvlet")
+    else if (vul_file::extension(params->output_extension_()) == ".cvlet")
     {
       vcl_cout << "Just outputting .cvlet, no contours.\n";
     }
