@@ -485,7 +485,8 @@ int main(int argc, char *argv[]) {
 
             bool status(false);
 
-            if ( params->edge_extension_() == ".edg" ||  params->edge_extension_() == ".edg.gz" )
+            if ( vul_file::extension(params->edge_extension_()) == ".edg" ||  
+                 vul_file::extension(params->edge_extension_()) == ".edg.gz" )
             {                
                 output_file = output_file + params->edge_extension_();
                 bpro1_filepath output(output_file,params->edge_extension_());
