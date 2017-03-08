@@ -5,7 +5,7 @@
 # 1) install edge
 
 toe_sigma_list="1 2 3"
-toe_thresh_list="1 2 3 5 7"
+toe_thresh_list="1 2 3 5 10"
 
 # set -x
 case $# in

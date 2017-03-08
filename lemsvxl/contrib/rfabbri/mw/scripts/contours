@@ -13,10 +13,54 @@
 vorlexecname=dborl_compute_contours
 vorldirname=$HOME/bin/$vorlexecname
 xmlorig="$HOME/bin/$vorlexecname-input.xml"
+program=contours
 
-# set -x
+myusage () { 
+  echo "Usage: $0 [options] image_filename" 1>&2; 
+  echo "Options: refer to the source file" 1>&2; 
+}
+
 case $# in
-  0) echo "Usage: $0 [image_filename]" 1>&2; exit 2
+  0) myusage
+    exit 2
+    ;;
+esac
+
+while [[ $# -gt 0 ]]; do
+  arg="$1"
+  case $arg in
+      --version|-V|-v)
+        echo "VXD edge"
+        exit 0
+        ;;
+      --help|-h) 
+        myusage
+        exit 0
+        ;;
+      -r|--nrad)  # overrides the value in the config file
+      nrad="$2"
+      shift 2
+      ;;
+      -l|--num_link_iters)  # overrides the value in the config file
+      num_link_iters="$2"
+      shift 2
+      ;;
+      -x|--suffix)  # override the output_extension in the config file
+      suffix="$2.edg"
+      shift 2
+      ;;
+      -*)
+      echo "$program: $arg: unknown option"
+      exit 1
+      ;;
+      *) break;;
+  esac
+done
+
+case $# in
+  0) myusage
+    exit 2
+    ;;
 esac
 
 img_ext=`echo $1|grep -o '\.[^\.]*$'`
@@ -28,9 +72,42 @@ echo image base: $img_base
 
 tmpfile=/tmp/$$-tmp-$vorlexecname-input.xml
 
+# change parameters for both color and gray edge detector, since we are not sure
+# which one will get used. OR hardcode to use the gray one OR change edge to use
+# color
+
+# -edgemap parameter to use existing edges
+
+# - Linking params
+#  - nrad (radius of nhood)
+#  - secondary: gap (maximum pixel distance to complete)
+#  - not sure: token_len (puts bounds on legal curvature)
+#  - max # to group: chain size to group
+#  - # iters
+# - Extract contours
+#   - len_thresh (40)
+#
+# Strategy: give ranges and study each variation at a time
+
+if test -n "$suffix"; then
+  suffix_subst="s%\(output_extension=\)\"[^\"]*\"%\1\"$suffix\"%g"
+fi
+
+if test -n "$nrad"; then
+  nrad_subst="s%\(Edge_Linking-nrad=\)\"[0-9]*\"%\1\"$nrad\"%g"
+fi
+
+if test -n "$num_link_iters"; then
+  num_link_iters_subst="s%\(Edge_Linking-num_link_iters=\)\"[0-9]*\"%\1\"$num_link_iters\"%g"
+fi
+
+set -x
 sed "s/@IMGEXT@/$img_ext/g
 s/@IMGBASENAME@/$img_base$img_ext/g
 s/@INPUTDIR@/$img_dir/g
-s/@OUTPUTDIR@/$img_dir/g" $xmlorig  > $tmpfile
-
+s/@OUTPUTDIR@/$img_dir/g
+$suffix_subst
+$nrad_subst
+$num_link_iters_subst
+" $xmlorig  > $tmpfile
 $vorldirname -x $tmpfile
