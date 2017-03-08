@@ -15,4 +15,4 @@ case $# in
 esac
 
 # for one image filename:
-parallel contours -r {1} -l {2} --suffix _nrad-{1}_num_link_iters-{2}.cemv $1 ::: $nrad_list ::: $num_link_iters_list
+parallel contours -r {1} -l {2} --suffix _nrad-{1}_num_link_iters-{2} $1 ::: $nrad_list ::: $num_link_iters_list
