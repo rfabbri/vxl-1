@@ -49,6 +49,10 @@ while [[ $# -gt 0 ]]; do
       suffix="$2"
       shift 2
       ;;
+      -e|--edgesuffix)
+      edgesuffix="$2"
+      shift 2
+      ;;
       -*)
       echo "$program: $arg: unknown option"
       exit 1
@@ -93,6 +97,11 @@ if test -n "$suffix"; then
   suffix_subst="s%\(output_extension=\)\"[^\"]*\"%\1\"$suffix\"%g"
 fi
 
+if test -n "$edgesuffix"; then
+  edgesuffix_subst="s%\(edge_extension=\)\"[^\"]*\"%\1\"$edgesuffix\"%g"
+  existingedges_subst="s%\(use_existing_edges=\)\"[^\"]*\"%\1\"on\"%g"
+fi
+
 if test -n "$nrad"; then
   nrad_subst="s%\(Edge_Linking-nrad=\)\"[0-9]*\"%\1\"$nrad\"%g"
 fi
@@ -101,13 +110,16 @@ if test -n "$num_link_iters"; then
   num_link_iters_subst="s%\(Edge_Linking-num_link_iters=\)\"[0-9]*\"%\1\"$num_link_iters\"%g"
 fi
 
-set -x
 sed "s/@IMGEXT@/$img_ext/g
-s/@IMGBASENAME@/$img_base$img_ext/g
+s/@IMGBASENAME@/$img_base/g
 s/@INPUTDIR@/$img_dir/g
 s/@OUTPUTDIR@/$img_dir/g
 $suffix_subst
+$edgesuffix_subst
+$existingedges_subst
 $nrad_subst
 $num_link_iters_subst
 " $xmlorig  > $tmpfile
+
+set -x
 $vorldirname -x $tmpfile

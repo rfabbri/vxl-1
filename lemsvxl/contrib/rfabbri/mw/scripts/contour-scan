@@ -9,10 +9,11 @@
 
 nrad_list="2 4"
 num_link_iters_list="3 7 9"
+edgesuffix="--edgesuffix _sigma-2_thresh-5.edg" # leave blank to recompute edges
 
 case $# in
   0) echo "Usage: $0 [image_filenames]" 1>&2; exit 2
 esac
 
 # for one image filename:
-parallel contours -r {1} -l {2} --suffix _nrad-{1}_num_link_iters-{2} $1 ::: $nrad_list ::: $num_link_iters_list
+parallel contours -r {1} -l {2} --suffix _nrad-{1}_num_link_iters-{2} $edgesuffix $1 ::: $nrad_list ::: $num_link_iters_list

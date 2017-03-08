@@ -73,6 +73,7 @@ int main(int argc, char *argv[]) {
     //load the input image
     vcl_string input_img = params->input_object_dir_() + "/" 
         + params->input_object_name_() + params->input_extension_();
+    std::cout << "inputimg: " << input_img << std::endl;
 
     if (!vul_file::exists(input_img)) 
     {
