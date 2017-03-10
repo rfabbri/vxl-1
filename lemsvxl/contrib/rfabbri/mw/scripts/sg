@@ -20,6 +20,7 @@ esac
 state=normal
 prevstate=normal
 
+set -x
 while [[ $# -gt 0 ]]; do
   arg="$1"
 
@@ -70,8 +71,8 @@ while [[ $# -gt 0 ]]; do
       state=frag
       shift
       ;;
-      -m|--repeat_image)   # whether to make the given image the same on all frames
-      repeat_images=1
+      -m|--repeat_image|--repeat_img)   # whether to make the given image the same on all frames
+      repeat_img="-repeat_img"
       prevstate=$state
       state=normal
       shift
@@ -93,6 +94,24 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+# flush multiple options in $sofar
+if test $state != $prevstate; then
+  if test -n "$sofar"; then
+    # flush
+    if test $prevstate = edge; then
+      edge_fnames=$sofar
+    elif test $prevstate = frag; then
+      frag_fnames=$sofar
+    elif test $prevstate = imgs; then
+      imgs_fnames=$sofar
+    fi
+    # back to normal
+    prevstate=$state
+    sofar=""
+  fi
+fi
+
 if test -n "$sofar"; then
   if test $state = edge; then
     edge_fnames=$sofar
@@ -120,11 +139,5 @@ if test -n "$frag_fnames"; then
   frag_arg="-frags"
 fi
 
-if test -n "$repeat_images"; then
-  echo repeat
-  if test -n "$imgs_fnames"; then
-  fi
-fi
-
-echo sgui $img_arg "$imgs_fnames" $edge_arg "$edge_fnames" $frag_arg "$frag_fnames"
-sgui $img_arg "$imgs_fnames" $edge_arg "$edge_fnames" $frag_arg "$frag_fnames"
+set -x
+echo sgui $img_arg "$imgs_fnames" $edge_arg "$edge_fnames" $frag_arg "$frag_fnames" $repeat_img
