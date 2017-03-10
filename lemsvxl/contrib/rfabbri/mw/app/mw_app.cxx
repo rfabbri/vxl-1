@@ -2404,9 +2404,27 @@ reproject_curve_sculpture()
 }
 */
 
+void
+mw_load_img_edg(
+    const std::vector<std::string> &imgs, 
+    const std::vector<std::string> &edges, 
+    const std::vector<std::string> &frags)
+{
+  vnl_vector<unsigned> v(3);
+  v[0] = imgs.size(); 
+  v[1] = edges.size();
+  v[2] = frags.size();
 
+  unsigned nframes=v.max_value();
+  std::cout << "nframes = " << nframes << std::endl;
+  for (unsigned i=0; i < nframes; ++i) {
+    MANAGER->add_new_frame();
+  }
+  MANAGER->first_frame();
 
+  load_imgs_into_frames(imgs);
+  load_edgemaps_into_frames(edges);
+  load_curve_frags_into_frames(frags);
 
-
-
-
+  MANAGER->post_redraw();
+}

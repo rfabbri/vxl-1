@@ -1,3 +1,6 @@
+#include <vul/vul_arg.h>
+#include <buld/buld_arg.h>
+#include <vnl/vnl_vector.h>
 #include <vgui/vgui.h>
 #include <vgui/vgui_adaptor.h>
 #include <vgui/vgui_window.h>
@@ -7,7 +10,7 @@
 //#include <vgui/vgui_find.h>
 #include "mw_stereo_menu.h"
 #include <mw/app/show_contours_process.h>
-//#include <mw/app/mw_app.h>
+#include <mw/app/mw_app.h>
 //#include <mw/app/mw_data.h>
 //#include <mw/app/ctspheres_app.h>
 #include <bvis1/bvis1_macros.h>
@@ -115,7 +118,7 @@
 #include <dbkpr/vis/dbkpr_corr3d_displayer.h>
 #endif
 
-
+#define MANAGER bvis1_manager::instance()
 
 int main(int argc, char** argv)
 {
@@ -128,6 +131,14 @@ int main(int argc, char** argv)
   SoCurvel3D::initClass();
 #endif
 
+  vul_arg<std::vector<std::string> > a_edges("-edges", "load edgemap .edg(.gz) files (space-separated)");
+  vul_arg<std::vector<std::string> > a_frags("-frags", "load curve fragments .cemv(.gz) files (space-separated)");
+  vul_arg<std::vector<std::string> > a_imgs("-imgs", "load curve image files (space-separated)");
+  vul_arg_parse(argc,argv);
+
+  std::cout << a_edges.value_.size() << std::endl;
+  std::cout << a_frags.value_.size() << std::endl;
+  std::cout << a_imgs.value_.size() << std::endl;
 
   // Register the displayers
   REG_DISPLAYER( bvis1_image_displayer );
@@ -227,9 +238,11 @@ int main(int argc, char** argv)
   unsigned w = 1200, h = 700;
   vcl_string title = "Brown Eyes";
   vgui_window* win = vgui::produce_window(w, h, menu_holder, title);
+
   win->get_adaptor()->set_tableau( bvis1_manager::instance() );
-  
   win->show();
+
+  mw_load_img_edg(a_imgs.value_, a_edges.value_, a_frags.value_);
 
   return vgui::run(); 
 }
