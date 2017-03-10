@@ -34,6 +34,8 @@ while [[ $# -gt 0 ]]; do
         frag_fnames=$sofar
       elif test $prevstate = imgs; then
         imgs_fnames=$sofar
+      elif test $prevstate = normal; then
+        remaining_args=$sofar
       fi
       # back to normal
       prevstate=$state
@@ -88,6 +90,8 @@ while [[ $# -gt 0 ]]; do
         sofar="$sofar $1"
       elif test $state = imgs; then
         sofar="$sofar $1"
+      elif test $state = normal; then
+        sofar="$sofar $1"
       fi
       prevstate=$state
       shift
@@ -105,6 +109,8 @@ if test $state != $prevstate; then
       frag_fnames=$sofar
     elif test $prevstate = imgs; then
       imgs_fnames=$sofar
+    elif test $prevstate = normal; then
+      remaining_args=$sofar
     fi
     # back to normal
     prevstate=$state
@@ -119,6 +125,8 @@ if test -n "$sofar"; then
     frag_fnames=$sofar
   elif test $state = imgs; then
     imgs_fnames=$sofar
+  elif test $state = normal; then
+    remaining_args=$sofar
   fi
 fi
 
@@ -126,6 +134,31 @@ fi
 echo Imgs: $imgs_fnames
 echo Edges: $edge_fnames
 echo Frags: $frag_fnames
+
+# parse remaining args into each arg, depending on file type
+
+for i in $remaining_args; do
+  ext=`echo $i|grep -o '\.[^\.]*$'`
+  case $ext in
+    .edg|.edg.gz)
+      edge_fnames="$edge_fnames $i"
+    ;;
+    .cemv|.cemv.gz)
+      frag_fnames="$frag_fnames $i"
+    ;;
+    .png|.jpg|.jpeg)
+      imgs_fnames="$imgs_fnames $i"
+    ;;
+    *)
+      isimage=`file $i | grep -oi image`
+      if test -n "$isimage"; then
+        imgs_fnames="$imgs_fnames $i"
+      else
+        echo $program: invalid lone argument or unrecognized format: $i
+        exit 1
+      fi
+  esac
+done
 
 if test -n "$imgs_fnames"; then
   img_arg="-imgs"
@@ -139,5 +172,5 @@ if test -n "$frag_fnames"; then
   frag_arg="-frags"
 fi
 
-set -x
+
 echo sgui $img_arg "$imgs_fnames" $edge_arg "$edge_fnames" $frag_arg "$frag_fnames" $repeat_img
