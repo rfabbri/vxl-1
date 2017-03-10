@@ -1,0 +1,130 @@
+#!/bin/bash
+
+# parse commandline
+# -e f1 f2 f3 fn
+# -f f4 f5 f6
+
+program=myparse
+
+myusage () { 
+  echo "Usage: $0 [options] image_filenames" 1>&2; 
+  echo "Options: refer to the source file" 1>&2; 
+}
+
+case $# in
+  0) myusage
+    exit 2
+    ;;
+esac
+
+state=normal
+prevstate=normal
+
+while [[ $# -gt 0 ]]; do
+  arg="$1"
+
+  # flush multiple options in $sofar
+  if test $state != $prevstate; then
+    if test -n "$sofar"; then
+      # flush
+      if test $prevstate = edge; then
+        edge_fnames=$sofar
+      elif test $prevstate = frag; then
+        frag_fnames=$sofar
+      elif test $prevstate = imgs; then
+        imgs_fnames=$sofar
+      fi
+      # back to normal
+      prevstate=$state
+      sofar=""
+    fi
+  fi
+
+  case $arg in
+      --version|-V|-v)
+        echo "$program v1"
+        exit 0
+        ;;
+      --help|-h) 
+        myusage
+        exit 0
+        ;;
+#      -r|--nrad)  # overrides the value in the config file
+#      nrad="$2"
+#      shift 2
+#      prevstate=$state
+#      state=normal
+#      ;;
+      -i|--imgs|--images)
+      prevstate=$state
+      state=imgs
+      shift
+      ;;
+      -e|--edge)
+      prevstate=$state
+      state=edge
+      shift
+      ;;
+      -f|--frags|--cfrags)
+      prevstate=$state
+      state=frag
+      shift
+      ;;
+      -m|--repeat_image)   # whether to make the given image the same on all frames
+      repeat_images=1
+      prevstate=$state
+      state=normal
+      shift
+      ;;
+      -*)
+      echo "$program: $arg: unknown option"
+      exit 1
+      ;;
+      *)
+      if test $state = edge; then
+        sofar="$sofar $1"
+      elif test $state = frag; then
+        sofar="$sofar $1"
+      elif test $state = imgs; then
+        sofar="$sofar $1"
+      fi
+      prevstate=$state
+      shift
+      ;;
+  esac
+done
+if test -n "$sofar"; then
+  if test $state = edge; then
+    edge_fnames=$sofar
+  elif test $state = frag; then
+    frag_fnames=$sofar
+  elif test $state = imgs; then
+    imgs_fnames=$sofar
+  fi
+fi
+
+
+echo Imgs: $imgs_fnames
+echo Edges: $edge_fnames
+echo Frags: $frag_fnames
+
+if test -n "$imgs_fnames"; then
+  img_arg="-imgs"
+fi
+
+if test -n "$edge_fnames"; then
+  edge_arg="-edges"
+fi
+
+if test -n "$frag_fnames"; then
+  frag_arg="-frags"
+fi
+
+if test -n "$repeat_images"; then
+  echo repeat
+  if test -n "$imgs_fnames"; then
+  fi
+fi
+
+echo sgui $img_arg "$imgs_fnames" $edge_arg "$edge_fnames" $frag_arg "$frag_fnames"
+sgui $img_arg "$imgs_fnames" $edge_arg "$edge_fnames" $frag_arg "$frag_fnames"

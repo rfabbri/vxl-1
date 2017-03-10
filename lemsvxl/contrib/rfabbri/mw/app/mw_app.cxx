@@ -2406,10 +2406,12 @@ reproject_curve_sculpture()
 
 void
 mw_load_img_edg(
-    const std::vector<std::string> &imgs, 
+    const std::vector<std::string> &imgs_orig, 
     const std::vector<std::string> &edges, 
-    const std::vector<std::string> &frags)
+    const std::vector<std::string> &frags,
+    bool repeat_img)
 {
+  std::vector<std::string> imgs(imgs_orig);
   vnl_vector<unsigned> v(3);
   v[0] = imgs.size(); 
   v[1] = edges.size();
@@ -2419,6 +2421,8 @@ mw_load_img_edg(
   std::cout << "nframes = " << nframes << std::endl;
   for (unsigned i=0; i < nframes; ++i) {
     MANAGER->add_new_frame();
+    if (repeat_img && imgs.size() < nframes && imgs.size())
+      imgs.push_back(imgs.front());
   }
   MANAGER->first_frame();
 

@@ -22,7 +22,8 @@ void mw_load_img_edg();
 void mw_load_img_edg(
     const std::vector<std::string> &imgs, 
     const std::vector<std::string> &edges, 
-    const std::vector<std::string> &frags);
+    const std::vector<std::string> &frags,
+    bool repeat_img);
 void mw_load_mcs_instance();
 void load_ct_spheres_dataset();
 void example_project();

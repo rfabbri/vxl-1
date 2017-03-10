@@ -134,6 +134,7 @@ int main(int argc, char** argv)
   vul_arg<std::vector<std::string> > a_edges("-edges", "load edgemap .edg(.gz) files (space-separated)");
   vul_arg<std::vector<std::string> > a_frags("-frags", "load curve fragments .cemv(.gz) files (space-separated)");
   vul_arg<std::vector<std::string> > a_imgs("-imgs", "load curve image files (space-separated)");
+  vul_arg<bool> a_repeat_img("-repeat_img", "whether to use the same images in every frame");
   vul_arg_parse(argc,argv);
 
   std::cout << a_edges.value_.size() << std::endl;
@@ -242,7 +243,7 @@ int main(int argc, char** argv)
   win->get_adaptor()->set_tableau( bvis1_manager::instance() );
   win->show();
 
-  mw_load_img_edg(a_imgs.value_, a_edges.value_, a_frags.value_);
+  mw_load_img_edg(a_imgs.value_, a_edges.value_, a_frags.value_, a_repeat_img.value_);
 
   return vgui::run(); 
 }
