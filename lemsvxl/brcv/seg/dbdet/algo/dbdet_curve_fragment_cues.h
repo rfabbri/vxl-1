@@ -39,6 +39,7 @@ public:
     //visited_id_(0),
     //visited_(vil_border_create_accessor(visited_img_, vil_border_create_constant(visited_img_, dbdet_curve_fragment_cues_unvisited))),
     img_(img),
+    im(vil_border_create_accessor(img_,vil_border_create_geodesic(img_))),
     mask(img.ni(), img.nj()),
     //    dt_(dt),
     em_(em),
@@ -97,6 +98,8 @@ private:
   //bool not_visited(int i, int j) const { return visited_(i,j) != visited_id_; }
   //void mark_visited(int i, int j) { visited_img_(i,j) = visited_id_; }
   const vil_image_view<vil_rgb<vxl_byte> > &img_; // color RGB image
+  // make sure image clamps to within bounds
+  vil_border_accessor<vil_image_view<vil_rgb<vxl_byte> > > im;
   vil_image_view<vxl_uint_32> *dt_;
   // visited(i,j) = c marks pixels(i,j) as visited by curve c's nhood tube
   // visited(i,j) = UIHNT_MAX marks pixels(i,j) as not visited

@@ -113,6 +113,7 @@
 #include <dbdet/pro/dbdet_contour_breaker_geometric_process.h>
 #include <dbdet/pro/dbdet_contour_breaker_semantic_process.h>
 #include <dbdet/pro/dbdet_graphical_model_contour_merge_process.h>
+#include <dbdet/pro/dbdet_contour_ranker_process.h>
 #include <dbdet/vis/dbdet_bvis1_util.h>
 
 //local processes
@@ -227,6 +228,7 @@ int main(int argc, char** argv)
   REG_PROCESS( dbdet_contour_breaker_geometric_process );
   REG_PROCESS( dbdet_contour_breaker_semantic_process );
   REG_PROCESS( dbdet_graphical_model_contour_merge_process );
+  REG_PROCESS( dbdet_contour_ranker_process );
 
   //local processes
   REG_PROCESS( correlate_edge_maps_process );
