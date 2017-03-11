@@ -2,6 +2,9 @@
 //
 // \file
 
+#include <iomanip>
+#include <vcl_sstream.h>
+#include <vul/vul_file.h>
 #include <bvis1/bvis1_manager.h>
 #include <bvis1/bvis1_displayer.h>
 #include <bvis1/bvis1_view_tableau.h>
@@ -15,9 +18,9 @@
 #include <vgui/vgui_shell_tableau.h>
 #include <vgui/vgui_viewer2D_tableau.h>
 #include <vgui/vgui_displaybase_tableau.h>
+#include <vgui/vgui_utils.h>
 
 #include <vbl/io/vbl_io_smart_ptr.h>
-#include <vcl_sstream.h>
 
 #include <bvis1/bvis1_util.h>
 
@@ -400,18 +403,28 @@ void
 bvis1_manager::save_view_as_movie() const
 {
   vcl_cerr << "FIXME not supported (rfabbri)\n";
-#if 0
   vgui_dialog save_rep_dlg("Save Views as Movie");
   int start = 1;
   int end = bvis1_manager::instance()->repository()->num_frames();
   vcl_string file_name = "";
-  vcl_string ext = "*.avi";
+  vcl_string ext = "*.png";
   int id_codec = 0;
 
-  save_rep_dlg.file("File Name, Prefix or Directory:", ext, file_name);
+  save_rep_dlg.file("File Name, Prefix+extension or Directory:", ext, file_name);
   save_rep_dlg.field("Start Frame:",start);
   save_rep_dlg.field("End Frame:",end);
 
+  std::cout << "ext: " << ext << "fname: " << file_name << std::endl;
+  std::cout << "Warning: currently only images are supported; encode the video afterwards" << std::endl;
+
+  std::vector<std::string> supported_codecs;
+  supported_codecs.push_back("image per frame (FileNameNNNN.extension)");
+
+  save_rep_dlg.choice("Output Codec", supported_codecs, id_codec);
+  if(!save_rep_dlg.ask())
+    return;
+
+#if 0
   vcl_list<vcl_string> supported_codecs_lst = vidl1_io::supported_types();
 
   if (supported_codecs_lst.empty()) {
@@ -429,6 +442,17 @@ bvis1_manager::save_view_as_movie() const
   vidl1_movie_sptr movie = new vidl1_movie(new vidl1_clip(new bvis1_gl_codec(start,end)));
   vidl1_io::save(movie, file_name.c_str(), supported_codecs[id_codec].c_str());
 #endif
+
+  // save each view on a separate image file
+  for (unsigned i=start; i <= end; ++i) {
+    bvis1_manager::instance()->repository()->go_to_frame(i);
+    bvis1_manager::instance()->display_current_frame();
+    std::ostringstream i_str;
+    i_str << std::setw(4) << std::setfill('0') << i;
+    std::string fname = vul_file::strip_extension(file_name)+i_str.str()+vul_file::extension(file_name);
+    std::cout << "saving " << fname << std::endl;
+    vgui_utils::dump_colour_buffer(fname.c_str());
+  }
 }
 
 //: Access the selector tableau in the active view

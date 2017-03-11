@@ -31,5 +31,3 @@ bvis1_file_menu::save_view_as_movie()
 {
   bvis1_manager::instance()->save_view_as_movie();
 }
-
-
