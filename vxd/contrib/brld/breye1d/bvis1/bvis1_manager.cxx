@@ -411,7 +411,7 @@ bvis1_manager::save_view_as_movie() const
   int id_codec = 0;
 
   save_rep_dlg.file("File Name, Prefix+extension or Directory:", ext, file_name);
-  save_rep_dlg.field("Start Frame:",start);
+  save_rep_dlg.field("Start Frame (starts at 1):",start);
   save_rep_dlg.field("End Frame:",end);
 
   std::cout << "ext: " << ext << "fname: " << file_name << std::endl;
@@ -444,7 +444,11 @@ bvis1_manager::save_view_as_movie() const
 #endif
 
   // save each view on a separate image file
-  for (unsigned i=start; i <= end; ++i) {
+  if (start <= 0) {
+    std::cerr << "Error: frame indexing starts at 1 but <= 0 provided\n" << std::endl;
+    return;
+  }
+  for (unsigned i=start-1; i < end; ++i) {
     bvis1_manager::instance()->repository()->go_to_frame(i);
     bvis1_manager::instance()->display_current_frame();
     std::ostringstream i_str;
