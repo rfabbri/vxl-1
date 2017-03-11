@@ -63,18 +63,18 @@
 
 //: loads list of edge maps into all frames. Doesn't add frames.
 static void
-load_edgemaps_into_frames(const vcl_vector<vcl_string> &edgemaps_fnames);
+load_edgemaps_into_frames(const vcl_vector<vcl_string> &edgemaps_fnames, bool use_filenames=false);
 
 //: loads list of curve frags into all frames. Doesn't add frames.
 static void
-load_curve_frags_into_frames(const vcl_vector<vcl_string> &cfrags_fnames);
+load_curve_frags_into_frames(const vcl_vector<vcl_string> &cfrags_fnames, bool use_filenames=false);
 
 static void load_cams_into_frames(
     const vcl_vector<vcl_string> &cams_fnames, 
     bmcsd_util::camera_file_type cam_type);
 
 static void
-load_imgs_into_frames(const vcl_vector<vcl_string> &imgs_fnames);
+load_imgs_into_frames(const vcl_vector<vcl_string> &imgs_fnames, bool use_filenames=false);
 
 //: example of callback for menu "Examples". Insert any application commands
 //here as a shortcut.
@@ -532,7 +532,8 @@ mw_load_current_working_repository_edgel_tracing_tool()
 
 //: loads list of edge maps into all frames. Doesn't add frames.
 void
-load_edgemaps_into_frames(const vcl_vector<vcl_string> &edgemaps_fnames)
+load_edgemaps_into_frames(const vcl_vector<vcl_string> &edgemaps_fnames,
+    bool use_filename)
 {
   for (unsigned v=0; v < edgemaps_fnames.size(); ++v) {
     vcl_cout << "Reading " << edgemaps_fnames[v] << vcl_endl;
@@ -554,7 +555,10 @@ load_edgemaps_into_frames(const vcl_vector<vcl_string> &edgemaps_fnames)
 
     dbdet_edgemap_storage_sptr es = dbdet_edgemap_storage_new();
     es->set_edgemap(em);
-    es->set_name("edgemap116");
+    if (use_filename)
+      es->set_name(edgemaps_fnames[v]);
+    else
+      es->set_name("edgemap116");
 
     MANAGER->repository()->store_data(es);
     MANAGER->add_to_display(es);
@@ -564,7 +568,7 @@ load_edgemaps_into_frames(const vcl_vector<vcl_string> &edgemaps_fnames)
 }
 
 void
-load_imgs_into_frames(const vcl_vector<vcl_string> &imgs_fnames)
+load_imgs_into_frames(const vcl_vector<vcl_string> &imgs_fnames, bool use_filenames)
 {
   for (unsigned v=0; v < imgs_fnames.size(); ++v) {
 
@@ -578,7 +582,10 @@ load_imgs_into_frames(const vcl_vector<vcl_string> &imgs_fnames)
     }
     vidpro1_image_storage_sptr is = vidpro1_image_storage_new();
     is->set_image(loaded_image);
-    is->set_name("original_image");
+    if (use_filenames)
+      is->set_name(image_filename);
+    else
+      is->set_name("original_image");
 
     MANAGER->repository()->store_data(is);
     MANAGER->add_to_display(is);
@@ -614,7 +621,7 @@ load_cams_into_frames(
 
 
 void
-load_curve_frags_into_frames(const vcl_vector<vcl_string> &cfrags_fnames)
+load_curve_frags_into_frames(const vcl_vector<vcl_string> &cfrags_fnames, bool use_filenames)
 {
   for (unsigned v=0; v < cfrags_fnames.size(); ++v) {
     vcl_vector< vsol_spatial_object_2d_sptr > contours;
@@ -652,7 +659,10 @@ load_curve_frags_into_frames(const vcl_vector<vcl_string> &cfrags_fnames)
 
       vidpro1_vsol2D_storage_sptr cs = vidpro1_vsol2D_storage_new();
       cs->add_objects(contours, cfrags_fnames[v]);
-      cs->set_name("original_cfrags");
+      if (use_filenames)
+        cs->set_name(cfrags_fnames[v]);
+      else
+        cs->set_name("original_cfrags");  // this exact name is used by tools
 
       MANAGER->repository()->store_data(cs);
       MANAGER->add_to_display(cs);
@@ -2426,9 +2436,9 @@ mw_load_img_edg(
   }
   MANAGER->first_frame();
 
-  load_imgs_into_frames(imgs);
-  load_edgemaps_into_frames(edges);
-  load_curve_frags_into_frames(frags);
+  load_imgs_into_frames(imgs, true);
+  load_edgemaps_into_frames(edges, true);
+  load_curve_frags_into_frames(frags, true);
 
   MANAGER->post_redraw();
 }

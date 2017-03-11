@@ -173,4 +173,4 @@ if test -n "$frag_fnames"; then
 fi
 
 
-echo sgui $img_arg "$imgs_fnames" $edge_arg "$edge_fnames" $frag_arg "$frag_fnames" $repeat_img
+sgui $img_arg "$imgs_fnames" $edge_arg "$edge_fnames" $frag_arg "$frag_fnames" $repeat_img

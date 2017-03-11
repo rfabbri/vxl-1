@@ -10,6 +10,7 @@
 #
 # 3) run per usage message below
 
+echo XXX computing contours: $@
 vorlexecname=dborl_compute_contours
 vorldirname=$HOME/bin/$vorlexecname
 xmlorig="$HOME/bin/$vorlexecname-input.xml"
@@ -46,7 +47,7 @@ while [[ $# -gt 0 ]]; do
       shift 2
       ;;
       -x|--suffix)  # override the output_extension in the config file
-      suffix="$2"
+      suffix="$2.cemv"
       shift 2
       ;;
       -e|--edgesuffix)

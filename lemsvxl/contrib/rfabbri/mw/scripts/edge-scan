@@ -4,8 +4,11 @@
 #
 # 1) install edge
 
-toe_sigma_list="1 2 3"
-toe_thresh_list="1 2 3 5 10"
+#toe_sigma_list="1 2 3 5"
+#toe_thresh_list="0.1 1 2 3"
+
+toe_sigma_list="2 3"
+toe_thresh_list="0.05 0.08 0.1 0.2 0.5"
 
 # set -x
 case $# in
@@ -13,4 +16,5 @@ case $# in
 esac
 
 # for one image filename:
-parallel edge --sigma {1} --thresh {2} --suffix _sigma-{1}_thresh-{2} $1 ::: $toe_sigma_list ::: $toe_thresh_list
+parallel edge --sigma {1} --thresh {2} --suffix _sigma-{1}_thresh-{2} {3} ::: $toe_sigma_list ::: $toe_thresh_list ::: $*
+mysay edge yes
