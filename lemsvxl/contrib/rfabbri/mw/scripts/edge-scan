@@ -16,5 +16,5 @@ case $# in
 esac
 
 # for one image filename:
-parallel edge --sigma {1} --thresh {2} --suffix _sigma-{1}_thresh-{2} {3} ::: $toe_sigma_list ::: $toe_thresh_list ::: $*
+parallel edge --sigma {1} --thresh {2} --suffix _sigma-{1}_thresh-{2}.edg {3} ::: $toe_sigma_list ::: $toe_thresh_list ::: $*
 mysay edge yes

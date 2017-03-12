@@ -11,6 +11,7 @@ nrad_list="2 4"
 num_link_iters_list="3 7 9"
 toe_sigma_list="2 3"
 toe_thresh_list="0.2"
+output_extension=".cem" # cem or cemv
 
 edgesuffix="--edgesuffix _sigma-2_thresh-5.edg" # leave blank to recompute edges
 
@@ -20,9 +21,9 @@ esac
 
 if test -n "$toe_sigma_list"; then
   # if varying edge parameters
-parallel contours -r {1} -l {2} --suffix _nrad-{1}_num_link_iters-{2}_sigma-{3}_thresh-{4} --edgesuffix _sigma-{3}_thresh-{4}.edg {5} ::: $nrad_list ::: $num_link_iters_list ::: $toe_sigma_list ::: $toe_thresh_list ::: $*
+parallel contours -r {1} -l {2} --suffix _nrad-{1}_num_link_iters-{2}_sigma-{3}_thresh-{4}$output_extension --edgesuffix _sigma-{3}_thresh-{4}.edg {5} ::: $nrad_list ::: $num_link_iters_list ::: $toe_sigma_list ::: $toe_thresh_list ::: $*
 else
   # if fixing edge parameters according to edgesuffix
-parallel contours -r {1} -l {2} --suffix _nrad-{1}_num_link_iters-{2} $edgesuffix {3} ::: $nrad_list ::: $num_link_iters_list ::: $*
+parallel contours -r {1} -l {2} --suffix _nrad-{1}_num_link_iters-{2}$output_extension $edgesuffix {3} ::: $nrad_list ::: $num_link_iters_list ::: $*
 fi
 mysay contour yes
