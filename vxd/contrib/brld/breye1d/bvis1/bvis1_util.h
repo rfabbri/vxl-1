@@ -9,6 +9,7 @@
 //
 #include <vcl_string.h>
 #include <vcl_iostream.h>
+#include <vector>
 
 struct bvis1_util {
 
@@ -42,8 +43,13 @@ struct bvis1_util {
     }
   }
 
+  //: Loads list of images into all frames. Doesn't add frames.
+  // The idea is that the frames are added first, then many functions of this
+  // kind can be used to populate the frames over and over
+  // TODO: std::vector<std::string> parameter for names
+  static void
+  load_imgs_into_frames(const vcl_vector<vcl_string> &imgs_fnames, bool use_filenames=false);
 };
 
 
 #endif // bvis1_util_h
-

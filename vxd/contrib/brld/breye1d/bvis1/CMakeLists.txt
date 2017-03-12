@@ -19,6 +19,7 @@ set(bvis1_sources
    bvis1_view_tableau.cxx          bvis1_view_tableau.h             bvis1_view_tableau_sptr.h 
                                   bvis1_displayer.h                bvis1_displayer_sptr.h
    bvis1_tool.cxx                  bvis1_tool.h                     bvis1_tool_sptr.h
+   bvis1_util.cxx                   bvis1_util.h  
 #   bvis1_gl_codec.cxx              bvis1_gl_codec.h                 bvis1_gl_codec_sptr.h
 
 # Displayers
