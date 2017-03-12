@@ -21,6 +21,6 @@ set(sel_gui_sources
    sel_gui_main.cxx
 )
 add_executable(sel_gui ${sel_gui_sources})
-target_link_libraries(sel_gui vidpro1 bvis1 dbgl_algo bsold_pro bild_pro dbdet_pro dbdet_vis dbgui edge_det_pro edge_det_vis)
+target_link_libraries(sel_gui vidpro1 bvis1 dbgl_algo bsold_pro bild_pro dbdet_pro dbdet_vis dbgui edge_det_pro edge_det_vis buld)
 
 endif (VXL_VGUI_FOUND)

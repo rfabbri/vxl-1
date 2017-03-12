@@ -1,5 +1,7 @@
 // This is contrib/shock2d/gui/sel_gui_main.cxx
 
+#include <vul/vul_arg.h>
+#include <buld/buld_arg.h>
 #include <vgui/vgui.h>
 #include <vgui/vgui_adaptor.h>
 #include <vgui/vgui_window.h>
@@ -111,6 +113,7 @@
 #include <dbdet/pro/dbdet_contour_breaker_geometric_process.h>
 #include <dbdet/pro/dbdet_contour_breaker_semantic_process.h>
 #include <dbdet/pro/dbdet_graphical_model_contour_merge_process.h>
+#include <dbdet/vis/dbdet_bvis1_util.h>
 
 //local processes
 #include <edge_det/pro/correlate_edge_maps_process.h>
@@ -118,6 +121,17 @@
 int main(int argc, char** argv)
 {
   vgui::init(argc, argv);
+
+  vul_arg<std::vector<std::string> > a_edges("-edges", "load edgemap .edg(.gz) files (space-separated)");
+  vul_arg<std::vector<std::string> > a_frags("-frags", "load curve fragments .cemv(.gz) files (space-separated)");
+  vul_arg<std::vector<std::string> > a_imgs("-imgs", "load curve image files (space-separated)");
+  vul_arg<bool> a_repeat_img("-repeat_img", "whether to use the same images in every frame");
+  vul_arg_parse(argc,argv);
+
+  std::cout << a_edges.value_.size() << std::endl;
+  std::cout << a_frags.value_.size() << std::endl;
+  std::cout << a_imgs.value_.size() << std::endl;
+
 
   // Register the displayers
   REG_DISPLAYER( bvis1_image_displayer );
@@ -233,6 +247,9 @@ int main(int argc, char** argv)
   //win->enable_vscrollbar(true);
   //win->enable_hscrollbar(true);
   win->show();
+
+  dbdet_bvis1_util::load_img_edg(a_imgs.value_, a_edges.value_, a_frags.value_, a_repeat_img.value_);
+
   return vgui::run(); 
 }
 
