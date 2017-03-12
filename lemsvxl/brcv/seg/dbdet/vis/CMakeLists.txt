@@ -37,6 +37,7 @@ set(dbdet_vis_sources
    dbdet_sel_CC_linking_tool.cxx          dbdet_sel_CC_linking_tool.h
    
    dbdet_crop_curvelet_map_tool.cxx       dbdet_crop_curvelet_map_tool.h
+   dbdet_bvis1_util.cxx                   dbdet_bvis1_util.h 
 )
 
 add_library(dbdet_vis ${dbdet_vis_sources})
