@@ -1,13 +1,18 @@
 #include "dbdet_bvis1_util.h"
 
+#include <vul/vul_file.h>
+#include <vnl/vnl_vector_fixed.h>
+#include <bsold/bsold_file_io.h>
 #include <vidpro1/vidpro1_repository.h>
 #include <bvis1/bvis1_manager.h>
-#include <bvis1/bvis1_manager.h>
+#include <bvis1/bvis1_util.h>
 
 #include <vil/vil_load.h>
 #include <vil/vil_image_resource_sptr.h>
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <vidpro1/storage/vidpro1_image_storage_sptr.h>
+#include <vidpro1/storage/vidpro1_vsol2D_storage.h>
+#include <vidpro1/storage/vidpro1_vsol2D_storage_sptr.h>
 
 #include <dbdet/edge/dbdet_edgemap.h>
 #include <dbdet/edge/dbdet_edgemap_sptr.h>
@@ -51,4 +56,86 @@ load_edgemaps_into_frames(const vcl_vector<vcl_string> &edgemaps_fnames,
     MANAGER->next_frame();
   }
   MANAGER->first_frame();
+}
+
+void dbdet_bvis1_util::
+load_curve_frags_into_frames(const vcl_vector<vcl_string> &cfrags_fnames, bool use_filenames)
+{
+  for (unsigned v=0; v < cfrags_fnames.size(); ++v) {
+    vcl_vector< vsol_spatial_object_2d_sptr > contours;
+
+    vcl_string ext = vul_file::extension(cfrags_fnames[v]);
+    if (ext == ".vsl") {
+      vsl_b_ifstream bp_in(cfrags_fnames[v].c_str());
+      if (!bp_in) {
+        vcl_cout << " Error opening file  " << cfrags_fnames[v] << vcl_endl;
+        return;
+      }
+
+      vcl_cout << "Opened vsl file " << cfrags_fnames[v] <<  " for reading" << vcl_endl;
+
+      vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
+      output_vsol->b_read(bp_in);
+
+      //: clone
+
+      vidpro1_vsol2D_storage_sptr output_vsol_2;
+      output_vsol_2.vertical_cast(output_vsol->clone());
+
+      output_vsol_2->set_frame(-10); //:< means its not in rep
+      // try to copy by hand if doesnt work
+
+      MANAGER->repository()->store_data(output_vsol_2);
+      MANAGER->add_to_display(output_vsol);
+    } else {
+      bool retval = bsold_load_cem(contours, cfrags_fnames[v]);
+      if (!retval) {
+        vcl_cerr << "Could not open frag file " << cfrags_fnames[v] << vcl_endl;
+        return;
+      }
+      vcl_cout << "N curves: " << contours.size() << vcl_endl;
+
+      vidpro1_vsol2D_storage_sptr cs = vidpro1_vsol2D_storage_new();
+      cs->add_objects(contours, cfrags_fnames[v]);
+      if (use_filenames)
+        cs->set_name(cfrags_fnames[v]);
+      else
+        cs->set_name("original_cfrags");  // this exact name is used by tools
+
+      MANAGER->repository()->store_data(cs);
+      MANAGER->add_to_display(cs);
+    }
+    MANAGER->next_frame();
+  }
+  MANAGER->first_frame();
+}
+
+
+void dbdet_bvis1_util::
+load_img_edg(
+    const std::vector<std::string> &imgs_orig, 
+    const std::vector<std::string> &edges, 
+    const std::vector<std::string> &frags,
+    bool repeat_img)
+{
+  std::vector<std::string> imgs(imgs_orig);
+  vnl_vector<unsigned> v(3);
+  v[0] = imgs.size(); 
+  v[1] = edges.size();
+  v[2] = frags.size();
+
+  unsigned nframes=v.max_value();
+  std::cout << "nframes = " << nframes << std::endl;
+  for (unsigned i=0; i < nframes; ++i) {
+    MANAGER->add_new_frame();
+    if (repeat_img && imgs.size() < nframes && imgs.size())
+      imgs.push_back(imgs.front());
+  }
+  MANAGER->first_frame();
+
+  bvis1_util::load_imgs_into_frames(imgs, true);
+  dbdet_bvis1_util::load_edgemaps_into_frames(edges, true);
+  dbdet_bvis1_util::load_curve_frags_into_frames(frags, true);
+
+  MANAGER->post_redraw();
 }
