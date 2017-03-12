@@ -1,11 +1,11 @@
 #!/bin/bash
-# Runs mw_gui with useful commandline loading parameters
+# Runs sel_gui with useful commandline loading parameters
 
 # parse commandline
 # -e f1 f2 f3 fn
 # -f f4 f5 f6
 
-program=sg
+program=slg
 
 myusage () { 
   echo "Usage: $0 [options] image_filenames" 1>&2; 
@@ -174,4 +174,4 @@ if test -n "$frag_fnames"; then
 fi
 
 
-sgui $img_arg "$imgs_fnames" $edge_arg "$edge_fnames" $frag_arg "$frag_fnames" $repeat_img
+sel_gui $img_arg "$imgs_fnames" $edge_arg "$edge_fnames" $frag_arg "$frag_fnames" $repeat_img
