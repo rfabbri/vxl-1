@@ -112,6 +112,7 @@
 #include <mw/pro/dbdet_compute_linked_curves_process.h>
 #include <mw/pro/mw_extend_corresp_process.h>
 #include <mw/pro/dbmcs_nearest_edgels_process.h>
+#include <dbdet/vis/dbdet_bvis1_util.h>
 
 #ifdef HAS_BGUI3D
 #include <bgui3d/bgui3d.h>
@@ -243,7 +244,7 @@ int main(int argc, char** argv)
   win->get_adaptor()->set_tableau( bvis1_manager::instance() );
   win->show();
 
-  mw_load_img_edg(a_imgs.value_, a_edges.value_, a_frags.value_, a_repeat_img.value_);
+  dbdet_bvis1_util::load_img_edg(a_imgs.value_, a_edges.value_, a_frags.value_, a_repeat_img.value_);
 
   return vgui::run(); 
 }

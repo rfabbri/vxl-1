@@ -46,7 +46,9 @@
 #include <dbdet/algo/dbdet_load_edg.h>
 #include <dbdet/pro/dbdet_edgemap_storage_sptr.h>
 #include <dbdet/pro/dbdet_edgemap_storage.h>
+#include <dbdet/vis/dbdet_bvis1_util.h>
 
+#include <bvis1/bvis1_util.h>
 #include <bvis1/bvis1_manager.h>
 #include <bpro1/bpro1_process.h>
 #include <bpro1/bpro1_parameters.h>
@@ -61,20 +63,9 @@
 #include <vpgld/pro/vpgld_camera_storage.h>
 #include "mw_app.h"
 
-//: loads list of edge maps into all frames. Doesn't add frames.
-static void
-load_edgemaps_into_frames(const vcl_vector<vcl_string> &edgemaps_fnames, bool use_filenames=false);
-
-//: loads list of curve frags into all frames. Doesn't add frames.
-static void
-load_curve_frags_into_frames(const vcl_vector<vcl_string> &cfrags_fnames, bool use_filenames=false);
-
 static void load_cams_into_frames(
     const vcl_vector<vcl_string> &cams_fnames, 
     bmcsd_util::camera_file_type cam_type);
-
-static void
-load_imgs_into_frames(const vcl_vector<vcl_string> &imgs_fnames, bool use_filenames=false);
 
 //: example of callback for menu "Examples". Insert any application commands
 //here as a shortcut.
@@ -167,9 +158,9 @@ mw_load_mcs_instance()
 
   MANAGER->first_frame();
 
-  load_imgs_into_frames(imgs_fnames);
-  load_edgemaps_into_frames(edgemaps_fnames);
-  load_curve_frags_into_frames(cfrags_fnames);
+  bvis1_util::load_imgs_into_frames(imgs_fnames);
+  dbdet_bvis1_util::load_edgemaps_into_frames(edgemaps_fnames);
+  dbdet_bvis1_util::load_curve_frags_into_frames(cfrags_fnames);
   load_cams_into_frames(cams_fnames, cam_type);
   /* todo
   compute_dt_label(edgemaps_fnames);
@@ -309,7 +300,7 @@ mw_load_current_working_repository_curve_tracing_tool()
 
   assert (edgemaps_fnames.size()==0 || views.size() <= edgemaps_fnames.size());
 
-  load_edgemaps_into_frames(edgemaps_fnames);
+  dbdet_bvis1_util::load_edgemaps_into_frames(edgemaps_fnames);
 
   // make just a certain vsol visible, if any
   // 
@@ -530,70 +521,6 @@ mw_load_current_working_repository_edgel_tracing_tool()
 //  }
 }
 
-//: loads list of edge maps into all frames. Doesn't add frames.
-void
-load_edgemaps_into_frames(const vcl_vector<vcl_string> &edgemaps_fnames,
-    bool use_filename)
-{
-  for (unsigned v=0; v < edgemaps_fnames.size(); ++v) {
-    vcl_cout << "Reading " << edgemaps_fnames[v] << vcl_endl;
-    bool bSubPixel = true;
-    double scale=1.0;
-    dbdet_edgemap_sptr em;
-
-    bool retval = dbdet_load_edg(
-        edgemaps_fnames[v],
-        bSubPixel,
-        scale,
-        em);
-
-    if (!retval) {
-      vcl_cerr << "Could not open edge file " << edgemaps_fnames[v] << vcl_endl;
-      return;
-    }
-    vcl_cout << "N edgels: " << em->num_edgels() << vcl_endl;
-
-    dbdet_edgemap_storage_sptr es = dbdet_edgemap_storage_new();
-    es->set_edgemap(em);
-    if (use_filename)
-      es->set_name(edgemaps_fnames[v]);
-    else
-      es->set_name("edgemap116");
-
-    MANAGER->repository()->store_data(es);
-    MANAGER->add_to_display(es);
-    MANAGER->next_frame();
-  }
-  MANAGER->first_frame();
-}
-
-void
-load_imgs_into_frames(const vcl_vector<vcl_string> &imgs_fnames, bool use_filenames)
-{
-  for (unsigned v=0; v < imgs_fnames.size(); ++v) {
-
-    vcl_string image_filename = imgs_fnames[v];
-
-    vil_image_resource_sptr loaded_image 
-      = vil_load_image_resource( image_filename.c_str() );
-    if( !loaded_image ) {
-      vcl_cerr << "Failed to load image file" << image_filename << vcl_endl;
-      return;
-    }
-    vidpro1_image_storage_sptr is = vidpro1_image_storage_new();
-    is->set_image(loaded_image);
-    if (use_filenames)
-      is->set_name(image_filename);
-    else
-      is->set_name("original_image");
-
-    MANAGER->repository()->store_data(is);
-    MANAGER->add_to_display(is);
-    MANAGER->next_frame();
-  }
-  MANAGER->first_frame();
-}
-
 void
 load_cams_into_frames(
     const vcl_vector<vcl_string> &cams_fnames, 
@@ -619,58 +546,6 @@ load_cams_into_frames(
   MANAGER->first_frame();
 }
 
-
-void
-load_curve_frags_into_frames(const vcl_vector<vcl_string> &cfrags_fnames, bool use_filenames)
-{
-  for (unsigned v=0; v < cfrags_fnames.size(); ++v) {
-    vcl_vector< vsol_spatial_object_2d_sptr > contours;
-
-    vcl_string ext = vul_file::extension(cfrags_fnames[v]);
-    if (ext == ".vsl") {
-      vsl_b_ifstream bp_in(cfrags_fnames[v].c_str());
-      if (!bp_in) {
-        vcl_cout << " Error opening file  " << cfrags_fnames[v] << vcl_endl;
-        return;
-      }
-
-      vcl_cout << "Opened vsl file " << cfrags_fnames[v] <<  " for reading" << vcl_endl;
-
-      vidpro1_vsol2D_storage_sptr output_vsol = vidpro1_vsol2D_storage_new();
-      output_vsol->b_read(bp_in);
-
-      //: clone
-
-      vidpro1_vsol2D_storage_sptr output_vsol_2;
-      output_vsol_2.vertical_cast(output_vsol->clone());
-
-      output_vsol_2->set_frame(-10); //:< means its not in rep
-      // try to copy by hand if doesnt work
-
-      MANAGER->repository()->store_data(output_vsol_2);
-      MANAGER->add_to_display(output_vsol);
-    } else {
-      bool retval = bsold_load_cem(contours, cfrags_fnames[v]);
-      if (!retval) {
-        vcl_cerr << "Could not open frag file " << cfrags_fnames[v] << vcl_endl;
-        return;
-      }
-      vcl_cout << "N curves: " << contours.size() << vcl_endl;
-
-      vidpro1_vsol2D_storage_sptr cs = vidpro1_vsol2D_storage_new();
-      cs->add_objects(contours, cfrags_fnames[v]);
-      if (use_filenames)
-        cs->set_name(cfrags_fnames[v]);
-      else
-        cs->set_name("original_cfrags");  // this exact name is used by tools
-
-      MANAGER->repository()->store_data(cs);
-      MANAGER->add_to_display(cs);
-    }
-    MANAGER->next_frame();
-  }
-  MANAGER->first_frame();
-}
 
 //: the following seem wrong cause focal length has not been considerd.
 void
@@ -2379,7 +2254,6 @@ write_geno_info_super_sample(const bsold_geno_curve_2d &gc, char *suffix)
   fgama1_g_super_sample.close();
 }
 
-
 /*
 void
 reproject_curve_sculpture()
@@ -2413,32 +2287,3 @@ reproject_curve_sculpture()
    // write con file
 }
 */
-
-void
-mw_load_img_edg(
-    const std::vector<std::string> &imgs_orig, 
-    const std::vector<std::string> &edges, 
-    const std::vector<std::string> &frags,
-    bool repeat_img)
-{
-  std::vector<std::string> imgs(imgs_orig);
-  vnl_vector<unsigned> v(3);
-  v[0] = imgs.size(); 
-  v[1] = edges.size();
-  v[2] = frags.size();
-
-  unsigned nframes=v.max_value();
-  std::cout << "nframes = " << nframes << std::endl;
-  for (unsigned i=0; i < nframes; ++i) {
-    MANAGER->add_new_frame();
-    if (repeat_img && imgs.size() < nframes && imgs.size())
-      imgs.push_back(imgs.front());
-  }
-  MANAGER->first_frame();
-
-  load_imgs_into_frames(imgs, true);
-  load_edgemaps_into_frames(edges, true);
-  load_curve_frags_into_frames(frags, true);
-
-  MANAGER->post_redraw();
-}

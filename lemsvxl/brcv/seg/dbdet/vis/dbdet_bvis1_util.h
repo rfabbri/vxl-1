@@ -18,7 +18,7 @@ struct dbdet_bvis1_util {
   // kind can be used to populate the frames over and over
   // TODO: std::vector<std::string> parameter for names
   static void
-  load_edgemaps_into_frames(const vcl_vector<vcl_string> &edgemaps_fnames, bool use_filename);
+  load_edgemaps_into_frames(const vcl_vector<vcl_string> &edgemaps_fnames, bool use_filename=false);
 
   //: Loads list of curve fragments into all frames. Doesn't add frames.
   // The idea is that the frames are added first, then many functions of this

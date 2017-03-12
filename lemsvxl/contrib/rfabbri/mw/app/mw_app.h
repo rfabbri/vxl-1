@@ -18,12 +18,6 @@ void mw_misc();
 void mw_load_current_working_repository();
 void mw_load_current_working_repository_curve_tracing_tool();
 void mw_load_current_working_repository_edgel_tracing_tool();
-void mw_load_img_edg();
-void mw_load_img_edg(
-    const std::vector<std::string> &imgs, 
-    const std::vector<std::string> &edges, 
-    const std::vector<std::string> &frags,
-    bool repeat_img);
 void mw_load_mcs_instance();
 void load_ct_spheres_dataset();
 void example_project();
@@ -56,7 +50,6 @@ write_geno_info( const bsold_geno_curve_2d &gc, const bsold_geno_curve_2d &gc_ci
 void write_geno_arc_info( const bsold_geno_curve_2d &gc_circle, const char *ssuffix);
 
 #define MANAGER bvis1_manager::instance()
-
 
 #endif // mw_app_h
 
