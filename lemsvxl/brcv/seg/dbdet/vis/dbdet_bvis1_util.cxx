@@ -3,6 +3,7 @@
 #include <vul/vul_file.h>
 #include <vnl/vnl_vector_fixed.h>
 #include <bsold/bsold_file_io.h>
+#include <dbdet/algo/dbdet_cem_file_io.h>
 #include <vidpro1/vidpro1_repository.h>
 #include <bvis1/bvis1_manager.h>
 #include <bvis1/bvis1_util.h>
@@ -19,6 +20,10 @@
 #include <dbdet/algo/dbdet_load_edg.h>
 #include <dbdet/pro/dbdet_edgemap_storage_sptr.h>
 #include <dbdet/pro/dbdet_edgemap_storage.h>
+#include <dbdet/pro/dbdet_sel_storage_sptr.h>
+#include <dbdet/pro/dbdet_sel_storage.h>
+#include <dbdet/sel/dbdet_curve_fragment_graph.h>
+
 
 #define MANAGER bvis1_manager::instance()
 
@@ -65,7 +70,7 @@ load_curve_frags_into_frames(const vcl_vector<vcl_string> &cfrags_fnames, bool u
     vcl_vector< vsol_spatial_object_2d_sptr > contours;
 
     vcl_string ext = vul_file::extension(cfrags_fnames[v]);
-    if (ext == ".vsl") {
+    if (ext == ".vsl") { // binary format
       vsl_b_ifstream bp_in(cfrags_fnames[v].c_str());
       if (!bp_in) {
         vcl_cout << " Error opening file  " << cfrags_fnames[v] << vcl_endl;
@@ -87,7 +92,37 @@ load_curve_frags_into_frames(const vcl_vector<vcl_string> &cfrags_fnames, bool u
 
       MANAGER->repository()->store_data(output_vsol_2);
       MANAGER->add_to_display(output_vsol);
+    } else if (ext == ".cem") {
+      // create the sel storage class
+      dbdet_sel_storage_sptr os= dbdet_sel_storage_new();
+
+      //get pointers to the data structures in it
+      dbdet_curve_fragment_graph &CFG = os->CFG();
+      dbdet_edgemap_sptr EM = dbdet_load_cem(cfrags_fnames[v], CFG);
+      os->set_EM(EM);
+
+      if (!EM) { 
+        vcl_cerr << "SEL storage read problem" << vcl_endl;
+        return;
+      }
+      
+      if (use_filenames)
+        os->set_name(cfrags_fnames[v]);
+      else
+        os->set_name("original_cfrags");  // this exact name is used by tools
+
+      MANAGER->repository()->store_data(os);
+      MANAGER->add_to_display(os);
+
+      //create the edgemap storage class
+      // dbdet_edgemap_storage_sptr output_edgemap = dbdet_edgemap_storage_new();
+      // output_edgemap->set_edgemap(EM);
+
+      // storage_list.push_back(output_edgemap);
     } else {
+      // try cemv style (like '-bvsol' in dbdet_load_cem_process
+      // if you alternatively want to load your .cem as vsols, just 
+      // use .cemv on the same files
       bool retval = bsold_load_cem(contours, cfrags_fnames[v]);
       if (!retval) {
         vcl_cerr << "Could not open frag file " << cfrags_fnames[v] << vcl_endl;

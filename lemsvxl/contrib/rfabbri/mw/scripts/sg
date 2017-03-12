@@ -144,7 +144,7 @@ for i in $remaining_args; do
     .edg|.edg.gz)
       edge_fnames="$edge_fnames $i"
     ;;
-    .cemv|.cemv.gz)
+    .cem|.cemv|.cemv.gz|.cem.gz)
       frag_fnames="$frag_fnames $i"
     ;;
     .png|.jpg|.jpeg)
