@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Utility for performing edge detection on images.
 #

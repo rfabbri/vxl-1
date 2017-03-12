@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Utility for linking contours in images.
 
