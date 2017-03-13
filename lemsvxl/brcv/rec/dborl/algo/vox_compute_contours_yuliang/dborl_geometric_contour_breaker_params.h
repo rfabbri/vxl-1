@@ -19,7 +19,7 @@
 #include <dborl/algo/dborl_algo_params.h>
 #include <dborl/algo/dborl_utilities.h>
 
-#include <dbdet/pro/dbdet_geometric_contour_breaker_process.h>
+#include <dbdet/pro/dbdet_contour_breaker_geometric_process.h>
 
 //: put all the additional params into this class, and add them to the parameter list in the constructor so that 
 //  all the files related to the parameter set of the algorithm are generated automatically via the methods of the base class
@@ -45,7 +45,7 @@ public:
 
     algo_abbreviation_ = "cbg";
 
-    save_edges_.set_values(param_list_, "io", "save_fragments", "save fragments?", true, true);
+    save_fragments_.set_values(param_list_, "io", "save_fragments", "save fragments?", true, true);
     save_to_object_folder_.set_values(param_list_, "io", "save_to_object_folder", "save to object folder?", true, true);
   
     input_object_name_.set_values(param_list_, "io", "input_object_name", "input_object name", "dummy", "dummy", 
@@ -60,7 +60,7 @@ public:
     input_extension_.set_values(param_list_, "io", "input_extension", "input image extension", ".png", ".png");
     output_extension_.set_values(param_list_, "io", "output_extension", "output extension", ".cem", ".cem");
     
-    output_edge_folder_.set_values(param_list_,  "io",  "output_edge_folder",  "output folder to write edge map", "", 
+    output_cem_folder_.set_values(param_list_,  "io",  "output_cem_folder",  "output folder to write .cem", "", 
       "", 
       0,   // associate to 0th input object
       dborl_parameter_system_info::OUTPUT_FILE, "sel", dborl_parameter_type_info::FILEASSOC);
