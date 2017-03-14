@@ -34,7 +34,9 @@
 dbdet_load_cem_process::dbdet_load_cem_process() : bpro1_process(), num_frames_(0)
 {
   if( !parameters()->add( "Input file <filename...>" , "-cem_filename" , bpro1_filepath("","*.cem") ) ||
-      !parameters()->add( "Load as vsol"             , "-bvsol"        , false ))
+      !parameters()->add( "Load as vsol"             , "-bvsol"        , false ) ||
+      !parameters()->add( "Order by filename"        , "-orderbf", false)
+    )
   {
     vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
   }
@@ -101,7 +103,11 @@ bool dbdet_load_cem_process::execute()
       num_of_files++;
     }
 
-    vcl_sort(file_name.begin(), file_name.end());
+    bool orderbf;
+    parameters()->get_value( "-orderbf" , orderbf );
+    if(orderbf)
+      vcl_sort(file_name.begin(), file_name.end());
+
     for (int i=0 ; i<file_name.size(); ++i) 
     {
       load_CEM(file_name[i]);

@@ -35,7 +35,9 @@ dbdet_load_edg_process::dbdet_load_edg_process() : bpro1_process(), num_frames_(
       !parameters()->add( "SubPixel ?" ,               "-bP_SP" ,    true ) ||
       !parameters()->add( "Load as vsol" ,             "-bvsol" ,    false )  ||
       !parameters()->add( "Load as Lines" ,            "-blines" ,   true )  ||
-      !parameters()->add( "Scale" ,                    "-scale" ,   1.0 ))
+      !parameters()->add( "Scale" ,                    "-scale" ,   1.0 ) ||
+      !parameters()->add( "Order by filename"        , "-orderbf", false)
+    )
   {
     vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
   }
@@ -97,8 +99,11 @@ bool dbdet_load_edg_process::execute()
       input_files.push_back(fn());
 
     // Sort - because the file iterator uses readdir() it does not
-    //        iterate over files in alphanumeric order 
-    vcl_sort(input_files.begin(), input_files.end());
+    //        iterate over files in alphanumeric order
+    bool orderbf;
+    parameters()->get_value( "-orderbf" , orderbf );
+    if(orderbf) 
+      vcl_sort(input_files.begin(), input_files.end());
 
     while (!input_files.empty())
     {
