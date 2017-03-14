@@ -31,7 +31,7 @@ while [[ $# -gt 0 ]]; do
   arg="$1"
   case $arg in
       --version|-V|-v)
-        echo "VXD edge"
+        echo "VXD contours v1"
         exit 0
         ;;
       --help|-h) 
