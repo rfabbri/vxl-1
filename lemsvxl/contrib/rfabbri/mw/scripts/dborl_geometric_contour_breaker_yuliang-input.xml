@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<dborl_geometric_contour_breaker><cbg cbg-beta_0="-0.176587" cbg-beta_1="1.06185" cbg-fmean_0="0" cbg-fmean_1="0.766326" cbg-fstd_0="1" cbg-fstd_1="0.341095">
+</cbg>
+<io input_extension="@IMGEXT@" input_object_dir="@INPUTDIR@" input_object_name="@IMGBASENAME@" output_cem_folder="@OUTPUTDIR@" output_extension=".cem">
+</io>
+<web_directive categorization_file="categorization.xml" evaluation_file="evaluation.xml" perf_block="perf.xml" print_params_file="params.xml" print_params_only="off" status_block="status.xml">
+</web_directive>
+</dborl_geometric_contour_breaker>

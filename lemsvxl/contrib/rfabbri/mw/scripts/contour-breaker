@@ -1,0 +1,35 @@
+#!/bin/bash
+#
+# Utility for breaking contours.
+
+# 1) adapt these commands and run:
+# ln -s $HOME/cprg/vxlprg/lemsvpe/lemsvxl-bin/brcv/rec/dborl/algo/vox_compute_contours_yuliang/dborl_geometric_contour_breaker_yuliang ~/bin
+# cp $HOME/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/scripts/dborl_geometric_contour_breaker_yuliang-input.xml ~/bin
+# 
+# 2) edit ~/bin/dborl_geometric_contour_breaker-input.xml with your parameters
+#
+# 3) run per usage message below
+
+echo XXX breaking contours: $@
+vorlexecname=dborl_geometric_contour_breaker_yuliang
+vorldirname=$HOME/bin/$vorlexecname
+xmlorig="$HOME/bin/$vorlexecname-input.xml"
+program=contours-breaker
+
+img_ext=`echo $1|grep -o '\.[^\.]*$'`
+img_base="${1%$img_ext}"
+img_dir=`dirname $1`
+
+echo image extension: $img_ext
+echo image base: $img_base
+
+tmpfile=/tmp/$$-tmp-$vorlexecname-input.xml
+
+sed "s/@IMGEXT@/$img_ext/g
+s/@IMGBASENAME@/$img_base/g
+s/@INPUTDIR@/$img_dir/g
+s/@OUTPUTDIR@/$img_dir/g
+" $xmlorig  > $tmpfile
+
+set -x
+$vorldirname -x $tmpfile

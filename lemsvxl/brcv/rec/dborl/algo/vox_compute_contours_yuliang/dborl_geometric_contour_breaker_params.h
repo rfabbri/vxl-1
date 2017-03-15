@@ -44,24 +44,21 @@ public:
   dborl_geometric_contour_breaker_params(vcl_string algo_name) : dborl_algo_params(algo_name) { 
 
     algo_abbreviation_ = "cbg";
-
-    save_fragments_.set_values(param_list_, "io", "save_fragments", "save fragments?", true, true);
-    save_to_object_folder_.set_values(param_list_, "io", "save_to_object_folder", "save to object folder?", true, true);
   
-    input_object_name_.set_values(param_list_, "io", "input_object_name", "input_object name", "dummy", "dummy", 
+    input_object_name_.set_values(param_list_, "io", "input_object_name", "input_object name", "@IMGBASENAME@", "@IMGBASENAME@", 
       0,   // for 0th input object
       dborl_parameter_system_info::INPUT_OBJECT_STRING_ID);
 
-    input_object_dir_.set_values(param_list_, "io", "input_object_dir", "input object", "", 
-      "", 
+    input_object_dir_.set_values(param_list_, "io", "input_object_dir", "input object", "@INPUTDIR@", 
+      "@INPUTDIR@", 
       0,   // for 0th input object
       dborl_parameter_system_info::INPUT_OBJECT_DIR); 
 
-    input_extension_.set_values(param_list_, "io", "input_extension", "input image extension", ".png", ".png");
+    input_extension_.set_values(param_list_, "io", "input_extension", "input image extension", "@IMGEXT@", "@IMGEXT@");
     output_extension_.set_values(param_list_, "io", "output_extension", "output extension", ".cem", ".cem");
     
-    output_cem_folder_.set_values(param_list_,  "io",  "output_cem_folder",  "output folder to write .cem", "", 
-      "", 
+    output_cem_folder_.set_values(param_list_,  "io",  "output_cem_folder",  "output folder to write .cem", "@OUTPUTDIR@", 
+      "@OUTPUTDIR@", 
       0,   // associate to 0th input object
       dborl_parameter_system_info::OUTPUT_FILE, "sel", dborl_parameter_type_info::FILEASSOC);
     
