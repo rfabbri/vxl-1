@@ -30,10 +30,13 @@
 #include <vsol/vsol_point_2d.h>
 #include <bsold/bsold_file_io.h>
 
+
 dbdet_load_cem_process::dbdet_load_cem_process() : bpro1_process(), num_frames_(0)
 {
   if( !parameters()->add( "Input file <filename...>" , "-cem_filename" , bpro1_filepath("","*.cem") ) ||
-      !parameters()->add( "Load as vsol"             , "-bvsol"        , false ))
+      !parameters()->add( "Load as vsol"             , "-bvsol"        , false ) ||
+      !parameters()->add( "Order by filename"        , "-orderbf", false)
+    )
   {
     vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
   }
@@ -93,13 +96,24 @@ bool dbdet_load_cem_process::execute()
   if (vul_file::is_directory(input_file_path))
   {
     vul_file_iterator fn=input_file_path+"/*.cem";
+    vcl_vector<vcl_string> file_name;
     for ( ; fn; ++fn) 
     {
-      vcl_string input_file = fn();
-      load_CEM(input_file);
+      file_name.push_back(fn());
       num_of_files++;
     }
 
+    bool orderbf;
+    parameters()->get_value( "-orderbf" , orderbf );
+    if(orderbf)
+      vcl_sort(file_name.begin(), file_name.end());
+
+    for (int i=0 ; i<file_name.size(); ++i) 
+    {
+      load_CEM(file_name[i]);
+    }
+
+    vcl_cout << "Tota frames loaded: " << output_data_.size() << vcl_endl;
     //this is the number of frames to be outputted
     num_frames_ = num_of_files;
   }
@@ -107,7 +121,7 @@ bool dbdet_load_cem_process::execute()
     vcl_string input_file = input_file_path;
     bool successful = load_CEM(input_file);
     num_frames_ = 1;
-
+    
     if (!successful)
       return false;
   }

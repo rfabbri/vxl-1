@@ -108,10 +108,6 @@ hsv_gradient_cues(
     unsigned right_x = static_cast<unsigned>(points[i].x() + local_dist_ * n[i][0] + 0.5);
     unsigned right_y = static_cast<unsigned>(points[i].y() + local_dist_ * n[i][1] + 0.5);
 
-    // make sure image clamps to within bounds
-    vil_border_accessor<vil_image_view<vil_rgb<vxl_byte> > >
-      im = vil_border_create_accessor(img_,vil_border_create_geodesic(img_));
-
     double hue_left, hue_right,
            sat_left, sat_right,
            bg_left, bg_right;
