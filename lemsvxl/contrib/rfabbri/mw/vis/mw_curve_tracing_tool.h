@@ -27,9 +27,9 @@
 
 
 //: This tool displays epipolar lines corresponding to user mouse events.
-// It acts between three frames; all that is required is a perspective 
+// It acts between three or more frames; all that is required is a perspective 
 // camera storage for each frame. In the future we shall support fundamental
-// matrix storage class as well, this should be easy to do. 
+// matrix storage class as well.
 //
 // The tool currently creates vsol2D tableaus upon activation. These tableaus
 // are used for drawing the epipolars. The user can subsequently
@@ -54,10 +54,8 @@
 //
 //
 // \todo TODO
-//- make it work with more than two views
 //- when press <ESC>, regenerate the tableaux
 //- make it work when changing frames during tool activity
-//- rename p1_ to pn_
 //- highlight epipolar region between ep1 and ep2
 //   - transparent polygon (write an soview and implement draw function using opengl)
 //- Add a subenu to the context menu (as matt did in his corresp tool),
