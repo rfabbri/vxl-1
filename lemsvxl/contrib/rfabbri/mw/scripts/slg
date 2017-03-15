@@ -6,22 +6,22 @@
 # -f f4 f5 f6
 
 program=slg
+binary=sel_gui
 
 myusage () { 
-  echo "Usage: $0 [options] image_filenames" 1>&2; 
+  echo "Usage: $0 [options] [image_filenames]" 1>&2; 
   echo "Options: refer to the source file" 1>&2; 
 }
 
 case $# in
-  0) myusage
-    exit 2
-    ;;
+  0)  $binary
+      exit
+      ;;
 esac
 
 state=normal
 prevstate=normal
 
-set -x
 while [[ $# -gt 0 ]]; do
   arg="$1"
 
@@ -141,10 +141,24 @@ echo Frags: $frag_fnames
 for i in $remaining_args; do
   ext=`echo $i|grep -o '\.[^\.]*$'`
   case $ext in
-    .edg|.edg.gz)
+    .gz)
+      
+      nextext=`echo ${i%.gz}|grep -o '\.[^\.]*$'`
+      echo NEXTEXT: $nextext
+      echo i: $i
+      case $nextext in
+        .edg)
+          edge_fnames="$edge_fnames $i"
+        ;;
+        .cem|cemv)
+          frag_fnames="$frag_fnames $i"
+        ;;
+      esac
+      ;;
+    .edg)
       edge_fnames="$edge_fnames $i"
     ;;
-    .cem|.cemv|.cemv.gz|.cem.gz)
+    .cem|.cemv)
       frag_fnames="$frag_fnames $i"
     ;;
     .png|.jpg|.jpeg)
@@ -173,5 +187,4 @@ if test -n "$frag_fnames"; then
   frag_arg="-frags"
 fi
 
-
-sel_gui $img_arg "$imgs_fnames" $edge_arg "$edge_fnames" $frag_arg "$frag_fnames" $repeat_img
+$binary $img_arg "$imgs_fnames" $edge_arg "$edge_fnames" $frag_arg "$frag_fnames" $repeat_img

@@ -22,7 +22,6 @@ esac
 state=normal
 prevstate=normal
 
-#set -x
 while [[ $# -gt 0 ]]; do
   arg="$1"
 
@@ -139,7 +138,6 @@ echo Frags: $frag_fnames
 
 # parse remaining args into each arg, depending on file type
 
-set -x
 for i in $remaining_args; do
   ext=`echo $i|grep -o '\.[^\.]*$'`
   case $ext in
@@ -189,5 +187,4 @@ if test -n "$frag_fnames"; then
   frag_arg="-frags"
 fi
 
-echo 
 $binary $img_arg "$imgs_fnames" $edge_arg "$edge_fnames" $frag_arg "$frag_fnames" $repeat_img $*

@@ -7,11 +7,11 @@
 #nrad_list="1 2 4 6 10"
 #num_link_iters_list="3 7 9 15"
 
-nrad_list="2 4"
-num_link_iters_list="3 7 9"
-toe_sigma_list="2 3"
+nrad_list="2"
+num_link_iters_list="3"
+toe_sigma_list="3"
 toe_thresh_list="0.2"
-output_extension=".cem" # cem or cemv
+output_extension=".cemv" # cem or cemv
 
 edgesuffix="--edgesuffix _sigma-2_thresh-5.edg" # leave blank to recompute edges
 
