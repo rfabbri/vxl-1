@@ -49,6 +49,7 @@ dbdet_contour_ranker_process::dbdet_contour_ranker_process()
 {
   if( !parameters()->add( "Best #n contours(0=all)"   , "-nfrags" , 0) ||
       !parameters()->add( "Threshold"   , "-thresh" , 0.0) ||
+      !parameters()->add( "Minimum contour length(edgels)"   , "-minlen" , 0) ||
       !parameters()->add( "fmean[0]"   , "-fmean_0" , 0.0000000e+00) ||
       !parameters()->add( "fmean[1]"   , "-fmean_1" , 1.2100564e-01) ||
       !parameters()->add( "fmean[2]"   , "-fmean_2" , 1.1583408e-01) ||
@@ -176,10 +177,11 @@ dbdet_contour_ranker_process::execute()
   //get the parameters
   y_trained_parameters param;
   double thresh;
-  int nfrags;
+  int nfrags, minlen;
 
   parameters()->get_value( "-nfrags", nfrags);
   parameters()->get_value( "-thresh", thresh);
+  parameters()->get_value( "-minlen", minlen);
 
   parameters()->get_value( "-fmean_0", param[0][0]);
   parameters()->get_value( "-fmean_1", param[0][1]);
@@ -237,7 +239,7 @@ dbdet_contour_ranker_process::execute()
 
   for(int i=0; (i < disp.size() && it != CFG.frags.end()); ++i, it++)
   {
-    if(disp[i])
+    if(disp[i] && (*it)->edgels.size() > minlen)
     {
       newCFG.insert_fragment(new dbdet_edgel_chain(*(*it)));
     }

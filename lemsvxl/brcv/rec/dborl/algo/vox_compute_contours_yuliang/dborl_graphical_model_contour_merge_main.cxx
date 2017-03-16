@@ -141,7 +141,7 @@ int main(int argc, char *argv[]) {
     bool el_status = gmcm_pro.execute();
     gmcm_pro.finish();
 
-    // Grab output from geometric contour breaker
+    // Grab output from graphical model contour merge
     // if process did not fail
 
     // Set up storage for cbg

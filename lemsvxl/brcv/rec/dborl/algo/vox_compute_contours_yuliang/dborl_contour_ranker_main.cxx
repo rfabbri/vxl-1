@@ -3,7 +3,7 @@
 // \author Caio SOUZA
 // \date 03/13/2017
 //
-//        An algorithm to run geometric contour breaker
+//        An algorithm to run geometric contour ranker
 //      
 // \verbatim
 //   Modifications
@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
     vul_timer t;
 
     dborl_contour_ranker_params_sptr params = 
-        new dborl_contour_ranker_params("dborl_contour_ranker_breaker");  
+        new dborl_contour_ranker_params("dborl_contour_ranker");  
 
     if (!params->parse_command_line_args(argc, argv))
         return 1;
@@ -124,7 +124,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    vcl_cout<<"************ Contour Breaker Geometric ************"<<vcl_endl;
+    vcl_cout<<"************ Contour Ranker ************"<<vcl_endl;
     dbdet_contour_ranker_process cr_pro;
     set_process_parameters_of_bpro1(*params, 
                                     cr_pro, 
@@ -141,7 +141,7 @@ int main(int argc, char *argv[]) {
     bool el_status = cr_pro.execute();
     cr_pro.finish();
 
-    // Grab output from geometric contour breaker
+    // Grab output from contour ranker
     // if process did not fail
 
     // Set up storage for cbg
