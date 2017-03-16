@@ -121,7 +121,7 @@ dbdet_contour_breaker_geometric_process::execute()
   }
   clear_output(1);
 
-  vcl_cout << "Gemometric contour breaker...";
+  vcl_cout << "Gemometric contour breaker...\n";
   vcl_cout.flush();
 
   // get image from the storage class

@@ -162,7 +162,7 @@ dbdet_graphical_model_contour_merge_process::execute()
   }
   clear_output();
 
-  vcl_cout << "Graphical model contour merge...";
+  vcl_cout << "Graphical model contour merge...\n";
   vcl_cout.flush();
 
   // get image from the storage class

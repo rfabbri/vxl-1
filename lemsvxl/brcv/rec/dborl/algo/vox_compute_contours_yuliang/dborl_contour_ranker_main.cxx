@@ -13,8 +13,8 @@
 //
 //
 
-#include "dborl_geometric_contour_breaker_params.h"
-#include "dborl_geometric_contour_breaker_params_sptr.h"
+#include "dborl_contour_ranker_params.h"
+#include "dborl_contour_ranker_params_sptr.h"
 
 #include <vcl_iostream.h>
 #include <vul/vul_file.h>
@@ -34,7 +34,7 @@
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <vidpro1/process/vidpro1_save_cem_process.h>
 
-#include <dbdet/pro/dbdet_contour_breaker_geometric_process.h>
+#include <dbdet/pro/dbdet_contour_ranker_process.h>
 
 int main(int argc, char *argv[]) {
 
@@ -42,8 +42,8 @@ int main(int argc, char *argv[]) {
     // Start timer
     vul_timer t;
 
-    dborl_geometric_contour_breaker_params_sptr params = 
-        new dborl_geometric_contour_breaker_params("dborl_geometric_contour_breaker");  
+    dborl_contour_ranker_params_sptr params = 
+        new dborl_contour_ranker_params("dborl_contour_ranker_breaker");  
 
     if (!params->parse_command_line_args(argc, argv))
         return 1;
@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
 
    //--------------------------------------------
     vcl_string cem_file = params->input_object_dir_() + "/" 
-        + params->input_object_name_() + ".cem";
+        + params->input_object_name_() + params->input_cem_suffix_() + ".cem";
     if (!vul_file::exists(cem_file)) 
     {
         vcl_cerr << "Cannot find cfrags: " << cem_file << vcl_endl;
@@ -125,37 +125,37 @@ int main(int argc, char *argv[]) {
     }
 
     vcl_cout<<"************ Contour Breaker Geometric ************"<<vcl_endl;
-    dbdet_contour_breaker_geometric_process cbg_pro;
+    dbdet_contour_ranker_process cr_pro;
     set_process_parameters_of_bpro1(*params, 
-                                    cbg_pro, 
+                                    cr_pro, 
                                     params->algo_abbreviation_);  
 
     // Before we start the process lets clean input output
-    cbg_pro.clear_input();
-    cbg_pro.clear_output();
+    cr_pro.clear_input();
+    cr_pro.clear_output();
 
     // Add inputs (the order matters)
-    cbg_pro.add_input(input_img);
-    cbg_pro.add_input(input_edg);
-    cbg_pro.add_input(input_sel);
-    bool el_status = cbg_pro.execute();
-    cbg_pro.finish();
+    cr_pro.add_input(input_img);
+    cr_pro.add_input(input_edg);
+    cr_pro.add_input(input_sel);
+    bool el_status = cr_pro.execute();
+    cr_pro.finish();
 
     // Grab output from geometric contour breaker
     // if process did not fail
 
     // Set up storage for cbg
-    vcl_vector<bpro1_storage_sptr> cbg_results;
+    vcl_vector<bpro1_storage_sptr> cr_results;
     if ( el_status )
     {
-        cbg_results = cbg_pro.get_output();
+        cr_results = cr_pro.get_output();
     }
 
     //Clean up after ourselves
-    cbg_pro.clear_input();
+    cr_pro.clear_input();
 
 
-    if (cbg_results.size() != 1) 
+    if (cr_results.size() != 1) 
     {
         vcl_cerr << "Process output does not contain a sel data structure"
                  << vcl_endl;
@@ -167,9 +167,9 @@ int main(int argc, char *argv[]) {
  
     //get the input storage class
     dbdet_sel_storage_sptr sel;
-    sel.vertical_cast(cbg_results[0]);
+    sel.vertical_cast(cr_results[0]);
 
-    vcl_string cem_file_out = arams->output_cem_folder_() + "/" 
+    vcl_string cem_file_out = params->output_cem_folder_() + "/" 
         + params->input_object_name_() + params->output_cem_suffix_() +".cem";
     //save the contour fragment graph to the file
     bool retval = dbdet_save_cem(cem_file_out, sel->EM(), sel->CFG());

@@ -150,7 +150,7 @@ dbdet_contour_ranker_process::execute()
   }
   clear_output(1);
 
-  vcl_cout << "Contour ranker...";
+  vcl_cout << "Contour ranker...\n";
   vcl_cout.flush();
 
   // get image from the storage class
@@ -243,7 +243,7 @@ dbdet_contour_ranker_process::execute()
     }
   } 
   // create the output storage class
-  
+  vcl_cout << "Output #fragments: " << newCFG.frags.size() << vcl_endl;
   output_data_[0].push_back(output_sel);
   vcl_cout << "done!" << vcl_endl;
   vcl_cout.flush();

@@ -1,0 +1,57 @@
+#!/bin/bash
+#
+# Utility for breaking contours.
+
+# 1) adapt these commands and run:
+# ln -s $HOME/cprg/vxlprg/lemsvpe/lemsvxl-bin/brcv/rec/dborl/algo/vox_compute_contours_yuliang/dborl_graphical_model_contour_merge_yuliang ~/bin
+# cp $HOME/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/scripts/dborl_graphical_model_contour_merge_yuliang-input.xml ~/bin
+# 
+# 2) edit ~/bin/dborl_graphical_model_contour_merge_yuliang-input.xml with your parameters
+#
+# 3) run per usage message below
+
+echo XXX merging contours: $@
+vorlexecname=dborl_graphical_model_contour_merge_yuliang
+vorldirname=$HOME/bin/$vorlexecname
+xmlorig="$HOME/bin/$vorlexecname-input.xml"
+program=contour-merge
+
+img_ext=`echo $1|grep -o '\.[^\.]*$'`
+img_base="${1%$img_ext}"
+img_dir=`dirname $1`
+
+echo image extension: $img_ext
+echo image base: $img_base
+
+while [[ $# -gt 0 ]]; do
+  arg="$2"
+  case $arg in
+      -x|--suffix)  # input suffix to be added in .cem files
+      suffix="$3"
+      shift 2
+      ;;
+      -*)
+      echo "$program: $arg: unknown option"
+      exit 1
+      ;;
+      *) break;;
+  esac
+done
+
+if test -n "$suffix"; then
+  suffix_subst=$suffix
+else
+  suffix_subst="_break"
+fi
+
+tmpfile=/tmp/$$-tmp-$vorlexecname-input.xml
+
+sed "s/@CEMSUFFIX@/$suffix_subst/g
+s/@IMGEXT@/$img_ext/g
+s/@IMGBASENAME@/$img_base/g
+s/@INPUTDIR@/$img_dir/g
+s/@OUTPUTDIR@/$img_dir/g
+" $xmlorig  > $tmpfile
+
+set -x
+$vorldirname -x $tmpfile
