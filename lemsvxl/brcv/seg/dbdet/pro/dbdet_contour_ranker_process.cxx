@@ -171,7 +171,7 @@ dbdet_contour_ranker_process::execute()
   dbdet_edgemap_sptr EM = input_edgemap->get_edgemap();
 
   dbdet_sel_storage_sptr output_sel = dbdet_sel_storage_new();
-  output_sel->set_EM(EM);
+  output_sel->set_EM(input_sel->EM());
   dbdet_curve_fragment_graph &newCFG = output_sel->CFG();
 
   //get the parameters
@@ -240,10 +240,8 @@ dbdet_contour_ranker_process::execute()
   for(int i=0; (i < disp.size() && it != CFG.frags.end()); ++i, it++)
   {
     if(disp[i] && (*it)->edgels.size() > minlen)
-    {
       newCFG.insert_fragment(new dbdet_edgel_chain(*(*it)));
-    }
-  } 
+  }
   // create the output storage class
   vcl_cout << "Output #fragments: " << newCFG.frags.size() << vcl_endl;
   output_data_[0].push_back(output_sel);
