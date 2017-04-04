@@ -39,7 +39,7 @@
 #include <dbdet/algo/dbdet_curve_fragment_ranker.h>
 #include <vcl_algorithm.h>
 
-bool my_comp(vcl_pair<double, unsigned> & a, vcl_pair<double, unsigned> & b)
+bool my_comp(const vcl_pair<double, unsigned> & a, const vcl_pair<double, unsigned> & b)
 {
   return a.first > b.first;
 }
