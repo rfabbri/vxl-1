@@ -169,7 +169,7 @@ int main(int argc, char *argv[]) {
     dbdet_sel_storage_sptr sel;
     sel.vertical_cast(gmcm_results[0]);
 
-    vcl_string cem_file_out = arams->output_cem_folder_() + "/" 
+    vcl_string cem_file_out = params->output_cem_folder_() + "/" 
         + params->input_object_name_() + params->output_cem_suffix_() + ".cem";
     //save the contour fragment graph to the file
     bool retval = dbdet_save_cem(cem_file_out, sel->EM(), sel->CFG());
