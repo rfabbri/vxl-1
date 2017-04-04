@@ -608,3 +608,13 @@ if(BUILD_CONTRIB_mauro)
     add_subdirectory( mauro )
 endif(BUILD_CONTRIB_mauro)
 
+
+# Contrib Project: yuliang
+IF( DART_ROOT )
+  OPTION(BUILD_CONTRIB_yuliang "Build contrib/yuliang" NO)
+ELSE( DART_ROOT )
+  OPTION(BUILD_CONTRIB_yuliang "Build contrib/yuliang" NO)
+ENDIF( DART_ROOT )
+IF(BUILD_CONTRIB_yuliang)
+    SUBDIRS( yuliang )
+ENDIF(BUILD_CONTRIB_yuliang)
