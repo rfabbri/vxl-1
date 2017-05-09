@@ -74,9 +74,16 @@ dbdet_sel_tableau::dbdet_sel_tableau(dbdet_sel_storage_sptr sel):
   curve_line_width_(3.0),
   gesture0_(vgui_event_condition(vgui_LEFT, vgui_MODIFIER_NULL, true)),
   gesture1_(vgui_event_condition(vgui_LEFT, vgui_SHIFT, true)),
+  cfrag_select_(vgui_event_condition(vgui_LEFT, vgui_MODIFIER_NULL, true)),
+  cfrag_deselect_(vgui_event_condition(vgui_space , vgui_MODIFIER_NULL, true)),
+  cfrag_delete_(vgui_event_condition(vgui_DELETE, vgui_MODIFIER_NULL, true)),
+  cfrag_split_(vgui_event_condition(vgui_CHAR_s, vgui_MODIFIER_NULL, true)),
+  cfrag_merge_(vgui_event_condition(vgui_CHAR_m, vgui_MODIFIER_NULL, true)),
   draw_anchored_only_(false),
   cur_edgel(0),
   cur_link(0),
+  chain_a(0),
+  chain_b(0),
   local_zoom_factor(1),
   display_contour_groups_(true),
   display_prune_contours_(true)
@@ -150,6 +157,176 @@ bool dbdet_sel_tableau::handle( const vgui_event & e )
       print_link_info(cur_link);
       post_overlay_redraw(); //for drawing the curvelets
     }
+  }
+
+  //Query 3: select cfrag contour (Left click + ALT)
+  if (cfrag_select_(e)) {
+    float ix, iy;
+    vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix, iy);
+
+    // I) Find edgel closest to ix,iy
+    cur_edgel = find_closest_edgel(ix, iy);
+    vcl_cout << "Found edgel: " << cur_edgel << vcl_endl;
+    if (cur_edgel) {
+      dbdet_edgel_chain* found = 0;
+      bool valid = false;
+      for (dbdet_edgel_chain_list_const_iter it= CFG_.frags.begin(); it != CFG_.frags.end(); it++) {
+        for (int i = 0; i < (*it)->edgels.size(); ++i) {
+           if ((*it)->edgels[i]->id == cur_edgel->id) {
+             found = (*it);
+             vcl_cout << "Chain found: edgel[" << i << "]  -> (0, " << (*it)->edgels.size() -1 << ")\n";
+             if (i > 0 && i < (*it)->edgels.size() - 1) {
+                valid = true;
+             }
+             break;
+           }
+        }
+        if (valid) break;
+      }
+      if (found) {
+        vcl_cout << "Found chain: " << found << vcl_endl;
+        if (chain_a) {
+          chain_b = found;
+        } else {
+          chain_a = found;
+        }
+      }
+    }
+    post_redraw();
+  }
+
+  //Query 4: deselect cfrag contour/edgel (D)
+  if (cfrag_deselect_(e)) {
+    chain_a = chain_b = 0;
+    cur_edgel = 0;
+    cur_link = 0;
+    vcl_cout << "Chain deseleted: " << chain_a << ", " << chain_b << vcl_endl;
+    post_redraw();
+  }
+
+  //Query 5: delete chain_a
+  if (cfrag_delete_(e) && chain_a) {
+    for (dbdet_edgel_chain_list_iter it= CFG_.frags.begin(); it != CFG_.frags.end(); it++) {
+      if (*it == chain_a) {
+        CFG_.frags.erase(it);
+        vcl_cout << "Chain deleted: " << chain_a << vcl_endl;
+        break;
+      }
+    }
+    chain_a = chain_b = 0;
+    cur_edgel = 0;
+    cur_link = 0;
+    post_redraw();
+  }
+
+  if (cfrag_split_(e) && cur_edgel) {
+    int i = 0;
+    for (; i < chain_a->edgels.size(); ++i) {
+      if (cur_edgel->id == chain_a->edgels[i]->id) break;
+    }
+    if (i > 0 && i < chain_a->edgels.size() - 1) {
+      dbdet_edgel_chain * new_chain = new dbdet_edgel_chain();
+      new_chain->edgels = dbdet_edgel_list(chain_a->edgels.begin() + i, chain_a->edgels.end());
+      chain_a->edgels = dbdet_edgel_list(chain_a->edgels.begin(), chain_a->edgels.begin() + i + 1);
+      CFG_.frags.push_back(new_chain);
+      vcl_cout << "Chain splitted: " << chain_a << " -> " << new_chain << vcl_endl;
+      chain_a = chain_b = 0;
+      cur_edgel = 0;
+      cur_link = 0;
+    }
+    
+    post_redraw();
+  }
+
+  if (cfrag_merge_(e) && chain_a && chain_b) {
+    double min, dist;
+    int state = 0;
+    dbdet_edgel *a_front, *a_back, *b_front, *b_back;
+    dbdet_edgel_list_iter insert_point, begin_edgel, end_edgel;
+
+    a_front = chain_a->edgels.front();
+    a_back = chain_a->edgels.back();
+    b_front = chain_b->edgels.front();
+    b_back = chain_b->edgels.back();
+
+    vcl_cout << "Points A: " << a_front->pt << ", " << a_back->pt << vcl_endl;
+    vcl_cout << "Points B: " << b_front->pt << ", " << b_back->pt << vcl_endl;
+
+    //Case 0: --> a --> e --> b --> 
+    min = vgl_distance(a_back->pt, b_front->pt);
+    vcl_cout << "--> a --> e --> b -->: dist:" << min << vcl_endl; 
+    
+    //Case 1: --> a --> e <-- b <--
+    dist = vgl_distance(a_back->pt, b_back->pt);
+    if (dist < min) {
+      min = dist;
+      state=1;
+    }
+    vcl_cout << "--> a --> e <-- b <--: dist:" << dist << vcl_endl;
+    //Case 2: <-- a <-- e <-- b <--
+    dist = vgl_distance(a_front->pt, b_back->pt);
+    if (dist < min) {
+      min = dist;
+      state=2;
+    }
+    vcl_cout << "<-- a <-- e <-- b <--: dist:" << dist << vcl_endl;
+    // <-- a <-- e --> b -->
+    dist = vgl_distance(a_front->pt, b_front->pt);
+    if (dist < min) {
+      min = dist;
+      state=3;
+    }
+    vcl_cout << "<-- a <-- e --> b -->: dist:" << dist << vcl_endl;
+
+    vcl_cout << "Case: " << state << vcl_endl;
+    if (min < 3.0) {
+      switch (state) {
+        case 0:
+          chain_a->edgels.insert(chain_a->edgels.end(), (a_back->id == b_front->id ? ++(chain_b->edgels.begin()) : chain_b->edgels.begin()), chain_b->edgels.end());
+          break;
+        case 1:
+          chain_a->edgels.insert(chain_a->edgels.end(), (a_back->id == b_back->id ? ++(chain_b->edgels.rbegin()) : chain_b->edgels.rbegin()), chain_b->edgels.rend());
+          break;
+        case 2:
+          chain_a->edgels.insert(chain_a->edgels.begin(), chain_b->edgels.begin(), (a_front->id == b_back->id ? --(chain_b->edgels.end()) : chain_b->edgels.end()));
+          break;
+        case 3:
+          chain_a->edgels.insert(chain_a->edgels.begin(), chain_b->edgels.rbegin(), (a_front->id == b_front->id ? --(chain_b->edgels.rend()) :chain_b->edgels.rend()));
+          
+          break;
+        default:
+          break; 
+      }
+
+      vcl_cout << "------------------------------------------------\n"; 
+      for(int i = 0; i < chain_a->edgels.size(); ++i) {
+         vcl_cout << chain_a->edgels[i]->pt << "\n";
+      }
+      vcl_cout << "------------------------------------------------\n";
+
+      vcl_cout << "Chains merged: " << chain_a << ", " << chain_b << vcl_endl;
+      for (dbdet_edgel_chain_list_iter it= CFG_.frags.begin(); it != CFG_.frags.end(); it++) {
+        if (*it == chain_b) {
+          CFG_.frags.erase(it);
+          break;
+        }
+      }
+      chain_b = chain_a = 0;
+      post_redraw();
+    } else {
+      vcl_cout << "Cannot merge: " << chain_a << ", " << chain_b << ", distance > 3.0" << vcl_endl;
+    }
+  }
+
+  if (cur_edgel && CM_.is_valid())
+  {
+      //mark the selected edgel
+      glColor3f( 1.0 , 0.0 , 1.0 );
+      glPointSize(8.0);
+      //gl2psPointSize(8.0);
+      glBegin( GL_POINTS );
+      glVertex2f(cur_edgel->pt.x(), cur_edgel->pt.y());
+      glEnd();
   }
 
   if( e.type == vgui_OVERLAY_DRAW ) {
@@ -968,6 +1145,9 @@ void dbdet_sel_tableau::draw_edgel_chains()
 			else continue;	
 		}
 	}
+      if(chain == chain_a || chain == chain_b) //Selected chain
+        glColor3f(247.0 / 255.0, 229.0 / 255.0, 252.0 / 255.0);//Light purple
+
       glBegin(GL_LINE_STRIP);
       for (unsigned j=0; j<chain->edgels.size(); j++)
         glVertex2f(chain->edgels[j]->pt.x(), chain->edgels[j]->pt.y());

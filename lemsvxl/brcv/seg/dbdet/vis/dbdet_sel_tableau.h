@@ -191,13 +191,15 @@ private:
 
   //-----------------------------------------------------------------------------------------------
   //these are for querying the sel object 
-  vgui_event_condition gesture0_, gesture1_;
+  vgui_event_condition gesture0_, gesture1_,
+  cfrag_select_, cfrag_deselect_, cfrag_delete_, cfrag_split_, cfrag_merge_; // cfrags edit events
   bool draw_anchored_only_;
 
   //-----------------------------------------------------------------------------------------------
   dbdet_edgel* cur_edgel; ///< currently selected edgel
   dbdet_link* cur_link;  ///< currently selected link
 
+  dbdet_edgel_chain* chain_a, *chain_b;///< currently selected chains
   //float col_pal[10][3]; ///< random colormap
 
   /*const float col_pal[10][3] = {  {1.0000 ,      0.0  ,0.4000},
