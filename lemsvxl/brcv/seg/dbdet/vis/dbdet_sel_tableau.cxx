@@ -76,7 +76,7 @@ dbdet_sel_tableau::dbdet_sel_tableau(dbdet_sel_storage_sptr sel):
   gesture1_(vgui_event_condition(vgui_LEFT, vgui_SHIFT, true)),
   cfrag_select_(vgui_event_condition(vgui_LEFT, vgui_MODIFIER_NULL, true)),
   cfrag_deselect_(vgui_event_condition(vgui_space , vgui_MODIFIER_NULL, true)),
-  cfrag_delete_(vgui_event_condition(vgui_DELETE, vgui_MODIFIER_NULL, true)),
+  cfrag_delete_(vgui_event_condition(vgui_CHAR_e, vgui_MODIFIER_NULL, true)),
   cfrag_split_(vgui_event_condition(vgui_CHAR_s, vgui_MODIFIER_NULL, true)),
   cfrag_merge_(vgui_event_condition(vgui_CHAR_m, vgui_MODIFIER_NULL, true)),
   draw_anchored_only_(false),
@@ -163,7 +163,6 @@ bool dbdet_sel_tableau::handle( const vgui_event & e )
   if (cfrag_select_(e)) {
     float ix, iy;
     vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix, iy);
-
     // I) Find edgel closest to ix,iy
     cur_edgel = find_closest_edgel(ix, iy);
     vcl_cout << "Found edgel: " << cur_edgel << vcl_endl;
@@ -195,7 +194,7 @@ bool dbdet_sel_tableau::handle( const vgui_event & e )
     post_redraw();
   }
 
-  //Query 4: deselect cfrag contour/edgel (D)
+  //Query 4: deselect cfrag contour/edgel (space)
   if (cfrag_deselect_(e)) {
     chain_a = chain_b = 0;
     cur_edgel = 0;
@@ -206,18 +205,26 @@ bool dbdet_sel_tableau::handle( const vgui_event & e )
 
   //Query 5: delete chain_a
   if (cfrag_delete_(e) && chain_a) {
-    for (dbdet_edgel_chain_list_iter it= CFG_.frags.begin(); it != CFG_.frags.end(); it++) {
-      if (*it == chain_a) {
-        CFG_.frags.erase(it);
-        vcl_cout << "Chain deleted: " << chain_a << vcl_endl;
-        break;
+
+    if (!chain_b) {
+      for (dbdet_edgel_chain_list_iter it= CFG_.frags.begin(); it != CFG_.frags.end(); it++) {
+        if (*it == chain_a) {
+          CFG_.frags.erase(it);
+          vcl_cout << "Chain deleted: " << chain_a << vcl_endl;
+          break;
+        }
       }
+      chain_a = chain_b = 0;
+      cur_edgel = 0;
+      cur_link = 0;
+      post_redraw();
+    } else {
+      vcl_cout << "2 Chains selected -> deselected" << chain_a << vcl_endl;
+      chain_a = chain_b = 0;
+      cur_edgel = 0;
+      cur_link = 0;
     }
-    chain_a = chain_b = 0;
-    cur_edgel = 0;
-    cur_link = 0;
-    post_redraw();
-  }
+  } 
 
   if (cfrag_split_(e) && cur_edgel) {
     int i = 0;
