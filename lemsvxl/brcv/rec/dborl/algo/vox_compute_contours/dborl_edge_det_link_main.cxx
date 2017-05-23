@@ -43,6 +43,8 @@
 #include <dbdet/pro/dbdet_save_cvlet_map_process.h>
 #include <dbdet/pro/dbdet_prune_fragments_Logistic_Regression.h>
 #include <dbdet/pro/dbdet_save_cem_process.h>
+#include <dbdet/algo/dbdet_cem_file_io.h>
+#include <dbdet/pro/dbdet_sel_storage.h>
                   
 int main(int argc, char *argv[]) {
 
@@ -635,7 +637,16 @@ int main(int argc, char *argv[]) {
             save_con_pro.clear_input();
             save_con_pro.clear_output();
         }
-        else if ( vul_file::extension(params->output_extension_()) == ".cem" ||
+        else if ( vul_file::extension(params->output_extension_()) == ".cem")
+        {
+            output_file = output_file + params->output_extension_();
+            dbdet_sel_storage_sptr sel;
+            sel.vertical_cast(sel_results[0]);
+            vcl_cout << ".CEM saved" <<vcl_endl;
+            //save the contour fragment graph to the file
+            write_status = dbdet_save_cem(output_file, sel->EM(), sel->CFG());
+        }
+        else if ( /*vul_file::extension(params->output_extension_()) == ".cem" ||*/
                   vul_file::extension(params->output_extension_()) == ".cemv" || 
                   vul_file::extension(params->output_extension_()) == ".cemv.gz")
         {
@@ -676,7 +687,16 @@ int main(int argc, char *argv[]) {
         }
  
     }
-    else if (vul_file::extension(params->output_extension_()) == ".cem" ||
+   else if ( vul_file::extension(params->output_extension_()) == ".cem")
+   {
+        output_file = output_file + params->output_extension_();
+        dbdet_sel_storage_sptr sel;
+        sel.vertical_cast(sel_results[0]);
+        vcl_cout << ".CEM saved" <<vcl_endl;
+        //save the contour fragment graph to the file
+        write_status = dbdet_save_cem(output_file, sel->EM(), sel->CFG());
+    }
+    else if (/*vul_file::extension(params->output_extension_()) == ".cem" ||*/
              vul_file::extension(params->output_extension_()) == ".cemv" ||
              vul_file::extension(params->output_extension_()) == ".cemv.gz")
     {
