@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<dborl_graphical_model_contour_merge><gmcm gmcm-beta_0="-0.176587" gmcm-beta_1="-0.240236" gmcm-beta_2="-0.288148" gmcm-beta_3="-0.285762" gmcm-beta_4="0.049989" gmcm-beta_5="-0.15149" gmcm-beta_6="-0.417617" gmcm-beta_7="0.923963" gmcm-beta_8="0.0153117" gmcm-beta_g_0="-0.176587" gmcm-beta_g_1="1.06185" gmcm-fmean_0="0" gmcm-fmean_1="0.121006" gmcm-fmean_2="0.115834" gmcm-fmean_3="0.0857177" gmcm-fmean_4="0.150834" gmcm-fmean_5="0.119465" gmcm-fmean_6="2.20515" gmcm-fmean_7="0.766326" gmcm-fmean_8="0.918343" gmcm-fmean_g_0="0" gmcm-fmean_g_1="0.766326" gmcm-fstd_0="1" gmcm-fstd_1="0.117513" gmcm-fstd_2="0.107358" gmcm-fstd_3="0.139956" gmcm-fstd_4="0.147686" gmcm-fstd_5="0.109673" gmcm-fstd_6="1.66524" gmcm-fstd_7="0.341095" gmcm-fstd_8="0.419548" gmcm-fstd_g_0="1" gmcm-fstd_g_1="0.341095">
+</gmcm>
+<io input_cem_suffix="@CEMSUFFIX@" input_extension="@IMGEXT@" input_object_dir="@INPUTDIR@" input_object_name="@IMGBASENAME@" output_cem_folder="@OUTPUTDIR@" output_cem_suffix="_merge" output_extension=".cem">
+</io>
+<web_directive categorization_file="categorization.xml" evaluation_file="evaluation.xml" perf_block="perf.xml" print_params_file="params.xml" print_params_only="off" status_block="status.xml">
+</web_directive>
+</dborl_graphical_model_contour_merge>

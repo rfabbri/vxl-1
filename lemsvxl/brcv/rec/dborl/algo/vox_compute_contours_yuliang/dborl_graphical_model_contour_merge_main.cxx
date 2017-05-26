@@ -1,9 +1,9 @@
 //:
 // \file
 // \author Caio SOUZA
-// \date 03/13/2017
+// \date 03/16/2017
 //
-//        An algorithm to run geometric contour breaker
+//        An algorithm to run graphical model contour merge
 //      
 // \verbatim
 //   Modifications
@@ -13,8 +13,8 @@
 //
 //
 
-#include "dborl_geometric_contour_breaker_params.h"
-#include "dborl_geometric_contour_breaker_params_sptr.h"
+#include "dborl_graphical_model_contour_merge_params.h"
+#include "dborl_graphical_model_contour_merge_params_sptr.h"
 
 #include <vcl_iostream.h>
 #include <vul/vul_file.h>
@@ -34,7 +34,7 @@
 #include <vidpro1/storage/vidpro1_image_storage.h>
 #include <vidpro1/process/vidpro1_save_cem_process.h>
 
-#include <dbdet/pro/dbdet_contour_breaker_geometric_process.h>
+#include <dbdet/pro/dbdet_graphical_model_contour_merge_process.h>
 
 int main(int argc, char *argv[]) {
 
@@ -42,8 +42,8 @@ int main(int argc, char *argv[]) {
     // Start timer
     vul_timer t;
 
-    dborl_geometric_contour_breaker_params_sptr params = 
-        new dborl_geometric_contour_breaker_params("dborl_geometric_contour_breaker");  
+    dborl_graphical_model_contour_merge_params_sptr params = 
+        new dborl_graphical_model_contour_merge_params("dborl_graphical_model_contour_merge");  
 
     if (!params->parse_command_line_args(argc, argv))
         return 1;
@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
 
    //--------------------------------------------
     vcl_string cem_file = params->input_object_dir_() + "/" 
-        + params->input_object_name_() + ".cem";
+        + params->input_object_name_() + params->input_cem_suffix_() + ".cem";
     if (!vul_file::exists(cem_file)) 
     {
         vcl_cerr << "Cannot find cfrags: " << cem_file << vcl_endl;
@@ -124,38 +124,38 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    vcl_cout<<"************ Contour Breaker Geometric ************"<<vcl_endl;
-    dbdet_contour_breaker_geometric_process cbg_pro;
+    vcl_cout<<"************ Contour Merge ************"<<vcl_endl;
+    dbdet_graphical_model_contour_merge_process gmcm_pro;
     set_process_parameters_of_bpro1(*params, 
-                                    cbg_pro, 
+                                    gmcm_pro, 
                                     params->algo_abbreviation_);  
 
     // Before we start the process lets clean input output
-    cbg_pro.clear_input();
-    cbg_pro.clear_output();
+    gmcm_pro.clear_input();
+    gmcm_pro.clear_output();
 
     // Add inputs (the order matters)
-    cbg_pro.add_input(input_img);
-    cbg_pro.add_input(input_edg);
-    cbg_pro.add_input(input_sel);
-    bool el_status = cbg_pro.execute();
-    cbg_pro.finish();
+    gmcm_pro.add_input(input_img);
+    gmcm_pro.add_input(input_edg);
+    gmcm_pro.add_input(input_sel);
+    bool el_status = gmcm_pro.execute();
+    gmcm_pro.finish();
 
-    // Grab output from geometric contour breaker
+    // Grab output from graphical model contour merge
     // if process did not fail
 
     // Set up storage for cbg
-    vcl_vector<bpro1_storage_sptr> cbg_results;
+    vcl_vector<bpro1_storage_sptr> gmcm_results;
     if ( el_status )
     {
-        cbg_results = cbg_pro.get_output();
+        gmcm_results = gmcm_pro.get_output();
     }
 
     //Clean up after ourselves
-    cbg_pro.clear_input();
+    gmcm_pro.clear_input();
 
 
-    if (cbg_results.size() != 1) 
+    if (gmcm_results.size() != 1) 
     {
         vcl_cerr << "Process output does not contain a sel data structure"
                  << vcl_endl;
@@ -167,10 +167,10 @@ int main(int argc, char *argv[]) {
  
     //get the input storage class
     dbdet_sel_storage_sptr sel;
-    sel.vertical_cast(cbg_results[0]);
+    sel.vertical_cast(gmcm_results[0]);
 
     vcl_string cem_file_out = params->output_cem_folder_() + "/" 
-        + params->input_object_name_() + params->output_cem_suffix_() +".cem";
+        + params->input_object_name_() + params->output_cem_suffix_() + ".cem";
     //save the contour fragment graph to the file
     bool retval = dbdet_save_cem(cem_file_out, sel->EM(), sel->CFG());
 

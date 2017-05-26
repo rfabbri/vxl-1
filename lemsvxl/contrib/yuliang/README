@@ -1,0 +1,17 @@
+1. write CMakelists.txt following:
+
+	lemsvxl/contrib/yuliang/mex_compute_contours/CMakeLists.txt
+	lemsvxl/contrib/yuliang/third_order_edge_detector/CMakeLists.txt
+
+	manually set up output path in CMakeLists.txt
+
+2. in ccmake, need to manually setup matlab include paths
+
+	MATLAB_ENG_LIBRARY               /usr/local/MATLAB/R2016a/bin/glnxa64/libeng.so
+	MATLAB_INCLUDE_DIR               /usr/local/MATLAB/R2016a/extern/include
+	MATLAB_MEX_LIBRARY               /usr/local/MATLAB/R2016a/bin/glnxa64/libmex.so
+	MATLAB_MX_LIBRARY                /usr/local/MATLAB/R2016a/bin/glnxa64/libmx.so
+
+3. change compiler flag
+ 	
+	CMAKE_CXX_FLAGS                  -fPIC

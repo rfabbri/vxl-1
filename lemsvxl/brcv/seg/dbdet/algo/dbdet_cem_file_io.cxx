@@ -4,9 +4,16 @@
 #include <dbdet/sel/dbdet_curve_fragment_graph.h>
 #include <dbdet/algo/dbdet_postprocess_contours.h>
 #include <vcl_cstring.h>
+#include <vcl_cassert.h>
 
 // -----------------------------------------------------------------------------
 //: Save the contour fragment graph as a .cem file
+
+static bool sort_cmp(dbdet_edgel * e1, dbdet_edgel * e2)
+{
+  return e1->id < e2->id;
+}
+
 bool dbdet_save_cem(vcl_string filename, dbdet_edgemap_sptr EM, dbdet_curve_fragment_graph& CFG)
 {
   //1)If file open fails, return.
@@ -39,15 +46,16 @@ bool dbdet_save_cem(vcl_string filename, dbdet_edgemap_sptr EM, dbdet_curve_frag
   }
 */
   // change by Yuliang, Oct, 2014, save the full edge map istead of the used edges
-  vcl_vector<int> emap(EM->num_edgels(), 0); //-2 indicates unused
+  //vcl_vector<int> emap(EM->num_edgels(), 0); //-2 indicates unused
 
 //compile new edge list (only keep the used ones in the new list)
-  vcl_vector<int> new_emap;
+ /* vcl_vector<int> new_emap;
   for (unsigned i=0; i<EM->edgels.size(); i++){
 //    if (emap[i]==-1){
       emap[i] = new_emap.size(); //save the forward mapping
       new_emap.push_back(i);     //save the reverse mapping
     }
+*/
 
   // output header information
   outfp << ".CEM v2.0 " << vcl_endl;
@@ -55,11 +63,12 @@ bool dbdet_save_cem(vcl_string filename, dbdet_edgemap_sptr EM, dbdet_curve_frag
 
   //output the edgemap section
   outfp << "[Edgemap]" << vcl_endl;
-  outfp << "count=" << new_emap.size() << vcl_endl;
+  outfp << "count=" << EM->edgels.size() << vcl_endl;
   //outfp << "# (x, y) dir conf d2f" << vcl_endl;
 
-  for (unsigned i=0; i<new_emap.size(); i++){
-    dbdet_edgel* e = EM->edgels[new_emap[i]];
+  for (unsigned i=0; i<EM->edgels.size(); i++){
+    dbdet_edgel* e = EM->edgels[i];
+    assert(i == e->id);
     outfp << "(" << e->pt.x() << ", " << e->pt.y() << ")\t" << e->tangent << "\t" << e->strength << "\t" << e->deriv << vcl_endl; 
   }
 
@@ -73,7 +82,7 @@ bool dbdet_save_cem(vcl_string filename, dbdet_edgemap_sptr EM, dbdet_curve_frag
 
     outfp << "[";
     for (unsigned i=0; i<chain->edgels.size(); i++)
-      outfp << emap[chain->edgels[i]->id] << " ";
+      outfp << chain->edgels[i]->id << " ";
     outfp << "]" << vcl_endl;
   }
 

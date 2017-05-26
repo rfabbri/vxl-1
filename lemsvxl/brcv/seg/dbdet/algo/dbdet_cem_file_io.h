@@ -30,7 +30,7 @@ dbdet_edgemap_sptr dbdet_load_cem(vcl_string filename, dbdet_curve_fragment_grap
 dbdet_edgemap_sptr dbdet_load_cem_v2(vcl_ifstream &infp, dbdet_curve_fragment_graph& CFG);
 
 //: load the older version (aka version 1) of the cem file (for backward compatibility)
-dbdet_edgemap_sptr dbdet_load_cem_v1(vcl_ifstream &infp, dbdet_curve_fragment_graph& CFG, int width = 1000, int height = 1000, bool convert_degrees_to_radians = true);
+dbdet_edgemap_sptr dbdet_load_cem_v1(vcl_ifstream &infp, dbdet_curve_fragment_graph& CFG, int width = 3000, int height = 3000, bool convert_degrees_to_radians = true);
 
 #endif // dbdet_cem_file_io_h
 

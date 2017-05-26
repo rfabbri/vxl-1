@@ -121,7 +121,7 @@ dbdet_contour_breaker_geometric_process::execute()
   }
   clear_output(1);
 
-  vcl_cout << "Gemometric contour breaker...";
+  vcl_cout << "Gemometric contour breaker...\n";
   vcl_cout.flush();
 
   // get image from the storage class
@@ -141,7 +141,7 @@ dbdet_contour_breaker_geometric_process::execute()
   dbdet_edgemap_sptr EM = input_edgemap->get_edgemap();
 
   dbdet_sel_storage_sptr output_sel = dbdet_sel_storage_new();
-  output_sel->set_EM(EM);
+  output_sel->set_EM(input_sel->EM());
   dbdet_curve_fragment_graph &newCFG = output_sel->CFG();
 
   //get the parameters
