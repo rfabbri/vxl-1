@@ -1,10 +1,8 @@
 #include "mw_curve_tracing_tool_common.h"
-
 #include "mw_curve_tracing_tool.h"
 #include "mw_curve_tracing_tool_utils.h"
 #include <vcl_algorithm.h>
 #include <vgl/vgl_intersection.h>
-
 
 mw_curve_tracing_tool::
 mw_curve_tracing_tool()

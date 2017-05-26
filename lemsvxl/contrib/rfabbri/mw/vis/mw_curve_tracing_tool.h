@@ -27,6 +27,8 @@
 
 
 //: This tool displays epipolar lines corresponding to user mouse events.
+// It is a visual development of the core of the 3D curve sketch system,
+// which actually lead to the real system when optimized and automated.
 // It acts between three or more frames; all that is required is a perspective 
 // camera storage for each frame. In the future we shall support fundamental
 // matrix storage class as well.
