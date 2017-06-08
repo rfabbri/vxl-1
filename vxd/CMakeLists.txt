@@ -72,6 +72,7 @@ set(VXD_ROOT_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR})
 set(VXD_CMAKE_DIR ${CMAKE_CURRENT_LIST_DIR}/config/cmake/Modules)
 
 include(${VXD_CMAKE_DIR}/VXDStandardOptions.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/config/cmake/doxygen/doxygen.cmake)
 # Only include these if we have vxd-specific cmake utilities. We currently use VXL's:
 #include(${CMAKE_CURRENT_LIST_DIR}/config/cmake/config/vxd_utils.cmake)
 
