@@ -25,6 +25,7 @@
 #include <vpgl/vpgl_proj_camera.h>
 // #include <vpgld/io/vpgld_io_proj_camera.h>
 #include <vpgld/io/vpgld_proj_camera_vsl.h>
+#include <vpgld/io/vpgld_perspective_camera_vsl.h>
 
 class vpgld_camera_storage : public bpro1_storage {
 
@@ -55,11 +56,20 @@ public:
 
   //: Sets the camera pointer. Storage must be allocated by the user and will be
   // deleted by _this_ class. In the future, this might be replaced by a smart pointer.
-  void set_camera( vpgl_proj_camera<double>* camera ){ camera_->set(camera); }
+  void set_camera( vpgl_proj_camera<double>* newcamera ) { 
+    if (camera_)
+      delete camera_;
+    camera_ = new vpgld_proj_camera_vsl<double>();
+    camera_->set(newcamera); 
+  }
+  void set_perspective_camera( vpgl_proj_camera<double>* newcamera ) { 
+    if (camera_)
+      delete camera_;
+    camera_ = new vpgld_perspective_camera_vsl<double>();
+    camera_->set(newcamera); 
+  }
 
   const vpgl_proj_camera<double> *get_camera(){ return camera_->get(); }
-
-
 protected:
   // storage should be able to hold any camera derived from proj_camera
   vpgld_proj_camera_vsl<double>  *camera_;

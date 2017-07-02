@@ -200,12 +200,13 @@ bool bmcsd_load_camera_process::execute()
   vpgld_camera_storage_sptr 
      cam_storage = vpgld_camera_storage_new();
   
-  cam_storage->set_camera(P);
+  cam_storage->set_perspective_camera(P);
 
   output_data_[0].push_back(cam_storage);
   
   if (cam_storage->get_camera()->type_name() != "vpgl_perspective_camera")
-    vcl_cerr << "Error: load camera requires perspective camera\n";
+    vcl_cerr << "Error: bmcsd load camera requires perspective camera, but returned: " 
+      << cam_storage->get_camera()->type_name() << std::endl;
 
   const vpgl_perspective_camera<double> *psp_cam = 
     static_cast<const vpgl_perspective_camera<double>*>(cam_storage->get_camera());

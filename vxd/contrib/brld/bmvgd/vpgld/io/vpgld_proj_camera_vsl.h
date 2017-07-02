@@ -63,7 +63,7 @@ class vpgld_proj_camera_vsl
 
   vpgl_proj_camera<T> * get() { return cam_; }
   const vpgl_proj_camera<T> * get() const { return cam_; }
-  void set(vpgl_proj_camera<T> *c) { assert (c); cam_ = c; }
+  void set(vpgl_proj_camera<T> *c) { cam_ = c; }
 
   //: Clone `this': creation of a new object and initialization
   //  See Prototype pattern
