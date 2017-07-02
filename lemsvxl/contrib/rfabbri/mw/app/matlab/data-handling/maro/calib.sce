@@ -58,3 +58,17 @@ fprintfMat('1.projmatrix',P1,'%30.30lf')
 fprintfMat('2.projmatrix',P2,'%30.30lf')
 fprintfMat('3.projmatrix',P3,'%30.30lf')
 fprintfMat('4.projmatrix',P4,'%30.30lf')
+
+// Project origin for checking
+
+o1=P1*[0 0 0 1]';
+o1=o1/o1(3)
+
+o2=P2*[0 0 0 1]';
+o2=o2/o2(3)
+;
+o3=P3*[0 0 0 1]';
+o3=o3/o3(3)
+
+o4=P4*[0 0 0 1]';
+o4=o4/o4(3)
