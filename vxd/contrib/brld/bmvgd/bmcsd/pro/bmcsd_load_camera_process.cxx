@@ -24,10 +24,10 @@ bmcsd_load_camera_process::bmcsd_load_camera_process() : bpro1_process()
 {
   if(  
       !parameters()->add( "Input file name" , "-nameprefix" , bpro1_filepath("","*.*")) ||
-      !parameters()->add( "File type ASCII Camera matrix?" , "-camera_matrix_ftype" , false)  ||
+      !parameters()->add( "File type ASCII Camera matrix?" , "-camera_matrix_ftype" , true)  ||
       !parameters()->add( "File type ASCII Intrinsic/Extrinsic?" , "-intrinsic_extrinsic_ftype" , false)  ||
       !parameters()->add( "File type binary VSL (old vpgld)?" , "-vsl_ftype" , false)  ||
-      !parameters()->add( "Multiple Intrinsic/Extrinsic Sequence?" , "-multi_intrextr" , true)  ||
+      !parameters()->add( "Multiple Intrinsic/Extrinsic Sequence?" , "-multi_intrextr" , false)  ||
       !parameters()->add( "     # of first file (integer from 0 to 499)" , "-multi_intrextr_first_file"     , 0 ) ||
       !parameters()->add( "     Reset numbering?" , "-multi_intrextr_reset" , false)  ||
       !parameters()->add( "     Prefix", "-multi_intrextr_prefix"     , vcl_string("frame_00") ) ||
