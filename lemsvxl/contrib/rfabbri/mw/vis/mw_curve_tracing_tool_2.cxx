@@ -268,6 +268,22 @@ handle( const vgui_event & e,
         vgui::out << "Whole curve selection mode " << state << vcl_endl;;
         break;
       }
+      case '>': { 
+        std::vector<bdifd_camera> newcams;
+        for (unsigned v = 0; v < s_->nviews(); ++v) {
+          vpgl_calibration_matrix<double> K(s_->cams(v).Pr_.get_calibration());
+          std::cout << "Focal length: " << K.focal_length() << std::endl;
+          K.set_focal_length(K.focal_length()+1); // adds 1mm to focal 
+          // update P
+          vpgl_perspective_camera<double> P(s_->cams(v).Pr_);
+          P.set_calibration(K);
+          bdifd_camera c;
+          c.set_p(P);
+          newcams.push_back(c);
+        }
+        s_->set_cams(newcams);
+        break;
+      }
 
       default:
         vcl_cout << "Unassigned key: " << e.key << " pressed.\n";
