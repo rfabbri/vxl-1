@@ -35,6 +35,8 @@ while [[ $# -gt 0 ]]; do
         frag_fnames=$sofar
       elif test $prevstate = imgs; then
         imgs_fnames=$sofar
+      elif test $prevstate = cams; then
+        cam_fnames=$sofar
       elif test $prevstate = normal; then
         remaining_args=$sofar
       fi
@@ -74,6 +76,11 @@ while [[ $# -gt 0 ]]; do
       state=frag
       shift
       ;;
+      -c|--cams|--cam)
+      prevstate=$state
+      state=cams
+      shift
+      ;;
       -m|--repeat_image|--repeat_img)   # whether to make the given image the same on all frames
       repeat_img="-repeat_img"
       prevstate=$state
@@ -90,6 +97,8 @@ while [[ $# -gt 0 ]]; do
       elif test $state = frag; then
         sofar="$sofar $1"
       elif test $state = imgs; then
+        sofar="$sofar $1"
+      elif test $state = cams; then
         sofar="$sofar $1"
       elif test $state = normal; then
         sofar="$sofar $1"
@@ -110,6 +119,8 @@ if test $state != $prevstate; then
       frag_fnames=$sofar
     elif test $prevstate = imgs; then
       imgs_fnames=$sofar
+    elif test $prevstate = cams; then
+      cams_fnames=$sofar
     elif test $prevstate = normal; then
       remaining_args=$sofar
     fi
@@ -126,6 +137,8 @@ if test -n "$sofar"; then
     frag_fnames=$sofar
   elif test $state = imgs; then
     imgs_fnames=$sofar
+  elif test $state = cams; then
+    cams_fnames=$sofar
   elif test $state = normal; then
     remaining_args=$sofar
   fi
@@ -133,6 +146,7 @@ fi
 
 
 echo Imgs: $imgs_fnames
+echo Cams: $cams_fnames
 echo Edges: $edge_fnames
 echo Frags: $frag_fnames
 
@@ -164,6 +178,9 @@ for i in $remaining_args; do
     .png|.jpg|.jpeg)
       imgs_fnames="$imgs_fnames $i"
     ;;
+    .projmatrix)
+      cams_fnames="$cams_fnames $i"
+    ;;
     *)
       isimage=`file $i | grep -oi image`
       if test -n "$isimage"; then
@@ -187,4 +204,8 @@ if test -n "$frag_fnames"; then
   frag_arg="-frags"
 fi
 
-$binary $img_arg "$imgs_fnames" $edge_arg "$edge_fnames" $frag_arg "$frag_fnames" $repeat_img $*
+if test -n "$cams_fnames"; then
+  cams_arg="-cams"
+fi
+
+$binary $img_arg "$imgs_fnames" $edge_arg "$edge_fnames" $frag_arg "$frag_fnames" "$cams_arg" "$cams_fnames" $repeat_img $*
