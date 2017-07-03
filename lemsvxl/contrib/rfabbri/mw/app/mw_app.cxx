@@ -63,10 +63,6 @@
 #include <vpgld/pro/vpgld_camera_storage.h>
 #include "mw_app.h"
 
-static void load_cams_into_frames(
-    const vcl_vector<vcl_string> &cams_fnames, 
-    bmcsd_util::camera_file_type cam_type);
-
 //: example of callback for menu "Examples". Insert any application commands
 //here as a shortcut.
 void 

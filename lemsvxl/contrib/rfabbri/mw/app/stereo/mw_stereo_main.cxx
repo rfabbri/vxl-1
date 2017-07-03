@@ -135,12 +135,15 @@ int main(int argc, char** argv)
   vul_arg<std::vector<std::string> > a_edges("-edges", "load edgemap .edg(.gz) files (space-separated)");
   vul_arg<std::vector<std::string> > a_frags("-frags", "load curve fragments .cemv(.gz) files (space-separated)");
   vul_arg<std::vector<std::string> > a_imgs("-imgs", "load curve image files (space-separated)");
+  vul_arg<std::vector<std::string> > a_cams("-cams", "load camera files (space-separated)");
   vul_arg<bool> a_repeat_img("-repeat_img", "whether to use the same images in every frame");
   vul_arg_parse(argc,argv);
 
+  std::cout << "Number of args: " << std::endl;
   std::cout << a_edges.value_.size() << std::endl;
   std::cout << a_frags.value_.size() << std::endl;
   std::cout << a_imgs.value_.size() << std::endl;
+  std::cout << a_cams.value_.size() << std::endl;
 
   // Register the displayers
   REG_DISPLAYER( bvis1_image_displayer );
@@ -245,6 +248,7 @@ int main(int argc, char** argv)
   win->show();
 
   dbdet_bvis1_util::load_img_edg(a_imgs.value_, a_edges.value_, a_frags.value_, a_repeat_img.value_);
+  load_cams_into_frames(a_cams.value_, bmcsd_util::BMCS_3X4);
 
   return vgui::run(); 
 }
