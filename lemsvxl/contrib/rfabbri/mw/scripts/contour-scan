@@ -13,7 +13,7 @@ toe_sigma_list="3"
 toe_thresh_list="0.2"
 output_extension=".cemv" # cem or cemv
 
-edgesuffix="--edgesuffix _sigma-2_thresh-5.edg" # leave blank to recompute edges
+edgesuffix="--edgesuffix _sigma-3_thresh-0.2.edg" # leave blank to recompute edges (not currently working)
 
 case $# in
   0) echo "Usage: $0 [image_filenames]" 1>&2; exit 2

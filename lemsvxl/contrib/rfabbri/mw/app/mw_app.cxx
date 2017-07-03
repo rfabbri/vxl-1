@@ -103,7 +103,8 @@ void
 mw_load_mcs_instance()
 {
   vcl_string data_dir="./";
-  bmcsd_util::camera_file_type cam_type = bmcsd_util::BMCS_INTRINSIC_EXTRINSIC;
+  //bmcsd_util::camera_file_type cam_type = bmcsd_util::BMCS_INTRINSIC_EXTRINSIC;
+  bmcsd_util::camera_file_type cam_type = bmcsd_util::BMCS_3X4;
   unsigned instance_id = 0;
 
   bmcsd_curve_stereo_data_path dpath;
@@ -170,14 +171,16 @@ mw_load_mcs_instance()
 
   io_dialog.message("select initialization options:");
 
-  // create 3 views
-  int ngrids_wanted = 3;
+  // create views
+  int ngrids_wanted = 4;
 
+  /* XXX can uncomment this if desired; it works
   io_dialog.field("#views", ngrids_wanted);
   if (!io_dialog.ask()) {
     vcl_cout << "Canceled\n";
     return;
   }
+  */
   vcl_cout << "Desired #views: " << ngrids_wanted << vcl_endl;
 
   // add grid if only one present

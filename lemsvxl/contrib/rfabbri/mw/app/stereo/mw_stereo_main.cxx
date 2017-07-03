@@ -250,5 +250,8 @@ int main(int argc, char** argv)
   dbdet_bvis1_util::load_img_edg(a_imgs.value_, a_edges.value_, a_frags.value_, a_repeat_img.value_);
   load_cams_into_frames(a_cams.value_, bmcsd_util::BMCS_3X4);
 
+  // XXX remove
+  mw_load_mcs_instance();
+
   return vgui::run(); 
 }
