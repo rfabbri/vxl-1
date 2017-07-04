@@ -103,8 +103,13 @@ void
 mw_load_mcs_instance()
 {
   vcl_string data_dir="./";
-  //bmcsd_util::camera_file_type cam_type = bmcsd_util::BMCS_INTRINSIC_EXTRINSIC;
-  bmcsd_util::camera_file_type cam_type = bmcsd_util::BMCS_3X4;
+  bmcsd_util::camera_file_type cam_type;
+
+  if (vul_file::exists(data_dir + "calib.intrinsic"))
+    cam_type = bmcsd_util::BMCS_INTRINSIC_EXTRINSIC;
+  else
+    cam_type = bmcsd_util::BMCS_3X4;
+
   unsigned instance_id = 0;
 
   bmcsd_curve_stereo_data_path dpath;
