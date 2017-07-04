@@ -282,6 +282,7 @@ handle( const vgui_event & e,
           newcams.push_back(c);
         }
         s_->set_cams(newcams);
+        update_display_for_epipolar_curve_pencil();
         break;
       }
 
@@ -714,15 +715,8 @@ get_vsols(
   return true;
 }
 
-bool mw_curve_tracing_tool_2::
-handle_mouse_click( 
-    const vgui_event & e, 
-    const bvis1_view_tableau_sptr& view)
-{
-  float ix, iy;
-  vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix, iy);
-  ix = MW_ROUND(ix); iy = MW_ROUND(iy);
-
+void mw_curve_tracing_tool_2::
+clear_previous_selections() {
   // Clear previous selections
   if (reproj_soview_.front()) {
     for (unsigned k=0; k+2 < nviews(); ++k) {
@@ -747,6 +741,18 @@ handle_mouse_click(
       p_reproj_soviews_[k].clear();
     }
   }
+}
+
+bool mw_curve_tracing_tool_2::
+handle_mouse_click( 
+    const vgui_event & e, 
+    const bvis1_view_tableau_sptr& view)
+{
+  float ix, iy;
+  vgui_projection_inspector().window_to_image_coordinates(e.wx, e.wy, ix, iy);
+  ix = MW_ROUND(ix); iy = MW_ROUND(iy);
+
+  clear_previous_selections();
 
   // Curve selection
 

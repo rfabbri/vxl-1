@@ -107,6 +107,7 @@ protected:
   //: Constructor from a specific implementation.
   mw_curve_tracing_tool_2(bmcsd_curve_stereo *impl);
   void init(bmcsd_curve_stereo *impl);
+  void clear_previous_selections();
 
   //: \see frame_v()
   vcl_vector<int> frame_v_;
