@@ -303,11 +303,10 @@ initialize_curve_selection()
      tab_[0]->remove(p0_);
      tab_[0]->remove(pn_);
      tab_[0]->remove(curvelet_soview_);
-     //     XXX
-//     for (unsigned k=1; k< nviews(); ++k) {
-//       tab_[k]->remove(ep0_soview_[k]);
-//       tab_[k]->remove(epn_soview_[k]);
-//     }
+     for (unsigned k=1; k< nviews(); ++k) {
+       tab_[k]->remove(ep0_soview_[k]);
+       tab_[k]->remove(epn_soview_[k]);
+     }
   }
   for (unsigned i=0 ; i < nviews(); ++i)
     tab_[i]->set_current_grouping( "Drawing" );
@@ -332,13 +331,12 @@ initialize_curve_selection()
 
   // Add epipolar lines to tab_[v], v >= 2
   for (unsigned v=2; v < nviews(); ++v) {
-    //    XXX
-//    tab_[v]->set_foreground(color_pn_.r, color_pn_.g, color_pn_.b);
-//    epn_soview_[v] = tab_[v]->add_infinite_line(
-//        s_->ep_end(v-1).a(), s_->ep_end(v-1).b(), s_->ep_end(v-1).c());
-//    tab_[v]->set_foreground(color_p0_.r, color_p0_.g, color_p0_.b);
-//    ep0_soview_[v] = tab_[v]->add_infinite_line(
-//        s_->ep_ini(v-1).a(), s_->ep_ini(v-1).b(), s_->ep_ini(v-1).c());
+    tab_[v]->set_foreground(color_pn_.r, color_pn_.g, color_pn_.b);
+    epn_soview_[v] = tab_[v]->add_infinite_line(
+        s_->ep_end(v-1).a(), s_->ep_end(v-1).b(), s_->ep_end(v-1).c());
+    tab_[v]->set_foreground(color_p0_.r, color_p0_.g, color_p0_.b);
+    ep0_soview_[v] = tab_[v]->add_infinite_line(
+        s_->ep_ini(v-1).a(), s_->ep_ini(v-1).b(), s_->ep_ini(v-1).c());
 
     draw_candidate_curves();
 
@@ -363,18 +361,16 @@ update_pn(const vsol_point_2d_sptr &pt)
   tab_[0]->remove(pn_);
   pn_ = tab_[0]->add_point(pt->x(), pt->y());
   tab_[1]->set_foreground(color_pn_.r, color_pn_.g, color_pn_.b);
-  //  XXX
   tab_[1]->remove(epn_soview_[1]);
   epn_soview_[1] = tab_[1]->add_infinite_line(
       s_->ep_end(0).a(),s_->ep_end(0).b(),s_->ep_end(0).c());
 
-//  XXX
-//  for (unsigned v=2; v < nviews(); ++v) {
-//    tab_[v]->set_foreground(color_pn_.r,color_pn_.g,color_pn_.b);
-//    tab_[v]->remove(epn_soview_[v]);
-//    epn_soview_[v] = tab_[v]->add_infinite_line(
-//        s_->ep_end(v-1).a(),s_->ep_end(v-1).b(),s_->ep_end(v-1).c());
-//  }
+  for (unsigned v=2; v < nviews(); ++v) {
+    tab_[v]->set_foreground(color_pn_.r,color_pn_.g,color_pn_.b);
+    tab_[v]->remove(epn_soview_[v]);
+    epn_soview_[v] = tab_[v]->add_infinite_line(
+        s_->ep_end(v-1).a(),s_->ep_end(v-1).b(),s_->ep_end(v-1).c());
+  }
 
   draw_candidate_curves();
   update_display_for_epipolar_curve_pencil();
@@ -732,9 +728,8 @@ handle_mouse_click(
     for (unsigned k=0; k+2 < nviews(); ++k) {
 
       tab_[k+2]->remove(reproj_soview_[k]);
-      //      XXX 
-//      tab_[k+2]->remove(ep0_soview_2n_[k]);
-//      tab_[k+2]->remove(epn_soview_2n_[k]);
+      tab_[k+2]->remove(ep0_soview_2n_[k]);
+      tab_[k+2]->remove(epn_soview_2n_[k]);
       tab_[k+2]->post_redraw();
       reproj_soview_[k] = 0;
       
@@ -882,14 +877,13 @@ show_reprojections(unsigned crv2_id)
     reproj_soview_[v-2] = tab_[v]->add_vsol_polyline_2d(reproj_poly, cc_style_pumped);
 
     // soview for epip. lines for reprojection: endpts
-    //    XXX
-//    tab_[v]->set_foreground(color_pn_.r,color_pn_.g,color_pn_.b);
-//    epn_soview_2n_[v-2] = tab_[v]->add_infinite_line(
-//        s_->ep_v1_end(v-2).a(),s_->ep_v1_end(v-2).b(),s_->ep_v1_end(v-2).c());
+    tab_[v]->set_foreground(color_pn_.r,color_pn_.g,color_pn_.b);
+    epn_soview_2n_[v-2] = tab_[v]->add_infinite_line(
+        s_->ep_v1_end(v-2).a(),s_->ep_v1_end(v-2).b(),s_->ep_v1_end(v-2).c());
 
-//    tab_[v]->set_foreground(color_p0_.r,color_p0_.g,color_p0_.b);
-//    ep0_soview_2n_[v-2] = tab_[v]->add_infinite_line(
-//        s_->ep_v1_ini(v-2).a(),s_->ep_v1_ini(v-2).b(),s_->ep_v1_ini(v-2).c());
+    tab_[v]->set_foreground(color_p0_.r,color_p0_.g,color_p0_.b);
+    ep0_soview_2n_[v-2] = tab_[v]->add_infinite_line(
+        s_->ep_v1_ini(v-2).a(),s_->ep_v1_ini(v-2).b(),s_->ep_v1_ini(v-2).c());
   }
 
   // epip. lines for reprojection: all other points
