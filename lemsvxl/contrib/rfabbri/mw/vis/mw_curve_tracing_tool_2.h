@@ -248,12 +248,13 @@ private:
         std::vector<bdifd_camera> newcams;
         for (unsigned v = 0; v < s_->nviews(); ++v) {
           vpgl_calibration_matrix<double> K(s_->cams(v).Pr_.get_calibration());
-          std::cout << "Focal length: " << K.focal_length() << std::endl;
+          //std::cout << "Focal length: " << K.focal_length() << std::endl;
           if (fabs(K.focal_length() + delta) < 1e-3) {
             std::cerr << "cannot decrement focalength";
             return;
           }
           K.set_focal_length(K.focal_length() + delta); // adds delta mm to focal 
+          std::cout << "Focal length: " << K.focal_length() << std::endl;
           // update P
           vpgl_perspective_camera<double> P(s_->cams(v).Pr_);
           P.set_calibration(K);
