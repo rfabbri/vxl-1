@@ -234,6 +234,36 @@ private:
   unsigned selected_crv_id_view0() const { return selected_crv_id_view0_; }
   void set_selected_crv_id_view0(unsigned id) { selected_crv_id_view0_ = id; }
 
+  //: Paricular case only for focal length manip: reselects curve with id selected_crv_id_view0() in view0
+  // Never use it except when curve is wholly selected
+  void reselect_curve_view0() {
+        clear_previous_selections();
+        s_->initialize_subcurve(0);
+        initialize_curve_selection();
+        s_->update_endpoint(s_->selected_crv(0)->size()-1);
+        update_pn(s_->selected_crv(0)->p1());
+  }
+
+  void increment_focalength(double delta) {
+        std::vector<bdifd_camera> newcams;
+        for (unsigned v = 0; v < s_->nviews(); ++v) {
+          vpgl_calibration_matrix<double> K(s_->cams(v).Pr_.get_calibration());
+          std::cout << "Focal length: " << K.focal_length() << std::endl;
+          if (fabs(K.focal_length() + delta) < 1e-3) {
+            std::cerr << "cannot decrement focalength";
+            return;
+          }
+          K.set_focal_length(K.focal_length() + delta); // adds delta mm to focal 
+          // update P
+          vpgl_perspective_camera<double> P(s_->cams(v).Pr_);
+          P.set_calibration(K);
+          bdifd_camera c;
+          c.set_p(P);
+          newcams.push_back(c);
+        }
+        s_->set_cams(newcams);
+        reselect_curve_view0();
+  }
 };
 
 
