@@ -10,8 +10,14 @@
 #include <vnl/vnl_random.h>
 #include <vnl/vnl_double_3.h>
 
-void get_cams(std::vector<vpgl_perspective_camera<double> > *cams)
+void get_cams(const std::vector<std::string> > &cam_fnames, std::vector<vpgl_perspective_camera<double> > *cams)
 {
+  assert(cams->size() == 0);
+  for (unsigned i=0; i < cam_fnames.size(); ++i) {
+    vpgl_perspective_camera<double> cam;
+    bmcsd_util::read_cam_anytype(cams_fnames[i], cam_type, &cam);
+    cams->push_back(cam);
+  }
 }
 
 void initialize_world_by_triangulation()
@@ -43,14 +49,20 @@ void write_cams(std::vector<vpgl_perspective_camera<double> > &cams)
     cam_fname_noexts.push_back(std::string(i) + "-badj");
     std::cout << "outputting " << cam_fname_noexts.back() << std::endl;
   }
-  bmcsd_util::write_cams("./", cam_fname_noexts, bmcsd_util::BMCS_3X4, cams);
+  vul_file::make_directory("badj"); 
+  std::cout << "Temp fname TODO: " << vul_temp_filename() << std::endl;
+  
+  bmcsd_util::write_cams("./badj", cam_fname_noexts, bmcsd_util::BMCS_3X4, cams);
 }
 
 int main(int argc, char** argv)
 {
-  std::vector<vpgl_perspective_camera<double> > ini_cams;
 
-  get_cams(&ini_cams);
+  vul_arg<std::vector<std::string> > a_cams("-cams", "load camera files (space-separated)");
+  vul_arg_parse(argc,argv);
+  
+  std::vector<vpgl_perspective_camera<double> > ini_cams;
+  get_cams(a_cams.value_, &ini_cams);
 
   get_corrs(&corr);
 
