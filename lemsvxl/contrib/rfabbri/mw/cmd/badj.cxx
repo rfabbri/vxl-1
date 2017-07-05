@@ -20,26 +20,35 @@ void get_cams(const std::vector<std::string> > &cam_fnames, std::vector<vpgl_per
   }
 }
 
-void initialize_world_by_triangulation()
-{
-}
-
-void get_corrs()
+void get_corrs(unsigned ncams, std::vector<std::vector<bool> > *mask)
 { 
   unsigned npts=; // XXX
+
+  std::vector< std::vector<vgl_point_2d<double> > > imgpts_percam(ncams);
+
+  imgpts[0].push_back(vgl_point_2d<double> (x,y,z));
+
+
   std::vector<vgl_point_3d<double> > &ini_world = *pworld;
-
-  world = std::vector<vgl_point_3d<double> >(npts,vgl_point_3d<double>(0.0, 0.0, 0.0));
-
-  std::vector<vgl_point_2d<double> > image_points;
-
+  std::vector<vgl_point_2d<double> > image_points_linearlist;
 
   for (unsigned c = 0; c < ncams; ++c)
     for (unsigned pw=0; pw < npts; ++i)
-      image_points.push_back(imgpts[c][pw]);
+      image_points_linearlist.push_back(imgpts_percam[c][pw]);
 
   // make the mask (using all the points)
-  std::vector<std::vector<bool> > mask(cameras.size(), std::vector<bool>(world.size(),true) );
+  *mask = std::vector<std::vector<bool> > (cameras.size(), std::vector<bool>(npts,true) );
+}
+
+
+void initialize_world_by_triangulation(
+    imgpts, 
+    const std::vector<vpgl_perspective_camera<double> > &cams,
+    std::vector<vgl_point_3d<double> > *world)
+{
+  // assume all points show up in all cams
+  npts = imgspts[0].size();
+  *world = std::vector<vgl_point_3d<double> >(npts,vgl_point_3d<double>(0.0, 0.0, 0.0));
 }
 
 void write_cams(std::vector<vpgl_perspective_camera<double> > &cams)
