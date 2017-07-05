@@ -16,6 +16,10 @@ set(vox_mcs_stereo_eval_sources
    vox_mcs_eval_params_sptr.h vbl_smart_ptr+vox_eval_mcs_params-.cxx
 )
 
+set(badj_sources
+   badj.cxx
+)
+
 add_executable(mcr ${mcr_stereo_sources})
 target_link_libraries(mcr mw_pro bmcsd_algo sdetd_io sdetd_algo)
 
@@ -27,3 +31,8 @@ target_link_libraries(generate_synth_sequence mw_pro sdetd_io sdetd_algo)
 
 add_executable(vox_mcs_eval ${vox_mcs_stereo_eval_sources})
 target_link_libraries(vox_mcs_eval mw_pro dborl_algo dbxml sdetd_io sdetd_algo)
+
+add_executable(badj ${badj_sources})
+target_link_libraries(badj vpgld)
+
+

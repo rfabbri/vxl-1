@@ -244,17 +244,22 @@ private:
         update_pn(s_->selected_crv(0)->p1());
   }
 
-  void increment_focalength(double delta) {
+  void increment_focalength(double val) {
+        std::cout << "f mm: " << val*11 << std::endl;
+
         std::vector<bdifd_camera> newcams;
         for (unsigned v = 0; v < s_->nviews(); ++v) {
           vpgl_calibration_matrix<double> K(s_->cams(v).Pr_.get_calibration());
+          std::cout << "Calib matrix: " << K.get_matrix() << std::endl;
+          std::cout << "Rot matrix: " << s_->cams(v).Pr_.get_rotation().as_matrix() << std::endl;
+          std::cout << "Transl: " << s_->cams(v).Pr_.get_translation() << std::endl;
           //std::cout << "Focal length: " << K.focal_length() << std::endl;
-          if (fabs(K.focal_length() + delta) < 1e-3) {
+          if (fabs(val) < 1e-6) {
             std::cerr << "cannot decrement focalength";
             return;
           }
-          K.set_focal_length(K.focal_length() + delta); // adds delta mm to focal 
-          std::cout << "Focal length: " << K.focal_length() << std::endl;
+          K.set_focal_length(val); // adds delta mm to focal 
+          std::cout << "Stored focal length: " << K.focal_length() << std::endl;
           // update P
           vpgl_perspective_camera<double> P(s_->cams(v).Pr_);
           P.set_calibration(K);

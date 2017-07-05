@@ -5,9 +5,12 @@
 #include <vpgld/io/vpgld_io_cameras.h>
 #include <bmcsd/algo/bmcsd_algo_util.h>
 
+static double focal_length_;
+
 mw_curve_tracing_tool_2::
 mw_curve_tracing_tool_2()
 {
+  focal_length_ = 11.; // working with a specific dataset
   init(new bmcsd_curve_stereo);
 }
 
@@ -28,7 +31,7 @@ init(bmcsd_curve_stereo *impl)
   display_all_right_epips_ = true; 
   display_all_left_epips_ = false; 
   display_all_nth_view_epips_ = false; 
-  compute_isets_ = true;
+  compute_isets_ = false;
   click_selects_whole_curve_ = true;
 
   ep_style_ = vgui_style::new_style();
@@ -270,11 +273,11 @@ handle( const vgui_event & e,
       }
       case '>': { 
 
-        increment_focalength(1.);
+        increment_focalength(++focal_length_*1./11.);
         break;
       }
       case '<': { 
-        increment_focalength(-1.);
+        increment_focalength(--focal_length_*1./11.);
       }
 
       default:

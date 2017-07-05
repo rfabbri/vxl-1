@@ -41,14 +41,14 @@ R2 = [...
 -c  c  0
  0  0 -1
 -c -c  0]
-C2 = [14710 7500 480]'
+C2 = [14975 15000 480]'
 T2 = -R2*C2
 P2 = K2*[R2 T2]
 
 // Extrinsics cam 4 (baseline 24cm down from cam 1)
 K4 = K
 R4 = R2  // TODO unsure if this is true, but from the images it looks like it
-C4 = [14710 7500 240]'
+C4 = [14975 15000 240]'
 T4 = -R4*C4
 P4 = K4*[R4 T4]
 
