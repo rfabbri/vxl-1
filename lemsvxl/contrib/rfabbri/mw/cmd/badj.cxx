@@ -21,16 +21,18 @@ void get_cams(const std::vector<std::string> &cam_fnames, std::vector<vpgl_persp
   assert(cams->size() == 0);
 
   assert(cam_fnames.size());
-  std::cout << "Reading " << cam_fnames.size() << " cams " << std::endl;
+  std::cerr << "Reading " << cam_fnames.size() << " cams " << std::endl;
   if (vul_file::extension(cam_fnames[0]) == ".projmatrix")
     cam_type = bmcsd_util::BMCS_3X4;
   else
     cam_type =  bmcsd_util::BMCS_INTRINSIC_EXTRINSIC;
 
   for (unsigned i=0; i < cam_fnames.size(); ++i) {
+    std::cerr << "------------------------------------------------------------\n";
     vpgl_perspective_camera<double> cam;
     bmcsd_util::read_cam_anytype(cam_fnames[i], cam_type, &cam);
     cams->push_back(cam);
+    std::cerr << cams->back() << std::endl;
   }
 }
 
