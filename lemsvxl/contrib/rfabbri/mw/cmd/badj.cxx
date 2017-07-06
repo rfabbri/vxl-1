@@ -1,4 +1,8 @@
+#include <sstream>
 #include <vul/vul_arg.h>
+#include <buld/buld_arg.h>
+#include <vul/vul_file.h>
+#include <vul/vul_temp_filename.h>
 #include <vgl/vgl_point_2d.h>
 #include <vgl/vgl_vector_2d.h>
 #include <vgl/vgl_point_3d.h>
@@ -9,13 +13,23 @@
 #include <vnl/vnl_crs_index.h>
 #include <vnl/vnl_random.h>
 #include <vnl/vnl_double_3.h>
+#include <bmcsd/bmcsd_util.h>
 
-void get_cams(const std::vector<std::string> > &cam_fnames, std::vector<vpgl_perspective_camera<double> > *cams)
+void get_cams(const std::vector<std::string> &cam_fnames, std::vector<vpgl_perspective_camera<double> > *cams)
 {
+  bmcsd_util::camera_file_type cam_type;
   assert(cams->size() == 0);
+
+  assert(cam_fnames.size());
+  std::cout << "Reading " << cam_fnames.size() << " cams " << std::endl;
+  if (vul_file::extension(cam_fnames[0]) == ".projmatrix")
+    cam_type = bmcsd_util::BMCS_3X4;
+  else
+    cam_type =  bmcsd_util::BMCS_INTRINSIC_EXTRINSIC;
+
   for (unsigned i=0; i < cam_fnames.size(); ++i) {
     vpgl_perspective_camera<double> cam;
-    bmcsd_util::read_cam_anytype(cams_fnames[i], cam_type, &cam);
+    bmcsd_util::read_cam_anytype(cam_fnames[i], cam_type, &cam);
     cams->push_back(cam);
   }
 }
@@ -95,7 +109,7 @@ void initialize_world_by_triangulation(
     std::vector<vgl_point_3d<double> > *world)
 {
   // assume all points show up in all cams
-  npts = imgpts[0].size();
+  unsigned npts = imgpts[0].size();
   *world = std::vector<vgl_point_3d<double> >(npts,vgl_point_3d<double>(0.0, 0.0, 0.0));
 }
 
@@ -103,7 +117,9 @@ void write_cams(std::vector<vpgl_perspective_camera<double> > &cams)
 {
   vcl_vector<vcl_string> cam_fname_noexts; 
   for (unsigned i=0; i < cams.size(); ++i) {
-    cam_fname_noexts.push_back(std::string(i) + "-badj");
+    std::stringstream sstm;
+    sstm << i;
+    cam_fname_noexts.push_back(sstm.str() + std::string("-badj"));
     std::cout << "outputting " << cam_fname_noexts.back() << std::endl;
   }
   vul_file::make_directory("badj"); 
@@ -121,6 +137,7 @@ int main(int argc, char** argv)
   std::vector<vpgl_perspective_camera<double> > ini_cams;
   get_cams(a_cams.value_, &ini_cams);
 
+  return 0;
   std::vector<vgl_point_2d<double> > imgpts_linearlist; 
   std::vector< std::vector<vgl_point_2d<double> > > imgpts_percam;
   std::vector<std::vector<bool> > mask;

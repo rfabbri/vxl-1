@@ -33,6 +33,6 @@ add_executable(vox_mcs_eval ${vox_mcs_stereo_eval_sources})
 target_link_libraries(vox_mcs_eval mw_pro dborl_algo dbxml sdetd_io sdetd_algo)
 
 add_executable(badj ${badj_sources})
-target_link_libraries(badj vpgld)
+target_link_libraries(badj bmcsd vpgld_io vpgld_algo vpgl_algo buld vul)
 
 

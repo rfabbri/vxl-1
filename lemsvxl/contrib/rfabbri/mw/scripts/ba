@@ -1,0 +1,212 @@
+#!/bin/bash
+# Runs mw_gui with useful commandline loading parameters
+
+# parse commandline
+# -e f1 f2 f3 fn
+# -f f4 f5 f6
+
+program=ba
+binary=badj
+
+myusage () { 
+  echo "Usage: $0 [options] [cam_filenames]" 1>&2; 
+  echo "Options: refer to the source file" 1>&2; 
+  echo "Example: ba *.projmatrix or ba -c *.projmatrix"
+}
+
+case $# in
+  0)  $binary
+      exit
+      ;;
+esac
+
+state=normal
+prevstate=normal
+
+while [[ $# -gt 0 ]]; do
+  arg="$1"
+
+  # flush multiple options in $sofar
+  if test $state != $prevstate; then
+    if test -n "$sofar"; then
+      # flush
+      if test $prevstate = edge; then
+        edge_fnames=$sofar
+      elif test $prevstate = frag; then
+        frag_fnames=$sofar
+      elif test $prevstate = imgs; then
+        imgs_fnames=$sofar
+      elif test $prevstate = cams; then
+        cam_fnames=$sofar
+      elif test $prevstate = normal; then
+        remaining_args=$sofar
+      fi
+      # back to normal
+      prevstate=$state
+      sofar=""
+    fi
+  fi
+
+  case $arg in
+      --version|-V|-v)
+        echo "$program v1"
+        exit 0
+        ;;
+      --help|-h) 
+        myusage
+        exit 0
+        ;;
+#      -r|--nrad)  # overrides the value in the config file
+#      nrad="$2"
+#      shift 2
+#      prevstate=$state
+#      state=normal
+#      ;;
+      -i|--imgs|--images)
+      prevstate=$state
+      state=imgs
+      shift
+      ;;
+      -e|--edge)
+      prevstate=$state
+      state=edge
+      shift
+      ;;
+      -f|--frags|--cfrags)
+      prevstate=$state
+      state=frag
+      shift
+      ;;
+      -c|--cams|--cam)
+      prevstate=$state
+      state=cams
+      shift
+      ;;
+      -m|--repeat_image|--repeat_img)   # whether to make the given image the same on all frames
+      repeat_img="-repeat_img"
+      prevstate=$state
+      state=normal
+      shift
+      ;;
+      -*)
+      echo "$program: $arg: unknown option"
+      exit 1
+      ;;
+      *)
+      if test $state = edge; then
+        sofar="$sofar $1"
+      elif test $state = frag; then
+        sofar="$sofar $1"
+      elif test $state = imgs; then
+        sofar="$sofar $1"
+      elif test $state = cams; then
+        sofar="$sofar $1"
+      elif test $state = normal; then
+        sofar="$sofar $1"
+      fi
+      prevstate=$state
+      shift
+      ;;
+  esac
+done
+
+# flush multiple options in $sofar
+if test $state != $prevstate; then
+  if test -n "$sofar"; then
+    # flush
+    if test $prevstate = edge; then
+      edge_fnames=$sofar
+    elif test $prevstate = frag; then
+      frag_fnames=$sofar
+    elif test $prevstate = imgs; then
+      imgs_fnames=$sofar
+    elif test $prevstate = cams; then
+      cams_fnames=$sofar
+    elif test $prevstate = normal; then
+      remaining_args=$sofar
+    fi
+    # back to normal
+    prevstate=$state
+    sofar=""
+  fi
+fi
+
+if test -n "$sofar"; then
+  if test $state = edge; then
+    edge_fnames=$sofar
+  elif test $state = frag; then
+    frag_fnames=$sofar
+  elif test $state = imgs; then
+    imgs_fnames=$sofar
+  elif test $state = cams; then
+    cams_fnames=$sofar
+  elif test $state = normal; then
+    remaining_args=$sofar
+  fi
+fi
+
+
+#echo Imgs: $imgs_fnames
+echo Cams: $cams_fnames
+#echo Edges: $edge_fnames
+#echo Frags: $frag_fnames
+
+# parse remaining args into each arg, depending on file type
+
+for i in $remaining_args; do
+  ext=`echo $i|grep -o '\.[^\.]*$'`
+  case $ext in
+    .gz)
+      
+      nextext=`echo ${i%.gz}|grep -o '\.[^\.]*$'`
+      echo NEXTEXT: $nextext
+      echo i: $i
+      case $nextext in
+        .edg)
+          edge_fnames="$edge_fnames $i"
+        ;;
+        .cem|cemv)
+          frag_fnames="$frag_fnames $i"
+        ;;
+      esac
+      ;;
+    .edg)
+      edge_fnames="$edge_fnames $i"
+    ;;
+    .cem|.cemv)
+      frag_fnames="$frag_fnames $i"
+    ;;
+    .png|.jpg|.jpeg)
+      imgs_fnames="$imgs_fnames $i"
+    ;;
+    .projmatrix)
+      cams_fnames="$cams_fnames $i"
+    ;;
+    *)
+      isimage=`file $i | grep -oi image`
+      if test -n "$isimage"; then
+        imgs_fnames="$imgs_fnames $i"
+      else
+        echo $program: invalid lone argument or unrecognized format: $i
+        exit 1
+      fi
+  esac
+done
+
+if test -n "$imgs_fnames"; then
+  img_arg="-imgs"
+fi
+
+if test -n "$edge_fnames"; then
+  edge_arg="-edges"
+fi
+
+if test -n "$frag_fnames"; then
+  frag_arg="-frags"
+fi
+
+if test -n "$cams_fnames"; then
+  cams_arg="-cams"
+fi
+
+$binary $img_arg "$imgs_fnames" $edge_arg "$edge_fnames" $frag_arg "$frag_fnames" "$cams_arg" "$cams_fnames" $repeat_img $*
