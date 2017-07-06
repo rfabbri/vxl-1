@@ -204,6 +204,7 @@ int main(int argc, char** argv)
   vpgl_bundle_adjust::write_vrml("badj_ini.wrl",ini_cams, ini_world);
 
   // optimization with fixed calibration
+  /*
   {
     std::vector<vpgl_perspective_camera<double> > unknown_cameras(ini_cams);
     std::vector<vgl_point_3d<double> > unknown_world(ini_world);
@@ -221,10 +222,10 @@ int main(int argc, char** argv)
     std::cout << "Start error: " << ba.start_error() << std::endl;
     std::cout << "End error: " << ba.end_error() << std::endl;
   }
+  */
 
 
   // test optimization with shared calibration and unknown focal length
-  /*
   {
     std::vector<vpgl_perspective_camera<double> > unknown_cameras(ini_cams);
     std::vector<vgl_point_3d<double> > unknown_world(ini_world);
@@ -234,11 +235,13 @@ int main(int argc, char** argv)
     ba.set_max_iterations(10000);
     bool converge = ba.optimize(unknown_cameras, unknown_world, imgpts_linearlist, mask);
     std::cout << "Converged? " << converge << std::endl;
-
-    vpgl_bundle_adjust::write_vrml("test_bundle_est_f.wrl",unknown_cameras,unknown_world);
-    write_cams(unknown_cameras);
+    vpgl_bundle_adjust::write_vrml("badj_est_f.wrl",unknown_cameras,unknown_world);
+    write_cams(get_suffix(a_f.value_), unknown_cameras);
+    write_stats(get_suffix(a_f.value_), ba);
+    mywritev("badj/pts3d-optimized.dat", unknown_world);
+    std::cout << "Start error: " << ba.start_error() << std::endl;
+    std::cout << "End error: " << ba.end_error() << std::endl;
   }
-  */
 
   return 0;
 }

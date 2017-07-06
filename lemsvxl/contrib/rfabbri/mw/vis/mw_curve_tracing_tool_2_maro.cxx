@@ -450,11 +450,16 @@ draw_marked_points()
   // Project initial 3D points and show
   for (unsigned v=0; v < nviews(); ++v) {
     tab_[v]->set_current_grouping( "Drawing" );
-    tab_[v]->set_point_radius(8);
-    tab_[v]->set_foreground(0.3, 0.8, 1);
     for (unsigned p=0; p < ini_world.size(); ++p) {
+      tab_[v]->set_point_radius(8);
+      tab_[v]->set_foreground(0.3, 0.8, 1);
       vgl_point_2d<double> pprj = s_->cams(v).Pr_(vgl_homg_point_3d<double>(ini_world[p]));
       tab_[v]->add_point(pprj.x(), pprj.y());
+
+      tab_[v]->set_point_radius(50); // huge
+      vgl_point_2d<double> oprj = s_->cams(v).Pr_(vgl_homg_point_3d<double>(0,0,0));
+      tab_[v]->set_foreground(1, 1, 1);
+      tab_[v]->add_point(oprj.x(), oprj.y());
     }
   }
 
