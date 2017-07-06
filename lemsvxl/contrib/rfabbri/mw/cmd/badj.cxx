@@ -122,7 +122,7 @@ void get_corrs(
   imgpts_percam[3][4].set(1114, 472);
   imgpts_percam[3][5].set(1165, 380);
   imgpts_percam[3][6].set(1191, 380);
-  imgpts_percam[3][7].set(1179, 603);
+  imgpts_percam[3][7].set(1179, 554);
   imgpts_percam[3][8].set(1194, 624);
   imgpts_percam[3][9].set(1168, 624);
 

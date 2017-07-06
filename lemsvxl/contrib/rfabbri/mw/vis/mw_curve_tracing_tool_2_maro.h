@@ -270,6 +270,7 @@ private:
         s_->set_cams(newcams);
         reselect_curve_view0();
   }
+  void draw_marked_points();
 };
 
 
