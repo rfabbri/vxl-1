@@ -45,6 +45,8 @@ void get_corrs(
   unsigned npts=10;
   std::vector< std::vector<vgl_point_2d<double> > > imgpts_percam = *pimgpts_percam;
 
+  imgpts_percam.resize(ncams);
+
   imgpts_percam[0].resize(npts);
   imgpts_percam[0][0].set(891.0, 460.0);
   imgpts_percam[0][1].set(827.0, 550.0);
