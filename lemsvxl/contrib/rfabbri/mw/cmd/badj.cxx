@@ -119,9 +119,11 @@ int main(int argc, char** argv)
   std::vector<vpgl_perspective_camera<double> > ini_cams;
   get_cams(a_cams.value_, &ini_cams);
 
-  get_corrs(ini_cams.size(), &image_points, &mask);
+  std::vector<vgl_point_2d<double> > image_points_linearlist; 
+  std::vector< std::vector<vgl_point_2d<double> > > imgpts_percam;
+  get_corrs(ini_cams.size(), &image_points_linearlist, &imgpts_percam, &mask);
 
-  initialize_world_by_triangulation(&ini_world);
+  initialize_world_by_triangulation(imgpts_percam, ini_cams, &ini_world);
  
   // write a VRML version of the scene for debugging
   vpgl_bundle_adjust::write_vrml("badj_ini.wrl",ini_cams, ini_world);
