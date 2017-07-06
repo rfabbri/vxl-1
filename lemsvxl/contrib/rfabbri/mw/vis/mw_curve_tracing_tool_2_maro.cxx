@@ -453,7 +453,33 @@ draw_marked_points()
     tab_[v]->set_point_radius(8);
     tab_[v]->set_foreground(0.3, 0.8, 1);
     for (unsigned p=0; p < ini_world.size(); ++p) {
-      vgl_point_2d<double> pprj = s_->cams(v).Pr_(vgl_homg_point_3d<double>(ini_world[v]));
+      vgl_point_2d<double> pprj = s_->cams(v).Pr_(vgl_homg_point_3d<double>(ini_world[p]));
+      tab_[v]->add_point(pprj.x(), pprj.y());
+    }
+  }
+
+  // Read in points file if any, and show in smaller color
+
+  std::vector<vgl_point_3d<double> > pts3d;
+
+  // optinally read 3D points, if exist
+  if(myreadv("./pts3d-optimized.dat", pts3d)) {
+    std::cout << "Read " << pts3d.size() << " points" << std::endl;
+    for (unsigned p=0; p < pts3d.size(); ++p) {
+      std::cout << "Point " << p << ": " << pts3d[p] << std::endl;
+    }
+  }
+
+
+
+  assert(pts3d.size() == ini_world.size() && pts3d.size() == r.size());
+
+  for (unsigned v=0; v < nviews(); ++v) {
+    tab_[v]->set_current_grouping( "Drawing" );
+    tab_[v]->set_point_radius(6);
+    for (unsigned p=0; p < pts3d.size(); ++p) {
+      tab_[v]->set_foreground(r[p]+0.5, g[p]+0.5, b[p]+0.5);
+      vgl_point_2d<double> pprj = s_->cams(v).Pr_(vgl_homg_point_3d<double>(pts3d[p]));
       tab_[v]->add_point(pprj.x(), pprj.y());
     }
     tab_[v]->post_redraw();

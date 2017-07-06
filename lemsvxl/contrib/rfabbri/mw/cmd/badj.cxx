@@ -214,9 +214,10 @@ int main(int argc, char** argv)
     // ba.set_use_gradient(false);
     bool converge = ba.optimize(unknown_cameras, unknown_world, imgpts_linearlist, mask);
     std::cout << "Converged? " << converge << std::endl;
-    vpgl_bundle_adjust::write_vrml("badj_fixed_k.wrl", unknown_cameras, unknown_world);
+    vpgl_bundle_adjust::write_vrml("badj/badj_fixed_k.wrl", unknown_cameras, unknown_world);
     write_cams(get_suffix(a_f.value_), unknown_cameras);
     write_stats(get_suffix(a_f.value_), ba);
+    mywritev("badj/pts3d-optimized.dat", unknown_world);
     std::cout << "Start error: " << ba.start_error() << std::endl;
     std::cout << "End error: " << ba.end_error() << std::endl;
   }
