@@ -139,12 +139,12 @@ int main(int argc, char** argv)
   std::vector<vpgl_perspective_camera<double> > ini_cams;
   get_cams(a_cams.value_, &ini_cams);
 
-  return 0;
   std::vector<vgl_point_2d<double> > imgpts_linearlist; 
   std::vector< std::vector<vgl_point_2d<double> > > imgpts_percam;
   std::vector<std::vector<bool> > mask;
   get_corrs(ini_cams.size(), &imgpts_linearlist, &imgpts_percam, &mask);
 
+  return 0;
   std::vector<vgl_point_3d<double> > ini_world;
   initialize_world_by_triangulation(imgpts_percam, ini_cams, &ini_world);
  
