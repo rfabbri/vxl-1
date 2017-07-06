@@ -209,4 +209,5 @@ if test -n "$cams_fnames"; then
   cams_arg="-cams"
 fi
 
+#lldb -- $binary $img_arg "$imgs_fnames" $edge_arg "$edge_fnames" $frag_arg "$frag_fnames" "$cams_arg" "$cams_fnames" $repeat_img $*
 $binary $img_arg "$imgs_fnames" $edge_arg "$edge_fnames" $frag_arg "$frag_fnames" "$cams_arg" "$cams_fnames" $repeat_img $*

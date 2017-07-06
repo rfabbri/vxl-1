@@ -43,7 +43,7 @@ void get_corrs(
     std::vector<std::vector<bool> > *mask)
 {
   unsigned npts=10;
-  std::vector< std::vector<vgl_point_2d<double> > > imgpts_percam = *pimgpts_percam;
+  std::vector< std::vector<vgl_point_2d<double> > > &imgpts_percam = *pimgpts_percam;
 
   imgpts_percam.resize(ncams);
 
@@ -122,8 +122,8 @@ void write_cams(std::vector<vpgl_perspective_camera<double> > &cams)
   vcl_vector<vcl_string> cam_fname_noexts; 
   for (unsigned i=0; i < cams.size(); ++i) {
     std::stringstream sstm;
-    sstm << i;
-    cam_fname_noexts.push_back(sstm.str() + std::string("-badj"));
+    sstm << i+1;
+    cam_fname_noexts.push_back(sstm.str());
     std::cout << "outputting " << cam_fname_noexts.back() << std::endl;
   }
   vul_file::make_directory("badj"); 
@@ -146,7 +146,6 @@ int main(int argc, char** argv)
   std::vector<std::vector<bool> > mask;
   get_corrs(ini_cams.size(), &imgpts_linearlist, &imgpts_percam, &mask);
 
-  return 0;
   std::vector<vgl_point_3d<double> > ini_world;
   initialize_world_by_triangulation(imgpts_percam, ini_cams, &ini_world);
  

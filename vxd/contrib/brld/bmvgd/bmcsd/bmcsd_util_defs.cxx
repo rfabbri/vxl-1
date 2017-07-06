@@ -1437,7 +1437,23 @@ write_cams(
 
     case bmcsd_util::BMCS_3X4:
       vcl_cout << "Writing camera: 3x4 matrix, dir = " << dir << vcl_endl;
-      vcl_cerr << "Error: Not supported\n";
+
+      for (unsigned v=0; v < cam.size(); ++v) {
+        vcl_string e_fname(dir + vcl_string("/") 
+            + cam_fname_noexts[v] + vcl_string(".projmatrix"));
+        vcl_cout << "Writing cam file: " << e_fname << vcl_endl;
+        vcl_ofstream fp;
+
+        fp.open(e_fname.c_str(),vcl_ios::out);
+
+        if (!fp) {
+          vcl_cerr << "write_cam: error, unable to open file name " << e_fname << vcl_endl;
+          return false;
+        }
+        fp << vcl_setprecision(20);
+        fp << cam[v].get_matrix() << vcl_endl;
+        fp.close();
+      }
       return false;
     break;
     default:
