@@ -26,6 +26,7 @@
 
 #include <vpgld/vis/vpgld_epipolar_region_tool.h>
 #include <mw/vis/mw_curve_tracing_tool_2.h>
+#include <mw/vis/mw_curve_tracing_tool_2_maro.h>
 #include <mw/vis/mw_curve_dt_tracing_tool_2.h>
 #include <mw/vis/mw_curve_edit_tracing_tool_2.h>
 //#include <mw/vis/mw_curve_tracing_tool.h>
@@ -246,6 +247,12 @@ mw_stereo_menu::setup_menu()
   MENU_ADD_TOOL( mw_correspond_point_tool_basic, tools);
   tools.separator();
   MENU_ADD_TOOL( mw_sel_inliers_to_curve , tools);
+  tools.separator();
+  MENU_ADD_TOOL( mw_curve_tracing_tool_2_maro, tools);
+  MENU_ADD_TOOL( mw_curve_tracing_tool_2_maro, tools);
+  MENU_ADD_TOOL( mw_curve_tracing_tool_2_maro, tools);
+  MENU_ADD_TOOL( mw_curve_tracing_tool_2_maro, tools);
+  MENU_ADD_TOOL( mw_curve_tracing_tool_2_maro, tools);
 
   MainMenu.add( "Tools", tools );
 

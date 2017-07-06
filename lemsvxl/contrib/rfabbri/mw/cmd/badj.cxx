@@ -1,4 +1,5 @@
 #include <sstream>
+#include <iomanip>
 #include <vul/vul_arg.h>
 #include <buld/buld_arg.h>
 #include <vul/vul_file.h>
@@ -58,7 +59,7 @@ void apply_focal_lengths(const std::vector<double> f, std::vector<vpgl_perspecti
   }
 }
 
-std::string get_prefix(const std::vector<double> &f)
+std::string get_suffix(const std::vector<double> &f)
 {
     std::stringstream sstm;
     for (unsigned i=0; i < f.size(); ++i)
@@ -144,7 +145,7 @@ void initialize_world_by_triangulation(
 {
   // assume all points show up in all cams
   unsigned npts = imgpts[0].size();
-  *world = std::vector<vgl_point_3d<double> >(npts,vgl_point_3d<double>(0.0, 0.0, 0.0));
+  *world = std::vector<vgl_point_3d<double> >(npts,vgl_point_3d<double>(7475.,   7500., 360.));
 }
 
 void write_cams(std::string suffix, std::vector<vpgl_perspective_camera<double> > &cams)
@@ -162,11 +163,28 @@ void write_cams(std::string suffix, std::vector<vpgl_perspective_camera<double> 
   bmcsd_util::write_cams("./badj", cam_fname_noexts, bmcsd_util::BMCS_3X4, cams);
 }
 
+void write_stats(std::string suffix, const vpgl_bundle_adjust &ba) {
+    vcl_string e_fname("./badj/stats" + suffix + vcl_string(".txt"));
+    vcl_cout << "Writing stats file: " << e_fname << vcl_endl;
+    vcl_ofstream fp;
+
+    fp.open(e_fname.c_str(),vcl_ios::out);
+
+    if (!fp) {
+      vcl_cerr << "write_stats: error, unable to open file name " << e_fname << vcl_endl;
+      return;
+    }
+    fp << vcl_setprecision(20);
+    fp << "start error = " << ba.start_error() << vcl_endl;
+    fp << "end error = " << ba.end_error() << vcl_endl;
+    fp.close();
+}
+
 int main(int argc, char** argv)
 {
 
   vul_arg<std::vector<std::string> > a_cams("-cams", "load camera files (space-separated)");
-  vul_arg<std::vector<double> > a_f("-f", "focal length for cams (space-separated)");
+  vul_arg<std::vector<double> > a_f("-flen", "focal length for cams (space-separated)");
   vul_arg_parse(argc,argv);
 
   std::vector<vpgl_perspective_camera<double> > ini_cams;
@@ -197,7 +215,8 @@ int main(int argc, char** argv)
     bool converge = ba.optimize(unknown_cameras, unknown_world, imgpts_linearlist, mask);
     std::cout << "Converged? " << converge << std::endl;
     vpgl_bundle_adjust::write_vrml("badj_fixed_k.wrl", unknown_cameras, unknown_world);
-    write_cams(get_prefix(a_f.value_), unknown_cameras);
+    write_cams(get_suffix(a_f.value_), unknown_cameras);
+    write_stats(get_suffix(a_f.value_), ba);
     std::cout << "Start error: " << ba.start_error() << std::endl;
     std::cout << "End error: " << ba.end_error() << std::endl;
   }

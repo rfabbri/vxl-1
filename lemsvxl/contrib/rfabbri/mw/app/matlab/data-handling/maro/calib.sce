@@ -72,3 +72,32 @@ o3=o3/o3(3)
 
 o4=P4*[0 0 0 1]';
 o4=o4/o4(3)
+
+
+// Compute point of focus by intersecting the look at directions
+
+// intermediate vertical positions:
+z_out0 = (C1(3)+C3(3))/2
+
+lookat0 = [1 0]';
+
+// intersect
+l0 = cross([C1(1:2); 1], [C1(1:2)+lookat0; 1])
+
+lookat1 = [-1 -1]';
+
+l1 = cross([C2(1:2); 1], [C2(1:2)+lookat1; 1])
+
+p = cross(l0,l1)
+p = p/p(3)
+p = [p(1:2); z_out0]
+
+//p  = 
+//   7475.
+//   7500.
+//   360.
+
+pp=P1*[p;1]; pp(1:2)/pp(3)
+pp=P2*[p;1]; pp(1:2)/pp(3)
+pp=P3*[p;1]; pp(1:2)/pp(3)
+pp=P4*[p;1]; pp(1:2)/pp(3)

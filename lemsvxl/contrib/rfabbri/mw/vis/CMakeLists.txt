@@ -9,6 +9,9 @@ set(mw_vis_sources
   mw_curve_tracing_tool_2.cxx mw_curve_tracing_tool_2.h mw_curve_tracing_tool_common_2.h
   mw_curve_dt_tracing_tool_2.cxx mw_curve_dt_tracing_tool_2.h
   mw_curve_edit_tracing_tool_2.cxx mw_curve_edit_tracing_tool_2.h
+
+  # Specific for Maro/Ocean datasets
+  mw_curve_tracing_tool_2_maro.cxx mw_curve_tracing_tool_2_maro.h
 #
 # The following is old deprecated code
 #

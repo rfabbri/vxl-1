@@ -89,8 +89,8 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
       -*)
-      echo "$program: $arg: unknown option"
-      exit 1
+      #echo "$program: $arg: unknown option"
+      break
       ;;
       *)
       if test $state = edge; then
