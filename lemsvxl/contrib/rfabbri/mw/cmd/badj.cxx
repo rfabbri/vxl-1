@@ -33,7 +33,37 @@ void get_cams(const std::vector<std::string> &cam_fnames, std::vector<vpgl_persp
     bmcsd_util::read_cam_anytype(cam_fnames[i], cam_type, &cam);
     cams->push_back(cam);
     std::cerr << cams->back() << std::endl;
+    
+    std::cerr << "P Matrix: \n" << cams->back().get_matrix() << std::endl;
   }
+}
+
+void apply_focal_lengths(const std::vector<double> f, std::vector<vpgl_perspective_camera<double> > *pcams)
+{
+  std::vector<vpgl_perspective_camera<double> > &cams = *pcams;
+
+  if (!f.size()) return;
+
+  assert(f.size() == cams.size());
+
+  for (unsigned c=0; c < cams.size(); ++c) {
+    // change the focal length
+    std::cerr << "Requested focal length: " << f[c] << std::endl;
+    vpgl_calibration_matrix<double> K(cams[c].get_calibration());
+    std::cerr << "Previous focal length: " << K.focal_length()*11 << std::endl;
+    K.set_focal_length(f[c]*1./11.); // adds delta mm to focal 
+    std::cerr << "New focal length: " << K.focal_length()*11 << std::endl;
+    // update P
+    cams[c].set_calibration(K);
+  }
+}
+
+std::string get_prefix(const std::vector<double> &f)
+{
+    std::stringstream sstm;
+    for (unsigned i=0; i < f.size(); ++i)
+      sstm << "-" << f[i];
+    return sstm.str();
 }
 
 void get_corrs(
@@ -117,13 +147,13 @@ void initialize_world_by_triangulation(
   *world = std::vector<vgl_point_3d<double> >(npts,vgl_point_3d<double>(0.0, 0.0, 0.0));
 }
 
-void write_cams(std::vector<vpgl_perspective_camera<double> > &cams)
+void write_cams(std::string suffix, std::vector<vpgl_perspective_camera<double> > &cams)
 {
   vcl_vector<vcl_string> cam_fname_noexts; 
   for (unsigned i=0; i < cams.size(); ++i) {
     std::stringstream sstm;
     sstm << i+1;
-    cam_fname_noexts.push_back(sstm.str());
+    cam_fname_noexts.push_back(sstm.str() + suffix);
     std::cout << "outputting " << cam_fname_noexts.back() << std::endl;
   }
   vul_file::make_directory("badj"); 
@@ -136,10 +166,13 @@ int main(int argc, char** argv)
 {
 
   vul_arg<std::vector<std::string> > a_cams("-cams", "load camera files (space-separated)");
+  vul_arg<std::vector<double> > a_f("-f", "focal length for cams (space-separated)");
   vul_arg_parse(argc,argv);
-  
+
   std::vector<vpgl_perspective_camera<double> > ini_cams;
   get_cams(a_cams.value_, &ini_cams);
+
+  apply_focal_lengths(a_f.value_, &ini_cams);
 
   std::vector<vgl_point_2d<double> > imgpts_linearlist; 
   std::vector< std::vector<vgl_point_2d<double> > > imgpts_percam;
@@ -164,14 +197,14 @@ int main(int argc, char** argv)
     bool converge = ba.optimize(unknown_cameras, unknown_world, imgpts_linearlist, mask);
     std::cout << "Converged? " << converge << std::endl;
     vpgl_bundle_adjust::write_vrml("badj_fixed_k.wrl", unknown_cameras, unknown_world);
-    write_cams(unknown_cameras);
+    write_cams(get_prefix(a_f.value_), unknown_cameras);
+    std::cout << "Start error: " << ba.start_error() << std::endl;
+    std::cout << "End error: " << ba.end_error() << std::endl;
   }
 
 
-  // TODO: with focal length badj
-
-  /*
   // test optimization with shared calibration and unknown focal length
+  /*
   {
     std::vector<vpgl_perspective_camera<double> > unknown_cameras(ini_cams);
     std::vector<vgl_point_3d<double> > unknown_world(ini_world);
@@ -179,10 +212,11 @@ int main(int argc, char** argv)
     vpgl_bundle_adjust ba;
     ba.set_self_calibrate(true);
     ba.set_max_iterations(10000);
-    bool converge = ba.optimize(unknown_cameras, unknown_world, subset_image_points, mask);
+    bool converge = ba.optimize(unknown_cameras, unknown_world, imgpts_linearlist, mask);
     std::cout << "Converged? " << converge << std::endl;
 
     vpgl_bundle_adjust::write_vrml("test_bundle_est_f.wrl",unknown_cameras,unknown_world);
+    write_cams(unknown_cameras);
   }
   */
 
