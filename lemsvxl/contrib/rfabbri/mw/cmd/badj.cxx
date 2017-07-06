@@ -23,10 +23,11 @@ void get_cams(const std::vector<std::string> > &cam_fnames, std::vector<vpgl_per
 void get_corrs(
     unsigned ncams, 
     std::vector<vgl_point_2d<double> > *image_points_linearlist, 
+    std::vector< std::vector<vgl_point_2d<double> > > *pimgpts_percam,
     std::vector<std::vector<bool> > *mask)
 {
   unsigned npts=10;
-  std::vector< std::vector<vgl_point_2d<double> > > imgpts_percam(ncams);
+  std::vector< std::vector<vgl_point_2d<double> > > imgpts_percam = *pimgpts_percam;
 
   imgpts[0].resize(npts);
   imgpts[0][0].set(891.0, 460.0);
@@ -87,7 +88,7 @@ void get_corrs(
 
 
 void initialize_world_by_triangulation(
-    imgpts, 
+    const std::vector<std::vector<vgl_point_2d<double> > > &imgpts,
     const std::vector<vpgl_perspective_camera<double> > &cams,
     std::vector<vgl_point_3d<double> > *world)
 {
