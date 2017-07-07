@@ -1,3 +1,4 @@
+// suffix O == Optimized
 PO = list()
 
 PO(1) = [1262.3228226080518652 59780.088653043771046 -152.24174831819246378 -461454407.260212183
@@ -25,8 +26,35 @@ PO(4) = [...
 -0.70500007917348317399 -0.70910394157355693956 0.012103239658343423191 19536.463138148450525
 ];
 
+// pts3d=myread('pts3d-optimized.dat');
+// pts3d=matrix(pts3d,-1,3)
+// format(20)
+
+pts3dO = [...
+   7539.5169151704049    7539.92367852953066   6920.648267985438  
+   7696.62294815191763   7722.20989855404787   7708.06651771305951
+   372.011966154728952   371.655650711046633   385.812480370757612
+   7540.34628238484675   7540.06568411689386   7269.18522752753324
+   7686.73603796166117   7719.77201786693331   7295.33952485037207
+   358.274827444400444   346.142677993149505   364.418931177161312
+   7540.28995061205296   7539.73887887307592   7232.03637032506686
+   7686.61962719974417   7722.75791691726045   7311.09774833124357
+   330.585821529618102   335.669793998070816   387.493588139760277
+   7540.87605109192191   7539.41086483002164   7188.17367485176419
+   7707.18415184390324   7716.93820145570407   7364.33624353628602
+   330.35997655005059    335.668555010958073   333.4240508274533  
+   7540.99720113750845   7535.45754080204188   7138.66474369889056
+   7707.26133033227416   7719.58607197325455   7421.35248768877409
+   358.238150159039037   341.109755369088418   381.115186382382547
+   7540.54643078250592   7513.43757054335401   7150.62970214126108
+   7717.39469648285922   7720.43941618188819   7406.75822072322899
+   371.583628083801727   341.317501725368459   394.085061403705026
+];
+
+
 exec /Users/rfabbri/sciprg/toolbx/siptoolbox/macros/sip_rq.sci;
 exec /Users/rfabbri/sciprg/toolbx/siptoolbox/macros/KRC_from_P.sci;
+exec /Users/rfabbri/cprg/vxlprg/lemsvpe/lemsvxl/contrib/rfabbri/mw/app/matlab/utils/mywrite.sci;
 
 
 RO = list();
@@ -48,3 +76,46 @@ end
 
 // remap world coordinates to align to 1st cam
 
+ROnew = list();
+POnew = list();
+
+M = RO(1)'*R(1)
+for i=1:4
+  if (i == 1)
+    ROnew(1) = R(1)
+  else
+    ROnew(i) = RO(i)*M
+  end
+  TOnew = -RO(i)*CO(i)   // translation vector stays invariant
+  POnew(i) = KO(i)*[ROnew(i) TOnew]
+  pts3d_new = pts3d*M
+end
+
+// output to files
+mkdir('newcam')
+for i=1:4
+  fprintfMat('newcam/' + string(i) + '.projmatrix', POnew(i),'%30.30lf')
+end
+mywrite('newcam/pts3d-optimized.dat', pts3d_new);
+
+// check the transform didn't change coordinates
+
+disp('proj before')
+
+pts2dO = list()
+for i=1:4
+  pts2dO(i) = (PO(i)*[pts3dO ones(size(pts3dO,1),1)]')'
+  pts2dO(i) = pts2dO(i)(:,1:2)./[pts2dO(i)(:,3) pts2dO(i)(:,3)]
+end
+
+pts2dOnew = list()
+maxdif = zeros(1,4)
+for i=1:4
+  pts2dOnew(i) = (POnew(i)*[pts3d_new ones(size(pts3d_new,1),1)]')'
+  pts2dOnew(i) = pts2dOnew(i)(:,1:2)./[pts2dOnew(i)(:,3) pts2dOnew(i)(:,3)]
+  maxdif(i) = max(pts2dO(i) - pts2dOnew(i));
+end
+
+if max(maxdif) > 0.01
+  disp('coord transform error!!!!!')
+end

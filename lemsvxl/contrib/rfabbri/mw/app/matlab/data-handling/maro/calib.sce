@@ -61,10 +61,10 @@ P(4) = K(4)*[R(4) T(4)]
 
 
 // Write out
-fprintfMat('1.projmatrix',P(1),'%30.30lf')
-fprintfMat('2.projmatrix',P(2),'%30.30lf')
-fprintfMat('3.projmatrix',P(3),'%30.30lf')
-fprintfMat('4.projmatrix',P(4),'%30.30lf')
+//fprintfMat('1.projmatrix',P(1),'%30.30lf')
+//fprintfMat('2.projmatrix',P(2),'%30.30lf')
+//fprintfMat('3.projmatrix',P(3),'%30.30lf')
+//fprintfMat('4.projmatrix',P(4),'%30.30lf')
 
 // Project origin for checking
 
