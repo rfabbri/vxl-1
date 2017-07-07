@@ -94,9 +94,9 @@ end
 // output to files
 mkdir('newcam2')
 for i=1:4
-  fprintfMat('newcam2/' + string(i) + '.projmatrix', PO(i),'%30.30lf')
+  fprintfMat('newcam2/' + string(i) + '.projmatrix', POnew(i),'%30.30lf')
 end
-mywrite('newcam2/pts3d-optimized.dat', pts3dO);
+mywrite('newcam2/pts3d-optimized.dat', pts3d_new);
 
 //mkdir('newcam')
 //for i=1:4
