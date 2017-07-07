@@ -297,13 +297,13 @@ handle( const vgui_event & e,
   return false;
 }
 
-static void get_corrs(
+static void get_corrs_old(
     unsigned ncams, 
     std::vector<vgl_point_2d<double> > *image_points_linearlist, 
     std::vector< std::vector<vgl_point_2d<double> > > *pimgpts_percam,
     std::vector<std::vector<bool> > *pmask)
 {
-  unsigned npts=15;
+  unsigned npts=17;
   std::vector< std::vector<vgl_point_2d<double> > > &imgpts_percam = *pimgpts_percam;
   std::vector<std::vector<bool> > &mask = *pmask;
 
@@ -329,8 +329,12 @@ static void get_corrs(
   imgpts_percam[0][12].set(824,329);
   imgpts_percam[0][13].set(0,0);
   imgpts_percam[0][14].set(0,0);
+  imgpts_percam[0][15].set(0,0);
+  imgpts_percam[0][16].set(0,0);
   mask[0][13]=false;
   mask[0][14]=false;
+  mask[0][15]=false;
+  mask[0][16]=false;
 
   imgpts_percam[1].resize(npts);
   imgpts_percam[1][0].set(1011.5, 548.5);
@@ -348,6 +352,8 @@ static void get_corrs(
   imgpts_percam[1][12].set(0,0);
   imgpts_percam[1][13].set(452.5,549.5);
   imgpts_percam[1][14].set(683.0,410);
+  imgpts_percam[1][15].set(1100,744);
+  imgpts_percam[1][16].set(1557,458);
   mask[1][12]=false;
 
   imgpts_percam[2].resize(npts);
@@ -366,8 +372,12 @@ static void get_corrs(
   imgpts_percam[2][12].set(852,47);
   imgpts_percam[2][13].set(0,0);
   imgpts_percam[2][14].set(0,0);
+  imgpts_percam[2][15].set(0,0);
+  imgpts_percam[2][16].set(0,0);
   mask[2][13]=false;
   mask[2][14]=false;
+  mask[2][15]=false;
+  mask[2][16]=false;
 
   imgpts_percam[3].resize(npts);
   imgpts_percam[3][0].set(1069, 379);
@@ -385,16 +395,132 @@ static void get_corrs(
   imgpts_percam[3][12].set(0,0);
   imgpts_percam[3][13].set(474.5,472.5);
   imgpts_percam[3][14].set(717.0,325.0);
+  imgpts_percam[3][15].set(1158.0,674.0);
+  imgpts_percam[3][16].set(1650.0,366.0);
   mask[3][12]=false;
 
   for (unsigned c = 0; c < ncams; ++c)
     for (unsigned pw=0; pw < npts; ++pw) {
       assert(imgpts_percam[c].size() == npts);
-      image_points_linearlist->push_back(imgpts_percam[c][pw]);
       if (mask[c][pw])
         image_points_linearlist->push_back(imgpts_percam[c][pw]);
     }
+}
 
+static void get_corrs(
+    unsigned ncams, 
+    std::vector<vgl_point_2d<double> > *image_points_linearlist, 
+    std::vector< std::vector<vgl_point_2d<double> > > *pimgpts_percam,
+    std::vector<std::vector<bool> > *pmask)
+{
+  unsigned npts=18;
+  std::vector< std::vector<vgl_point_2d<double> > > &imgpts_percam = *pimgpts_percam;
+  std::vector<std::vector<bool> > &mask = *pmask;
+
+  // make the mask (using all the points)
+  mask = std::vector<std::vector<bool> > (ncams, std::vector<bool>(npts,true) );
+
+
+  imgpts_percam.resize(ncams);
+
+  imgpts_percam[0].resize(npts);
+  imgpts_percam[0][0].set(891.0, 460.0);
+  imgpts_percam[0][1].set(827.0, 550.0);
+  imgpts_percam[0][2].set(826.0, 732.0);
+  imgpts_percam[0][3].set(961.0, 734.0);
+  imgpts_percam[0][4].set(961.0, 550.0);
+  imgpts_percam[0][5].set(1026.0, 463.0);
+  imgpts_percam[0][6].set(1059.0, 463.0);
+  imgpts_percam[0][7].set(1043, 629);
+  imgpts_percam[0][8].set(1063, 700);
+  imgpts_percam[0][9].set(1025, 700);
+  imgpts_percam[0][10].set(1042,659);
+  imgpts_percam[0][11].set(1042,659);
+  imgpts_percam[0][12].set(824,329);
+  imgpts_percam[0][13].set(0,0);
+  imgpts_percam[0][14].set(0,0);
+  imgpts_percam[0][15].set(0,0);
+  imgpts_percam[0][16].set(0,0);
+  imgpts_percam[0][17].set(0,0);
+  mask[0][13]=false;
+  mask[0][14]=false;
+  mask[0][15]=false;
+  mask[0][16]=false;
+  mask[0][17]=false;
+
+  imgpts_percam[1].resize(npts);
+  imgpts_percam[1][0].set(1011.5, 548.5);
+  imgpts_percam[1][1].set(961.5, 635.2);
+  imgpts_percam[1][2].set(958.5, 812.0);
+  imgpts_percam[1][3].set(1048.5, 816.2);
+  imgpts_percam[1][4].set(1051, 637);
+  imgpts_percam[1][5].set(1100, 552);
+  imgpts_percam[1][6].set(1125, 552);
+  imgpts_percam[1][7].set(1111, 716);
+  imgpts_percam[1][8].set(1126.5, 785);
+  imgpts_percam[1][9].set(1101, 784);
+  imgpts_percam[1][10].set(1130,751);
+  imgpts_percam[1][11].set(1235,747.4);
+  imgpts_percam[1][12].set(0,0);
+  imgpts_percam[1][13].set(452.5,549.5);
+  imgpts_percam[1][14].set(683.0,410);
+  imgpts_percam[1][15].set(1100,744);
+  imgpts_percam[1][16].set(1557,458);
+  imgpts_percam[1][17].set(1447,378);
+  mask[1][12]=false;
+
+  imgpts_percam[2].resize(npts);
+  imgpts_percam[2][0].set(923, 81);
+  imgpts_percam[2][1].set(854.5, 178.8);
+  imgpts_percam[2][2].set(856, 373);
+  imgpts_percam[2][3].set(1000, 372);
+  imgpts_percam[2][4].set(999, 178);
+  imgpts_percam[2][5].set(1070, 84);
+  imgpts_percam[2][6].set(1102, 82);
+  imgpts_percam[2][7].set(1087, 262);
+  imgpts_percam[2][8].set(1108, 333);
+  imgpts_percam[2][9].set(1067, 334);
+  imgpts_percam[2][10].set(1083.5,297);
+  imgpts_percam[2][11].set(1083.5,297);
+  imgpts_percam[2][12].set(852,47);
+  imgpts_percam[2][13].set(0,0);
+  imgpts_percam[2][14].set(0,0);
+  imgpts_percam[2][15].set(0,0);
+  imgpts_percam[2][16].set(0,0);
+  imgpts_percam[2][17].set(0,0);
+  mask[2][13]=false;
+  mask[2][14]=false;
+  mask[2][15]=false;
+  mask[2][16]=false;
+  mask[2][17]=false;
+
+  imgpts_percam[3].resize(npts);
+  imgpts_percam[3][0].set(1069, 379);
+  imgpts_percam[3][1].set(1018, 472.6);
+  imgpts_percam[3][2].set(1018.5, 661);
+  imgpts_percam[3][3].set(1115, 662);
+  imgpts_percam[3][4].set(1114, 472);
+  imgpts_percam[3][5].set(1165, 380);
+  imgpts_percam[3][6].set(1191, 380);
+  imgpts_percam[3][7].set(1179, 554);
+  imgpts_percam[3][8].set(1194, 624);
+  imgpts_percam[3][9].set(1168, 624);
+  imgpts_percam[3][10].set(1201,589);
+  imgpts_percam[3][11].set(1310,587);
+  imgpts_percam[3][12].set(0,0);
+  imgpts_percam[3][13].set(474.5,472.5);
+  imgpts_percam[3][14].set(717.0,325.0);
+  imgpts_percam[3][15].set(1158.0,674.0);
+  imgpts_percam[3][16].set(1650.0,366.0);
+  imgpts_percam[3][17].set(1525,282);
+  mask[3][12]=false;
+
+  for (unsigned c = 0; c < ncams; ++c)
+    for (unsigned pw=0; pw < npts; ++pw) {
+      assert(imgpts_percam[c].size() == npts);
+      if (mask[c][pw])
+        image_points_linearlist->push_back(imgpts_percam[c][pw]);
+    }
 }
 
 static void initialize_maro_world(
