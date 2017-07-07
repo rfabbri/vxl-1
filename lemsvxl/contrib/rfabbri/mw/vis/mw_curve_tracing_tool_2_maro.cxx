@@ -303,7 +303,7 @@ static void get_corrs(
     std::vector< std::vector<vgl_point_2d<double> > > *pimgpts_percam,
     std::vector<std::vector<bool> > *mask)
 {
-  unsigned npts=10;
+  unsigned npts=12;
   std::vector< std::vector<vgl_point_2d<double> > > &imgpts_percam = *pimgpts_percam;
 
   imgpts_percam.resize(ncams);
@@ -319,6 +319,8 @@ static void get_corrs(
   imgpts_percam[0][7].set(1043, 629);
   imgpts_percam[0][8].set(1063, 700);
   imgpts_percam[0][9].set(1025, 700);
+  imgpts_percam[0][10].set(1042,659);
+  imgpts_percam[0][11].set(1042,659);
 
   imgpts_percam[1].resize(npts);
   imgpts_percam[1][0].set(1011.5, 548.5);
@@ -331,6 +333,8 @@ static void get_corrs(
   imgpts_percam[1][7].set(1111, 716);
   imgpts_percam[1][8].set(1126.5, 785);
   imgpts_percam[1][9].set(1101, 784);
+  imgpts_percam[1][10].set(1130,751);
+  imgpts_percam[1][11].set(1235,747.4);
 
   imgpts_percam[2].resize(npts);
   imgpts_percam[2][0].set(923, 81);
@@ -343,6 +347,8 @@ static void get_corrs(
   imgpts_percam[2][7].set(1087, 262);
   imgpts_percam[2][8].set(1108, 333);
   imgpts_percam[2][9].set(1067, 334);
+  imgpts_percam[2][10].set(1083.5,297);
+  imgpts_percam[2][11].set(1083.5,297);
 
   imgpts_percam[3].resize(npts);
   imgpts_percam[3][0].set(1069, 379);
@@ -355,6 +361,8 @@ static void get_corrs(
   imgpts_percam[3][7].set(1179, 554);
   imgpts_percam[3][8].set(1194, 624);
   imgpts_percam[3][9].set(1168, 624);
+  imgpts_percam[3][10].set(1201,589);
+  imgpts_percam[3][11].set(1310,587);
 
   for (unsigned c = 0; c < ncams; ++c)
     for (unsigned pw=0; pw < npts; ++pw) {
@@ -473,11 +481,8 @@ draw_marked_points()
     for (unsigned p=0; p < pts3d.size(); ++p) {
       std::cout << "Point " << p << ": " << pts3d[p] << std::endl;
     }
+    assert(pts3d.size() == ini_world.size() && pts3d.size() == r.size());
   }
-
-
-
-  assert(pts3d.size() == ini_world.size() && pts3d.size() == r.size());
 
   for (unsigned v=0; v < nviews(); ++v) {
     tab_[v]->set_current_grouping( "Drawing" );
