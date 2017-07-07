@@ -640,6 +640,8 @@ draw_marked_points()
     for (unsigned p=0; p < pts3d.size(); ++p) {
       tab_[v]->set_foreground(r[p]+0.5, g[p]+0.5, b[p]+0.5);
       vgl_point_2d<double> pprj = s_->cams(v).Pr_(vgl_homg_point_3d<double>(pts3d[p]));
+      std::cout << "Projecting with camera " << s_->cams(v).Pr_ << std::endl
+        << "Result " << pprj << std::endl;
       tab_[v]->add_point(pprj.x(), pprj.y());
     }
     tab_[v]->post_redraw();
