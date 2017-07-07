@@ -391,6 +391,8 @@ static void get_corrs(
     for (unsigned pw=0; pw < npts; ++pw) {
       assert(imgpts_percam[c].size() == npts);
       image_points_linearlist->push_back(imgpts_percam[c][pw]);
+      if (mask[c][pw])
+        image_points_linearlist->push_back(imgpts_percam[c][pw]);
     }
 
 }

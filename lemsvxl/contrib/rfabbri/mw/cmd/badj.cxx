@@ -67,15 +67,19 @@ std::string get_suffix(const std::vector<double> &f)
     return sstm.str();
 }
 
-void get_corrs(
+static void get_corrs(
     unsigned ncams, 
     std::vector<vgl_point_2d<double> > *image_points_linearlist, 
     std::vector< std::vector<vgl_point_2d<double> > > *pimgpts_percam,
-    std::vector<std::vector<bool> > *mask)
+    std::vector<std::vector<bool> > *pmask)
 {
-
-  unsigned npts=12;
+  unsigned npts=15;
   std::vector< std::vector<vgl_point_2d<double> > > &imgpts_percam = *pimgpts_percam;
+  std::vector<std::vector<bool> > &mask = *pmask;
+
+  // make the mask (using all the points)
+  mask = std::vector<std::vector<bool> > (ncams, std::vector<bool>(npts,true) );
+
 
   imgpts_percam.resize(ncams);
 
@@ -92,6 +96,11 @@ void get_corrs(
   imgpts_percam[0][9].set(1025, 700);
   imgpts_percam[0][10].set(1042,659);
   imgpts_percam[0][11].set(1042,659);
+  imgpts_percam[0][12].set(824,329);
+  imgpts_percam[0][13].set(0,0);
+  imgpts_percam[0][14].set(0,0);
+  mask[0][13]=false;
+  mask[0][14]=false;
 
   imgpts_percam[1].resize(npts);
   imgpts_percam[1][0].set(1011.5, 548.5);
@@ -106,6 +115,10 @@ void get_corrs(
   imgpts_percam[1][9].set(1101, 784);
   imgpts_percam[1][10].set(1130,751);
   imgpts_percam[1][11].set(1235,747.4);
+  imgpts_percam[1][12].set(0,0);
+  imgpts_percam[1][13].set(452.5,549.5);
+  imgpts_percam[1][14].set(683.0,410);
+  mask[1][12]=false;
 
   imgpts_percam[2].resize(npts);
   imgpts_percam[2][0].set(923, 81);
@@ -120,6 +133,11 @@ void get_corrs(
   imgpts_percam[2][9].set(1067, 334);
   imgpts_percam[2][10].set(1083.5,297);
   imgpts_percam[2][11].set(1083.5,297);
+  imgpts_percam[2][12].set(852,47);
+  imgpts_percam[2][13].set(0,0);
+  imgpts_percam[2][14].set(0,0);
+  mask[2][13]=false;
+  mask[2][14]=false;
 
   imgpts_percam[3].resize(npts);
   imgpts_percam[3][0].set(1069, 379);
@@ -134,15 +152,17 @@ void get_corrs(
   imgpts_percam[3][9].set(1168, 624);
   imgpts_percam[3][10].set(1201,589);
   imgpts_percam[3][11].set(1310,587);
+  imgpts_percam[3][12].set(0,0);
+  imgpts_percam[3][13].set(474.5,472.5);
+  imgpts_percam[3][14].set(717.0,325.0);
+  mask[3][12]=false;
 
   for (unsigned c = 0; c < ncams; ++c)
     for (unsigned pw=0; pw < npts; ++pw) {
       assert(imgpts_percam[c].size() == npts);
-      image_points_linearlist->push_back(imgpts_percam[c][pw]);
+      if (mask[c][pw])
+        image_points_linearlist->push_back(imgpts_percam[c][pw]);
     }
-
-  // make the mask (using all the points)
-  *mask = std::vector<std::vector<bool> > (ncams, std::vector<bool>(npts,true) );
 }
 
 
