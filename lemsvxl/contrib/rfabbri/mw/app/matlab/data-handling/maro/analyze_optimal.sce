@@ -1,4 +1,17 @@
+// =============================================
+// Best optimized cameras so far ===============
+// =============================================
+//
+// Optimized camera extrinsic and intrinsic calibration files - Lab Oceano
+//
+// author: Ricardo Fabbri
+//
 // suffix O == Optimized
+//
+// The following cameras were optimized using a sparse levenberg-marquadt
+// alrogithm with varying focal length, starting from 18 hand-marked point
+// correspondences. The final average reprojection error is subpixel: 0.835px
+
 PO = list()
 
 PO(1) = [1262.3228226080518652 59780.088653043771046 -152.24174831819246378 -461454407.260212183
@@ -30,6 +43,10 @@ PO(4) = [...
 // pts3d=matrix(pts3d,-1,3)
 // format(20)
 
+// we can notice that, even though the points project exactly to the point
+// correspondences, they are out of scale and are rotated and translated with
+// respect to the world coordinateds. TODO correct the global scale, translation
+// and rotation
 pts3dO = [...
    7539.5169151704049    7696.62294815191763   372.011966154728952
    7540.34628238484675   7686.73603796166117   358.274827444400444

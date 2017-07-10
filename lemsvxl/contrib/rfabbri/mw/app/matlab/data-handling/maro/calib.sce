@@ -1,4 +1,12 @@
-// world units: mm
+//
+//
+// Camera extrinsic and intrinsic calibration files - Lab Oceano
+//
+// author: Ricardo Fabbri
+
+// Initial Cameras modeled using the technical report ======================
+//
+// World units: mm
 
 // Intrinsics
 f = 11    // initial focal length, in mm
@@ -110,6 +118,8 @@ pp=P(3)*[p;1]; pp(1:2)/pp(3)
 pp=P(4)*[p;1]; pp(1:2)/pp(3)
 
 
+// =============================================
 // Best optimized cameras so far ===============
+// =============================================
 
 exec analyze_optimal.sce;
