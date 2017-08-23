@@ -54,6 +54,8 @@ add_subdirectory( vox_detect_xgraph )
 # Brown VOX algorithm to perform edge detection and edge linking
 add_subdirectory( vox_compute_contours )
 
+add_subdirectory( vox_compute_contours_MSEL )
+
 add_subdirectory( vox_compute_contours_release )
 
 add_subdirectory( vox_compute_contours_yuliang)
