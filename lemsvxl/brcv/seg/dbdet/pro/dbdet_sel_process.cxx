@@ -74,7 +74,7 @@ dbdet_sel_process::dbdet_sel_process()
       !parameters()->add( "Maximum Pixel Distance to complete" , "-gap" , 3.0 ) ||
       !parameters()->add( "Get Uncertainty from edges" , "-badap_uncer" , true ) ||
       !parameters()->add( "  - Position uncertainty" , "-dx" , 0.4 ) ||
-      !parameters()->add( "  - Orientation uncertainty(Deg)" , "-dt" , 15.0 ) ||
+      !parameters()->add( "  - Orientation uncertainty(Deg)" , "-dt" , 20.0 ) ||
       
       //curve model
       !parameters()->add( "Curve Model"   , "-curve_model" , curve_model_choices, 5) ||
@@ -103,7 +103,7 @@ dbdet_sel_process::dbdet_sel_process()
       //!parameters()->add( "Minimum curvelet size to link" , "-min_size_to_link", (unsigned) 4 ) ||
 
       //link graph --> image contours
-      !parameters()->add( "Extract Image Contours "   , "-linking_algo" , linking_algo_choices, 0 ) ||
+      !parameters()->add( "Extract Image Contours "   , "-linking_algo" , linking_algo_choices, 2 ) ||
       
       //linking parameter for contour extraction from the link graph
       !parameters()->add( "  - Number of Linking iterations" , "-num_link_iters", (unsigned) 7 ) ||
@@ -112,7 +112,9 @@ dbdet_sel_process::dbdet_sel_process()
       !parameters()->add( "Proceed with Hypothesis Graph", "-bGetfinalcontours", true ) ||
 
 	  //merge frag candidates after hypothesis
-      !parameters()->add( "Merge curve fragments candidates", "-bmergefrags", true )
+      //!parameters()->add( "Merge curve fragments candidates", "-bmergefrags", true )
+      //
+      !parameters()->add( "Resolving Junctions", "-bDetJct", true )
 	)
   {
     vcl_cerr << "ERROR: Adding parameters in " __FILE__ << vcl_endl;
@@ -309,22 +311,31 @@ bool dbdet_sel_process::execute()
       edge_linker->extract_regular_contours_from_the_link_graph();
       break;
   }
-// By Yuliang Guo, Oct, 2010
-      edge_linker->extract_regular_contours_from_the_link_graph();
+  edge_linker->regular_contour_filter(); // Filtering step, getting rid of local problems, e.g., tiny triangles
+  edge_linker->prune_extreme_short_curve_frags(); //  those isolated frags with only 2 edges
+  //edge_linker->pre_processing(); // fill small gaps,
+  //edge_linker->merge_extreme_short_curve_frags(); // remove extremely short curve fragments
+  edge_linker->refresh_linked_condition();
+
   if(bGetfinalcontours){  
-      edge_linker->Construct_Hypothesis_Tree();
-      edge_linker->Disambiguation();
-      if(bmergefrags){
-		  edge_linker->correct_CFG_topology(); 
+	  if(bDetJct){ // this is an approach integrated with junction detection and curve extraction
+		  edge_linker->construct_all_DEHTs();
+		  edge_linker->resolve_junction_conflict();
+		  edge_linker->extract_non_jct_curve_frages();
+		  edge_linker->resolve_paths_conflict();
+	  }
+	  else{ // this is a greedy approach via breadth-first search from each end point
+		  edge_linker->Construct_Hypothesis_Tree();
+		  edge_linker->Disambiguation();
+		  edge_linker->correct_CFG_topology();
+	  }
 		  //edge_linker->Post_Process();
-	  }
-	  else
-	  {
-		 edge_linker->merge_extreme_short_curve_frags();
-		 //edge_linker->Post_Process();
-	  }
-      //edge_linker->correct_CFG_topology();
   }
+  //else
+  //{
+	 //edge_linker->merge_extreme_short_curve_frags();
+	 //edge_linker->Post_Process();
+  //}
   double link_time = t.real() / 1000.0;
   vcl_cout << "Time taken to link: " << link_time << " sec" << vcl_endl;
 }
@@ -416,7 +427,8 @@ dbdet_sel_process::get_parameters()
   parameters()->get_value( "-linking_algo" , linking_algo);
   parameters()->get_value( "-num_link_iters" , num_link_iters);
   parameters()->get_value( "-bGetfinalcontours" , bGetfinalcontours );
-  parameters()->get_value( "-bmergefrags" , bmergefrags );
+  //parameters()->get_value( "-bmergefrags" , bmergefrags );
+  parameters()->get_value( "-bDetJct", bDetJct);
   
 }
 
