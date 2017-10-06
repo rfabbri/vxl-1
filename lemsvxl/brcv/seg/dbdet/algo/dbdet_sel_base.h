@@ -408,6 +408,8 @@ public:
   double compute_path_metric3(vcl_vector<dbdet_edgel*>& Pchain,
                                vcl_vector<dbdet_edgel*>& Tchain,
                                vcl_vector<dbdet_edgel*>& Cchain);
+  double compute_path_metric3(vcl_deque<dbdet_edgel*>& Tchain);
+
   //: compute the len of the chain
   double compute_path_len(vcl_deque<dbdet_edgel*>& chain);
   double compute_path_len(vcl_vector<dbdet_edgel*>& chain);
@@ -418,7 +420,11 @@ public:
   //: Pre-processing to fill minor gaps :://Chenhao Liu
   void pre_processing();
 
-  void prune_extreme_short_curve_frags(); //  those isolated frags with only 2 edges
+  //:  those isolated frags with only 2 edges, and single long link
+  void prune_extreme_short_curve_frags();
+
+  //:  those frags with only <=3 edges, with avg step cost > 1.5
+  bool is_short_high_cost_curve_frag(dbdet_edgel_chain* chain);
 
   //: Refresh the linked array to avoid unforeseen mistakes :://Chenhao Liu
   void refresh_linked_condition();

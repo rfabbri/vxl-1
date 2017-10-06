@@ -479,6 +479,39 @@ double dbdet_sel_base::compute_path_metric3(vcl_vector<dbdet_edgel*>& Pchain,
   return cost;
 }
 
+double dbdet_sel_base::compute_path_metric3(vcl_deque<dbdet_edgel*>& chain)
+{
+  double cost = 0.0;double ds=0;double dt=0;
+
+  //now compute the metric
+  dbdet_edgel *eA=0, *eP=0;
+  double thp = 0, total_ds =0.0, size=chain.size();
+  for (unsigned i=1; i<chain.size(); i++)
+  {
+    eA = chain[i];
+    eP = chain[i-1];
+
+    //compute ds
+    ds = vgl_distance(eA->pt, eP->pt);
+    double a;
+    if(ds<=1.0) a=1.0; else a=ds;
+    total_ds += ds;
+    //compute dtheta: tangent(i) - tangent(i-1)
+    double dtheta = vcl_pow((vcl_cos(eA->tangent) - vcl_cos(eP->tangent)), 2) + vcl_pow((vcl_sin(eA->tangent) - vcl_sin(eP->tangent)), 2);
+
+    //compute dt: dir(i, i-1) - dir(i-1, i-2)
+    double thc = dbdet_vPointPoint(eP->pt, eA->pt); // arc_tan2
+    dt = vcl_pow((vcl_cos(thc) - vcl_cos(thp)), 2) + vcl_pow((vcl_sin(thc) - vcl_sin(thp)), 2);
+
+    if(i==1)
+    	dt=0;
+    cost += dt + dtheta + a*vcl_pow(ds,2);
+
+    thp = thc;//save the current vector for the next iteration
+  }
+  cost /= (size-1);
+  return cost;
+}
 
 
 bool link_cost_less(dbdet_CFTG_link* link1, dbdet_CFTG_link* link2)
@@ -965,6 +998,74 @@ static bool is_continue (const dbdet_edgel_chain *c1, const dbdet_edgel_chain *c
 		}
 	}
 	return false;
+}
+
+static double get_max_continuity (const dbdet_edgel_chain *c1, const dbdet_edgel_chain *c2)
+{
+	int nbr_limit = 3;
+	int sz1 = (c1->edgels.size()<nbr_limit)?c1->edgels.size():nbr_limit;
+	int sz2 = (c2->edgels.size()<nbr_limit)?c2->edgels.size():nbr_limit;
+ 	dbdet_edgel* e1;dbdet_edgel* e4;
+	dbdet_edgel* e2 = c1->edgels.back(); // Last edge of c1
+	dbdet_edgel* e3 = c2->edgels.front(); // Front edge of c2
+	double dx1=0,dy1=0,dy2=0,dx2=0,s1=0,s2=0,s=0,SM_1=0;
+	double max_con = -1;
+
+	for(int i=1;i<sz1;i++)
+	{
+		e1 = c1->edgels[c1->edgels.size()-1-i];
+		dx1 = e2->pt.x()-e1->pt.x();
+		dy1 = e2->pt.y()-e1->pt.y();
+		for(int j=1;j<sz2 ;j++)
+		{
+			e4 = c2->edgels[j];
+			dx2 = e4->pt.x()-e3->pt.x();
+			dy2 = e4->pt.y()-e3->pt.y();
+			SM_1 = (dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2);
+
+			if(SM_1>=max_con)
+				max_con = SM_1;
+			//else if(SM_1<Theta_2)
+				//return false;
+			//else
+				//continue;
+		}
+	}
+	return max_con;
+}
+
+static double get_min_continuity (const dbdet_edgel_chain *c1, const dbdet_edgel_chain *c2)
+{
+	int nbr_limit = 3;
+	int sz1 = (c1->edgels.size()<nbr_limit)?c1->edgels.size():nbr_limit;
+	int sz2 = (c2->edgels.size()<nbr_limit)?c2->edgels.size():nbr_limit;
+ 	dbdet_edgel* e1;dbdet_edgel* e4;
+	dbdet_edgel* e2 = c1->edgels.back(); // Last edge of c1
+	dbdet_edgel* e3 = c2->edgels.front(); // Front edge of c2
+	double dx1=0,dy1=0,dy2=0,dx2=0,s1=0,s2=0,s=0,SM_1=0;
+	double min_con = 1;
+
+	for(int i=1;i<sz1;i++)
+	{
+		e1 = c1->edgels[c1->edgels.size()-1-i];
+		dx1 = e2->pt.x()-e1->pt.x();
+		dy1 = e2->pt.y()-e1->pt.y();
+		for(int j=1;j<sz2 ;j++)
+		{
+			e4 = c2->edgels[j];
+			dx2 = e4->pt.x()-e3->pt.x();
+			dy2 = e4->pt.y()-e3->pt.y();
+			SM_1 = (dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2);
+
+			if(SM_1<=min_con)
+				min_con = SM_1;
+			//else if(SM_1<Theta_2)
+				//return false;
+			//else
+				//continue;
+		}
+	}
+	return min_con;
 }
 
 static double get_continuity (const dbdet_edgel_chain *c1, const dbdet_edgel_chain *c2)
@@ -2567,7 +2668,7 @@ void dbdet_sel_base::resolve_paths_conflict()
 				continue;
 			//if(compute_path_len((*clit1)->edgels)<5 && (*clit1)->edgels.size()<5 && curve_frag_graph_.pFrags[other_end_id].size() + curve_frag_graph_.cFrags[other_end_id].size()==1) // short free end path
 				//paths2delete.push_back(*clit1);
-			if((*clit1)->edgels.size()==2 && curve_frag_graph_.cFrags[other_end_id].size() + curve_frag_graph_.pFrags[other_end_id].size()==1) // single free end link
+			if((*clit1)->edgels.size()<=3 && curve_frag_graph_.cFrags[other_end_id].size() + curve_frag_graph_.pFrags[other_end_id].size()==1) // single free end link
 				paths2delete.push_back(*clit1);
 			else
 				cur_jct_paths.push_back(*clit1);
@@ -2579,7 +2680,7 @@ void dbdet_sel_base::resolve_paths_conflict()
 				continue;
 			//if(compute_path_len((*clit1)->edgels)<5 && (*clit1)->edgels.size()<5 && curve_frag_graph_.pFrags[other_end_id].size() + curve_frag_graph_.cFrags[other_end_id].size()==1) // short free end path
 				//paths2delete.push_back(*clit1);
-			if((*clit1)->edgels.size()==2 && curve_frag_graph_.cFrags[other_end_id].size() + curve_frag_graph_.pFrags[other_end_id].size()==1) // single free end link
+			if((*clit1)->edgels.size()<=3 && curve_frag_graph_.cFrags[other_end_id].size() + curve_frag_graph_.pFrags[other_end_id].size()==1) // free end link
 				paths2delete.push_back(*clit1);
 			else
 				cur_jct_paths.push_back(*clit1);
@@ -2722,10 +2823,8 @@ void dbdet_sel_base::resolve_paths_conflict()
 
 				if(is_cross_over((*clit1), (*clit2)))
 				{
-					vcl_vector<dbdet_edgel*> vvv1((*clit1)->edgels.begin(), (*clit1)->edgels.end());
-					vcl_vector<dbdet_edgel*> vvv2((*clit2)->edgels.begin(), (*clit2)->edgels.end());
-					double cost1=compute_path_metric3(dummy_path, vvv1, dummy_path);
-					double cost2=compute_path_metric3(dummy_path, vvv2, dummy_path);
+					double cost1=compute_path_metric3((*clit1)->edgels);
+					double cost2=compute_path_metric3((*clit2)->edgels);
 					if(cost1>cost2)
 					{
 						curve_frag_graph_.extract_fragment(*clit1);
@@ -2743,8 +2842,116 @@ void dbdet_sel_base::resolve_paths_conflict()
 		}
 		clit0 ++;
 	}
-
 	merge_non_jct_curve_frags(); // merge all the curve fragments, except at junctions
+	///////////////////////////////////////////////////////////////////////////////////////////////////////
+	// 3. Prune out extremely short curve fragments at very certain false positive T-junction
+	///////////////////////////////////////////////////////////////////////////////////////////////////////
+	for (unsigned i=0; i<edgemap_->edgels.size(); i++)
+	{
+	    dbdet_edgel_chain *c1=0, *c2=0;
+	    dbdet_edgel* eA = edgemap_->edgels[i];
+	    bool found_T = false;
+
+	    int deg = curve_frag_graph_.pFrags[i].size()+ curve_frag_graph_.cFrags[i].size();
+	    //degree 3 is a junction (T-junction or Y-junction)
+	    if (deg>2) //  Make length of contour as the first priority
+	    {
+	        //goal is to see if any two will produce smooth continuation
+	    	dbdet_edgel_chain_list node_frags;
+			dbdet_edgel_chain_list_iter p_fit = curve_frag_graph_.pFrags[i].begin();
+			for(;p_fit!=curve_frag_graph_.pFrags[i].end();p_fit++)
+			{
+				if((*p_fit)->edgels.front() == (*p_fit)->edgels.back()) // skip circle
+					continue;
+				node_frags.push_back(*p_fit);
+			}
+
+	        dbdet_edgel_chain_list_iter c_fit = curve_frag_graph_.cFrags[i].begin();
+			for(;c_fit!=curve_frag_graph_.cFrags[i].end();c_fit++)
+	        {
+				if((*c_fit)->edgels.front() == (*c_fit)->edgels.back()) // skip circle
+					continue;
+	            node_frags.push_back(*c_fit);
+	        }
+
+			if(node_frags.size()<3) // for the case initial deg>2 is due to circle, do not consider 4 way junction either
+			{
+				for (dbdet_edgel_chain_list_iter fit_1=node_frags.begin(); fit_1!=node_frags.end(); fit_1++)
+				{
+					if((*fit_1)!=c1 && (*fit_1)!=c2 && is_short_high_cost_curve_frag(*fit_1))
+					{
+						curve_frag_graph_.extract_fragment(*fit_1);
+					}
+				}
+				continue;
+			}
+
+			//sort all the pfrags and cfrags in length
+			node_frags.sort(is_longer);
+
+	        //compare each pair to decide merge or not
+	        dbdet_edgel_chain_list_iter fit_1=node_frags.begin();
+			for (;fit_1!=--node_frags.end();)
+			{
+				c1= *fit_1;
+
+				if(c1->edgels.back()!= eA)
+				{
+					curve_frag_graph_.extract_fragment(c1);
+					vcl_reverse(c1->edgels.begin(), c1->edgels.end());
+					curve_frag_graph_.insert_fragment(c1);
+				}
+				fit_1++;
+				dbdet_edgel_chain_list_iter fit_2 = fit_1, max_fit = fit_1;
+				double max_SM = 0;
+				for (;fit_2!=node_frags.end();fit_2++)
+				{
+					c2=*fit_2;
+					if(c2->edgels.back()== eA){
+						curve_frag_graph_.extract_fragment(c2);
+						vcl_reverse(c2->edgels.begin(), c2->edgels.end());
+						curve_frag_graph_.insert_fragment(c2);
+					}
+
+					double SM_0 = get_max_continuity(c1,c2);
+					if(SM_0>max_SM){
+						max_SM = SM_0;
+						max_fit = fit_2;
+					}
+				}
+				if(max_SM>=0.9)
+				{
+					c2=*max_fit;
+					found_T = true;
+					//curve_frag_graph_.extract_fragment(c1);
+					//curve_frag_graph_.extract_fragment(c2);
+					//c1->append(c2->edgels);
+					//curve_frag_graph_.insert_fragment(c1);
+					break;
+				}
+				//if(fit_2!=node_frags.end())
+				//    break;
+			}
+
+
+			// if the remaining path is short and high cost, remove it
+			if(found_T)
+			{
+				for (fit_1=node_frags.begin(); fit_1!=node_frags.end(); fit_1++)
+				{
+					if((*fit_1)!=c1 && (*fit_1)!=c2 && is_short_high_cost_curve_frag(*fit_1))
+					{
+						curve_frag_graph_.extract_fragment(*fit_1);
+					}
+				}
+			}
+
+		}
+	}
+	merge_non_jct_curve_frags(); // merge all the curve fragments, except at junctions
+
+
+
 /*
 	//////////////////////////////////////////////////////////////////
 	// Resolve conflicting paths : IS not necessuary when there is NO FP T-junction anymore
@@ -3755,6 +3962,12 @@ void dbdet_sel_base::merge_non_jct_curve_frags()
 				//curve_frag_graph_.pFrags[c1->edgels.front()->id].remove(c1);
 			delete c2;
 		}
+		/*else if (c1->edgels.front()==c2->edgels.back())// form a cycle
+		{
+			c1->append(c2->edgels);
+			curve_frag_graph_.insert_fragment(c1);
+			delete c2;
+		}*/
 		else{
 			curve_frag_graph_.insert_fragment(c1);
 			curve_frag_graph_.insert_fragment(c2);
@@ -3825,6 +4038,31 @@ void dbdet_sel_base::prune_extreme_short_curve_frags() //  those isolated frags 
 	}
 }
 
+//:  those frags with only <=3 edges, with avg step length > 1
+bool dbdet_sel_base::is_short_high_cost_curve_frag(dbdet_edgel_chain* chain)
+{
+
+		if(chain->edgels.size()>4)
+			return false;
+
+		// remove single link
+		if(chain->edgels.size()==2)
+			return true;
+
+
+		// remove free end short curve fragments
+		int eS_id = (chain)->edgels.front()->id;
+		int eE_id = (chain)->edgels.back()->id;
+		if(curve_frag_graph_.cFrags[eS_id].size() + curve_frag_graph_.pFrags[eS_id].size()==1
+				|| curve_frag_graph_.cFrags[eE_id].size() + curve_frag_graph_.pFrags[eE_id].size()==1 )
+			return true;
+
+		// remove high cost curve fragments
+		if(compute_path_metric3((chain)->edgels)>1.25)
+			return true;
+
+		return false;
+}
 
 //: A pre-processing function to fill small gaps so as to simplify the graph
 //New version: we replaced end-to-end gap filling by end-to-non-end gap filling, but only link once. This is very risky.
