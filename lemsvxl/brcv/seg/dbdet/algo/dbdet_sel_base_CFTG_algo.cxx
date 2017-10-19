@@ -2213,6 +2213,10 @@ void dbdet_sel_base::resolve_junction_conflict()
 
 	vcl_cout << "Extract junctions curve fragments" << vcl_endl;
 
+
+	bool prune = false;
+	if(prune)
+	{
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//Consider the T-junctions formed in extracting junction-associated curve fragments as false positive
 	//locate them, only keep the most continuous two branches, based on local geometric continuity
@@ -2236,18 +2240,13 @@ void dbdet_sel_base::resolve_junction_conflict()
 			if(curve_frag_graph_.cFrags[cur_chain->edgels[j]->id].size() >1)
 			{
 				FP_jct_index.push_back(j); // the later case will solve this one by one
-				/*dbdet_edgel_chain_list_iter clit1=curve_frag_graph_.cFrags[cur_chain->edgels[j]->id].begin();
-				for (;clit1!=curve_frag_graph_.cFrags[cur_chain->edgels[j]->id].end(); clit1 ++)
-				{
-					// update flag of linked edges
-					//for(int k=1;k<(*clit1)->edgels.size()-1;k++)
-						//edge_link_graph_.linked[(*clit1)->edgels[k]->id]=0;
-					curve_frag_graph_.extract_fragment(*clit1);
-					clit1--;
-					//vcl_cout << "remove path at point: "<< cur_chain->edgels[j]->id << " j:"<< j << " start at:"<< cur_chain->edgels[0]->id << " end at:"<< cur_chain->edgels.back()->id<< vcl_endl;
-
-				}
-				continue;*/
+				//dbdet_edgel_chain_list_iter clit1=curve_frag_graph_.cFrags[cur_chain->edgels[j]->id].begin();
+				//for (;clit1!=curve_frag_graph_.cFrags[cur_chain->edgels[j]->id].end(); clit1 ++)
+				//{
+				//	curve_frag_graph_.extract_fragment(*clit1);
+				//	clit1--;
+				//}
+				//continue;
 			}
 
 		}
@@ -2356,6 +2355,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 
 					cur_jct2_paths.push_back(*clit3);
 				}
+				/*
 				// check if another path from jct1 (path3) intersect at another path from jct 2
 				dbdet_edgel_chain* joint_chain2;
 				dbdet_edgel_chain* cur_chain2;
@@ -2382,7 +2382,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 						}
 					}
 					clit3++;
-				}
+				}*/
 
 				// check if joint_chain2 cross over any paths from jct2
 				for (clit3= cur_jct2_paths.begin(); clit3!= cur_jct2_paths.end(); clit3++)
@@ -2393,6 +2393,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 						//vcl_cout << "remove joint chain from jct1: "<<jct1 <<vcl_endl;
 						// do not need to extract joint_chain which is already extracted
 
+/*
 						// make the remaining intersect point as true junction
 						curve_frag_graph_.extract_fragment(cur_chain2);
 						vcl_vector<dbdet_edgel*> vvv(cur_chain2->edgels.begin()+intersect_j, cur_chain2->edgels.end());
@@ -2400,16 +2401,31 @@ void dbdet_sel_base::resolve_junction_conflict()
 						new_chain->append(vvv);
 						cur_chain2->edgels.erase(cur_chain2->edgels.begin()+intersect_j+1, cur_chain2->edgels.end());
 						curve_frag_graph_.insert_fragment(cur_chain2);
-						curve_frag_graph_.insert_fragment(new_chain);
+						curve_frag_graph_.insert_fragment(new_chain);*/
 						has_cross_case = true;
+						clit0 --; // this will ensure to check cur_chain again in case there are other FP T-junctions coming afterwards
+						// A Special case:
+						// for the joint to delete, if there is another T junction in the middle, cut the joint chain, put the remaining portion back
+						vcl_reverse(joint_chain->edgels.begin(), joint_chain->edgels.end()); // reverse it back
+						for(int kk = 1; kk<joint_chain->edgels.size()-1; kk++)
+						{
+							if(curve_frag_graph_.pFrags[joint_chain->edgels[kk]->id].size() + curve_frag_graph_.cFrags[joint_chain->edgels[kk]->id].size()>0)
+							{
+								joint_chain->edgels.erase(joint_chain->edgels.begin(), joint_chain->edgels.begin()+kk);
+								curve_frag_graph_.insert_fragment(joint_chain);
+								break;
+							}
+						}
+
 						// update junction label
 						if(curve_frag_graph_.pFrags[jct1].size() + curve_frag_graph_.cFrags[jct1].size()<3)
 							curve_frag_graph_.junction_edgels[jct1]=0;
 						break;
 					}
+					/*
 					else if(intersect_j>0 && is_cross_over(*clit3, joint_chain2) && (*clit3)!=cur_chain2) // intersect_j>0 indicates that there is another intersect path
 					{
-						//vcl_cout << "remove joint chain 2 from jct1: "<<jct1 <<vcl_endl;
+						vcl_cout << "remove joint chain 2 from jct1: "<<jct1 <<vcl_endl;
 						curve_frag_graph_.extract_fragment(joint_chain2);
 						// insert joint_chain back
 						vcl_reverse(joint_chain->edgels.begin(), joint_chain->edgels.end()); // reverse it back
@@ -2428,7 +2444,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 						if(curve_frag_graph_.pFrags[jct1].size() + curve_frag_graph_.cFrags[jct1].size()<3)
 							curve_frag_graph_.junction_edgels[jct1]=0;
 						break;
-					}
+					}*/
 				}
 			}
 
@@ -2459,9 +2475,8 @@ void dbdet_sel_base::resolve_junction_conflict()
 				if(joint_chain->edgels.size()==2 && compute_path_len(joint_chain->edgels)>2) // if the joint is single long link, remove directly
 					clit0 --; // this will ensure to check cur_chain again in case there are other FP T-junctions coming afterwards
 				// The case to choose joint over sub1
-				else if(cos_j2 > cos_12 )
+				else if((cos_j2 > cos_12 + 0.1))// && sub_path_1.size()<5) || (sub_path_1.size()==2 && compute_path_len(sub_path_1)>2))
 				{
-					//vcl_cout << "solve FP T-junction" << vcl_endl;
 					clit0 --;
 					curve_frag_graph_.extract_fragment(cur_chain);// remove the pointer from the graph, and delete
 					joint_chain->append(sub_path_2);
@@ -2470,7 +2485,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 					//break;
 				}
 				// The case to choose joint over sub2
-				else if(cos_j1  > cos_21 )
+				else if((cos_j1  > cos_21 + 0.1))// && sub_path_2.size()<5) || (sub_path_2.size()==2 && compute_path_len(sub_path_2)>2))
 				{
 					//vcl_cout << "solve FP T-junction" << vcl_endl;
 					clit0 --;
@@ -2504,6 +2519,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 
 		clit0 ++;
 	}
+	}
 	refresh_linked_condition();
 	vcl_cout << "resolve junction conflict" << vcl_endl;
 
@@ -2532,7 +2548,7 @@ void dbdet_sel_base::extract_non_jct_curve_frages()
 			}
 		}
 
-		// if the path to add is to form a junction, do not extract
+		// if the path to add is to form a T-junction, do not extract
 		if(curve_frag_graph_.pFrags[best_path.back()->id].size() + curve_frag_graph_.cFrags[best_path.back()->id].size()<1)
 			continue;
 
@@ -2593,8 +2609,8 @@ void dbdet_sel_base::extract_non_jct_curve_frages()
 				break;
 			}
 		}
-		// if the path to add is to form a junction, do not extract
-		if(curve_frag_graph_.pFrags[best_path.back()->id].size() + curve_frag_graph_.cFrags[best_path.back()->id].size()>1 || best_path.size()==2)
+		// if the path to add is to form a T-junction, do not extract
+		if((curve_frag_graph_.pFrags[best_path.back()->id].size() + curve_frag_graph_.cFrags[best_path.back()->id].size()<1 && edge_link_graph_.linked[best_path.back()->id]) || best_path.size()==2)
 			continue;
 
 		bool found_overlapping = false;
@@ -2722,6 +2738,7 @@ void dbdet_sel_base::resolve_paths_conflict()
 				//found the double links, remover the shorter path
 				if(other_end_id1==other_end_id2)
 				{
+					//vcl_cout << "remove double link other end: " << other_end_id1 << vcl_endl;
 					int len1 = compute_path_len(path1);
 					int len2 = compute_path_len(path2);
 
@@ -2848,7 +2865,7 @@ void dbdet_sel_base::resolve_paths_conflict()
 	///////////////////////////////////////////////////////////////////////////////////////////////////////
 	for (unsigned i=0; i<edgemap_->edgels.size(); i++)
 	{
-	    dbdet_edgel_chain *c1=0, *c2=0;
+
 	    dbdet_edgel* eA = edgemap_->edgels[i];
 	    bool found_T = false;
 
@@ -2878,7 +2895,7 @@ void dbdet_sel_base::resolve_paths_conflict()
 			{
 				for (dbdet_edgel_chain_list_iter fit_1=node_frags.begin(); fit_1!=node_frags.end(); fit_1++)
 				{
-					if((*fit_1)!=c1 && (*fit_1)!=c2 && is_short_high_cost_curve_frag(*fit_1))
+					if(is_short_high_cost_curve_frag(*fit_1))
 					{
 						curve_frag_graph_.extract_fragment(*fit_1);
 					}
@@ -2889,7 +2906,9 @@ void dbdet_sel_base::resolve_paths_conflict()
 			//sort all the pfrags and cfrags in length
 			node_frags.sort(is_longer);
 
-	        //compare each pair to decide merge or not
+		    dbdet_edgel_chain *c1;
+		    dbdet_edgel_chain *c2;
+	        //compare each pair to decide if it is a T-junction
 	        dbdet_edgel_chain_list_iter fit_1=node_frags.begin();
 			for (;fit_1!=--node_frags.end();)
 			{
@@ -2901,8 +2920,9 @@ void dbdet_sel_base::resolve_paths_conflict()
 					vcl_reverse(c1->edgels.begin(), c1->edgels.end());
 					curve_frag_graph_.insert_fragment(c1);
 				}
-				fit_1++;
-				dbdet_edgel_chain_list_iter fit_2 = fit_1, max_fit = fit_1;
+				dbdet_edgel_chain_list_iter fit_2 = fit_1;
+				fit_2 ++;
+				dbdet_edgel_chain_list_iter max_fit = fit_1;
 				double max_SM = 0;
 				for (;fit_2!=node_frags.end();fit_2++)
 				{
@@ -2931,6 +2951,7 @@ void dbdet_sel_base::resolve_paths_conflict()
 				}
 				//if(fit_2!=node_frags.end())
 				//    break;
+				fit_1++;
 			}
 
 
@@ -2941,6 +2962,7 @@ void dbdet_sel_base::resolve_paths_conflict()
 				{
 					if((*fit_1)!=c1 && (*fit_1)!=c2 && is_short_high_cost_curve_frag(*fit_1))
 					{
+						//vcl_cout << "remove a short curve at jct: " << i << vcl_endl;
 						curve_frag_graph_.extract_fragment(*fit_1);
 					}
 				}
@@ -2948,6 +2970,7 @@ void dbdet_sel_base::resolve_paths_conflict()
 
 		}
 	}
+	//refresh_linked_condition();
 	merge_non_jct_curve_frags(); // merge all the curve fragments, except at junctions
 
 
@@ -3960,7 +3983,7 @@ void dbdet_sel_base::merge_non_jct_curve_frags()
 			//when it makes a closed contour, just count as the child frag rather than parent frag
 			//if(c1->edgels.front()==c1->edgels.back())
 				//curve_frag_graph_.pFrags[c1->edgels.front()->id].remove(c1);
-			delete c2;
+			//delete c2;
 		}
 		/*else if (c1->edgels.front()==c2->edgels.back())// form a cycle
 		{
@@ -4042,7 +4065,7 @@ void dbdet_sel_base::prune_extreme_short_curve_frags() //  those isolated frags 
 bool dbdet_sel_base::is_short_high_cost_curve_frag(dbdet_edgel_chain* chain)
 {
 
-		if(chain->edgels.size()>4)
+		if(chain->edgels.size()>=4)
 			return false;
 
 		// remove single link
@@ -4058,7 +4081,7 @@ bool dbdet_sel_base::is_short_high_cost_curve_frag(dbdet_edgel_chain* chain)
 			return true;
 
 		// remove high cost curve fragments
-		if(compute_path_metric3((chain)->edgels)>1.25)
+		if(compute_path_len((chain)->edgels)/((chain)->edgels.size()-1)>1.5)
 			return true;
 
 		return false;
