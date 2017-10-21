@@ -462,8 +462,6 @@ double dbdet_sel_base::compute_path_metric3(vcl_vector<dbdet_edgel*>& Pchain,
     double a;
     if(ds<=1.0) a=1.0; else a=ds;
     total_ds += ds;
-    //compute dtheta: tangent(i) - tangent(i-1)
-    double dtheta = vcl_pow((vcl_cos(eA->tangent) - vcl_cos(eP->tangent)), 2) + vcl_pow((vcl_sin(eA->tangent) - vcl_sin(eP->tangent)), 2);
 
     //compute dt: dir(i, i-1) - dir(i-1, i-2)
     double thc = dbdet_vPointPoint(eP->pt, eA->pt); // arc_tan2
@@ -471,7 +469,10 @@ double dbdet_sel_base::compute_path_metric3(vcl_vector<dbdet_edgel*>& Pchain,
 
     if(i==1)
     	dt=0;
-    cost += dt + dtheta + a*vcl_pow(ds,2);
+    cost += dt + a*vcl_pow(ds,2);
+    //compute dtheta: tangent(i) - tangent(i-1)
+    //double dtheta = vcl_pow((vcl_cos(eA->tangent) - vcl_cos(eP->tangent)), 2) + vcl_pow((vcl_sin(eA->tangent) - vcl_sin(eP->tangent)), 2);
+    //cost += dtheta;
 
     thp = thc;//save the current vector for the next iteration
   }
@@ -496,8 +497,6 @@ double dbdet_sel_base::compute_path_metric3(vcl_deque<dbdet_edgel*>& chain)
     double a;
     if(ds<=1.0) a=1.0; else a=ds;
     total_ds += ds;
-    //compute dtheta: tangent(i) - tangent(i-1)
-    double dtheta = vcl_pow((vcl_cos(eA->tangent) - vcl_cos(eP->tangent)), 2) + vcl_pow((vcl_sin(eA->tangent) - vcl_sin(eP->tangent)), 2);
 
     //compute dt: dir(i, i-1) - dir(i-1, i-2)
     double thc = dbdet_vPointPoint(eP->pt, eA->pt); // arc_tan2
@@ -505,7 +504,10 @@ double dbdet_sel_base::compute_path_metric3(vcl_deque<dbdet_edgel*>& chain)
 
     if(i==1)
     	dt=0;
-    cost += dt + dtheta + a*vcl_pow(ds,2);
+    cost += dt + a*vcl_pow(ds,2);
+    //compute dtheta: tangent(i) - tangent(i-1)
+    //double dtheta = vcl_pow((vcl_cos(eA->tangent) - vcl_cos(eP->tangent)), 2) + vcl_pow((vcl_sin(eA->tangent) - vcl_sin(eP->tangent)), 2);
+    //cost += dtheta;
 
     thp = thc;//save the current vector for the next iteration
   }
@@ -999,6 +1001,40 @@ static bool is_continue (const dbdet_edgel_chain *c1, const dbdet_edgel_chain *c
 	}
 	return false;
 }
+
+static bool is_not_continue (const dbdet_edgel_chain *c1, const dbdet_edgel_chain *c2)
+{
+	int nbr_limit = 3;
+	int sz1 = (c1->edgels.size()<nbr_limit)?c1->edgels.size():nbr_limit;
+	int sz2 = (c2->edgels.size()<nbr_limit)?c2->edgels.size():nbr_limit;
+ 	dbdet_edgel* e1;dbdet_edgel* e4;
+	dbdet_edgel* e2 = c1->edgels.back(); // Last edge of c1
+	dbdet_edgel* e3 = c2->edgels.front(); // Front edge of c2
+	double dx1=0,dy1=0,dy2=0,dx2=0,s1=0,s2=0,s=0,SM_1=0;
+
+	for(int i=1;i<sz1;i++)
+	{
+		e1 = c1->edgels[c1->edgels.size()-1-i];
+		dx1 = e2->pt.x()-e1->pt.x();
+		dy1 = e2->pt.y()-e1->pt.y();
+		for(int j=1;j<sz2 ;j++)
+		{
+			e4 = c2->edgels[j];
+			dx2 = e4->pt.x()-e3->pt.x();
+			dy2 = e4->pt.y()-e3->pt.y();
+			SM_1 = (dx1*dx2 + dy1*dy2)/vcl_sqrt(dx1*dx1+dy1*dy1)/vcl_sqrt(dx2*dx2+dy2*dy2);
+
+			if(SM_1<0)
+				return true;
+			//else if(SM_1<Theta_2)
+				//return false;
+			//else
+				//continue;
+		}
+	}
+	return false;
+}
+
 
 static double get_max_continuity (const dbdet_edgel_chain *c1, const dbdet_edgel_chain *c2)
 {
@@ -2214,7 +2250,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 	vcl_cout << "Extract junctions curve fragments" << vcl_endl;
 
 
-	bool prune = false;
+	bool prune = true;
 	if(prune)
 	{
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2355,10 +2391,10 @@ void dbdet_sel_base::resolve_junction_conflict()
 
 					cur_jct2_paths.push_back(*clit3);
 				}
-				/*
+
 				// check if another path from jct1 (path3) intersect at another path from jct 2
-				dbdet_edgel_chain* joint_chain2;
-				dbdet_edgel_chain* cur_chain2;
+				dbdet_edgel_chain* joint_chain2=0;
+				dbdet_edgel_chain* cur_chain2=0;
 				int intersect_j = 0;
 				clit3=  cur_jct2_paths.begin();
 				while (clit3!=  cur_jct2_paths.end())
@@ -2382,7 +2418,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 						}
 					}
 					clit3++;
-				}*/
+				}
 
 				// check if joint_chain2 cross over any paths from jct2
 				for (clit3= cur_jct2_paths.begin(); clit3!= cur_jct2_paths.end(); clit3++)
@@ -2390,18 +2426,20 @@ void dbdet_sel_base::resolve_junction_conflict()
 					// remove the joint_chain that cross over
 					if(is_cross_over(*clit3, joint_chain) && (*clit3)!=cur_chain)
 					{
-						//vcl_cout << "remove joint chain from jct1: "<<jct1 <<vcl_endl;
+						vcl_cout << "remove joint chain from jct1: "<<jct1 <<vcl_endl;
 						// do not need to extract joint_chain which is already extracted
 
-/*
-						// make the remaining intersect point as true junction
-						curve_frag_graph_.extract_fragment(cur_chain2);
-						vcl_vector<dbdet_edgel*> vvv(cur_chain2->edgels.begin()+intersect_j, cur_chain2->edgels.end());
-						dbdet_edgel_chain* new_chain = new dbdet_edgel_chain();
-						new_chain->append(vvv);
-						cur_chain2->edgels.erase(cur_chain2->edgels.begin()+intersect_j+1, cur_chain2->edgels.end());
-						curve_frag_graph_.insert_fragment(cur_chain2);
-						curve_frag_graph_.insert_fragment(new_chain);*/
+						if(cur_chain2)
+						{
+							// make the remaining intersect point as true junction
+							curve_frag_graph_.extract_fragment(cur_chain2);
+							vcl_vector<dbdet_edgel*> vvv(cur_chain2->edgels.begin()+intersect_j, cur_chain2->edgels.end());
+							dbdet_edgel_chain* new_chain = new dbdet_edgel_chain();
+							new_chain->append(vvv);
+							cur_chain2->edgels.erase(cur_chain2->edgels.begin()+intersect_j+1, cur_chain2->edgels.end());
+							curve_frag_graph_.insert_fragment(cur_chain2);
+							curve_frag_graph_.insert_fragment(new_chain);
+						}
 						has_cross_case = true;
 						clit0 --; // this will ensure to check cur_chain again in case there are other FP T-junctions coming afterwards
 						// A Special case:
@@ -2422,8 +2460,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 							curve_frag_graph_.junction_edgels[jct1]=0;
 						break;
 					}
-					/*
-					else if(intersect_j>0 && is_cross_over(*clit3, joint_chain2) && (*clit3)!=cur_chain2) // intersect_j>0 indicates that there is another intersect path
+					else if(joint_chain2>0 && intersect_j>0 && is_cross_over(*clit3, joint_chain2) && (*clit3)!=cur_chain2) // intersect_j>0 indicates that there is another intersect path
 					{
 						vcl_cout << "remove joint chain 2 from jct1: "<<jct1 <<vcl_endl;
 						curve_frag_graph_.extract_fragment(joint_chain2);
@@ -2444,7 +2481,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 						if(curve_frag_graph_.pFrags[jct1].size() + curve_frag_graph_.cFrags[jct1].size()<3)
 							curve_frag_graph_.junction_edgels[jct1]=0;
 						break;
-					}*/
+					}
 				}
 			}
 
@@ -3745,11 +3782,11 @@ void dbdet_sel_base::topologial_NMS(int edgel_id)
     		for( clit1= curve_frag_graph_.HypFrags[connect_id].begin(); clit1!=curve_frag_graph_.HypFrags[connect_id].end(); clit1++)
     			end_ids_1.insert((*clit1)->edgels.front()->id);
 
-    		if(end_ids_0 == end_ids_1) // only neighbors sharing the same set of nodes are to suppress
-    		{
+    		//if(end_ids_0 == end_ids_1) // only neighbors sharing the same set of nodes are to suppress
+    		//{
 				double cur_cost = 0;
 				int cur_total_sz = 0;
-				dbdet_edgel_chain_list_iter clit1;
+				//dbdet_edgel_chain_list_iter clit1;
 				for( clit1= curve_frag_graph_.HypFrags[connect_id].begin(); clit1!=curve_frag_graph_.HypFrags[connect_id].end(); clit1++)
 				{
 					int path_sz = (*clit1)->edgels.size();
@@ -3769,7 +3806,7 @@ void dbdet_sel_base::topologial_NMS(int edgel_id)
 				}
 				else
 					curve_frag_graph_.junction_edgels[connect_id] = 0;
-    		}
+    		//}
 
     	}
     }
@@ -3976,7 +4013,7 @@ void dbdet_sel_base::merge_non_jct_curve_frags()
 			vcl_reverse(c1->edgels.begin(), c1->edgels.end());
 		}
 
-		if ( is_continue(c1, c2)){ //if two contours are all very short < 5 edges and are continuous, merge them anyway
+		if ( !is_not_continue(c1, c2)){ //if two contours are all very short < 5 edges and are continuous, merge them anyway
 			//merge the two contours
 			c1->append(c2->edgels);
 			curve_frag_graph_.insert_fragment(c1);
