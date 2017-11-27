@@ -298,6 +298,10 @@ Download youtube playlists
 youtube-dl -cit --merge-output-format mp4 -k https://www.youtube.com/playlist?list=PL1tkMA9lsTiWppAn3QbZePg5QyS9cRZhF
 youtube-dl -cit --merge-output-format mp4 -k https://www.youtube.com/playlist?list=PL1tkMA9lsTiWppAn3QbZePg5QyS9cRZhF
 
+# Useful:
+#       --playlist-start NUMBER
+#              Playlist video to start at (default is 1)
+
 # cit is default now
 youtube-dl --extract-audio --audio-format mp3 https://www.youtube.com/playlist?list=PLD6030E61BF2B5C08
 
