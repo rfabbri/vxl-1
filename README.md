@@ -223,6 +223,13 @@ sw            # switches path between vxl source and vxl-bin
 mymake        # works the same if you are already in vxl-bin
 ```
 
+### Cmake anywhere with cm
+```bash
+pwd           # we are in any folder, say, vpe/vxd/contrib/brld/bmvgd/bmcsd
+cm            # runs cmake as if you went to vpe/vxd-bin
+              # similarly in any folder of vxl or lemsvxl
+```
+
 ### CD Path
 
 If you setup your CDPATH per `scripts/devsetup/tips`,
