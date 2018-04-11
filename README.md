@@ -223,6 +223,8 @@ sw            # switches path between vxl source and vxl-bin
 mymake        # works the same if you are already in vxl-bin
 ```
 
+In my system, I have set `alias m='mymake'`.
+
 ### Cmake anywhere with cm
 ```bash
 pwd           # we are in any folder, say, vpe/vxd/contrib/brld/bmvgd/bmcsd
