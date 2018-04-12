@@ -131,6 +131,15 @@ EDGE_COUNT=114056
 ....
 ```
 
+### Computing subpixel edges
+
+The third order detector from Amir Tamrakkar is used. There are variants for
+color images that you may want to try, but below is the basics of how to compute
+this.
+
+
+
+
 ## Curve fragment (linked edges) information
 
 The linked curve fragments may be obtained from a different edgemap than what is
@@ -159,6 +168,23 @@ EDGE_COUNT=38
 
 
 ## Curvelet information (Optional)
+
+
+## Visualizing edges, images and camera information
+
+There is a GUI called `sg` (Stereo GUI) in the internal LEMSVXL repository at
+`lemsvpe/lemsvxl/contrib/rfabbri/mw/scripts` which you can use to visualize these
+results:
+
+```
+Sg *.edg *.png *.cemv
+```
+Will open one (image,edg,fragment) triplet per frame.
+If you want the same image for all frames, pass `-m`: 
+
+```
+sg *.edg *.png *.cemv -m
+```
 
 ## Credits
 
