@@ -24,9 +24,6 @@ system and its source code.
 - Camera Pose Estimation Using Curve Differential Geometry, ECCV 2012, Firenze, Italy, R. Fabbri, P. J. Giblin & B. Kimia
 
 
-# Running the system
-
-
 ## Input dataset
 
 ### Basic data: images
@@ -39,16 +36,48 @@ frame_0005.png frame_0006.png frame_0007.png frame_0008.png frame_0009.png
 
 ### Required derived data: cameras
 
+
+#### Camera requirements
 Each image must have a camera model specifying both intrinsic and extrinsic
 parameters ("fully calibrated"). These are allowed to be moderately
-innacurate. Currently, camera models are estimated using a traditional
+innacurate. 
+
+#### How to obtain cameras
+Currently, camera models are estimated using a traditional
 point-based structure from motion system such as Bundler (see also VisualSFM),
-or manual calibration and pose estimation through specifying point or line
+or by manual calibration and pose estimation through specifying point or line
 correspondences. We are in the process of developing fully curve-based
 pipeline for determining the cameras, but this technology is not yet mature.
 
+If your scene is modeled and rendered in CAD, you can obtain camera models using
+Blender together with my python scripts:
+
+* http://blender.stackexchange.com/questions/38009/3x4-camera-matrix-from-blender-camera
+* http://blender.stackexchange.com/questions/40650/blender-camera-from-3x4-matrix
+* Detailed instructions in: https://github.com/rfabbri/pavilion-multiview-3d-dataset
+
+#### Camera format
+
+The camera can be in at least two different formats:
+
+##### Format 1: Intrinsic/Extrinsic pairs
+In this format, the instrinsic parameters are the same for all images,
+and is specified in a single file together with the images, called
+'calib.intrinsic`.  This file contains a standard 3x3 matrix K as described in
+Hartley & Zisserman, in ASCII format. Make sure you use double precision. Example:
+
+```bash
+$ cat calib.intrinsic
+
+   2.2000000000000000e+03   0.0000000000000000e+00   6.4000000000000000e+02
+   0.0000000000000000e+00   2.2000000000000000e+03   3.6000000000000000e+02
+   0.0000000000000000e+00   0.0000000000000000e+00   1.0000000000000000e+00
+```
 
 
-# Credits
 
-Copyright (c) Ricardo Fabbri
+
+
+## Credits
+
+Copyright (c) [Ricardo Fabbri](http://rfabbri.github.io)
