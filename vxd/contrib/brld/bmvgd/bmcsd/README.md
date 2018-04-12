@@ -26,6 +26,10 @@ system and its source code.
 
 ## Input dataset
 
+All that is required is a set of images and (possibly approximate) camera model
+information, detailed below. Curves and edges are computed for each frame as
+detailed below. Only then can the 3D curve sketch itself run.
+
 ### Basic data: images
 The input must be a sequence of images, for instance: 
 
@@ -61,7 +65,15 @@ Blender together with my python scripts:
 The camera can be in at least two different formats.
 The code for this is at `bmcsd_util::read_cam_anytype()`.
 
-##### Format 1: Intrinsic/Extrinsic pairs
+##### Format 1: Projection matrix per image
+
+In this format, a 3x4 camera matrix in text format specified as a
+`.projmatrix` file for each image. For instance, in the same folder as image
+`frame_0005.png` there is a file `frame_0005.projmatrix`. Make sure to use
+double precision when generating your text file.
+
+
+##### Format 2: Intrinsic/Extrinsic pairs
 
 ##### Intrinsic parameters
 In this format, the instrinsic parameters are the same for all images,
@@ -70,7 +82,7 @@ and is specified in a single file together with the images, called
 Hartley & Zisserman, in ASCII format. Make sure you use double precision. Example:
 
 ```bash
-$ cat calib.intrinsic
+cat calib.intrinsic
 
    2.2000000000000000e+03   0.0000000000000000e+00   6.4000000000000000e+02
    0.0000000000000000e+00   2.2000000000000000e+03   3.6000000000000000e+02
@@ -84,7 +96,7 @@ For instance, in the same folder as image `frame_0005.png` there is a file
 `frame_0005.extrinsic`. Each `.extrinsic` file is a text file as follows:
 
 ```bash
-$ cat frame_0005.extrinsic
+cat frame_0005.extrinsic
 
 -0.10343499811291564927 1.6295626415092911987e-15 -0.994636215490558806
 0.11785340886738646105 -0.99295536999761169206 -0.012255905158036265595
@@ -96,13 +108,57 @@ Where the first 3x3 numbers form the camera's rotation matrix, and the last line
 forms the camera center (not the translation vector!). 
 
 
-##### Format 2: Projection matrix per image
+## Subpixel Edgemaps
 
-In this format, a 3x4 camera matrix in text format specified as a
-`.projmatrix` file for each image. For instance, in the same folder as image
-`frame_0005.png` there is a file `frame_0005.projmatrix`. Make sure to use
-double precision when generating your file.
+### Edgemap format
 
+The format is extension `.edg`, in ASCII, one per image file, and looks like:
+
+```
+# EDGE_MAP v3.0
+
+# Format :  [Pixel_Pos]  Pixel_Dir Pixel_Conf  [Sub_Pixel_Pos] Sub_Pixel_Dir Strength Uncer
+
+WIDTH=1280
+HEIGHT=720
+EDGE_COUNT=114056
+
+
+[6, 5]    5.17601 17.4736   [6.48193, 5.48969]   5.17601 17.4736 0.107256
+[7, 5]    5.0873 17.5829   [6.66549, 5.09222]   5.0873 17.5829 0.128001
+[15, 5]    5.5694 21.966   [15.4614, 5.43892]   5.5694 21.966 0.302899
+[16, 5]    5.63831 21.6765   [15.6423, 5.25879]   5.63831 21.6765 0.301624
+....
+```
+
+## Curve fragment (linked edges) information
+
+The linked curve fragments may be obtained from a different edgemap than what is
+used as confirmation. They are extension `.cemv`, one per image file, in ASCII,
+and looks like:
+
+```
+# Format :
+# Each contour block will consist of the following
+# [BEGIN CONTOUR]
+# EDGE_COUNT=num_of_edges
+# [Pixel_Pos]  Pixel_Dir Pixel_Conf  [Sub_Pixel_Pos] Sub_Pixel_Dir Sub_Pixel_Conf 
+# ...
+# ...
+# [END CONTOUR]
+
+CONTOUR_COUNT=
+TOTAL_EDGE_COUNT=
+[BEGIN CONTOUR]
+EDGE_COUNT=38
+ [0, 0]  0.0  0.0  [4.74236, 7.69503]  0.0  0.0
+ [0, 0]  0.0  0.0  [5.04857, 7.94679]  0.0  0.0
+ [0, 0]  0.0  0.0  [5.36333, 8.15191]  0.0  0.0
+ ....
+```
+
+
+## Curvelet information (Optional)
 
 ## Credits
 
