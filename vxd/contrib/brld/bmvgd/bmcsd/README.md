@@ -58,9 +58,12 @@ Blender together with my python scripts:
 
 #### Camera format
 
-The camera can be in at least two different formats:
+The camera can be in at least two different formats.
+The code for this is at `bmcsd_util::read_cam_anytype()`.
 
 ##### Format 1: Intrinsic/Extrinsic pairs
+
+##### Intrinsic parameters
 In this format, the instrinsic parameters are the same for all images,
 and is specified in a single file together with the images, called
 'calib.intrinsic`.  This file contains a standard 3x3 matrix K as described in
@@ -74,8 +77,31 @@ $ cat calib.intrinsic
    0.0000000000000000e+00   0.0000000000000000e+00   1.0000000000000000e+00
 ```
 
+##### Extrinsic parameters
+
+The extrinsic parameters are specified per file, with an extension `.extrinsic`.
+For instance, in the same folder as image `frame_0005.png` there is a file
+`frame_0005.extrinsic`. Each `.extrinsic` file is a text file as follows:
+
+```bash
+$ cat frame_0005.extrinsic
+
+-0.10343499811291564927 1.6295626415092911987e-15 -0.994636215490558806
+0.11785340886738646105 -0.99295536999761169206 -0.012255905158036265595
+-0.98762937136545203565 -0.11848895810541228146 0.10270633682191222802
+1088.1156793830618881 275.07425100389514228 -113.15618865547817506
+```
+
+Where the first 3x3 numbers form the camera's rotation matrix, and the last line
+forms the camera center (not the translation vector!). 
 
 
+##### Format 2: Projection matrix per image
+
+In this format, a 3x4 camera matrix in text format specified as a
+`.projmatrix` file for each image. For instance, in the same folder as image
+`frame_0005.png` there is a file `frame_0005.projmatrix`. Make sure to use
+double precision when generating your file.
 
 
 ## Credits
