@@ -9,4 +9,7 @@
 *   - vpgl: traditional photogrammetry/MVG algorithms,
 *   - becld: Epipolar curve library
 *   - dbkpr: key point recognition, matching & reconstruction
+* 
+* For running the 3D Curve Sketch Pipeline, see the file vxd/contrib/brld/bmvgd/bmcsd/README.md
+*
 */
