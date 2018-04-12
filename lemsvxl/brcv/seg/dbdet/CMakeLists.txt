@@ -57,6 +57,7 @@ set(dbdet_sources
    sel/dbdet_curvelet_map.h          sel/dbdet_curvelet_map.cxx
    sel/dbdet_hyp_tree_graph.h
    sel/dbdet_EHT.h
+   sel/dbdet_DEHT.h
    sel/dbdet_CFTG.h
 
    filter/dbdet_texton_classifier.h  filter/dbdet_texton_classifier.cxx

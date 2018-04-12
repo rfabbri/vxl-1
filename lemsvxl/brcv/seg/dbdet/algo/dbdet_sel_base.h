@@ -52,6 +52,7 @@
 #include <dbdet/sel/dbdet_hyp_tree_graph.h>
 
 #include <dbdet/sel/dbdet_EHT.h>
+#include <dbdet/sel/dbdet_DEHT.h>
 #include <dbdet/sel/dbdet_CFTG.h>
 #include <dbdet/algo/dbdet_sel_knot.h>
 
@@ -358,6 +359,80 @@ public:
 
   //: Construct Hypothesis Tree to improve Contour Extraction
   void Hypothesis_tree_construction();
+
+
+  //***********************************************************************//
+  // Resolving ambiguity based on edge topology graph (ETG):
+  //	junction detection and curve extraction
+  //***********************************************************************//
+
+  //: construct a dynamic edge hyp tree rooted at a given edgel,
+  //  attach hyp paths with each participating edgel
+  dbdet_DEHT* construct_dyn_hyp_tree(dbdet_edgel* e);
+
+  //: construct possible DEHTs from the all the end points of curve frags,
+  void construct_all_DEHTs();
+
+  //: resolving junction based on the attached hyp paths:
+  //  find compatible junctions, and extract the participating curve fragments
+  void resolve_junction_conflict();
+
+  //: extract curve fragments not participating in junctions
+  void extract_non_jct_curve_frages();
+
+  //: resolve paths conflict
+  void resolve_paths_conflict();
+
+  //: perform a geometric consistency check to determine whether a given attached path to junction
+  bool is_JCT_path_legal(vcl_vector<dbdet_edgel*>& edgel_chain);
+
+  //: check if two paths initialing from the same edge are partially overlapping
+  bool is_overlapping(vcl_vector<dbdet_edgel*> edges_1, vcl_vector<dbdet_edgel*> edges_2);
+
+  //: extract non-overlapping attached paths, count the total number
+  int check_a_junction(int edgel_id);
+
+  //: Topological non maximum suppression of junction candidates
+  void topologial_NMS(int edgel_id); // non-recursive version
+
+  //: Enforce the constraint: there is only one junction connecting a unique set of end points
+  void check_jct_compatibility(int edgel_id);
+
+  //: For each curve fragment reaching out from a junction,  cut it when it reach a existing curve fragment
+  void cut_jct_curve_fragment(int edgel_id);
+
+  //: merge all the curve fragment exact at junction point
+  void merge_non_jct_curve_frags();
+
+  //: compute a simple path metric based on the chain and its neighboring support chains
+  double compute_path_metric3(vcl_vector<dbdet_edgel*>& Pchain,
+                               vcl_vector<dbdet_edgel*>& Tchain,
+                               vcl_vector<dbdet_edgel*>& Cchain);
+  double compute_path_metric3(vcl_deque<dbdet_edgel*>& Tchain);
+
+  //: compute the len of the chain
+  double compute_path_len(vcl_deque<dbdet_edgel*>& chain);
+  double compute_path_len(vcl_vector<dbdet_edgel*>& chain);
+
+  //: check if two chains have cross over links
+  bool is_cross_over(dbdet_edgel_chain* chain_1, dbdet_edgel_chain* chain_2);
+
+  //: Pre-processing to fill minor gaps :://Chenhao Liu
+  void pre_processing();
+
+  //:  those isolated frags with only 2 edges, and single long link
+  void prune_extreme_short_curve_frags();
+
+  //:  those frags with only <=3 edges, with avg step cost > 1.5
+  bool is_short_high_cost_curve_frag(dbdet_edgel_chain* chain);
+
+  //: Refresh the linked array to avoid unforeseen mistakes :://Chenhao Liu
+  void refresh_linked_condition();
+
+
+
+
+
 
   //***********************************************************************//
   // Hybrid method: Perform geometric consistency check on curvefragments

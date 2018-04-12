@@ -264,6 +264,7 @@ class dbdet_sel_tableau_sel_command : public vgui_command
       case 5: //extract regular contours from the link graph
       {
         sel_tableau->edge_linker()->extract_regular_contours_from_the_link_graph();
+        sel_tableau->edge_linker()->regular_contour_filter();
         break;
       }
       case 6:
@@ -459,7 +460,7 @@ class dbdet_sel_tableau_sel_command : public vgui_command
         sel_tableau->edge_linker()->Construct_Hypothesis_Tree();
         sel_tableau->edge_linker()->Disambiguation();
         sel_tableau->edge_linker()->correct_CFG_topology();
-	sel_tableau->edge_linker()->Post_Process();
+	    sel_tableau->edge_linker()->Post_Process();
 
         break;
       }
