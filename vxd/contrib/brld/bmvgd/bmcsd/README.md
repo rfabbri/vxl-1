@@ -142,17 +142,46 @@ EDGE_COUNT=114056
 
 The third order detector from Amir Tamrakkar is used. There are variants for
 color images that you may want to try, but below is the basics of how to compute
-this. The basic classes are all open-sourced, located in `vxl/contrib/brl/bseg/sdet/*third*`.
-We provide a commandline utility called `edge` which
+this. The basic classes are all open-sourced, located in `vxl/contrib/brl/bseg/sdet/*third*`,
+with additional code in `vxd/contrib/brld/bsegd/sdetd`.
 
+#### GUI
+For an initial visual exploration of the edge detector's parameters,
+you can start the GUI `sg`, load an image, and compute an edgemap.
+Example
+``
+sg image.png
+``
+Use menu option `Processes > Edge Detection > Third Order Edge Detector`.
+There may be variants for color iamges, but that is "premature optimization";
+leave that for later. 
 
+#### Commandline `edge` program
 
-We recommend compute it in parallel by installing GNU Parallel.
+We provide a commandline utility called `edge`. Example:
+```
+edge image.png
+```
+Will produce the file `image.edg`. You can then inspect both with the GUI
+```
+sg image.png imge.edg                            # I simply use    sg image*
+```
 
+We recommend compute it in parallel by installing GNU Parallel. You can then
+compute the edges for all images of your dataset in parallel:
+```
+parallel edge ::: *.png
+```
 
+#### Parameter search
+If you have a range of reasonable parameters set in the GUI that may work,
+you can search for the best combination in parallel using a commandline script
+called `edge-scan`.
 
 
 ## Curve fragment (linked edges) information
+
+## Curve fragment format
 
 The linked curve fragments may be obtained from a different edgemap than what is
 used as confirmation. They are extension `.cemv`, one per image file, in ASCII,
@@ -180,6 +209,11 @@ EDGE_COUNT=38
 
 Note that this is different from a `.cem` file, which contains more linking
 information. 
+
+#### Parameter search
+If you have a range of reasonable parameters set in the GUI that may work,
+you can search for the best combination in parallel using a commandline script
+called `contour-scan`.
 
 
 ## Curvelet information (Optional)
