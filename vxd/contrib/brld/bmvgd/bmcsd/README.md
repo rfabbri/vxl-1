@@ -210,11 +210,71 @@ EDGE_COUNT=38
 Note that this is different from a `.cem` file, which contains more linking
 information. 
 
+### Computing curve fragments
+
+The symbolic edge linker Amir Tamrakkar is originally used. There are several
+improvements by Yuliang Guo which can also be used.  There are variants for
+color images and texture that you may want to try, but below is the basics of how to compute
+this. The basic classes are all open-sourced, located in `vxl/contrib/brl/bseg/sdet/*symbolic*`,
+with additional code in `vxd/contrib/brld/bsegd/sdetd`.
+
+
+#### GUI
+For an initial visual exploration of the edge linker's parameters,
+you can start the GUI `sg`, load an image and edgemap, and compute curve
+fragments.
+
+Example
+``
+sg image.png image.edg
+``
+(you can also only load the image and compute the edge detector on the GUI)
+
+Use menu option `Processes > Edge Detection > Symbolic Edge Linker`.
+There may be variants, but that is "premature optimization"; leave that for later. 
+
+#### Commandline `contours` program
+
+We provide a commandline utility called `contours`. Example:
+```
+contours image.png
+```
+Will produce the file `image.cemv`. You can then inspect both with the GUI
+```
+sg image.png imge.edg image.cemv                           # I simply use    sg image*
+```
+
+We recommend compute it in parallel by installing GNU Parallel. You can then
+compute the edges for all images of your dataset in parallel:
+
+Case 1) If you want to recompute the edgemaps from scratch (to possibly use
+different parameters than what you used to generate the `.edg` above:
+```
+parallel contours ::: *.png
+```
+
+Case 2) If you want to reuse the edgemaps:
+```
+parallel contours ::: --edgesuffix ::: .edg ::: *.png
+```
+
 #### Parameter search
 If you have a range of reasonable parameters set in the GUI that may work,
 you can search for the best combination in parallel using a commandline script
 called `contour-scan`.
 
+#### Contours prost-processing
+
+We can use machine learning and other prost-processing on top of the edgemaps,
+to get cleaner, well-connected curves. Thesea are provided by scripts
+`contour-break`, `contour-merge`, and `contour-rank`. We recommend running them
+in the following order:
+
+```
+parallel contour-break ::: *.png
+parallel contour-merge ::: *.png
+parallel contour-rank ::: *.png
+```
 
 ## Curvelet information (Optional)
 
