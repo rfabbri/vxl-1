@@ -23,6 +23,13 @@ system and its source code.
 
 - Camera Pose Estimation Using Curve Differential Geometry, ECCV 2012, Firenze, Italy, R. Fabbri, P. J. Giblin & B. Kimia
 
+## System requirements
+
+The 3D Curve Sketch system requires a Unix-like system, such as GNU/Linux and
+Mac OS. The main developer uses both Mac OS and GNU/Linux but originally
+developed the system on a Gentoo Linux workstation. Many of his students and
+collaborators use Ubuntu Linux. The system will run fastest under GNU/Linux.
+
 
 ## Input dataset
 
@@ -135,7 +142,12 @@ EDGE_COUNT=114056
 
 The third order detector from Amir Tamrakkar is used. There are variants for
 color images that you may want to try, but below is the basics of how to compute
-this.
+this. The basic classes are all open-sourced, located in `vxl/contrib/brl/bseg/sdet/*third*`.
+We provide a commandline utility called `edge` which
+
+
+
+We recommend compute it in parallel by installing GNU Parallel.
 
 
 
@@ -165,6 +177,9 @@ EDGE_COUNT=38
  [0, 0]  0.0  0.0  [5.36333, 8.15191]  0.0  0.0
  ....
 ```
+
+Note that this is different from a `.cem` file, which contains more linking
+information. 
 
 
 ## Curvelet information (Optional)
