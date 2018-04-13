@@ -149,12 +149,24 @@ with additional code in `vxd/contrib/brld/bsegd/sdetd`.
 For an initial visual exploration of the edge detector's parameters,
 you can start the GUI `sg`, load an image, and compute an edgemap.
 Example
-``
+```
 sg image.png
-``
+```
 Use menu option `Processes > Edge Detection > Third Order Edge Detector`.
 There may be variants for color iamges, but that is "premature optimization";
-leave that for later. 
+leave that for later. If you want to process an entire video, we recommend the
+commandline option below. But you can also open the frames in the gui like so:
+
+```
+sg image-000.png image-001.png image-002.png   # and so on
+```
+or
+```
+sg *.png
+```
+Which will open one image per frame. You can navigate the frames using the arrow
+keys. After detecting edges in the first frame, you can say `Process and Play
+video`, which will repeat the last used process (edge detection) on each frame.
 
 #### Commandline `edge` program
 
@@ -183,7 +195,21 @@ called `edge-scan`.
 
 This command is implemented as a wrapper over `dborl_edge_third_order`,
 whose source code is located at `lemsvxl/brcv/rec/dborl/algo/edge`. 
-This performs the following steps: 
+
+#### Most important parameters
+
+You will want to detect edges for two purposes:
+
+1) To be used for constructing curve fragments to be reconstructed
+2) To be used as confirmation views to vote for 3D curve hypotheses
+
+For purpose (1), you will want your edges to have very low threshold, so that
+geometric consistency be used as a robust filter by the symbolic edge linker /
+curve fragment extractor below. This is to pick up faint but geometrically
+salient constrast curves, for instance.
+
+For purpose (2), you will want less clutter. This can be tuned using
+ground-truth validation experiments.
 
 
 ## Curve fragment (linked edges) information
