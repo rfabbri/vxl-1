@@ -158,7 +158,8 @@ leave that for later.
 
 #### Commandline `edge` program
 
-We provide a commandline utility called `edge`. Example:
+We provide a commandline program called `edge`, currently located in
+`lemsvxl/contrib/rfabbri/mw/scripts`. Example:
 ```
 edge image.png
 ```
@@ -177,6 +178,12 @@ parallel edge ::: *.png
 If you have a range of reasonable parameters set in the GUI that may work,
 you can search for the best combination in parallel using a commandline script
 called `edge-scan`.
+
+#### Details of the `edge` program
+
+This command is implemented as a wrapper over `dborl_edge_third_order`,
+whose source code is located at `lemsvxl/brcv/rec/dborl/algo/edge`. 
+This performs the following steps: 
 
 
 ## Curve fragment (linked edges) information
@@ -208,7 +215,12 @@ EDGE_COUNT=38
 ```
 
 Note that this is different from a `.cem` file, which contains more linking
-information. 
+information. The original codebase confuses CEM and CEMV throughout the
+codebase; so sometimes a .cem or a function claiming to work on CEM actually
+expects CEMV-type data. The `V' in CEMV means CEM vsol. It is just a convention.
+The process `dbdet_save_cem_process` saves CEM, while `vidpro1_save_cem_process`
+will save it in the format required for the 3D Curve Sketch. This process is
+accessed through the commandline or GUI as described below.
 
 ### Computing curve fragments
 
@@ -233,9 +245,14 @@ sg image.png image.edg
 Use menu option `Processes > Edge Detection > Symbolic Edge Linker`.
 There may be variants, but that is "premature optimization"; leave that for later. 
 
+You can save the edge map in the CEMV format required by the 3D curve sketch by
+using `File > Save > .CEMv`. This will output the raw curve fragments with no
+linking further information.
+
 #### Commandline `contours` program
 
-We provide a commandline utility called `contours`. Example:
+We provide a commandline utility called `contours`, currently located in
+`lemsvxl/contrib/rfabbri/mw/scripts`. Example:
 ```
 contours image.png
 ```
@@ -258,17 +275,27 @@ Case 2) If you want to reuse the edgemaps:
 parallel contours ::: --edgesuffix ::: .edg ::: *.png
 ```
 
+Note: The commandline program `curve` can also generate a more complete CEM file if desired, 
+and will do so instead of CEMV based on the provided extension of the output
+filename when writing to a file.
+
 #### Parameter search
 If you have a range of reasonable parameters set in the GUI that may work,
 you can search for the best combination in parallel using a commandline script
 called `contour-scan`.
 
+#### Details of the `contours` program
+
+This command is implemented as a wrapper over `dborl_compute_contours`,
+whose source code is located at `lemsvxl/brcv/rec/dborl/algo/vox_compute_contours`. 
+This performs the following steps: 
+
 #### Contours prost-processing
 
-We can use machine learning and other prost-processing on top of the edgemaps,
-to get cleaner, well-connected curves. Thesea are provided by scripts
-`contour-break`, `contour-merge`, and `contour-rank`. We recommend running them
-in the following order:
+We can use machine learning and perform complex topological prost-processing on
+top of the edgemaps, to get cleaner, well-connected curves. These are provided
+by scripts `contour-break`, `contour-merge`, and `contour-rank`. We recommend
+running them in the following order:
 
 ```
 parallel contour-break ::: *.png
@@ -294,6 +321,35 @@ If you want the same image for all frames, pass `-m`:
 ```
 sg *.edg *.png *.cemv -m
 ```
+
+### Generate video of edges and curves from GUI
+
+Generate images with OpenGL buffer content (for screenshots and video)
+File → save as movie → multiple file codec
+
+### Semi-manual curve fragment editing
+
+We have a GUI editor to clean and topologically mend 2D curve fragments in case you want
+to perform a semi-automated 3D reconstruction, or use these maps as ground truth
+to train the merge/break/rank filters before applying to large datasets.
+I have a file called `sel_gui-editor.odp` documenting this if need be.
+The CEM visualizer (VXL tableau) has been extended to contain these commands:
+
+```
+select: Left click
+Deselect: "Space"
+Delete: "e"
+Merge: "m"
+Split: "s"
+```
+
+Merging is only applied if curves are close enough (3px);
+Deletion is only applied if only one curve is selected (to prevent accidental deletion);
+There is no "undo" action yet, be careful.
+
+## Visualizing the 3D Curve Sketch
+
+## Multiview curve sketch attributes (`mca`)
 
 ## Credits
 
