@@ -203,13 +203,30 @@ You will want to detect edges for two purposes:
 1) To be used for constructing curve fragments to be reconstructed
 2) To be used as confirmation views to vote for 3D curve hypotheses
 
-For purpose (1), you will want your edges to have very low threshold, so that
+For purpose (1), you will want your edges to have very low threshold (high
+recall), so that
 geometric consistency be used as a robust filter by the symbolic edge linker /
 curve fragment extractor below. This is to pick up faint but geometrically
-salient constrast curves, for instance.
+salient constrast curves, for instance. Leaving the work for the goemetric
+filter also has the advantage of not requiring you to tune the threshold - just
+leave it very low.
 
 For purpose (2), you will want less clutter. This can be tuned using
 ground-truth validation experiments.
+
+From experiments we found out two edge detector parameters are most relevant:
+- sigma (neighborhod filter size)
+- threshold (constrast)
+
+The sigma parameter must be low to avoid localization error; we typically use 2 in
+practice, sometimes 3 for noisy images. Our paper mentions we have used xx.
+
+A typical low threshold for forming curve fragments is 0.2. You may increase
+this in order to avoid the linking stage being too slow, but qualitatively this
+fixed threshold has worked for many datasets for purpose (1) above.
+
+For purpose (2), we suggest sigma at most 2, and a higher threshold. Our
+datasets use:
 
 
 ## Curve fragment (linked edges) information
