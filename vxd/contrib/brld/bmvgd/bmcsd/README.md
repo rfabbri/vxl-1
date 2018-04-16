@@ -288,7 +288,13 @@ sg image.png image.edg
 Use menu option `Processes > Edge Detection > Symbolic Edge Linker`.
 There may be variants, but that is "premature optimization"; leave that for later. 
 
-You can save the edge map in the CEMV format required by the 3D curve sketch by
+What you will see is a set of randomly colored curve fragments, which is
+equivalent of the .CEM file format. You can extract only the curve fragments to
+be used in the 3D Curve Sketch using `Proceses > Edge detection > Extract Linked
+Curves`. The most useful parameters of this filter is the length threshold and
+the Smooth Extracted Contour Number of Times, leaving the stepsize 1. This is a
+simple yet effective curvature-based smoothing invented by Ricardo Fabbri.
+You can now save the edge map in the CEMV format required by the 3D curve sketch by
 using `File > Save > .CEMv`. This will output the raw curve fragments with no
 linking further information.
 
