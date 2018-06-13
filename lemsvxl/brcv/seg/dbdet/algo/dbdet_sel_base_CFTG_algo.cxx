@@ -1890,14 +1890,14 @@ dbdet_DEHT* dbdet_sel_base::construct_dyn_hyp_tree(dbdet_edgel* edge)
       // A node indicates its optimal path to the root via holding only one parent
       vcl_vector<dbdet_edgel*> path1 = cur_node->path;
       path1.push_back((*lit)->ce);
-      // TODO: this need to be changed to a accumulate version to improve efficiency
+      // TODO: A:should not use normalized metric, B: use accumulative computation to improve efficiency
       double cost1 = dbdet_sel_base::compute_path_metric3(connected_frag,path1,dummy_chain);
       // if this a node with the same edgel already exist in the tree
       if(node_list.find((*lit)->ce->id)!=node_list.end()) {
     	  //vcl_cout << "reach a previous added node" << vcl_endl;
     	  dbdet_DEHT_node* child_node = node_list[(*lit)->ce->id];
     	  vcl_vector<dbdet_edgel*> path2 = child_node->path;
-          // TODO: this need to be changed to a accumulate version to improve efficiency
+          // TODO: A:should not use normalized metric, B: use accumulative computation to improve efficiency
           double cost2 = dbdet_sel_base::compute_path_metric3(connected_frag,path2,dummy_chain);
           if(cost1>=cost2) // this path will not be considered
         	  continue;
@@ -2002,7 +2002,7 @@ dbdet_DEHT* dbdet_sel_base::construct_dyn_hyp_tree(dbdet_edgel* edge)
   //////////////////////////////////////////////////////
   // Attach qualified paths to the participating edges
   //////////////////////////////////////////////////////
-	  //vcl_cout << "number of nodes: " << node_list.size() << vcl_endl;
+  // TODO: use a vector to hold costs for HypFrags to avoiding recomputing in later processes !!
   vcl_map<int, dbdet_DEHT_node*>::iterator mit = node_list.begin();
   for (; mit!=node_list.end(); mit++) // it includes root node
   {
