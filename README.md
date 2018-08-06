@@ -7,7 +7,7 @@ coupled projects based on [VXL](http://vxl.sourceforge.net) and
 related utilities into a unified programming environment, making the setup more
 homogeneous among a team. Advantages:
 
-- **No dependency mess:** everyone in the team use the same VXL and VXD versions when working on master.
+- **No dependency mess:** everyone in the team uses the same VXL and VXD versions when working on master.
 - **Plain old Git:** most of the time, updating to/from LEMSVXL, VXL or VXD within VPE is tracked in VPE.
   Only the VPE team sees these changes, uniformly.
 - **Separate repositories for upstream sharing:** subrepos are simultaneously kept in their own upstream repositories.
@@ -128,11 +128,15 @@ then inspect the `vxl/master` branch instead of `vxl-master`.
 
 #### Ubuntu Linux
 The following command installs many of the required packages for building VXL.
-While the './setup-for-development' already
 
 ```bash
   sudo sh scripts/utils/configure-ubuntu-for-programming
 ```
+
+#### Mac OS
+The following website has information on configuring your Mac OS for
+programming: http://wiki.nosdigitais.teia.org.br/Mac
+
 
 ### 2. Compile VXL
 ```bash
