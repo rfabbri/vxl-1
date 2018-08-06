@@ -1,0 +1,5 @@
+#!/bin/sh
+# If your black toner is out, use this to force printing with the color
+# cartridge by converting black to dark blue
+echo producing blue-$1
+convert -density 300 $1 +level-colors 'rgb( 0, 0, 20)',white blue-$1

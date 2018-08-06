@@ -3,10 +3,8 @@
 #set -x
 
 
-VXLDIR=/home/rfabbri/cprg/vxlprg
-
 case $# in
-    0) echo currently in `ls -l $VXLDIR/vxl-bin|egrep -o '(dbg|rel)'`; exit 0
+    0) echo currently in `ls -l $LEMSVPE/vxl-bin|egrep -o '(dbg|rel)'`; exit 0
 esac
 
 case $1 in
@@ -14,11 +12,14 @@ case $1 in
       echo 'Usage: switchbuild (dbg|rel)' 1>&2; exit 2 
     ;;
     dbg | rel)
-      rm -f $VXLDIR/lemsvxl-bin
-      ln -s $VXLDIR/lemsvxl-bin-$1 $VXLDIR/lemsvxl-bin
+      rm -f $LEMSVPE/lemsvxl-bin
+      ln -s $LEMSVPE/lemsvxl-bin-$1 $LEMSVPE/lemsvxl-bin
 
-      rm -f $VXLDIR/vxl-bin
-      ln -s $VXLDIR/vxl-bin-$1 $VXLDIR/vxl-bin
+      rm -f $LEMSVPE/vxl-bin
+      ln -s $LEMSVPE/vxl-bin-$1 $LEMSVPE/vxl-bin
+
+      rm -f $LEMSVPE/vxd-bin
+      ln -s $LEMSVPE/vxd-bin-$1 $LEMSVPE/vxd-bin
     ;;
     *)
       echo 'Usage: switchbuild [-h] [(dbg|rel)]' 1>&2; exit 2 
