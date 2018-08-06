@@ -66,6 +66,23 @@ or
 
 mplayer video.m2t -vo png -frames 5
 
+or
+
+ffmpeg -i file.mpg -r 1/1 $filename%03d.png
+
+         Details:
+                 ffmpeg -i foo.avi -r 1 -s WxH -f image2 foo-%03d.jpeg
+
+         This will extract one video frame per second from the video and will output them in files named
+         foo-001.jpeg, foo-002.jpeg, etc. Images will be rescaled to fit the new WxH values.
+
+         If you want to extract just a limited number of frames, you can use the above command in
+         combination with the -vframes or -t option, or in combination with -ss to start extracting from a
+         certain point in time.
+
+         See also http://stackoverflow.com/questions/10957412/fastest-way-to-extract-frames-using-ffmpeg
+
+
 ----------------------------------------------------------------------
 Make a video from a series of images:
 
@@ -281,7 +298,12 @@ Download youtube playlists
 youtube-dl -cit --merge-output-format mp4 -k https://www.youtube.com/playlist?list=PL1tkMA9lsTiWppAn3QbZePg5QyS9cRZhF
 youtube-dl -cit --merge-output-format mp4 -k https://www.youtube.com/playlist?list=PL1tkMA9lsTiWppAn3QbZePg5QyS9cRZhF
 
+# Useful:
+#       --playlist-start NUMBER
+#              Playlist video to start at (default is 1)
+
 # cit is default now
 youtube-dl --extract-audio --audio-format mp3 https://www.youtube.com/playlist?list=PLD6030E61BF2B5C08
 
 # use -w if you are downloading in parallel in a folder 
+reduce number of colors: ##### convert  +dither -colors 32 notas-pe-2018-p1.png bla.png
