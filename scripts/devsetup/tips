@@ -145,6 +145,8 @@ programming.
   export LEMSVXL LEMSVPE LEMSVXL VXL_SRC VXD_SRC VPE_SRC
 
   Now you can just type 'cd vgl/algo' from anywhere.
+  A copy of Ric Fabbri's .bashrc and .bash_alias with useful VXL-related
+  configuration may be found at lemsvpe/scripts/utils/bash-confi
 
 See  http://wiki.nosdigitais.teia.org.br/VXL  for detailed compile instructions, what
 CMake flags to use, etc.'

@@ -352,7 +352,7 @@ This is an improvement to the alternative process proposed in a [stackoverflow a
 For the curious, the procedure we used to create the VPE monorepo initially is
 in the file [additional-maintenance](./doc/additional-maintenance.md). 
 
-### Pulling in changes from VXL/VXD/LEMSVXL
+### Pulling in changes from VXL/VXD/LEMSVXL/UTILS
 ```bash
 # do it in steps to make sure whats going on
 git fetch vxl
@@ -379,6 +379,7 @@ git co vxl-master
 git merge --ff-only vxl/master  # ff-only is to ensure vxl-master is really tracking vxl/master
 git co master
 
+# When updating 'utils', there's no utils-orig; its not central to LEMSVPE
 cd vxl-orig
 git pull
 cd ..
@@ -394,6 +395,11 @@ git push origin vxl-master-merge
 # git fetch vxl
 # git merge -s recursive -Xsubtree=vxl vxl/master
 ```
+
+Hint: try this with a smaller subrepo project, such as scripts/utils, to get the
+hang of things before attempting to update vxl. Also, make sure updating VXL
+won't break the work of your peers, so do it when the changes look harmless,
+and when you have your test suite up and running.
 
 ### Pushing to VXL/VXD/LEMSVXL upstream from VPE
 
