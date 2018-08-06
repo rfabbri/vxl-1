@@ -1,1 +1,2 @@
-s/\(\\emph{\)lasers\(}\)/lasers/g
+s/\\section\>/\\chapter/g
+s/subsection\>/section/g

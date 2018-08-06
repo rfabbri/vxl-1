@@ -1,6 +1,15 @@
 #!/bin/sh
-#set +x
-gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dDownsampleColorImages=true -dColorImageResolution=250 -dNOPAUSE  -dBATCH -sOutputFile=$2 $1
+#gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dDownsampleColorImages=true -dColorImageResolution=50  -dPDFSETTINGS=/ebook -dNOPAUSE  -dBATCH -sOutputFile=$2 $1
+ofname=`noext $1`-sm.pdf
+rm -f $ofname
+resolution=100
+gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dDownsampleColorImages=true -dColorImageResolution=$resolution  -dDownsampleGrayImages=true -dGrayImageResolution=$resolution -dDetectDuplicateImages -dCompressFonts=true -dNOPAUSE  -dBATCH -sOutputFile=$ofname  $1
+du -sh $1 $ofname
+open $ofname
+#QFACTOR="1000000"
+#gs -sDEVICE=pdfwrite -sOutputFile=$2 -dCompatibilityLevel=1.4 -dDownsampleColorImages=true -dColorImageResolution=200 -dDownsampleGrayImages=true -dGrayImageResolution=200 -dDetectDuplicateImages -dCompressFonts=true -ColorImageDownsampleType=Bicubic -dNOPAUSE  -dBATCH -c "<< /ColorImageDict << /QFactor ${QFACTOR} /Blend 1 /HSamples [2 1 1 2] /VSamples [2 1 1 2] >> >> setdistillerparams" -f $1
+
+#gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=$2 $1
 
 #pdf2ps $1 /tmp/$$-out.ps
 #ps2pdf /tmp/$$-out.ps $1
