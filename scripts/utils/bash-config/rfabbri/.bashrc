@@ -30,69 +30,48 @@ if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
-# set a fancy prompt (non-color, unless we know we "want" color)
-case "$TERM" in
-    xterm-*color*) color_prompt=yes;;
-esac
 
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
-#force_color_prompt=yes
-
-if [ -n "$force_color_prompt" ]; then
-    if tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
-    else
-	color_prompt=
-    fi
-fi
-
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
-unset color_prompt force_color_prompt
-
-
-# Change the window title of X terminals 
-case ${TERM} in
-	xterm*|rxvt*|Eterm|aterm|kterm|gnome)
-		PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME%%.*}:${PWD/$HOME/~}\007"'
-		;;
-	screen)
-		PROMPT_COMMAND='echo -ne "\033_${USER}@${HOSTNAME%%.*}:${PWD/$HOME/~}\033\\"'
-		;;
-esac
 
 # enable color support of ls and also add handy aliases
 # xxx if [ -x /usr/bin/dircolors ]; then
-if [ -x /sw/bin/gdircolors ]; then
-    test -r ~/.dircolors && eval "$(gdircolors -b ~/.dircolors)" || eval "$(gdircolors -b)"
-    alias ls='ls --color=auto'
+if [[ "$MYOS" == "Linux" ]]; then
+  mydircolorpath="/usr/bin/dircolors"
+  mydircolor=dircolors
+else
+  mydircolorpath="/usr/local/bin/gdircolors"
+  mydircolor=gdircolors
+fi
+
+if [ -x $mydircolorpath ]; then
+    test -r ~/.dircolors && eval "$($mydircolor -b ~/.dircolors)" || eval "$($mydircolor -b)"
+    if [[ "$MYOS" == "Linux" ]]; then
+      alias ls='ls --color=auto'
+    else
+      alias ls='ls -G'
+    fi
     #alias dir='dir --color=auto'
     #alias vdir='vdir --color=auto'
-
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
+#    alias grep='grep --color=auto'
+#    alias fgrep='fgrep --color=auto'
+#    alias egrep='egrep --color=auto'
 fi
 
 # VARIABLES
 
 #CVSROOT=/vision/projects/cvsroot
 CVS_RSH=ssh
-LEMSVXL=$HOME/cprg/vxlprg/lemsvxl
-VXL_SRC=$HOME/cprg/vxlprg/vxl
 EDITOR=vim
 PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
-CDPATH=.:..:~:$LEMSVXL:$VXL_SRC/core:$VXL_SRC/contrib:$VXL_SRC/contrib/brl:$VXL_SRC/contrib/brl/bbas:$VXL_SRC/contrib/gel/mrc:$LEMSVXL/brcv:$LEMSVXL/basic:$LEMSVXL/brcv/rec:$LEMSVXL/brcv/seg:$LEMSVXL/contrib/rfabbri:$LEMSVXL/brcv/mvg:/vision:/mnt/
+LEMSVPE=$HOME/cprg/vxlprg/lemsvpe
+LEMSVXL=$LEMSVPE/lemsvxl
+VXL_SRC=$LEMSVPE/vxl
+VXD_SRC=$LEMSVPE/vxd
+VPE_SRC=$LEMSVPE/../vpe
+vgui=qt
+CDPATH=.:..:~:$LEMSVPE:$LEMSVXL:$VXD_SRC/contrib:$VXD_SRC/contrib/brld/bbasd:$VXD_SRC/contrib/brld/bmvgd:$VXD_SRC/contrib/brld/breye1d:$VXD_SRC/contrib/brld/bsegd:$VXD_SRC/contrib/brld/brecd:$VXD_SRC/contrib/brld:$VXL_SRC/core:$VXL_SRC/contrib:$VXD_SRC/old/contrib/gel:$VXD_SRC/old/core:$VXL_SRC/contrib/brl:$VXL_SRC/contrib/brl/bbas:$VXL_SRC/contrib/brl/bseg:$VXL_SRC/contrib/gel/mrc:$LEMSVXL/contrib:$LEMSVXL/brcv:$LEMSVXL/basic:$LEMSVXL/brcv/rec:$LEMSVXL/brcv/seg:$LEMSVXL/contrib/rfabbri:$LEMSVXL/brcv/mvg:/vision:/mnt/
+export LEMSVXL LEMSVPE LEMSVXL VXL_SRC VXD_SRC VPE_SRC vgui
 #TEXMF="/usr/share/texmf"
-TEXINPUTS=".:$HOME/lib/texmf/tex//:$TEXINPUTS"
+export TEXINPUTS=".:$HOME/lib/texmf/tex//:$TEXINPUTS"
 BIBINPUTS=".:/home/rfabbri/lib/doc/bib:/home/rfabbri/lib/doc/old-reference/bib/kimia/vision/:/home/rfabbri/lib/doc/old-reference/bib/kimia/vision/shape/:/home/rfabbri/lib/doc/old-reference/bib/kimia/bib-admin/:/home/rfabbri/lib/doc/old-reference/bib/kimia/math/:/home/rfabbri/lib/doc/old-reference/bib/kimia/:/home/rfabbri/lib/doc/old-reference/bib/kimia/vision/shape-from/:/home/rfabbri/lib/doc/old-reference/bib/kimia/psychology/:/home/rfabbri/lib/doc/old-reference/bib/kimia/vision/segmentation/:/home/rfabbri/lib/doc/old-reference/bib/kimia/medical/:/home/rfabbri/lib/doc/old-reference/bib/kimia/vision/texture:/vision/docs/kimia/reference/:/vision/docs/kimia/reference/old-reference/bib/vision/:/vision/docs/kimia/reference/old-reference/bib/vision/shape/:/vision/docs/kimia/reference/old-reference/bib/bib-admin/:/vision/docs/kimia/reference/old-reference/bib/math/:/vision/docs/kimia/reference/old-reference/bib/:/vision/docs/kimia/reference/old-reference/bib/vision/shape-from/:/vision/docs/kimia/reference/old-reference/bib/psychology/:/vision/docs/kimia/reference/old-reference/bib/vision/segmentation/:/vision/docs/kimia/reference/old-reference/bib/medical/:/vision/docs/kimia/reference/old-reference/bib/vision/texture"
 XDVIINPUTS=/usr/share/texmf/xdvi:/usr/share/texmf/dvips/config
 NNTPSERVER='news.brown.edu'
@@ -103,12 +82,12 @@ PAGER=/usr/bin/less
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/rfabbri/src/bundler/bin
-CLASSPATH=$CLASSPATH:$HOME/lib/java
+CLASSPATH=$CLASSPATH:/opt/local//share/java/:$HOME/lib/java
 BROWSER=/usr/bin/firefox
 PYTHONPATH=$PYTHONPATH:$HOME/lib/python
-GREP_OPTIONS='--color=auto'
+#deprecated: GREP_OPTIONS='--color=auto'
 
-export PATH CDPATH VXL_DIR EDITOR PKG_CONFIG_PATH CVS_RSH TEXINPUTS XDVIINPUTS BIBINPUTS NNTPSERVER VISUAL LANG LD_LIBRARY_PATH PAGER CLASSPATH BROWSER PYTHONPATH GREP_OPTIONS
+export PATH CDPATH VXL_DIR EDITOR PKG_CONFIG_PATH CVS_RSH XDVIINPUTS BIBINPUTS NNTPSERVER VISUAL LANG LD_LIBRARY_PATH PAGER CLASSPATH BROWSER PYTHONPATH
 
 #eval `dircolors -b`
 
@@ -151,7 +130,8 @@ PS4='+ '
 }
 
 function shortpwd {
-   pwd_length=20
+   #it2setkeylabel set status `git branch |grep '*'|cut -f 2 -d ' '`
+   pwd_length=10
 
    DIR=`pwd`
 
@@ -178,8 +158,49 @@ function shortpwd {
 
 }
 
-PROMPT_COMMAND=shortpwd
-PS1='\u@\h:$newPWD$ '
+# Change the window title of X terminals 
+#if [ "$TERM_PROGRAM" != "Apple_Terminal" ]; then
+#  case ${TERM} in
+#    xterm*|rxvt*|Eterm|aterm|kterm|gnome)
+#      PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME%%.*}:$newPWD\007"'
+#      ;;
+#    screen)
+#      PROMPT_COMMAND='echo -ne "\033_${USER}@${HOSTNAME%%.*}:$newPWD\033\\"'
+#      ;;
+#  esac
+
+PROMPT_COMMAND="shortpwd ; $PROMPT_COMMAND"
+# set a fancy prompt (non-color, unless we know we "want" color)
+case "$TERM" in
+    xterm-*color*) color_prompt=yes;;
+esac
+
+# uncomment for a colored prompt, if the terminal has the capability; turned
+# off by default to not distract the user: the focus in a terminal window
+# should be on the output of commands, not on the prompt
+#force_color_prompt=yes
+
+if [ -n "$force_color_prompt" ]; then
+    if tput setaf 1 >&/dev/null; then
+	# We have color support; assume it's compliant with Ecma-48
+	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+	# a case would tend to support setf rather than setaf.
+      color_prompt=yes
+    else
+	    color_prompt=
+    fi
+fi
+
+if [ "$color_prompt" = yes ]; then
+    #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]$newPWD\[\033[00m\]\$ '
+    PS1='\u@\h:\[\033[38;5;248m\]$newPWD\[\033[00m\]\$ '
+else
+    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+fi
+unset color_prompt force_color_prompt
+
+#fi
+#PS1='\u@\h:$newPWD$ '
 
 source "$HOME/bin/funcoeszz"
 export ZZPATH="$HOME/funcoeszz"
@@ -194,3 +215,50 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 fi
 
 #xmodmap $HOME/.xmodmap
+
+. ~/bin/use_java7
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
+
+# ===================================
+
+## At the terminal when you start getting the prompts, type `Accepts` and press enter
+function Accepts ()
+{
+osascript <<EOF
+  tell application "System Events"
+    repeat while exists (processes where name is "SecurityAgent")
+      tell process "SecurityAgent" to click button "Allow" of window 1
+      delay 0.2
+    end repeat
+  end tell
+EOF
+}
+
+## At the terminal when you start getting the prompts, type `Accepts YourUsername YourPassword` and press enter
+function AcceptWithCreds ()
+{
+username="$1"
+password="$2"
+
+[ -z "${password}" ] && return 1
+
+osascript 2>/dev/null <<EOF
+    set appName to "${username}"
+    set appPass to "${password}"
+    tell application "System Events"
+        repeat while exists (processes where name is "SecurityAgent")
+            tell process "SecurityAgent"
+                if exists (text field 1 of window 1) then
+                    set value of text field 1 of window 1 to appName
+                    set value of text field 2 of window 1 to appPass
+                end if
+            end tell
+      tell process "SecurityAgent" to click button "Allow" of window 1
+            delay 0.2
+        end repeat
+    end tell
+EOF
+}
+echo 'Finished...'
