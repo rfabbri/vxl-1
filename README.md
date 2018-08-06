@@ -356,6 +356,9 @@ in the file [additional-maintenance](./doc/additional-maintenance.md).
 ```bash
 # do it in steps to make sure whats going on
 git fetch vxl
+# examine the commits (vxl-master tracks the last merge from vxl/master):
+# gitk vxl-master vxl/master
+# Optional:
 # git branch vxl-master vxl/master # create optional branch if you're fetching 
                                    # non-master branch, else use vxl-master normally
 git checkout master
