@@ -6,5 +6,7 @@ set(BUILD_SHARED_LIBS ON CACHE BOOL "Reduce link time by using shared libs in LE
 set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Build Debug by default in LEMSVPE")
 set(VNL_CONFIG_LEGACY_METHODS ON CACHE BOOL "backward-compatibility methods provided by vnl, for LEMSVPE")
 set(BUILD_VGUI ON CACHE BOOL "Build VGUI for LEMSVPE")
+set(BUILD_CORE_VIDEO ON CACHE BOOL "Build VIDL for use in VXD")
+set(WITH_FFMPEG OFF CACHE BOOL "Disable FFMPEG suppoert at first")
 
 message("Try to compile core first. Then Turn on VGUI in CMake and try to build it.")
