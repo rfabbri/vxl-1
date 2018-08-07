@@ -38,7 +38,7 @@ private:
   //: private implementation struct
   struct pimpl;
   //: private implementation instance
-  vcl_auto_ptr<pimpl> data_;
+  vcl_unique_ptr<pimpl> data_;
 
 };
 

@@ -35,14 +35,14 @@ class bprod_b_istream_source_base : public bprod_source
     : is(new vsl_b_ifstream(filename)) {}
     
     void open(const vcl_string& filename) 
-    { is = vcl_auto_ptr<vsl_b_istream>(new vsl_b_ifstream(filename)); }
+    { is = vcl_unique_ptr<vsl_b_istream>(new vsl_b_ifstream(filename)); }
     
     //: Execute the process
     bprod_signal execute()
     {
       return BPROD_INVALID;
     }
-    vcl_auto_ptr<vsl_b_istream> is;
+    vcl_unique_ptr<vsl_b_istream> is;
 };
 
 
@@ -82,7 +82,7 @@ class bprod_b_ostream_sink_base : public bprod_sink
     : os(new vsl_b_ofstream(filename)) {}
     
     void open(const vcl_string& filename) 
-    { os = vcl_auto_ptr<vsl_b_ostream>(new vsl_b_ofstream(filename)); }
+    { os = vcl_unique_ptr<vsl_b_ostream>(new vsl_b_ofstream(filename)); }
     
     bool enabled() const { return (os.get() != NULL && os->os().good()); }
     
@@ -91,7 +91,7 @@ class bprod_b_ostream_sink_base : public bprod_sink
     {
       return BPROD_INVALID;
     }
-    vcl_auto_ptr<vsl_b_ostream> os;
+    vcl_unique_ptr<vsl_b_ostream> os;
   };
 
 
