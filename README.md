@@ -381,7 +381,8 @@ git co master
 
 # When updating 'utils', there's no utils-orig; its not central to LEMSVPE
 cd vxl-orig
-git pull
+git checkout vxl-master
+git pull vxl master
 cd ..
 
 git push origin master
