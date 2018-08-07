@@ -27,6 +27,8 @@
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_nonlinear_minimizer.h>
 
+#include <vnl/algo/vnl_algo_export.h>
+
 class vnl_least_squares_function;
 
 //: Levenberg Marquardt nonlinear least squares
@@ -39,14 +41,14 @@ class vnl_least_squares_function;
 //  (See Hartley in ``Applications of Invariance in Computer Vision''
 //  for example).
 
-class vnl_levenberg_marquardt : public vnl_nonlinear_minimizer
+class VNL_ALGO_EXPORT vnl_levenberg_marquardt : public vnl_nonlinear_minimizer
 {
  public:
 
   //: Initialize with the function object that is to be minimized.
   vnl_levenberg_marquardt(vnl_least_squares_function& f) { init(&f); }
 
-  ~vnl_levenberg_marquardt();
+  ~vnl_levenberg_marquardt() VXL_OVERRIDE;
 
   //: Minimize the function supplied in the constructor until convergence or failure.
   //  On return, x is such that f(x) is the lowest value achieved.

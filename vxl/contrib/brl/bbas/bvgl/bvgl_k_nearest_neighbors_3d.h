@@ -18,19 +18,19 @@ class bvgl_k_nearest_neighbors_3d
 {
  public:
   //: default constructor
- bvgl_k_nearest_neighbors_3d():tolerance_(Type(0)), search_tree_(0){}
+ bvgl_k_nearest_neighbors_3d():tolerance_(Type(0)), search_tree_(VXL_NULLPTR){}
   //: Construct from a vgl_pointset
   bvgl_k_nearest_neighbors_3d(vgl_pointset_3d<Type> const& ptset, Type tolerance = Type(0));
   //: destructor
   ~bvgl_k_nearest_neighbors_3d(){
     if(search_tree_)
       delete search_tree_;
-    search_tree_ = 0;
+    search_tree_ = VXL_NULLPTR;
   }
   //: copy constructor
   bvgl_k_nearest_neighbors_3d(bvgl_k_nearest_neighbors_3d const& other) :
     tolerance_(other.tolerance_), ptset_(other.ptset_),
-    search_tree_(0)
+    search_tree_(VXL_NULLPTR)
   {
     // create handles init of M_ and search_tree_, and flags_
     create();
@@ -59,6 +59,9 @@ class bvgl_k_nearest_neighbors_3d
   //: find the indices of the k closest neighbors.
   bool knn_indices(vgl_point_3d<Type> const& p, unsigned k, vnl_vector<int> &indices) const;
 
+  //: find the k nearest neighbors and return their indices
+  bool knn(vgl_point_3d<Type> const& p, unsigned k, vgl_pointset_3d<Type>& neighbors, vnl_vector<int> &indices) const;
+
   //: accessors provide efficient access to a single pointset copy
   const vgl_pointset_3d<Type>& const_ptset() const {return ptset_;}
   vgl_pointset_3d<Type>& ptset(){return ptset_;}
@@ -78,6 +81,9 @@ class bvgl_k_nearest_neighbors_3d
   }
 
   protected:
+  //: util function for finding the k closest neighbors and indices
+  inline bool knn_util(vgl_point_3d<Type> const& p, unsigned k, vgl_pointset_3d<Type>& neighbors, vnl_vector<int> &indices) const;
+
   Type tolerance_;
   Nabo::NearestNeighbourSearch<Type>* search_tree_;
   vnl_matrix<Type> M_;//a matrix form(3 x n) of the pointset used by nabo
@@ -96,13 +102,13 @@ template <class Type>
 bool bvgl_k_nearest_neighbors_3d<Type>::create(){
   if(search_tree_){
     delete search_tree_;
-    search_tree_ = 0;
+    search_tree_ = VXL_NULLPTR;
   }
   flags_ = 0;
   flags_ = flags_ |  Nabo::NearestNeighbourSearch<Type>::ALLOW_SELF_MATCH;
   unsigned n = ptset_.npts(), dim = 3;
   if(n==0){
-    search_tree_ = 0;
+    search_tree_ = VXL_NULLPTR;
     return false;
   }
   M_.set_size(dim, n);
@@ -115,7 +121,7 @@ bool bvgl_k_nearest_neighbors_3d<Type>::create(){
 }
 template <class Type>
 bvgl_k_nearest_neighbors_3d<Type>::bvgl_k_nearest_neighbors_3d(vgl_pointset_3d<Type> const& ptset, Type tolerance):
-search_tree_(0), tolerance_(tolerance), ptset_(ptset){
+search_tree_(VXL_NULLPTR), tolerance_(tolerance), ptset_(ptset){
   create();
 }
 
@@ -161,11 +167,21 @@ bool bvgl_k_nearest_neighbors_3d<Type>::closest_point(vgl_point_3d<Type> const& 
 template <class Type>
 bool bvgl_k_nearest_neighbors_3d<Type>::knn(vgl_point_3d<Type> const& p, unsigned k, vgl_pointset_3d<Type>& neighbors) const{
   vnl_vector<int> indices(k);
+  return knn_util(p, k, neighbors, indices);
+}
+
+template  <class Type>
+bool bvgl_k_nearest_neighbors_3d<Type>::knn(vgl_point_3d<Type> const& p, unsigned k, vgl_pointset_3d<Type>& neighbors, vnl_vector<int> & indices) const {
+  return knn_util(p, k, neighbors, indices);
+}
+
+template <class Type>
+inline bool bvgl_k_nearest_neighbors_3d<Type>::knn_util(vgl_point_3d<Type> const& p, unsigned k, vgl_pointset_3d<Type>& neighbors, vnl_vector<int> &indices) const {
   vnl_vector<Type> q(3),dists2(k);
   q[0]=p.x();  q[1]=p.y();  q[2]=p.z();
   if(!search_tree_)
     return false;
-  search_tree_->knn(q, indices,dists2, k, tolerance_, flags_);
+  search_tree_->knn(q, indices, dists2, k, tolerance_, flags_);
   bool has_normals = ptset_.has_normals();
   for(unsigned i = 0; i<k; ++i){
     if(dists2[i] == vcl_numeric_limits<Type>::infinity()||indices[i]<0)
@@ -178,4 +194,5 @@ bool bvgl_k_nearest_neighbors_3d<Type>::knn(vgl_point_3d<Type> const& p, unsigne
   }
   return true;
 }
+
 #endif // bvgl_k_nearest_neighbors_3d_h_

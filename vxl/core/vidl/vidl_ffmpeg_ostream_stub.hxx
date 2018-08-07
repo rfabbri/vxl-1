@@ -3,7 +3,8 @@
 #define vidl_ffmpeg_ostream_stub_hxx_
 #include <iostream>
 #include "vidl_ffmpeg_ostream.h"
-#include <stdexcept>>
+#include <stdexcept>
+
 //:
 // \file
 // \brief A stub implementation when ffmpeg is not available.
@@ -20,7 +21,7 @@ struct vidl_ffmpeg_ostream::pimpl
 
 vidl_ffmpeg_ostream
 ::vidl_ffmpeg_ostream()
-  : os_( 0 )
+  : os_( VXL_NULLPTR )
 {
   std::cerr << "vidl_ffmpeg_ostream: warning: ffmpeg support is not compiled in\n";
 }
@@ -28,7 +29,7 @@ vidl_ffmpeg_ostream
 vidl_ffmpeg_ostream
 ::vidl_ffmpeg_ostream(const std::string&,
                       const vidl_ffmpeg_ostream_params&)
-  : os_( 0 )
+  : os_( VXL_NULLPTR )
 {
   std::cerr << "vidl_ffmpeg_ostream: warning: ffmpeg support is not compiled in\n";
 }

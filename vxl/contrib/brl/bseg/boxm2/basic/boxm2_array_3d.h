@@ -8,6 +8,8 @@
 #include <iosfwd>
 #include <vcl_compiler.h>
 #include <vcl_compiler.h>
+#include <vcl_cstddef.h>
+#include <vcl_cstdlib.h>
 
 #ifdef __OPTIMIZE__
 # define RANGECHECK(i,j,k) ((void)0)
@@ -29,17 +31,17 @@ class boxm2_array_3d
   typedef T* iterator;
   typedef T const* const_iterator;
 
-  boxm2_array_3d(): buffer_(NULL), element_(NULL), row1_count_(0), row2_count_(0), row3_count_(0)
+  boxm2_array_3d(): buffer_(VXL_NULLPTR), element_(VXL_NULLPTR), row1_count_(0), row2_count_(0), row3_count_(0)
   {
-    construct(0,0,0,NULL);
+    construct(0,0,0,VXL_NULLPTR);
   }
 
-  boxm2_array_3d(size_type n1, size_type n2, size_type n3, T* buffer):buffer_(NULL), element_(NULL), row1_count_(0), row2_count_(0), row3_count_(0)
+  boxm2_array_3d(size_type n1, size_type n2, size_type n3, T* buffer):buffer_(VXL_NULLPTR), element_(VXL_NULLPTR), row1_count_(0), row2_count_(0), row3_count_(0)
   {
     construct(n1, n2, n3, buffer);
   }
 
-  boxm2_array_3d(size_type n1, size_type n2, size_type n3, T* buffer, T const& fill_value):buffer_(NULL), element_(NULL), row1_count_(0), row2_count_(0), row3_count_(0)
+  boxm2_array_3d(size_type n1, size_type n2, size_type n3, T* buffer, T const& fill_value):buffer_(VXL_NULLPTR), element_(VXL_NULLPTR), row1_count_(0), row2_count_(0), row3_count_(0)
   {
     construct(n1, n2, n3, buffer);
     fill(fill_value);
@@ -108,6 +110,20 @@ class boxm2_array_3d
   size_type linear_index(size_type i1, size_type i2, size_type i3) const{
     return (i1*row2_count_+i2)*row3_count_ + i3;
   }
+
+  //: convert from the linear index to 3-d indices. Indices are stored
+  // in-place in arguments.
+  void coords_from_index(size_type idx,
+                         size_type &i1,
+                         size_type &i2,
+                         size_type &i3) const {
+    ldiv_t div = vcl_ldiv(idx, (row2_count_ * row3_count_));
+    i1 = div.quot;
+    div = vcl_div(div.rem, row3_count_);
+    i2 = div.quot;
+    i3 = div.rem;
+  }
+
   // data_block will return all elements of the array in sequential storage.
   T      * data_block()       { return element_[0][0]; }
   T const* data_block() const { return element_[0][0]; }

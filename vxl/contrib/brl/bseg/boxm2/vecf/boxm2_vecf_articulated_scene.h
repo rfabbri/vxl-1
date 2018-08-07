@@ -4,7 +4,7 @@
 #include <boxm2/boxm2_scene.h>
 #include <vcl_compiler.h>
 #include <vector>
-#include <stddef.h>
+#include <cstddef>
 #include <boxm2/boxm2_block.h>
 #include <boxm2/basic/boxm2_block_id.h>
 #include <boxm2/boxm2_data.h>
@@ -47,15 +47,15 @@ typedef vbl_smart_ptr<boxm2_vecf_articulated_scene> boxm2_vecf_articulated_scene
 
 class boxm2_vecf_articulated_scene : public vbl_ref_count{
  public:
- boxm2_vecf_articulated_scene(): blk_(0), alpha_base_(0), app_base_(0),nobs_base_(0), alpha_data_(0), app_data_(0), nobs_data_(0),
-    target_alpha_base_(0),target_app_base_(0),target_nobs_base_(0), target_alpha_data_(0), target_app_data_(0),
-    target_nobs_data_(0), target_blk_(0),sigma_(0.5f), source_model_exists_(false), base_model_(0),
+ boxm2_vecf_articulated_scene(): blk_(VXL_NULLPTR), alpha_base_(VXL_NULLPTR), app_base_(VXL_NULLPTR),nobs_base_(VXL_NULLPTR), alpha_data_(VXL_NULLPTR), app_data_(VXL_NULLPTR), nobs_data_(VXL_NULLPTR),
+    target_alpha_base_(VXL_NULLPTR),target_app_base_(VXL_NULLPTR),target_nobs_base_(VXL_NULLPTR), target_alpha_data_(VXL_NULLPTR), target_app_data_(VXL_NULLPTR),
+    target_nobs_data_(VXL_NULLPTR), target_blk_(VXL_NULLPTR),sigma_(0.5f), source_model_exists_(false), base_model_(VXL_NULLPTR),
     has_background_(false), is_single_instance_(true), color_apm_id_("frontalized"), target_data_extracted_(false){
   }
 
  boxm2_vecf_articulated_scene(std::string scene_file,std::string color_apm_id = "frontalized"):
-  blk_(0), alpha_base_(0), app_base_(0), nobs_base_(0), alpha_data_(0), app_data_(0), nobs_data_(0), target_alpha_base_(0),
-    target_app_base_(0),target_nobs_base_(0), target_alpha_data_(0), target_app_data_(0), target_nobs_data_(0), target_blk_(0),
+  blk_(VXL_NULLPTR), alpha_base_(VXL_NULLPTR), app_base_(VXL_NULLPTR), nobs_base_(VXL_NULLPTR), alpha_data_(VXL_NULLPTR), app_data_(VXL_NULLPTR), nobs_data_(VXL_NULLPTR), target_alpha_base_(VXL_NULLPTR),
+    target_app_base_(VXL_NULLPTR),target_nobs_base_(VXL_NULLPTR), target_alpha_data_(VXL_NULLPTR), target_app_data_(VXL_NULLPTR), target_nobs_data_(VXL_NULLPTR), target_blk_(VXL_NULLPTR),
     is_single_instance_(true), sigma_(0.5f),source_model_exists_(false), has_background_(false), color_apm_id_(color_apm_id),
     target_data_extracted_(false){
     base_model_ = new boxm2_scene(scene_file);
@@ -68,7 +68,7 @@ class boxm2_vecf_articulated_scene : public vbl_ref_count{
   std::string color_apm_id() {return color_apm_id_;}
 
   static  double8 interp_generic_double8(vgl_point_3d<double>* neighbors, double8* probs, vgl_point_3d<double> p );
-  static  double interp_generic_double(vgl_point_3d<double>* neighbors, double* probs, vgl_point_3d<double> p );
+  static  double interp_generic_double(vgl_point_3d<double>* neighbors, const double* probs, vgl_point_3d<double> p );
   double8 to_double8(color_APM& apm){
     double8 apm_f; apm_f.fill(0);
     apm_f[0] = (double) apm[0]; apm_f[1] =(double) apm[1] ; apm_f[2] =(double) apm[2];

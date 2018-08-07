@@ -124,7 +124,8 @@ bool vimt_is_image_dicom(vil_stream* is)
        try
        {
          char magic[ DCM_MagicLen ];
-         for (vil_file_format** p = vil_file_format::all(); *p; ++p) {
+         std::list<vil_file_format*>& l = vil_file_format::all();
+         for (vil_file_format::iterator p = l.begin(); p != l.end(); ++p) {
            is->seek(0);
            is->seek( DCM_PreambleLen );
            if ( is->read( magic, DCM_MagicLen ) == DCM_MagicLen ) {
@@ -238,9 +239,9 @@ void vimt_load_to_float(const std::string& im_path, vimt_image_2d_of<float>& ima
   }
   else if (ir->pixel_format()==VIL_PIXEL_FORMAT_BYTE)
   {
-    vimt_image_2d_of<vxl_byte> byte_image;	  
+    vimt_image_2d_of<vxl_byte> byte_image;
     vimt_load_as_grey_or_rgb(im_path.c_str(), byte_image, unit_scaling);
-	vimt_convert_cast(byte_image, image);
+        vimt_convert_cast(byte_image, image);
   }
   else
   {

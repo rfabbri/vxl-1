@@ -16,6 +16,7 @@
 
 class vsol_volume_3d;
 class vsol_polyhedron;
+class vsol_mesh_3d; // not in this library to avoid dependencies (see brl/bseg/betr)
 #include "vsol_volume_3d_sptr.h"
 #include <vsol/vsol_spatial_object_3d.h>
 #include <vsol/vsol_point_3d_sptr.h>
@@ -26,9 +27,10 @@ class vsol_volume_3d : public vsol_spatial_object_3d
   enum vsol_volume_3d_type
   { VOLUME_NO_TYPE=0,
     POLYHEDRON,
+    MESH,
     NUM_VOLUME_TYPES
   };
-  vsol_volume_3d_type volume_type(void) const { return vsol_volume_3d::VOLUME_NO_TYPE; }
+  virtual vsol_volume_3d_type volume_type(void) const { return vsol_volume_3d::VOLUME_NO_TYPE; }
 
  public:
   //---------------------------------------------------------------------------
@@ -42,9 +44,11 @@ class vsol_volume_3d : public vsol_spatial_object_3d
   virtual vsol_volume_3d* cast_to_volume() { return this;}
   virtual vsol_volume_3d const* cast_to_volume() const { return this;}
 
-  virtual vsol_polyhedron* cast_to_polyhedron() { return 0;}
-  virtual vsol_polyhedron const* cast_to_polyhedron() const { return 0;}
+  virtual vsol_polyhedron* cast_to_polyhedron() { return VXL_NULLPTR;}
+  virtual vsol_polyhedron const* cast_to_polyhedron() const { return VXL_NULLPTR;}
 
+  virtual vsol_mesh_3d* cast_to_mesh() { return VXL_NULLPTR;}
+  virtual vsol_mesh_3d const* cast_to_mesh() const { return VXL_NULLPTR;}
   //---------------------------------------------------------------------------
   //: Is the point `p' inside `this' volume ?
   //---------------------------------------------------------------------------

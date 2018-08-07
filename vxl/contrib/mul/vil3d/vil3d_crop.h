@@ -8,7 +8,7 @@
 #include <vil3d/vil3d_image_view.h>
 #include <vil3d/vil3d_image_resource.h>
 #include <vcl_cassert.h>
-
+#include <vgl/vgl_box_3d.h>
 
 //: Create a view that is a window onto an existing image.
 // O(1).
@@ -25,6 +25,16 @@ vil3d_image_view<T> vil3d_crop(const vil3d_image_view<T>& im,
   return vil3d_image_view<T>(im.memory_chunk(), &im(i0,j0,k0),
                              ni, nj, nk, im.nplanes(),
                              im.istep(), im.jstep(), im.kstep(), im.planestep());
+}
+
+//: Create a view that is a window onto an existing image.
+// O(1).
+template <class T>
+vil3d_image_view<T> vil3d_crop(const vil3d_image_view<T>& im, const vgl_box_3d<int>& b)
+{
+  return vil3d_crop(im,b.min_x(),1+b.max_x()-b.min_x(),
+                       b.min_y(),1+b.max_y()-b.min_y(),
+                       b.min_z(),1+b.max_z()-b.min_z());
 }
 
 //: Crop to a region of src.
@@ -55,7 +65,7 @@ class vil3d_crop_image_resource : public vil3d_image_resource
                                                    unsigned j0, unsigned n_j,
                                                    unsigned k0, unsigned n_k) const
   {
-    if (i0 + n_i > ni() || j0 + n_j > nj() || k0 + n_k > nk()) return 0;
+    if (i0 + n_i > ni() || j0 + n_j > nj() || k0 + n_k > nk()) return VXL_NULLPTR;
     return src_->get_copy_view(i0+i0_, n_i, j0+j0_, n_j, k0+k0_, n_k);
   }
 
@@ -63,7 +73,7 @@ class vil3d_crop_image_resource : public vil3d_image_resource
                                               unsigned j0, unsigned n_j,
                                               unsigned k0, unsigned n_k) const
   {
-    if (i0 + n_i > ni() || j0 + n_j > nj() || k0 + n_k > nk()) return 0;
+    if (i0 + n_i > ni() || j0 + n_j > nj() || k0 + n_k > nk()) return VXL_NULLPTR;
     return src_->get_view(i0+i0_, n_i, j0+j0_, n_j, k0+k0_, n_k);
   }
 
@@ -75,7 +85,7 @@ class vil3d_crop_image_resource : public vil3d_image_resource
   }
 
   //: Extra property information
-  virtual bool get_property(char const* tag, void* property_value = 0) const
+  virtual bool get_property(char const* tag, void* property_value = VXL_NULLPTR) const
   {
     return src_->get_property(tag, property_value);
   }

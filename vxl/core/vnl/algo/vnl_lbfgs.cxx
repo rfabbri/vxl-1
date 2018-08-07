@@ -98,14 +98,15 @@ bool vnl_lbfgs::minimize(vnl_vector<double>& x)
     f_->compute(x, &f, &g);
     if (this->num_evaluations_ == 0) {
       this->start_error_ = f;
+      best_x = x;
       best_f = f;
     } else if (f < best_f) {
       best_x = x;
       best_f = f;
     }
 
-#define print_(i,a,b,c,d) std::cerr<<std::setw(6)<<i<<' '<<std::setw(20)<<a<<' '\
-           <<std::setw(20)<<b<<' '<<std::setw(20)<<c<<' '<<std::setw(20)<<d<<'\n'
+#define print_(i,a,b,c,d) std::cerr<<std::setw(6)<<(i)<<' '<<std::setw(20)<<(a)<<' '\
+           <<std::setw(20)<<(b)<<' '<<std::setw(20)<<(c)<<' '<<std::setw(20)<<(d)<<'\n'
 
     if (check_derivatives_)
     {

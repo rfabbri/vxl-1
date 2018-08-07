@@ -14,7 +14,7 @@
 
 #include <vector>
 #include <algorithm>
-#include <memory>
+#include <vcl_memory.h>
 #include <vpdl/vpdt/vpdt_dist_traits.h>
 #include <vpdl/vpdt/vpdt_probability.h>
 #include <vcl_cassert.h>
@@ -116,7 +116,7 @@ class vpdt_mixture_of
 
   // Copy Constructor
   vpdt_mixture_of(const vpdt_mixture_of<dist_t>& other)
-    : components_(other.components_.size(),NULL)
+    : components_(other.components_.size(),VXL_NULLPTR)
   {
     // deep copy of the data
     for (unsigned int i=0; i<components_.size(); ++i) {

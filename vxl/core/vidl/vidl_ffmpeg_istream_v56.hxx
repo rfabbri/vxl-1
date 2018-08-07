@@ -46,14 +46,14 @@ struct vidl_ffmpeg_istream::pimpl
     vid_index_( -1 ),
     data_index_( -1 ),
     vid_str_( NULL ),
+    video_enc_( 0 ),
     frame_( NULL ),
     num_frames_( -2 ), // sentinel value to indicate not yet computed
     sws_context_( NULL ),
     cur_frame_( NULL ),
     metadata_( 0 ),
-    pts_( 0 ),
     frame_number_offset_( 0 ),
-    video_enc_( 0 )
+    pts_( 0 )
   {
     packet_.data = NULL;
   }
@@ -113,6 +113,11 @@ struct vidl_ffmpeg_istream::pimpl
   double stream_time_base_to_frame()
     {
     assert(this->vid_str_);
+    if(this->vid_str_->avg_frame_rate.num == 0.0)
+    {
+      return av_q2d(av_inv_q(av_mul_q(this->vid_str_->time_base,
+                                      this->vid_str_->r_frame_rate)));
+    }
     return av_q2d(
       av_inv_q(
         av_mul_q(this->vid_str_->time_base, this->vid_str_->avg_frame_rate)));
@@ -450,9 +455,16 @@ advance()
     // Make sure that the packet is from the actual video stream.
     if (is_->packet_.stream_index == is_->vid_index_)
     {
-      if ( avcodec_decode_video2( is_->video_enc_,
-                                  is_->frame_, &got_picture,
-                                  &is_->packet_ ) < 0 ) {
+       int err = avcodec_decode_video2( is_->video_enc_,
+                                       is_->frame_, &got_picture,
+                                       &is_->packet_);
+       if (err == AVERROR_INVALIDDATA)
+       {// Ignore the frame and move to the next
+         av_free_packet(&is_->packet_);
+         continue;
+       }
+      if (err<0)
+      {
         std::cerr << "vidl_ffmpeg_istream: Error decoding packet!\n";
         av_free_packet(&is_->packet_);
         return false;
@@ -468,7 +480,10 @@ advance()
       is_->metadata_.insert(is_->metadata_.end(), is_->packet_.data,
         is_->packet_.data + is_->packet_.size);
     }
-    av_free_packet( &is_->packet_ );
+    if (!got_picture)
+    {
+      av_free_packet( &is_->packet_ );
+    }
   }
 
   // From ffmpeg apiexample.c: some codecs, such as MPEG, transmit the

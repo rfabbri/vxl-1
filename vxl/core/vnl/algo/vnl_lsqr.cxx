@@ -24,7 +24,7 @@ public:
 
   lsqrVNL()
     {
-    this->ls_ = NULL;
+    this->ls_ = VXL_NULLPTR;
     }
 
   virtual ~lsqrVNL()
@@ -88,7 +88,7 @@ vnl_lsqr::~vnl_lsqr()
 }
 
 // Requires number_of_residuals() of workspace in rw.
-int vnl_lsqr::aprod_(long* mode, long* m, long* n, double* x, double* y, long* /*leniw*/, long* /*lenrw*/, long* /*iw*/, double* rw, void* userdata)
+int vnl_lsqr::aprod_(const long* mode, const long* m, const long* n, double* x, double* y, long* /*leniw*/, long* /*lenrw*/, long* /*iw*/, double* rw, void* userdata)
 {
   //
   // THIS CODE IS DEPRECATED
@@ -123,7 +123,7 @@ int vnl_lsqr::minimize(vnl_vector<double>& result)
   long n = ls_->get_number_of_unknowns();
   double damp = 0;
   long leniw = 1;
-  long* iw = 0;
+  long* iw = VXL_NULLPTR;
   long lenrw = m;
 #ifdef __GNUC__
   double rw[m];
