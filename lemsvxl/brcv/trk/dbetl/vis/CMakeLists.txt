@@ -31,7 +31,7 @@ target_link_libraries(dbetl_vis dbetl_pro becld_vis bvis1 vgui ${OPENGL_LIBRARIE
 
 # Add the bgui3d library if bgui3d is built is available for 3D rendering
 if (VXL_BGUI3D_FOUND)
-  target_link_libraries(dbetl_vis bgui3d)
+  target_link_libraries(dbetl_vis bgui3d ${VXL_COIN3D_LIBRARY} vpgl)
 endif (VXL_BGUI3D_FOUND)
 
 

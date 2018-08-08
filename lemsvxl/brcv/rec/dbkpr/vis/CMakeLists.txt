@@ -31,7 +31,7 @@ target_link_libraries(dbkpr_vis dbkpr_pro dbdet_vis)
 
 # Add the bgui3d library if bgui3d is built is available for 3D rendering
 if (VXL_BGUI3D_FOUND)
-  target_link_libraries(dbkpr_vis bgui3d)
+  target_link_libraries(dbkpr_vis bgui3d ${VXL_COIN3D_LIBRARY})
 endif (VXL_BGUI3D_FOUND)
 
 
