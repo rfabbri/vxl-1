@@ -1,8 +1,6 @@
 # multi-view camera library
 # brl/bmvl/bcal/CMakeLists.txt
 
-include( ${LEMS_CMAKE_DIR}/config/vxl_utils.cmake )
-
 include_directories(${VXL_BRL_INCLUDE_DIR})
 include_directories(${lems_SOURCE_DIR}/brcv/mvg/bmvl )
 

@@ -1,4 +1,3 @@
-#
 #Some will want to construct a VXL programming environment where Brown Eyes
 #is directly in the file heirarchy of VXL rather than a separate source tree.
 #This approach has a distinct advantage when using Visual Studio since both 
@@ -96,147 +95,117 @@ set(LEMS_CMAKE_DIR ${CMAKE_CURRENT_LIST_DIR}/config/cmake/Modules)
 
 include(${LEMS_CMAKE_DIR}/LEMSStandardOptions.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/config/cmake/doxygen/doxygen.cmake)
+include( ${CMAKE_CURRENT_LIST_DIR}/config/cmake/config/vxl_utils.cmake )
 # Only include these if we have vxd-specific cmake utilities. We currently use VXL's:
 #include(${CMAKE_CURRENT_LIST_DIR}/config/cmake/config/vxd_utils.cmake)
 
 # Location of VXD's FindXXX.cmake CMake modules.
 # This is identical to VXD_CMAKE_DIR.  Perhaps we should eliminate MODULE_PATH?
 set( MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/config/cmake/Modules CACHE STATIC "VXD module path" )
+set (LIBRARY_OUTPUT_PATH ${lems_BINARY_DIR}/lib CACHE PATH "Single output directory for building all libraries.")
 
-set( BUILD_LEMS "NO" )
-
-
-# We are building Brown Eyes interleaved with VXL
-# XXX NOT CURRENTLY SUPPORTED
-if (EXISTS ${vxl_SOURCE_DIR}/contrib/brl/blem/CMakeLists.txt)
-  #Import cmake variable used by external projects
-  include(${vxl_BINARY_DIR}/VXLConfig.cmake)
-  set( BUILD_BROWN_INTERLEAVED "YES" )
-  set( BUILD_LEMS "YES" )
-# Else, we are building Brown Eyes as a stand alone project  (currently supported)
-else (EXISTS ${vxl_SOURCE_DIR}/contrib/brl/blem/CMakeLists.txt)
-
-  set (LIBRARY_OUTPUT_PATH ${lems_BINARY_DIR}/lib CACHE PATH "Single output directory for building all libraries.")
-
-  find_package(VXL PATHS "../vxl-bin")
-  if(VXL_FOUND)
-    # include the standard stuff, such as Dart test
-    set(VXL_PROVIDE_STANDARD_OPTIONS 1)
-    include(${VXL_CMAKE_DIR}/UseVXL.cmake)
-  else(VXL_FOUND)
-    if( VXL_BINARY_PATH )
-      set( VXL_DIR ${VXL_BINARY_PATH} )
-      message( "Use preferred VXL_DIR in place of VXL_BINARY_PATH" )
-    endif( VXL_BINARY_PATH )
-  endif(VXL_FOUND)
-
-  find_package(VXD PATHS "../vxd-bin")
-  if(VXD_FOUND)
-    # include the standard stuff, such as Dart test
-    set(VXD_PROVIDE_STANDARD_OPTIONS 1)
-    include(${VXD_CMAKE_DIR}/UseVXD.cmake)
-    set( BUILD_LEMS "YES" )
-  else(VXD_FOUND)
-    if( VXD_BINARY_PATH )
-      set( VXD_DIR ${VXD_BINARY_PATH} )
-      message( "Use preferred VXD_DIR in place of VXD_BINARY_PATH" )
-    endif( VXD_BINARY_PATH )
-  endif(VXD_FOUND)
-endif (EXISTS ${vxl_SOURCE_DIR}/contrib/brl/blem/CMakeLists.txt)
-
-
-# If LEMS code is built (either stand-alone or interleaved)
-if(BUILD_LEMS) 
-  # CMake support directory.
-  set(LEMS_CMAKE_DIR ${lems_SOURCE_DIR}/config/cmake)
-
-  # Brown 3rd Party Libraries
-  add_subdirectory( db3p )
-
-  # Brown Vision Algorithms
-  option(BUILD_ALGO "Build Depreciated Algorithms" NO)
-  if(BUILD_ALGO)
-    add_subdirectory( algo )
-  endif(BUILD_ALGO)
-  
-  # Basic Utility Libraries
-  add_subdirectory( basic ) 
-   
-  # Brown Computer Vision Libraries
-  add_subdirectory( brcv )
-  
-  # Brown Eyes Code
-  option(BUILD_BREYE "Build Brown Eyes" NO)
-  if(BUILD_BREYE)
-    add_subdirectory( breye )
-  endif(BUILD_BREYE)
-
-  # Brown Eyes Code
-  option(BUILD_BREYE1 "Build Old Brown Eyes" YES)
-  if(BUILD_BREYE1)
-    add_subdirectory( breye1 )
-  endif(BUILD_BREYE1)
-
-  #Apps
-  option(BUILD_APPS "Build Apps" NO)
-  if(BUILD_APPS)
-    add_subdirectory( apps )
-  endif(BUILD_APPS)
-
-  option(BUILD_PLAYLAND "Build the personal testing area" NO)
-  if(BUILD_PLAYLAND)
-    add_subdirectory( playland )
-  endif(BUILD_PLAYLAND)
-
-  if( DART_ROOT )
-    option(BUILD_CONTRIB "Build the contrib development area" YES)
-  else( DART_ROOT )
-    option(BUILD_CONTRIB "Build the contrib development area" NO)
-  endif( DART_ROOT )
-  if(BUILD_CONTRIB)
-    add_subdirectory( contrib )
-  endif(BUILD_CONTRIB)
-
-endif(BUILD_LEMS)
-
+find_package(VXL PATHS "../vxl-bin")
 if(VXL_FOUND)
-  # This is required on some platforms because various libraries
-  # include OpenGL indirectly even when it is not used
-  include_directories( ${VXL_VGUI_INCLUDE_DIR} )
-
-  #update vxl/config/Modules/NewCMakeModules folder to get the following
-  include( ${VXL_CMAKE_DIR}/NewCMake/FindDirectShow.cmake )
-
-  if(DIRECTSHOW_FOUND)
-    include_directories(${DIRECTSHOW_INCLUDE_DIR})
-    add_definitions(-DHAS_DSHOW)
-    # For Euresys Multicam Driver's DirectShow source filter.
-    # - should I put this in a Module of it's own?
-    #include( ${MODULE_PATH}/NewCMake/FindDirectShow_ESF.cmake )
-    find_path(DIRECTSHOW_ESF_INCLUDE_DIR ESFilter.h
-      "C:/Program Files/Euresys/MultiCam/Include"
-      DOC "What is the path where the file ESFilter.h can be found"
-    )
-    if(DIRECTSHOW_ESF_INCLUDE_DIR)
-      set(DIRECTSHOW_ESF_FOUND "YES")
-    endif(DIRECTSHOW_ESF_INCLUDE_DIR)
-    if(DIRECTSHOW_ESF_FOUND)
-      include_directories(${DIRECTSHOW_ESF_INCLUDE_DIR})
-      add_definitions(-DHAS_DSHOW_ESF)
-    endif(DIRECTSHOW_ESF_FOUND)
-  endif(DIRECTSHOW_FOUND)
-
-  option(USE_Boost "Use Boost libraries" NO)
-  if ( USE_Boost )
-    set(Boost_USE_STATIC_LIBS   OFF)
-    find_package( Boost 1.35.0 COMPONENTS iostreams)
-  else ( USE_Boost )
-    set( Boost_FOUND FALSE )
-  endif( USE_Boost )
-  
-  #required by dbul library
-  include( ${LEMS_CMAKE_DIR}/Modules/UseOctave.cmake )
+  # include the standard stuff, such as Dart test
+  set(VXL_PROVIDE_STANDARD_OPTIONS 1)
+  include(${VXL_CMAKE_DIR}/UseVXL.cmake)
+else(VXL_FOUND)
+  message( FATAL_ERROR "VXL not found, but required" )
 endif(VXL_FOUND)
+
+find_package(VXD PATHS "../vxd-bin")
+if(VXD_FOUND)
+  # include the standard stuff, such as Dart test
+  set(VXD_PROVIDE_STANDARD_OPTIONS 1)
+  include(${VXD_CMAKE_DIR}/UseVXD.cmake)
+  set( BUILD_LEMS "YES" )
+else(VXD_FOUND)
+  message( FATAL_ERROR "VXD not found, but required" )
+endif(VXD_FOUND)
+
+# Brown 3rd Party Libraries
+add_subdirectory( db3p )
+
+# Brown Vision Algorithms
+option(BUILD_ALGO "Build Depreciated Algorithms" NO)
+if(BUILD_ALGO)
+  add_subdirectory( algo )
+endif(BUILD_ALGO)
+
+# Basic Utility Libraries
+add_subdirectory( basic ) 
+ 
+# Brown Computer Vision Libraries
+add_subdirectory( brcv )
+
+# Brown Eyes Code
+option(BUILD_BREYE "Build Brown Eyes" NO)
+if(BUILD_BREYE)
+  add_subdirectory( breye )
+endif(BUILD_BREYE)
+
+# Brown Eyes Code
+option(BUILD_BREYE1 "Build Old Brown Eyes" YES)
+if(BUILD_BREYE1)
+  add_subdirectory( breye1 )
+endif(BUILD_BREYE1)
+
+#Apps
+option(BUILD_APPS "Build Apps" NO)
+if(BUILD_APPS)
+  add_subdirectory( apps )
+endif(BUILD_APPS)
+
+option(BUILD_PLAYLAND "Build the personal testing area" NO)
+if(BUILD_PLAYLAND)
+  add_subdirectory( playland )
+endif(BUILD_PLAYLAND)
+
+if( DART_ROOT )
+  option(BUILD_CONTRIB "Build the contrib development area" YES)
+else( DART_ROOT )
+  option(BUILD_CONTRIB "Build the contrib development area" NO)
+endif( DART_ROOT )
+if(BUILD_CONTRIB)
+  add_subdirectory( contrib )
+endif(BUILD_CONTRIB)
+
+# This is required on some platforms because various libraries
+# include OpenGL indirectly even when it is not used
+include_directories( ${VXL_VGUI_INCLUDE_DIR} )
+
+#update vxl/config/Modules/NewCMakeModules folder to get the following
+include( ${VXL_CMAKE_DIR}/NewCMake/FindDirectShow.cmake )
+
+if(DIRECTSHOW_FOUND)
+  include_directories(${DIRECTSHOW_INCLUDE_DIR})
+  add_definitions(-DHAS_DSHOW)
+  # For Euresys Multicam Driver's DirectShow source filter.
+  # - should I put this in a Module of it's own?
+  #include( ${MODULE_PATH}/NewCMake/FindDirectShow_ESF.cmake )
+  find_path(DIRECTSHOW_ESF_INCLUDE_DIR ESFilter.h
+    "C:/Program Files/Euresys/MultiCam/Include"
+    DOC "What is the path where the file ESFilter.h can be found"
+  )
+  if(DIRECTSHOW_ESF_INCLUDE_DIR)
+    set(DIRECTSHOW_ESF_FOUND "YES")
+  endif(DIRECTSHOW_ESF_INCLUDE_DIR)
+  if(DIRECTSHOW_ESF_FOUND)
+    include_directories(${DIRECTSHOW_ESF_INCLUDE_DIR})
+    add_definitions(-DHAS_DSHOW_ESF)
+  endif(DIRECTSHOW_ESF_FOUND)
+endif(DIRECTSHOW_FOUND)
+
+option(USE_Boost "Use Boost libraries" NO)
+if ( USE_Boost )
+  set(Boost_USE_STATIC_LIBS   OFF)
+  find_package( Boost 1.35.0 COMPONENTS iostreams)
+else ( USE_Boost )
+  set( Boost_FOUND FALSE )
+endif( USE_Boost )
+
+#required by dbul library
+include( ${LEMS_CMAKE_DIR}/UseOctave.cmake )
 
 # adds a test for Endianness and a global variable that should be useful for file format programming -MM
 include(TestBigEndian)
