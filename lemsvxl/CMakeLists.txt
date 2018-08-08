@@ -56,6 +56,53 @@ endforeach()
 
 project(lems)
 
+#-----------------------------------------------------------------------------
+if(NOT COMMAND SETIFEMPTY)
+  macro(SETIFEMPTY)
+    set(KEY ${ARGV0})
+    set(VALUE ${ARGV1})
+    if(NOT ${KEY})
+      set(${ARGV})
+    endif()
+  endmacro()
+endif()
+
+#-----------------------------------------------------------------------------
+SETIFEMPTY(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib)
+SETIFEMPTY(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib)
+SETIFEMPTY(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
+
+#-----------------------------------------------------------------------------
+SETIFEMPTY(CMAKE_INSTALL_LIBRARY_DESTINATION lib)
+SETIFEMPTY(CMAKE_INSTALL_ARCHIVE_DESTINATION lib)
+SETIFEMPTY(CMAKE_INSTALL_RUNTIME_DESTINATION bin)
+
+# Allow external project to override the export target
+if(NOT LEMS_NO_EXPORT)
+  SETIFEMPTY(LEMS_INSTALL_EXPORT_NAME LEMSTargets)
+endif()
+
+SETIFEMPTY(LEMS_INSTALL_RUNTIME_DIR bin)
+SETIFEMPTY(LEMS_INSTALL_LIBRARY_DIR lib)
+SETIFEMPTY(LEMS_INSTALL_ARCHIVE_DIR lib)
+SETIFEMPTY(LEMS_INSTALL_INCLUDE_DIR include/LEMS)
+if(NOT LEMS_LIB_PREFIX)
+  set( LEMS_LIB_PREFIX "") # This is typically empty
+endif()
+
+# CMake support directory.
+set(LEMS_ROOT_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR})
+set(LEMS_CMAKE_DIR ${CMAKE_CURRENT_LIST_DIR}/config/cmake/Modules)
+
+include(${LEMS_CMAKE_DIR}/LEMSStandardOptions.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/config/cmake/doxygen/doxygen.cmake)
+# Only include these if we have vxd-specific cmake utilities. We currently use VXL's:
+#include(${CMAKE_CURRENT_LIST_DIR}/config/cmake/config/vxd_utils.cmake)
+
+# Location of VXD's FindXXX.cmake CMake modules.
+# This is identical to VXD_CMAKE_DIR.  Perhaps we should eliminate MODULE_PATH?
+set( MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/config/cmake/Modules CACHE STATIC "VXD module path" )
+
 set( BUILD_LEMS "NO" )
 
 
@@ -191,12 +238,24 @@ if(VXL_FOUND)
   include( ${LEMS_CMAKE_DIR}/Modules/UseOctave.cmake )
 endif(VXL_FOUND)
 
-if(NOT BUILD_BROWN_INTERLEAVED)
-  # This SUBDIRS command must be the last SUBDIRS command in this file
-  add_subdirectory( config/cmake/export )
-endif(NOT BUILD_BROWN_INTERLEAVED)
-
-
 # adds a test for Endianness and a global variable that should be useful for file format programming -MM
 include(TestBigEndian)
 TEST_BIG_ENDIAN(MY_BIG_ENDIAN)
+
+# Copy the UseLEMS.cmake file to the binary directory so that client
+# projects don't need to find the source directory first. They can run
+# the UseLEMS.cmake from the lemsvxl binary directory, and determine the
+# lemsvxl source directory by loading the cache.
+configure_file( ${LEMS_CMAKE_DIR}/UseLEMS.cmake
+                ${lemsvxl_BINARY_DIR}/UseLEMS.cmake COPYONLY )
+# For use in client projects that call UseLEMS.cmake
+set(LEMS_LIBRARY_PATH ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} CACHE STATIC "Where all the lemsvxl libraries are, for clients to use." )
+
+# Copy CTestCustom.cmake to top of build tree
+#configure_file( ${LEMS_CMAKE_DIR}/CTestCustom.cmake
+#  ${lems_BINARY_DIR}/CTestCustom.cmake COPYONLY )
+
+# This command must be the last command in this file
+if(NOT LEMS_NO_EXPORT)
+  include(${CMAKE_CURRENT_LIST_DIR}/config/cmake/export/LEMSCreateProject.cmake)
+endif()
