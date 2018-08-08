@@ -32,7 +32,7 @@ set(dbmsh3d_vis_sources
 
 add_library(dbmsh3d_vis ${dbmsh3d_vis_sources})
 
-target_link_libraries( dbmsh3d_vis dbmsh3d dbmsh3d_algo dbmsh3d_pro bgui3d )
+target_link_libraries( dbmsh3d_vis dbmsh3d dbmsh3d_algo dbmsh3d_pro bgui3d ${VXL_COIN3D_LIBRARY})
 
 endif (HAS_BGUI3D)
 
