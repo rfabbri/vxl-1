@@ -216,7 +216,7 @@ TEST_BIG_ENDIAN(MY_BIG_ENDIAN)
 # the UseLEMS.cmake from the lemsvxl binary directory, and determine the
 # lemsvxl source directory by loading the cache.
 configure_file( ${LEMS_CMAKE_DIR}/UseLEMS.cmake
-                ${lemsvxl_BINARY_DIR}/UseLEMS.cmake COPYONLY )
+                ${lems_BINARY_DIR}/UseLEMS.cmake COPYONLY )
 # For use in client projects that call UseLEMS.cmake
 set(LEMS_LIBRARY_PATH ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} CACHE STATIC "Where all the lemsvxl libraries are, for clients to use." )
 
