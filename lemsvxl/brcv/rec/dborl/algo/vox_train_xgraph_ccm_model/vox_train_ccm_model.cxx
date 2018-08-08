@@ -572,7 +572,7 @@ gather_edgemap_pyramid_info(const vcl_string& image_name,
         vgl_point_2d<int > min_point(0, 0);
         vgl_point_2d<int > max_point(img->ni()-1, img->nj()-1);
         vgl_box_2d<int > bbox(min_point, max_point);
-        int area = bbox.area();
+        int area = bbox.volume();
 
         // insert to the sorted map
         map_area2name.insert(vcl_make_pair(-area, fname));
