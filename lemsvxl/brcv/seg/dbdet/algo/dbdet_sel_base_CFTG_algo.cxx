@@ -2460,7 +2460,7 @@ void dbdet_sel_base::resolve_junction_conflict()
 							curve_frag_graph_.junction_edgels[jct1]=0;
 						break;
 					}
-					else if(joint_chain2>0 && intersect_j>0 && is_cross_over(*clit3, joint_chain2) && (*clit3)!=cur_chain2) // intersect_j>0 indicates that there is another intersect path
+					else if(joint_chain2 != 0 && intersect_j>0 && is_cross_over(*clit3, joint_chain2) && (*clit3)!=cur_chain2) // intersect_j>0 indicates that there is another intersect path
 					{
 						//vcl_cout << "remove joint chain 2 from jct1: "<<jct1 <<vcl_endl;
 						curve_frag_graph_.extract_fragment(joint_chain2);
