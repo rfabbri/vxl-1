@@ -7,6 +7,7 @@ set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Build Debug by default in LEMSVPE")
 set(VNL_CONFIG_LEGACY_METHODS ON CACHE BOOL "backward-compatibility methods provided by vnl, for LEMSVPE")
 set(BUILD_VGUI ON CACHE BOOL "Build VGUI for LEMSVPE")
 set(BUILD_CORE_VIDEO ON CACHE BOOL "Build VIDL for use in VXD")
-set(WITH_FFMPEG OFF CACHE BOOL "Disable FFMPEG suppoert at first")
+set(WITH_FFMPEG OFF CACHE BOOL "Disable FFMPEG suppoert at first in LEMSVPE")
+set(BUILD_CONTRIB ON CACHE BOOL "Build VXL contrib for LEMSVPE")
 
 message("Try to compile core first. Then Turn on VGUI in CMake and try to build it.")
