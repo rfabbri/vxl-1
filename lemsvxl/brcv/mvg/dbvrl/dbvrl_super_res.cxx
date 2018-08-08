@@ -129,7 +129,7 @@ dbvrl_super_res::compute_weights( vnl_matrix<double>& data,
   }
   
   data.set_size(data_list.size(), data_list.front().size());
-  weights.set_size(weight_list.size(), bounds.area());
+  weights.set_size(weight_list.size(), bounds.volume());
   int r=0;
   typedef vcl_list<vnl_vector<double> >::iterator vec_itr;
   for( vec_itr d_itr = data_list.begin(), w_itr = weight_list.begin();
@@ -169,7 +169,7 @@ dbvrl_super_res::compute_weights( int index,
   int j_max = vcl_min(int(xform_box.max_y()+0.5) + 1, int(image.nj())-1);
 
   //data.set_size((i_max-i_min+1)*(j_max-j_min+1), image.nplanes());
-  //weights.set_size(data.rows(), bounds.area());
+  //weights.set_size(data.rows(), bounds.volume());
 
   int n_planes = image.nplanes();
 
@@ -182,7 +182,7 @@ dbvrl_super_res::compute_weights( int index,
       data.push_back(pixel);
 
       vgl_point_2d<double> center(i,j);
-      vnl_vector<double> weight(bounds.area(), 0.0);
+      vnl_vector<double> weight(bounds.volume(), 0.0);
       int p = 0;
       for (int x=bounds.min_x(); x<bounds.max_x(); ++x){
         for (int y=bounds.min_y(); y<bounds.max_y(); ++y, ++p){
