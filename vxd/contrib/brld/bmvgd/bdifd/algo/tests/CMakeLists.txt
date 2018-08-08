@@ -10,7 +10,7 @@ add_executable (bdifd_algo_test_all
 
 target_link_libraries( bdifd_algo_test_all bdifd_algo testlib )
 
-add_test( bdifd_algo_test_diff_geometry bdifd_algo_test_all test_diff_geometry )
+add_test( NAME  bdifd_algo_test_diff_geometry COMMAND $<TARGET_FILE:bdifd_algo_test_all> test_diff_geometry )
 
 add_executable( bdifd_algo_test_include test_include.cxx )
 

@@ -10,8 +10,8 @@ add_executable( vepl1_test_all
 )
 TARGET_link_libraries( vepl1_test_all vepl1 vil1 testlib )
 
-add_test(vepl1_test_threshold  ${EXECUTABLE_OUTPUT_PATH}/vepl1_test_all vepl1_test_threshold)
-add_test(vepl1_test_erode_disk ${EXECUTABLE_OUTPUT_PATH}/vepl1_test_all vepl1_test_erode_disk)
+add_test( NAME vepl1_test_threshold  COMMAND $<TARGET_FILE:vepl1_test_all> vepl1_test_threshold)
+add_test( NAME vepl1_test_erode_disk COMMAND $<TARGET_FILE:vepl1_test_all> vepl1_test_erode_disk)
 
 add_executable( vepl1_test_include test_include.cxx )
 TARGET_link_libraries( vepl1_test_include vepl1 )

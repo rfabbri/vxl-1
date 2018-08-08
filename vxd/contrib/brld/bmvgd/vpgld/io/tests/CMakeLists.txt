@@ -9,7 +9,7 @@ add_executable( vpgld_io_test_all
 )
 
 target_link_libraries( vpgld_io_test_all vpgld_algo vsl vbl_io testlib )
-#add_test( vpgld_io_test_triangulation vpgld_io_test_all test_triangulation)
+#add_test( NAME  vpgld_io_test_triangulation COMMAND $<TARGET_FILE:vpgld_io_test_all> test_triangulation)
 
 add_executable( vpgld_io_test_include test_include.cxx )
 target_link_libraries( vpgld_io_test_include vpgld_io )

@@ -10,9 +10,9 @@ add_executable( becld_test_all
 
 target_link_libraries( becld_test_all becld testlib )
 
-add_test( becld_test_epipole           becld_test_all test_epipole )
-add_test( becld_test_episeg            becld_test_all test_episeg )
-add_test( becld_test_epiband           becld_test_all test_epiband )
+add_test( NAME  becld_test_epipole           COMMAND $<TARGET_FILE:becld_test_all> test_epipole )
+add_test( NAME  becld_test_episeg            COMMAND $<TARGET_FILE:becld_test_all> test_episeg )
+add_test( NAME  becld_test_epiband           COMMAND $<TARGET_FILE:becld_test_all> test_epiband )
 
 add_executable( becld_test_include test_include.cxx )
 target_link_libraries( becld_test_include becld )

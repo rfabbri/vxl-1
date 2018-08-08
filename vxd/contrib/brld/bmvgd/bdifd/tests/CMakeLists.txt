@@ -10,7 +10,7 @@ add_executable ( bdifd_test_all
 
 target_link_libraries( bdifd_test_all bdifd testlib )
 
-add_test( bdifd_test_camera bdifd_test_all test_camera )
+add_test( NAME  bdifd_test_camera COMMAND $<TARGET_FILE:bdifd_test_all> test_camera )
 
 add_executable( bdifd_test_include test_include.cxx )
 

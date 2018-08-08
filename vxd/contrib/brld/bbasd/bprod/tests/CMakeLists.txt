@@ -12,10 +12,10 @@ add_executable( bprod_test_all
 
 target_link_libraries( bprod_test_all bprod testlib  )
 
-add_test( bprod_test_process          bprod_test_all test_process )
-add_test( bprod_test_process_factory  bprod_test_all test_process_factory )
-add_test( bprod_test_delay_filter     bprod_test_all test_delay_filter )
-add_test( bprod_test_storage          bprod_test_all test_storage )
+add_test( NAME  bprod_test_process          COMMAND $<TARGET_FILE:bprod_test_all> test_process )
+add_test( NAME  bprod_test_process_factory  COMMAND $<TARGET_FILE:bprod_test_all> test_process_factory )
+add_test( NAME  bprod_test_delay_filter     COMMAND $<TARGET_FILE:bprod_test_all> test_delay_filter )
+add_test( NAME  bprod_test_storage          COMMAND $<TARGET_FILE:bprod_test_all> test_storage )
 
 
 add_executable( bprod_test_include test_include.cxx )

@@ -13,8 +13,8 @@ add_executable( vpgld_algo_test_all
 )
 
 target_link_libraries( vpgld_algo_test_all vpgld_algo bdifd_algo mvl testlib )
-add_test( vpgld_algo_test_fm_estimation vpgld_algo_test_all test_fm_estimation)
-add_test( vpgld_algo_test_triangulation vpgld_algo_test_all test_triangulation)
+add_test( NAME  vpgld_algo_test_fm_estimation COMMAND $<TARGET_FILE:vpgld_algo_test_all> test_fm_estimation)
+add_test( NAME  vpgld_algo_test_triangulation COMMAND $<TARGET_FILE:vpgld_algo_test_all> test_triangulation)
 
 add_executable( vpgld_algo_test_include test_include.cxx )
 target_link_libraries( vpgld_algo_test_include vpgl_algo mvl )

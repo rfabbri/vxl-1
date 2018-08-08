@@ -18,7 +18,7 @@ add_executable ( bgrld_test_all ${bgrld_test_sources})
 
 target_link_libraries( bgrld_test_all bgrld testlib )
 
-add_test( bgrld_test_graph   bgrld_test_all graph_test )
+add_test( NAME  bgrld_test_graph   COMMAND $<TARGET_FILE:bgrld_test_all> graph_test )
 
 #this is for test_includes
 add_executable( bgrld_test_include test_include.cxx)

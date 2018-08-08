@@ -10,9 +10,9 @@ add_executable( bsold_test_all
 
 target_link_libraries( bsold_test_all bsold testlib )
 
-add_test( bsold_test_interp_curve_2d  bsold_test_all test_interp_curve_2d )
-add_test( bsold_test_interp_curve_3d  bsold_test_all test_interp_curve_3d )
-add_test( bsold_test_file_io bsold_test_all test_file_io )
+add_test( NAME  bsold_test_interp_curve_2d  COMMAND $<TARGET_FILE:bsold_test_all> test_interp_curve_2d )
+add_test( NAME  bsold_test_interp_curve_3d  COMMAND $<TARGET_FILE:bsold_test_all> test_interp_curve_3d )
+add_test( NAME  bsold_test_file_io COMMAND $<TARGET_FILE:bsold_test_all> test_file_io )
 
 add_executable( bsold_test_include test_include.cxx )
 target_link_libraries( bsold_test_include bsold vsl )

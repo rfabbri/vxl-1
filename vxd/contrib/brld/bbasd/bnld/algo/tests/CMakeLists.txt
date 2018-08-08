@@ -17,13 +17,13 @@ add_executable ( bnld_algo_test_all
 
 target_link_libraries( bnld_algo_test_all bnld_algo testlib )
 
-add_test( bnld_algo_test_eno_poly         bnld_algo_test_all test_eno_poly )
-add_test( bnld_algo_test_eno_interp       bnld_algo_test_all test_eno_interp)
-add_test( bnld_algo_test_eno_zerox        bnld_algo_test_all test_eno_zerox )
-add_test( bnld_algo_test_eno_1d           bnld_algo_test_all test_eno_1d)
-add_test( bnld_algo_test_eno_image        bnld_algo_test_all test_eno_image)
-add_test( bnld_algo_test_eno_shock_1d     bnld_algo_test_all test_eno_shock_1d)
-add_test( bnld_algo_test_eno_third_order  bnld_algo_test_all test_eno_third_order)
+add_test( NAME  bnld_algo_test_eno_poly         COMMAND $<TARGET_FILE:bnld_algo_test_all> test_eno_poly )
+add_test( NAME  bnld_algo_test_eno_interp       COMMAND $<TARGET_FILE:bnld_algo_test_all> test_eno_interp)
+add_test( NAME  bnld_algo_test_eno_zerox        COMMAND $<TARGET_FILE:bnld_algo_test_all> test_eno_zerox )
+add_test( NAME  bnld_algo_test_eno_1d           COMMAND $<TARGET_FILE:bnld_algo_test_all> test_eno_1d)
+add_test( NAME  bnld_algo_test_eno_image        COMMAND $<TARGET_FILE:bnld_algo_test_all> test_eno_image)
+add_test( NAME  bnld_algo_test_eno_shock_1d     COMMAND $<TARGET_FILE:bnld_algo_test_all> test_eno_shock_1d)
+add_test( NAME  bnld_algo_test_eno_third_order  COMMAND $<TARGET_FILE:bnld_algo_test_all> test_eno_third_order)
 
 
 add_executable( bnld_algo_test_include test_include.cxx )

@@ -7,7 +7,7 @@ add_executable ( bcsid_test_all
 
 target_link_libraries( bcsid_test_all bcsid sdetd_algo bild_algo vil_algo testlib )
 
-add_test( bcsid_test_curve_distance bcsid_test_all test_curve_distance )
+add_test( NAME  bcsid_test_curve_distance COMMAND $<TARGET_FILE:bcsid_test_all> test_curve_distance )
 
 add_executable( bcsid_test_include test_include.cxx )
 target_link_libraries( bcsid_test_include bcsid)

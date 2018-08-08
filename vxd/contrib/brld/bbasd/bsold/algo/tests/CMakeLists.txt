@@ -16,9 +16,9 @@ add_executable ( bsold_algo_test_all
 
 target_link_libraries( bsold_algo_test_all bsold_algo testlib )
 
-add_test( bsold_algo_test_interp_linear bsold_algo_test_all test_interp_linear)
-add_test( bsold_algo_test_geno bsold_algo_test_all test_geno)
-add_test( bsold_algo_test_geno_shock bsold_algo_test_all test_geno_shock)
+add_test( NAME  bsold_algo_test_interp_linear COMMAND $<TARGET_FILE:bsold_algo_test_all> test_interp_linear)
+add_test( NAME  bsold_algo_test_geno COMMAND $<TARGET_FILE:bsold_algo_test_all> test_geno)
+add_test( NAME  bsold_algo_test_geno_shock COMMAND $<TARGET_FILE:bsold_algo_test_all> test_geno_shock)
 
 add_executable( bsold_algo_test_include test_include.cxx )
 target_link_libraries( bsold_algo_test_include bsold_algo )

@@ -8,7 +8,7 @@ add_executable( bild_algo_test_all
 
 target_link_libraries( bild_algo_test_all bild_algo testlib )
 
-add_test( bild_algo_test_exact_distance_transform bild_algo_test_all test_exact_distance_transform )
+add_test( NAME  bild_algo_test_exact_distance_transform COMMAND $<TARGET_FILE:bild_algo_test_all> test_exact_distance_transform )
 
 
 add_executable( bild_algo_test_include test_include.cxx )

@@ -12,11 +12,11 @@ add_executable ( bmrf_test_all
 )
 TARGET_link_libraries( bmrf_test_all bmrf vgl vil vbl_io vbl vpl testlib )
 
-add_test( bmrf_test_epi_point       ${EXECUTABLE_OUTPUT_PATH}/bmrf_test_all test_epi_point)
-add_test( bmrf_test_epi_seg         ${EXECUTABLE_OUTPUT_PATH}/bmrf_test_all test_epi_seg)
-add_test( bmrf_test_node            ${EXECUTABLE_OUTPUT_PATH}/bmrf_test_all test_node)
-add_test( bmrf_test_network         ${EXECUTABLE_OUTPUT_PATH}/bmrf_test_all test_network)
-add_test( bmrf_test_network_builder ${EXECUTABLE_OUTPUT_PATH}/bmrf_test_all test_network_builder)
+add_test( NAME  bmrf_test_epi_point       COMMAND $<TARGET_FILE:bmrf_test_all> test_epi_point)
+add_test( NAME  bmrf_test_epi_seg         COMMAND $<TARGET_FILE:bmrf_test_all> test_epi_seg)
+add_test( NAME  bmrf_test_node            COMMAND $<TARGET_FILE:bmrf_test_all> test_node)
+add_test( NAME  bmrf_test_network         COMMAND $<TARGET_FILE:bmrf_test_all> test_network)
+add_test( NAME  bmrf_test_network_builder COMMAND $<TARGET_FILE:bmrf_test_all> test_network_builder)
 
 add_executable( bmrf_test_include test_include.cxx)
 TARGET_link_libraries( bmrf_test_include bmrf)
