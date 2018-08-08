@@ -24,6 +24,7 @@
 #include <iosfwd>
 #include <vcl_compiler.h>
 #include <sdet/sdet_region_sptr.h>
+#include <vsol/vsol_polygon_2d.h>
 #include <vsol/vsol_polygon_2d_sptr.h>
 #include <vdgl/vdgl_digital_region.h>
 #include <vgl/vgl_box_2d.h>
@@ -38,7 +39,8 @@ class region_sim{
   bool operator < (region_sim const& s) const{
     return s_ < s.s_;}
   bool operator > (region_sim const& s) const{
-    return s_ > s.s_;} unsigned ri_;//!<index for region i
+    return s_ > s.s_;}
+  unsigned ri_;//!<index for region i
   unsigned rj_;//!<index for region j
   float s_;//!<similarity score for i,j (high s_ is more similar)
 };
