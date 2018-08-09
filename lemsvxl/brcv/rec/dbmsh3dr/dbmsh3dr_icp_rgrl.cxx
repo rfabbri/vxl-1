@@ -93,12 +93,12 @@ bool rgrl_rigid_icp_register (const vcl_vector<rgrl_feature_sptr>& fixedFV,
   //Turn on debug info  cp_matcher->set_debug_flag (3);
 
   //Weighter
-  vcl_auto_ptr<rrel_m_est_obj>  m_est_obj( new rrel_tukey_obj(4) );
+  vcl_unique_ptr<rrel_m_est_obj>  m_est_obj( new rrel_tukey_obj(4) );
   rgrl_weighter_sptr wgter = new rgrl_weighter_m_est(m_est_obj, false, false);
 
   //Scale estimator
   int max_set_size = 1000;  //maximum expected number of features
-  vcl_auto_ptr<rrel_objective> muset_obj( new rrel_muset_obj( max_set_size , false) );
+  vcl_unique_ptr<rrel_objective> muset_obj( new rrel_muset_obj( max_set_size , false) );
 
   rgrl_scale_estimator_unwgted_sptr unwgted_scale_est;
   rgrl_scale_estimator_wgted_sptr wgted_scale_est;

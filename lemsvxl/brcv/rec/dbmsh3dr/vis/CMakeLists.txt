@@ -19,7 +19,7 @@ dbmsh3dr_cmdproc.cxx             dbmsh3dr_cmdproc.h
 
 add_library(dbmsh3dr_vis  ${dbmsh3dr_vis_sources})
 
-target_link_libraries( dbmsh3dr_vis dbmsh3dr_pro dbmsh3d_vis )  
+target_link_libraries( dbmsh3dr_vis dbmsh3dr_pro dbmsh3d_vis dbmsh3d_cmdproc )  
 
 endif (HAS_BGUI3D)
 

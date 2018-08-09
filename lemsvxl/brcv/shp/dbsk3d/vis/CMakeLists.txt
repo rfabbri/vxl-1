@@ -25,7 +25,6 @@ set(dbsk3d_vis_sources
    dbsk3d_vis_ms_elm.cxx            dbsk3d_vis_ms_elm.h
    dbsk3d_vis_ms_hypg.cxx           dbsk3d_vis_ms_hypg.h
    dbsk3d_vis_ms_hypg_trans.cxx     dbsk3d_vis_ms_hypg_trans.h
-
 )
 
 
