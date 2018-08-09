@@ -14,5 +14,5 @@ add_executable(biob_test_all ${biob_test_src})
 target_link_libraries(biob_test_all biob vnl testlib vgl vgl_algo
 vgl_xio vbl)
 
-add_test( biob_test biob_test_all)
+add_test( NAME  biob_test COMMAND $<TARGET_FILE:biob_test_all>)
 

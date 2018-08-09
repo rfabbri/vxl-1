@@ -18,5 +18,5 @@ add_executable( smw_test_all ${smw_test_src} )
 
 target_link_libraries( smw_test_all testlib smw vul vnl)
 
-add_test( smw_test_graph smw_test_all test_graph )
+add_test( NAME  smw_test_graph COMMAND $<TARGET_FILE:smw_test_all> test_graph )
 

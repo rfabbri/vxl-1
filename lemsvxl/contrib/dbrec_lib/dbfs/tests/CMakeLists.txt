@@ -12,7 +12,7 @@ add_executable ( dbfs_test_all ${dbfs_test_sources})
 
 target_link_libraries( dbfs_test_all dbfs testlib )
 
-add_test( dbfs_test_selector   dbfs_test_all selector_test )
+add_test( NAME  dbfs_test_selector   COMMAND $<TARGET_FILE:dbfs_test_all> selector_test )
 
 #this is for test_includes
 add_executable( dbfs_test_include test_include.cxx)

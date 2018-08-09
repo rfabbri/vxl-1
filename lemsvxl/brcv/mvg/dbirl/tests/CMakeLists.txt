@@ -9,4 +9,4 @@ add_executable( dbirl_test_all
 
 target_link_libraries(dbirl_test_all dbirl dbinfo bpro1 brip btol vtol vsol vgl_algo vgl vil1 vnl_algo vnl vsl vpl vbl vul testlib)
 
-add_test(dbirl_test_h_computation dbirl_test_all test_h_computation)
+add_test( NAME dbirl_test_h_computation COMMAND $<TARGET_FILE:dbirl_test_all> test_h_computation)

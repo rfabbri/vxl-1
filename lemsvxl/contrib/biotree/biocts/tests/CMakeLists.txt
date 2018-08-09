@@ -9,7 +9,7 @@ add_executable( biocts_test_all
 
 target_link_libraries( biocts_test_all biocts testlib )
 
-add_test(biocts_test biocts_test_all)
+add_test( NAME biocts_test COMMAND $<TARGET_FILE:biocts_test_all>)
 
 add_executable( biocts_test_include test_include.cxx )
 

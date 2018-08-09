@@ -9,7 +9,7 @@ include_directories( ${lems_SOURCE_DIR}/contrib/ )
 
 #target_link_libraries(mview2_test_all dbinfo vidpro bpro vsol vsl vpl vbl vul testlib)
 
-#add_test(mview2_test_track_storage  mview2_test_all   test_track_storage)
+#add_test( NAME mview2_test_track_storage  COMMAND $<TARGET_FILE:mview2_test_all>   test_track_storage)
 
 #add_executable( mview2_test_include test_include.cxx )
 #target_link_libraries( mview2_test_include mview2 )

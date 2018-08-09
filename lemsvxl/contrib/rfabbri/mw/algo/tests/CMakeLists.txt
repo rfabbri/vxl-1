@@ -18,16 +18,16 @@ add_executable (mw_algo_test_all
    test_dvcpl_distmap_bundle_adjust.cxx
 )
 
-#add_test( mw_algo_test_reprojection_errors mw_algo_test_all test_reprojection_errors )
-#add_test( mw_algo_test_stereo_band mw_algo_test_all test_stereo_band )
-#add_test( mw_algo_test_tangent_band mw_algo_test_all test_tangent_band)
-add_test( mw_algo_test_util mw_algo_test_all test_util )
-add_test( mw_algo_test_cam mw_algo_test_all test_cam )
-add_test( mw_algo_test_sift_curve mw_algo_test_all test_sift_curve )
-#add_test( mw_algo_test_bprod_process mw_algo_test_all test_bprod_process )
-add_test( mw_algo_test_multiview_bprod_process mw_algo_test_all test_multiview_bprod_process )
-add_test( mw_algo_test_bmcsd_stereo_driver mw_algo_test_all test_bmcsd_stereo_driver)
-add_test( mw_algo_test_dvcpl_distmap_bundle_ajust mw_algo_test_all test_dvcpl_distmap_bundle_adjust )
+#add_test( NAME  mw_algo_test_reprojection_errors COMMAND $<TARGET_FILE:mw_algo_test_all> test_reprojection_errors )
+#add_test( NAME  mw_algo_test_stereo_band COMMAND $<TARGET_FILE:mw_algo_test_all> test_stereo_band )
+#add_test( NAME  mw_algo_test_tangent_band COMMAND $<TARGET_FILE:mw_algo_test_all> test_tangent_band)
+add_test( NAME  mw_algo_test_util COMMAND $<TARGET_FILE:mw_algo_test_all> test_util )
+add_test( NAME  mw_algo_test_cam COMMAND $<TARGET_FILE:mw_algo_test_all> test_cam )
+add_test( NAME  mw_algo_test_sift_curve COMMAND $<TARGET_FILE:mw_algo_test_all> test_sift_curve )
+#add_test( NAME  mw_algo_test_bprod_process COMMAND $<TARGET_FILE:mw_algo_test_all> test_bprod_process )
+add_test( NAME  mw_algo_test_multiview_bprod_process COMMAND $<TARGET_FILE:mw_algo_test_all> test_multiview_bprod_process )
+add_test( NAME  mw_algo_test_bmcsd_stereo_driver COMMAND $<TARGET_FILE:mw_algo_test_all> test_bmcsd_stereo_driver)
+add_test( NAME  mw_algo_test_dvcpl_distmap_bundle_ajust COMMAND $<TARGET_FILE:mw_algo_test_all> test_dvcpl_distmap_bundle_adjust )
 
 add_executable( mw_algo_test_include test_include.cxx )
 

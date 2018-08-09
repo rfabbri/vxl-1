@@ -9,7 +9,7 @@ add_executable( biolung_test_all
 
 target_link_libraries( biolung_test_all biolung testlib )
 
-add_test(biolung_test biolung_test_all)
+add_test( NAME biolung_test COMMAND $<TARGET_FILE:biolung_test_all>)
 
 add_executable( biolung_test_include test_include.cxx )
 target_link_libraries( biolung_test_include biolung )

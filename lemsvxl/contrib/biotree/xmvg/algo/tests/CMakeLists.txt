@@ -7,5 +7,5 @@ add_executable( xmvg_algo_test_all
 
 target_link_libraries(xmvg_algo_test_all xmvg xmvg_algo testlib )
 
-add_test( xmvg_test_ramp_compensation   xmvg_test_all test_ramp_compensation)
+add_test( NAME  xmvg_test_ramp_compensation   COMMAND $<TARGET_FILE:xmvg_test_all> test_ramp_compensation)
 

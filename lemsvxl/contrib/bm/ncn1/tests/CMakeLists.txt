@@ -8,5 +8,5 @@ add_executable( ncn1_test_all
                 
 target_link_libraries( ncn1_test_all ncn1 vnl vul testlib )
 
-add_test( ncn1_test_sampler       ${EXECUTABLE_OUTPUT_PATH}/ncn1_test_all test_sampler )                
-add_test( ncn1_test_factory       ${EXECUTABLE_OUTPUT_PATH}/ncn1_test_all test_factory )
+add_test( NAME  ncn1_test_sampler       COMMAND $<TARGET_FILE:ncn1_test_all> test_sampler )                
+add_test( NAME  ncn1_test_factory       COMMAND $<TARGET_FILE:ncn1_test_all> test_factory )

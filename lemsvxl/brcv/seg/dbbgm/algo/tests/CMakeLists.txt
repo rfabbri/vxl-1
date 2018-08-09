@@ -8,7 +8,7 @@ add_executable( dbbgm_algo_test_all
 
 target_link_libraries( dbbgm_algo_test_all dbbgm_algo testlib )
 
-add_test( dbbgm_algo_test_hmm_algo           dbbgm_algo_test_all test_hmm_algo )
+add_test( NAME  dbbgm_algo_test_hmm_algo           COMMAND $<TARGET_FILE:dbbgm_algo_test_all> test_hmm_algo )
 
 add_executable( dbbgm_algo_test_include test_include.cxx )
 

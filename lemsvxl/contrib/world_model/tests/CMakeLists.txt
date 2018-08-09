@@ -8,6 +8,6 @@ add_executable( world_model_test_all
 
 target_link_libraries(world_model_test_all world_model testlib)
 
-add_test(test_utm_lat_lon world_model_test_all)
+add_test( NAME test_utm_lat_lon COMMAND $<TARGET_FILE:world_model_test_all>)
 
 

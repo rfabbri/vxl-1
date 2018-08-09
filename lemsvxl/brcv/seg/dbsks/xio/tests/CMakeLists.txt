@@ -7,7 +7,7 @@ add_executable( dbsks_xio_test_all
 )
 target_link_libraries( dbsks_xio_test_all dbsks_xio testlib)
 
-#add_test( dbsks_test_xio_xshock dbsks_test_all test_xio_xshock )
+#add_test( NAME  dbsks_test_xio_xshock COMMAND $<TARGET_FILE:dbsks_test_all> test_xio_xshock )
 
 # Test include files
 add_executable( dbsks_xio_test_include test_include.cxx )

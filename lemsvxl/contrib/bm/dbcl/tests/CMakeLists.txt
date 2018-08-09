@@ -9,5 +9,5 @@ set( dbcl_test_sources
 add_executable( dbcl_test_all ${dbcl_test_sources} )
 target_link_libraries( dbcl_test_all dbcl vgl vnl testlib ) 
 
-add_test( dbcl_test_linear_classifier				${EXECUTABLE_OUTPUT_PATH}/dbcl		test_linear_classifier )
+add_test( NAME  dbcl_test_linear_classifier				${EXECUTABLE_OUTPUT_PATH}/dbcl		test_linear_classifier )
 

@@ -14,13 +14,13 @@ aux_source_directory(Templates bioproc_test_src)
 
 add_executable( bioproc_test_all ${bioproc_test_src})
 
-add_test( bioproc_test_splat_resource
-          bioproc_test_all
+add_test( NAME  bioproc_test_splat_resource
+          COMMAND $<TARGET_FILE:bioproc_test_all>
           test_bioproc_dummy_splat_resource
           ${CMAKE_CURRENT_SOURCE_DIR}/test_data/toy\#\#\#\#.tif)
 
-add_test( bioproc_test_filtering_proc
-          bioproc_test_all
+add_test( NAME  bioproc_test_filtering_proc
+          COMMAND $<TARGET_FILE:bioproc_test_all>
           test_bioproc_filtering_proc
           ${CMAKE_CURRENT_SOURCE_DIR}/test_data/sanity00\#\#.tif)
 

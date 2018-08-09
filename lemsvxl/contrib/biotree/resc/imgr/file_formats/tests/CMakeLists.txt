@@ -8,22 +8,13 @@ add_executable( imgr_ff_test_all
   test_skyscan_rics_2_biotree.cxx
 )
 
-add_test( imgr_test_rsq
-          imgr_ff_test_all
-          test_imgr_rsq
-          ${CMAKE_CURRENT_SOURCE_DIR}/test_data/test.rsq)
+add_test( NAME  NAME  imgr_test_rsq COMMAND $<TARGET_FILE:imgr_ff_test_all> test_imgr_rsq ${CMAKE_CURRENT_SOURCE_DIR}/test_data/test.rsq)
 
-add_test( imgr_test_skyscan_header
-          imgr_ff_test_all
-          test_imgr_skyscan_header
-          ${CMAKE_CURRENT_SOURCE_DIR}/test_data/hair-fishline.log)
+add_test( NAME  NAME  imgr_test_skyscan_header COMMAND $<TARGET_FILE:imgr_ff_test_all> test_imgr_skyscan_header ${CMAKE_CURRENT_SOURCE_DIR}/test_data/hair-fishline.log)
 
-add_test( imgr_ff_test_algos imgr_ff_test_all test_imgr_ff_algos)
+add_test( NAME  NAME  imgr_ff_test_algos COMMAND $<TARGET_FILE:imgr_ff_test_all> test_imgr_ff_algos) 
 
-
-add_test( test_transformation
-          imgr_ff_test_all
-          test_skyscan_rics_2_biotree
+add_test( NAME  NAME  test_transformation COMMAND $<TARGET_FILE:imgr_ff_test_all> test_skyscan_rics_2_biotree
           ${CMAKE_CURRENT_SOURCE_DIR}/test_data/scan17um_rec.log ${CMAKE_CURRENT_SOURCE_DIR}/test_data/haircastfragments17um2.scn )
 
 

@@ -20,7 +20,7 @@ include_directories( ${VXL_CORE_INCLUDE_DIR} )
 
 target_link_libraries( dbil3d_cedt_test_all int_cedt3d testlib vnl )
 
-add_test( dbil3d_test_cedt   dbil3d_cedt_test_all test_dbil3d_cedt )
+add_test( NAME  dbil3d_test_cedt   COMMAND $<TARGET_FILE:dbil3d_cedt_test_all> test_dbil3d_cedt )
 
 add_executable( dbil3d_cedt_test_include test_include.cxx )
 target_link_libraries( dbil3d_cedt_test_include int_cedt3d )

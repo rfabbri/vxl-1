@@ -9,4 +9,4 @@ add_executable(geom_test_all ${geom_test_src})
 
 target_link_libraries(geom_test_all biob vnl testlib vgl vgl_algo vbl geom)
 
-add_test( geom_test geom_test_all)
+add_test( NAME  geom_test COMMAND $<TARGET_FILE:geom_test_all>)

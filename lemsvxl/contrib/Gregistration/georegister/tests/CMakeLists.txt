@@ -7,7 +7,7 @@ add_executable( georegister_test_all
 )
 
 target_link_libraries( georegister_test_all georegister testlib vpl vbl_io vul vsol vgl vidpro1)
-add_test( test_georegister  georegister_test_all test_dbrl_io )
+add_test( NAME  test_georegister  COMMAND $<TARGET_FILE:georegister_test_all> test_dbrl_io )
 
 
 add_executable( georegister_test_include test_include.cxx )

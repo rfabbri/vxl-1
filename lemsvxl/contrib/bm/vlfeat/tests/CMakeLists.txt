@@ -8,5 +8,5 @@ add_executable( vlfeat_test_all
                 
 target_link_libraries( vlfeat_test_all vlfeat vul vnl testlib )         
 
-add_test( vlfeat_test_helloWorld          ${EXECUTABLE_OUTPUT_PATH}/vlfeat_test_all test_helloWorld )
-add_test( vlfeat_test_dsift               ${EXECUTABLE_OUTPUT_PATH}/vlfeat_test_all test_dsift      )     
+add_test( NAME  vlfeat_test_helloWorld          COMMAND $<TARGET_FILE:vlfeat_test_all> test_helloWorld )
+add_test( NAME  vlfeat_test_dsift               COMMAND $<TARGET_FILE:vlfeat_test_all> test_dsift      )     

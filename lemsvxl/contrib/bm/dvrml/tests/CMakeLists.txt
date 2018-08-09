@@ -12,7 +12,7 @@ set( dvrml_test_sources
 add_executable( dvrml_test_all ${dvrml_test_sources} )
 target_link_libraries( dvrml_test_all dvrml vgl testlib )
 
-add_test( dvrml_test_draw_point		${EXECUTABLE_OUTPUT_PATH}/dvrml		test_draw_point )
-add_test( dvrml_test_draw_box 		${EXECUTABLE_OUTPUT_PATH}/dvrml     test_draw_box )
+add_test( NAME  dvrml_test_draw_point		${EXECUTABLE_OUTPUT_PATH}/dvrml		test_draw_point )
+add_test( NAME  dvrml_test_draw_box 		${EXECUTABLE_OUTPUT_PATH}/dvrml     test_draw_box )
 
 #message( "EXECUTABLE_OUTPUT_PATH = " ${EXECUTABLE_OUTPUT_PATH} )

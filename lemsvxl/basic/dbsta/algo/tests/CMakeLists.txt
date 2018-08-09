@@ -10,9 +10,9 @@ add_executable( dbsta_algo_test_all
 
 target_link_libraries( dbsta_algo_test_all dbsta_algo testlib )
 
-add_test( dbsta_test_gaussian_stats           dbsta_algo_test_all test_gaussian_stats )
-add_test( dbsta_test_adaptive_updater         dbsta_algo_test_all test_adaptive_updater )
-add_test( dbsta_test_sinkhorn                 dbsta_algo_test_all test_sinkhorn )
+add_test( NAME  dbsta_test_gaussian_stats           COMMAND $<TARGET_FILE:dbsta_algo_test_all> test_gaussian_stats )
+add_test( NAME  dbsta_test_adaptive_updater         COMMAND $<TARGET_FILE:dbsta_algo_test_all> test_adaptive_updater )
+add_test( NAME  dbsta_test_sinkhorn                 COMMAND $<TARGET_FILE:dbsta_algo_test_all> test_sinkhorn )
 
 
 add_executable( dbsta_algo_test_include test_include.cxx )

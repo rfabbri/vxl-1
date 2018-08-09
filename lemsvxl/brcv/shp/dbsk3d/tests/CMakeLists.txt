@@ -7,7 +7,7 @@ add_executable( dbsk3d_test_all
 )
 
 target_link_libraries( dbsk3d_test_all dbsk3d dbsk3d_pro dbmsh3d dbmsh3d_pro testlib )
-add_test( dbsk3d_test_shock_detect dbsk3d_test_all dbsk3d_test_shock_detect ${CMAKE_CURRENT_SOURCE_DIR}/data ) 
+add_test( NAME  dbsk3d_test_shock_detect COMMAND $<TARGET_FILE:dbsk3d_test_all> dbsk3d_test_shock_detect ${CMAKE_CURRENT_SOURCE_DIR}/data ) 
 
 
 add_executable( dbsk3d_test_include test_include.cxx )

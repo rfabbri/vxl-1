@@ -11,9 +11,9 @@ add_executable( dbbgmo_test_all
 
 target_link_libraries( dbbgmo_test_all dbbgmo dbstao_algo dbstao vnl vil vidl vul testlib vgui dbbgmo_vis)
 
-add_test( dbbgmo_test_bg_model_speed ${EXECUTABLE_OUTPUT_PATH}/dbbgm_test_all test_bg_model_speed )
-add_test( dbbgmo_test_measure ${EXECUTABLE_OUTPUT_PATH}/dbbgm_test_all test_measure )
-add_test( dbbgmo_test_bg_wavelet ${EXECUTABLE_OUTPUT_PATH}/dbbgm_test_all test_bg_wavelet )
+add_test( NAME  dbbgmo_test_bg_model_speed COMMAND $<TARGET_FILE:dbbgm_test_all> test_bg_model_speed )
+add_test( NAME  dbbgmo_test_measure COMMAND $<TARGET_FILE:dbbgm_test_all> test_measure )
+add_test( NAME  dbbgmo_test_bg_wavelet COMMAND $<TARGET_FILE:dbbgm_test_all> test_bg_wavelet )
 
 add_executable( dbbgmo_test_include test_include.cxx )
 target_link_libraries( dbbgmo_test_include dbbgmo)

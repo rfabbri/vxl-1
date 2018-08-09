@@ -16,11 +16,11 @@ add_executable( det_test_all
 
 target_link_libraries(det_test_all biodet vsol vbl testlib vcl )
 
-#add_test( det_test_field_stats   det_test_all test_det_field_stats)
-add_test( det_test_cylinder_map  det_test_all test_det_cylinder_map)
-add_test( det_test_nonmax_sup_helper det_test_all test_det_nonmax_sup_helper)
-add_test( det_test_nonmaxium_suppression det_test_all test_det_nonmaxium_suppression)
-add_test( det_edge_test_nonmaximum_suppression det_test_all test_edge_det_nonmaximum_suppression)
+#add_test( NAME  det_test_field_stats   COMMAND $<TARGET_FILE:det_test_all> test_det_field_stats)
+add_test( NAME  det_test_cylinder_map  COMMAND $<TARGET_FILE:det_test_all> test_det_cylinder_map)
+add_test( NAME  det_test_nonmax_sup_helper COMMAND $<TARGET_FILE:det_test_all> test_det_nonmax_sup_helper)
+add_test( NAME  det_test_nonmaxium_suppression COMMAND $<TARGET_FILE:det_test_all> test_det_nonmaxium_suppression)
+add_test( NAME  det_edge_test_nonmaximum_suppression COMMAND $<TARGET_FILE:det_test_all> test_edge_det_nonmaximum_suppression)
 
 add_executable( det_test_include test_include.cxx )
 target_link_libraries( det_test_include biodet )

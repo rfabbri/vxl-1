@@ -54,26 +54,26 @@ add_executable( dbsk2d_test_all
 target_link_libraries( dbsk2d_test_all dbsk2d testlib )
 
 # exceptions test
-add_test( dbsk2d_test_dbsk2d_exceptions     dbsk2d_test_all test_dbsk2d_exceptions )
+add_test( NAME  dbsk2d_test_dbsk2d_exceptions     COMMAND $<TARGET_FILE:dbsk2d_test_all> test_dbsk2d_exceptions )
 
 # file i/o tests
 
-add_test( dbsk2d_test_file_load_bnd         dbsk2d_test_all test_file_load_bnd ${CMAKE_CURRENT_SOURCE_DIR})
-add_test( dbsk2d_test_file_load_txt         dbsk2d_test_all test_file_load_txt ${CMAKE_CURRENT_SOURCE_DIR})
-add_test( dbsk2d_test_file_load_con         dbsk2d_test_all test_file_load_con ${CMAKE_CURRENT_SOURCE_DIR})
-add_test( dbsk2d_test_file_load_edg         dbsk2d_test_all test_file_load_edg ${CMAKE_CURRENT_SOURCE_DIR})
-add_test( dbsk2d_test_file_load_cem         dbsk2d_test_all test_file_load_cem ${CMAKE_CURRENT_SOURCE_DIR})
+add_test( NAME  dbsk2d_test_file_load_bnd         COMMAND $<TARGET_FILE:dbsk2d_test_all> test_file_load_bnd ${CMAKE_CURRENT_SOURCE_DIR})
+add_test( NAME  dbsk2d_test_file_load_txt         COMMAND $<TARGET_FILE:dbsk2d_test_all> test_file_load_txt ${CMAKE_CURRENT_SOURCE_DIR})
+add_test( NAME  dbsk2d_test_file_load_con         COMMAND $<TARGET_FILE:dbsk2d_test_all> test_file_load_con ${CMAKE_CURRENT_SOURCE_DIR})
+add_test( NAME  dbsk2d_test_file_load_edg         COMMAND $<TARGET_FILE:dbsk2d_test_all> test_file_load_edg ${CMAKE_CURRENT_SOURCE_DIR})
+add_test( NAME  dbsk2d_test_file_load_cem         COMMAND $<TARGET_FILE:dbsk2d_test_all> test_file_load_cem ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_test( dbsk2d_test_ishock_belm           dbsk2d_test_all test_ishock_belm )
+add_test( NAME  dbsk2d_test_ishock_belm           COMMAND $<TARGET_FILE:dbsk2d_test_all> test_ishock_belm )
 
-add_test( dbsk2d_test_bnd_vertex            dbsk2d_test_all test_bnd_vertex )
-add_test( dbsk2d_test_bnd_contour           dbsk2d_test_all test_bnd_contour )
-add_test( dbsk2d_test_bnd_utils             dbsk2d_test_all test_bnd_utils )
-add_test( dbsk2d_test_boundary_inputs       dbsk2d_test_all test_boundary_inputs )
-add_test( dbsk2d_test_boundary_bounding_box dbsk2d_test_all test_boundary_bounding_box )
-add_test( dbsk2d_test_boundary_partition    dbsk2d_test_all test_boundary_partition )
-add_test( dbsk2d_test_dbsk2d_distance       dbsk2d_test_all test_dbsk2d_distance )
-add_test( dbsk2d_test_dbsk2d_closest_pont   dbsk2d_test_all test_dbsk2d_closest_point )
+add_test( NAME  dbsk2d_test_bnd_vertex            COMMAND $<TARGET_FILE:dbsk2d_test_all> test_bnd_vertex )
+add_test( NAME  dbsk2d_test_bnd_contour           COMMAND $<TARGET_FILE:dbsk2d_test_all> test_bnd_contour )
+add_test( NAME  dbsk2d_test_bnd_utils             COMMAND $<TARGET_FILE:dbsk2d_test_all> test_bnd_utils )
+add_test( NAME  dbsk2d_test_boundary_inputs       COMMAND $<TARGET_FILE:dbsk2d_test_all> test_boundary_inputs )
+add_test( NAME  dbsk2d_test_boundary_bounding_box COMMAND $<TARGET_FILE:dbsk2d_test_all> test_boundary_bounding_box )
+add_test( NAME  dbsk2d_test_boundary_partition    COMMAND $<TARGET_FILE:dbsk2d_test_all> test_boundary_partition )
+add_test( NAME  dbsk2d_test_dbsk2d_distance       COMMAND $<TARGET_FILE:dbsk2d_test_all> test_dbsk2d_distance )
+add_test( NAME  dbsk2d_test_dbsk2d_closest_pont   COMMAND $<TARGET_FILE:dbsk2d_test_all> test_dbsk2d_closest_point )
 
 add_executable( dbsk2d_test_include test_include.cxx )
 target_link_libraries( dbsk2d_test_include dbsk2d )

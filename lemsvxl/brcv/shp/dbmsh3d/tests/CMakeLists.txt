@@ -9,7 +9,7 @@ add_executable( dbmsh3d_test_all
 )
 
 target_link_libraries( dbmsh3d_test_all dbmsh3d dbmsh3d_algo testlib vul)
-add_test( dbmsh3d_test_face_geom dbmsh3d_test_all dbmsh3d_tri_test.cxx )
+add_test( NAME  dbmsh3d_test_face_geom COMMAND $<TARGET_FILE:dbmsh3d_test_all> dbmsh3d_tri_test.cxx )
 
 add_executable( dbmsh3d_test_include test_include.cxx )
 target_link_libraries( dbmsh3d_test_include dbmsh3d )

@@ -17,7 +17,7 @@ add_executable( biosim_test_all
 
 target_link_libraries( biosim_test_all biosim testlib biocts)
 
-add_test(biosim_test biosim_test_all test_biosim)
+add_test( NAME biosim_test COMMAND $<TARGET_FILE:biosim_test_all> test_biosim)
 
 add_executable( biosim_test_include test_include.cxx )
 target_link_libraries( biosim_test_include biosim )

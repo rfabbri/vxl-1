@@ -8,7 +8,7 @@ add_executable( dbsksp_xio_test_all
 
 target_link_libraries( dbsksp_xio_test_all dbsksp_xio testlib )
 
-# add_test( dbsksp_xio_test_shock_graph   dbsksp_xio_test_all test_shock_graph )
+# add_test( NAME  dbsksp_xio_test_shock_graph   COMMAND $<TARGET_FILE:dbsksp_xio_test_all> test_shock_graph )
 
 
 add_executable( dbsksp_xio_test_include test_include.cxx )

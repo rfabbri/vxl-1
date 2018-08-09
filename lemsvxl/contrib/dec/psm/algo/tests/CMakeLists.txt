@@ -18,17 +18,17 @@ add_executable( psm_algo_test_all
 target_link_libraries( psm_algo_test_all psm psm_algo hsds testlib vbl vgl vpgl vpgl_algo vil boct boxm)
 
 
-#add_test( psm_render_expected ${EXECUTABLE_OUTPUT_PATH}/psm_algo_test_all   test_psm_render_expected )
-#add_test( psm_update  ${EXECUTABLE_OUTPUT_PATH}/psm_algo_test_all   test_psm_update )
-#add_test( psm_track_rays ${EXECUTABLE_OUTPUT_PATH}/psm_algo_test_all  test_psm_track_rays )
-#add_test( psm_compute_vis_implicit ${EXECUTABLE_OUTPUT_PATH}/psm_algo_test_all  test_psm_compute_vis_implicit )
-add_test( psm_triangle_scan_iterator_aa ${EXECUTABLE_OUTPUT_PATH}/psm_algo_test_all  test_psm_triangle_scan_iterator_aa )
-add_test( psm_triangle_interpolation_iterator ${EXECUTABLE_OUTPUT_PATH}/psm_algo_test_all  test_psm_triangle_interpolation_iterator )
-add_test( psm_raytrace_operations ${EXECUTABLE_OUTPUT_PATH}/psm_algo_test_all  test_psm_raytrace_operations)
-add_test( psm_convert_to_boct ${EXECUTABLE_OUTPUT_PATH}/psm_algo_test_all  test_convert_to_boct)
-add_test( psm_triangle_scan_iterator ${EXECUTABLE_OUTPUT_PATH}/psm_algo_test_all test_psm_triangle_scan_iterator )
-add_test( psm_condense_scene ${EXECUTABLE_OUTPUT_PATH}/psm_algo_test_all test_psm_condense_scene )
-add_test( satellite_rays ${EXECUTABLE_OUTPUT_PATH}/psm_algo_test_all test_satellite_rays )
+#add_test( NAME  psm_render_expected COMMAND $<TARGET_FILE:psm_algo_test_all>   test_psm_render_expected )
+#add_test( NAME  psm_update  COMMAND $<TARGET_FILE:psm_algo_test_all>   test_psm_update )
+#add_test( NAME  psm_track_rays COMMAND $<TARGET_FILE:psm_algo_test_all>  test_psm_track_rays )
+#add_test( NAME  psm_compute_vis_implicit COMMAND $<TARGET_FILE:psm_algo_test_all>  test_psm_compute_vis_implicit )
+add_test( NAME  psm_triangle_scan_iterator_aa COMMAND $<TARGET_FILE:psm_algo_test_all>  test_psm_triangle_scan_iterator_aa )
+add_test( NAME  psm_triangle_interpolation_iterator COMMAND $<TARGET_FILE:psm_algo_test_all>  test_psm_triangle_interpolation_iterator )
+add_test( NAME  psm_raytrace_operations COMMAND $<TARGET_FILE:psm_algo_test_all>  test_psm_raytrace_operations)
+add_test( NAME  psm_convert_to_boct COMMAND $<TARGET_FILE:psm_algo_test_all>  test_convert_to_boct)
+add_test( NAME  psm_triangle_scan_iterator COMMAND $<TARGET_FILE:psm_algo_test_all> test_psm_triangle_scan_iterator )
+add_test( NAME  psm_condense_scene COMMAND $<TARGET_FILE:psm_algo_test_all> test_psm_condense_scene )
+add_test( NAME  satellite_rays COMMAND $<TARGET_FILE:psm_algo_test_all> test_satellite_rays )
 
 
 

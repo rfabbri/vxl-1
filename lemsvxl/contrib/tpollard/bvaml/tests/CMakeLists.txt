@@ -7,8 +7,8 @@ add_executable( bvaml_test_all
 )
 
 target_link_libraries( bvaml_test_all bvaml baml vpgl vpl testlib )
-add_test( bvaml_test_rays_to_voxels  bvaml_test_all   test_rays_to_voxels )
-add_test( bvaml_test_voxel           bvaml_test_all   test_voxel )
-add_test( bvaml_test_supervoxel      bvaml_test_all   test_supervoxel )
-add_test( bvaml_test_ray             bvaml_test_all   test_ray )
+add_test( NAME  bvaml_test_rays_to_voxels  COMMAND $<TARGET_FILE:bvaml_test_all>   test_rays_to_voxels )
+add_test( NAME  bvaml_test_voxel           COMMAND $<TARGET_FILE:bvaml_test_all>   test_voxel )
+add_test( NAME  bvaml_test_supervoxel      COMMAND $<TARGET_FILE:bvaml_test_all>   test_supervoxel )
+add_test( NAME  bvaml_test_ray             COMMAND $<TARGET_FILE:bvaml_test_all>   test_ray )
 

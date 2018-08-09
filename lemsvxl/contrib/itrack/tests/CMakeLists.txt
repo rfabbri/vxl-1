@@ -9,7 +9,7 @@ add_executable( itrack_test_all
 
 target_link_libraries(itrack_test_all dbinfo vidpro bpro vsol vsl vpl vbl vul testlib)
 
-add_test(itrack_test_track_storage  itrack_test_all   test_track_storage)
+add_test( NAME itrack_test_track_storage  COMMAND $<TARGET_FILE:itrack_test_all>   test_track_storage)
 
 add_executable( itrack_test_include test_include.cxx )
 #target_link_libraries( itrack_test_include itrack )

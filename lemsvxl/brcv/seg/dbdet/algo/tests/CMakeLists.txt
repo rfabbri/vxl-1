@@ -26,9 +26,9 @@ add_executable ( dbdet_algo_test_all
 
 target_link_libraries( dbdet_algo_test_all dbdet_algo sdet testlib dbtest)
 
-add_test( dbdet_algo_test_load_edg dbdet_algo_test_all test_load_edg )
+add_test( NAME  dbdet_algo_test_load_edg COMMAND $<TARGET_FILE:dbdet_algo_test_all> test_load_edg )
 
-add_test( dbdet_algo_test_sel   dbdet_algo_test_all test_sel )
+add_test( NAME  dbdet_algo_test_sel   COMMAND $<TARGET_FILE:dbdet_algo_test_all> test_sel )
 
 add_test ( dbdet_algo_test_edgemap dbdet_algo_test_all test_edgemap )
 

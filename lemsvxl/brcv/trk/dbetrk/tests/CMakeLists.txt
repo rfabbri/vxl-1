@@ -8,8 +8,8 @@ add_executable( dbetrk_test_all
 )
 
 target_link_libraries( dbetrk_test_all dbetrk testlib )
-add_test(dbetrk_track  dbetrk_test_all test_dbetrk_track ) 
-add_test(dbetrk_edge   dbetrk_test_all test_dbetrk_edge ) 
+add_test( NAME dbetrk_track  COMMAND $<TARGET_FILE:dbetrk_test_all> test_dbetrk_track ) 
+add_test( NAME dbetrk_edge   COMMAND $<TARGET_FILE:dbetrk_test_all> test_dbetrk_edge ) 
 
 
 add_executable( dbetrk_test_include test_include.cxx )

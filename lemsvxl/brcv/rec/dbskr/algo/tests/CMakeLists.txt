@@ -30,9 +30,9 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/rectangle.esf          ${CMAKE_CURREN
 # a shock graph with two disconnected components
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dog1.esf          ${CMAKE_CURRENT_BINARY_DIR}/dog1.esf COPYONLY )
 
-add_test( dbskr_test_patch_selectors ${EXECUTABLE_OUTPUT_PATH}/dbskr_algo_test_all test_patch_selectors )
-add_test( dbskr_test_graph_algos ${EXECUTABLE_OUTPUT_PATH}/dbskr_algo_test_all test_graph_algos )
-add_test( dbskr_test_shock_patch_match ${EXECUTABLE_OUTPUT_PATH}/dbskr_algo_test_all test_shock_patch_match )
+add_test( NAME  dbskr_test_patch_selectors COMMAND $<TARGET_FILE:dbskr_algo_test_all> test_patch_selectors )
+add_test( NAME  dbskr_test_graph_algos COMMAND $<TARGET_FILE:dbskr_algo_test_all> test_graph_algos )
+add_test( NAME  dbskr_test_shock_patch_match COMMAND $<TARGET_FILE:dbskr_algo_test_all> test_shock_patch_match )
 
 add_executable( dbskr_algo_test_include test_include.cxx )
 target_link_libraries( dbskr_algo_test_include dbskr_algo dbskr_pro)

@@ -12,8 +12,7 @@ add_executable( bioproc_util_test_all
 
 #add_executable( bioproc_util_test_all ${bioproc_util_test_src})
 
-add_test( bioproc_test_proc_filter_stats
-          bioproc_det_test_all
+add_test( NAME  bioproc_test_proc_filter_stats COMMAND $<TARGET_FILE:bioproc_det_test_all>
           test_proc_filter_stats)
 
 target_link_libraries(bioproc_util_test_all bioproc_util testlib vcl )

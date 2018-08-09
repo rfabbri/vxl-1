@@ -11,10 +11,10 @@ add_executable( bapl_test_all
 
 target_link_libraries( bapl_test_all bapl testlib vil vnl brip)
 
-add_test( bapl_test_transform         bapl_test_all test_transform )
-add_test( bapl_test_roi               bapl_test_all test_roi )
-add_test( bapl_test_matcher           bapl_test_all test_matcher )
-add_test( bapl_test_lowe_pyramid_set  bapl_test_all test_lowe_pyramid_set )
+add_test( NAME  bapl_test_transform         COMMAND $<TARGET_FILE:bapl_test_all> test_transform )
+add_test( NAME  bapl_test_roi               COMMAND $<TARGET_FILE:bapl_test_all> test_roi )
+add_test( NAME  bapl_test_matcher           COMMAND $<TARGET_FILE:bapl_test_all> test_matcher )
+add_test( NAME  bapl_test_lowe_pyramid_set  COMMAND $<TARGET_FILE:bapl_test_all> test_lowe_pyramid_set )
 
 add_executable( bapl_test_include test_include.cxx )
 target_link_libraries( bapl_test_include bapl )

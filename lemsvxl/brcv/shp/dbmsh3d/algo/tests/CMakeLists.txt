@@ -16,11 +16,11 @@ add_executable( dbmsh3d_algo_test_all
 
 target_link_libraries( dbmsh3d_algo_test_all dbmsh3d_algo testlib vul vgl vgl_algo)
 
-add_test( test_mesh_tri dbmsh3d_algo_test_all)
-add_test( test_graph_sh_path dbmsh3d_algo_test_all)
+add_test( NAME  test_mesh_tri COMMAND $<TARGET_FILE:dbmsh3d_algo_test_all>)
+add_test( NAME  test_graph_sh_path COMMAND $<TARGET_FILE:dbmsh3d_algo_test_all>)
 
-add_test( dbmsh3d_algo_test_mesh_triangulate dbmsh3d_algo_test_all  test_mesh_triangulate )
-add_test( dbmsh3d_algo_test_pt_mesh_dist     dbmsh3d_algo_test_all  test_pt_mesh_dist )
+add_test( NAME  dbmsh3d_algo_test_mesh_triangulate COMMAND $<TARGET_FILE:dbmsh3d_algo_test_all>  test_mesh_triangulate )
+add_test( NAME  dbmsh3d_algo_test_pt_mesh_dist     COMMAND $<TARGET_FILE:dbmsh3d_algo_test_all>  test_pt_mesh_dist )
 
 add_executable( dbmsh3d_algo_test_include test_include.cxx )
 target_link_libraries( dbmsh3d_algo_test_include dbmsh3d_algo )

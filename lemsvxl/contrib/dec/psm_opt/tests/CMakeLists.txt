@@ -13,10 +13,10 @@ add_executable( psm_opt_test_all
 target_link_libraries( psm_opt_test_all psm psm_algo psm_opt hsds testlib vbl vgl bvxm vnl vpgl)
 
 
-add_test( psm_opt_generate_opt_samples ${EXECUTABLE_OUTPUT_PATH}/psm_opt_test_all   test_psm_opt_generate_opt_samples)
-add_test( psm_opt_optimizer ${EXECUTABLE_OUTPUT_PATH}/psm_opt_test_all   test_psm_opt_optimizer)
-add_test( psm_opt_bayesian_optimizer ${EXECUTABLE_OUTPUT_PATH}/psm_opt_test_all   test_psm_opt_bayesian_optimizer)
-add_test( psm_opt_appearance_estimator ${EXECUTABLE_OUTPUT_PATH}/psm_opt_test_all test_psm_opt_appearance_estimator)
+add_test( NAME  psm_opt_generate_opt_samples COMMAND $<TARGET_FILE:psm_opt_test_all>   test_psm_opt_generate_opt_samples)
+add_test( NAME  psm_opt_optimizer COMMAND $<TARGET_FILE:psm_opt_test_all>   test_psm_opt_optimizer)
+add_test( NAME  psm_opt_bayesian_optimizer COMMAND $<TARGET_FILE:psm_opt_test_all>   test_psm_opt_bayesian_optimizer)
+add_test( NAME  psm_opt_appearance_estimator COMMAND $<TARGET_FILE:psm_opt_test_all> test_psm_opt_appearance_estimator)
 
 
 

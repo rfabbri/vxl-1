@@ -12,11 +12,11 @@ add_executable( dbskr_test_all
 )
 target_link_libraries( dbskr_test_all dbskr testlib)
 
-add_test( dbskr_tree_test            dbskr_test_all test_tree ${CMAKE_CURRENT_SOURCE_DIR})
-add_test( dbskr_tree_edit_test       dbskr_test_all test_tree_edit ${CMAKE_CURRENT_SOURCE_DIR})
-#add_test( dbskr_shock_patch_test       dbskr_test_all test_shock_patch ${CMAKE_CURRENT_SOURCE_DIR})
-#add_test( dbskr_scurve_test          dbskr_test_all test_scurve ${CMAKE_CURRENT_SOURCE_DIR})
-#add_test( dbskr_scvmatch_test        dbskr_test_all test_scvmatch ${CMAKE_CURRENT_SOURCE_DIR})
+add_test( NAME  dbskr_tree_test            COMMAND $<TARGET_FILE:dbskr_test_all> test_tree ${CMAKE_CURRENT_SOURCE_DIR})
+add_test( NAME  dbskr_tree_edit_test       COMMAND $<TARGET_FILE:dbskr_test_all> test_tree_edit ${CMAKE_CURRENT_SOURCE_DIR})
+#add_test( NAME  dbskr_shock_patch_test       COMMAND $<TARGET_FILE:dbskr_test_all> test_shock_patch ${CMAKE_CURRENT_SOURCE_DIR})
+#add_test( NAME  dbskr_scurve_test          COMMAND $<TARGET_FILE:dbskr_test_all> test_scurve ${CMAKE_CURRENT_SOURCE_DIR})
+#add_test( NAME  dbskr_scvmatch_test        COMMAND $<TARGET_FILE:dbskr_test_all> test_scvmatch ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable( dbskr_test_include test_include.cxx )
 target_link_libraries( dbskr_test_include dbskr ) #dbsk2d_algo

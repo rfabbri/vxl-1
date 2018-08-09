@@ -26,8 +26,8 @@ add_library( smw ${smw_sources} )
 
 target_link_libraries( smw vil vnl bsta )
 
-#add_test(smw_bvxm_voxel_world ${EXECUTABLE_OUTPUT_PATH}/smw_test_all test_smw_bvxm_voxel_world)
-#add_test(smw_node ${EXECUTABLE_OUTPUT_PATH}/smw_test_all test_smw_node)
+#add_test( NAME smw_bvxm_voxel_world COMMAND $<TARGET_FILE:smw_test_all> test_smw_bvxm_voxel_world)
+#add_test( NAME smw_node COMMAND $<TARGET_FILE:smw_test_all> test_smw_node)
 
 add_subdirectory(tests)
 

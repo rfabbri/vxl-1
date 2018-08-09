@@ -19,5 +19,5 @@ add_executable(splr_test_all ${splr_test_src})
 
 target_link_libraries(splr_test_all splr xmvg xmvg_io xscan testlib vcl vbl biob vsl)
 
-add_test(splr_test splr_test_all)
+add_test( NAME splr_test COMMAND $<TARGET_FILE:splr_test_all>)
 

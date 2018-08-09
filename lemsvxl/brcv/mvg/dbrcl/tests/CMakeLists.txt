@@ -5,4 +5,4 @@ add_executable( dbrcl_test_all
 )
 
 target_link_libraries( dbrcl_test_all dbrcl vpl testlib )
-add_test( dbrcl_test_constrained_camera    dbrcl_test_all  test_constrained_camera )
+add_test( NAME  dbrcl_test_constrained_camera    COMMAND $<TARGET_FILE:dbrcl_test_all>  test_constrained_camera )

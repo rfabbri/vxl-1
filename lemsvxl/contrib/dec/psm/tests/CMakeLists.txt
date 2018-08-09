@@ -16,8 +16,8 @@ add_executable( psm_test_all
 target_link_libraries( psm_test_all psm hsds testlib vbl vgl bvxm vnl)
 
 
-add_test( psm_bvxm_import ${EXECUTABLE_OUTPUT_PATH}/psm_test_all   test_psm_bvxm_import)
-add_test( psm_cell_enumerator ${EXECUTABLE_OUTPUT_PATH}/psm_test_all   test_psm_cell_enumerator)
+add_test( NAME  psm_bvxm_import COMMAND $<TARGET_FILE:psm_test_all>   test_psm_bvxm_import)
+add_test( NAME  psm_cell_enumerator COMMAND $<TARGET_FILE:psm_test_all>   test_psm_cell_enumerator)
 
 
 

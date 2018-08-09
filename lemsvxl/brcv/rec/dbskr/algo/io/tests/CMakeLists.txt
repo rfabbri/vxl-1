@@ -16,6 +16,6 @@ add_executable( dbskr_algoio_test_all
 
 target_link_libraries( dbskr_algoio_test_all dbskr_algoio testlib )
 
-add_test( dbskr_test_params ${EXECUTABLE_OUTPUT_PATH}/dbskr_algoio_test_all test_params )
+add_test( NAME  dbskr_test_params COMMAND $<TARGET_FILE:dbskr_algoio_test_all> test_params )
 
 

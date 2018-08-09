@@ -12,11 +12,11 @@ add_executable( dbcvr_test_all
 )
 target_link_libraries( dbcvr_test_all dbcvr bsol testlib bsold)
 
-add_test( dbcvr_cvmatch              dbcvr_test_all test_cvmatch ${CMAKE_CURRENT_SOURCE_DIR}/file_read_data)
-add_test( dbcvr_cvmatch_even         dbcvr_test_all test_cvmatch_even)
-add_test( dbcvr_clsd_cvmatch         dbcvr_test_all test_clsd_cvmatch ${CMAKE_CURRENT_SOURCE_DIR}/file_read_data)
-add_test( dbcvr_interp_cvmatch       dbcvr_test_all test_interp_cvmatch ${CMAKE_CURRENT_SOURCE_DIR}/file_read_data)
-add_test( dbcvr_clsd_interp_cvmatch  dbcvr_test_all test_clsd_interp_cvmatch ${CMAKE_CURRENT_SOURCE_DIR}/file_read_data)
+add_test( NAME  dbcvr_cvmatch              COMMAND $<TARGET_FILE:dbcvr_test_all> test_cvmatch ${CMAKE_CURRENT_SOURCE_DIR}/file_read_data)
+add_test( NAME  dbcvr_cvmatch_even         COMMAND $<TARGET_FILE:dbcvr_test_all> test_cvmatch_even)
+add_test( NAME  dbcvr_clsd_cvmatch         COMMAND $<TARGET_FILE:dbcvr_test_all> test_clsd_cvmatch ${CMAKE_CURRENT_SOURCE_DIR}/file_read_data)
+add_test( NAME  dbcvr_interp_cvmatch       COMMAND $<TARGET_FILE:dbcvr_test_all> test_interp_cvmatch ${CMAKE_CURRENT_SOURCE_DIR}/file_read_data)
+add_test( NAME  dbcvr_clsd_interp_cvmatch  COMMAND $<TARGET_FILE:dbcvr_test_all> test_clsd_interp_cvmatch ${CMAKE_CURRENT_SOURCE_DIR}/file_read_data)
 
 add_executable( dbcvr_test_include test_include.cxx )
 target_link_libraries( dbcvr_test_include dbcvr )

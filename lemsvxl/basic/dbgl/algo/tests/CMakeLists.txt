@@ -10,7 +10,7 @@ add_executable( dbgl_algo_test_all
 
 target_link_libraries(dbgl_algo_test_all dbgl_algo bgld_algo testlib)
 
-add_test( dbgl_algo_test_diffgeom dbgl_algo_test_all test_diffgeom )
+add_test( NAME  dbgl_algo_test_diffgeom COMMAND $<TARGET_FILE:dbgl_algo_test_all> test_diffgeom )
 
 add_executable( dbgl_algo_test_include test_include.cxx )
 target_link_libraries( dbgl_algo_test_include dbgl_algo)

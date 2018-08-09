@@ -11,5 +11,5 @@ add_executable( xscan_test_all
 
 target_link_libraries(xscan_test_all xscan testlib)
 
-add_test(xscan_test xscan_test_all)
+add_test( NAME xscan_test COMMAND $<TARGET_FILE:xscan_test_all>)
 

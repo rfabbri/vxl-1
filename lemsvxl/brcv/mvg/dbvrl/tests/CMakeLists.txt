@@ -8,7 +8,7 @@ add_executable( dbvrl_test_all
 
 target_link_libraries( dbvrl_test_all dbvrl testlib vul)
 
-add_test( dbvrl_test_minimizer         dbvrl_test_all test_minimizer )
+add_test( NAME  dbvrl_test_minimizer         COMMAND $<TARGET_FILE:dbvrl_test_all> test_minimizer )
 
 add_executable( dbvrl_test_include test_include.cxx )
 target_link_libraries( dbvrl_test_include dbvrl)

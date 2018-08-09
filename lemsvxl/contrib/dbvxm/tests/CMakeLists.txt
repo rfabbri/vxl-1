@@ -9,7 +9,7 @@ add_executable( dbvxm_test_all
 target_link_libraries( dbvxm_test_all dbvxm testlib vcl vbl vpgl bsta bsta_algo)
 
 
-add_test( dbvxm_test_gen_synthetic_multi_scale_world     ${EXECUTABLE_OUTPUT_PATH}/dbvxm_test_all test_gen_synthetic_multi_scale_world )
+add_test( NAME  dbvxm_test_gen_synthetic_multi_scale_world     COMMAND $<TARGET_FILE:dbvxm_test_all> test_gen_synthetic_multi_scale_world )
 
 add_executable( dbvxm_test_include test_include.cxx )
 target_link_libraries( dbvxm_test_include dbvxm)

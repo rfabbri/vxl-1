@@ -7,4 +7,4 @@ add_executable( dsm_ocl_test_all
                 
 target_link_libraries( dsm_ocl_test_all dsm_ocl vnl vul )
 
-add_test( dsm_ocl_test_hog      ${EXECUTABLE_OUTPUT_PATH}/dsm_test_all test_hog )               
+add_test( NAME  dsm_ocl_test_hog      COMMAND $<TARGET_FILE:dsm_test_all> test_hog )               

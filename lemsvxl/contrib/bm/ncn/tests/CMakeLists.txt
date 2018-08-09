@@ -8,6 +8,6 @@ add_executable( ncn_test_all
   
 target_link_libraries( ncn_test_all ncn vnl vul testlib )
  
-add_test( ncn_test_mutual_information_ranking     ${EXECUTABLE_OUTPUT_PATH}/ncn_test_all test_mutual_information_ranking )
-add_test( ncn_test_factory ${EXECUTABLE_OUTPUT_PATH}/ncn_test_all test_mutual_information_ranking )
+add_test( NAME  ncn_test_mutual_information_ranking     COMMAND $<TARGET_FILE:ncn_test_all> test_mutual_information_ranking )
+add_test( NAME  ncn_test_factory COMMAND $<TARGET_FILE:ncn_test_all> test_mutual_information_ranking )
  
