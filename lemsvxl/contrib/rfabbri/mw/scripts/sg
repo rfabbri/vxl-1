@@ -164,7 +164,7 @@ for i in $remaining_args; do
         .edg)
           edge_fnames="$edge_fnames $i"
         ;;
-        .cem|cemv)
+        .cem|.cemv)
           frag_fnames="$frag_fnames $i"
         ;;
       esac
