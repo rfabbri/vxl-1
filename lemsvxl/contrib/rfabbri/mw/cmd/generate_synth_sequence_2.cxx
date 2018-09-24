@@ -44,10 +44,6 @@ main(int argc, char **argv)
     vpgl_perspective_camera<double> *P;
     P = bdifd_turntable::camera_olympus(6*i, K);
     cam_gt[i].set_p(*P);
-    delete P;
-
-    P = bdifd_turntable::camera_olympus(6*i, K);
-
     cam_vpgl[i] = *P;
     delete P;
   }
@@ -58,6 +54,8 @@ main(int argc, char **argv)
 
   bool retval =  
     bmcsd_util::write_cams(dir, prefix, bmcsd_util::BMCS_INTRINSIC_EXTRINSIC, cam_vpgl);
+
+  std::cout << "VPGL CAM 003: " << cam_vpgl[3].get_matrix() << std::endl;
   if (!retval)
     abort();
   
@@ -68,7 +66,9 @@ main(int argc, char **argv)
 //  bdifd_data::space_curves_digicam_turntable_sandbox( crv3d );
   bdifd_data::space_curves_olympus_turntable( crv3d );
 
-
+  vgl_point_3d<double> pt_analyze(crv3d[0][2].Gama[0], crv3d[0][2].Gama[1], crv3d[0][2].Gama[2]);
+  std::cout << "VPGL PROJ 003 pt 3: " << "pt " << std::endl << pt_analyze << std::endl <<
+    "project: " << std::endl <<  cam_vpgl[3].project(pt_analyze) << std::endl;
 
   crv2d.resize(crv3d.size());
 
@@ -80,6 +80,7 @@ main(int argc, char **argv)
   // xi[i][k] == curve i at view k
   // write points as ASCII and also .cemv
   unsigned  number_of_curves = crv2d.size();
+  assert(crv3d.size() == crv2d.size());
 
   vcl_ofstream fp_crv_id;
   
@@ -191,6 +192,7 @@ main(int argc, char **argv)
     return 1;
   }
   
+  fp_crv_3d_pts << vcl_setprecision(20);
   fp_crv_3d_tgts << vcl_setprecision(20);
   
   vcl_vector<vcl_vector<bdifd_1st_order_point_3d> > crv3d_1st(crv3d.size());
@@ -198,8 +200,8 @@ main(int argc, char **argv)
     crv3d_1st[i].resize(crv3d[i].size());
     for (unsigned k=0; k < crv3d[i].size(); ++k) {
       crv3d_1st[i][k] = crv3d[i][k];
-      fp_crv_3d_pts << crv3d[i][k].Gama[0] << " " << crv3d[i][k].Gama[1]  << " " << crv3d[i][k].Gama[3] << std::endl;
-      fp_crv_3d_tgts << crv3d[i][k].T[0] << " " << crv3d[i][k].T[1]  << " " << crv3d[i][k].T[3] << std::endl;
+      fp_crv_3d_pts << crv3d[i][k].Gama[0] << " " << crv3d[i][k].Gama[1]  << " " << crv3d[i][k].Gama[2] << std::endl;
+      fp_crv_3d_tgts << crv3d[i][k].T[0] << " " << crv3d[i][k].T[1]  << " " << crv3d[i][k].T[2] << std::endl;
     }
   }
   // bmcsd_curve_3d_sketch csk(crv3d_1st, attr);
