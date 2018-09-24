@@ -141,7 +141,6 @@ main(int argc, char **argv)
     }
     
     fp_tgts2d << vcl_setprecision(20);
-    std::cout << vcl_setprecision(20);
 
     
     vcl_vector< sdet_edgel *> edgels;
@@ -150,7 +149,7 @@ main(int argc, char **argv)
         edgels.push_back(new sdet_edgel);
         bmcsd_algo_util::bdifd_to_sdet(crv2d[i][k][j], edgels.back());
         fp_tgts2d << crv2d[i][k][j].t[0] << " " << crv2d[i][k][j].t[1] << std::endl;
-        assert(fabs(crv2d[i][k][j].t[2] - 0) < 1e-4);
+        assert(fabs(crv2d[i][k][j].t[2]) < 1e-4);
       }
     }
     fp_tgts2d.close();
@@ -162,26 +161,50 @@ main(int argc, char **argv)
 //      abort();
   }
 
-  /*
 
   // The 3D Curve Sketch
 
+  /*
   vcl_vector< bmcsd_curve_3d_attributes > attr(number_of_curves);
   for (unsigned i=0; i < number_of_curves; ++i) {
     attr[i].set_views(new bmcsd_stereo_views);
     attr[i].v_->set_stereo0(0);
     attr[i].v_->set_stereo1(nviews-1);
   }
-
+  */
+  
+  std::string fname_crv_3d_pts = dir + vcl_string("/") + "crv-3D-pts.txt";
+  std::string fname_crv_3d_tgts = dir + vcl_string("/") + "crv-3D-tgts.txt";
+  
+  vcl_ofstream fp_crv_3d_pts;
+  vcl_ofstream fp_crv_3d_tgts;
+  
+  fp_crv_3d_pts.open(fname_crv_3d_pts.c_str());
+  if (!fp_crv_3d_pts) {
+    vcl_cerr << "generate_synth_sequence: error, unable to open file name " << fname_crv_3d_pts << vcl_endl;
+    return 1;
+  }
+  
+  fp_crv_3d_tgts.open(fname_crv_3d_tgts.c_str());
+  if (!fp_crv_3d_tgts) {
+    vcl_cerr << "generate_synth_sequence: error, unable to open file name " << fname_crv_3d_tgts << vcl_endl;
+    return 1;
+  }
+  
+  fp_crv_3d_tgts << vcl_setprecision(20);
+  
   vcl_vector<vcl_vector<bdifd_1st_order_point_3d> > crv3d_1st(crv3d.size());
   for (unsigned  i=0; i < crv3d.size(); ++i) {
     crv3d_1st[i].resize(crv3d[i].size());
-    for (unsigned k=0; k < crv3d[i].size(); ++k)
+    for (unsigned k=0; k < crv3d[i].size(); ++k) {
       crv3d_1st[i][k] = crv3d[i][k];
+      fp_crv_3d_pts << crv3d[i][k].Gama[0] << " " << crv3d[i][k].Gama[1]  << " " << crv3d[i][k].Gama[3] << std::endl;
+      fp_crv_3d_tgts << crv3d[i][k].T[0] << " " << crv3d[i][k].T[1]  << " " << crv3d[i][k].T[3] << std::endl;
+    }
   }
-  bmcsd_curve_3d_sketch csk(crv3d_1st, attr);
-  csk.write_dir_format(dir+vcl_string("/csk"));
-  */
+  // bmcsd_curve_3d_sketch csk(crv3d_1st, attr);
+
+  //csk.write_dir_format(dir+vcl_string("/csk"));
 
   return 0;
 }
