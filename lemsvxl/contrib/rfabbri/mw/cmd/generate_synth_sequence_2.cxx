@@ -81,12 +81,21 @@ main(int argc, char **argv)
   // write points as ASCII and also .cemv
   unsigned  number_of_curves = crv2d.size();
 
+  vcl_ofstream fp_crv_id;
+  
+  std::string fname_crv_id = dir + vcl_string("/") + "crv-ids.txt";
+  fp_crv_id.open(fname_crv_id.c_str());
+  if (!fp_crv_id) {
+    vcl_cerr << "generate_synth_sequence: error, unable to open file name " << fname_crv_id << vcl_endl;
+    return 1;
+  }
+    
   for (unsigned  k=0; k < nviews; ++k) {
     vcl_ostringstream v_str;
     v_str << vcl_setw(4) << vcl_setfill('0') << k;
     vcl_string fname_base = dir + vcl_string("/") + prefix + v_str.str();
     
-    vcl_ofstream fp_pts2d, fp_crv_id;
+    vcl_ofstream fp_pts2d;
     std::string fname_pts2d = fname_base + "-pts-2D.txt";
     
     fp_pts2d.open(fname_pts2d.c_str());
@@ -95,22 +104,16 @@ main(int argc, char **argv)
       return 1;
     }
     
-    std::string fname_crv_id = fname_base + "-crv-id.txt";
-    fp_crv_id.open(fname_crv_id.c_str());
-    if (!fp_crv_id) {
-      vcl_cerr << "generate_synth_sequence: error, unable to open file name " << fname_crv_id << vcl_endl;
-      return 1;
-    }
-    
     fp_pts2d << vcl_setprecision(20);
 
     
     vcl_vector< vsol_spatial_object_2d_sptr > polys(number_of_curves);
     for (unsigned i=0; i<number_of_curves; ++i) {
-      fp_crv_id << i << std::endl;
       vcl_vector<vsol_point_2d_sptr> xi; 
       xi.resize(crv2d[i][k].size());
       for (unsigned  j=0; j < crv2d[i][k].size(); ++j)  {
+        if (k == 0)
+          fp_crv_id << i << std::endl;
         xi[j] = new vsol_point_2d(crv2d[i][k][j].gama[0], crv2d[i][k][j].gama[1]);
         fp_pts2d << crv2d[i][k][j].gama[0] << " " << crv2d[i][k][j].gama[1] << std::endl;
       }
@@ -123,25 +126,43 @@ main(int argc, char **argv)
 
   // edgemaps.
 
-  /*
   for (unsigned  k=0; k < nviews; ++k) {
+    vcl_ostringstream v_str;
+    v_str << vcl_setw(4) << vcl_setfill('0') << k;
+    vcl_string fname_base = dir + vcl_string("/") + prefix + v_str.str();
+    
+    vcl_ofstream fp_tgts2d;
+    std::string fname_tgts2d = fname_base + "-tgts-2D.txt";
+    
+    fp_tgts2d.open(fname_tgts2d.c_str());
+    if (!fp_tgts2d) {
+      vcl_cerr << "generate_synth_sequence: error, unable to open file name " << fname_tgts2d << vcl_endl;
+      return 1;
+    }
+    
+    fp_tgts2d << vcl_setprecision(20);
+    std::cout << vcl_setprecision(20);
+
+    
     vcl_vector< sdet_edgel *> edgels;
     for (unsigned i=0; i<number_of_curves; ++i) {
       for (unsigned  j=0; j < crv2d[i][k].size(); ++j) {
         edgels.push_back(new sdet_edgel);
         bmcsd_algo_util::bdifd_to_sdet(crv2d[i][k][j], edgels.back());
+        fp_tgts2d << crv2d[i][k][j].t[0] << " " << crv2d[i][k][j].t[1] << std::endl;
+        assert(fabs(crv2d[i][k][j].t[2] - 0) < 1e-4);
       }
     }
-    sdet_edgemap_sptr em = new sdet_edgemap(520, 380, edgels);
+    fp_tgts2d.close();
+//    sdet_edgemap_sptr em = new sdet_edgemap(520, 380, edgels);
 
-    vcl_ostringstream v_str;
-    v_str << vcl_setw(4) << vcl_setfill('0') << k;
-    vcl_string filename = dir + vcl_string("/") + prefix + v_str.str() + vcl_string(".edg.gz");
-    bool retval = sdetd_save_edg(filename, em);
-    if (!retval)
-      abort();
+//    vcl_string filename = dir + vcl_string("/") + prefix + v_str.str() + vcl_string(".edg.gz");
+//    bool retval = sdetd_save_edg(filename, em);
+//    if (!retval)
+//      abort();
   }
 
+  /*
 
   // The 3D Curve Sketch
 
