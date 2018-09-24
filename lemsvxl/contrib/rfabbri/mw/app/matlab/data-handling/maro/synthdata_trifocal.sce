@@ -1,9 +1,9 @@
 cd /Users/rfabbri/lib/data/synthcurves-multiview-3d-dataset/ascii-20_views-olympus-turntable
 
 // read 3 views
-gama1_vec=read('frame_0003-pts-2D.txt',-1,2)';
-gama2_vec=read('frame_0011-pts-2D.txt',-1,2)';
-gama3_vec=read('frame_0017-pts-2D.txt',-1,2)';
+gama__1_vec_img=read('frame_0003-pts-2D.txt',-1,2)';
+gama__2_vec_img=read('frame_0011-pts-2D.txt',-1,2)';
+gama__3_vec_img=read('frame_0017-pts-2D.txt',-1,2)';
 
 t1_vec=read('frame_0003-tgts-2D.txt',-1,2)';
 t2_vec=read('frame_0011-tgts-2D.txt',-1,2)';
@@ -59,14 +59,50 @@ Gama_w_vec = read('crv-3D-pts.txt',-1,3)';
 
 P_1 = K *[R_1 T_1];
 
+// sanity check 0: project 1st point matches supplied 2D point
 proj=P_1*[Gama_w_vec(:,1); 1]
 proj=proj/proj($);
 proj=proj(1:2)
-gama1_vec(:,1)
-max(abs(proj-gama1_vec(:,1)))
+gama__1_vec_img(:,1)
+max(abs(proj-gama__1_vec_img(:,1)))
 
-// sanity check 1: projections to cam 1 give supplied 2D points
+// sanity check 1: all projections to cam 1 give supplied 2D points
 proj_1 = P_1 * [Gama_w_vec; ones(1,size(Gama_w_vec,2))];
 proj_1 = proj_1 ./ [proj_1(3,:); proj_1(3,:); proj_1(3,:)];
 proj_1 = proj_1(1:2,:);
-max(abs(proj_1 - gama1_vec))
+max(abs(proj_1 - gama__1_vec_img))
+
+
+
+// last index in underscore is view, like so:
+//    symbol_samplenumber_viewnumber
+//    symbol__viewnumber(samplenumber)
+//    symbol(samplenumber,viewnumber)
+Gama_1_vec = R_1*Gama_w_vec + T_1*ones(1,size(Gama_w_vec,2));
+Gama_2_vec = R_21*Gama_1_vec + T_21*ones(1,size(Gama_w_vec,2));
+Gama_3_vec = R_31*Gama_1_vec + T_31*ones(1,size(Gama_w_vec,2));
+
+rho__1 = Gama_1_vec(3,:);
+rho__2 = Gama_2_vec(3,:);
+rho__3 = Gama_3_vec(3,:);
+
+// ---------------------------------------------------------------------
+// CORE 3 EQUATIONS
+// must output zero:
+
+// Starting here we treat the 2D points as 3D vectors
+// Apply the inverse K matrix!
+
+gama__1_vec_img = [gama__1_vec_img; ones(1,size(gama__1_vec_img,2))]
+gama__2_vec_img = [gama__2_vec_img; ones(1,size(gama__2_vec_img,2))]
+gama__3_vec_img = [gama__3_vec_img; ones(1,size(gama__3_vec_img,2))]
+
+// gama__1_vec = inv(K)*gama__1_vec;
+gama__1_vec = K\gama__1_vec_img;
+gama__2_vec = K\gama__2_vec_img;
+gama__3_vec = K\gama__3_vec_img;
+
+i=[689 869 968]
+rho__2(i(1))*gama__2_vec(:,i(1)) - rho__1(i(1))*R_21*gama__1_vec(:,i(1)) - T_21
+rho__3(i(1))*gama__3_vec(:,i(1)) - rho__1(i(1))*R_31*gama__1_vec(:,i(1)) - T_31
+// ---------------------------------------------------------------------
