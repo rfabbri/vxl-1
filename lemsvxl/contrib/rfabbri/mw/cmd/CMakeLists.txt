@@ -10,6 +10,10 @@ set(generate_synth_sequence_sources
    generate_synth_sequence.cxx
 )
 
+set(generate_synth_sequence_2_sources
+   generate_synth_sequence_2.cxx
+)
+
 set(vox_mcs_stereo_eval_sources
    vox_mcs_eval.cxx vox_mcs_eval.h
    vox_mcs_eval_params.cxx vox_mcs_eval_params.h 
@@ -28,6 +32,9 @@ target_link_libraries(pad vcl)
 
 add_executable(generate_synth_sequence ${generate_synth_sequence_sources})
 target_link_libraries(generate_synth_sequence mw_pro sdetd_io sdetd_algo)
+
+add_executable(generate_synth_sequence_2 ${generate_synth_sequence_2_sources})
+target_link_libraries(generate_synth_sequence_2 mw_pro sdetd_io sdetd_algo)
 
 add_executable(vox_mcs_eval ${vox_mcs_stereo_eval_sources})
 target_link_libraries(vox_mcs_eval mw_pro dborl_algo dbxml sdetd_io sdetd_algo)

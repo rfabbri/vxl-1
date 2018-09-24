@@ -5,11 +5,6 @@ gama__1_vec_img=read('frame_0003-pts-2D.txt',-1,2)';
 gama__2_vec_img=read('frame_0011-pts-2D.txt',-1,2)';
 gama__3_vec_img=read('frame_0017-pts-2D.txt',-1,2)';
 
-t1_vec=read('frame_0003-tgts-2D.txt',-1,2)';
-t2_vec=read('frame_0011-tgts-2D.txt',-1,2)';
-t3_vec=read('frame_0017-tgts-2D.txt',-1,2)';
-
-
 RC_1 = read('frame_0003.extrinsic',-1,3);
 RC_2 = read('frame_0011.extrinsic',-1,3);
 RC_3 = read('frame_0017.extrinsic',-1,3);
@@ -82,12 +77,12 @@ Gama_1_vec = R_1*Gama_w_vec + T_1*ones(1,size(Gama_w_vec,2));
 Gama_2_vec = R_21*Gama_1_vec + T_21*ones(1,size(Gama_w_vec,2));
 Gama_3_vec = R_31*Gama_1_vec + T_31*ones(1,size(Gama_w_vec,2));
 
-rho__1 = Gama_1_vec(3,:);
-rho__2 = Gama_2_vec(3,:);
-rho__3 = Gama_3_vec(3,:);
+depth__1 = Gama_1_vec(3,:);
+depth__2 = Gama_2_vec(3,:);
+depth__3 = Gama_3_vec(3,:);
 
 // ---------------------------------------------------------------------
-// CORE 3 EQUATIONS
+// CORE POINT EQUATIONS
 // must output zero:
 
 // Starting here we treat the 2D points as 3D vectors
@@ -102,7 +97,21 @@ gama__1_vec = K\gama__1_vec_img;
 gama__2_vec = K\gama__2_vec_img;
 gama__3_vec = K\gama__3_vec_img;
 
-i=[689 869 968]
-rho__2(i(1))*gama__2_vec(:,i(1)) - rho__1(i(1))*R_21*gama__1_vec(:,i(1)) - T_21
-rho__3(i(1))*gama__3_vec(:,i(1)) - rho__1(i(1))*R_31*gama__1_vec(:,i(1)) - T_31
+point_ids=[689 869 968]
+for i=point_ids
+  depth__2(i)*gama__2_vec(:,i) - depth__1(i)*R_21*gama__1_vec(:,i) - T_21
+  depth__3(i)*gama__3_vec(:,i) - depth__1(i)*R_31*gama__1_vec(:,i) - T_31
+end
+
 // ---------------------------------------------------------------------
+// TANGENT EQUATIONS
+
+// Read 3D tangents
+
+T_w_vec = read('crv-3D-tgts.txt',-1,3)';
+t__1_vec_img=read('frame_0003-tgts-2D.txt',-1,2)';
+t__2_vec_img=read('frame_0011-tgts-2D.txt',-1,2)';
+t__3_vec_img=read('frame_0017-tgts-2D.txt',-1,2)';
+
+exec synthdata_trifocal_tangents.sce;
+
