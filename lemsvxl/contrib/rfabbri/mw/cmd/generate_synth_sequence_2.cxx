@@ -78,26 +78,52 @@ main(int argc, char **argv)
 
   //: image coordinates
   // xi[i][k] == curve i at view k
+  // write points as ASCII and also .cemv
   unsigned  number_of_curves = crv2d.size();
 
   for (unsigned  k=0; k < nviews; ++k) {
-    vcl_vector< vsol_spatial_object_2d_sptr > polys(number_of_curves);
-    for (unsigned i=0; i<number_of_curves; ++i) {
-      vcl_vector<vsol_point_2d_sptr> xi; 
-      xi.resize(crv2d[i][k].size());
-      for (unsigned  j=0; j < crv2d[i][k].size(); ++j) 
-        xi[j] = new vsol_point_2d(crv2d[i][k][j].gama[0], crv2d[i][k][j].gama[1]);
-      polys[i] = new vsol_polyline_2d(xi);
-    }
-
     vcl_ostringstream v_str;
     v_str << vcl_setw(4) << vcl_setfill('0') << k;
-    vcl_string filename = dir + vcl_string("/") + prefix + v_str.str() + vcl_string(".cemv.gz");
-    bsold_save_cem(polys, filename);
+    vcl_string fname_base = dir + vcl_string("/") + prefix + v_str.str();
+    
+    vcl_ofstream fp_pts2d, fp_crv_id;
+    std::string fname_pts2d = fname_base + "-pts-2D.txt";
+    
+    fp_pts2d.open(fname_pts2d.c_str());
+    if (!fp_pts2d) {
+      vcl_cerr << "generate_synth_sequence: error, unable to open file name " << fname_pts2d << vcl_endl;
+      return 1;
+    }
+    
+    std::string fname_crv_id = fname_base + "-crv-id.txt";
+    fp_crv_id.open(fname_crv_id.c_str());
+    if (!fp_crv_id) {
+      vcl_cerr << "generate_synth_sequence: error, unable to open file name " << fname_crv_id << vcl_endl;
+      return 1;
+    }
+    
+    fp_pts2d << vcl_setprecision(20);
+
+    
+    vcl_vector< vsol_spatial_object_2d_sptr > polys(number_of_curves);
+    for (unsigned i=0; i<number_of_curves; ++i) {
+      fp_crv_id << i << std::endl;
+      vcl_vector<vsol_point_2d_sptr> xi; 
+      xi.resize(crv2d[i][k].size());
+      for (unsigned  j=0; j < crv2d[i][k].size(); ++j)  {
+        xi[j] = new vsol_point_2d(crv2d[i][k][j].gama[0], crv2d[i][k][j].gama[1]);
+        fp_pts2d << crv2d[i][k][j].gama[0] << " " << crv2d[i][k][j].gama[1] << std::endl;
+      }
+      polys[i] = new vsol_polyline_2d(xi);
+    }
+    fp_crv_id.close();
+
+    // bsold_save_cem(polys, fname_base + vcl_string(".cemv.gz"));
   }
 
-  // We now need to generate the edgemaps.
+  // edgemaps.
 
+  /*
   for (unsigned  k=0; k < nviews; ++k) {
     vcl_vector< sdet_edgel *> edgels;
     for (unsigned i=0; i<number_of_curves; ++i) {
@@ -134,6 +160,7 @@ main(int argc, char **argv)
   }
   bmcsd_curve_3d_sketch csk(crv3d_1st, attr);
   csk.write_dir_format(dir+vcl_string("/csk"));
+  */
 
   return 0;
 }
