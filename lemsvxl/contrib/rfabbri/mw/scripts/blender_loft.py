@@ -1,21 +1,30 @@
 # Loft curves given by files into surface
 #
-# INPUT
-#    p0.txt, p1.txt, p2.txt, ... (arbitrary number of curve samples, each nx3
-#    array space separated)
+# INPUT 
+#    p0.txt, p1.txt, p2.txt, ... 
+#       An arbitrary number of curves to be lofted. Each p*.txt is one curve defined by
+#       a sequence of X Y Z point samples arranged in an nx3 array, space separated.
 #
 # OUTPUT
 #    loftsurf.ply
 #
 # USAGE
 #
-#   Commandline
+#   Commandline through a shell wrapper 'bloft'
+#      bloft   # it will read as many curves as you have, one fragment per .txt
+#
+#   Running directly
 #      blender -b -nosound -P blender_loft.py
 #       
-#   Inside blender console
-#
+#   Running inside blender console (to debug)
 #      filename = "PWD/blender_loft.py"
 #      exec(compile(open(filename).read(), filename, 'exec'))
+#
+# EXAMPLES
+#
+#   Go into the folder bloft-examples. For each test, copy the .txt files into a
+#   new folder and run bloft in it.
+#
 #
 # AUTHOR
 #   Ricardo Fabbri <rfabbri@gmail.com>, 3 Dec 2015
