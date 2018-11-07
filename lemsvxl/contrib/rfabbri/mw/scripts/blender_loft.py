@@ -1,7 +1,8 @@
 # Loft curves given by files into surface
 #
 # INPUT
-#    p0.txt, p1.txt
+#    p0.txt, p1.txt, p2.txt, ... (arbitrary number of curve samples, each nx3
+#    array space separated)
 #
 # OUTPUT
 #    loftsurf.ply
