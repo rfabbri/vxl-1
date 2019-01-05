@@ -66,10 +66,13 @@ load_edgemaps_into_frames(const vcl_vector<vcl_string> &edgemaps_fnames,
 void dbdet_bvis1_util::
 load_curve_frags_into_frames(const vcl_vector<vcl_string> &cfrags_fnames, bool use_filenames)
 {
+  std::cerr << "XXX load curve frags\n";
+  std::cerr << "XXX load curve frags :::: size" << cfrags_fnames.size() << "\n";
   for (unsigned v=0; v < cfrags_fnames.size(); ++v) {
     vcl_vector< vsol_spatial_object_2d_sptr > contours;
 
     vcl_string ext = vul_file::extension(cfrags_fnames[v]);
+    std::cerr << "XXX load curve frags :::: ext" << ext << "\n";
     if (ext == ".vsl") { // binary format
       vsl_b_ifstream bp_in(cfrags_fnames[v].c_str());
       if (!bp_in) {
@@ -123,6 +126,7 @@ load_curve_frags_into_frames(const vcl_vector<vcl_string> &cfrags_fnames, bool u
       // try cemv style (like '-bvsol' in dbdet_load_cem_process
       // if you alternatively want to load your .cem as vsols, just 
       // use .cemv on the same files
+      std::cerr << "XXX .cemv loadinmg" << "load_curve_frags" << std::endl;
       bool retval = bsold_load_cem(contours, cfrags_fnames[v]);
       if (!retval) {
         vcl_cerr << "Could not open frag file " << cfrags_fnames[v] << vcl_endl;

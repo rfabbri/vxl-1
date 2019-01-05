@@ -209,9 +209,12 @@ static bool bsold_save_cem_ascii(vcl_vector< vsol_spatial_object_2d_sptr >& vsol
 bool bsold_load_cem(vcl_vector< vsol_spatial_object_2d_sptr >& contours, vcl_string filename)
 {
   vcl_string ext = vul_file::extension(filename);
+  std::cerr << "bsold_load_cem attempt at loading " << filename << "with ext" << ext << std::endl;;
 
   if (ext == ".gz") {
+    std::cerr << "XXX Gzip file\n";
 #ifdef HAS_BOOST
+    std::cerr << "XXX HAS_BOOST, YEAH\n";
     return bsold_load_cem_gzip(contours, filename);
 #else
     vcl_cerr << "Error: .gz compressed file was provided, but boost wasn't found\n";
